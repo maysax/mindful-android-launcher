@@ -21,5 +21,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile "junit:junit:$junitVersion"
+
+    /**
+     * =================== Support libraries ===================
+     */
+    compile "com.android.support:support-v4:$supportVersion"
     compile "com.android.support:appcompat-v7:$supportVersion"
 }
