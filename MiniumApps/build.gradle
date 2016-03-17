@@ -32,10 +32,10 @@ allprojects {
 }
 
 project.ext {
-    compileSdkVersion = 23
+    compileSdkVersion = 24
     buildToolsVersion = "23.0.2"
-    minSdkVersion = 15
-    targetSdkVersion = 23
+    minSdkVersion = 10
+    targetSdkVersion = 24
 
     supportVersion = "24.0.0-alpha1"
     annotationsVersion = "4.0.0"
