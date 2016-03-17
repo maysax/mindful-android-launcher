@@ -1,8 +1,11 @@
 package minium.co.core.ui;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 import org.androidannotations.annotations.EActivity;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * This activity will be the base activity
@@ -13,5 +16,9 @@ import org.androidannotations.annotations.EActivity;
 @EActivity
 public class CoreActivity extends AppCompatActivity {
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
 }

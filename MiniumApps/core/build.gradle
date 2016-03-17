@@ -41,4 +41,11 @@ dependencies {
     // https://github.com/excilys/androidannotations
     compile "org.androidannotations:androidannotations-api:$annotationsVersion"
 
+
+    /**
+     * =================== UI ===================
+     */
+    // https://github.com/chrisjenx/Calligraphy
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0@aar'
+
 }
