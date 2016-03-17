@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "minium.co.contacts"
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
     }
