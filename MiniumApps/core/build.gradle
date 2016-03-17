@@ -65,4 +65,7 @@ dependencies {
         transitive = true;
     }
 
+    // TODO: provide link
+    compile 'com.orhanobut:logger:1.11'
+
 }

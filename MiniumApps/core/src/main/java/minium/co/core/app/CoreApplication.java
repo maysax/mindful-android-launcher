@@ -7,8 +7,10 @@ import com.crashlytics.android.Crashlytics;
 import org.androidannotations.annotations.EApplication;
 
 import io.fabric.sdk.android.Fabric;
+import minium.co.core.BuildConfig;
 import minium.co.core.R;
 import minium.co.core.config.Config;
+import minium.co.core.log.Tracer;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -32,6 +34,14 @@ public abstract class CoreApplication extends Application {
         super.onCreate();
 
         sInstance = this;
+
+        Tracer.i("Version code: " + BuildConfig.VERSION_CODE);
+        Tracer.i("Version name: " + BuildConfig.VERSION_NAME);
+        Tracer.i("Build time: " + BuildConfig.BUILD_TIME);
+        Tracer.i("Application Id: " + BuildConfig.APPLICATION_ID);
+        Tracer.i("Build type: " + BuildConfig.BUILD_TYPE);
+        Tracer.i("Git SHA: " + BuildConfig.GIT_SHA);
+        Tracer.i("Debug? : " + BuildConfig.DEBUG);
 
         init();
     }
