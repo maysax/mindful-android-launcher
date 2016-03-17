@@ -3,12 +3,25 @@
 buildscript {
     repositories {
         jcenter()
+
+        // NOTE: Global repositories should be placed here
+
+        // Fabric
+        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.0.0-beta7'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+
+        // apt required for AndroidAnnotations
+        // https://bitbucket.org/hvisser/android-apt
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+
+        // Fabric
+        // https://twittersdk.artifactoryonline.com/twittersdk/public/io/fabric/tools/gradle/
+        classpath 'io.fabric.tools:gradle:1.21.2'
     }
 }
 
@@ -16,6 +29,19 @@ allprojects {
     repositories {
         jcenter()
     }
+}
+
+project.ext {
+    compileSdkVersion = 23
+    buildToolsVersion = "23.0.2"
+    minSdkVersion = 15
+    targetSdkVersion = 23
+
+    supportVersion = "24.0.0-alpha1"
+    annotationsVersion = "4.0.0"
+    iconifyVersion = "2.2.1"
+    calligraphyVersion = "2.1.0@aar"
+    eventbusVersion = "3.0.0-beta1"
 }
 
 task clean(type: Delete) {
