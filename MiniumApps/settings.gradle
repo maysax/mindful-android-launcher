@@ -1,1 +1,1 @@
-include ':launcher', ':messages', ':core', ':call', ':clock', ':calculator', ':contacts'
+include ':launcher', ':core'

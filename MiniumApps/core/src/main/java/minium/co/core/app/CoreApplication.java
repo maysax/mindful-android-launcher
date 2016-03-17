@@ -2,8 +2,11 @@ package minium.co.core.app;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.androidannotations.annotations.EApplication;
 
+import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
 import minium.co.core.config.Config;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -36,6 +39,7 @@ public abstract class CoreApplication extends Application {
     protected void init() {
         // set initial configurations here
         configCalligraphy();
+        configFabric();
     }
 
     private void configCalligraphy() {
@@ -44,5 +48,13 @@ public abstract class CoreApplication extends Application {
                         .setDefaultFontPath(getString(Config.DEFAULT_FONT_PATH_RES))
                         .setFontAttrId(R.attr.fontPath)
                         .build());
+    }
+
+    private void configFabric() {
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(Config.DEBUG)
+                .build();
+        Fabric.with(fabric);
     }
 }

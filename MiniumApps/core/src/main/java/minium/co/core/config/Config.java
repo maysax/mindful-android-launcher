@@ -7,6 +7,9 @@ import minium.co.core.R;
  */
 public class Config {
 
+    // RELEASE: false
+    public static final Boolean DEBUG = true;
+
     // Calligraphy - custom fonts
     public static final int DEFAULT_FONT_PATH_RES = R.string.fonts_noto_sans_regular;
 }

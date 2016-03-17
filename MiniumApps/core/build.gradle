@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -16,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
@@ -47,5 +52,14 @@ dependencies {
      */
     // https://github.com/chrisjenx/Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.1.0@aar'
+
+
+    /**
+     * =================== Debug/Log ===================
+     */
+    // TODO: verify the link: http://fabric.io
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+        transitive = true;
+    }
 
 }
