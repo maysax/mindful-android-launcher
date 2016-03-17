@@ -42,6 +42,8 @@ project.ext {
     iconifyVersion = "2.2.1"
     calligraphyVersion = "2.1.0@aar"
     eventbusVersion = "3.0.0-beta1"
+
+    junitVersion = "4.12"
 }
 
 task clean(type: Delete) {
