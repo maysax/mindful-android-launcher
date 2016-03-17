@@ -26,15 +26,19 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
+
     /**
      * =================== Support libraries ===================
      */
+    // http://developer.android.com/tools/support-library/index.html
     compile "com.android.support:support-v4:$supportVersion"
     compile "com.android.support:appcompat-v7:$supportVersion"
+
 
     /**
      * =================== Framework ===================
      */
     // https://github.com/excilys/androidannotations
     compile "org.androidannotations:androidannotations-api:$annotationsVersion"
+
 }
