@@ -2,6 +2,8 @@ package minium.co.core.app;
 
 import android.app.Application;
 
+import org.androidannotations.annotations.EApplication;
+
 /**
  * Each application should contain an {@link Application} class instance
  * All applications of this project should extend their own application from this class
@@ -9,7 +11,7 @@ import android.app.Application;
  *
  * Created by shahab on 3/17/16.
  */
-
+@EApplication
 public abstract class CoreApplication extends Application {
 
     private static CoreApplication sInstance;
