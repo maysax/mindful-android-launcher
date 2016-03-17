@@ -12,4 +12,7 @@ public class Config {
 
     // Calligraphy - custom fonts
     public static final int DEFAULT_FONT_PATH_RES = R.string.fonts_noto_sans_regular;
+
+    public static final String TRACE_TAG = "t-min:";
+    public static final String LOG_TAG = "d-min";
 }
