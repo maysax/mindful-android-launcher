@@ -43,3 +43,10 @@ dependencies {
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 }
+
+apt {
+    arguments {
+        // RELEASE: comment it out
+        trace 'true'
+    }
+}

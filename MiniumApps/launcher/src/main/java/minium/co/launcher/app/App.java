@@ -1,9 +1,11 @@
 package minium.co.launcher.app;
 
 import org.androidannotations.annotations.EApplication;
+import org.androidannotations.annotations.Trace;
 
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
 
 /**
@@ -15,6 +17,9 @@ import minium.co.core.log.Tracer;
 @EApplication
 public class App extends CoreApplication {
 
+    private final String TRACE_TAG = Config.TRACE_TAG + "App";
+
+    @Trace(tag = TRACE_TAG)
     @Override
     public void onCreate() {
         super.onCreate();
