@@ -71,6 +71,9 @@ dependencies {
     // https://github.com/chrisjenx/Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.1.0@aar'
 
+    // http://joanzapata.com/android-iconify/
+    compile "com.joanzapata.iconify:android-iconify-fontawesome:$iconifyVersion"
+
 
     /**
      * =================== Debug/Log ===================
@@ -80,7 +83,14 @@ dependencies {
         transitive = true;
     }
 
-    // TODO: provide link
+    // https://github.com/orhanobut/logger
     compile 'com.orhanobut:logger:1.11'
+
+
+    /**
+     * =================== EVENTS ===================
+     */
+    // https://github.com/greenrobot/EventBus
+    compile "de.greenrobot:eventbus:$eventbusVersion"
 
 }
