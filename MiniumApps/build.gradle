@@ -45,15 +45,17 @@ project.ext {
 
     junitVersion = "4.12"
 
-    //
+    // get the current build SHA
     gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+
+    // get the current build time
     buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
 
     // Manifest version information!
     versionMajor = 1
     versionMinor = 0
     versionPatch = 0
-    versionBuild = 0 // bump for secret builds, public betas, etc.
+    versionBuild = 0 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {
