@@ -14,7 +14,13 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
     }
     buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
         release {
+            debuggable false
+            // RELEASE: true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

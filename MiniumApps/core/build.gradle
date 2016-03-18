@@ -21,6 +21,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        abortOnError false
+        textReport true
+        textOutput 'stdout'
+        fatal 'UnusedResources'
+    }
 }
 
 repositories {
