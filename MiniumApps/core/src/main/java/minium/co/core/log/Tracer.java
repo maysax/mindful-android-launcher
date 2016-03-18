@@ -56,8 +56,7 @@ public class Tracer {
     public static void init() {
         Logger
                 .init(Config.LOG_TAG)
-                .setMethodCount(3)
-                .setMethodOffset(2)
+                .setMethodCount(2)
                 // RELEASE: Use LogLevel.NONE for the release version
                 .setLogLevel(LogLevel.FULL);
     }
