@@ -34,7 +34,7 @@ allprojects {
 project.ext {
     compileSdkVersion = 23
     buildToolsVersion = "23.0.2"
-    minSdkVersion = 10
+    minSdkVersion = 15  // TODO: make it 10, and do the necessary fixes
     targetSdkVersion = 23
 
     supportVersion = "23.2.1"

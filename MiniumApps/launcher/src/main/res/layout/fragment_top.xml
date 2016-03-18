@@ -1,0 +1,35 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/black"
+    tools:context=".ui.TopFragment">
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/iTxt1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/white"
+        tools:text="CALL"/>
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/iTxt2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/white"
+        android:gravity="center"
+        tools:text="SELECT"/>
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/iTxt3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@color/white"
+        android:gravity="end"
+        tools:text="{}"/>
+
+</LinearLayout>

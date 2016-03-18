@@ -3,8 +3,11 @@ package minium.co.core.app;
 import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 import org.androidannotations.annotations.EApplication;
+import org.androidannotations.annotations.Trace;
 
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
@@ -22,6 +25,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 @EApplication
 public abstract class CoreApplication extends Application {
 
+    private final String TRACE_TAG = Config.TRACE_TAG + "CoreApplication";
+
     private static CoreApplication sInstance;
 
     public static synchronized CoreApplication getInstance() {
@@ -37,11 +42,13 @@ public abstract class CoreApplication extends Application {
         init();
     }
 
+    @Trace(tag = TRACE_TAG)
     protected void init() {
         // set initial configurations here
         configTracer();
         configCalligraphy();
         configFabric();
+        configIconify();
     }
 
     private void configTracer() {
@@ -62,5 +69,10 @@ public abstract class CoreApplication extends Application {
                 .debuggable(Config.DEBUG)
                 .build();
         Fabric.with(fabric);
+    }
+
+
+    private void configIconify() {
+        Iconify.with(new FontAwesomeModule());
     }
 }

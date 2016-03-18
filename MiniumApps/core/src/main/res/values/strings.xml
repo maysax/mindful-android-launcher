@@ -1,3 +1,47 @@
 <resources>
     <string name="app_name">Core</string>
+
+    <!-- errors -->
+    <string name="error.requiredField">This field is required</string>
+    <string name="error.invalidEmail">This email address is not valid</string>
+    <string name="error.invalidPassword">This password has to be at least 8 characters and can contain alpha-numeric characters and/or @#$%</string>
+    <string name="error.mismatchPassword">The passwords do not match</string>
+    <string name="error.incorrectCredential">Please check your user name and password and try again</string>
+    <string name="error.locationServiceUnavailable">Sorry, the service is not available</string>
+    <string name="error.locationInvalidLatlong">Invalid latitude or longitude used</string>
+    <string name="error.locationNoAddressFound">Sorry, no address found</string>
+    <string name="error.locationNoDataProvided">No location data provided</string>
+    <string name="error.connection">It appears that you are not connected with internet. Please make sure you have an active connection and try again.</string>
+    <string name="error.connectionLost">We have lost you. It appears that you are not connected with internet.</string>
+    <string name="error.genericServer">We are experiencing technical difficulties on our end. Please try again after some time.</string>
+    <string name="error.genericInternal">We are sorry. This feature is not available right now. Please try again later.</string>
+    <string name="error.externalStorageSpace">No external storage is available. Please make sure that external storage is mounted so that the app can work properly.</string>
+
+    <!-- messages -->
+    <string name="msg.not.yet.implemented">Not yet implemented</string>
+
+    <string-array name="appNames">
+        <item>Contacts</item>
+        <item>Messages</item>
+        <item>Focus</item>
+        <item>Clock</item>
+        <item>Call</item>
+        <item>Calculator</item>
+        <item>Notes</item>
+        <item>Favorites</item>
+        <item>Settings</item>
+    </string-array>
+
+    <string-array name="appNamesWithIcon">
+        <item>{fa-users 36dp}\n\nContacts</item>
+        <item>{fa-envelope-o 36dp}\n\nMessages</item>
+        <item>{fa-clock-o 36dp}\n\nFocus</item>
+        <item>{fa-clock-o 36dp}\n\nClock</item>
+        <item>{fa-phone 36dp}\n\nCall</item>
+        <item>{fa-calculator 36dp}\n\nCalculator</item>
+        <item>{fa-sticky-note-o 36dp}\n\nNotes</item>
+        <item>{fa-heart-o 36dp}\n\nFavorites</item>
+        <item>{fa-cogs 36dp}\n\nSettings</item>
+    </string-array>
+
 </resources>

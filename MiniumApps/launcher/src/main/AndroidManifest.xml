@@ -14,19 +14,32 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/CoreTheme">
 
         <!-- Fabric configuration -->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
 
-        <activity android:name=".ui.MainActivity_">
+        <activity android:name=".ui.MainActivity_"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.HOME"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".battery.BatteryChangeReceiver_">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
