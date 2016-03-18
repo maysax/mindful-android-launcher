@@ -52,10 +52,10 @@ project.ext {
     buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
 
     // Manifest version information!
-    versionMajor = 1
+    versionMajor = 0
     versionMinor = 0
     versionPatch = 0
-    versionBuild = 0 // bump for internal builds, public betas, etc.
+    versionBuild = 1 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {

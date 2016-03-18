@@ -35,21 +35,20 @@ public abstract class CoreApplication extends Application {
 
         sInstance = this;
 
-        Tracer.i("Version code: " + BuildConfig.VERSION_CODE);
-        Tracer.i("Version name: " + BuildConfig.VERSION_NAME);
-        Tracer.i("Build time: " + BuildConfig.BUILD_TIME);
-        Tracer.i("Application Id: " + BuildConfig.APPLICATION_ID);
-        Tracer.i("Build type: " + BuildConfig.BUILD_TYPE);
-        Tracer.i("Git SHA: " + BuildConfig.GIT_SHA);
-        Tracer.i("Debug? : " + BuildConfig.DEBUG);
+
 
         init();
     }
 
     protected void init() {
         // set initial configurations here
+        configTracer();
         configCalligraphy();
         configFabric();
+    }
+
+    private void configTracer() {
+        Tracer.init();
     }
 
     private void configCalligraphy() {

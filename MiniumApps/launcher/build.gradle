@@ -10,12 +10,8 @@ android {
         applicationId "minium.co.launcher"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionMajor * 10000
-        + rootProject.ext.versionMinor * 1000
-        + rootProject.ext.versionPatch * 100
-        + rootProject.ext.versionBuild
-
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        versionCode "${versionMajor}".toInteger() * 10000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
     }
     buildTypes {
         release {
