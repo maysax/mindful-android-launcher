@@ -7,7 +7,6 @@ import com.crashlytics.android.Crashlytics;
 import org.androidannotations.annotations.EApplication;
 
 import io.fabric.sdk.android.Fabric;
-import minium.co.core.BuildConfig;
 import minium.co.core.R;
 import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
@@ -34,8 +33,6 @@ public abstract class CoreApplication extends Application {
         super.onCreate();
 
         sInstance = this;
-
-
 
         init();
     }

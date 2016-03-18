@@ -10,7 +10,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionMajor * 10000 + rootProject.ext.versionMinor * 1000 + rootProject.ext.versionPatch * 100 + rootProject.ext.versionBuild
 
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
 
         buildConfigField "String", project.KEY_GIT_SHA, "\"${gitSha}\""
         buildConfigField "String", project.KEY_BUILD_TIME, "\"${buildTime}\""
