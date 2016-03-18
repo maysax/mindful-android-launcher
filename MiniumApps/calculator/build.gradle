@@ -10,11 +10,17 @@ android {
         applicationId "minium.co.calculator"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode "${versionMajor}".toInteger() * 10000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
     }
     buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
         release {
+            debuggable false
+            // RELEASE: true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -36,4 +42,11 @@ dependencies {
     compile project(':core')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
+}
+
+apt {
+    arguments {
+        // RELEASE: comment it out
+        trace 'true'
+    }
 }

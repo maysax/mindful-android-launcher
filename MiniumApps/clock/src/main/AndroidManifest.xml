@@ -1,8 +1,29 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="minium.co.clock">
 
-    <application android:allowBackup="true" android:icon="@mipmap/ic_launcher"
+    <!--
+    On SDK version 23 and up, your app data will be automatically backed up and restored on app install.
+    Consider adding the attribute `android:fullBackupContent` to specify an `@xml` resource
+    which configures which files to backup.
+    More info: https://developer.android.com/preview/backup/index.html
+    -->
+
+    <application
+        android:name=".app.App_"
+        android:allowBackup="true" android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name" android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Fabric configuration -->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
+
+        <activity android:name=".ui.MainActivity_">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
     </application>
 
