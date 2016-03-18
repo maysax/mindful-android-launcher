@@ -1,1 +1,7 @@
-include ':launcher', ':core'
+include ':launcher'
+include ':core'
+include ':calculator'
+include ':call'
+include ':clock'
+include ':contacts'
+include ':messages'
