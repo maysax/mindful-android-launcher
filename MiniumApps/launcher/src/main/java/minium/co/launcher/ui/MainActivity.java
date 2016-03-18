@@ -5,13 +5,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
 
-import de.greenrobot.event.Subscribe;
-import de.greenrobot.event.ThreadMode;
 import minium.co.core.config.Config;
 import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
 import minium.co.launcher.R;
-import minium.co.launcher.battery.BatteryChangeEvent;
 
 @Fullscreen
 @EActivity(R.layout.activity_main)
@@ -40,11 +36,5 @@ public class MainActivity extends CoreActivity {
     @Trace(tag = TRACE_TAG)
     void loadMainView() {
         loadFragment(MainFragment_.builder().build());
-    }
-
-    @Trace(tag = TRACE_TAG)
-    @Subscribe(threadMode = ThreadMode.MainThread)
-    public void onBatteryLevelChange(BatteryChangeEvent event) {
-        UIUtils.toast(this, "Battery level: " + event.getBatteryPct());
     }
 }

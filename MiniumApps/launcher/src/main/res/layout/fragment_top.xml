@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@color/black"
+    android:paddingLeft="@dimen/margin.1"
+    android:paddingRight="@dimen/margin.1"
     tools:context=".ui.TopFragment">
 
     <com.joanzapata.iconify.widget.IconTextView
@@ -29,7 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="@color/white"
-        android:gravity="end"
-        tools:text="{}"/>
+        android:gravity="end"/>
 
 </LinearLayout>

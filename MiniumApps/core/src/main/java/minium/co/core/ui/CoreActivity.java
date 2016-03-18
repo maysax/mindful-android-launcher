@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import org.androidannotations.annotations.EActivity;
 
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.R;
 import minium.co.core.helper.Validate;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -94,5 +95,8 @@ public class CoreActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Subscribe
+    public void genericEvent(Object event) {
+        // DO NOT code here, it is a generic catch event method
+    }
 }
