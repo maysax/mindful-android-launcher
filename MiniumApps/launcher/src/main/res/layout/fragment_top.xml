@@ -14,13 +14,14 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="@color/white"
+        android:drawablePadding="@dimen/margin.2"
+        android:paddingLeft="@dimen/margin.1"
         tools:text="CALL"/>
 
     <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/iTxt2"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:textColor="@color/white"
         android:gravity="center"
         tools:text="SELECT"/>
@@ -31,6 +32,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="@color/white"
+        android:drawablePadding="@dimen/margin.2"
+        android:paddingRight="@dimen/margin.1"
         android:gravity="end"/>
 
 </LinearLayout>
