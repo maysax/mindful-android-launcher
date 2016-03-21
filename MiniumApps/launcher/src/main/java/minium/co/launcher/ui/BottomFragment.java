@@ -11,6 +11,7 @@ import org.androidannotations.annotations.ViewById;
 
 import minium.co.core.util.UIUtils;
 import minium.co.launcher.R;
+import minium.co.launcher.helper.ActivityHelper;
 
 
 /**
@@ -40,8 +41,22 @@ public class BottomFragment extends Fragment {
         btn3.setText("MESSAGES");
     }
 
-    @Click({R.id.btn1, R.id.btn2, R.id.btn3})
-    void onClick() {
-        UIUtils.alert(getContext(), "No yet implemented");
+    @Click
+    void btn1() {
+        // opening dialer app
+        if (!new ActivityHelper(getContext()).openDialerApp())
+            UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+    }
+
+    @Click
+    void btn2() {
+        UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+    }
+
+    @Click
+    void btn3() {
+        // opening messages app
+        if (!new ActivityHelper(getContext()).openMessagingApp())
+            UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
     }
 }
