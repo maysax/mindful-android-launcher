@@ -45,9 +45,8 @@ public class BatteryChangeReceiver extends BroadcastReceiver {
 
         int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
         float batteryPct = level / (float)scale;
 
-        EventBus.getDefault().post(new BatteryChangeEvent(batteryPct));
+        EventBus.getDefault().post(new BatteryChangeEvent(level));
     }
 }

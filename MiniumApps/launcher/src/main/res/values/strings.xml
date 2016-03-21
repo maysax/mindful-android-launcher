@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Launcher</string>
 
-    <string name="format.battery">%1$s {fa-battery-full}</string>
+    <string name="format.battery">%1$d%%</string>
 </resources>

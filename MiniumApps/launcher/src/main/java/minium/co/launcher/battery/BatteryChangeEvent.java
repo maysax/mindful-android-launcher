@@ -5,13 +5,13 @@ package minium.co.launcher.battery;
  */
 public class BatteryChangeEvent {
 
-    private float batteryPct;
+    private int level;
 
-    public BatteryChangeEvent(float batteryPct) {
-        this.batteryPct = batteryPct;
+    public BatteryChangeEvent(int level) {
+        this.level = level;
     }
 
-    public float getBatteryPct() {
-        return batteryPct;
+    public int getLevel() {
+        return level;
     }
 }
