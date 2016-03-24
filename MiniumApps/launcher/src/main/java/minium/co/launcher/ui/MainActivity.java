@@ -10,6 +10,7 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
 
 import minium.co.core.config.Config;
+import minium.co.core.log.LogConfig;
 import minium.co.core.ui.CoreActivity;
 import minium.co.launcher.R;
 import minium.co.launcher.battery.BatteryChangeReceiver_;
@@ -18,7 +19,7 @@ import minium.co.launcher.battery.BatteryChangeReceiver_;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
 
-    private final String TRACE_TAG = Config.TRACE_TAG + "MainActivity";
+    private final String TRACE_TAG = LogConfig.TRACE_TAG + "MainActivity";
 
     @Trace(tag = TRACE_TAG)
     @AfterViews

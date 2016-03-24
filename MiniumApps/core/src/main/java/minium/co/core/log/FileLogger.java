@@ -116,7 +116,7 @@ public class FileLogger {
 
     public static void log(String message, Throwable tr) {
         LogFormatter.EclipseFormatter formatter = new LogFormatter.EclipseFormatter();
-        String formatMsg = formatter.format(LogFormatter.LEVEL.DEBUG, Config.LOG_TAG, message, tr);
+        String formatMsg = formatter.format(LogFormatter.LEVEL.DEBUG, LogConfig.LOG_TAG, message, tr);
         String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
         File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
         if (externalFilesDir != null) {

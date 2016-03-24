@@ -9,6 +9,7 @@ import org.androidannotations.annotations.Trace;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.config.Config;
+import minium.co.core.log.LogConfig;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,7 +17,7 @@ import minium.co.core.config.Config;
 @EFragment
 public abstract class CoreFragment extends Fragment {
 
-    protected final String TRACE_TAG = Config.TRACE_TAG + "MainFragment";
+    protected final String TRACE_TAG = LogConfig.TRACE_TAG + "MainFragment";
     protected CoreActivity context;
 
     public CoreFragment() {

@@ -12,7 +12,9 @@ import org.androidannotations.annotations.Trace;
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
 import minium.co.core.config.Config;
+import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.core.util.FontUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -25,7 +27,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 @EApplication
 public abstract class CoreApplication extends Application {
 
-    private final String TRACE_TAG = Config.TRACE_TAG + "CoreApplication";
+    private final String TRACE_TAG = LogConfig.TRACE_TAG + "CoreApplication";
 
     private static CoreApplication sInstance;
 
@@ -58,7 +60,7 @@ public abstract class CoreApplication extends Application {
     private void configCalligraphy() {
         CalligraphyConfig
                 .initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath(getString(Config.DEFAULT_FONT_PATH_RES))
+                        .setDefaultFontPath(getString(FontUtils.DEFAULT_FONT_PATH_RES))
                         .setFontAttrId(R.attr.fontPath)
                         .build());
     }
