@@ -48,6 +48,7 @@ public class TopFragment extends CoreFragment {
     };
 
     TelephonyManager telephonyManager;
+    SignalStrengthListener listener;
 
 
     public TopFragment() {
@@ -65,10 +66,17 @@ public class TopFragment extends CoreFragment {
         super.onStart();
         try {
             telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            telephonyManager.listen(new SignalStrengthListener(), PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+            listener = new SignalStrengthListener();
+            telephonyManager.listen(listener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        telephonyManager.listen(listener, PhoneStateListener.LISTEN_NONE);
     }
 
     @Trace(tag = TRACE_TAG)

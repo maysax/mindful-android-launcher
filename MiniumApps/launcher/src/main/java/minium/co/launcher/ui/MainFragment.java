@@ -85,57 +85,57 @@ public class MainFragment extends CoreFragment {
     @Click
     void ib00() {
         // opening contacts app
-        if (!new ActivityHelper(getContext()).openContactsApp())
-            UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        if (!new ActivityHelper(context).openContactsApp())
+            UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 
     @Click
     void ib01() {
         // opening messages app
-        if (!new ActivityHelper(getContext()).openMessagingApp())
-            UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        if (!new ActivityHelper(context).openMessagingApp())
+            UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 
     @Click
     void ib02() {
         // What is Focus app? I do not have any idea.
-        UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 
     @Click
     void ib10() {
         // opening clock app
-        UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 
     @Click
     void ib11() {
         // opening dialer app
-        if (!new ActivityHelper(getContext()).openDialerApp())
-            UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        if (!new ActivityHelper(context).openDialerApp())
+            UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 
     @Click
     void ib12() {
         // opening calculator app
-        if (!new ActivityHelper(getContext()).openCalculatorApp())
-            UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        if (!new ActivityHelper(context).openCalculatorApp())
+            UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 
     @Click
     void ib20() {
-        UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 
     @Click
     void ib21() {
-        UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 
     @Click
     void ib22() {
         // opening settings app
-        if (!new ActivityHelper(getContext()).openSettingsApp())
-            UIUtils.alert(getContext(), getString(R.string.msg_not_yet_implemented));
+        if (!new ActivityHelper(context).openSettingsApp())
+            UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
     }
 }
