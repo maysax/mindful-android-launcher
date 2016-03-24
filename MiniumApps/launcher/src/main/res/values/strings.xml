@@ -3,4 +3,8 @@
 
     <string name="format.battery">%1$d%%</string>
     <string name="format.signal">{fa-signal 16dp} %1$s %2$d%%</string>
+
+    <string name="label.call">CALL</string>
+    <string name="label.select">SELECT</string>
+    <string name="label.messages">Messages</string>
 </resources>

@@ -37,9 +37,9 @@ public class BottomFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        btn1.setText("CALL");
-        btn2.setText("SELECT");
-        btn3.setText("MESSAGES");
+        btn1.setText(R.string.label_call);
+        btn2.setText(R.string.label_select);
+        btn3.setText(R.string.label_messages);
     }
 
     @Click
