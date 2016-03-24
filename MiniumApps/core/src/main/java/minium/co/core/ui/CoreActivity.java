@@ -1,9 +1,9 @@
 package minium.co.core.ui;
 
+import android.app.Fragment;
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -50,7 +50,7 @@ public class CoreActivity extends AppCompatActivity {
     }
 
     public void loadFragment(Fragment fragment, int containerViewId) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         // clear back stack
         for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
             fragmentManager.popBackStack();
@@ -73,7 +73,7 @@ public class CoreActivity extends AppCompatActivity {
      */
     public void loadChildFragment(Fragment fragment) {
         Validate.notNull(fragment);
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.mainView, fragment, "main")
                 .addToBackStack(null)

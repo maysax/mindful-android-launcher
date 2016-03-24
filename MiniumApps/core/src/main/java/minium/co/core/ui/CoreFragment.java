@@ -1,7 +1,7 @@
 package minium.co.core.ui;
-
-
-import android.support.v4.app.Fragment;
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Trace;
@@ -17,10 +17,16 @@ import minium.co.core.config.Config;
 public abstract class CoreFragment extends Fragment {
 
     protected final String TRACE_TAG = Config.TRACE_TAG + "MainFragment";
-
+    protected CoreActivity context;
 
     public CoreFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = (CoreActivity) activity;
     }
 
     @Trace(tag = TRACE_TAG)

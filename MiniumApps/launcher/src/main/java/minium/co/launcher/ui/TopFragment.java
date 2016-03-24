@@ -2,7 +2,7 @@ package minium.co.launcher.ui;
 
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -21,7 +21,6 @@ import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
-import minium.co.core.util.UIUtils;
 import minium.co.launcher.R;
 import minium.co.launcher.battery.BatteryChangeEvent;
 
@@ -65,7 +64,7 @@ public class TopFragment extends CoreFragment {
     public void onStart() {
         super.onStart();
         try {
-            telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             telephonyManager.listen(new SignalStrengthListener(), PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
@@ -80,7 +79,7 @@ public class TopFragment extends CoreFragment {
 
     private void updateBatteryText(int level) {
         iTxt3.setText(getString(R.string.format_battery, level));
-        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(getContext(), getBatteryIcon(level)).colorRes(R.color.white).sizeDp(16), null);
+        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(level)).colorRes(R.color.white).sizeDp(16), null);
     }
 
     private Icon getBatteryIcon(int level) {
