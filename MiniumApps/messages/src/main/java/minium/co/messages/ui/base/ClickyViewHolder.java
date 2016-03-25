@@ -15,8 +15,9 @@ public abstract class ClickyViewHolder<DataType> extends RecyclerView.ViewHolder
     public DataType mData;
     public CoreActivity mContext;
 
-    public ClickyViewHolder(View itemView) {
+    public ClickyViewHolder(CoreActivity context, View itemView) {
         super(itemView);
+        this.mContext = context;
     }
 
     @Override
