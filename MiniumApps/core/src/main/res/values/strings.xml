@@ -20,6 +20,9 @@
     <!-- messages -->
     <string name="msg.not.yet.implemented">Not yet implemented</string>
 
+    <!-- Icons -->
+    <string name="ic_comment">{fa-comment 16sp}</string>
+
     <string-array name="appNames">
         <item>Contacts</item>
         <item>Messages</item>

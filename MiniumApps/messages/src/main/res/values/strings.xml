@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Messages</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint.no.messages">No messages yet.</string>
 </resources>
