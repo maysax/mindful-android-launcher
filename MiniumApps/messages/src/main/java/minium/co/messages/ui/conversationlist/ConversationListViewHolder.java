@@ -16,6 +16,7 @@ import minium.co.messages.ui.base.ClickyViewHolder;
 
 public class ConversationListViewHolder extends ClickyViewHolder<Conversation> implements Contact.UpdateListener {
 
+    protected View root;
     protected ImageView selected;
     protected TextView txtName;
     protected TextView txtDate;

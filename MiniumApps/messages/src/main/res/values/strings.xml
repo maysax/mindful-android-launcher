@@ -12,4 +12,7 @@
 
     <!-- Subject to display in the conversation list if there is no subject -->
     <string name="placeholder.no.subject">(No subject)</string>
+
+    <string name="date.yesterday">Yesterday</string>
+    <string name="date.just.now">Just now</string>
 </resources>

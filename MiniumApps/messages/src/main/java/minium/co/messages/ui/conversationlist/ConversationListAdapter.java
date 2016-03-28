@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import minium.co.core.log.LogConfig;
 import minium.co.core.ui.CoreActivity;
 import minium.co.messages.R;
+import minium.co.messages.common.util.DateFormatter;
+import minium.co.messages.data.Contact;
 import minium.co.messages.data.Conversation;
 import minium.co.messages.ui.base.RecyclerCursorAdapter;
 
@@ -42,11 +44,35 @@ public class ConversationListAdapter  extends RecyclerCursorAdapter<Conversation
 
     @Override
     public void onBindViewHolder(ConversationListViewHolder holder, int position) {
+        final Conversation conversation = getItem(position);
 
-    }
+        holder.mData = conversation;
+        holder.mContext = mContext;
+        holder.mClickListener = mItemClickListener;
+        holder.root.setOnClickListener(holder);
 
-    @Override
-    public int getItemCount() {
-        return 0;
+        holder.badgeMuted.setVisibility(View.VISIBLE);
+
+        holder.badgeError.setVisibility(View.VISIBLE);
+
+        final boolean hasUnreadMessages = conversation.hasUnreadMessages();
+        if (hasUnreadMessages) {
+            holder.badgeUnread.setVisibility(View.VISIBLE);
+            holder.txtMsg.setMaxLines(5);
+        } else {
+            holder.badgeUnread.setVisibility(View.GONE);
+            holder.txtMsg.setMaxLines(1);
+        }
+
+        // Date
+        holder.txtDate.setText(DateFormatter.getConversationTimestamp(mContext, conversation.getDate()));
+
+        // Subject
+        holder.txtMsg.setText(conversation.getSnippet());
+
+        Contact.addListener(holder);
+
+        // Update the avatar and name
+        /* SKIP holder.onUpdate(conversation.getRecipients().size() == 1 ? conversation.getRecipients().get(0) : null); */
     }
 }

@@ -278,4 +278,29 @@ public class Conversation {
 
         Tracer.d("fillFromCursor: conv=" + conv + ", recipientIds=" + recipientIds);
     }
+
+    /**
+     * Returns true if there are any unread messages in the conversation.
+     */
+    public boolean hasUnreadMessages() {
+        synchronized (this) {
+            return mHasUnreadMessages;
+        }
+    }
+
+    /**
+     * Returns the time of the last update to this conversation in milliseconds,
+     * on the {@link System#currentTimeMillis} timebase.
+     */
+    public synchronized long getDate() {
+        return mDate;
+    }
+
+    /**
+     * Returns a snippet of text from the most recent message in the conversation.
+     */
+    public synchronized String getSnippet() {
+        return mSnippet;
+    }
+
 }

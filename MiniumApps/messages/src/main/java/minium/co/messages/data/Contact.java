@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import minium.co.core.log.Tracer;
 
@@ -31,6 +32,14 @@ public class Contact {
     private boolean mQueryPending;
 
     private long mRecipientId;       // used to find the Recipient cache entry
+
+    private final static HashSet<UpdateListener> mListeners = new HashSet<>();
+
+    public static void addListener(UpdateListener l) {
+        synchronized (mListeners) {
+            mListeners.add(l);
+        }
+    }
 
     public interface UpdateListener {
         public void onUpdate(Contact updated);
@@ -141,6 +150,8 @@ public class Contact {
 
         private final HashMap<String, ArrayList<Contact>> mContactsHash = new HashMap<>();
 
+        private final static HashSet<UpdateListener> mListeners = new HashSet<>();
+
         private ContactsCache(Context context) {
             mContext = context;
         }
@@ -154,6 +165,12 @@ public class Contact {
                         Tracer.d(key + " ==> " + c.toString());
                     }
                 }
+            }
+        }
+
+        public static void addListener(UpdateListener l) {
+            synchronized (mListeners) {
+                mListeners.add(l);
             }
         }
 
