@@ -36,6 +36,10 @@ public abstract class RecyclerCursorAdapter<VH extends RecyclerView.ViewHolder, 
         return mCursor;
     }
 
+    public void setItemClickListener(ItemClickListener<DataType> conversationClickListener) {
+        mItemClickListener = conversationClickListener;
+    }
+
     public int getCount() {
         return mCursor == null ? 0 : mCursor.getCount();
     }
@@ -43,5 +47,25 @@ public abstract class RecyclerCursorAdapter<VH extends RecyclerView.ViewHolder, 
     @Override
     public int getItemCount() {
         return CursorUtils.isValid(mCursor) ? mCursor.getCount() : 0;
+    }
+
+    public void changeCursor(Cursor cursor) {
+        Cursor old = swapCursor(cursor);
+        if (old != null) {
+            old.close();
+        }
+    }
+
+    private Cursor swapCursor(Cursor cursor) {
+        if (mCursor == cursor) {
+            return null;
+        }
+
+        Cursor oldCursor = mCursor;
+        mCursor = cursor;
+        if (cursor != null) {
+            notifyDataSetChanged();
+        }
+        return oldCursor;
     }
 }

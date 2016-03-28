@@ -2,6 +2,7 @@ package minium.co.messages.transaction;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.google.android.mms.pdu_alt.CharacterSets;
@@ -12,6 +13,15 @@ import com.google.android.mms.pdu_alt.PduPersister;
  * Created by shahab on 3/25/16.
  */
 public class SmsHelper {
+
+    public static final Uri SMS_CONTENT_PROVIDER = Uri.parse("content://sms/");
+    public static final Uri MMS_CONTENT_PROVIDER = Uri.parse("content://mms/");
+    public static final Uri SENT_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/sent");
+    public static final Uri DRAFTS_CONTENT_PROVIDER = Uri.parse("content://sms/draft");
+    public static final Uri PENDING_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/outbox");
+    public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
+    public static final Uri CONVERSATIONS_CONTENT_PROVIDER = Uri.parse("content://mms-sms/conversations?simple=true");
+    public static final Uri ADDRESSES_CONTENT_PROVIDER = Uri.parse("content://mms-sms/canonical-addresses");
 
     private static String[] sNoSubjectStrings;
 

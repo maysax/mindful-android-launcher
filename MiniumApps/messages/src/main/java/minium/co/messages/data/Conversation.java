@@ -2,6 +2,7 @@ package minium.co.messages.data;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.provider.Telephony;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -21,6 +22,12 @@ import minium.co.messages.transaction.SmsHelper;
 public class Conversation {
 
     protected final String TRACE_TAG = LogConfig.TRACE_TAG + "Conversation";
+
+    public static final String[] ALL_THREADS_PROJECTION = {
+            Telephony.Threads._ID, Telephony.Threads.DATE, Telephony.Threads.MESSAGE_COUNT, Telephony.Threads.RECIPIENT_IDS,
+            Telephony.Threads.SNIPPET, Telephony.Threads.SNIPPET_CHARSET, Telephony.Threads.READ, Telephony.Threads.ERROR,
+            Telephony.Threads.HAS_ATTACHMENT
+    };
 
     public static final int ID = 0;
     public static final int DATE = 1;
