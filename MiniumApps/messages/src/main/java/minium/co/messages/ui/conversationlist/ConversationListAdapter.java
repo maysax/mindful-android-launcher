@@ -21,6 +21,11 @@ public class ConversationListAdapter  extends RecyclerCursorAdapter<Conversation
         super(context);
     }
 
+    protected Conversation getItem(int position) {
+        mCursor.moveToPosition(position);
+        return Conversation.from(mContext, mCursor);
+    }
+
     @Override
     public ConversationListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);

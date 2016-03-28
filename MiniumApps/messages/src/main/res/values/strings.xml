@@ -2,4 +2,14 @@
     <string name="app_name">Messages</string>
 
     <string name="hint.no.messages">No messages yet.</string>
+
+    <!-- String to match as no subject and filter out as a subject. For example, if the
+     subject string is "no subject", we won't display that. We'll pretend
+     no subject string was delivered. -->
+<!--<string-array name="empty.subject.strings">-->
+        <!--<item>no subject</item>-->
+    <!--</string-array>-->
+
+    <!-- Subject to display in the conversation list if there is no subject -->
+    <string name="placeholder.no.subject">(No subject)</string>
 </resources>
