@@ -34,11 +34,12 @@ public class SmsHelper {
      * @return
      */
     public static String cleanseMmsSubject(Context context, String subject) {
+        /*SKIP
         if (TextUtils.isEmpty(subject)) {
             return subject;
         }
         if (sNoSubjectStrings == null) {
-            /*SKIP sNoSubjectStrings = context.getResources().getStringArray(R.array.empty_subject_strings); */
+            sNoSubjectStrings = context.getResources().getStringArray(R.array.empty_subject_strings);
         }
 
         final int len = sNoSubjectStrings.length;
@@ -46,7 +47,7 @@ public class SmsHelper {
             if (subject.equalsIgnoreCase(sNoSubjectStrings[i])) {
                 return null;
             }
-        }
+        }*/
         return subject;
     }
 

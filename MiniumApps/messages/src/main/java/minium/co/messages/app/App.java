@@ -5,9 +5,10 @@ import org.androidannotations.annotations.Trace;
 
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
-import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.messages.data.Contact;
+import minium.co.messages.data.Conversation;
 
 /**
  * Concrete implementation of {@link CoreApplication}
@@ -32,5 +33,8 @@ public class App extends CoreApplication {
                 + " || Build time:  " + BuildConfig.BUILD_TIME
                 + " || Build flavor: " + minium.co.messages.BuildConfig.FLAVOR
                 + " || Build type: " + minium.co.messages.BuildConfig.BUILD_TYPE);
+
+        Contact.init(this);
+        Conversation.init(this);
     }
 }

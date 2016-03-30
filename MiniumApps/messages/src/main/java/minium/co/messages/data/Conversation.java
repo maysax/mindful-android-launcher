@@ -2,6 +2,7 @@ package minium.co.messages.data;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.Telephony;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +23,9 @@ import minium.co.messages.transaction.SmsHelper;
 public class Conversation {
 
     protected final String TRACE_TAG = LogConfig.TRACE_TAG + "Conversation";
+
+    public static final Uri sAllThreadsUri =
+            Telephony.Threads.CONTENT_URI.buildUpon().appendQueryParameter("simple", "true").build();
 
     public static final String[] ALL_THREADS_PROJECTION = {
             Telephony.Threads._ID, Telephony.Threads.DATE, Telephony.Threads.MESSAGE_COUNT, Telephony.Threads.RECIPIENT_IDS,
@@ -55,6 +59,8 @@ public class Conversation {
     private boolean mHasError;          // True if any message is in an error state.
     private boolean mIsChecked;         // True if user has selected the conversation for a
     // multi-operation such as delete.
+
+    private static boolean sLoadingThreads;
 
     private Conversation(Context context) {
         mContext = context;
@@ -310,4 +316,84 @@ public class Conversation {
         return mSnippet;
     }
 
+    /**
+     * Set up the conversation cache.  To be called once at application
+     * startup time.
+     */
+    public static void init(final Context context) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cacheAllThreads(context);
+            }
+        }, "Conversation.init");
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+    }
+
+    private static void cacheAllThreads(Context context) {
+        Tracer.d("[Conversation] cacheAllThreads: begin");
+        synchronized (Cache.getInstance()) {
+            if (sLoadingThreads) {
+                return;
+            }
+            sLoadingThreads = true;
+        }
+
+        // Keep track of what threads are now on disk so we
+        // can discard anything removed from the cache.
+        HashSet<Long> threadsOnDisk = new HashSet<>();
+
+        // Query for all conversations.
+        Cursor c = context.getContentResolver().query(sAllThreadsUri,
+                ALL_THREADS_PROJECTION, null, null, null);
+        try {
+            if (c != null) {
+                while (c.moveToNext()) {
+                    long threadId = c.getLong(ID);
+                    threadsOnDisk.add(threadId);
+
+                    // Try to find this thread ID in the cache.
+                    Conversation conv;
+                    synchronized (Cache.getInstance()) {
+                        conv = Cache.get(threadId);
+                    }
+
+                    if (conv == null) {
+                        // Make a new Conversation and put it in
+                        // the cache if necessary.
+                        conv = new Conversation(context, c, true);
+                        try {
+                            synchronized (Cache.getInstance()) {
+                                Cache.put(conv);
+                            }
+                        } catch (IllegalStateException e) {
+                            Tracer.e("Tried to add duplicate Conversation to Cache" + " for threadId: " + threadId + " new conv: " + conv);
+                            if (!Cache.replace(conv)) {
+                                Tracer.e("cacheAllThreads cache.replace failed on " + conv);
+                            }
+                        }
+                    } else {
+                        // Or update in place so people with references
+                        // to conversations get updated too.
+                        fillFromCursor(context, conv, c, true);
+                    }
+                }
+            }
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+            synchronized (Cache.getInstance()) {
+                sLoadingThreads = false;
+            }
+        }
+
+        // Purge the cache of threads that no longer exist on disk.
+        Cache.keepOnly(threadsOnDisk);
+
+        Tracer.d("[Conversation] cacheAllThreads: finished");
+        if (Config.DEBUG) Cache.dumpCache();
+
+    }
 }

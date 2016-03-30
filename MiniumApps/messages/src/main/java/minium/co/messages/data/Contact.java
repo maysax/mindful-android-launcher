@@ -41,6 +41,24 @@ public class Contact {
         }
     }
 
+    public static void init(final Context context) {
+        if (sContactCache != null) { // Stop previous Runnable
+            sContactCache.mTaskQueue.mWorkerThread.interrupt();
+        }
+        sContactCache = new ContactsCache(context);
+
+        RecipientIdCache.init(context);
+
+        // it maybe too aggressive to listen for *any* contact changes, and rebuild MMS contact
+        // cache each time that occurs. Unless we can get targeted updates for the contacts we
+        // care about(which probably won't happen for a long time), we probably should just
+        // invalidate cache peoridically, or surgically.
+        /*
+        context.getContentResolver().registerContentObserver(
+                Contacts.CONTENT_URI, true, sContactsObserver);
+        */
+    }
+
     public interface UpdateListener {
         public void onUpdate(Contact updated);
     }
