@@ -22,4 +22,6 @@
     <string name="has_draft">Draft</string>
     <!-- In conversation list items, this is the separator between a contact's name and the draft stamp [CHAR LIMIT=5] -->
     <string name="draft_separator">,\u0020</string>
+    <!-- Name of the local user when displaying sender of an outgoing message (personal pronoun) -->
+    <string name="messagelist_sender_self">Me</string>
 </resources>

@@ -1,19 +1,26 @@
 package minium.co.messages.data;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SqliteWrapper;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.nio.CharBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
 import minium.co.core.log.Tracer;
+import minium.co.messages.R;
 import minium.co.messages.app.App;
+import minium.co.messages.app.App_;
+import minium.co.messages.common.util.IOUtils;
 import minium.co.messages.transaction.SmsHelper;
 
 /**
@@ -59,6 +66,22 @@ public class Contact {
     public static void addListener(UpdateListener l) {
         synchronized (mListeners) {
             mListeners.add(l);
+        }
+    }
+
+    public static void removeListener(UpdateListener l) {
+        synchronized (mListeners) {
+            mListeners.remove(l);
+        }
+    }
+
+    public static void dumpListeners() {
+        synchronized (mListeners) {
+            int i = 0;
+            Tracer.i("[Contact] dumpListeners; size=" + mListeners.size());
+            for (UpdateListener listener : mListeners) {
+                Tracer.i("["+ (i++) + "]" + listener);
+            }
         }
     }
 
@@ -111,6 +134,16 @@ public class Contact {
         mSendToVoicemail = false;
     }
 
+    @Override
+    public String toString() {
+        return String.format("{ number=%s, name=%s, nameAndNumber=%s, label=%s, person_id=%d, hash=%d method_id=%d }",
+                (mNumber != null ? mNumber : "null"),
+                (mName != null ? mName : "null"),
+                (mNameAndNumber != null ? mNameAndNumber : "null"),
+                (mLabel != null ? mLabel : "null"),
+                mPersonId, hashCode(),
+                mContactMethodId);
+    }
 
     public static Contact get(String number, boolean canBlock) {
         return sContactCache.get(number, canBlock);
@@ -386,15 +419,14 @@ public class Contact {
                     contact.mIsStale = false;
 
 
-                    Tracer.v("async update for " + contact.toString() + " canBlock: " + canBlock +
-                                " isStale: " + contact.mIsStale);
+                    Tracer.v("async update for " + contact.toString() + " canBlock: " + canBlock + " isStale: " + contact.mIsStale);
 
 
                     final Contact c = contact;
                     r = new Runnable() {
                         @Override
                         public void run() {
-                            // SKIP: updateContact(c);
+                            updateContact(c);
                         }
                     };
 
@@ -473,7 +505,7 @@ public class Contact {
         }*/
 
 
-        /* SKIP
+
         private boolean contactChanged(Contact orig, Contact newContactData) {
             // The phone number should never change, so don't bother checking.
             // TODO: Maybe update it if it has gotten longer, i.e. 650-234-5678 -> +16502345678?
@@ -488,16 +520,12 @@ public class Contact {
             }
 
             if (orig.mPersonId != newContactData.mPersonId) {
-                if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                    Tracer.d("person id changed");
-                }
+                Tracer.d("person id changed");
                 return true;
             }
 
             if (orig.mPresenceResId != newContactData.mPresenceResId) {
-                if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                    Tracer.d("presence changed");
-                }
+                Tracer.d("presence changed");
                 return true;
             }
 
@@ -505,35 +533,29 @@ public class Contact {
                 return true;
             }
 
-            String oldName = emptyIfNull(orig.mName);
-            String newName = emptyIfNull(newContactData.mName);
+            String oldName = IOUtils.emptyIfNull(orig.mName);
+            String newName = IOUtils.emptyIfNull(newContactData.mName);
             if (!oldName.equals(newName)) {
-                if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                    Tracer.d(String.format("name changed: %s -> %s", oldName, newName));
-                }
+                Tracer.d(String.format("name changed: %s -> %s", oldName, newName));
                 return true;
             }
 
-            String oldLabel = emptyIfNull(orig.mLabel);
-            String newLabel = emptyIfNull(newContactData.mLabel);
+            String oldLabel = IOUtils.emptyIfNull(orig.mLabel);
+            String newLabel = IOUtils.emptyIfNull(newContactData.mLabel);
             if (!oldLabel.equals(newLabel)) {
-                if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                    Tracer.d(String.format("label changed: %s -> %s", oldLabel, newLabel));
-                }
+                Tracer.d(String.format("label changed: %s -> %s", oldLabel, newLabel));
                 return true;
             }
 
             if (!Arrays.equals(orig.mAvatarData, newContactData.mAvatarData)) {
-                if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                    Tracer.d("avatar changed");
-                }
+                Tracer.d("avatar changed");
                 return true;
             }
 
             return false;
-        }*/
+        }
 
-        /* SKIP
+
         private void updateContact(final Contact c) {
             if (c == null) {
                 return;
@@ -542,9 +564,8 @@ public class Contact {
             Contact entry = getContactInfo(c);
             synchronized (c) {
                 if (contactChanged(c, entry)) {
-                    if (Log.isLoggable(LogTag.APP, Log.VERBOSE)) {
-                        log("updateContact: contact changed for " + entry.mName);
-                    }
+                    Tracer.v("updateContact: contact changed for " + entry.mName);
+
 
                     c.mNumber = entry.mNumber;
                     c.mLabel = entry.mLabel;
@@ -576,9 +597,8 @@ public class Contact {
                             iterator = (HashSet<UpdateListener>)Contact.mListeners.clone();
                         }
                         for (UpdateListener l : iterator) {
-                            if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                                Tracer.d("updating " + l);
-                            }
+                            Tracer.d("updating " + l);
+
                             l.onUpdate(c);
                         }
                     }
@@ -588,13 +608,12 @@ public class Contact {
                     c.notifyAll();
                 }
             }
-        }*/
+        }
 
 
         /**
          * Returns the caller info in Contact.
          */
-        /* SKIP
         private Contact getContactInfo(Contact c) {
             if (c.mIsMe) {
                 return getContactInfoForSelf();
@@ -613,7 +632,7 @@ public class Contact {
                 final String strippedNumber = android.telephony.PhoneNumberUtils.stripSeparators(c.mNumber);
                 return getContactInfoForPhoneNumber(strippedNumber);
             }
-        } */
+        }
 
         // Some received sms's have addresses such as "OakfieldCPS" or "T-Mobile". This
         // function will attempt to identify these and return true. If the number contains
@@ -629,7 +648,7 @@ public class Contact {
         //    "#4#5#6#"  -> true   [it is considered to be the address "#4#5#6#"]
         //    "AB12"     -> true   [2 digits, it is considered to be the address "AB12"]
         //    "12"       -> true   [2 digits, it is considered to be the address "12"]
-        /* SKIP
+
         private boolean isAlphaNumber(String number) {
             // TODO: PhoneNumberUtils.isWellFormedSmsAddress() only check if the number is a valid
             // GSM SMS address. If the address contains a dialable char, it considers it a well
@@ -649,27 +668,27 @@ public class Contact {
             // At this point, anything like "Mobile1" or "Dogs77" will be stripped down to
             // "1" and "77". "#4#5#6#" remains as "#4#5#6#" at this point.
             return number.length() < 3;
-        } */
+        }
 
         /**
          * Queries the caller id info with the phone number.
          * @return a Contact containing the caller id info corresponding to the number.
          */
-        /* SKIP
+
         private Contact getContactInfoForPhoneNumber(String number) {
             Contact entry = new Contact(number);
             entry.mContactMethodType = CONTACT_METHOD_TYPE_PHONE;
 
-            if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                log("queryContactInfoByNumber: number=" + number);
-            }
+
+            Tracer.d("queryContactInfoByNumber: number=" + number);
+
 
             String normalizedNumber = PhoneNumberUtils.normalizeNumber(number);
             String minMatch = android.telephony.PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
             if (!TextUtils.isEmpty(normalizedNumber) && !TextUtils.isEmpty(minMatch)) {
                 String numberLen = String.valueOf(normalizedNumber.length());
                 String numberE164 = PhoneNumberUtils.formatNumberToE164(
-                        number, QKSMSApp.getApplication().getCurrentCountryIso());
+                        number, App_.getInstance().getCurrentCountryIso());
                 String selection;
                 String[] args;
                 if (TextUtils.isEmpty(numberE164)) {
@@ -698,19 +717,19 @@ public class Contact {
                 }
             }
             return entry;
-        }*/
+        }
 
         /**
          * @return a Contact containing the info for the profile.
          */
-        /* SKIP
+
         private Contact getContactInfoForSelf() {
             Contact entry = new Contact(true);
             entry.mContactMethodType = CONTACT_METHOD_TYPE_SELF;
 
-            if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                log("getContactInfoForSelf");
-            }
+
+            Tracer.d("getContactInfoForSelf");
+
             Cursor cursor = mContext.getContentResolver().query(
                     ContactsContract.Profile.CONTENT_URI, SELF_PROJECTION, null, null, null);
             if (cursor == null) {
@@ -727,9 +746,8 @@ public class Contact {
                 cursor.close();
             }
             return entry;
-        }*/
+        }
 
-        /* SKIP
         private void fillPhoneTypeContact(final Contact contact, final Cursor cursor) {
             synchronized (contact) {
                 contact.mContactMethodType = CONTACT_METHOD_TYPE_PHONE;
@@ -742,37 +760,33 @@ public class Contact {
                 contact.mPresenceText = cursor.getString(CONTACT_STATUS_COLUMN);
                 contact.mNumberE164 = cursor.getString(PHONE_NORMALIZED_NUMBER);
                 contact.mSendToVoicemail = cursor.getInt(SEND_TO_VOICEMAIL) == 1;
-                if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                    log("fillPhoneTypeContact: name=" + contact.mName + ", number="
-                            + contact.mNumber + ", presence=" + contact.mPresenceResId
-                            + " SendToVoicemail: " + contact.mSendToVoicemail);
-                }
+                Tracer.d("fillPhoneTypeContact: name=" + contact.mName + ", number=" + contact.mNumber + ", presence=" + contact.mPresenceResId + " SendToVoicemail: " + contact.mSendToVoicemail);
+
             }
-            byte[] data = loadAvatarData(contact);
+/* SKIP            byte[] data = loadAvatarData(contact);
 
             synchronized (contact) {
                 contact.mAvatarData = data;
-            }
-        }*/
+            }*/
+        }
 
-        /* SKIP
+
         private void fillSelfContact(final Contact contact, final Cursor cursor) {
             synchronized (contact) {
                 contact.mName = cursor.getString(SELF_NAME_COLUMN);
                 if (TextUtils.isEmpty(contact.mName)) {
                     contact.mName = mContext.getString(R.string.messagelist_sender_self);
                 }
-                if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                    log("fillSelfContact: name=" + contact.mName + ", number="
-                            + contact.mNumber);
-                }
+
+                Tracer.d("fillSelfContact: name=" + contact.mName + ", number=" + contact.mNumber);
+
             }
-            byte[] data = loadAvatarData(contact);
+/* SKIP            byte[] data = loadAvatarData(contact);
 
             synchronized (contact) {
                 contact.mAvatarData = data;
-            }
-        }*/
+            }*/
+        }
         /*
          * Load the avatar data from the cursor into memory.  Don't decode the data
          * until someone calls for it (see getAvatar).  Hang onto the raw data so that
@@ -832,7 +846,7 @@ public class Contact {
         /**
          * Query the contact email table to get the name of an email address.
          */
-        /* SKIP
+
         private Contact getContactInfoForEmailAddress(String email) {
             Contact entry = new Contact(email);
             entry.mContactMethodType = CONTACT_METHOD_TYPE_EMAIL;
@@ -841,7 +855,7 @@ public class Contact {
                     EMAIL_WITH_PRESENCE_URI,
                     EMAIL_PROJECTION,
                     EMAIL_SELECTION,
-                    new String[] { email },
+                    new String[]{email},
                     null);
 
             if (cursor != null) {
@@ -862,20 +876,19 @@ public class Contact {
                             }
                             if (!TextUtils.isEmpty(name)) {
                                 entry.mName = name;
-                                if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
-                                    log("getContactInfoForEmailAddress: name=" + entry.mName +
+                                Tracer.d("getContactInfoForEmailAddress: name=" + entry.mName +
                                             ", email=" + email + ", presence=" +
                                             entry.mPresenceResId);
-                                }
+
                                 found = true;
                             }
                         }
 
                         if (found) {
-                            byte[] data = loadAvatarData(entry);
+/* SKIP                            byte[] data = loadAvatarData(entry);
                             synchronized (entry) {
                                 entry.mAvatarData = data;
-                            }
+                            }*/
 
                             break;
                         }
@@ -885,7 +898,7 @@ public class Contact {
                 }
             }
             return entry;
-        } */
+        }
 
         // Invert and truncate to five characters the phoneNumber so that we
         // can use it as the key in a hashtable.  We keep a mapping of this

@@ -2,6 +2,7 @@
     package="minium.co.messages">
 
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <!--
     On SDK version 23 and up, your app data will be automatically backed up and restored on app install.
