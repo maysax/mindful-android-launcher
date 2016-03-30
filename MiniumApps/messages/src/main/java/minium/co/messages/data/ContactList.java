@@ -24,4 +24,13 @@ public class ContactList extends ArrayList<Contact> {
         }
         return list;
     }
+
+    public String formatNames(String separator) {
+        String[] names = new String[size()];
+        int i = 0;
+        for (Contact c : this) {
+            names[i++] = c.getName();
+        }
+        return TextUtils.join(separator, names);
+    }
 }

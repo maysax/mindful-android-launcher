@@ -73,6 +73,6 @@ public class ConversationListAdapter  extends RecyclerCursorAdapter<Conversation
         Contact.addListener(holder);
 
         // Update the avatar and name
-        /* SKIP holder.onUpdate(conversation.getRecipients().size() == 1 ? conversation.getRecipients().get(0) : null); */
+        holder.onUpdate(conversation.getRecipients().size() == 1 ? conversation.getRecipients().get(0) : null);
     }
 }

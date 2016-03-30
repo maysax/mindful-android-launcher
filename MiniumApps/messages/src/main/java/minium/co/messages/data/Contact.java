@@ -160,6 +160,18 @@ public class Contact {
         }
     }
 
+    public synchronized String getName() {
+        if (TextUtils.isEmpty(mName)) {
+            return mNumber;
+        } else {
+            return mName;
+        }
+    }
+
+    public synchronized boolean existsInDatabase() {
+        return (mPersonId > 0);
+    }
+
 
     public synchronized void setRecipientId(long id) {
         mRecipientId = id;

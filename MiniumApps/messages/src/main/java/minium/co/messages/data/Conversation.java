@@ -119,6 +119,15 @@ public class Conversation {
     }
 
     /**
+     * Returns the number of messages in this conversation, excluding the draft
+     * (if it exists).
+     */
+    public synchronized int getMessageCount() {
+        return mMessageCount;
+    }
+
+
+    /**
      * Private cache for the use of the various forms of Conversation.get.
      */
     private static class Cache {
@@ -395,5 +404,12 @@ public class Conversation {
         Tracer.d("[Conversation] cacheAllThreads: finished");
         if (Config.DEBUG) Cache.dumpCache();
 
+    }
+
+    /**
+     * Returns the recipient set of this conversation.
+     */
+    public synchronized ContactList getRecipients() {
+        return mRecipients;
     }
 }

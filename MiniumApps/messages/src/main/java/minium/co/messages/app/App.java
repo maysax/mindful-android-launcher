@@ -11,6 +11,7 @@ import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.messages.common.google.DraftCache;
 import minium.co.messages.data.Contact;
 import minium.co.messages.data.Conversation;
 
@@ -42,6 +43,7 @@ public class App extends CoreApplication {
                 + " || Build type: " + minium.co.messages.BuildConfig.BUILD_TYPE);
 
         Contact.init(this);
+        DraftCache.init(this);
         Conversation.init(this);
     }
 
