@@ -13,6 +13,7 @@ import android.view.View;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
 import minium.co.core.log.LogConfig;
@@ -100,6 +101,7 @@ implements RecyclerCursorAdapter.ItemClickListener<Conversation>, LoaderManager.
         return new CursorLoader(context, SmsHelper.CONVERSATIONS_CONTENT_PROVIDER, Conversation.ALL_THREADS_PROJECTION, null, null, "date DESC");
     }
 
+    @Trace(tag = TRACE_TAG)
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (mAdapter != null) {
             // Swap the new cursor in.  (The framework will take care of closing the, old cursor once we return.)

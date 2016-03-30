@@ -21,7 +21,7 @@
     <string name="msg.not.yet.implemented">Not yet implemented</string>
 
     <!-- Icons -->
-    <string name="ic_comment">{fa-comment 16sp}</string>
+    <string name="ic_comment">{fa-comment 48sp}</string>
 
     <string-array name="appNames">
         <item>Contacts</item>

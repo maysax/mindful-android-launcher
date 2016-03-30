@@ -14,11 +14,12 @@
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="32dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:background="@color/material.core.amber">
 
         <com.joanzapata.iconify.widget.IconTextView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/ic_comment" />
 
         <TextView
