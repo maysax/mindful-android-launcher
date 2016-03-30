@@ -1,7 +1,11 @@
 package minium.co.messages.app;
 
+import android.location.Country;
+
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.Trace;
+
+import java.util.Locale;
 
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
@@ -21,6 +25,9 @@ public class App extends CoreApplication {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "App";
 
+    private String mCountryIso;
+
+
     @Trace(tag = TRACE_TAG)
     @Override
     public void onCreate() {
@@ -36,5 +43,14 @@ public class App extends CoreApplication {
 
         Contact.init(this);
         Conversation.init(this);
+    }
+
+    // This function CAN return null.
+    public String getCurrentCountryIso() {
+        if (mCountryIso == null) {
+            Country country = new Country(Locale.getDefault().getCountry(), Country.COUNTRY_SOURCE_LOCALE);
+            mCountryIso = country.getCountryIso();
+        }
+        return mCountryIso;
     }
 }

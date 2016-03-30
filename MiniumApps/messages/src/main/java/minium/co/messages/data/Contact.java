@@ -1,8 +1,10 @@
 package minium.co.messages.data;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 import java.nio.CharBuffer;
@@ -11,6 +13,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import minium.co.core.log.Tracer;
+import minium.co.messages.app.App;
+import minium.co.messages.transaction.SmsHelper;
 
 /**
  * Created by shahab on 3/25/16.
@@ -28,12 +32,29 @@ public class Contact {
     private static ContactsCache sContactCache;
     private static final String SELF_ITEM_KEY = "Self_Item_Key";
 
+    private long mRecipientId;       // used to find the Recipient cache entry
+    private String mLabel;
+    private long mPersonId;
+    private int mPresenceResId;      // TODO: make this a state instead of a res ID
+    private String mPresenceText;
+    private BitmapDrawable mAvatar;
+    private byte [] mAvatarData;
     private boolean mIsStale;
     private boolean mQueryPending;
-
-    private long mRecipientId;       // used to find the Recipient cache entry
+    private boolean mIsMe;          // true if this contact is me!
+    private boolean mSendToVoicemail;   // true if this contact should not put up notification
 
     private final static HashSet<UpdateListener> mListeners = new HashSet<>();
+
+    private long mContactMethodId;   // Id in phone or email Uri returned by provider of current
+    // Contact, -1 is invalid. e.g. contact method id is 20 when
+    // current contact has phone content://.../phones/20.
+    private int mContactMethodType;
+    private String mNumber;
+    private String mNumberE164;
+    private String mName;
+    private String mNameAndNumber;   // for display, e.g. Fred Flintstone <670-782-1123>
+    private boolean mNumberIsModified; // true if the number is modified
 
     public static void addListener(UpdateListener l) {
         synchronized (mListeners) {
@@ -63,9 +84,82 @@ public class Contact {
         public void onUpdate(Contact updated);
     }
 
+    private Contact(String number, String name) {
+        init(number, name);
+    }
+    /*
+     * Make a basic contact object with a phone number.
+     */
+    private Contact(String number) {
+        init(number, "");
+    }
+
+    private Contact(boolean isMe) {
+        init(SELF_ITEM_KEY, "");
+        mIsMe = isMe;
+    }
+
+    private void init(String number, String name) {
+        mContactMethodId = CONTACT_METHOD_ID_UNKNOWN;
+        mName = name;
+        setNumber(number);
+        mNumberIsModified = false;
+        mLabel = "";
+        mPersonId = 0;
+        mPresenceResId = 0;
+        mIsStale = true;
+        mSendToVoicemail = false;
+    }
+
+
     public static Contact get(String number, boolean canBlock) {
         return sContactCache.get(number, canBlock);
     }
+
+    public synchronized String getNumber() {
+        return mNumber;
+    }
+
+    public synchronized void setNumber(String number) {
+        if (!SmsHelper.isEmailAddress(number)) {
+            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164, ((App)App.getInstance()).getCurrentCountryIso());
+        } else {
+            mNumber = number;
+        }
+        notSynchronizedUpdateNameAndNumber();
+        mNumberIsModified = true;
+    }
+
+    private void notSynchronizedUpdateNameAndNumber() {
+        mNameAndNumber = formatNameAndNumber(mName, mNumber, mNumberE164);
+    }
+
+    /**
+     * Fomat the name and number.
+     *
+     * @param name
+     * @param number
+     * @param numberE164 the number's E.164 representation, is used to get the
+     *        country the number belongs to.
+     * @return the formatted name and number
+     */
+    public static String formatNameAndNumber(String name, String number, String numberE164) {
+        // Format like this: Mike Cleron <(650) 555-1234>
+        //                   Erick Tseng <(650) 555-1212>
+        //                   Tutankhamun <tutank1341@gmail.com>
+        //                   (408) 555-1289
+        String formattedNumber = number;
+        if (!SmsHelper.isEmailAddress(number)) {
+            formattedNumber = PhoneNumberUtils.formatNumber(number, numberE164, ((App) App.getInstance()).getCurrentCountryIso());
+        }
+
+        if (!TextUtils.isEmpty(name) && !name.equals(number)) {
+            return name + " <" + formattedNumber + ">";
+        } else {
+            return formattedNumber;
+        }
+    }
+
 
     public synchronized void setRecipientId(long id) {
         mRecipientId = id;
@@ -260,7 +354,7 @@ public class Contact {
 
             // Always return a Contact object, if if we don't have an actual contact
             // in the contacts db.
-            Contact contact = null; // SKIP internalGet(number, isMe);
+            Contact contact = internalGet(number, isMe);
             Runnable r = null;
 
             synchronized (contact) {
@@ -813,7 +907,6 @@ public class Contact {
         static final int STATIC_KEY_BUFFER_MAXIMUM_LENGTH = 5;
         static CharBuffer sStaticKeyBuffer = CharBuffer.allocate(STATIC_KEY_BUFFER_MAXIMUM_LENGTH);
 
-        /* SKIP
         private Contact internalGet(String numberOrEmail, boolean isMe) {
             synchronized (ContactsCache.this) {
                 // See if we can find "number" in the hashtable.
@@ -849,7 +942,7 @@ public class Contact {
                 candidates.add(c);
                 return c;
             }
-        }*/
+        }
 
         void invalidate() {
             // Don't remove the contacts. Just mark them stale so we'll update their

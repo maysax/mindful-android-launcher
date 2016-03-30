@@ -28,6 +28,7 @@ public class ConversationListViewHolder extends ClickyViewHolder<Conversation> i
     public ConversationListViewHolder(CoreActivity context, View itemView) {
         super(context, itemView);
 
+        root = itemView.findViewById(R.id.rowLayout);
         selected = (ImageView) itemView.findViewById(R.id.selected);
         txtName = (TextView) itemView.findViewById(R.id.txtName);
         txtDate = (TextView) itemView.findViewById(R.id.txtDate);
