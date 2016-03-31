@@ -24,10 +24,26 @@
             android:name="io.fabric.ApiKey"
             android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
 
-        <activity android:name=".ui.MainActivity_">
+        <activity android:name=".ui.MainActivity_"
+                  android:launchMode="singleTask"
+                  android:windowSoftInputMode="stateUnchanged|adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SENDTO" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.MULTIWINDOW_LAUNCHER" />
+
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+                <data android:scheme="sms_body" />
             </intent-filter>
         </activity>
 
