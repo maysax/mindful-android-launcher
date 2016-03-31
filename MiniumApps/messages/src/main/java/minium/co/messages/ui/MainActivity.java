@@ -11,7 +11,7 @@ import minium.co.core.ui.CoreActivity;
 import minium.co.messages.R;
 import minium.co.messages.common.util.KeyboardUtils;
 import minium.co.messages.ui.conversationlist.ConversationListFragment_;
-import minium.co.messages.ui.messagelist.MessageListFragment;
+import minium.co.messages.ui.messagelist.MessageListFragment_;
 
 
 @EActivity(R.layout.activity_main)
@@ -29,12 +29,13 @@ public class MainActivity extends CoreActivity {
     }
 
     public void setConversation(long threadId, long rowId, String pattern, boolean animate) {
-
-        MessageListFragment fragment = MessageListFragment.getInstance(threadId, rowId, pattern, !animate);
-
         // Save the thread ID here and switch the content
         sThreadShowing = threadId;
-        switchContent(fragment, animate);
+        switchContent(MessageListFragment_.builder()
+                .threadId(threadId)
+                .rowId(rowId)
+                .highlight(pattern)
+                .showImmediate(animate).build(), animate);
 
     }
 

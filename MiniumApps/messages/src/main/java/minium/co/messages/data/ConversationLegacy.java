@@ -1,10 +1,15 @@
 package minium.co.messages.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
+import minium.co.messages.R;
 import minium.co.messages.common.google.DraftCache;
+import minium.co.messages.transaction.SmsHelper;
+import minium.co.messages.ui.dialog.DefaultSmsHelper;
 
 /**
  * Use this class (rather than Conversation) for marking conversations as read, and managing drafts.
@@ -37,5 +42,62 @@ public class ConversationLegacy {
 
     public boolean hasDraft() {
         return DraftCache.getInstance().hasDraft(threadId);
+    }
+
+    public long getThreadId() {
+        return threadId;
+    }
+
+    public Uri getUri() {
+        return Uri.parse("content://mms-sms/conversations/" + getThreadId());
+    }
+
+    private long[] getUnreadIds() {
+        long[] ids = new long[0];
+
+        try {
+            cursor = context.getContentResolver().query(getUri(), new String[]{SmsHelper.COLUMN_ID}, SmsHelper.UNREAD_SELECTION, null, null);
+            ids = new long[cursor.getCount()];
+            cursor.moveToFirst();
+
+            for (int i = 0; i < ids.length; i++) {
+                ids[i] = cursor.getLong(cursor.getColumnIndexOrThrow(SmsHelper.COLUMN_ID));
+                cursor.moveToNext();
+                Log.d(TAG, "Unread ID: " + ids[i]);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return ids;
+    }
+
+    public void markRead() {
+
+        new Thread() {
+            public void run() {
+
+                long[] ids = getUnreadIds();
+                if (ids.length > 0) {
+                    new DefaultSmsHelper(context, R.string.not_default_mark_read).showIfNotDefault(null);
+
+                    ContentValues cv = new ContentValues();
+                    cv.put("read", true);
+                    cv.put("seen", true);
+
+                    for (long id : ids) {
+                        context.getContentResolver().update(getUri(), cv, SmsHelper.COLUMN_ID + "=" + id, null);
+                    }
+
+                    /* SKIP NotificationManager.update(context);
+
+                    UnreadBadgeService.update(context); */
+                }
+            }
+        }.start();
     }
 }

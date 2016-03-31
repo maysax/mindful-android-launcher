@@ -67,10 +67,43 @@ public class Conversation {
         mThreadId = 0;
     }
 
+    private Conversation(Context context, long threadId, boolean allowQuery) {
+
+        Tracer.v("Conversation constructor threadId: " + threadId);
+
+        mContext = context;
+        if (!loadFromThreadId(threadId, allowQuery)) {
+            mRecipients = new ContactList();
+            mThreadId = 0;
+        }
+    }
+
     private Conversation(Context context, Cursor cursor, boolean allowQuery) {
         Tracer.d("Conversation constructor cursor, allowQuery: " + allowQuery);
         mContext = context;
         fillFromCursor(context, this, cursor, allowQuery);
+    }
+
+    /**
+     * Find the conversation matching the provided thread ID.
+     */
+    public static Conversation get(Context context, long threadId, boolean allowQuery) {
+        Tracer.v("Conversation get by threadId: " + threadId);
+
+        Conversation conv = Cache.get(threadId);
+        if (conv != null)
+            return conv;
+
+        conv = new Conversation(context, threadId, allowQuery);
+        try {
+            Cache.put(conv);
+        } catch (IllegalStateException e) {
+            Tracer.e("Tried to add duplicate Conversation to Cache (from threadId): " + conv);
+            if (!Cache.replace(conv)) {
+                Tracer.e("get by threadId cache.replace failed on " + conv);
+            }
+        }
+        return conv;
     }
 
     /**
@@ -411,5 +444,26 @@ public class Conversation {
      */
     public synchronized ContactList getRecipients() {
         return mRecipients;
+    }
+
+    private boolean loadFromThreadId(long threadId, boolean allowQuery) {
+        Cursor c = mContext.getContentResolver().query(sAllThreadsUri, ALL_THREADS_PROJECTION,
+                "_id=" + Long.toString(threadId), null, null);
+        try {
+            if (c.moveToFirst()) {
+                fillFromCursor(mContext, this, c, allowQuery);
+
+                if (threadId != mThreadId) {
+                    Tracer.e("loadFromThreadId: fillFromCursor returned differnt thread_id!" +
+                            " threadId=" + threadId + ", mThreadId=" + mThreadId);
+                }
+            } else {
+                Tracer.e("loadFromThreadId: Can't find thread ID " + threadId);
+                return false;
+            }
+        } finally {
+            c.close();
+        }
+        return true;
     }
 }
