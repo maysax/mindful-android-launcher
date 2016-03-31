@@ -44,8 +44,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textSize="@dimen/text.size.large"
-                android:textColor="@color/text.secondary"
-                android:textStyle="bold"
+                fontPath="@string/fonts.noto.sans.bold"
                 tools:text="Contact Name" />
 
             <View
