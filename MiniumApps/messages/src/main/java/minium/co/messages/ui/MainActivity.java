@@ -1,15 +1,15 @@
 package minium.co.messages.ui;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.text.TextUtils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.InstanceState;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.messages.R;
-import minium.co.messages.common.util.KeyboardUtils;
+import minium.co.messages.app.MessagesPref_;
 import minium.co.messages.ui.conversationlist.ConversationListFragment_;
 import minium.co.messages.ui.messagelist.MessageListFragment_;
 
@@ -17,50 +17,43 @@ import minium.co.messages.ui.messagelist.MessageListFragment_;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
 
+    // This thread (messages) is being displayed currently.
     public static long sThreadShowing;
 
-    private ContentFragment mContent;
+    @InstanceState
+    Boolean isMmsSetupDismissed = false;
 
-    private boolean mIsDestroyed = false;
+    @Pref
+    MessagesPref_ prefs;
 
     @AfterViews
     void afterViews() {
         loadFragment(ConversationListFragment_.builder().build());
+        showDialogIfNeeded();
+    }
+
+    private void showDialogIfNeeded() {
+        if (!isMmsSetupDismissed) {
+            beginMmsSetup();
+        }
+    }
+
+    private void beginMmsSetup() {
+        if (!prefs.isMmsSetupDoNotAskAgain().get()
+                && TextUtils.isEmpty(prefs.mmsURL().get())
+                && TextUtils.isEmpty(prefs.mmsProxy().get())
+                && TextUtils.isEmpty(prefs.mmsPort().get())) {
+
+        }
     }
 
     public void setConversation(long threadId, long rowId, String pattern, boolean animate) {
         // Save the thread ID here and switch the content
         sThreadShowing = threadId;
-        switchContent(MessageListFragment_.builder()
+        loadChildFragment(MessageListFragment_.builder()
                 .threadId(threadId)
                 .rowId(rowId)
                 .highlight(pattern)
-                .showImmediate(animate).build(), animate);
-
+                .showImmediate(animate).build());
     }
-
-    public void switchContent(ContentFragment fragment, boolean animate) {
-        // Make sure that the activity isn't destroyed before making fragment transactions.
-        if (fragment != null && !mIsDestroyed) {
-            KeyboardUtils.hide(this);
-
-            mContent = fragment;
-            FragmentManager m = getFragmentManager();
-
-            // Only do a replace if it is a different fragment.
-            if (fragment != m.findFragmentById(R.id.mainView)) {
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.mainView, (Fragment) fragment)
-                        .commitAllowingStateLoss();
-            }
-
-            /* SKIP mSlidingMenu.showContent(animate); */
-            invalidateOptionsMenu();
-
-        } else {
-            Tracer.w("Null fragment, can't switch content");
-        }
-    }
-
 }

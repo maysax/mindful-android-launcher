@@ -1,9 +1,9 @@
 package minium.co.core.ui;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -23,6 +23,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 @EActivity
 public class CoreActivity extends AppCompatActivity {
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -84,11 +85,7 @@ public class CoreActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                    finish();
-                } else {
-                    getSupportFragmentManager().popBackStack();
-                }
+                handleBackPress();
                 return true;
         }
 
@@ -98,5 +95,18 @@ public class CoreActivity extends AppCompatActivity {
     @Subscribe
     public void genericEvent(Object event) {
         // DO NOT code here, it is a generic catch event method
+    }
+
+    @Override
+    public void onBackPressed() {
+        handleBackPress();
+    }
+
+    private void handleBackPress() {
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            this.finish();
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 }

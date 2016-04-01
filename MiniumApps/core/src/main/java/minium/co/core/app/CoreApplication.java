@@ -14,6 +14,7 @@ import minium.co.core.R;
 import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.core.ui.LifecycleHandler;
 import minium.co.core.util.FontUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -49,6 +50,11 @@ public abstract class CoreApplication extends Application {
         configCalligraphy();
         configFabric();
         configIconify();
+        configureLifecycle();
+    }
+
+    private void configureLifecycle() {
+        registerActivityLifecycleCallbacks(new LifecycleHandler());
     }
 
     private void configTracer() {
