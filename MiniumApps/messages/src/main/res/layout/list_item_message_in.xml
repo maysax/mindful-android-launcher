@@ -22,7 +22,7 @@
         android:layout_toEndOf="@id/txtDate"
         android:singleLine="true"
         android:ellipsize="end"
-        android:textSize="@dimen/text.size.medium"
+        android:textSize="@dimen/text.size.regular"
         android:textColor="@color/text.primary"
         tools:text="Contact Name"/>
 
