@@ -3,6 +3,7 @@ package minium.co.messages.ui.messagelist;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.provider.Telephony;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
@@ -21,6 +22,7 @@ import minium.co.messages.R;
 import minium.co.messages.common.util.CursorUtils;
 import minium.co.messages.common.util.LinkifyUtils;
 import minium.co.messages.common.util.MessageUtils;
+import minium.co.messages.data.Contact;
 import minium.co.messages.ui.base.RecyclerCursorAdapter;
 
 /**
@@ -61,6 +63,27 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
         return mMessageItemCache.get(type, msgId, mCursor);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        // This method shouldn't be called if our cursor is null, since the framework should know
+        // that there aren't any items to look at in that case
+        MessageItem item = getItem(position);
+        int boxId = item.getBoxId();
+
+        if (item.isSms()) {
+            if (boxId == Telephony.TextBasedSmsColumns.MESSAGE_TYPE_INBOX || boxId == Telephony.TextBasedSmsColumns.MESSAGE_TYPE_ALL) {
+                return INCOMING_ITEM;
+            } else {
+                return OUTGOING_ITEM;
+            }
+        } else {
+            if (boxId == Telephony.Mms.MESSAGE_BOX_ALL || boxId == Telephony.Mms.MESSAGE_BOX_INBOX) {
+                return INCOMING_ITEM;
+            } else {
+                return OUTGOING_ITEM;
+            }
+        }
+    }
 
     @Override
     public MessageListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -86,6 +109,12 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
 
         bindTimestamp(holder, item);
         bindBody(holder, item);
+        bindContact(holder, item);
+    }
+
+    private void bindContact(MessageListViewHolder holder, MessageItem item) {
+        if (!item.isMe())
+            holder.txtName.setText(Contact.get(item.mAddress, true).getName());
     }
 
     public MessageColumns.ColumnsMap getColumnsMap() {

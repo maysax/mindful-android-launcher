@@ -11,8 +11,8 @@
         android:id="@+id/txtDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text.size.medium"
-        tools:text="4:41PM"/>
+        android:textSize="@dimen/text.size.regular"
+        tools:text="4:41PM" />
 
     <TextView
         android:id="@+id/txtName"
@@ -21,7 +21,9 @@
         android:layout_marginStart="@dimen/margin.2"
         android:layout_toEndOf="@id/txtDate"
         android:singleLine="true"
+        android:ellipsize="end"
         android:textSize="@dimen/text.size.medium"
+        android:textColor="@color/text.primary"
         tools:text="Contact Name"/>
 
     <TextView
@@ -29,8 +31,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/txtDate"
+        android:layout_marginEnd="64dp"
         android:layout_marginTop="@dimen/margin.1"
-        android:textSize="@dimen/text.size.medium"
+        android:textSize="@dimen/text.size.regular"
         tools:text="@string/demo.text"/>
 
 </RelativeLayout>

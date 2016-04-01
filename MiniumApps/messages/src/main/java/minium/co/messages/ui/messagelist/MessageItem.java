@@ -178,6 +178,10 @@ public class MessageItem {
         }
     }
 
+    public int getBoxId() {
+        return mBoxId;
+    }
+
     public boolean isMe() {
         // Logic matches MessageListAdapter.getItemViewType which is used to decide which
         // type of MessageListItem to create: a left or right justified item depending on whether
