@@ -42,6 +42,14 @@ public class MessagesApp extends CoreApplication {
                 + " || Build flavor: " + minium.co.messages.BuildConfig.FLAVOR
                 + " || Build type: " + minium.co.messages.BuildConfig.BUILD_TYPE);
 
+        // Figure out the country *before* loading contacts and formatting numbers
+        Country country = new Country(Locale.getDefault().getCountry(), Country.COUNTRY_SOURCE_LOCALE);
+        mCountryIso = country.getCountryIso();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
         Contact.init(this);
         DraftCache.init(this);
         Conversation.init(this);

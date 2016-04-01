@@ -3,8 +3,6 @@ package minium.co.core.log;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
-import minium.co.core.config.Config;
-
 /**
  * Created by shahabuddin on 8/20/15.
  */
@@ -56,7 +54,9 @@ public class Tracer {
     public static void init() {
         Logger
                 .init(LogConfig.LOG_TAG)
-                .setMethodCount(2)
+                .setMethodCount(1)
+                .setMethodOffset(1)
+                .hideThreadInfo()
                 // RELEASE: Use LogLevel.NONE for the release version
                 .setLogLevel(LogLevel.FULL);
     }
