@@ -69,7 +69,7 @@ dependencies {
      * =================== UI ===================
      */
     // https://github.com/chrisjenx/Calligraphy
-    compile 'uk.co.chrisjenx:calligraphy:2.1.0@aar'
+    compile "uk.co.chrisjenx:calligraphy:$calligraphyVersion"
 
     // http://joanzapata.com/android-iconify/
     compile "com.joanzapata.iconify:android-iconify-fontawesome:$iconifyVersion"
@@ -79,12 +79,12 @@ dependencies {
      * =================== Debug/Log ===================
      */
     // https://fabric.io
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    compile("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion") {
         transitive = true;
     }
 
     // https://github.com/orhanobut/logger
-    compile 'com.orhanobut:logger:1.11'
+    compile "com.orhanobut:logger:$loggerVersion"
 
 
     /**

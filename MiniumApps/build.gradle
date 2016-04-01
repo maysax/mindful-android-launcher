@@ -42,6 +42,8 @@ project.ext {
     iconifyVersion = "2.2.1"
     calligraphyVersion = "2.1.0@aar"
     eventbusVersion = "3.0.0-beta1"
+    loggerVersion = "1.11"
+    crashlyticsVersion = "2.5.5@aar"
 
     junitVersion = "4.12"
 
