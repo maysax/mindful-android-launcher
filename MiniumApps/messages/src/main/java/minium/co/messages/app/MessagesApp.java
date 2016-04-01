@@ -41,7 +41,11 @@ public class MessagesApp extends CoreApplication {
                 + " || Build time:  " + BuildConfig.BUILD_TIME
                 + " || Build flavor: " + minium.co.messages.BuildConfig.FLAVOR
                 + " || Build type: " + minium.co.messages.BuildConfig.BUILD_TYPE);
+    }
 
+    @Override
+    protected void init() {
+        super.init();
         Contact.init(this);
         DraftCache.init(this);
         Conversation.init(this);
