@@ -8,22 +8,11 @@
                 android:padding="@dimen/margin.2">
 
     <TextView
-        android:id="@+id/txtName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:singleLine="true"
-        android:textSize="@dimen/text.size.regular"
-        android:textColor="@color/text.primary"
-        tools:text="Contact Name"/>
-
-    <TextView
         android:id="@+id/txtDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text.size.regular"
-        android:layout_toStartOf="@id/txtName"
-        android:layout_marginEnd="@dimen/margin.2"
+        android:layout_alignParentEnd="true"
         tools:text="4:41PM"/>
 
     <TextView
