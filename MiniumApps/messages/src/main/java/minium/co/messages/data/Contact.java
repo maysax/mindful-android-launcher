@@ -18,8 +18,8 @@ import java.util.HashSet;
 
 import minium.co.core.log.Tracer;
 import minium.co.messages.R;
-import minium.co.messages.app.App;
-import minium.co.messages.app.App_;
+import minium.co.messages.app.MessagesApp;
+import minium.co.messages.app.MessagesApp_;
 import minium.co.messages.common.util.IOUtils;
 import minium.co.messages.transaction.SmsHelper;
 
@@ -155,7 +155,7 @@ public class Contact {
 
     public synchronized void setNumber(String number) {
         if (!SmsHelper.isEmailAddress(number)) {
-            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164, ((App)App.getInstance()).getCurrentCountryIso());
+            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164, ((MessagesApp) MessagesApp.getInstance()).getCurrentCountryIso());
         } else {
             mNumber = number;
         }
@@ -183,7 +183,7 @@ public class Contact {
         //                   (408) 555-1289
         String formattedNumber = number;
         if (!SmsHelper.isEmailAddress(number)) {
-            formattedNumber = PhoneNumberUtils.formatNumber(number, numberE164, ((App) App.getInstance()).getCurrentCountryIso());
+            formattedNumber = PhoneNumberUtils.formatNumber(number, numberE164, ((MessagesApp) MessagesApp.getInstance()).getCurrentCountryIso());
         }
 
         if (!TextUtils.isEmpty(name) && !name.equals(number)) {
@@ -687,8 +687,7 @@ public class Contact {
             String minMatch = android.telephony.PhoneNumberUtils.toCallerIDMinMatch(normalizedNumber);
             if (!TextUtils.isEmpty(normalizedNumber) && !TextUtils.isEmpty(minMatch)) {
                 String numberLen = String.valueOf(normalizedNumber.length());
-                String numberE164 = PhoneNumberUtils.formatNumberToE164(
-                        number, App_.getInstance().getCurrentCountryIso());
+                String numberE164 = PhoneNumberUtils.formatNumberToE164(number, MessagesApp_.getInstance().getCurrentCountryIso());
                 String selection;
                 String[] args;
                 if (TextUtils.isEmpty(numberE164)) {

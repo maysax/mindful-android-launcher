@@ -22,9 +22,9 @@ import minium.co.messages.data.Conversation;
  * Created by shahab on 3/17/16.
  */
 @EApplication
-public class App extends CoreApplication {
+public class MessagesApp extends CoreApplication {
 
-    private final String TRACE_TAG = LogConfig.TRACE_TAG + "App";
+    private final String TRACE_TAG = LogConfig.TRACE_TAG + "MessagesApp";
 
     private String mCountryIso;
 

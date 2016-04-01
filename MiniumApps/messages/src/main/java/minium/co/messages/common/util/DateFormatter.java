@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import minium.co.messages.R;
-import minium.co.messages.app.App;
+import minium.co.messages.app.MessagesApp;
 
 public abstract class DateFormatter {
 
@@ -78,7 +78,7 @@ public abstract class DateFormatter {
     public static String getRelativeTimestamp(long date) {
         String relativeTimestamp = (String) DateUtils.getRelativeTimeSpanString(date);
         if (relativeTimestamp.equals("in 0 minutes") || relativeTimestamp.equals("0 minutes ago"))
-            return App.getInstance().getString(R.string.date_just_now);
+            return MessagesApp.getInstance().getString(R.string.date_just_now);
         return relativeTimestamp;
     }
 

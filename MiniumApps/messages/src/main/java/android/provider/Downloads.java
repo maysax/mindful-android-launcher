@@ -481,7 +481,7 @@ public final class Downloads {
 
         /**
          * This download was completed by the caller (i.e., NOT downloadmanager)
-         * and caller wants to have this download displayed in Downloads App.
+         * and caller wants to have this download displayed in Downloads MessagesApp.
          */
         public static final int DESTINATION_NON_DOWNLOADMANAGER_DOWNLOAD = 6;
 
