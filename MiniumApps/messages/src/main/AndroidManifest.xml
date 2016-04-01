@@ -1,6 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="minium.co.messages">
 
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <!--
     On SDK version 23 and up, your app data will be automatically backed up and restored on app install.
     Consider adding the attribute `android:fullBackupContent` to specify an `@xml` resource
@@ -9,7 +13,7 @@
     -->
 
     <application
-        android:name=".app.App_"
+        android:name=".app.MessagesApp_"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,10 +25,12 @@
             android:name="io.fabric.ApiKey"
             android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
 
-        <activity android:name=".ui.MainActivity_">
+        <activity android:name=".ui.MainActivity_"
+                  android:launchMode="singleTask"
+                  android:windowSoftInputMode="stateUnchanged|adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
 

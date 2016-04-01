@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/rowLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/margin.2">
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:singleLine="true"
+        android:textSize="@dimen/text.size.medium"
+        android:textColor="@color/text.primary"
+        tools:text="Contact Name"/>
+
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text.size.regular"
+        android:layout_toStartOf="@id/txtName"
+        android:layout_marginEnd="@dimen/margin.2"
+        tools:text="4:41PM"/>
+
+    <TextView
+        android:id="@+id/txtMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtDate"
+        android:layout_marginTop="@dimen/margin.1"
+        android:layout_marginStart="64dp"
+        android:textSize="@dimen/text.size.regular"
+        android:layout_alignParentEnd="true"
+        tools:text="@string/demo.text"/>
+
+</RelativeLayout>
