@@ -28,6 +28,10 @@ import com.moez.QKSMS.transaction.SmsHelper;
  */
 public class Contact {
 
+    public synchronized boolean isNamed() {
+        return !TextUtils.isEmpty(mName);
+    }
+
     public static final int CONTACT_METHOD_TYPE_UNKNOWN = 0;
     public static final int CONTACT_METHOD_TYPE_PHONE = 1;
     public static final int CONTACT_METHOD_TYPE_EMAIL = 2;

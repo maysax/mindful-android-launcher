@@ -55,7 +55,7 @@ public class MessagesApp extends CoreApplication {
     /**
      * Figure out the country *before* loading contacts and formatting numbers
      *
-     * @return Country ISO 
+     * @return Country ISO
      *
      * This function can return NULL
      */

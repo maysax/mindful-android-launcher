@@ -22,231 +22,215 @@ import android.database.Cursor;
 import android.database.sqlite.SqliteWrapper;
 import android.provider.Telephony.MmsSms;
 import android.provider.Telephony.Sms.Conversations;
-import android.util.Log;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
 
  /**
- * Cache for information about draft messages on conversations.
- */
-public class DraftCache {
-    private static final String TAG = "Mms/draft";
+  * Cache for information about draft messages on conversations.
+  */
+ public class DraftCache {
 
-    private static DraftCache sInstance;
+     private static DraftCache sInstance;
 
-    private final Context mContext;
+     private final Context mContext;
 
-    private boolean mSavingDraft;   // true when we're in the process of saving a draft. Check this
-    // before deleting any empty threads from the db.
-    private final Object mSavingDraftLock = new Object();
+     private boolean mSavingDraft;   // true when we're in the process of saving a draft. Check this
+     // before deleting any empty threads from the db.
+     private final Object mSavingDraftLock = new Object();
 
-    private HashSet<Long> mDraftSet = new HashSet<>(4);
-    private final Object mDraftSetLock = new Object();
-    private final HashSet<OnDraftChangedListener> mChangeListeners = new HashSet<>(1);
-    private final Object mChangeListenersLock = new Object();
+     private HashSet<Long> mDraftSet = new HashSet<>(4);
+     private final Object mDraftSetLock = new Object();
+     private final HashSet<OnDraftChangedListener> mChangeListeners = new HashSet<>(1);
+     private final Object mChangeListenersLock = new Object();
 
-    public interface OnDraftChangedListener {
-        void onDraftChanged(long threadId, boolean hasDraft);
-    }
+     public interface OnDraftChangedListener {
+         void onDraftChanged(long threadId, boolean hasDraft);
+     }
 
-    private DraftCache(Context context) {
-        Tracer.d("DraftCache.constructor");
+     private DraftCache(Context context) {
+         Tracer.d("QKSMS: DraftCache.constructor");
+         mContext = context;
+         refresh();
+     }
 
-        mContext = context;
-        refresh();
-    }
+     static final String[] DRAFT_PROJECTION = new String[] {
+             Conversations.THREAD_ID           // 0
+     };
 
-    static final String[] DRAFT_PROJECTION = new String[] {
-            Conversations.THREAD_ID           // 0
-    };
+     static final int COLUMN_DRAFT_THREAD_ID = 0;
 
-    static final int COLUMN_DRAFT_THREAD_ID = 0;
+     /** To be called whenever the draft state might have changed.
+      *  Dispatches work to a thread and returns immediately.
+      */
+     public void refresh() {
+         Tracer.d("QKSMS: refresh");
 
-    /** To be called whenever the draft state might have changed.
-     *  Dispatches work to a thread and returns immediately.
-     */
-    public void refresh() {
-            Tracer.d("refresh");
+         Thread thread = new Thread(new Runnable() {
+             @Override
+             public void run() {
+                 rebuildCache();
+             }
+         }, "DraftCache.refresh");
+         thread.setPriority(Thread.MIN_PRIORITY);
+         thread.start();
+     }
 
+     /**
+      * Does the actual work of rebuilding the draft cache.
+      */
+     @SuppressLint("NewApi")
+     private void rebuildCache() {
+         Tracer.d("QKSMS: rebuildCache");
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                rebuildCache();
-            }
-        }, "DraftCache.refresh");
-        thread.setPriority(Thread.MIN_PRIORITY);
-        thread.start();
-    }
+         HashSet<Long> newDraftSet = new HashSet<>();
 
-    /**
-     * Does the actual work of rebuilding the draft cache.
-     */
-    @SuppressLint("NewApi")
-    private void rebuildCache() {
-            Tracer.d("rebuildCache");
+         Cursor cursor = SqliteWrapper.query(
+                 mContext,
+                 mContext.getContentResolver(),
+                 MmsSms.CONTENT_DRAFT_URI,
+                 DRAFT_PROJECTION, null, null, null);
 
+         if (cursor != null) {
+             try {
+                 if (cursor.moveToFirst()) {
+                     for (; !cursor.isAfterLast(); cursor.moveToNext()) {
+                         long threadId = cursor.getLong(COLUMN_DRAFT_THREAD_ID);
+                         newDraftSet.add(threadId);
+                         Tracer.d("QKSMS: rebuildCache: add tid=" + threadId);
 
-        HashSet<Long> newDraftSet = new HashSet<>();
+                     }
+                 }
+             } finally {
+                 cursor.close();
+             }
+         }
 
-        Cursor cursor = SqliteWrapper.query(
-                mContext,
-                mContext.getContentResolver(),
-                MmsSms.CONTENT_DRAFT_URI,
-                DRAFT_PROJECTION, null, null, null);
+         Set<Long> added;
+         Set<Long> removed;
+         synchronized (mDraftSetLock) {
+             HashSet<Long> oldDraftSet = mDraftSet;
+             mDraftSet = newDraftSet;
+                 dump();
+             // If nobody's interested in finding out about changes,
+             // just bail out early.
+             synchronized (mChangeListenersLock) {
+                 if (mChangeListeners.size() < 1) {
+                     return;
+                 }
+             }
 
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    for (; !cursor.isAfterLast(); cursor.moveToNext()) {
-                        long threadId = cursor.getLong(COLUMN_DRAFT_THREAD_ID);
-                        newDraftSet.add(threadId);
-                            Tracer.d("rebuildCache: add tid=" + threadId);
+             // Find out which drafts were removed and added and notify
+             // listeners.
+             added = new HashSet<Long>(newDraftSet);
+             added.removeAll(oldDraftSet);
+             removed = new HashSet<Long>(oldDraftSet);
+             removed.removeAll(newDraftSet);
+         }
 
-                    }
-                }
-            } finally {
-                cursor.close();
-            }
-        }
+         synchronized (mChangeListenersLock) {
+             for (OnDraftChangedListener l : mChangeListeners) {
+                 for (long threadId : added) {
+                     l.onDraftChanged(threadId, true);
+                 }
+                 for (long threadId : removed) {
+                     l.onDraftChanged(threadId, false);
+                 }
+             }
+         }
+     }
 
-        Set<Long> added;
-        Set<Long> removed;
-        synchronized (mDraftSetLock) {
-            HashSet<Long> oldDraftSet = mDraftSet;
-            mDraftSet = newDraftSet;
+     /** Updates the has-draft status of a particular thread on
+      *  a piecemeal basis, to be called when a draft has appeared
+      *  or disappeared.
+      */
+     public void setDraftState(long threadId, boolean hasDraft) {
+         if (threadId <= 0) {
+             return;
+         }
 
-            if(Config.DEBUG)
-                dump();
+         boolean changed;
+         synchronized (mDraftSetLock) {
+             if (hasDraft) {
+                 changed = mDraftSet.add(threadId);
+             } else {
+                 changed = mDraftSet.remove(threadId);
+             }
+         }
 
-            // If nobody's interested in finding out about changes,
-            // just bail out early.
-            synchronized (mChangeListenersLock) {
-                if (mChangeListeners.size() < 1) {
-                    return;
-                }
-            }
+         Tracer.v("QKSMS:Mms/draft: setDraftState: tid=" + threadId + ", value=" + hasDraft + ", changed=" + changed);
 
-            // Find out which drafts were removed and added and notify
-            // listeners.
-            added = new HashSet<Long>(newDraftSet);
-            added.removeAll(oldDraftSet);
-            removed = new HashSet<Long>(oldDraftSet);
-            removed.removeAll(newDraftSet);
-        }
+         dump();
 
-        synchronized (mChangeListenersLock) {
-            for (OnDraftChangedListener l : mChangeListeners) {
-                for (long threadId : added) {
-                    l.onDraftChanged(threadId, true);
-                }
-                for (long threadId : removed) {
-                    l.onDraftChanged(threadId, false);
-                }
-            }
-        }
-    }
+         // Notify listeners if there was a change.
+         if (changed) {
+             synchronized (mChangeListenersLock) {
+                 for (OnDraftChangedListener l : mChangeListeners) {
+                     l.onDraftChanged(threadId, hasDraft);
+                 }
+             }
+         }
+     }
 
-    /** Updates the has-draft status of a particular thread on
-     *  a piecemeal basis, to be called when a draft has appeared
-     *  or disappeared.
-     */
-    public void setDraftState(long threadId, boolean hasDraft) {
-        if (threadId <= 0) {
-            return;
-        }
+     /** Returns true if the given thread ID has a draft associated
+      *  with it, false if not.
+      */
+     public boolean hasDraft(long threadId) {
+         synchronized (mDraftSetLock) {
+             return mDraftSet.contains(threadId);
+         }
+     }
 
-        boolean changed;
-        synchronized (mDraftSetLock) {
-            if (hasDraft) {
-                changed = mDraftSet.add(threadId);
-            } else {
-                changed = mDraftSet.remove(threadId);
-            }
-        }
+     public void addOnDraftChangedListener(OnDraftChangedListener l) {
 
+         Tracer.v("QKSMS:Mms/draft: addOnDraftChangedListener " + l);
 
-            Tracer.d("setDraftState: tid=" + threadId + ", value=" + hasDraft + ", changed=" + changed);
+         synchronized (mChangeListenersLock) {
+             mChangeListeners.add(l);
+         }
+     }
 
+     public void removeOnDraftChangedListener(OnDraftChangedListener l) {
 
-        if (Config.DEBUG) {
-            dump();
-        }
+         Tracer.v("QKSMS:Mms/draft: removeOnDraftChangedListener " + l);
 
-        // Notify listeners if there was a change.
-        if (changed) {
-            synchronized (mChangeListenersLock) {
-                for (OnDraftChangedListener l : mChangeListeners) {
-                    l.onDraftChanged(threadId, hasDraft);
-                }
-            }
-        }
-    }
+         synchronized (mChangeListenersLock) {
+             mChangeListeners.remove(l);
+         }
+     }
 
-    /** Returns true if the given thread ID has a draft associated
-     *  with it, false if not.
-     */
-    public boolean hasDraft(long threadId) {
-        synchronized (mDraftSetLock) {
-            return mDraftSet.contains(threadId);
-        }
-    }
+     public void setSavingDraft(final boolean savingDraft) {
+         synchronized (mSavingDraftLock) {
+             mSavingDraft = savingDraft;
+         }
+     }
 
-    public void addOnDraftChangedListener(OnDraftChangedListener l) {
-            Tracer.d("addOnDraftChangedListener " + l);
+     public boolean getSavingDraft() {
+         synchronized (mSavingDraftLock) {
+             return mSavingDraft;
+         }
+     }
 
-        synchronized (mChangeListenersLock) {
-            mChangeListeners.add(l);
-        }
-    }
+     /**
+      * Initialize the global instance. Should call only once.
+      */
+     public static void init(Context context) {
+         sInstance = new DraftCache(context);
+     }
 
-    public void removeOnDraftChangedListener(OnDraftChangedListener l) {
+     /**
+      * Get the global instance.
+      */
+     public static DraftCache getInstance() {
+         return sInstance;
+     }
 
-        Tracer.d("removeOnDraftChangedListener " + l);
-        synchronized (mChangeListenersLock) {
-            mChangeListeners.remove(l);
-        }
-    }
-
-    public void setSavingDraft(final boolean savingDraft) {
-        synchronized (mSavingDraftLock) {
-            mSavingDraft = savingDraft;
-        }
-    }
-
-    public boolean getSavingDraft() {
-        synchronized (mSavingDraftLock) {
-            return mSavingDraft;
-        }
-    }
-
-    /**
-     * Initialize the global instance. Should call only once.
-     */
-    public static void init(Context context) {
-        sInstance = new DraftCache(context);
-    }
-
-    /**
-     * Get the global instance.
-     */
-    public static DraftCache getInstance() {
-        return sInstance;
-    }
-
-    public void dump() {
-        Log.i(TAG, "dump:");
-        for (Long threadId : mDraftSet) {
-            Log.i(TAG, "  tid: " + threadId);
-        }
-    }
-
-    private void log(String format, Object... args) {
-        String s = String.format(format, args);
-        Log.d(TAG, "[DraftCache/" + Thread.currentThread().getId() + "] " + s);
-    }
-}
+     public void dump() {
+         Tracer.v("QKSMS:Mms/draft: dump:");
+         for (Long threadId : mDraftSet) {
+             Tracer.v("QKSMS:Mms/draft: tid: " + threadId);
+         }
+     }
+ }

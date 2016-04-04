@@ -42,6 +42,9 @@ dependencies {
     compile project(':core')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
+
+
+    compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
 }
 
 apt {
