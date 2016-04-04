@@ -51,9 +51,9 @@ public class ConversationListAdapter  extends RecyclerCursorAdapter<Conversation
         holder.mClickListener = mItemClickListener;
         holder.root.setOnClickListener(holder);
 
-        holder.badgeMuted.setVisibility(View.VISIBLE);
+        //holder.badgeMuted.setVisibility(View.VISIBLE);
 
-        holder.badgeError.setVisibility(View.VISIBLE);
+        //holder.badgeError.setVisibility(View.VISIBLE);
 
         final boolean hasUnreadMessages = conversation.hasUnreadMessages();
         if (hasUnreadMessages) {
