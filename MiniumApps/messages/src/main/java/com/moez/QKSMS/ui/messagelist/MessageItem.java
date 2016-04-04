@@ -14,15 +14,15 @@ import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.EncodedStringValue;
 import com.google.android.mms.pdu_alt.PduHeaders;
 import com.google.android.mms.pdu_alt.PduPersister;
+import com.moez.QKSMS.common.formatter.FormatterFactory;
+import com.moez.QKSMS.common.utils.AddressUtils;
+import com.moez.QKSMS.common.utils.DateFormatter_;
+import com.moez.QKSMS.data.Contact;
+import com.moez.QKSMS.transaction.SmsHelper;
 
 import java.util.regex.Pattern;
 
 import minium.co.messages.R;
-import com.moez.QKSMS.common.formatter.FormatterFactory;
-import com.moez.QKSMS.common.utils.AddressUtils;
-import com.moez.QKSMS.common.utils.DateFormatter;
-import com.moez.QKSMS.data.Contact;
-import com.moez.QKSMS.transaction.SmsHelper;
 
 /**
  * Mostly immutable model for an SMS/MMS message.
@@ -131,7 +131,7 @@ public class MessageItem {
                 // Set "received" or "sent" time stamp
                 boolean sent = /* SKIP prefs.getBoolean(QKPreference.SENT_TIMESTAMPS.getKey(), false) */ false && !isMe();
                 mDate = cursor.getLong(sent ? columnsMap.mColumnSmsDateSent : columnsMap.mColumnSmsDate);
-                mTimestamp = DateFormatter.getMessageTimestamp(context, mDate);
+                mTimestamp = DateFormatter_.getInstance_(context).getMessageTimestamp(context, mDate);
             }
 
             mLocked = cursor.getInt(columnsMap.mColumnSmsLocked) != 0;

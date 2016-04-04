@@ -1,12 +1,26 @@
 package com.moez.QKSMS.common.utils;
 
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Browser;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.CharacterStyle;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Shahab on 3/31/2016.
+ * Shamelessly stolen from
+ * <a href="https://raw.githubusercontent.com/guardianproject/ChatSecureAndroid/master/src/info/guardianproject/util/LinkifyHelper.java">ChatSecure's implementation</a>
  */
 public class LinkifyUtils {
 
@@ -18,6 +32,12 @@ public class LinkifyUtils {
     private static Pattern twitterHandle = Pattern.compile("@([A-Za-z0-9_-]+)");
     private static Pattern hashtag = Pattern.compile("#([A-Za-z0-9_-]+)");
 
+    static Linkify.TransformFilter returnMatchFilter = new Linkify.TransformFilter() {
+        @Override
+        public String transformUrl(Matcher match, String url) {
+            return match.group(1);
+        }
+    };
 
     /* Right now, if there is no app to handle */
     public static void addLinks(TextView text) {
@@ -27,8 +47,70 @@ public class LinkifyUtils {
         Linkify.addLinks(text, openpgp4fpr, null);
         Linkify.addLinks(text, bitcoin, null);
         Linkify.addLinks(text, xmpp, null);
-/* SKIP        Linkify.addLinks(text, twitterHandle, "https://twitter.com/", null, returnMatchFilter);
+        Linkify.addLinks(text, twitterHandle, "https://twitter.com/", null, returnMatchFilter);
         Linkify.addLinks(text, hashtag, "https://twitter.com/hashtag/", null, returnMatchFilter);
-        text.setText(replaceAll(text.getText(), URLSpan.class, new URLSpanConverter()));*/
+        text.setText(replaceAll(text.getText(), URLSpan.class, new URLSpanConverter()));
+    }
+
+    /**
+     * Do not create this static utility class.
+     */
+    private LinkifyUtils() {
+    }
+
+    // thanks to @commonsware https://stackoverflow.com/a/11417498
+    public static <A extends CharacterStyle, B extends CharacterStyle> Spannable replaceAll(
+            CharSequence original, Class<A> sourceType, SpanConverter<A, B> converter) {
+        SpannableString result = new SpannableString(original);
+        A[] spans = result.getSpans(0, result.length(), sourceType);
+
+        for (A span : spans) {
+            int start = result.getSpanStart(span);
+            int end = result.getSpanEnd(span);
+            int flags = result.getSpanFlags(span);
+
+            result.removeSpan(span);
+            result.setSpan(converter.convert(span), start, end, flags);
+        }
+
+        return (result);
+    }
+
+    private interface SpanConverter<A extends CharacterStyle, B extends CharacterStyle> {
+        B convert(A span);
+    }
+
+    /**
+     * This trickery is needed in order to have clickable links that open things
+     * in a new {@code Task} rather than in ChatSecure's {@code Task.} Thanks to @commonsware
+     * https://stackoverflow.com/a/11417498
+     */
+    private static class NewTaskUrlSpan extends ClickableSpan {
+        private String urlString;
+
+        NewTaskUrlSpan(String urlString) {
+            this.urlString = urlString;
+        }
+
+        @Override
+        public void onClick(View widget) {
+            try {
+                Uri uri = Uri.parse(urlString);
+                Context context = widget.getContext();
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            } catch (ActivityNotFoundException ignored) {
+                Log.e("LinkifyUtils", "", ignored); // We should (or shouldn't) explain that no app can handle this intent ?
+            }
+        }
+    }
+
+    private static class URLSpanConverter implements LinkifyUtils.SpanConverter<URLSpan, ClickableSpan> {
+        @Override
+        public NewTaskUrlSpan convert(URLSpan span) {
+            return (new NewTaskUrlSpan(span.getURL()));
+        }
     }
 }

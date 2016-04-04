@@ -4,13 +4,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import minium.co.core.log.LogConfig;
-import minium.co.core.ui.CoreActivity;
-import minium.co.messages.R;
-import com.moez.QKSMS.common.utils.DateFormatter;
+import com.moez.QKSMS.common.utils.DateFormatter_;
 import com.moez.QKSMS.data.Contact;
 import com.moez.QKSMS.data.Conversation;
 import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
+
+import minium.co.core.log.LogConfig;
+import minium.co.core.ui.CoreActivity;
+import minium.co.messages.R;
 
 /**
  * Created by shahab on 3/25/16.
@@ -65,7 +66,7 @@ public class ConversationListAdapter  extends RecyclerCursorAdapter<Conversation
         }
 
         // Date
-        holder.txtDate.setText(DateFormatter.getConversationTimestamp(mContext, conversation.getDate()));
+        holder.txtDate.setText(DateFormatter_.getInstance_(mContext).getConversationTimestamp(mContext, conversation.getDate()));
 
         // Subject
         holder.txtMsg.setText(conversation.getSnippet());

@@ -24,4 +24,7 @@ public interface MessagesPref {
 
     @DefaultString("")
     String mmsPort();
+
+    @DefaultBoolean(false)
+    boolean isUsing24HourTime();
 }

@@ -1,20 +1,26 @@
 package com.moez.QKSMS.common.utils;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
+
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import minium.co.messages.R;
-import minium.co.messages.app.MessagesApp;
+import minium.co.messages.app.MessagesApp_;
+import minium.co.messages.app.MessagesPref_;
 
-public abstract class DateFormatter {
+@EBean
+public class DateFormatter {
 
-    public static String getConversationTimestamp(Context context, long date) {
+    @Pref
+    MessagesPref_ prefs;
+
+    public String getConversationTimestamp(Context context, long date) {
         if (isSameDay(date)) {
             return accountFor24HourTime(context, new SimpleDateFormat("h:mm a")).format(date);
         } else if (isSameWeek(date)) {
@@ -26,37 +32,33 @@ public abstract class DateFormatter {
         }
     }
 
-    private static boolean isSameDay(long date) {
+    private boolean isSameDay(long date) {
         SimpleDateFormat formatter = new SimpleDateFormat("D, y");
         return formatter.format(date).equals(formatter.format(System.currentTimeMillis()));
     }
 
-    private static boolean isSameWeek(long date) {
+    private boolean isSameWeek(long date) {
         SimpleDateFormat formatter = new SimpleDateFormat("w, y");
         return formatter.format(date).equals(formatter.format(System.currentTimeMillis()));
     }
 
-    private static boolean isSameYear(long date) {
+    private boolean isSameYear(long date) {
         SimpleDateFormat formatter = new SimpleDateFormat("y");
         return formatter.format(date).equals(formatter.format(System.currentTimeMillis()));
     }
 
-    private static boolean isYesterday(long date) {
+    private boolean isYesterday(long date) {
         SimpleDateFormat formatter = new SimpleDateFormat("yD");
         return Integer.parseInt(formatter.format(date)) + 1 == Integer.parseInt(formatter.format(System.currentTimeMillis()));
     }
 
-    public static SimpleDateFormat accountFor24HourTime(Context context, SimpleDateFormat input) { //pass in 12 hour time. If needed, change to 24 hr.
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        /*SKIP boolean isUsing24HourTime = prefs.getBoolean(SettingsFragment.TIMESTAMPS_24H, DateFormat.is24HourFormat(context));
-
-        if (isUsing24HourTime) {
+    public SimpleDateFormat accountFor24HourTime(Context context, SimpleDateFormat input) { //pass in 12 hour time. If needed, change to 24 hr.
+        if (prefs.isUsing24HourTime().get()) {
             return new SimpleDateFormat(input.toPattern().replace('h', 'H').replaceAll(" a", ""));
-        } else */
-            return input;
+        } else return input;
     }
 
-    public static String getMessageTimestamp(Context context, long date) {
+    public String getMessageTimestamp(Context context, long date) {
         String time = ", " + accountFor24HourTime(context, new SimpleDateFormat("h:mm a")).format(date);
         if (isSameDay(date)) {
             return accountFor24HourTime(context, new SimpleDateFormat("h:mm a")).format(date);
@@ -71,20 +73,19 @@ public abstract class DateFormatter {
         return DateUtils.formatDateTime(context, date, DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH) + time;
     }
 
-    public static String getDate(Context context, long date) {
+    public String getDate(Context context, long date) {
         return DateUtils.formatDateTime(context, date, DateUtils.FORMAT_SHOW_DATE) + accountFor24HourTime(context, new SimpleDateFormat(", h:mm:ss a")).format(date);
     }
 
-    public static String getRelativeTimestamp(long date) {
+    public String getRelativeTimestamp(long date) {
         String relativeTimestamp = (String) DateUtils.getRelativeTimeSpanString(date);
         if (relativeTimestamp.equals("in 0 minutes") || relativeTimestamp.equals("0 minutes ago"))
-            return MessagesApp.getInstance().getString(R.string.date_just_now);
+            return MessagesApp_.getInstance().getString(R.string.date_just_now);
         return relativeTimestamp;
     }
 
-    public static String getSummaryTimestamp(Context context, String time) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("H:mm")
-                ;
+    public String getSummaryTimestamp(Context context, String time) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("H:mm");
         Date date;
 
         try {
