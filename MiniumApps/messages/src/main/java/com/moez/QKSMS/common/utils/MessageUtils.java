@@ -6,12 +6,15 @@ import android.text.TextUtils;
 import minium.co.messages.R;
 
 /**
- * Created by Shahab on 3/31/2016.
+ * An utility class for managing messages.
  */
 public class MessageUtils {
 
-    private static String sLocalNumber;
     private static String[] sNoSubjectStrings;
+
+    private MessageUtils() {
+        // Forbidden being instantiated.
+    }
 
     /**
      * cleanseMmsSubject will take a subject that's says, "<Subject: no subject>", and return
