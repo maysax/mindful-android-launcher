@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.conversationlist.ConversationListFragment">
+    tools:context="com.moez.QKSMS.ui.conversationlist.ConversationListFragment">
 
     <LinearLayout
         android:id="@+id/emptyLayout"

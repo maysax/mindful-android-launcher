@@ -2,6 +2,9 @@ package minium.co.messages.ui;
 
 import android.text.TextUtils;
 
+import com.moez.QKSMS.ui.conversationlist.ConversationListFragment_;
+import com.moez.QKSMS.ui.messagelist.MessageListFragment_;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.InstanceState;
@@ -10,8 +13,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import minium.co.core.ui.CoreActivity;
 import minium.co.messages.R;
 import minium.co.messages.app.MessagesPref_;
-import minium.co.messages.ui.conversationlist.ConversationListFragment_;
-import minium.co.messages.ui.messagelist.MessageListFragment_;
 
 
 @EActivity(R.layout.activity_main)
