@@ -2,7 +2,10 @@ package minium.co.messages.app;
 
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
+import org.androidannotations.annotations.sharedpreferences.DefaultStringSet;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+
+import java.util.Set;
 
 /**
  * Created by Shahab on 4/1/2016.
@@ -27,4 +30,10 @@ public interface MessagesPref {
 
     @DefaultBoolean(false)
     boolean isUsing24HourTime();
+
+    /**
+     * =================== Conversation configurations  ===================
+     */
+    @DefaultStringSet({})
+    Set<String> notificationDisabled();
 }

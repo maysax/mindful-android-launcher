@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.moez.QKSMS.common.ConversationPrefsHelper_;
 import com.moez.QKSMS.common.utils.DateFormatter_;
 import com.moez.QKSMS.data.Contact;
 import com.moez.QKSMS.data.Conversation;
@@ -49,10 +50,8 @@ public class ConversationListAdapter  extends RecyclerCursorAdapter<Conversation
         holder.mContext = mContext;
         holder.mClickListener = mItemClickListener;
         holder.root.setOnClickListener(holder);
-
-        //holder.badgeMuted.setVisibility(View.VISIBLE);
-
-        //holder.badgeError.setVisibility(View.VISIBLE);
+        holder.badgeMuted.setVisibility(ConversationPrefsHelper_.getInstance_(mContext).getNotificationsEnabled(conversation.getThreadId()) ? View.GONE : View.VISIBLE);
+        holder.badgeError.setVisibility(conversation.hasError() ? View.VISIBLE : View.GONE);
 
         final boolean hasUnreadMessages = conversation.hasUnreadMessages();
         if (hasUnreadMessages) {

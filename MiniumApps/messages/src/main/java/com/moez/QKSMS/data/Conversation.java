@@ -104,6 +104,13 @@ public class Conversation {
     }
 
     /**
+     * Returns true if any messages in the conversation are in an error state.
+     */
+    public synchronized boolean hasError() {
+        return mHasError;
+    }
+
+    /**
      * Returns the thread ID of this conversation.  Can be zero if
      * {@link #ensureThreadId} has not been called yet.
      */
