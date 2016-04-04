@@ -1,15 +1,19 @@
 package com.moez.QKSMS.common.utils;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+
+import com.moez.QKSMS.data.Message;
+import com.moez.QKSMS.transaction.SmsHelper;
+
+import minium.co.core.log.Tracer;
 
 
 public class CursorUtils {
-    public static final String TAG = "CursorUtils";
 
     /**
      * Returns true if the cursor is non-null and not closed.
@@ -28,9 +32,9 @@ public class CursorUtils {
         }
 
         for (int i = 0; i < cursor.getColumnCount(); i++) {
-            Log.d(TAG, "Column " + cursor.getColumnName(i) + ": " + cursor.getString(i));
+            Tracer.v("Column" + cursor.getColumnName(i) + ": " + cursor.getString(i));
         }
-        Log.d(TAG, "------------------------------------------------------------");
+        Tracer.v("------------------------------------------------------------");
     }
 
     public static void prepareEmulator(Context context) {
@@ -45,7 +49,6 @@ public class CursorUtils {
 
         ContentResolver contentResolver = context.getContentResolver();
 
-        /*SKIP
         String[][]messages = new String[][] {
                 {"4165254009", "Why are you texting myself?", "1399856640", "" + Message.RECEIVED}, // address, body, date, type
                 {"4166485592", "These popups are so handy!", "1400079840", "" + Message.RECEIVED}};
@@ -58,7 +61,7 @@ public class CursorUtils {
             cv.put("date_sent", messages[i][2]);
             cv.put("type", messages[i][3]);
             contentResolver.insert(SmsHelper.SMS_CONTENT_PROVIDER, cv);
-        }*/
+        }
 
 
         /*for (int i = 0; i < messages.length; i++) {
