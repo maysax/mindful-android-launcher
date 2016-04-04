@@ -42,10 +42,6 @@ public class MessagesApp extends CoreApplication {
                 + " || Build time:  " + BuildConfig.BUILD_TIME
                 + " || Build flavor: " + minium.co.messages.BuildConfig.FLAVOR
                 + " || Build type: " + minium.co.messages.BuildConfig.BUILD_TYPE);
-
-        // Figure out the country *before* loading contacts and formatting numbers
-        Country country = new Country(Locale.getDefault().getCountry(), Country.COUNTRY_SOURCE_LOCALE);
-        mCountryIso = country.getCountryIso();
     }
 
     @Override
@@ -56,11 +52,16 @@ public class MessagesApp extends CoreApplication {
         Conversation.init(this);
     }
 
-    // This function CAN return null.
+    /**
+     * Figure out the country *before* loading contacts and formatting numbers
+     *
+     * @return Country ISO 
+     *
+     * This function can return NULL
+     */
     public String getCurrentCountryIso() {
         if (mCountryIso == null) {
-            Country country = new Country(Locale.getDefault().getCountry(), Country.COUNTRY_SOURCE_LOCALE);
-            mCountryIso = country.getCountryIso();
+            mCountryIso = new Country(Locale.getDefault().getCountry(), Country.COUNTRY_SOURCE_LOCALE).getCountryIso();
         }
         return mCountryIso;
     }

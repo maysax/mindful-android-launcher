@@ -20,7 +20,7 @@ import minium.co.core.log.Tracer;
 import minium.co.messages.R;
 import minium.co.messages.app.MessagesApp;
 import minium.co.messages.app.MessagesApp_;
-import minium.co.messages.common.util.IOUtils;
+import minium.co.messages.utils.IOUtils;
 import com.moez.QKSMS.transaction.SmsHelper;
 
 /**

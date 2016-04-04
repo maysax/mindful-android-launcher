@@ -1,4 +1,4 @@
-package minium.co.messages.common.util;
+package minium.co.messages.utils;
 
 /**
  * Created by Shahab on 3/30/2016.
