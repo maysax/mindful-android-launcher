@@ -23,9 +23,6 @@ import minium.co.messages.app.MessagesApp_;
 import minium.co.messages.utils.IOUtils;
 import com.moez.QKSMS.transaction.SmsHelper;
 
-/**
- * Created by shahab on 3/25/16.
- */
 public class Contact {
 
     public synchronized boolean isNamed() {

@@ -13,9 +13,7 @@ import minium.co.core.log.LogConfig;
 import minium.co.core.ui.CoreActivity;
 import minium.co.messages.R;
 
-/**
- * Created by shahab on 3/25/16.
- */
+
 public class ConversationListAdapter  extends RecyclerCursorAdapter<ConversationListViewHolder, Conversation> {
 
     protected final String TRACE_TAG = LogConfig.TRACE_TAG + "ConversationListAdapter";

@@ -8,17 +8,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import minium.co.core.ui.CoreActivity;
-import minium.co.messages.R;
 import com.moez.QKSMS.data.Contact;
 import com.moez.QKSMS.data.Conversation;
 import com.moez.QKSMS.data.ConversationLegacy;
-import minium.co.messages.ui.MainActivity;
 import com.moez.QKSMS.ui.base.ClickyViewHolder;
 
-/**
- * Created by shahab on 3/25/16.
- */
+import minium.co.core.ui.CoreActivity;
+import minium.co.messages.R;
+import minium.co.messages.ui.MainActivity;
 
 public class ConversationListViewHolder extends ClickyViewHolder<Conversation> implements Contact.UpdateListener {
 

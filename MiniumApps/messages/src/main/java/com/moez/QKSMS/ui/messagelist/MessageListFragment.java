@@ -13,6 +13,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 
+import com.moez.QKSMS.data.Conversation;
+import com.moez.QKSMS.data.ConversationLegacy;
+import com.moez.QKSMS.data.Message;
+import com.moez.QKSMS.transaction.SmsHelper;
+import com.moez.QKSMS.ui.base.QKContentFragment;
+import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
@@ -21,16 +28,7 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import minium.co.messages.R;
-import com.moez.QKSMS.data.Conversation;
-import com.moez.QKSMS.data.ConversationLegacy;
-import com.moez.QKSMS.data.Message;
-import com.moez.QKSMS.transaction.SmsHelper;
-import com.moez.QKSMS.ui.base.QKContentFragment;
-import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
 
-/**
- * Created by Shahab on 3/31/2016.
- */
 @EFragment(R.layout.fragment_conversation)
 public class MessageListFragment extends QKContentFragment implements  LoaderManager.LoaderCallbacks<Cursor>, RecyclerCursorAdapter.ItemClickListener<MessageItem> {
 

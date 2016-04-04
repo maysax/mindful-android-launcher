@@ -16,9 +16,7 @@ import minium.co.core.log.Tracer;
 import minium.co.messages.R;
 import com.moez.QKSMS.transaction.SmsHelper;
 
-/**
- * Created by shahab on 3/25/16.
- */
+
 public class Conversation {
 
     protected final String TRACE_TAG = LogConfig.TRACE_TAG + "Conversation";

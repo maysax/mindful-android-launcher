@@ -5,15 +5,12 @@ import android.database.Cursor;
 import android.util.LruCache;
 
 import com.google.android.mms.MmsException;
+import com.moez.QKSMS.common.utils.CursorUtils;
 
 import java.util.regex.Pattern;
 
 import minium.co.core.log.Tracer;
-import com.moez.QKSMS.common.utils.CursorUtils;
 
-/**
- * Created by Shahab on 3/31/2016.
- */
 public class MessageItemCache extends LruCache<Long, MessageItem> {
 
     private Context mContext;

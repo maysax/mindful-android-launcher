@@ -3,13 +3,11 @@ package com.moez.QKSMS.ui.messagelist;
 import android.view.View;
 import android.widget.TextView;
 
-import minium.co.core.ui.CoreActivity;
-import minium.co.messages.R;
 import com.moez.QKSMS.ui.base.ClickyViewHolder;
 
-/**
- * Created by Shahab on 3/31/2016.
- */
+import minium.co.core.ui.CoreActivity;
+import minium.co.messages.R;
+
 public class MessageListViewHolder extends ClickyViewHolder<MessageItem> {
 
     protected View root;

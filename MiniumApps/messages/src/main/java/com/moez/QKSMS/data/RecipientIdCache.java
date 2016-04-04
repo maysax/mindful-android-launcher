@@ -14,9 +14,7 @@ import java.util.Map;
 import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
 
-/**
- * Created by shahab on 3/25/16.
- */
+
 public class RecipientIdCache {
 
     private static Uri sAllCanonical =

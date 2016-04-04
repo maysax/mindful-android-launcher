@@ -2,9 +2,7 @@ package com.moez.QKSMS.data;
 
 import android.net.Uri;
 
-/**
- * Created by Shahab on 3/31/2016.
- */
+
 public class Message {
 
     public static final int RECEIVED = 1;

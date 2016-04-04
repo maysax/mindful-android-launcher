@@ -2,9 +2,7 @@ package com.moez.QKSMS.ui.dialog;
 
 import android.app.DialogFragment;
 
-/**
- * Created by Shahab on 4/1/2016.
- */
+
 public interface DialogFragmentListener {
     // Called when the DialogFragment button is pressed, the DialogFragment is dismissed, etc.
     public void onDialogFragmentResult(int resultCode, DialogFragment fragment);

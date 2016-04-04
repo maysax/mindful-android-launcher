@@ -1,8 +1,5 @@
 package com.moez.QKSMS;
 
-/**
- * Created by Shahab on 3/30/2016.
- */
 public class MmsConfig {
 
     // Email gateway alias support, including the master switch and different rules

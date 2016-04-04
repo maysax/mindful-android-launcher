@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 
 import minium.co.messages.R;
 
-/**
- * Created by Shahab on 3/31/2016.
- */
+
 public class DefaultSmsHelper {
     private Context mContext;
     private int mMessage;

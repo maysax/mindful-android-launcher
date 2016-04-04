@@ -5,9 +5,7 @@ import android.view.View;
 
 import minium.co.core.ui.CoreActivity;
 
-/**
- * Created by shahab on 3/25/16.
- */
+
 public abstract class ClickyViewHolder<DataType> extends RecyclerView.ViewHolder
         implements View.OnClickListener {
 

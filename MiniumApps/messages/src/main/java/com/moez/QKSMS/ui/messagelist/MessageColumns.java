@@ -7,9 +7,7 @@ import android.provider.Telephony;
 
 import minium.co.core.log.Tracer;
 
-/**
- * Created by Shahab on 3/31/2016.
- */
+
 public class MessageColumns {
     public static final int COLUMN_MSG_TYPE            = 0;
     public static final int COLUMN_ID                  = 1;

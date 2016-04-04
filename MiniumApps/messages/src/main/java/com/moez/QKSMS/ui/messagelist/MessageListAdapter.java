@@ -12,6 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.mms.pdu_alt.PduHeaders;
+import com.moez.QKSMS.common.utils.CursorUtils;
+import com.moez.QKSMS.common.utils.LinkifyUtils;
+import com.moez.QKSMS.common.utils.MessageUtils;
+import com.moez.QKSMS.data.Contact;
+import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,15 +24,7 @@ import java.util.regex.Pattern;
 import minium.co.core.log.LogConfig;
 import minium.co.core.ui.CoreActivity;
 import minium.co.messages.R;
-import com.moez.QKSMS.common.utils.CursorUtils;
-import com.moez.QKSMS.common.utils.LinkifyUtils;
-import com.moez.QKSMS.common.utils.MessageUtils;
-import com.moez.QKSMS.data.Contact;
-import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
 
-/**
- * Created by Shahab on 3/31/2016.
- */
 public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHolder, MessageItem>  {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "MessageListAdapter";

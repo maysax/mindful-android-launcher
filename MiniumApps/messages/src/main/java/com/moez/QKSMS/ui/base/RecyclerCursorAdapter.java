@@ -4,14 +4,13 @@ import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.moez.QKSMS.common.utils.CursorUtils;
+
 import java.util.HashMap;
 
 import minium.co.core.ui.CoreActivity;
-import com.moez.QKSMS.common.utils.CursorUtils;
 
-/**
- * Created by shahab on 3/25/16.
- */
+
 public abstract class RecyclerCursorAdapter<VH extends RecyclerView.ViewHolder, DataType>
         extends RecyclerView.Adapter<VH> {
 

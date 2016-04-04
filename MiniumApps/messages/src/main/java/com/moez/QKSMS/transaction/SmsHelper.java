@@ -9,17 +9,14 @@ import android.util.Patterns;
 import com.google.android.mms.pdu_alt.CharacterSets;
 import com.google.android.mms.pdu_alt.EncodedStringValue;
 import com.google.android.mms.pdu_alt.PduPersister;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.moez.QKSMS.MmsConfig;
 import com.moez.QKSMS.data.Message;
 import com.moez.QKSMS.ui.messagelist.MessageColumns;
 
-/**
- * Created by shahab on 3/25/16.
- */
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
 public class SmsHelper {
 
     public static final Uri SMS_CONTENT_PROVIDER = Uri.parse("content://sms/");

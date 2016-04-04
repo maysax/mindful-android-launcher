@@ -4,9 +4,6 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 
-/**
- * Created by shahab on 3/25/16.
- */
 public class ContactList extends ArrayList<Contact> {
 
     /**

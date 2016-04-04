@@ -29,9 +29,6 @@ import minium.co.messages.R;
  *
  * <p>The only mutable field is the cached formatted message member,
  * the formatting of which is done outside this model in MessageListItem.
- *
- * Copied from QKSMS
- * Created by Shahab on 3/31/2016.
  */
 public class MessageItem {
 
