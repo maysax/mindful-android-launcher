@@ -51,12 +51,8 @@ public class SearchAdapter extends RecyclerCursorAdapter<SearchViewHolder, Searc
 
         if (data.contact != null) {
             Drawable avatarDrawable = data.contact.getAvatar(mContext, null);
-            holder.avatar.setImageDrawable(avatarDrawable);
-            holder.avatar.setContactName(data.contact.getName());
             holder.name.setText(data.contact.getName());
         } else {
-            holder.avatar.setImageDrawable(null);
-            holder.avatar.setContactName(null);
             holder.name.setText(null);
         }
 
