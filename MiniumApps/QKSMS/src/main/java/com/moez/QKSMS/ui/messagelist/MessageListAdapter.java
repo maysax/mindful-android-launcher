@@ -8,7 +8,6 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.provider.Telephony.TextBasedSmsColumns;
 import android.telephony.TelephonyManager;
@@ -20,7 +19,6 @@ import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.android.mms.transaction.Transaction;
 import com.android.mms.transaction.TransactionBundle;
@@ -44,7 +42,6 @@ import com.moez.QKSMS.ui.base.QKActivity;
 import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
 import com.moez.QKSMS.ui.mms.MmsThumbnailPresenter;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
-import com.moez.QKSMS.ui.view.AvatarView;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -123,10 +120,10 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
         boolean sent;
 
         if (viewType == INCOMING_ITEM) {
-            resource = R.layout.list_item_message_in;
+            resource = R.layout.list_item_message_in_2;
             sent = false;
         } else {
-            resource = R.layout.list_item_message_out;
+            resource = R.layout.list_item_message_out_2;
             sent = true;
         }
 
@@ -140,30 +137,30 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
         if (sent) {
             // set up colors
 //            holder.mBodyTextView.setOnColorBackground(ThemeManager.getSentBubbleColor() != ThemeManager.getNeutralBubbleColor());
-            holder.mDateView.setOnColorBackground(false);
+//            holder.mDateView.setOnColorBackground(false);
             holder.mDeliveredIndicator.setColorFilter(ThemeManager.getTextOnBackgroundSecondary(), PorterDuff.Mode.SRC_ATOP);
             holder.mLockedIndicator.setColorFilter(ThemeManager.getTextOnBackgroundSecondary(), PorterDuff.Mode.SRC_ATOP);
 
             // set up avatar
-            holder.mAvatarView.setImageDrawable(Contact.getMe(true).getAvatar(mContext, null));
-            holder.mAvatarView.setContactName(AvatarView.ME);
-            holder.mAvatarView.assignContactUri(ContactsContract.Profile.CONTENT_URI);
-            if (mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_SENT, true)) {
-                ((RelativeLayout.LayoutParams) holder.mMessageBlock.getLayoutParams()).setMargins(0, 0, 0, 0);
-                holder.mAvatarView.setVisibility(View.GONE);
-            }
+//            holder.mAvatarView.setImageDrawable(Contact.getMe(true).getAvatar(mContext, null));
+//            holder.mAvatarView.setContactName(AvatarView.ME);
+//            holder.mAvatarView.assignContactUri(ContactsContract.Profile.CONTENT_URI);
+//            if (mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_SENT, true)) {
+//                ((RelativeLayout.LayoutParams) holder.mMessageBlock.getLayoutParams()).setMargins(0, 0, 0, 0);
+//                holder.mAvatarView.setVisibility(View.GONE);
+//            }
         } else {
             // set up colors
 //            holder.mBodyTextView.setOnColorBackground(ThemeManager.getReceivedBubbleColor() != ThemeManager.getNeutralBubbleColor());
-            holder.mDateView.setOnColorBackground(false);
+//            holder.mDateView.setOnColorBackground(false);
             holder.mDeliveredIndicator.setColorFilter(ThemeManager.getTextOnBackgroundSecondary(), PorterDuff.Mode.SRC_ATOP);
             holder.mLockedIndicator.setColorFilter(ThemeManager.getTextOnBackgroundSecondary(), PorterDuff.Mode.SRC_ATOP);
 
             // set up avatar
-            if (mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_RECEIVED, false)) {
-                ((RelativeLayout.LayoutParams) holder.mMessageBlock.getLayoutParams()).setMargins(0, 0, 0, 0);
-                holder.mAvatarView.setVisibility(View.GONE);
-            }
+//            if (mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_RECEIVED, false)) {
+//                ((RelativeLayout.LayoutParams) holder.mMessageBlock.getLayoutParams()).setMargins(0, 0, 0, 0);
+//                holder.mAvatarView.setVisibility(View.GONE);
+//            }
         }
 
         LiveViewManager.registerView(QKPreference.BACKGROUND, this, key -> {
@@ -319,8 +316,8 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
             }
         }
 
-        holder.mDateView.setVisibility(showTimestamp ? View.VISIBLE : View.GONE);
-        holder.mSpace.setVisibility(showAvatar ? View.VISIBLE : View.GONE);
+//        holder.mDateView.setVisibility(showTimestamp ? View.VISIBLE : View.GONE);
+//        holder.mSpace.setVisibility(showAvatar ? View.VISIBLE : View.GONE);
 //        holder.mBodyTextView.setBackgroundResource(showAvatar ? (messageItem.isMe() ? ThemeManager.getSentBubbleRes() :
 //                ThemeManager.getReceivedBubbleRes()) : (messageItem.isMe() ?
 //                ThemeManager.getSentBubbleAltRes() : ThemeManager.getReceivedBubbleAltRes()));
@@ -333,11 +330,11 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
 //            }
 //        });
 
-        if (messageItem.isMe() && !mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_SENT, true)) {
-            holder.mAvatarView.setVisibility(showAvatar ? View.VISIBLE : View.GONE);
-        } else if (!messageItem.isMe() && !mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_RECEIVED, false)) {
-            holder.mAvatarView.setVisibility(showAvatar ? View.VISIBLE : View.GONE);
-        }
+//        if (messageItem.isMe() && !mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_SENT, true)) {
+//            holder.mAvatarView.setVisibility(showAvatar ? View.VISIBLE : View.GONE);
+//        } else if (!messageItem.isMe() && !mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_RECEIVED, false)) {
+//            holder.mAvatarView.setVisibility(showAvatar ? View.VISIBLE : View.GONE);
+//        }
     }
 
     private void bindBody(MessageListViewHolder holder, MessageItem messageItem) {
@@ -427,13 +424,14 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
     private void bindAvatar(MessageListViewHolder holder, MessageItem messageItem) {
         if (!messageItem.isMe()) {
             Contact contact = Contact.get(messageItem.mAddress, true);
-            holder.mAvatarView.setImageDrawable(contact.getAvatar(mContext, null));
-            holder.mAvatarView.setContactName(contact.getName());
-            if (contact.existsInDatabase()) {
-                holder.mAvatarView.assignContactUri(contact.getUri());
-            } else {
-                holder.mAvatarView.assignContactFromPhone(contact.getNumber(), true);
-            }
+            holder.mTxtName.setText(contact.getName());
+//            holder.mAvatarView.setImageDrawable(contact.getAvatar(mContext, null));
+//            holder.mAvatarView.setContactName(contact.getName());
+//            if (contact.existsInDatabase()) {
+//                holder.mAvatarView.assignContactUri(contact.getUri());
+//            } else {
+//                holder.mAvatarView.assignContactFromPhone(contact.getNumber(), true);
+//            }
         }
     }
 

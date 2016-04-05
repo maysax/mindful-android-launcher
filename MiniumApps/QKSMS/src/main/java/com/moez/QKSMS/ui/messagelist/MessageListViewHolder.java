@@ -8,18 +8,17 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.common.google.ItemLoadedCallback;
 import com.moez.QKSMS.common.google.ThumbnailManager;
 import com.moez.QKSMS.enums.QKPreference;
-import com.moez.QKSMS.interfaces.SlideViewInterface;
 import com.moez.QKSMS.interfaces.LiveView;
+import com.moez.QKSMS.interfaces.SlideViewInterface;
 import com.moez.QKSMS.ui.base.ClickyViewHolder;
 import com.moez.QKSMS.ui.base.QKActivity;
 import com.moez.QKSMS.ui.mms.Presenter;
-import com.moez.QKSMS.ui.view.AvatarView;
 import com.moez.QKSMS.ui.view.QKTextView;
 
 import java.util.Map;
@@ -31,12 +30,10 @@ public class MessageListViewHolder extends ClickyViewHolder<MessageItem> impleme
     protected View mRoot;
     protected QKTextView mBodyTextView;
     protected QKTextView mDateView;
+    protected QKTextView mTxtName;
     protected ImageView mLockedIndicator;
     protected ImageView mDeliveredIndicator;
     protected ImageView mDetailsIndicator;
-    protected AvatarView mAvatarView;
-    protected LinearLayout mMessageBlock;
-    protected View mSpace;
     protected FrameLayout mMmsView;
     protected ImageView mImageView;
     protected ImageButton mSlideShowButton;
@@ -50,14 +47,12 @@ public class MessageListViewHolder extends ClickyViewHolder<MessageItem> impleme
         super(context, view);
 
         mRoot = view;
-        mBodyTextView = (QKTextView) view.findViewById(R.id.text_view);
-        mDateView = (QKTextView) view.findViewById(R.id.date_view);
+        mBodyTextView = (QKTextView) view.findViewById(R.id.txtMsg);
+        mDateView = (QKTextView) view.findViewById(R.id.txtDate);
+        mTxtName = (QKTextView) view.findViewById(R.id.txtName);
         mLockedIndicator = (ImageView) view.findViewById(R.id.locked_indicator);
         mDeliveredIndicator = (ImageView) view.findViewById(R.id.delivered_indicator);
         mDetailsIndicator = (ImageView) view.findViewById(R.id.details_indicator);
-        mAvatarView = (AvatarView) view.findViewById(R.id.avatar);
-        mMessageBlock = (LinearLayout) view.findViewById(R.id.message_block);
-        mSpace = view.findViewById(R.id.space);
         mMmsView = (FrameLayout) view.findViewById(R.id.mms_view);
         mImageView = (ImageView) view.findViewById(R.id.image_view);
         mSlideShowButton = (ImageButton) view.findViewById(R.id.play_slideshow_button);

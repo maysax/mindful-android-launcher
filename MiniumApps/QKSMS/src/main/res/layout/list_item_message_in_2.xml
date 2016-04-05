@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:id="@+id/layoutTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/locked_indicator"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:paddingRight="4dp"
+            android:src="@drawable/ic_lock"/>
+
+        <ImageView
+            android:id="@+id/delivered_indicator"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:paddingRight="4dp"
+            android:src="@drawable/ic_accept"/>
+
+        <ImageView
+            android:id="@+id/details_indicator"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:paddingRight="4dp"
+            android:src="@drawable/ic_info"/>
+
+        <com.moez.QKSMS.ui.view.QKTextView
+            android:id="@+id/txtDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            app:type="tertiary"
+            tools:text="4:41PM"/>
+
+        <com.moez.QKSMS.ui.view.QKTextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:type="secondary"
+            tools:text="Contact Name"/>
+
+    </LinearLayout>
+
+
+    <com.moez.QKSMS.ui.view.QKTextView
+        android:id="@+id/txtMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layoutTop"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
+        android:layout_marginTop="4dp"
+        android:autoLink="all"
+        android:linksClickable="true"
+        tools:text="Hello This is a very long message"/>
+
+    <FrameLayout
+        android:id="@+id/mms_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_below="@id/txtMsg"
+        android:foreground="@drawable/card_mask">
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="@dimen/mms_inline_attachment_size"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:visibility="visible"/>
+
+        <ImageButton
+            android:id="@+id/play_slideshow_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/button_background_transparent"
+            android:padding="16dp"
+            android:src="@drawable/ic_play"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <ViewStub
+        android:id="@+id/mms_downloading_view_stub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout="@layout/view_mms_downloading"/>
+
+</RelativeLayout>
+
+
+
+
