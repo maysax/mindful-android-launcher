@@ -33,10 +33,9 @@ public class QKLinearLayout extends LinearLayout {
             for (int i = 0; i < a.length(); i++) {
                 int attr = a.getIndex(i);
 
-                switch (attr) {
-                    case R.styleable.QKLinearLayout_backgroundTint:
-                        mBackgroundTint = a.getInt(i, 0xFFFFFFFF);
-                        break;
+                if (attr == R.styleable.QKLinearLayout_backgroundTint) {
+                    mBackgroundTint = a.getInt(i, 0xFFFFFFFF);
+
                 }
             }
 

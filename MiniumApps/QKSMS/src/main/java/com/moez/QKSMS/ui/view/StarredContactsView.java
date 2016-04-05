@@ -168,10 +168,10 @@ public class StarredContactsView extends LinearLayout implements LoaderManager.L
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.toggle:
-                toggle();
-                break;
+        int i = v.getId();
+        if (i == R.id.toggle) {
+            toggle();
+
         }
     }
 }

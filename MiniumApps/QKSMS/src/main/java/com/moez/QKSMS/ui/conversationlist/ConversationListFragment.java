@@ -189,47 +189,42 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_blocked:
-                setShowingBlocked(!mShowBlocked);
-                return true;
-
-            case R.id.menu_delete:
-                DialogHelper.showDeleteConversationsDialog((MainActivity) mContext, mAdapter.getSelectedItems().keySet());
-                mAdapter.disableMultiSelectMode(true);
-                return true;
-
-            case R.id.menu_mark_read:
-                for (long threadId : mAdapter.getSelectedItems().keySet()) {
-                    if (getUnreadWeight() >= 0) {
-                        new ConversationLegacy(mContext, threadId).markRead();
-                    } else {
-                        new ConversationLegacy(mContext, threadId).markUnread();
-                    }
+        int i = item.getItemId();
+        if (i == R.id.menu_blocked) {
+            setShowingBlocked(!mShowBlocked);
+            return true;
+        } else if (i == R.id.menu_delete) {
+            DialogHelper.showDeleteConversationsDialog((MainActivity) mContext, mAdapter.getSelectedItems().keySet());
+            mAdapter.disableMultiSelectMode(true);
+            return true;
+        } else if (i == R.id.menu_mark_read) {
+            for (long threadId : mAdapter.getSelectedItems().keySet()) {
+                if (getUnreadWeight() >= 0) {
+                    new ConversationLegacy(mContext, threadId).markRead();
+                } else {
+                    new ConversationLegacy(mContext, threadId).markUnread();
                 }
-                mAdapter.disableMultiSelectMode(true);
-                return true;
-
-            case R.id.menu_block:
-                for (long threadId : mAdapter.getSelectedItems().keySet()) {
-                    if (getBlockedWeight() > 0) {
-                        BlockedConversationHelper.unblockConversation(mPrefs, threadId);
-                    } else {
-                        BlockedConversationHelper.blockConversation(mPrefs, threadId);
-                    }
+            }
+            mAdapter.disableMultiSelectMode(true);
+            return true;
+        } else if (i == R.id.menu_block) {
+            for (long threadId : mAdapter.getSelectedItems().keySet()) {
+                if (getBlockedWeight() > 0) {
+                    BlockedConversationHelper.unblockConversation(mPrefs, threadId);
+                } else {
+                    BlockedConversationHelper.blockConversation(mPrefs, threadId);
                 }
-                mAdapter.disableMultiSelectMode(true);
-                initLoaderManager();
-                return true;
-
-            case R.id.menu_delete_failed:
-                DialogHelper.showDeleteFailedMessagesDialog((MainActivity) mContext, mAdapter.getSelectedItems().keySet());
-                mAdapter.disableMultiSelectMode(true);
-                return true;
-
-            case R.id.menu_done:
-                mAdapter.disableMultiSelectMode(true);
-                return true;
+            }
+            mAdapter.disableMultiSelectMode(true);
+            initLoaderManager();
+            return true;
+        } else if (i == R.id.menu_delete_failed) {
+            DialogHelper.showDeleteFailedMessagesDialog((MainActivity) mContext, mAdapter.getSelectedItems().keySet());
+            mAdapter.disableMultiSelectMode(true);
+            return true;
+        } else if (i == R.id.menu_done) {
+            mAdapter.disableMultiSelectMode(true);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

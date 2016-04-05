@@ -475,32 +475,28 @@ public class MessageListFragment extends QKContentFragment implements ActivityLa
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_call:
-                makeCall();
-                return true;
-
-            case R.id.menu_notifications:
-                ConversationPrefsHelper conversationPrefs = new ConversationPrefsHelper(mContext, mThreadId);
-                boolean notificationMuted = conversationPrefs.getNotificationsEnabled();
-                conversationPrefs.putBoolean(SettingsFragment.NOTIFICATIONS, !notificationMuted);
-                mContext.invalidateOptionsMenu();
-                vibrateOnConversationStateChanged(notificationMuted);
-                return true;
-
-            case R.id.menu_details:
-                mConversationDetailsDialog.showDetails(mConversation);
-                return true;
-
-            case R.id.menu_notification_settings:
-                ConversationSettingsDialog.newInstance(mThreadId, mConversation.getRecipients().formatNames(", "))
-                        .setContext(mContext)
-                        .show();
-                return true;
-
-            case R.id.menu_delete_conversation:
-                DialogHelper.showDeleteConversationDialog((MainActivity) mContext, mThreadId);
-                return true;
+        int i = item.getItemId();
+        if (i == R.id.menu_call) {
+            makeCall();
+            return true;
+        } else if (i == R.id.menu_notifications) {
+            ConversationPrefsHelper conversationPrefs = new ConversationPrefsHelper(mContext, mThreadId);
+            boolean notificationMuted = conversationPrefs.getNotificationsEnabled();
+            conversationPrefs.putBoolean(SettingsFragment.NOTIFICATIONS, !notificationMuted);
+            mContext.invalidateOptionsMenu();
+            vibrateOnConversationStateChanged(notificationMuted);
+            return true;
+        } else if (i == R.id.menu_details) {
+            mConversationDetailsDialog.showDetails(mConversation);
+            return true;
+        } else if (i == R.id.menu_notification_settings) {
+            ConversationSettingsDialog.newInstance(mThreadId, mConversation.getRecipients().formatNames(", "))
+                    .setContext(mContext)
+                    .show();
+            return true;
+        } else if (i == R.id.menu_delete_conversation) {
+            DialogHelper.showDeleteConversationDialog((MainActivity) mContext, mThreadId);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

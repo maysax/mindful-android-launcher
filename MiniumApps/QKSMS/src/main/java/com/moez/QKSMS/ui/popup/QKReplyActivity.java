@@ -175,56 +175,49 @@ public class QKReplyActivity extends QKPopupActivity implements DialogInterface.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.menu_fold:
-                switchView();
-                if (mShowUnreadOnly) {
-                    item.setIcon(R.drawable.ic_unfold);
-                    item.setTitle(R.string.menu_show_all);
-                } else {
-                    item.setIcon(R.drawable.ic_fold);
-                    item.setTitle(R.string.menu_show_unread);
-                }
-                return true;
-
-            case R.id.menu_open_thread:
-                Intent threadIntent = new Intent(this, MainActivity.class);
-                threadIntent.putExtra(MainActivity.EXTRA_THREAD_ID, mConversationLegacy.getThreadId());
-                startActivity(threadIntent);
-                finish();
-                return true;
-
-            case R.id.menu_call:
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:" + mConversationLegacy.getAddress()));
-                startActivity(callIntent);
-                return true;
-
-            case R.id.menu_mark_read:
-                mConversationLegacy.markRead();
-                finish();
-                return true;
-
-            case R.id.menu_delete:
-                Intent intent = new Intent(this, DeleteUnreadMessageService.class);
-                intent.putExtra(DeleteUnreadMessageService.EXTRA_THREAD_URI, mConversation.getUri());
-                startService(intent);
-                finish();
-                return true;
-
-            case R.id.menu_copy:
-                Intent copyIntent = new Intent(this, CopyUnreadMessageTextService.class);
-                copyIntent.putExtra(DeleteUnreadMessageService.EXTRA_THREAD_URI, mConversation.getUri());
-                startService(copyIntent);
-                return true;
-
-            case R.id.menu_forward:
-                Intent forwardIntent = new Intent(this, QKComposeActivity.class);
-                forwardIntent.putExtra("sms_body", SmsHelper.getUnreadMessageText(this, mConversation.getUri()));
-                startActivity(forwardIntent);
-                finish();
-                return true;
+        int i = item.getItemId();
+        if (i == R.id.menu_fold) {
+            switchView();
+            if (mShowUnreadOnly) {
+                item.setIcon(R.drawable.ic_unfold);
+                item.setTitle(R.string.menu_show_all);
+            } else {
+                item.setIcon(R.drawable.ic_fold);
+                item.setTitle(R.string.menu_show_unread);
+            }
+            return true;
+        } else if (i == R.id.menu_open_thread) {
+            Intent threadIntent = new Intent(this, MainActivity.class);
+            threadIntent.putExtra(MainActivity.EXTRA_THREAD_ID, mConversationLegacy.getThreadId());
+            startActivity(threadIntent);
+            finish();
+            return true;
+        } else if (i == R.id.menu_call) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + mConversationLegacy.getAddress()));
+            startActivity(callIntent);
+            return true;
+        } else if (i == R.id.menu_mark_read) {
+            mConversationLegacy.markRead();
+            finish();
+            return true;
+        } else if (i == R.id.menu_delete) {
+            Intent intent = new Intent(this, DeleteUnreadMessageService.class);
+            intent.putExtra(DeleteUnreadMessageService.EXTRA_THREAD_URI, mConversation.getUri());
+            startService(intent);
+            finish();
+            return true;
+        } else if (i == R.id.menu_copy) {
+            Intent copyIntent = new Intent(this, CopyUnreadMessageTextService.class);
+            copyIntent.putExtra(DeleteUnreadMessageService.EXTRA_THREAD_URI, mConversation.getUri());
+            startService(copyIntent);
+            return true;
+        } else if (i == R.id.menu_forward) {
+            Intent forwardIntent = new Intent(this, QKComposeActivity.class);
+            forwardIntent.putExtra("sms_body", SmsHelper.getUnreadMessageText(this, mConversation.getUri()));
+            startActivity(forwardIntent);
+            finish();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

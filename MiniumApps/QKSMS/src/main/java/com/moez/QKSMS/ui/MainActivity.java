@@ -235,19 +235,19 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onKeyUp(KeyEvent.KEYCODE_BACK, null);
-                break;
-            case R.id.menu_settings:
-                switchContent(SettingsFragment.newInstance(R.xml.settings_main), true);
-                break;
-            case R.id.menu_search:
-                switchContent(new SearchFragment(), true);
-                break;
-            case R.id.menu_changelog:
-                DialogHelper.showChangelog(this);
-                break;
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onKeyUp(KeyEvent.KEYCODE_BACK, null);
+
+        } else if (i == R.id.menu_settings) {
+            switchContent(SettingsFragment.newInstance(R.xml.settings_main), true);
+
+        } else if (i == R.id.menu_search) {
+            switchContent(new SearchFragment(), true);
+
+        } else if (i == R.id.menu_changelog) {
+            DialogHelper.showChangelog(this);
+
         }
 
         return super.onOptionsItemSelected(item);

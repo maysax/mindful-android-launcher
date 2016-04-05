@@ -144,17 +144,17 @@ public class WelcomeActivity extends QKActivity implements ViewPager.OnPageChang
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.welcome_skip:
-                setResult(RESULT_OK, null);
-                finish();
-                break;
-            case R.id.welcome_previous:
-                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-                break;
-            case R.id.welcome_next:
-                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-                break;
+        int i = v.getId();
+        if (i == R.id.welcome_skip) {
+            setResult(RESULT_OK, null);
+            finish();
+
+        } else if (i == R.id.welcome_previous) {
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+
+        } else if (i == R.id.welcome_next) {
+            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+
         }
     }
 

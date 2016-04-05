@@ -22,10 +22,10 @@ public class WelcomeIntroFragment extends BaseWelcomeFragment implements View.On
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.welcome_start:
-                mPager.setCurrentItem(1);
-                break;
+        int i = v.getId();
+        if (i == R.id.welcome_start) {
+            mPager.setCurrentItem(1);
+
         }
     }
 }

@@ -486,38 +486,34 @@ public class ComposeView extends LinearLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.compose_button:
-                handleComposeButtonClick();
-                break;
+        int i = v.getId();
+        if (i == R.id.compose_button) {
+            handleComposeButtonClick();
 
-            case R.id.cancel:
-                clearAttachment();
-                break;
+        } else if (i == R.id.cancel) {
+            clearAttachment();
 
-            case R.id.attach:
-                if (hasSetupMms()) {
-                    mAttachmentPanel.setVisibility(GONE);
-                    updateButtonState();
-                    chooseAttachmentFromGallery();
-                }
-                break;
+        } else if (i == R.id.attach) {
+            if (hasSetupMms()) {
+                mAttachmentPanel.setVisibility(GONE);
+                updateButtonState();
+                chooseAttachmentFromGallery();
+            }
 
-            case R.id.camera:
-                if (hasSetupMms()) {
-                    mAttachmentPanel.setVisibility(GONE);
-                    updateButtonState();
-                    attachFromCamera();
-                }
-                break;
+        } else if (i == R.id.camera) {
+            if (hasSetupMms()) {
+                mAttachmentPanel.setVisibility(GONE);
+                updateButtonState();
+                attachFromCamera();
+            }
 
-            case R.id.delay:
-                if (!mPrefs.getBoolean(KEY_DELAYED_INFO_DIALOG_SHOWN, false) && !mDelayedMessagingEnabled) {
-                    showDelayedMessagingInfo();
-                } else {
-                    toggleDelayedMessaging();
-                }
-                break;
+        } else if (i == R.id.delay) {
+            if (!mPrefs.getBoolean(KEY_DELAYED_INFO_DIALOG_SHOWN, false) && !mDelayedMessagingEnabled) {
+                showDelayedMessagingInfo();
+            } else {
+                toggleDelayedMessaging();
+            }
+
         }
     }
 
