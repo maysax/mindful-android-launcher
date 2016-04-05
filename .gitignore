@@ -44,3 +44,5 @@ fabric.properties
 keys/
 
 gradlew.bat
+
+crashlytics-build.*
