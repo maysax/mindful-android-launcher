@@ -23,16 +23,6 @@
         android:layout_marginTop="24dp"
         android:visibility="gone" />
 
-    <com.moez.QKSMS.ui.view.AvatarView
-        android:id="@+id/conversation_list_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="12dp"
-        android:src="@drawable/tools_avatar"
-        app:initialSize="32dp" />
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"

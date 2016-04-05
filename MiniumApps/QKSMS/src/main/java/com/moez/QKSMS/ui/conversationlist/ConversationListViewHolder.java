@@ -7,6 +7,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.data.Contact;
 import com.moez.QKSMS.data.Conversation;
@@ -16,7 +17,6 @@ import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.base.ClickyViewHolder;
 import com.moez.QKSMS.ui.base.QKActivity;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
-import com.moez.QKSMS.ui.view.AvatarView;
 import com.moez.QKSMS.ui.view.QKTextView;
 
 public class ConversationListViewHolder extends ClickyViewHolder<Conversation> implements Contact.UpdateListener {
@@ -30,7 +30,6 @@ public class ConversationListViewHolder extends ClickyViewHolder<Conversation> i
     protected ImageView mutedView;
     protected ImageView unreadView;
     protected ImageView errorIndicator;
-    protected AvatarView mAvatarView;
     protected ImageView mSelected;
 
     public ConversationListViewHolder(QKActivity context, View view) {
@@ -44,7 +43,6 @@ public class ConversationListViewHolder extends ClickyViewHolder<Conversation> i
         mutedView = (ImageView) view.findViewById(R.id.conversation_list_muted);
         unreadView = (ImageView) view.findViewById(R.id.conversation_list_unread);
         errorIndicator = (ImageView) view.findViewById(R.id.conversation_list_error);
-        mAvatarView = (AvatarView) view.findViewById(R.id.conversation_list_avatar);
         mSelected = (ImageView) view.findViewById(R.id.selected);
     }
 
@@ -59,12 +57,6 @@ public class ConversationListViewHolder extends ClickyViewHolder<Conversation> i
             if (contact.getNumber().equals(updated.getNumber())) {
                 drawable = contact.getAvatar(mContext, null);
                 name = contact.getName();
-
-                if (contact.existsInDatabase()) {
-                    mAvatarView.assignContactUri(contact.getUri());
-                } else {
-                    mAvatarView.assignContactFromPhone(contact.getNumber(), true);
-                }
             } else {
                 // onUpdate was called because *some* contact was loaded, but it wasn't the contact for this
                 // conversation, and thus we shouldn't update the UI because we won't be able to set the correct data
@@ -75,11 +67,9 @@ public class ConversationListViewHolder extends ClickyViewHolder<Conversation> i
         } else if (mData.getRecipients().size() > 1) {
             drawable = null;
             name = "" + mData.getRecipients().size();
-            mAvatarView.assignContactUri(null);
         } else {
             drawable = null;
             name = "#";
-            mAvatarView.assignContactUri(null);
         }
 
         final ConversationLegacy conversationLegacy = new ConversationLegacy(mContext, mData.getThreadId());
@@ -88,8 +78,6 @@ public class ConversationListViewHolder extends ClickyViewHolder<Conversation> i
             ((MainActivity) mContext).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    mAvatarView.setImageDrawable(drawable);
-                    mAvatarView.setContactName(name);
                     fromView.setText(formatMessage(mData, conversationLegacy));
                 }
             });

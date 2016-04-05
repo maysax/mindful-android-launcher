@@ -101,12 +101,6 @@ public class ConversationListAdapter extends RecyclerCursorAdapter<ConversationL
             holder.mSelected.setVisibility(View.GONE);
         }
 
-        if (mPrefs.getBoolean(SettingsFragment.HIDE_AVATAR_CONVERSATIONS, false)) {
-            holder.mAvatarView.setVisibility(View.GONE);
-        } else {
-            holder.mAvatarView.setVisibility(View.VISIBLE);
-        }
-
         // Date
         holder.dateView.setText(DateFormatter.getConversationTimestamp(mContext, conversation.getDate()));
 
