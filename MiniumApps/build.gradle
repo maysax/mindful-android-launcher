@@ -22,6 +22,8 @@ buildscript {
         // Fabric
         // https://twittersdk.artifactoryonline.com/twittersdk/public/io/fabric/tools/gradle/
         classpath 'io.fabric.tools:gradle:1.21.2'
+
+        classpath 'me.tatarka:gradle-retrolambda:3.2.2'
     }
 }
 

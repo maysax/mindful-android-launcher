@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
 android {
@@ -17,18 +18,30 @@ android {
         debug {
             debuggable true
             minifyEnabled false
+            shrinkResources true
         }
         release {
             debuggable false
             // RELEASE: true
             minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        compileOptions.encoding = "UTF-8"
+
+        // Use Java 1.7, requires minSdk 8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 repositories {
+    jcenter()
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://clojars.org/repo/' }
 }
 
 dependencies {
@@ -45,6 +58,8 @@ dependencies {
 
 
     compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
+    compile 'com.klinkerapps:android-chips:1.0.1@aar'
+    compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
 }
 
 apt {
