@@ -78,25 +78,25 @@ public class TypefaceManager {
     private static Typeface createTypeface(Context context, int typefaceValue) throws IllegalArgumentException {
         switch (typefaceValue) {
             case Typefaces.ROBOTO_THIN:
-                return Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Thin.ttf");
+                return Typeface.createFromAsset(context.getAssets(), "fonts/NotoSans-Italic.ttf");
 
             case Typefaces.ROBOTO_LIGHT:
-                return Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
+                return Typeface.createFromAsset(context.getAssets(), "fonts/NotoSans-Italic.ttf");
 
             case Typefaces.ROBOTO_REGULAR:
-                return Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
+                return Typeface.createFromAsset(context.getAssets(), "fonts/NotoSans-Regular.ttf");
 
             case Typefaces.ROBOTO_MEDIUM:
-                return Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Medium.ttf");
+                return Typeface.createFromAsset(context.getAssets(), "fonts/NotoSans-Regular.ttf");
 
             case Typefaces.ROBOTO_CONDENSED_LIGHT:
-                return Typeface.createFromAsset(context.getAssets(), "fonts/RobotoCondensed-Light.ttf");
+                return Typeface.createFromAsset(context.getAssets(), "fonts/NotoSans-Italic.ttf");
 
             case Typefaces.ROBOTO_CONDENSED_REGULAR:
-                return Typeface.createFromAsset(context.getAssets(), "fonts/RobotoCondensed-Regular.ttf");
+                return Typeface.createFromAsset(context.getAssets(), "fonts/NotoSans-Regular.ttf");
 
             case Typefaces.ROBOTO_CONDENSED_BOLD:
-                return Typeface.createFromAsset(context.getAssets(), "fonts/RobotoCondensed-Bold.ttf");
+                return Typeface.createFromAsset(context.getAssets(), "fonts/NotoSans-Bold.ttf");
 
             case Typefaces.DEFAULT_REGULAR:
                 return Typeface.DEFAULT;
