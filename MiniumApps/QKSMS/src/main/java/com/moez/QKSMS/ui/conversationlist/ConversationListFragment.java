@@ -19,8 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import com.melnykov.fab.FloatingActionButton;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.BlockedConversationHelper;
@@ -49,10 +47,10 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
 
     private final String TAG = "ConversationList";
 
-    @Bind(R.id.empty_state) View mEmptyState;
-    @Bind(R.id.empty_state_icon) ImageView mEmptyStateIcon;
-    @Bind(R.id.conversations_list) RecyclerView mRecyclerView;
-    @Bind(R.id.fab) FloatingActionButton mFab;
+    View mEmptyState;
+    ImageView mEmptyStateIcon;
+    RecyclerView mRecyclerView;
+    FloatingActionButton mFab;
 
     private ConversationListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
@@ -95,7 +93,10 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_conversations, null);
-        ButterKnife.bind(this, view);
+        mEmptyState = view.findViewById(R.id.empty_state);
+        mEmptyStateIcon = (ImageView) view.findViewById(R.id.empty_state_icon);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.conversations_list);
+        mFab = (FloatingActionButton) view.findViewById(R.id.fab);
 
         mEmptyStateIcon.setColorFilter(ThemeManager.getTextOnBackgroundPrimary());
 

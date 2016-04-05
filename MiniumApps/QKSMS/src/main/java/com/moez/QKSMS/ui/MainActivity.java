@@ -62,9 +62,6 @@ import org.ligi.snackengage.snacks.BaseSnack;
 import java.net.URLDecoder;
 import java.util.Collection;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 
 public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuListener {
     private final String TAG = "MainActivity";
@@ -81,8 +78,8 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
 
     public static final String MMS_SETUP_DONT_ASK_AGAIN = "mmsSetupDontAskAgain";
 
-    @Bind(R.id.root) View mRoot;
-    @Bind(R.id.sliding_menu) SlidingMenu mSlidingMenu;
+    View mRoot;
+    SlidingMenu mSlidingMenu;
 
     private ConversationListFragment mConversationList;
     private ContentFragment mContent;
@@ -102,7 +99,8 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
 
         setContentView(R.layout.activity_main);
         setTitle(R.string.title_conversation_list);
-        ButterKnife.bind(this);
+        mRoot = findViewById(R.id.root);
+        mSlidingMenu = (SlidingMenu) findViewById(R.id.sliding_menu);
 
         setSlidingTabEnabled(mPrefs.getBoolean(SettingsFragment.SLIDING_TAB, false));
         mSlidingMenu.setListener(this);
