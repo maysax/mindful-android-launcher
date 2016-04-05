@@ -190,7 +190,7 @@ public class ComposeView extends LinearLayout implements View.OnClickListener {
             updateDelayButton();
             mProgress.setUnfinishedStrokeColor(ThemeManager.getTextOnColorSecondary());
             mProgress.setFinishedStrokeColor(ThemeManager.getTextOnColorPrimary());
-            if (ThemeManager.getSentBubbleRes() != 0) mReplyText.setBackgroundResource(ThemeManager.getSentBubbleRes());
+            //if (ThemeManager.getSentBubbleRes() != 0) mReplyText.setBackgroundResource(ThemeManager.getSentBubbleRes());
         });
 
         LiveViewManager.registerView(QKPreference.BACKGROUND, this, key -> {
