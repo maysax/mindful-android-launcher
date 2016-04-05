@@ -5,6 +5,7 @@
 
     <item
         android:id="@+id/menu_changelog"
-        android:title="@string/menu_changelog" />
+        android:title="@string/menu_changelog"
+        android:visible="false"/>
 
 </menu>
