@@ -25,13 +25,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import butterknife.Bind;
-import butterknife.ButterKnife;
+
 import com.google.android.mms.pdu_alt.PduHeaders;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.ConversationPrefsHelper;
 import com.moez.QKSMS.common.DialogHelper;
-import com.moez.QKSMS.common.DonationManager;
 import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.common.QKRateSnack;
 import com.moez.QKSMS.common.google.DraftCache;
@@ -57,11 +55,15 @@ import com.moez.QKSMS.ui.search.SearchFragment;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 import com.moez.QKSMS.ui.view.slidingmenu.SlidingMenu;
 import com.moez.QKSMS.ui.welcome.WelcomeActivity;
+
 import org.ligi.snackengage.SnackEngage;
 import org.ligi.snackengage.snacks.BaseSnack;
 
 import java.net.URLDecoder;
 import java.util.Collection;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuListener {
@@ -248,9 +250,6 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
             case R.id.menu_changelog:
                 DialogHelper.showChangelog(this);
                 break;
-            case R.id.menu_donate:
-                DonationManager.getInstance(this).showDonateDialog();
-                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -300,7 +299,6 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
     public void onDestroy() {
         super.onDestroy();
         mIsDestroyed = true;
-        DonationManager.getInstance(this).destroy();
     }
 
     @Override

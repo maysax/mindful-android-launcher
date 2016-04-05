@@ -32,7 +32,6 @@ import com.mariussoft.endlessjabber.sdk.EndlessJabberInterface;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.AnalyticsManager;
 import com.moez.QKSMS.common.DialogHelper;
-import com.moez.QKSMS.common.DonationManager;
 import com.moez.QKSMS.common.ListviewHelper;
 import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.enums.QKPreference;
@@ -139,7 +138,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public static final String MMS_PROXY = "mms_proxy";
     public static final String AUTOMATICALLY_CONFIGURE_MMS = "pref_key_automatically_configure_mms";
     public static final String MMS_CONTACT_SUPPORT = "pref_key_mms_contact_support";
-    public static final String DONATE = "pref_key_donate";
     public static final String DISMISSED_READ = "pref_key_dismiss_read";
     public static final String MAX_MMS_ATTACHMENT_SIZE = "pref_mms_max_attachment_size";
     public static final String QUICKREPLY = "pref_key_quickreply_enabled";
@@ -607,9 +605,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                                     }
                                 })
                         .show();
-                break;
-            case DONATE:
-                DonationManager.getInstance(mContext).showDonateDialog();
                 break;
             case GOOGLE_PLUS:
                 startBrowserIntent(GOOGLE_PLUS_URL);
