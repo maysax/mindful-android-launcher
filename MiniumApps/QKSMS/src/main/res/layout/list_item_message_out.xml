@@ -50,10 +50,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:autoLink="all"
-                    android:background="@drawable/message_sent_2"
                     android:gravity="center_vertical"
                     android:linksClickable="true"
-                    app:type="primary" />
+                    app:type="secondary" />
 
                 <FrameLayout
                     android:id="@+id/mms_view"
