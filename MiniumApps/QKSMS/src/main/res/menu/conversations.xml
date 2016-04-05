@@ -9,14 +9,16 @@
 
     <item
         android:id="@+id/menu_settings"
-        android:title="@string/menu_settings" />
+        android:title="@string/menu_settings"
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_blocked"
         android:title="@string/pref_blocked_conversations"
-        android:visible="false" />
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_changelog"
-        android:title="@string/menu_changelog" />
+        android:title="@string/menu_changelog"
+        android:visible="false"/>
 </menu>
