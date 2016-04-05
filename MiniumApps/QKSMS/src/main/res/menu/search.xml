@@ -4,9 +4,11 @@
 
     <item
         android:id="@+id/menu_settings"
-        android:title="@string/menu_settings" />
+        android:title="@string/menu_settings"
+        android:visible="false"/>
 
     <item
         android:id="@+id/menu_changelog"
-        android:title="@string/menu_changelog" />
+        android:title="@string/menu_changelog"
+        android:visible="false"/>
 </menu>
