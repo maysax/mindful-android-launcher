@@ -28,15 +28,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.mariussoft.endlessjabber.sdk.EndlessJabberInterface;
 import com.moez.QKSMS.R;
-import com.moez.QKSMS.common.DialogHelper;
 import com.moez.QKSMS.common.ListviewHelper;
 import com.moez.QKSMS.common.LiveViewManager;
-import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.common.utils.DateFormatter;
 import com.moez.QKSMS.common.utils.KeyboardUtils;
 import com.moez.QKSMS.common.utils.PackageUtils;
+import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.receiver.NightModeAutoReceiver;
 import com.moez.QKSMS.transaction.EndlessJabber;
 import com.moez.QKSMS.transaction.NotificationManager;
@@ -144,7 +144,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public static final String QUICKCOMPOSE = "pref_key_quickcompose";
     public static final String STRIP_UNICODE = "pref_key_strip_unicode";
     public static final String VERSION = "pref_key_version";
-    public static final String CHANGELOG = "pref_key_changelog";
     public static final String THANKS = "pref_key_thanks";
     public static final String GOOGLE_PLUS = "pref_key_google_plus";
     public static final String GITHUB = "pref_key_github";
@@ -580,9 +579,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             case MMS_CONTACT_SUPPORT:
                 // Opens an email compose intent with MMS debugging information
                 MMSSetupFragment.contactSupport(getActivity());
-                break;
-            case CHANGELOG:
-                DialogHelper.showChangelog(mContext);
                 break;
             case THANKS:
                 new QKDialog()

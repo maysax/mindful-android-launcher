@@ -21,8 +21,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.common.utils.ColorUtils;
@@ -265,10 +263,6 @@ public abstract class QKActivity extends AppCompatActivity {
 
     public void makeToast(@StringRes int message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-    public RequestQueue getRequestQueue() {
-        return ((QKSMSAppBase) getApplication()).getRequestQueue();
     }
 
     public boolean getBoolean(QKPreference preference) {

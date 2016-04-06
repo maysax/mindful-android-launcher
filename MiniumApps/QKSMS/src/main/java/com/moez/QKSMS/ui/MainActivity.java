@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import com.google.android.mms.pdu_alt.PduHeaders;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.ConversationPrefsHelper;
-import com.moez.QKSMS.common.DialogHelper;
 import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.common.google.DraftCache;
 import com.moez.QKSMS.common.utils.KeyboardUtils;
@@ -54,7 +53,6 @@ import com.moez.QKSMS.ui.search.SearchFragment;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 import com.moez.QKSMS.ui.view.slidingmenu.SlidingMenu;
 import com.moez.QKSMS.ui.welcome.WelcomeActivity;
-
 
 import java.net.URLDecoder;
 import java.util.Collection;
@@ -237,9 +235,6 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
 
         } else if (i == R.id.menu_search) {
             switchContent(new SearchFragment(), true);
-
-        } else if (i == R.id.menu_changelog) {
-            DialogHelper.showChangelog(this);
 
         }
 
