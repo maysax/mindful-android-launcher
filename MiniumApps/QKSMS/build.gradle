@@ -1,12 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-
-
-repositories {
-    mavenCentral()
-    jcenter()
-    maven { url 'https://clojars.org/repo/' }
-}
+apply plugin: 'io.fabric'
 
 android {
 
@@ -23,7 +17,7 @@ android {
     defaultConfig {
         versionCode 127
         versionName "2.5.5"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 23
         multiDexEnabled true
     }
@@ -57,6 +51,11 @@ android {
         disable 'MissingTranslation'
     }
 
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://clojars.org/repo/' }
 }
 
 buildscript {
@@ -98,4 +97,6 @@ dependencies {
 //    withAnalyticsCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
 //        transitive = true;
 //    }
+
+    compile project(':core')
 }

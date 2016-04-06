@@ -34,7 +34,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
-    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:name=".QKSMSAppBase"
@@ -43,6 +42,13 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:theme="@style/AppThemeLight">
+
+        <!-- Fabric configuration -->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
+
+
         <activity
             android:name=".ui.popup.QKComposeActivity"
             android:excludeFromRecents="true"
@@ -267,10 +273,6 @@
         <service
             android:name=".ui.widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-
-        <!--<meta-data-->
-            <!--android:name="io.fabric.ApiKey"-->
-            <!--android:value="0" />-->
 
         <uses-library
             android:name="com.sec.android.app.multiwindow"

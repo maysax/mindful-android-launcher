@@ -25,7 +25,6 @@ import android.location.Country;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
-import android.support.multidex.MultiDexApplication;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -47,7 +46,9 @@ import com.moez.QKSMS.ui.mms.layout.LayoutManager;
 
 import java.util.Locale;
 
-public class QKSMSAppBase extends MultiDexApplication {
+import minium.co.core.app.CoreApplication;
+
+public class QKSMSAppBase extends CoreApplication {
     public static final String LOG_TAG = "Mms";
 
     private SearchRecentSuggestions mRecentSuggestions;
