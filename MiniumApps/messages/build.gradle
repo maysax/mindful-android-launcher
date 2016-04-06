@@ -53,7 +53,7 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
 
     //compile project(':core')
-    compile project(':QKSMS')
+    //compile project(':QKSMS')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 }

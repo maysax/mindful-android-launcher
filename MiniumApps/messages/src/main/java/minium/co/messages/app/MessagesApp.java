@@ -9,7 +9,7 @@ import com.moez.QKSMS.QKSMSAppBase;
  * Created by shahab on 3/17/16.
  */
 
-public class MessagesApp extends QKSMSAppBase {
+public class MessagesApp extends CoreApp {
 
     //private final String TRACE_TAG = LogConfig.TRACE_TAG + "MessagesApp";
 
