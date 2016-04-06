@@ -28,6 +28,7 @@ import android.provider.SearchRecentSuggestions;
 import android.support.multidex.MultiDexApplication;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
 import com.android.mms.transaction.MmsSystemEventReceiver;
 import com.android.mms.util.DownloadManager;
 import com.android.mms.util.RateController;
@@ -43,8 +44,6 @@ import com.moez.QKSMS.data.Conversation;
 import com.moez.QKSMS.transaction.NotificationManager;
 import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.mms.layout.LayoutManager;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Locale;
 
@@ -59,7 +58,6 @@ public class QKSMSAppBase extends MultiDexApplication {
     private PduLoaderManager mPduLoaderManager;
     private ThumbnailManager mThumbnailManager;
     private DrmManagerClient mDrmManagerClient;
-    private RefWatcher refWatcher;
 
     @Override
     public void onCreate() {
@@ -76,9 +74,6 @@ public class QKSMSAppBase extends MultiDexApplication {
         sQKSMSApp = this;
 
         loadDefaultPreferenceValues();
-
-        // Initialize analytics, leakcanary, and crittercism
-        refWatcher = LeakCanary.install(this);
 
         // Figure out the country *before* loading contacts and formatting numbers
         Country country = new Country(Locale.getDefault().getCountry(), Country.COUNTRY_SOURCE_LOCALE);
@@ -102,11 +97,6 @@ public class QKSMSAppBase extends MultiDexApplication {
         LiveViewManager.init(this);
 
         activePendingMessages();
-    }
-
-    public static RefWatcher getRefWatcher(Context context) {
-        QKSMSAppBase application = (QKSMSAppBase) context.getApplicationContext();
-        return application.refWatcher;
     }
 
     @SuppressLint("CommitPrefEdits")
