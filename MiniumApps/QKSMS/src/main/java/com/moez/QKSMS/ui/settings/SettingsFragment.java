@@ -149,7 +149,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public static final String GITHUB = "pref_key_github";
     public static final String CROWDIN = "pref_key_crowdin";
 
-    public static final String WELCOME_SEEN = "pref_key_welcome_seen";
+
 
     public static final String DEFAULT_NOTIFICATION_TONE = "content://settings/system/notification_sound";
 

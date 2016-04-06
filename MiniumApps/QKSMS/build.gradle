@@ -58,16 +58,6 @@ repositories {
     maven { url 'https://clojars.org/repo/' }
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-
-    }
-
-    dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:3.2.2'
-    }
-}
 
 dependencies {
     // Open source libraries
@@ -79,7 +69,6 @@ dependencies {
     compile 'com.vdurmont:emoji-java:1.1.1'
     compile 'me.leolin:ShortcutBadger:1.1.1'
     compile 'com.googlecode.ez-vcard:ez-vcard:0.9.6'
-    compile 'com.google.code.gson:gson:2.4'
     compile 'com.koushikdutta.ion:ion:1.1.7'
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'

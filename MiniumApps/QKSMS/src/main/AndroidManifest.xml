@@ -107,9 +107,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
-        <activity
-            android:name=".ui.welcome.WelcomeActivity"
-            android:theme="@style/AppThemeLight" />
 
         <!-- Popup activity -->
         <activity

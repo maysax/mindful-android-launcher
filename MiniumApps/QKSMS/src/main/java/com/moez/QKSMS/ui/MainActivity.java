@@ -52,7 +52,6 @@ import com.moez.QKSMS.ui.popup.QKReplyActivity;
 import com.moez.QKSMS.ui.search.SearchFragment;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 import com.moez.QKSMS.ui.view.slidingmenu.SlidingMenu;
-import com.moez.QKSMS.ui.welcome.WelcomeActivity;
 
 import java.net.URLDecoder;
 import java.util.Collection;
@@ -90,7 +89,6 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        launchWelcomeActivity();
 
         setContentView(R.layout.activity_main);
         setTitle(R.string.app_name);
@@ -130,6 +128,8 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
             // in the ThemeManager isn't the MainActivity
             mRoot.setBackgroundColor(ThemeManager.getBackgroundColor());
         });
+
+        new DefaultSmsHelper(this, R.string.not_default_first).showIfNotDefault(null);
     }
 
     /**
@@ -171,16 +171,6 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
         // but doesn't have the flag.
         return savedInstanceState != null
                 && savedInstanceState.getBoolean(KEY_MMS_SETUP_FRAGMENT_DISMISSED, false);
-    }
-
-    private void launchWelcomeActivity() {
-        if (mPrefs.getBoolean(SettingsFragment.WELCOME_SEEN, false)) {
-            // User has already seen the welcome screen
-            return;
-        }
-
-        Intent welcomeIntent = new Intent(this, WelcomeActivity.class);
-        startActivityForResult(welcomeIntent, WelcomeActivity.WELCOME_REQUEST_CODE);
     }
 
     public void showMenu() {
@@ -260,8 +250,6 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
                 }
             }
 
-        } else if (requestCode == WelcomeActivity.WELCOME_REQUEST_CODE) {
-            new DefaultSmsHelper(this, R.string.not_default_first).showIfNotDefault(null);
         }
     }
 
