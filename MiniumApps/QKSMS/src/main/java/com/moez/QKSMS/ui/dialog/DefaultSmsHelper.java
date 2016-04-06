@@ -4,19 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.provider.Telephony;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.ui.ThemeManager;
-import com.nispok.snackbar.Snackbar;
-import com.nispok.snackbar.SnackbarManager;
-import com.nispok.snackbar.enums.SnackbarType;
-import com.nispok.snackbar.listeners.ActionClickListener;
-
-import java.lang.reflect.Field;
 
 
-public class DefaultSmsHelper implements ActionClickListener {
+public class DefaultSmsHelper implements View.OnClickListener {
 
     private Context mContext;
     private int mMessage;
@@ -36,52 +31,25 @@ public class DefaultSmsHelper implements ActionClickListener {
         }
     }
 
-    public void showIfNotDefault(ViewGroup viewGroup) {
+    public boolean showIfNotDefault(ViewGroup viewGroup) {
         if (!mIsDefault) {
             long deltaTime = (System.nanoTime() / 1000000) - sLastShown;
             long duration = deltaTime > 60 * 1000 ? 8000 : 3000;
 
-            Snackbar snackBar = Snackbar.with(mContext)
-                    .type(getSnackBarType())
-                    .text(mMessage)
-                    .duration(duration)
-                    .actionColor(ThemeManager.getColor())
-                    .actionLabel(R.string.upgrade_now)
-                    .actionListener(this);
-
-            if (viewGroup == null) {
-                SnackbarManager.show(snackBar);
-            } else {
-                SnackbarManager.show(snackBar, viewGroup);
-            }
+            android.support.design.widget.Snackbar
+                    .make(viewGroup, mMessage, android.support.design.widget.Snackbar.LENGTH_LONG)
+                    .setAction(R.string.upgrade_now, this).setActionTextColor(ThemeManager.getColor()).show();
 
             sLastShown = System.nanoTime() / 1000000;
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void onActionClicked(Snackbar snackbar) {
+    public void onClick(View v) {
         Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
         intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, mContext.getPackageName());
         mContext.startActivity(intent);
-    }
-
-    private SnackbarType getSnackBarType() {
-        SnackbarType snackbarType = SnackbarType.MULTI_LINE;
-
-        try {
-            Field maxLines = SnackbarType.class.getDeclaredField("maxLines");
-            maxLines.setAccessible(true);
-            maxLines.setInt(snackbarType, 3);
-
-            Field maxHeight = SnackbarType.class.getDeclaredField("maxHeight");
-            maxHeight.setAccessible(true);
-            maxHeight.setInt(snackbarType, 112);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return snackbarType;
     }
 }

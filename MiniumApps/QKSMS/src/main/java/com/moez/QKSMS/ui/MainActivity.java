@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 
@@ -128,8 +129,6 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
             // in the ThemeManager isn't the MainActivity
             mRoot.setBackgroundColor(ThemeManager.getBackgroundColor());
         });
-
-        new DefaultSmsHelper(this, R.string.not_default_first).showIfNotDefault(null);
     }
 
     /**
@@ -161,6 +160,8 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
                     .show();
 
             // Only show the MMS setup fragment if it hasn't already been dismissed
+        } else if (new DefaultSmsHelper(this, R.string.not_default_first).showIfNotDefault((ViewGroup) mRoot)) {
+
         } else if (!wasMmsSetupFragmentDismissed(savedInstanceState)) {
             beginMmsSetup();
         }
