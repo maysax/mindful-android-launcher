@@ -65,6 +65,8 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:gridlayout-v7:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:support-v13:$supportVersion"
     compile 'com.android.support:multidex:1.0.1'
 
     /**

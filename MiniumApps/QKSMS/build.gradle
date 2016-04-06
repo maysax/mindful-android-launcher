@@ -10,15 +10,15 @@ android {
         disable 'InvalidPackage'
     }
 
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         versionCode 127
         versionName "2.5.5"
-        minSdkVersion 19
-        targetSdkVersion 23
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
     }
 
@@ -84,18 +84,6 @@ dependencies {
     compile 'com.koushikdutta.ion:ion:1.1.7'
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'
-
-    // Google libraries
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.android.support:support-v13:23.2.1'
-    compile 'com.android.support:recyclerview-v7:23.2.1'
-//    withAnalyticsCompile 'com.google.android.gms:play-services-analytics:8.3.0'
-//
-//    // External services
-//    withAnalyticsCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-//        transitive = true;
-//    }
 
     compile project(':core')
 }
