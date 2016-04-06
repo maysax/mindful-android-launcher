@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import minium.co.core.app.CoreApplication;
+
 import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_END_EVENT;
 import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_PAUSE_EVENT;
 import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_SEEK_EVENT;
@@ -198,7 +200,7 @@ public class SmilHelper {
             return document;
         }
 
-        DrmManagerClient drmManagerClient = QKSMSAppBase.getApplication().getDrmManagerClient();
+        DrmManagerClient drmManagerClient = ((QKSMSAppBase) CoreApplication.getInstance()).getDrmManagerClient();
 
         boolean hasText = false;
         boolean hasMedia = false;

@@ -47,6 +47,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import minium.co.core.app.CoreApplication;
+
 
 public class ImageModel extends RegionMediaModel {
     private static final String TAG = "Mms/image";
@@ -138,7 +140,7 @@ public class ImageModel extends RegionMediaModel {
     }
 
     public ItemLoadedFuture loadThumbnailBitmap(ItemLoadedCallback callback) {
-        ThumbnailManager thumbnailManager = QKSMSAppBase.getApplication().getThumbnailManager();
+        ThumbnailManager thumbnailManager = ((QKSMSAppBase) CoreApplication.getInstance()).getThumbnailManager();
         mItemLoadedFuture = thumbnailManager.getThumbnail(getUri(), callback);
         return mItemLoadedFuture;
     }

@@ -38,13 +38,12 @@
     <uses-permission android:name="android.permission.WRITE_SMS" />
 
     <application
-        android:name=".QKSMSAppBase"
+        android:name=".QKSMSAppBase_"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_teal"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppThemeLight"
-        tools:replace="label,icon">
+        android:theme="@style/AppThemeLight">
 
         <!-- Fabric configuration -->
         <meta-data

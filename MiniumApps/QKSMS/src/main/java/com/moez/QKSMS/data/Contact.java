@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import minium.co.core.app.CoreApplication;
+
 public class Contact {
     public static final int CONTACT_METHOD_TYPE_UNKNOWN = 0;
     public static final int CONTACT_METHOD_TYPE_PHONE = 1;
@@ -212,7 +214,7 @@ public class Contact {
         //                   (408) 555-1289
         String formattedNumber = number;
         if (!SmsHelper.isEmailAddress(number)) {
-            formattedNumber = PhoneNumberUtils.formatNumber(number, numberE164, QKSMSAppBase.getApplication().getCurrentCountryIso());
+            formattedNumber = PhoneNumberUtils.formatNumber(number, numberE164, ((QKSMSAppBase) CoreApplication.getInstance()).getCurrentCountryIso());
         }
 
         if (!TextUtils.isEmpty(name) && !name.equals(number)) {
@@ -233,7 +235,7 @@ public class Contact {
 
     public synchronized void setNumber(String number) {
         if (!SmsHelper.isEmailAddress(number)) {
-            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164, QKSMSAppBase.getApplication().getCurrentCountryIso());
+            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164,  ((QKSMSAppBase) CoreApplication.getInstance()).getCurrentCountryIso());
         } else {
             mNumber = number;
         }
@@ -853,7 +855,7 @@ public class Contact {
             if (!TextUtils.isEmpty(normalizedNumber) && !TextUtils.isEmpty(minMatch)) {
                 String numberLen = String.valueOf(normalizedNumber.length());
                 String numberE164 = PhoneNumberUtils.formatNumberToE164(
-                        number, QKSMSAppBase.getApplication().getCurrentCountryIso());
+                        number,  ((QKSMSAppBase) CoreApplication.getInstance()).getCurrentCountryIso());
                 String selection;
                 String[] args;
                 if (TextUtils.isEmpty(numberE164)) {

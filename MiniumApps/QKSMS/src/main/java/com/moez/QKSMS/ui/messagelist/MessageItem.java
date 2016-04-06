@@ -55,6 +55,8 @@ import com.moez.QKSMS.transaction.SmsHelper;
 
 import java.util.regex.Pattern;
 
+import minium.co.core.app.CoreApplication;
+
 /**
  * Mostly immutable model for an SMS/MMS message.
  *
@@ -201,7 +203,7 @@ public class MessageItem {
             // will get called immediately
             boolean loadSlideshow = mMessageType != PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND;
 
-            mItemLoadedFuture = QKSMSAppBase.getApplication().getPduLoaderManager()
+            mItemLoadedFuture = ((QKSMSAppBase) CoreApplication.getInstance()).getPduLoaderManager()
                     .getPdu(mMessageUri, loadSlideshow,
                     new PduLoadedMessageItemCallback());
 

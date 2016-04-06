@@ -31,6 +31,8 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 
+import minium.co.core.app.CoreApplication;
+
 public class AddressUtils {
     private static final String TAG = "AddressUtils";
     private static PhoneNumberUtil mPhoneNumberUtil;
@@ -76,7 +78,7 @@ public class AddressUtils {
      * @return true if query looks like a valid phone number
      */
     public static boolean isPossiblePhoneNumberCanDoFileAccess(String query) {
-        String currentCountry = QKSMSAppBase.getApplication().getCurrentCountryIso().toUpperCase();
+        String currentCountry = ((QKSMSAppBase) CoreApplication.getInstance()).getCurrentCountryIso().toUpperCase();
         if (mPhoneNumberUtil == null) {
             mPhoneNumberUtil = PhoneNumberUtil.getInstance();
         }

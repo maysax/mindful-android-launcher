@@ -6,8 +6,9 @@ import android.telephony.TelephonyManager;
 import com.google.i18n.phonenumbers.PhoneNumberMatch;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.data.Contact;
+
+import minium.co.core.app.CoreApplication;
 
 public class NumberToContactFormatter implements Formatter {
     String mCountryIso;
@@ -29,7 +30,7 @@ public class NumberToContactFormatter implements Formatter {
 
     public String getCurrentCountryIso() {
         if (mCountryIso == null) {
-            TelephonyManager tm = (TelephonyManager) QKSMSAppBase.getApplication().getSystemService(Context.TELEPHONY_SERVICE);
+            TelephonyManager tm = (TelephonyManager) CoreApplication.getInstance().getSystemService(Context.TELEPHONY_SERVICE);
             mCountryIso = tm.getNetworkCountryIso();
             // Just in case the TelephonyManager method failed, fallback to US
             if (mCountryIso == null) {

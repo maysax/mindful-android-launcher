@@ -6,13 +6,14 @@ import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
-import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import minium.co.core.app.CoreApplication;
 
 public abstract class DateFormatter {
 
@@ -79,7 +80,7 @@ public abstract class DateFormatter {
     public static String getRelativeTimestamp(long date) {
         String relativeTimestamp = (String) DateUtils.getRelativeTimeSpanString(date);
         if (relativeTimestamp.equals("in 0 minutes") || relativeTimestamp.equals("0 minutes ago"))
-            return QKSMSAppBase.getApplication().getString(com.moez.QKSMS.R.string.date_just_now);
+            return CoreApplication.getInstance().getString(com.moez.QKSMS.R.string.date_just_now);
         return relativeTimestamp;
     }
 

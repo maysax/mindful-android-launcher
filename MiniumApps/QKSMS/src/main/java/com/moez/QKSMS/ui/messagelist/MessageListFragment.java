@@ -1,6 +1,5 @@
 package com.moez.QKSMS.ui.messagelist;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
@@ -37,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
+
 import com.google.android.mms.ContentType;
 import com.moez.QKSMS.LogTag;
 import com.moez.QKSMS.MmsConfig;
@@ -46,8 +46,6 @@ import com.moez.QKSMS.common.CIELChEvaluator;
 import com.moez.QKSMS.common.ConversationPrefsHelper;
 import com.moez.QKSMS.common.DialogHelper;
 import com.moez.QKSMS.common.LiveViewManager;
-import com.moez.QKSMS.ui.dialog.conversationdetails.ConversationDetailsDialog;
-import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.common.utils.KeyboardUtils;
 import com.moez.QKSMS.common.utils.MessageUtils;
 import com.moez.QKSMS.common.vcard.ContactOperations;
@@ -56,6 +54,7 @@ import com.moez.QKSMS.data.ContactList;
 import com.moez.QKSMS.data.Conversation;
 import com.moez.QKSMS.data.ConversationLegacy;
 import com.moez.QKSMS.data.Message;
+import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.interfaces.ActivityLauncher;
 import com.moez.QKSMS.transaction.NotificationManager;
 import com.moez.QKSMS.transaction.SmsHelper;
@@ -68,17 +67,20 @@ import com.moez.QKSMS.ui.delivery.DeliveryReportItem;
 import com.moez.QKSMS.ui.dialog.AsyncDialog;
 import com.moez.QKSMS.ui.dialog.ConversationSettingsDialog;
 import com.moez.QKSMS.ui.dialog.QKDialog;
+import com.moez.QKSMS.ui.dialog.conversationdetails.ConversationDetailsDialog;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 import com.moez.QKSMS.ui.view.ComposeView;
 import com.moez.QKSMS.ui.view.MessageListRecyclerView;
 import com.moez.QKSMS.ui.view.SmoothLinearLayoutManager;
 import com.moez.QKSMS.ui.widget.WidgetProvider;
-import ezvcard.Ezvcard;
-import ezvcard.VCard;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
+import minium.co.core.app.CoreApplication;
 
 public class MessageListFragment extends QKContentFragment implements ActivityLauncher, SensorEventListener,
         LoaderManager.LoaderCallbacks<Cursor>, RecyclerCursorAdapter.MultiSelectListener,
@@ -568,7 +570,7 @@ public class MessageListFragment extends QKContentFragment implements ActivityLa
                 if (msgItem.isMms()) {
                     MessageUtils.removeThumbnailsFromCache(msgItem.getSlideshow());
 
-                    QKSMSAppBase.getApplication().getPduLoaderManager().removePdu(msgItem.mMessageUri);
+                    ((QKSMSAppBase) CoreApplication.getInstance()).getPduLoaderManager().removePdu(msgItem.mMessageUri);
                     // Delete the message *after* we've removed the thumbnails because we
                     // need the pdu and slideshow for removeThumbnailsFromCache to work.
                 }

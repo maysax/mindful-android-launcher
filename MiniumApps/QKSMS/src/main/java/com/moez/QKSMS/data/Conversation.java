@@ -39,6 +39,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import minium.co.core.app.CoreApplication;
+
 /**
  * An interface for finding information about conversations and/or creating new ones.
  */
@@ -800,7 +802,7 @@ public class Conversation {
             sDeletingThreads = true;
             String selection = deleteAll ? null : "locked=0";
 
-            QKSMSAppBase app = QKSMSAppBase.getApplication();
+            CoreApplication app = QKSMSAppBase.getInstance();
             //app.getPduLoaderManager().clear();
             //app.getThumbnailManager().clear();
 

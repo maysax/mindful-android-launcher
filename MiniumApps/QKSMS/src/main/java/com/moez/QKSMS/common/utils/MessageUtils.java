@@ -92,6 +92,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import minium.co.core.app.CoreApplication;
+
 /**
  * An utility class for managing messages.
  */
@@ -134,7 +136,7 @@ public abstract class MessageUtils {
         String type = new String(part.getContentType());
         boolean isDrm = DrmUtils.isDrmType(type);
         if (isDrm) {
-            type = QKSMSAppBase.getApplication().getDrmManagerClient().getOriginalMimeType(part.getDataUri());
+            type = ((QKSMSAppBase) CoreApplication.getInstance()).getDrmManagerClient().getOriginalMimeType(part.getDataUri());
         }
         if (!ContentType.isImageType(type) && !ContentType.isVideoType(type) &&
                 !ContentType.isAudioType(type)) {
@@ -279,7 +281,7 @@ public abstract class MessageUtils {
             String type = new String(part.getContentType());
 
             if (DrmUtils.isDrmType(type)) {
-                String mimeType = QKSMSAppBase.getApplication().getDrmManagerClient()
+                String mimeType = ((QKSMSAppBase) CoreApplication.getInstance()).getDrmManagerClient()
                         .getOriginalMimeType(part.getDataUri());
                 if (ContentType.isAudioType(mimeType) && DrmUtils.haveRightsForAction(part.getDataUri(),
                         DrmStore.Action.RINGTONE)) {
@@ -834,7 +836,7 @@ public abstract class MessageUtils {
 
     public static void removeThumbnailsFromCache(SlideshowModel slideshow) {
         if (slideshow != null) {
-            ThumbnailManager thumbnailManager = QKSMSAppBase.getApplication().getThumbnailManager();
+            ThumbnailManager thumbnailManager = ((QKSMSAppBase) CoreApplication.getInstance()).getThumbnailManager();
             boolean removedSomething = false;
             Iterator<SlideModel> iterator = slideshow.iterator();
             while (iterator.hasNext()) {
@@ -853,7 +855,7 @@ public abstract class MessageUtils {
                 // when a message or thread is deleted. For now, we're clearing the whole thumbnail
                 // cache so we don't retrieve stale images when part ids are reused. This will be
                 // fixed in the next release in the mms provider.
-                QKSMSAppBase.getApplication().getThumbnailManager().clearBackingStore();
+                ((QKSMSAppBase) CoreApplication.getInstance()).getThumbnailManager().clearBackingStore();
             }
         }
     }
@@ -1111,7 +1113,7 @@ public abstract class MessageUtils {
 
     public static String getLocalNumber() {
         if (null == sLocalNumber) {
-            sLocalNumber = QKSMSAppBase.getApplication().getTelephonyManager().getLine1Number();
+            sLocalNumber = ((QKSMSAppBase) CoreApplication.getInstance()).getTelephonyManager().getLine1Number();
         }
         return sLocalNumber;
     }

@@ -42,17 +42,19 @@ import com.moez.QKSMS.transaction.NotificationManager;
 import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.mms.layout.LayoutManager;
 
+import org.androidannotations.annotations.EApplication;
+
 import java.util.Locale;
 
-import minium.co.messages.app.MessagesApp;
+import minium.co.core.app.CoreApplication;
 
-public class QKSMSAppBase extends MessagesApp {
+@EApplication
+public class QKSMSAppBase extends CoreApplication {
     public static final String LOG_TAG = "Mms";
 
     private SearchRecentSuggestions mRecentSuggestions;
     private TelephonyManager mTelephonyManager;
     private String mCountryIso;
-    private static QKSMSAppBase sQKSMSApp = null;
     private PduLoaderManager mPduLoaderManager;
     private ThumbnailManager mThumbnailManager;
     private DrmManagerClient mDrmManagerClient;
@@ -68,8 +70,6 @@ public class QKSMSAppBase extends MessagesApp {
             StrictMode.setThreadPolicy(
                     new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
         }
-
-        sQKSMSApp = this;
 
         loadDefaultPreferenceValues();
 
@@ -113,10 +113,6 @@ public class QKSMSAppBase extends MessagesApp {
 
         // For Sms: retry to send smses in outbox and queued box
         //sendBroadcast(new Intent(SmsReceiverService.ACTION_SEND_INACTIVE_MESSAGE, null, this, SmsReceiver.class));
-    }
-
-    synchronized public static QKSMSAppBase getApplication() {
-        return sQKSMSApp;
     }
 
     @Override
@@ -169,6 +165,8 @@ public class QKSMSAppBase extends MessagesApp {
         }
         return mCountryIso;
     }
+
+
 
     public DrmManagerClient getDrmManagerClient() {
         if (mDrmManagerClient == null) {

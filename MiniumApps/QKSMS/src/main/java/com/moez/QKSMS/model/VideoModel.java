@@ -43,6 +43,8 @@ import com.moez.QKSMS.common.google.ThumbnailManager;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.smil.ElementTime;
 
+import minium.co.core.app.CoreApplication;
+
 public class VideoModel extends RegionMediaModel {
     private static final String TAG = MediaModel.TAG;
     private static final boolean DEBUG = true;
@@ -204,7 +206,7 @@ public class VideoModel extends RegionMediaModel {
     }
 
     public ItemLoadedFuture loadThumbnailBitmap(ItemLoadedCallback callback) {
-        ThumbnailManager thumbnailManager = QKSMSAppBase.getApplication().getThumbnailManager();
+        ThumbnailManager thumbnailManager = ((QKSMSAppBase) CoreApplication.getInstance()).getThumbnailManager();
         mItemLoadedFuture = thumbnailManager.getVideoThumbnail(getUri(), callback);
         return mItemLoadedFuture;
     }

@@ -49,6 +49,7 @@ import java.util.regex.Pattern;
 
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
+import minium.co.core.app.CoreApplication;
 
 public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHolder, MessageItem> {
     private final String TAG = "MessageListAdapter";
@@ -227,7 +228,7 @@ public class MessageListAdapter extends RecyclerCursorAdapter<MessageListViewHol
             case DownloadManager.STATE_UNSTARTED:
                 DownloadManager downloadManager = DownloadManager.getInstance();
                 boolean autoDownload = downloadManager.isAuto();
-                boolean dataSuspended = (QKSMSAppBase.getApplication().getTelephonyManager()
+                boolean dataSuspended = (((QKSMSAppBase) CoreApplication.getInstance()).getTelephonyManager()
                         .getDataState() == TelephonyManager.DATA_SUSPENDED);
 
                 // If we're going to automatically start downloading the mms attachment, then
