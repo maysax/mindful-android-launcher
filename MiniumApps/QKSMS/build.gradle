@@ -69,8 +69,6 @@ dependencies {
     compile 'me.leolin:ShortcutBadger:1.1.1'
     compile 'com.googlecode.ez-vcard:ez-vcard:0.9.6'
     compile 'com.koushikdutta.ion:ion:1.1.7'
-    compile 'frankiesardo:icepick:3.2.0'
-    provided 'frankiesardo:icepick-processor:3.2.0'
 
     compile project(':core')
 }

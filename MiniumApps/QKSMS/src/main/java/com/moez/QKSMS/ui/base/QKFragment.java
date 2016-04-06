@@ -9,8 +9,6 @@ import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.ui.ThemeManager;
 
-import icepick.Icepick;
-
 public class QKFragment extends Fragment {
 
     protected QKActivity mContext;
@@ -35,13 +33,11 @@ public class QKFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
 
     @Override
