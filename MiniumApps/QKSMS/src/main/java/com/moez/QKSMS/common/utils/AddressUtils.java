@@ -28,7 +28,7 @@ import com.google.android.mms.pdu_alt.EncodedStringValue;
 import com.google.android.mms.pdu_alt.PduHeaders;
 import com.google.android.mms.pdu_alt.PduPersister;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 
 public class AddressUtils {
@@ -76,7 +76,7 @@ public class AddressUtils {
      * @return true if query looks like a valid phone number
      */
     public static boolean isPossiblePhoneNumberCanDoFileAccess(String query) {
-        String currentCountry = QKSMSApp.getApplication().getCurrentCountryIso().toUpperCase();
+        String currentCountry = QKSMSAppBase.getApplication().getCurrentCountryIso().toUpperCase();
         if (mPhoneNumberUtil == null) {
             mPhoneNumberUtil = PhoneNumberUtil.getInstance();
         }

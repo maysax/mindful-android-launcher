@@ -30,7 +30,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.mariussoft.endlessjabber.sdk.EndlessJabberInterface;
 import com.moez.QKSMS.R;
-import com.moez.QKSMS.common.AnalyticsManager;
 import com.moez.QKSMS.common.DialogHelper;
 import com.moez.QKSMS.common.ListviewHelper;
 import com.moez.QKSMS.common.LiveViewManager;
@@ -390,11 +389,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         }
 
         Log.d(TAG, "onPreferenceChange key:" + key + " newValue: " + valueString);
-        AnalyticsManager.getInstance().sendEvent(
-                AnalyticsManager.CATEGORY_PREFERENCE_CHANGE,
-                key,
-                valueString
-        );
 
         switch (key) {
             case BACKGROUND:
@@ -486,8 +480,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public boolean onPreferenceClick(Preference preference) {
 
         String key = preference.getKey() != null ? preference.getKey() : "";
-
-        AnalyticsManager.getInstance().sendEvent(AnalyticsManager.CATEGORY_PREFERENCE_CLICK, key, null);
 
         // Categories
         int resId = 0;

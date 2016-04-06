@@ -20,12 +20,13 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.android.volley.RequestQueue;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.LiveViewManager;
-import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.common.utils.ColorUtils;
+import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.view.QKTextView;
 
@@ -267,7 +268,7 @@ public abstract class QKActivity extends AppCompatActivity {
     }
 
     public RequestQueue getRequestQueue() {
-        return ((QKSMSApp) getApplication()).getRequestQueue();
+        return ((QKSMSAppBase) getApplication()).getRequestQueue();
     }
 
     public boolean getBoolean(QKPreference preference) {

@@ -19,7 +19,6 @@ import android.view.Gravity;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import com.moez.QKSMS.R;
-import com.moez.QKSMS.common.AnalyticsManager;
 import com.moez.QKSMS.common.CIELChEvaluator;
 import com.moez.QKSMS.common.ConversationPrefsHelper;
 import com.moez.QKSMS.common.LiveViewManager;
@@ -36,7 +35,7 @@ import com.moez.QKSMS.ui.widget.WidgetProvider;
 public class ThemeManager {
     private final static String TAG = "ThemeManager";
 
-    public static final int DEFAULT_COLOR = 0xff009688;
+    public static final int DEFAULT_COLOR = 0xff000000;
     public static final int TRANSITION_LENGTH = 500;
 
     public enum Theme {
@@ -541,12 +540,6 @@ public class ThemeManager {
     }
 
     public static void setColor(QKActivity activity, int color) {
-
-        AnalyticsManager.getInstance().sendEvent(
-                AnalyticsManager.CATEGORY_PREFERENCE_CHANGE,
-                SettingsFragment.CATEGORY_THEME,
-                getColorString(color)
-        );
 
         int colorFrom = mColor;
         mColor = color;

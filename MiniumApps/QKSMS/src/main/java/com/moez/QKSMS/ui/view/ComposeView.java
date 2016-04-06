@@ -43,7 +43,6 @@ import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.mmssms.Transaction;
 import com.moez.QKSMS.mmssms.Utils;
 import com.moez.QKSMS.R;
-import com.moez.QKSMS.common.AnalyticsManager;
 import com.moez.QKSMS.data.Conversation;
 import com.moez.QKSMS.data.ConversationLegacy;
 import com.moez.QKSMS.interfaces.ActivityLauncher;
@@ -442,12 +441,6 @@ public class ComposeView extends LinearLayout implements View.OnClickListener {
         if (recipients != null && recipients.length > 0) {
             mReplyText.setText("");
 
-            AnalyticsManager.getInstance().sendEvent(
-                    AnalyticsManager.CATEGORY_MESSAGES,
-                    AnalyticsManager.ACTION_SEND_MESSAGE,
-                    mLabel
-            );
-
             Transaction sendTransaction = new Transaction(mContext, SmsHelper.getSendSettings(mContext));
 
             com.moez.QKSMS.mmssms.Message message = new com.moez.QKSMS.mmssms.Message(body, recipients);
@@ -626,12 +619,6 @@ public class ComposeView extends LinearLayout implements View.OnClickListener {
 
     private void attachFromCamera() {
 
-        AnalyticsManager.getInstance().sendEvent(
-                AnalyticsManager.CATEGORY_MESSAGES,
-                AnalyticsManager.ACTION_ATTACH_FROM_CAMERA,
-                mLabel
-        );
-
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(mContext.getPackageManager()) != null) {
 
@@ -656,12 +643,6 @@ public class ComposeView extends LinearLayout implements View.OnClickListener {
     }
 
     private void chooseAttachmentFromGallery() {
-
-        AnalyticsManager.getInstance().sendEvent(
-                AnalyticsManager.CATEGORY_MESSAGES,
-                AnalyticsManager.ACTION_ATTACH_IMAGE,
-                mLabel
-        );
 
         try {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
@@ -848,11 +829,6 @@ public class ComposeView extends LinearLayout implements View.OnClickListener {
         if (imageBitmap == null) {
             clearAttachment();
         } else {
-            AnalyticsManager.getInstance().sendEvent(
-                    AnalyticsManager.CATEGORY_MESSAGES,
-                    AnalyticsManager.ACTION_ATTACH_IMAGE,
-                    mLabel
-            );
 
             mAttachment.setImageBitmap(imageBitmap);
             mAttachmentLayout.setVisibility(View.VISIBLE);

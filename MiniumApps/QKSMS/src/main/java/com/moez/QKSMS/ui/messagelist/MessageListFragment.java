@@ -40,7 +40,7 @@ import android.widget.Toast;
 import com.google.android.mms.ContentType;
 import com.moez.QKSMS.LogTag;
 import com.moez.QKSMS.MmsConfig;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.CIELChEvaluator;
 import com.moez.QKSMS.common.ConversationPrefsHelper;
@@ -568,7 +568,7 @@ public class MessageListFragment extends QKContentFragment implements ActivityLa
                 if (msgItem.isMms()) {
                     MessageUtils.removeThumbnailsFromCache(msgItem.getSlideshow());
 
-                    QKSMSApp.getApplication().getPduLoaderManager().removePdu(msgItem.mMessageUri);
+                    QKSMSAppBase.getApplication().getPduLoaderManager().removePdu(msgItem.mMessageUri);
                     // Delete the message *after* we've removed the thumbnails because we
                     // need the pdu and slideshow for removeThumbnailsFromCache to work.
                 }

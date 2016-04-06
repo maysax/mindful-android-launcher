@@ -29,7 +29,7 @@ import com.google.android.mms.ContentType;
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.PduBody;
 import com.google.android.mms.pdu_alt.PduPart;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.smil.SMILDocument;
@@ -198,7 +198,7 @@ public class SmilHelper {
             return document;
         }
 
-        DrmManagerClient drmManagerClient = QKSMSApp.getApplication().getDrmManagerClient();
+        DrmManagerClient drmManagerClient = QKSMSAppBase.getApplication().getDrmManagerClient();
 
         boolean hasText = false;
         boolean hasMedia = false;

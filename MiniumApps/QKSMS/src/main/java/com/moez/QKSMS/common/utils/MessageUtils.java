@@ -63,7 +63,8 @@ import com.google.android.mms.pdu_alt.RetrieveConf;
 import com.google.android.mms.pdu_alt.SendReq;
 import com.moez.QKSMS.LogTag;
 import com.moez.QKSMS.MmsConfig;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.TempFileProvider;
 import com.moez.QKSMS.common.google.ThumbnailManager;
@@ -133,7 +134,7 @@ public abstract class MessageUtils {
         String type = new String(part.getContentType());
         boolean isDrm = DrmUtils.isDrmType(type);
         if (isDrm) {
-            type = QKSMSApp.getApplication().getDrmManagerClient().getOriginalMimeType(part.getDataUri());
+            type = QKSMSAppBase.getApplication().getDrmManagerClient().getOriginalMimeType(part.getDataUri());
         }
         if (!ContentType.isImageType(type) && !ContentType.isVideoType(type) &&
                 !ContentType.isAudioType(type)) {
@@ -278,7 +279,7 @@ public abstract class MessageUtils {
             String type = new String(part.getContentType());
 
             if (DrmUtils.isDrmType(type)) {
-                String mimeType = QKSMSApp.getApplication().getDrmManagerClient()
+                String mimeType = QKSMSAppBase.getApplication().getDrmManagerClient()
                         .getOriginalMimeType(part.getDataUri());
                 if (ContentType.isAudioType(mimeType) && DrmUtils.haveRightsForAction(part.getDataUri(),
                         DrmStore.Action.RINGTONE)) {
@@ -833,7 +834,7 @@ public abstract class MessageUtils {
 
     public static void removeThumbnailsFromCache(SlideshowModel slideshow) {
         if (slideshow != null) {
-            ThumbnailManager thumbnailManager = QKSMSApp.getApplication().getThumbnailManager();
+            ThumbnailManager thumbnailManager = QKSMSAppBase.getApplication().getThumbnailManager();
             boolean removedSomething = false;
             Iterator<SlideModel> iterator = slideshow.iterator();
             while (iterator.hasNext()) {
@@ -852,7 +853,7 @@ public abstract class MessageUtils {
                 // when a message or thread is deleted. For now, we're clearing the whole thumbnail
                 // cache so we don't retrieve stale images when part ids are reused. This will be
                 // fixed in the next release in the mms provider.
-                QKSMSApp.getApplication().getThumbnailManager().clearBackingStore();
+                QKSMSAppBase.getApplication().getThumbnailManager().clearBackingStore();
             }
         }
     }
@@ -1110,7 +1111,7 @@ public abstract class MessageUtils {
 
     public static String getLocalNumber() {
         if (null == sLocalNumber) {
-            sLocalNumber = QKSMSApp.getApplication().getTelephonyManager().getLine1Number();
+            sLocalNumber = QKSMSAppBase.getApplication().getTelephonyManager().getLine1Number();
         }
         return sLocalNumber;
     }

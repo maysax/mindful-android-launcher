@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
-import com.moez.QKSMS.QKSMSApp;
+
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.ui.ThemeManager;
 import com.squareup.leakcanary.RefWatcher;
+
 import icepick.Icepick;
 
 public class QKFragment extends Fragment {
@@ -47,7 +49,7 @@ public class QKFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        RefWatcher refWatcher = QKSMSApp.getRefWatcher(getActivity());
+        RefWatcher refWatcher = QKSMSAppBase.getRefWatcher(getActivity());
         refWatcher.watch(this);
     }
 }

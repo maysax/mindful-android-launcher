@@ -166,7 +166,7 @@ public class MessageItem {
             // will get called immediately
             boolean loadSlideshow = mMessageType != PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND;
 
-            /* SKIP mItemLoadedFuture = QKSMSApp.getApplication().getPduLoaderManager()
+            /* SKIP mItemLoadedFuture = QKSMSAppBase.getApplication().getPduLoaderManager()
                     .getPdu(mMessageUri, loadSlideshow,
                             new PduLoadedMessageItemCallback()); */
 

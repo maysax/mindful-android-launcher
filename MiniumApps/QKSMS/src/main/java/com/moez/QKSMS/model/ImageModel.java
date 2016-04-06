@@ -32,8 +32,8 @@ import com.google.android.mms.smil.SmilHelper;
 import com.moez.QKSMS.ContentRestrictionException;
 import com.moez.QKSMS.ExceedMessageSizeException;
 import com.moez.QKSMS.LogTag;
-import com.moez.QKSMS.QKSMSApp;
 import com.moez.QKSMS.MmsConfig;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.common.google.ItemLoadedCallback;
 import com.moez.QKSMS.common.google.ItemLoadedFuture;
 import com.moez.QKSMS.common.google.ThumbnailManager;
@@ -138,7 +138,7 @@ public class ImageModel extends RegionMediaModel {
     }
 
     public ItemLoadedFuture loadThumbnailBitmap(ItemLoadedCallback callback) {
-        ThumbnailManager thumbnailManager = QKSMSApp.getApplication().getThumbnailManager();
+        ThumbnailManager thumbnailManager = QKSMSAppBase.getApplication().getThumbnailManager();
         mItemLoadedFuture = thumbnailManager.getThumbnail(getUri(), callback);
         return mItemLoadedFuture;
     }

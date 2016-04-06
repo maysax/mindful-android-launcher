@@ -35,7 +35,7 @@ import com.google.android.mms.MmsException;
 import com.google.android.mms.smil.SmilHelper;
 import com.moez.QKSMS.ContentRestrictionException;
 import com.moez.QKSMS.LogTag;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.common.google.ItemLoadedCallback;
 import com.moez.QKSMS.common.google.ItemLoadedFuture;
 import com.moez.QKSMS.common.google.ThumbnailManager;
@@ -204,7 +204,7 @@ public class VideoModel extends RegionMediaModel {
     }
 
     public ItemLoadedFuture loadThumbnailBitmap(ItemLoadedCallback callback) {
-        ThumbnailManager thumbnailManager = QKSMSApp.getApplication().getThumbnailManager();
+        ThumbnailManager thumbnailManager = QKSMSAppBase.getApplication().getThumbnailManager();
         mItemLoadedFuture = thumbnailManager.getVideoThumbnail(getUri(), callback);
         return mItemLoadedFuture;
     }

@@ -1,4 +1,4 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
@@ -10,16 +10,16 @@ repositories {
 }
 
 android {
-    flavorDimensions "analytics"
-
-    productFlavors {
-        withAnalytics {
-            dimension "analytics"
-        }
-        noAnalytics {
-            dimension "analytics"
-        }
-    }
+//    flavorDimensions "analytics"
+//
+//    productFlavors {
+//        withAnalytics {
+//            dimension "analytics"
+//        }
+//        noAnalytics {
+//            dimension "analytics"
+//        }
+//    }
 
     lintOptions {
         checkReleaseBuilds false
@@ -106,10 +106,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:support-v13:22.2.1'
     compile 'com.android.support:recyclerview-v7:22.2.1'
-    withAnalyticsCompile 'com.google.android.gms:play-services-analytics:8.3.0'
-
-    // External services
-    withAnalyticsCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
-        transitive = true;
-    }
+//    withAnalyticsCompile 'com.google.android.gms:play-services-analytics:8.3.0'
+//
+//    // External services
+//    withAnalyticsCompile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+//        transitive = true;
+//    }
 }

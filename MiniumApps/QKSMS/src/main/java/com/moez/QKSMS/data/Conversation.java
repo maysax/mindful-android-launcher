@@ -22,15 +22,14 @@ import android.util.Log;
 
 import com.android.mms.transaction.MmsMessageSender;
 import com.google.android.mms.pdu_alt.PduHeaders;
-import com.moez.QKSMS.QKSMSAppBase;
-import com.moez.QKSMS.mmssms.Utils;
 import com.moez.QKSMS.LogTag;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.google.DraftCache;
-import com.moez.QKSMS.receiver.UnreadBadgeService;
 import com.moez.QKSMS.common.utils.AddressUtils;
 import com.moez.QKSMS.common.utils.PhoneNumberUtils;
+import com.moez.QKSMS.mmssms.Utils;
+import com.moez.QKSMS.receiver.UnreadBadgeService;
 import com.moez.QKSMS.transaction.NotificationManager;
 import com.moez.QKSMS.transaction.SmsHelper;
 
@@ -801,7 +800,7 @@ public class Conversation {
             sDeletingThreads = true;
             String selection = deleteAll ? null : "locked=0";
 
-            QKSMSAppBase app = QKSMSApp.getApplication();
+            QKSMSAppBase app = QKSMSAppBase.getApplication();
             //app.getPduLoaderManager().clear();
             //app.getThumbnailManager().clear();
 

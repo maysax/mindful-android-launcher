@@ -29,6 +29,7 @@ import android.provider.Telephony.MmsSms;
 import android.provider.Telephony.Sms;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.android.mms.util.DownloadManager;
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.EncodedStringValue;
@@ -37,7 +38,7 @@ import com.google.android.mms.pdu_alt.NotificationInd;
 import com.google.android.mms.pdu_alt.PduHeaders;
 import com.google.android.mms.pdu_alt.PduPersister;
 import com.google.android.mms.pdu_alt.RetrieveConf;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.formatter.FormatterFactory;
 import com.moez.QKSMS.common.google.ItemLoadedCallback;
@@ -200,7 +201,7 @@ public class MessageItem {
             // will get called immediately
             boolean loadSlideshow = mMessageType != PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND;
 
-            mItemLoadedFuture = QKSMSApp.getApplication().getPduLoaderManager()
+            mItemLoadedFuture = QKSMSAppBase.getApplication().getPduLoaderManager()
                     .getPdu(mMessageUri, loadSlideshow,
                     new PduLoadedMessageItemCallback());
 

@@ -22,7 +22,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.moez.QKSMS.LogTag;
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.utils.PhoneNumberUtils;
 import com.moez.QKSMS.transaction.SmsHelper;
@@ -212,7 +212,7 @@ public class Contact {
         //                   (408) 555-1289
         String formattedNumber = number;
         if (!SmsHelper.isEmailAddress(number)) {
-            formattedNumber = PhoneNumberUtils.formatNumber(number, numberE164, QKSMSApp.getApplication().getCurrentCountryIso());
+            formattedNumber = PhoneNumberUtils.formatNumber(number, numberE164, QKSMSAppBase.getApplication().getCurrentCountryIso());
         }
 
         if (!TextUtils.isEmpty(name) && !name.equals(number)) {
@@ -233,7 +233,7 @@ public class Contact {
 
     public synchronized void setNumber(String number) {
         if (!SmsHelper.isEmailAddress(number)) {
-            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164, QKSMSApp.getApplication().getCurrentCountryIso());
+            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164, QKSMSAppBase.getApplication().getCurrentCountryIso());
         } else {
             mNumber = number;
         }
@@ -853,7 +853,7 @@ public class Contact {
             if (!TextUtils.isEmpty(normalizedNumber) && !TextUtils.isEmpty(minMatch)) {
                 String numberLen = String.valueOf(normalizedNumber.length());
                 String numberE164 = PhoneNumberUtils.formatNumberToE164(
-                        number, QKSMSApp.getApplication().getCurrentCountryIso());
+                        number, QKSMSAppBase.getApplication().getCurrentCountryIso());
                 String selection;
                 String[] args;
                 if (TextUtils.isEmpty(numberE164)) {

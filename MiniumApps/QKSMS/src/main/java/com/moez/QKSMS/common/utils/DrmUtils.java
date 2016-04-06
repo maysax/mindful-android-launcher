@@ -22,7 +22,7 @@ import android.drm.DrmStore;
 import android.net.Uri;
 import android.util.Log;
 
-import com.moez.QKSMS.QKSMSApp;
+import com.moez.QKSMS.QKSMSAppBase;
 
 public class DrmUtils {
     private static final String TAG = "DrmUtils";
@@ -39,7 +39,7 @@ public class DrmUtils {
 
     public static boolean isDrmType(String mimeType) {
         boolean result = false;
-        DrmManagerClient drmManagerClient = QKSMSApp.getApplication().getDrmManagerClient();
+        DrmManagerClient drmManagerClient = QKSMSAppBase.getApplication().getDrmManagerClient();
         if (drmManagerClient != null) {
             try {
                 if (drmManagerClient.canHandle("", mimeType)) {
@@ -61,7 +61,7 @@ public class DrmUtils {
      * @return true if the content may be forwarded
      */
     public static boolean haveRightsForAction(Uri uri, int action) {
-        DrmManagerClient drmManagerClient = QKSMSApp.getApplication().getDrmManagerClient();
+        DrmManagerClient drmManagerClient = QKSMSAppBase.getApplication().getDrmManagerClient();
 
         try {
             // first check if the URI is registered as DRM in DRM-framework
