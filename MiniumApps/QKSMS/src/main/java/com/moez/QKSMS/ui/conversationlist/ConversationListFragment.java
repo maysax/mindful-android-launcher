@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,16 +20,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.melnykov.fab.FloatingActionButton;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.BlockedConversationHelper;
 import com.moez.QKSMS.common.DialogHelper;
 import com.moez.QKSMS.common.LiveViewManager;
-import com.moez.QKSMS.ui.dialog.conversationdetails.ConversationDetailsDialog;
-import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.common.utils.ColorUtils;
 import com.moez.QKSMS.data.Conversation;
 import com.moez.QKSMS.data.ConversationLegacy;
+import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.transaction.SmsHelper;
 import com.moez.QKSMS.ui.ContentFragment;
 import com.moez.QKSMS.ui.MainActivity;
@@ -36,6 +36,7 @@ import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.base.QKFragment;
 import com.moez.QKSMS.ui.base.RecyclerCursorAdapter;
 import com.moez.QKSMS.ui.compose.ComposeFragment;
+import com.moez.QKSMS.ui.dialog.conversationdetails.ConversationDetailsDialog;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 
 import java.util.Observable;
@@ -82,8 +83,8 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
                 return;
             }
 
-            mFab.setColorNormal(ThemeManager.getColor());
-            mFab.setColorPressed(ColorUtils.lighten(ThemeManager.getColor()));
+            mFab.setRippleColor(ThemeManager.getColor());
+            mFab.setBackgroundColor(ColorUtils.lighten(ThemeManager.getColor()));
             mFab.getDrawable().setColorFilter(ThemeManager.getTextOnColorPrimary(), PorterDuff.Mode.SRC_ATOP);
 
             mEmptyStateIcon.setColorFilter(ThemeManager.getTextOnBackgroundPrimary());
@@ -104,9 +105,8 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        mFab.setColorNormal(ThemeManager.getColor());
-        mFab.setColorPressed(ColorUtils.lighten(ThemeManager.getColor()));
-        mFab.attachToRecyclerView(mRecyclerView);
+        mFab.setRippleColor(ThemeManager.getColor());
+        mFab.setBackgroundColor(ColorUtils.lighten(ThemeManager.getColor()));
         mFab.setColorFilter(ThemeManager.getTextOnColorPrimary());
         mFab.setOnClickListener(v -> {
             if (mAdapter.isInMultiSelectMode()) {

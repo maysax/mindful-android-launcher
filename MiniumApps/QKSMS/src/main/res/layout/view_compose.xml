@@ -77,12 +77,6 @@
             android:animateLayoutChanges="true">
 
             <ImageView
-                android:layout_width="56dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center"
-                android:src="@drawable/fab_shadow_mini" />
-
-            <ImageView
                 android:id="@+id/compose_button_background"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
