@@ -95,7 +95,7 @@ dependencies {
     compile 'com.googlecode.ez-vcard:ez-vcard:0.9.6'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.koushikdutta.ion:ion:1.1.7'
-    compile 'org.ligi:snackengage:0.4'
+//    compile 'org.ligi:snackengage:0.4'
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'
 

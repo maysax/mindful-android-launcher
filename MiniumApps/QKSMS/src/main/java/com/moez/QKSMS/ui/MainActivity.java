@@ -31,7 +31,6 @@ import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.ConversationPrefsHelper;
 import com.moez.QKSMS.common.DialogHelper;
 import com.moez.QKSMS.common.LiveViewManager;
-import com.moez.QKSMS.common.QKRateSnack;
 import com.moez.QKSMS.common.google.DraftCache;
 import com.moez.QKSMS.common.utils.KeyboardUtils;
 import com.moez.QKSMS.common.utils.MessageUtils;
@@ -56,8 +55,6 @@ import com.moez.QKSMS.ui.settings.SettingsFragment;
 import com.moez.QKSMS.ui.view.slidingmenu.SlidingMenu;
 import com.moez.QKSMS.ui.welcome.WelcomeActivity;
 
-import org.ligi.snackengage.SnackEngage;
-import org.ligi.snackengage.snacks.BaseSnack;
 
 import java.net.URLDecoder;
 import java.util.Collection;
@@ -135,10 +132,6 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
             // in the ThemeManager isn't the MainActivity
             mRoot.setBackgroundColor(ThemeManager.getBackgroundColor());
         });
-
-        //Adds a small/non intrusive snackbar that asks the user to rate the app
-        SnackEngage.from(this).withSnack(new QKRateSnack().withDuration(BaseSnack.DURATION_LONG))
-                .build().engageWhenAppropriate();
     }
 
     /**
