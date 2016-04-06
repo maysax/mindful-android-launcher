@@ -1,6 +1,6 @@
 package minium.co.messages.app;
 
-import com.moez.QKSMS.QKSMSAppBase;
+import minium.co.core.app.CoreApplication;
 
 /**
  * Concrete implementation of {@link CoreApplication}
@@ -9,7 +9,7 @@ import com.moez.QKSMS.QKSMSAppBase;
  * Created by shahab on 3/17/16.
  */
 
-public class MessagesApp extends CoreApp {
+public class MessagesApp extends CoreApplication {
 
     //private final String TRACE_TAG = LogConfig.TRACE_TAG + "MessagesApp";
 

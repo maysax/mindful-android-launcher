@@ -44,9 +44,9 @@ import com.moez.QKSMS.ui.mms.layout.LayoutManager;
 
 import java.util.Locale;
 
-import minium.co.core.app.CoreApplication;
+import minium.co.messages.app.MessagesApp;
 
-public class QKSMSAppBase extends CoreApplication {
+public class QKSMSAppBase extends MessagesApp {
     public static final String LOG_TAG = "Mms";
 
     private SearchRecentSuggestions mRecentSuggestions;
