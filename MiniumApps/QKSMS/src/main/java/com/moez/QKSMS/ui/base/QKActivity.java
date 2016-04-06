@@ -30,7 +30,9 @@ import com.moez.QKSMS.ui.view.QKTextView;
 
 import java.util.ArrayList;
 
-public abstract class QKActivity extends AppCompatActivity {
+import minium.co.core.ui.CoreActivity;
+
+public abstract class QKActivity extends CoreActivity {
     private final String TAG = "QKActivity";
 
     private Toolbar mToolbar;
@@ -261,31 +263,15 @@ public abstract class QKActivity extends AppCompatActivity {
         return R.style.AppThemeLight;
     }
 
-    public void makeToast(@StringRes int message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
     public boolean getBoolean(QKPreference preference) {
         return getPrefs().getBoolean(preference.getKey(), (boolean) preference.getDefaultValue());
-    }
-
-    public void setBoolean(QKPreference preference, boolean newValue) {
-        getPrefs().edit().putBoolean(preference.getKey(), newValue).apply();
     }
 
     public int getInt(QKPreference preference) {
         return getPrefs().getInt(preference.getKey(), (int) preference.getDefaultValue());
     }
 
-    public void setInt(QKPreference preference, int newValue) {
-        getPrefs().edit().putInt(preference.getKey(), newValue).apply();
-    }
-
     public String getString(QKPreference preference) {
         return getPrefs().getString(preference.getKey(), (String) preference.getDefaultValue());
-    }
-
-    public void setString(QKPreference preference, String newValue) {
-        getPrefs().edit().putString(preference.getKey(), newValue).apply();
     }
 }

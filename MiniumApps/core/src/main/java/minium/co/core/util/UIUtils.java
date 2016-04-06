@@ -2,6 +2,7 @@ package minium.co.core.util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
 import android.widget.Toast;
@@ -17,6 +18,10 @@ public class UIUtils {
     }
 
     public static void toast(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+    }
+
+    public static void toast(Context context, @StringRes int msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
