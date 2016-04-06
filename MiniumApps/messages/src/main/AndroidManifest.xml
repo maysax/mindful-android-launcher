@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="minium.co.messages">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="minium.co.messages">
 
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
@@ -13,26 +14,17 @@
     -->
 
     <application
-        android:name=".app.MessagesApp_"
+        android:name=".app.MessagesApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/CoreTheme">
+        tools:replace="label,icon">
 
         <!-- Fabric configuration -->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
-
-        <activity android:name=".ui.MainActivity_"
-                  android:launchMode="singleTask"
-                  android:windowSoftInputMode="stateUnchanged|adjustResize">
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
 
     </application>
 

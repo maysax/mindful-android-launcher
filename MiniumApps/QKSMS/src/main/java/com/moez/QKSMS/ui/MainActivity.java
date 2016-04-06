@@ -98,7 +98,7 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
         launchWelcomeActivity();
 
         setContentView(R.layout.activity_main);
-        setTitle(R.string.title_conversation_list);
+        setTitle(R.string.app_name);
         mRoot = findViewById(R.id.root);
         mSlidingMenu = (SlidingMenu) findViewById(R.id.sliding_menu);
 

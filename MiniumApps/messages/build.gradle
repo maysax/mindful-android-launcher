@@ -52,14 +52,10 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
-    compile project(':core')
+    //compile project(':core')
+    compile project(':QKSMS')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
-
-
-    compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
-    compile 'com.klinkerapps:android-chips:1.0.1@aar'
-    compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
 }
 
 apt {
