@@ -54,10 +54,12 @@ import com.moez.QKSMS.ui.search.SearchFragment;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 import com.moez.QKSMS.ui.view.slidingmenu.SlidingMenu;
 
+import org.androidannotations.annotations.EActivity;
+
 import java.net.URLDecoder;
 import java.util.Collection;
 
-
+@EActivity
 public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuListener {
     private final String TAG = "MainActivity";
 

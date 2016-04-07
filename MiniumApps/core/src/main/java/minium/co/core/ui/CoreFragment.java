@@ -1,14 +1,13 @@
 package minium.co.core.ui;
+
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Trace;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 
 /**

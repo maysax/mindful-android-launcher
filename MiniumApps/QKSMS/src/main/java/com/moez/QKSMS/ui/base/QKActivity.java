@@ -28,11 +28,14 @@ import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.view.QKTextView;
 
+import org.androidannotations.annotations.EActivity;
+
 import java.util.ArrayList;
 
 import minium.co.core.ui.CoreActivity;
 
-public abstract class QKActivity extends CoreActivity {
+@EActivity
+public abstract class QKActivity extends AppCompatActivity {
     private final String TAG = "QKActivity";
 
     private Toolbar mToolbar;
