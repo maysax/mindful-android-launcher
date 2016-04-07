@@ -178,7 +178,7 @@ public class ConversationListFragment extends QKFragment implements LoaderManage
             menu.findItem(R.id.menu_delete_failed).setVisible(doSomeHaveErrors());
         } else {
             inflater.inflate(R.menu.conversations, menu);
-            mContext.setTitle(mShowBlocked ? R.string.title_blocked : R.string.title_conversation_list);
+            mContext.setTitle(mShowBlocked ? R.string.title_blocked : R.string.app_name);
 
             mBlockedItem = menu.findItem(R.id.menu_blocked);
             BlockedConversationHelper.bindBlockedMenuItem(mContext, mPrefs, mBlockedItem, mShowBlocked);

@@ -75,9 +75,9 @@
                 android:layout_marginRight="8dp"
                 android:ellipsize="end"
                 android:layout_weight="1"
-                android:lines="1"
-                android:singleLine="false"
-                tools:text="Hey! This is a test message. I'm just making this longer now" />
+                android:lines="2"
+                android:maxLines="2"
+                tools:text="Hey! This is a test message. I'm just making this longer now and it will be very long test that might not be capable to small" />
 
             <LinearLayout
                 android:id="@+id/conversation_list_badges"

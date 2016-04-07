@@ -1,4 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+
     <string name="app_name">Messages</string>
 
     <!-- String to match as no subject and filter out as a subject. For example, if the
