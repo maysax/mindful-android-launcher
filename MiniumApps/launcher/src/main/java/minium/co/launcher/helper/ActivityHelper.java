@@ -37,7 +37,7 @@ public class ActivityHelper {
             getContext().startActivity(getContext().getPackageManager().getLaunchIntentForPackage("minium.co.messages"));
             return true;
         } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
+            Tracer.e(e, "Minium-Messages app not found : " + e.getMessage());
         }
 
         try {
