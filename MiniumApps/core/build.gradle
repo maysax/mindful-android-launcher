@@ -14,6 +14,8 @@ android {
 
         buildConfigField "String", project.KEY_GIT_SHA, "\"${gitSha}\""
         buildConfigField "String", project.KEY_BUILD_TIME, "\"${buildTime}\""
+
+        multiDexEnabled true
     }
     buildTypes {
         debug {
@@ -63,6 +65,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:gridlayout-v7:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:support-v13:$supportVersion"
+    compile 'com.android.support:multidex:1.0.1'
 
     /**
      * =================== Framework ===================

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_call"
+        android:icon="@drawable/ic_call"
+        android:title="@string/menu_call"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/menu_notifications"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/menu_notifications"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/menu_notification_settings"
+        android:title="@string/menu_notification_settings"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/menu_details"
+        android:title="@string/menu_view_details"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/menu_delete_conversation"
+        android:icon="@drawable/ic_delete"
+        app:showAsAction="ifRoom"
+        android:title="@string/delete_conversation" />
+</menu>

@@ -1,6 +1,7 @@
 package minium.co.core.app;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
@@ -26,7 +27,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * Created by shahab on 3/17/16.
  */
 @EApplication
-public abstract class CoreApplication extends Application {
+public abstract class CoreApplication extends MultiDexApplication {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "CoreApplication";
 

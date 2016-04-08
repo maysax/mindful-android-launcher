@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 
 android {
@@ -7,7 +8,6 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "minium.co.messages"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode "${versionMajor}".toInteger() * 10000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
@@ -17,18 +17,30 @@ android {
         debug {
             debuggable true
             minifyEnabled false
+            shrinkResources true
         }
         release {
             debuggable false
             // RELEASE: true
             minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        compileOptions.encoding = "UTF-8"
+
+        // Use Java 1.7, requires minSdk 8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 repositories {
+    jcenter()
     maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://clojars.org/repo/' }
 }
 
 dependencies {
@@ -39,7 +51,7 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
-    compile project(':core')
+    compile project(':QKSMS')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 }

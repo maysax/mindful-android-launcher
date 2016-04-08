@@ -1,7 +1,6 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
-    <string name="app_name">Messages</string>
 
-    <string name="hint.no.messages">No messages yet.</string>
+    <string name="app_name">Messages</string>
 
     <!-- String to match as no subject and filter out as a subject. For example, if the
      subject string is "no subject", we won't display that. We'll pretend
@@ -13,35 +12,6 @@
     <!-- Subject to display in the conversation list if there is no subject -->
     <string name="placeholder.no.subject">(No subject)</string>
 
-    <string name="date.yesterday">Yesterday</string>
-    <string name="date.just.now">Just now</string>
-
     <!-- In conversation list items, this comes after the receipient's name and contains the number of messages in the thread [CHAR LIMIT=5] -->
     <string name="format.msg.count">\u00a0<xliff:g id="number" example="1">%1$s</xliff:g></string>
-    <!-- Tag appearing on conversations in the conversation list that contain a draft message -->
-    <string name="has_draft">Draft</string>
-    <!-- In conversation list items, this is the separator between a contact's name and the draft stamp [CHAR LIMIT=5] -->
-    <string name="draft_separator">,\u0020</string>
-    <!-- Name of the local user when displaying sender of an outgoing message (personal pronoun) -->
-    <string name="messagelist_sender_self">Me</string>
-    <!-- Tells the user they need to set QKSMS as the default messaging app in order to mark messages as read -->
-    <string name="not_default_mark_read">QKSMS must be your SMS app to mark messages read</string>
-    <!-- Tells the user they need to set QKSMS as the default app in order to use this feature -->
-    <string name="default_info">QKSMS needs to be your SMS app to do that</string>
-    <!-- Sender to be used if the sender address has been hidden -->
-    <string name="hidden_sender_address">Hidden sender address</string>
-    <!--Message sending status: sending-->
-    <string name="status_sending">Sending…</string>
-    <!-- Status in "Report" window -->
-    <string name="status_failed">Failed. Tap for options</string>
-    <!--Text to be displayed while content is loading-->
-    <string name="loading">Loading…</string>
-    <!-- In message list items, this string builds the timestamp line when the message is in a group [CHAR LIMIT=NONE] -->
-    <string name="message_timestamp_format"><xliff:g id="string" example="Fred Flinstone">%1$s</xliff:g>\u0020-\u0020<xliff:g id="string" example="9:39AM">%2$s</xliff:g></string>
-    <!-- Label in "Message details" dialog -->
-    <string name="message_size_label">Message size\u000A</string>
-    <!-- Abbreviation for "kilobyte" -->
-    <string name="kilobyte">KB</string>
-    <!-- Formatting for subject displayed inline, prepended to MMS message text -->
-    <string name="inline_subject">"&lt;Subject: <xliff:g id="subject">%s</xliff:g>&gt;"</string>
 </resources>
