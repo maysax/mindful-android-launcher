@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.ui.ThemeManager;
+import com.moez.QKSMS.ui.base.QKActivity;
 
 
 public class DefaultSmsHelper implements View.OnClickListener {
@@ -37,7 +38,7 @@ public class DefaultSmsHelper implements View.OnClickListener {
             long duration = deltaTime > 60 * 1000 ? 8000 : 3000;
 
             android.support.design.widget.Snackbar
-                    .make(viewGroup, mMessage, android.support.design.widget.Snackbar.LENGTH_LONG)
+                    .make(viewGroup == null ? ((QKActivity) mContext).findViewById(android.R.id.content) : viewGroup, mMessage, android.support.design.widget.Snackbar.LENGTH_LONG)
                     .setAction(R.string.upgrade_now, this).setActionTextColor(ThemeManager.getColor()).show();
 
             sLastShown = System.nanoTime() / 1000000;
