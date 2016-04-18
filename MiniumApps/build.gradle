@@ -10,7 +10,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0-alpha1'
+        classpath 'com.android.tools.build:gradle:2.1.0-beta1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -35,7 +35,7 @@ allprojects {
 
 project.ext {
     compileSdkVersion = 23
-    buildToolsVersion = "23.0.2"
+    buildToolsVersion = "23.0.3"
     minSdkVersion = 21  // Targeting kitkat for now, might upgrade to Lollipop
     targetSdkVersion = 23
 
@@ -50,7 +50,7 @@ project.ext {
     junitVersion = "4.12"
 
     // get the current build SHA
-    gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+     gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
     // get the current build time
     buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
