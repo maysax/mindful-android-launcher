@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+apply plugin: 'io.fabric'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+//        applicationId "com.android.contacts.common"
+
+        testApplicationId "com.android.contacts.common.unittest"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+dependencies {
+    compile "com.googlecode.libphonenumber:geocoder:2.9"
+    compile 'com.googlecode.libphonenumber:libphonenumber:6.2'
+
+    compile project(':phoneCommon')
+}
