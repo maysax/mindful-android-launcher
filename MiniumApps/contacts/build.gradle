@@ -12,6 +12,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode "${versionMajor}".toInteger() * 10000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
         versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
+
+        multiDexEnabled true
     }
     buildTypes {
         debug {
