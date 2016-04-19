@@ -42,8 +42,6 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
 
     compile 'com.google.guava:guava:19.0'
-    compile 'com.googlecode.libphonenumber:libphonenumber:7.3.0'
-    compile 'com.googlecode.libphonenumber:geocoder:2.39'
 
     compile project(':core')
 
