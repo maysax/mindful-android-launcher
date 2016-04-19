@@ -41,4 +41,35 @@
 
     <!-- An ID to be used for contents of a custom dialog so that its state be preserved -->
     <item type="id" name="custom_dialog_content" />
+
+    <!-- For vcard.ImportVCardActivity -->
+    <item type="id" name="dialog_searching_vcard"/>
+    <item type="id" name="dialog_sdcard_not_found"/>
+    <item type="id" name="dialog_vcard_not_found"/>
+    <item type="id" name="dialog_select_import_type"/>
+    <item type="id" name="dialog_select_one_vcard"/>
+    <item type="id" name="dialog_select_multiple_vcard"/>
+    <item type="id" name="dialog_cache_vcard"/>
+    <item type="id" name="dialog_io_exception"/>
+    <item type="id" name="dialog_error_with_message"/>
+
+    <!-- For vcard.CancelActivity -->
+    <item type="id" name="dialog_cancel_confirmation"/>
+    <item type="id" name="dialog_cancel_failed"/>
+
+    <!-- For ExportVCardActivity -->
+    <item type="id" name="dialog_export_confirmation"/>
+    <item type="id" name="dialog_exporting_vcard"/>
+    <item type="id" name="dialog_fail_to_export_with_reason"/>
+
+    <!-- For Debug Purpose -->
+    <item type="id" name="cliv_name_textview"/>
+    <item type="id" name="cliv_phoneticname_textview"/>
+    <item type="id" name="cliv_label_textview"/>
+    <item type="id" name="cliv_data_view"/>
+
+    <!-- For tag ids used by ContactPhotoManager to tag views with contact details -->
+    <item type="id" name="tag_display_name"/>
+    <item type="id" name="tag_identifier"/>
+    <item type="id" name="tag_contact_type"/>
 </resources>

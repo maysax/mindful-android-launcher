@@ -24,4 +24,17 @@
     <!-- Number of lines the QuickContact title can have -->
     <integer name="quickcontact_title_lines">1</integer>
 
+
+    <!--  Determines the number of columns in a ContactTileRow in the favorites tab -->
+    <integer name="contact_tile_column_count_in_favorites_new">3</integer>
+
+    <!-- The number of characters in the snippet before we need to tokenize and ellipse. -->
+    <integer name="snippet_length_before_tokenize">30</integer>
+
+    <!-- Layout weight of space elements in contact list view.
+    Default to 0 to indicate no padding-->
+    <integer name="contact_list_space_layout_weight">0</integer>
+    <!-- Layout weight of card in contact list view.
+    Default to 0 to indicate no padding -->
+    <integer name="contact_list_card_layout_weight">0</integer>
 </resources>
