@@ -1,5 +1,7 @@
 package minium.co.contacts.app;
 
+import com.android.contacts.ContactsApplication;
+
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.Trace;
 
@@ -15,7 +17,7 @@ import minium.co.core.log.Tracer;
  * Created by shahab on 3/17/16.
  */
 @EApplication
-public class ContactsApp extends CoreApplication {
+public class ContactsApp extends ContactsApplication {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "ContactsApp";
 
