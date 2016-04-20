@@ -41,6 +41,8 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
+    compile 'com.google.guava:guava:15.0'
+
     compile project(':core')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
