@@ -38,7 +38,7 @@ import com.android.contacts.common.testing.InjectedServices;
 import com.android.contacts.common.util.Constants;
 import com.google.common.annotations.VisibleForTesting;
 
-public class ContactsApplication extends CoreApplication {
+public abstract class ContactsApplication extends CoreApplication {
     private static final boolean ENABLE_LOADER_LOG = false; // Don't submit with true
     private static final boolean ENABLE_FRAGMENT_LOG = false; // Don't submit with true
 
