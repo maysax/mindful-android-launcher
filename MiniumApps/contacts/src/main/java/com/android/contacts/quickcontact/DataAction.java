@@ -23,12 +23,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import com.android.net.WebAddress;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.provider.ContactsContract.Data;
 import android.telecom.PhoneAccount;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.contacts.common.CallUtil;
 import com.android.contacts.common.ContactsUtils;
@@ -170,8 +170,9 @@ public class DataAction implements Action {
             final WebsiteDataItem website = (WebsiteDataItem) item;
             final String url = website.getUrl();
             if (!TextUtils.isEmpty(url)) {
-                WebAddress webAddress = new WebAddress(url);
-                mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webAddress.toString()));
+                Toast.makeText(mContext, "WebAddress: " + url, Toast.LENGTH_LONG).show();
+//                WebAddress webAddress = new WebAddress(url);
+//                mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webAddress.toString()));
             }
 
         } else if (item instanceof ImDataItem) {
