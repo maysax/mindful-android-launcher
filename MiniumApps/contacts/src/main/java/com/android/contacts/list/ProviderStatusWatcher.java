@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.ProviderStatus;
 import android.util.Log;
 
@@ -61,7 +62,8 @@ public class ProviderStatusWatcher extends ContentObserver {
     }
 
     private static final String[] PROJECTION = new String[] {
-        ProviderStatus.STATUS
+            ProviderStatus.STATUS,
+            "data1"
     };
 
     /**
@@ -226,7 +228,7 @@ public class ProviderStatusWatcher extends ContentObserver {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                Cursor cursor = mContext.getContentResolver().query(ProviderStatus.CONTENT_URI,
+                Cursor cursor = mContext.getContentResolver().query(Uri.withAppendedPath(ContactsContract.AUTHORITY_URI, "provider_status"),
                         PROJECTION, null, null, null);
                 if (cursor != null) {
                     try {

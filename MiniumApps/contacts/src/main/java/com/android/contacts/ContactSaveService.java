@@ -977,7 +977,7 @@ public class ContactSaveService extends IntentService {
         String[] PROJECTION = {
                 RawContacts._ID,
                 RawContacts.CONTACT_ID,
-                // SKIP RawContacts.NAME_VERIFIED,
+                "name_verified",
                 RawContacts.DISPLAY_NAME_SOURCE,
         };
 
@@ -1060,7 +1060,7 @@ public class ContactSaveService extends IntentService {
         if (verifiedNameRawContactId != -1) {
             Builder builder = ContentProviderOperation.newUpdate(
                     ContentUris.withAppendedId(RawContacts.CONTENT_URI, verifiedNameRawContactId));
-            // SKIP builder.withValue(RawContacts.NAME_VERIFIED, 1);
+            builder.withValue("name_verified", 1);
             operations.add(builder.build());
         }
 
