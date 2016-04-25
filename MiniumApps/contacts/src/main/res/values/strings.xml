@@ -1427,4 +1427,5 @@ a        ren't members of any other group. [CHAR LIMIT=25] -->
          contacts to be displayed. [CHAR LIMIT=128] -->
     <string name="settings_contact_display_options_title">Contact display options</string>
 
+    <string name="viewContactDesription" msgid="214186610887547860">"Kontakta baxın"</string>
 </resources>
