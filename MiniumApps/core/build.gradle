@@ -63,7 +63,7 @@ dependencies {
      */
     // http://developer.android.com/tools/support-library/index.html
     compile "com.android.support:appcompat-v7:$supportVersion"
-    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:design:22.2.0"
     compile "com.android.support:gridlayout-v7:$supportVersion"
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.android.support:cardview-v7:$supportVersion"
