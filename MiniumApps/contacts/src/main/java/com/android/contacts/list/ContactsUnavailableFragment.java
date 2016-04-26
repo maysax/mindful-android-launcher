@@ -93,8 +93,8 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
             // The view hasn't been inflated yet.
             return;
         }
-        /* SKIP switch (providerStatus.status) {
-            case ProviderStatus.STATUS_NO_ACCOUNTS_NO_CONTACTS:
+        switch (providerStatus.status) {
+            case 4:
                 setMessageText(mNoContactsMsgResId, mNSecNoContactsMsgResId);
                 mCreateContactButton.setVisibility(View.VISIBLE);
                 mAddAccountButton.setVisibility(View.VISIBLE);
@@ -104,7 +104,7 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
                 mProgress.setVisibility(View.GONE);
                 break;
 
-            case ProviderStatus.STATUS_CHANGING_LOCALE:
+            case 3:
                 mMessageView.setText(R.string.locale_change_in_progress);
                 mMessageView.setGravity(Gravity.CENTER_HORIZONTAL);
                 mMessageView.setVisibility(View.VISIBLE);
@@ -116,7 +116,7 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
                 mProgress.setVisibility(View.VISIBLE);
                 break;
 
-            case ProviderStatus.STATUS_UPGRADING:
+            case 1:
                 mMessageView.setText(R.string.upgrade_in_progress);
                 mMessageView.setGravity(Gravity.CENTER_HORIZONTAL);
                 mMessageView.setVisibility(View.VISIBLE);
@@ -128,7 +128,7 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
                 mProgress.setVisibility(View.VISIBLE);
                 break;
 
-            case ProviderStatus.STATUS_UPGRADE_OUT_OF_MEMORY:
+            case 2:
                 String message = getResources().getString(R.string.upgrade_out_of_memory,
                         new Object[] { providerStatus.data});
                 mMessageView.setText(message);
@@ -141,7 +141,7 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
                 mRetryUpgradeButton.setVisibility(View.VISIBLE);
                 mProgress.setVisibility(View.GONE);
                 break;
-        }*/
+        }
     }
 
     @Override
