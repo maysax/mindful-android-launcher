@@ -7,12 +7,6 @@ import org.androidannotations.annotations.EActivity;
 
 import minium.co.core.ui.CoreActivity;
 
-@EActivity
+@EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
 }
