@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.eyeem.chips.ChipsEditText;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import org.androidannotations.annotations.EViewGroup;
@@ -22,7 +23,7 @@ import minium.co.launcher2.R;
 public class SearchLayout extends LinearLayout {
 
     @ViewById
-    protected EditText txtSearchBox;
+    protected ChipsEditText txtSearchBox;
 
     @ViewById
     protected IconTextView btnClear;
@@ -78,6 +79,14 @@ public class SearchLayout extends LinearLayout {
                     btnClear.setVisibility(VISIBLE);
                 } else {
                     btnClear.setVisibility(INVISIBLE);
+                }
+
+                if (s.toString().toLowerCase().startsWith("text")) {
+                    txtSearchBox.makeChip(0, 4, true);
+                }
+
+                if (s.toString().toLowerCase().startsWith("call")) {
+                    txtSearchBox.makeChip(0, 4, false);
                 }
             }
         });

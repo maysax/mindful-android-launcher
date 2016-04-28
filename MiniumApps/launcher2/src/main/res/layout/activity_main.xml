@@ -23,12 +23,4 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginTop="208dp"
-        android:background="@color/material.core.green">
-
-    </LinearLayout>
-
 </FrameLayout>

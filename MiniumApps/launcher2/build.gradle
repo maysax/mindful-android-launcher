@@ -41,6 +41,7 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
 
     compile project(':core')
+    compile project(':chips')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 }
