@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\@"
+        android:textSize="@dimen/text.size.xl"
+        android:textColor="@color/black"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        tools:background="@color/material.core.green"/>
+
+    <EditText
+        android:id="@+id/txtSearchBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:lines="1"
+        android:padding="8dp"
+        android:ellipsize="start"
+        android:textSize="@dimen/text.size.large"
+        tools:background="@color/material.core.blue"
+        />
+
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="{fa-times-circle 24dp}"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+
+        />
+
+</merge>

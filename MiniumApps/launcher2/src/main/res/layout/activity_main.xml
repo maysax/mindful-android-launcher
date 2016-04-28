@@ -10,30 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="minium.co.launcher2.MainActivity">
 
-    <LinearLayout
+    <minium.co.launcher2.ui.SearchLayout_
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edittext_rounded_corners"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="\@"
-            android:textSize="@dimen/text.size.2xl"
-            android:textColor="@color/black"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"/>
 
-        <minium.co.launcher2.ui.SearchEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:lines="1"
-            android:padding="8dp"
-            android:ellipsize="start"
-
-            />
-
-    </LinearLayout>
 </LinearLayout>
