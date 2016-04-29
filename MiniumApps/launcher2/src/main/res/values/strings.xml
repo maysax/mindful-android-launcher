@@ -3,4 +3,7 @@
 
     <string name="format.battery">%1$d%%</string>
     <string name="format.signal">{fa-signal 16dp} %1$s {fa-wifi 16dp}</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

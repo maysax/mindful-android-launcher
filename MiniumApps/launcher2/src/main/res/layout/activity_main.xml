@@ -9,22 +9,21 @@
     <FrameLayout
         android:id="@+id/statusView"
         android:layout_width="match_parent"
-        android:layout_height="20dp">
-
-    </FrameLayout>
+        android:layout_height="20dp"
+        tools:background="@color/material.core.red"/>
     
     <FrameLayout
         android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </FrameLayout>
+        android:layout_height="wrap_content"
+        tools:background="@color/material.core.green"/>
 
     <FrameLayout
         android:id="@+id/mainView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        tools:background="@color/material.core.orange">
 
     </FrameLayout>
 
@@ -35,21 +34,6 @@
 
     </FrameLayout>
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
-        <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
-        <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
-        <!--android:paddingTop="@dimen/activity_vertical_margin"-->
-        <!--android:orientation="vertical">-->
 
-        <!--<minium.co.launcher2.ui.SearchLayout_-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="top"/>-->
-
-
-    <!--</LinearLayout>-->
 
 </LinearLayout>
