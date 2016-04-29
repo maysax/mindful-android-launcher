@@ -6,5 +6,5 @@
           android:background="@drawable/lilatext_background"
           android:padding="8dp"
           android:textColor="#FFFFFFFF"
-          android:textSize="24sp"
+          android:textSize="16sp"
           android:textStyle="bold" />

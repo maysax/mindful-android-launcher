@@ -112,7 +112,9 @@ public class ChipsEditText extends MultilineEditText {
    @Override
    protected void onDraw(Canvas canvas) {
       super.onDraw(canvas);
-
+      if (isFocused()) {
+         cursorDrawable.draw(canvas, cursorBlink);
+      }
    }
 
    public void resetAutocompleList() {
@@ -540,6 +542,10 @@ public class ChipsEditText extends MultilineEditText {
       public void onHashTyped(boolean start);
    }
 
+   public CursorDrawable getCursorDrawable() {
+      return this.cursorDrawable;
+   }
+
    public BubbleStyle getCurrentBubbleStyle() {
       return currentBubbleStyle;
    }
@@ -548,6 +554,7 @@ public class ChipsEditText extends MultilineEditText {
       if (this.currentBubbleStyle == currentBubbleStyle) return;
       this.currentBubbleStyle = currentBubbleStyle;
       float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1.5f, getContext().getResources().getDisplayMetrics());
+      this.cursorDrawable = new CursorDrawable(this, getTextSize()*1.5f, width, getContext());
    }
 
    public SpannableString snapshot() {
