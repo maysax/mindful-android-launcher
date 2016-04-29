@@ -17,43 +17,8 @@ import minium.co.core.ui.CoreActivity;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
 
-    @ViewById
-    ViewGroup parentLayout;
-
-    @SystemService
-    InputMethodManager im;
-
-    SoftKeyboard softKeyboard;
-
     @AfterViews
     void afterViews() {
 
-        softKeyboard = new SoftKeyboard(parentLayout, im);
-        softKeyboard.setSoftKeyboardCallback(new SoftKeyboard.SoftKeyboardChanged()
-        {
-
-            @Override
-            public void onSoftKeyboardHide()
-            {
-                // Code here
-                Tracer.i("onSoftKeyboardHide");
-            }
-
-            @Override
-            public void onSoftKeyboardShow()
-            {
-                // Code here
-                Tracer.i("onSoftKeyboardShow");
-            }
-        });
-    }
-
-    /* Prevent memory leaks:
-*/
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        softKeyboard.unRegisterSoftKeyboardCallback();
     }
 }
