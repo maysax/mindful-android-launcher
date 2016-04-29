@@ -8,17 +8,30 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
+import de.greenrobot.event.Subscribe;
+import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.events.MainItemClickedEvent;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 @EFragment(R.layout.fragment_search)
-public class SearchFragment extends Fragment {
+public class SearchFragment extends CoreFragment {
+
+    @ViewById
+    SearchLayout searchLayout;
 
 
     public SearchFragment() {
         // Required empty public constructor
+    }
+
+    @Subscribe
+    public void onEvent(MainItemClickedEvent event) {
+        searchLayout.makeChips(event.getText());
     }
 }

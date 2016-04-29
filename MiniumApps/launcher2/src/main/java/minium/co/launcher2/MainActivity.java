@@ -20,6 +20,7 @@ import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
+import minium.co.launcher2.ui.MainFragment_;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.TopFragment;
 import minium.co.launcher2.ui.TopFragment_;
@@ -63,7 +64,7 @@ public class MainActivity extends CoreActivity {
     }
 
     void loadMainView() {
-
+        loadFragment(MainFragment_.builder().build(), R.id.mainView);
     }
 
     void loadBottomview() {

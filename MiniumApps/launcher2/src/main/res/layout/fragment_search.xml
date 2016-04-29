@@ -9,6 +9,7 @@
     tools:context="minium.co.launcher2.ui.SearchFragment">
 
     <minium.co.launcher2.ui.SearchLayout_
+        android:id="@+id/searchLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

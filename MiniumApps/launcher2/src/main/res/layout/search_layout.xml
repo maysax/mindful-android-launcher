@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
+        android:id="@+id/constantChar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="\@"
@@ -22,7 +23,8 @@
         android:lines="1"
         android:padding="8dp"
         android:ellipsize="start"
-        android:textSize="@dimen/text.size.large"
+        android:textSize="@dimen/text.size.regular"
+        android:hint="Make a selection"
         tools:background="@color/material.core.blue"
         />
 

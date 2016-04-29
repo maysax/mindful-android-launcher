@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.eyeem.chips.ChipsEditText;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -21,6 +22,9 @@ import minium.co.launcher2.R;
  */
 @EViewGroup(R.layout.search_layout)
 public class SearchLayout extends LinearLayout {
+
+    @ViewById
+    protected TextView constantChar;
 
     @ViewById
     protected ChipsEditText txtSearchBox;
@@ -57,11 +61,10 @@ public class SearchLayout extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         setupViews();
+
     }
 
     private void setupViews() {
-        btnClear.setVisibility(INVISIBLE);
-
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -77,19 +80,19 @@ public class SearchLayout extends LinearLayout {
             public void afterTextChanged(Editable s) {
                 if (s.length() != 0) {
                     btnClear.setVisibility(VISIBLE);
+                    constantChar.setTextColor(getResources().getColor(R.color.black));
                 } else {
                     btnClear.setVisibility(INVISIBLE);
+                    constantChar.setTextColor(getResources().getColor(R.color.colorAccent));
                 }
 
-                if (s.toString().toLowerCase().startsWith("text")) {
+                if (s.toString().toLowerCase().startsWith("text") || s.toString().toLowerCase().startsWith("call") || s.toString().toLowerCase().startsWith("note")) {
                     txtSearchBox.makeChip(0, 4, true);
-                }
-
-                if (s.toString().toLowerCase().startsWith("call")) {
-                    txtSearchBox.makeChip(0, 4, false);
                 }
             }
         });
+
+        txtSearchBox.setText("");
 
         btnClear.setOnClickListener(new OnClickListener() {
             @Override
@@ -97,5 +100,11 @@ public class SearchLayout extends LinearLayout {
                 txtSearchBox.getText().clear();
             }
         });
+    }
+
+    public void makeChips(String text) {
+        txtSearchBox.setText(text);
+        txtSearchBox.makeChip(0, text.length() + 1, false);
+        txtSearchBox.setSelection(text.length() + 1);
     }
 }
