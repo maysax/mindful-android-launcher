@@ -12,6 +12,7 @@
         android:textColor="@color/black"
         android:paddingStart="4dp"
         android:paddingEnd="4dp"
+        android:layout_gravity="center_vertical"
         tools:background="@color/material.core.green"/>
 
     <com.eyeem.chips.ChipsEditText
@@ -25,6 +26,7 @@
         android:ellipsize="start"
         android:textSize="@dimen/text.size.regular"
         android:hint="Make a selection"
+        android:layout_gravity="center_vertical"
         tools:background="@color/material.core.blue"
         />
 
@@ -32,10 +34,10 @@
         android:id="@+id/btnClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="{fa-times-circle 24dp}"
+        android:text="{fa-times-circle 16dp}"
         android:paddingStart="4dp"
         android:paddingEnd="4dp"
-
+        android:layout_gravity="center_vertical"
         />
 
 </merge>
