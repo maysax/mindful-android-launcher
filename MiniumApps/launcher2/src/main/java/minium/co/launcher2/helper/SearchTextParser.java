@@ -6,6 +6,7 @@ import org.androidannotations.annotations.Trace;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.launcher2.events.FilterContactsEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MakeChipEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
@@ -43,6 +44,11 @@ public class SearchTextParser {
                 EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
 
             }
+        } else if (txt.length() > 6) {
+            EventBus.getDefault().post(new FilterContactsEvent());
+        } else {
+            // TODO: may be loading same fragment over and over again
+            EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));
         }
     }
 }

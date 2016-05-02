@@ -6,6 +6,7 @@ package minium.co.launcher2.events;
 public class LoadFragmentEvent {
 
     public static final int CONTACTS_LIST = 1;
+    public static final int MAIN_FRAGMENT = 2;
 
     private int id;
 

@@ -89,6 +89,9 @@ public class MainActivity extends CoreActivity {
 
     @Subscribe
     public void onEvent(LoadFragmentEvent event) {
-        loadFragment(ContactsPickerFragment_.builder().build());
+        if (event.getId() == LoadFragmentEvent.CONTACTS_LIST)
+            loadFragment(ContactsPickerFragment_.builder().build(), R.id.mainView);
+        else if (event.getId() == LoadFragmentEvent.MAIN_FRAGMENT)
+            loadMainView();
     }
 }
