@@ -45,7 +45,7 @@ public class SearchTextParser {
 
             }
         } else if (txt.length() > 6) {
-            EventBus.getDefault().post(new FilterContactsEvent());
+            EventBus.getDefault().post(new FilterContactsEvent(txt.substring(6)));
         } else {
             // TODO: may be loading same fragment over and over again
             EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));

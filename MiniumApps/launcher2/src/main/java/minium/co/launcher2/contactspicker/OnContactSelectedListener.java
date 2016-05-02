@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
 /*
 * Copyright (C) 2011 - 2015 by Ngewi Fet <ngewif@gmail.com>
 *
@@ -21,23 +19,21 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
--->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <ListView android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:drawSelectorOnTop="false" />
+package minium.co.launcher2.contactspicker;
 
-    <TextView android:id="@android:id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="No contacts to display!"/>
-</LinearLayout>
+public interface OnContactSelectedListener {
+
+	/**
+	 * Callback when the contact is selected from the list of contacts
+	 * @param contactId Long ID of the contact which was selected. 
+	 */
+	void onContactNameSelected(long contactId, String contactName);
+	
+	/**
+	 * Callback when the contact number is selected from the contact details view
+	 * @param contactNumber String with the number which was selected
+	 * @param contactName Name of the contact which was selected as String
+	 */
+	void onContactNumberSelected(String contactNumber, String contactName);
+}
