@@ -15,6 +15,7 @@ import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.events.MainItemClickedEvent;
+import minium.co.launcher2.events.MakeChipEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +33,11 @@ public class SearchFragment extends CoreFragment {
 
     @Subscribe
     public void onEvent(MainItemClickedEvent event) {
-        searchLayout.makeChips(event.getText());
+        searchLayout.setText(event.getText());
+    }
+
+    @Subscribe
+    public void onEvent(MakeChipEvent event) {
+        searchLayout.makeChip(event.getStart(), event.getEnd(), event.getText());
     }
 }

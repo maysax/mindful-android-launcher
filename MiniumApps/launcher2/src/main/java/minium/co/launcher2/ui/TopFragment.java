@@ -110,7 +110,7 @@ public class TopFragment extends CoreFragment {
     }
 
     private void updateSignalText(int strength) {
-        Tracer.i("Signal strength: " + strength + " Operator: " + telephonyManager.getNetworkOperatorName());
+//        Tracer.i("Signal strength: " + strength + " Operator: " + telephonyManager.getNetworkOperatorName());
         iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName()));
     }
 }

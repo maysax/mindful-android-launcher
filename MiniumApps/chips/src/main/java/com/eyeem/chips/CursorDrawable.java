@@ -50,7 +50,7 @@ public class CursorDrawable {
          // draw cursor inside
          if (blink) {
             paint.setColor(bubble.style.textColor);
-            canvas.drawRect(0 - x_offset, y_offset, cursorWidth - x_offset, y_offset + y_h, paint);
+            canvas.drawRect(0 - x_offset, y_offset, cursorWidth - x_offset, y_offset, paint);
          }
       } else if (blink) {
          paint.setColor(color);

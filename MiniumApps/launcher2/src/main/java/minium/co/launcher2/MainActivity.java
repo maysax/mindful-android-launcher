@@ -10,16 +10,23 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
+import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
+import minium.co.launcher2.events.LoadFragmentEvent;
+import minium.co.launcher2.events.SearchTextChangedEvent;
+import minium.co.launcher2.helper.SearchTextParser;
+import minium.co.launcher2.ui.ContactsPickerFragment;
+import minium.co.launcher2.ui.ContactsPickerFragment_;
 import minium.co.launcher2.ui.MainFragment_;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.TopFragment;
@@ -30,6 +37,9 @@ import minium.co.launcher2.ui.TopFragment_;
 public class MainActivity extends CoreActivity {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "MainActivity";
+
+    @Bean
+    SearchTextParser searchTextParser;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -69,5 +79,16 @@ public class MainActivity extends CoreActivity {
 
     void loadBottomview() {
 
+    }
+
+    @Trace(tag = TRACE_TAG)
+    @Subscribe
+    public void onEvent(SearchTextChangedEvent event) {
+        searchTextParser.onTextChanged(event);
+    }
+
+    @Subscribe
+    public void onEvent(LoadFragmentEvent event) {
+        loadFragment(ContactsPickerFragment_.builder().build());
     }
 }

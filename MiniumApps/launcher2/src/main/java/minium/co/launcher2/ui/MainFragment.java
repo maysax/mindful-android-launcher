@@ -14,6 +14,7 @@ import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 import de.greenrobot.event.EventBus;
+import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
@@ -25,7 +26,7 @@ import minium.co.launcher2.model.MainListItem;
  * A simple {@link Fragment} subclass.
  */
 @EFragment(R.layout.fragment_main)
-public class MainFragment extends Fragment {
+public class MainFragment extends CoreFragment {
 
     @ViewById
     ListView listView;

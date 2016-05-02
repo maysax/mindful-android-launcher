@@ -13,15 +13,21 @@ import com.eyeem.chips.ChipsEditText;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import org.androidannotations.annotations.EViewGroup;
+import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
+import de.greenrobot.event.EventBus;
+import minium.co.core.log.LogConfig;
 import minium.co.launcher2.R;
+import minium.co.launcher2.events.SearchTextChangedEvent;
 
 /**
  * Created by Shahab on 4/26/2016.
  */
 @EViewGroup(R.layout.search_layout)
 public class SearchLayout extends LinearLayout {
+
+    private final String TRACE_TAG = LogConfig.TRACE_TAG + "SearchLayout";
 
     @ViewById
     protected TextView constantChar;
@@ -31,6 +37,8 @@ public class SearchLayout extends LinearLayout {
 
     @ViewById
     protected IconTextView btnClear;
+
+    private boolean isWatching;
 
     public SearchLayout(Context context) {
         super(context);
@@ -53,6 +61,7 @@ public class SearchLayout extends LinearLayout {
     }
 
     private void init() {
+        isWatching = true;
         setBackgroundResource(R.drawable.edittext_rounded_corners);
         setOrientation(HORIZONTAL);
     }
@@ -64,7 +73,8 @@ public class SearchLayout extends LinearLayout {
 
     }
 
-    private void setupViews() {
+    @Trace(tag = TRACE_TAG)
+    void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -78,6 +88,7 @@ public class SearchLayout extends LinearLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 if (s.length() != 0) {
                     btnClear.setVisibility(VISIBLE);
                     constantChar.setTextColor(getResources().getColor(R.color.black));
@@ -86,9 +97,8 @@ public class SearchLayout extends LinearLayout {
                     constantChar.setTextColor(getResources().getColor(R.color.colorAccent));
                 }
 
-                if (s.toString().toLowerCase().startsWith("text") || s.toString().toLowerCase().startsWith("call") || s.toString().toLowerCase().startsWith("note")) {
-                    txtSearchBox.makeChip(0, 4, true);
-                }
+                if (isWatching)
+                    EventBus.getDefault().post(new SearchTextChangedEvent(s.toString()));
             }
         });
 
@@ -102,9 +112,19 @@ public class SearchLayout extends LinearLayout {
         });
     }
 
-    public void makeChips(String text) {
+    @Trace(tag = TRACE_TAG)
+    public void setText(String text) {
         txtSearchBox.setText(text);
-        txtSearchBox.makeChip(0, text.length() + 1, false);
-        txtSearchBox.setSelection(text.length() + 1);
+    }
+
+    @Trace(tag = TRACE_TAG)
+    public void makeChip(int startPos, int endPos, String text) {
+        isWatching = false;
+        String newText = txtSearchBox.getText().toString();
+        newText = newText.substring(0, startPos) + text + " " + newText.substring(endPos);
+        txtSearchBox.setText(newText);
+        isWatching = true;
+        txtSearchBox.makeChip(startPos, endPos + 1, false);
+        txtSearchBox.setSelection(newText.length());
     }
 }
