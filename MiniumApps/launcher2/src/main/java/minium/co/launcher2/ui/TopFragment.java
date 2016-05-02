@@ -87,7 +87,7 @@ public class TopFragment extends CoreFragment {
 
     private void updateBatteryText(int level) {
         iTxt3.setText(getString(R.string.format_battery, level));
-        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(level)).sizeDp(16), null);
+        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(level)).sizeDp(12), null);
     }
 
     private Icon getBatteryIcon(int level) {

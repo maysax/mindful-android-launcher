@@ -15,6 +15,7 @@
         android:drawablePadding="@dimen/margin.2"
         android:paddingLeft="@dimen/margin.1"
         android:textColor="@color/text.primary"
+        android:textSize="@dimen/text.size.regular"
         tools:text="CALL"/>
 
     <TextClock
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/text.primary"
+        android:textSize="@dimen/text.size.regular"
         tools:text="SELECT"/>
 
     <com.joanzapata.iconify.widget.IconTextView
@@ -33,6 +35,7 @@
         android:drawablePadding="@dimen/margin.2"
         android:paddingRight="@dimen/margin.1"
         android:textColor="@color/text.primary"
+        android:textSize="@dimen/text.size.regular"
         android:gravity="end"/>
 
 </LinearLayout>
