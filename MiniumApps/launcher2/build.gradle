@@ -44,7 +44,7 @@ dependencies {
     compile project(':chips')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
-    compile 'com.android.support:support-v4:21.0.3'
+
 }
 
 apt {

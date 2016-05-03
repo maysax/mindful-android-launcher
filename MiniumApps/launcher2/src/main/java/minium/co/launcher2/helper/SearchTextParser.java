@@ -39,13 +39,13 @@ public class SearchTextParser {
                 EventBus.getDefault().post(new MakeChipEvent(0, KEY_NOTES.length(), "Note"));
 
             }
-        } else if (txt.length() == 6) {
+        } else if (txt.length() == 5) {
             if (txt.toLowerCase().startsWith(KEY_TEXT)) {
                 EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
 
             }
-        } else if (txt.length() > 6) {
-            EventBus.getDefault().post(new FilterContactsEvent(txt.substring(6)));
+        } else if (txt.length() > 5) {
+            EventBus.getDefault().post(new FilterContactsEvent(txt.substring(5)));
         } else {
             // TODO: may be loading same fragment over and over again
             EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));

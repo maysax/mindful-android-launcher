@@ -15,6 +15,7 @@ import com.joanzapata.iconify.widget.IconTextView;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
+import org.apache.commons.lang3.StringUtils;
 
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.LogConfig;
@@ -118,13 +119,28 @@ public class SearchLayout extends LinearLayout {
     }
 
     @Trace(tag = TRACE_TAG)
-    public void makeChip(int startPos, int endPos, String text) {
+    public void makeChip(String text) {
         isWatching = false;
-        String newText = txtSearchBox.getText().toString();
-        newText = newText.substring(0, startPos) + text + " " + newText.substring(endPos);
+        String currText = txtSearchBox.getText().toString();
+        // Hack 
+        if (currText.endsWith(" ")) currText += "@";
+
+        String[] splits = currText.split(" ");
+        int splitLen = splits.length;
+        splits [splitLen - 1] = text;
+        String newText = StringUtils.join(splits, " ");
         txtSearchBox.setText(newText);
         isWatching = true;
-        txtSearchBox.makeChip(startPos, endPos + 1, false);
+
+        int startPos = 0;
+        int endPos = 0;
+        for (String s : splits) {
+            endPos += s.length();
+            txtSearchBox.makeChip(startPos, endPos, false);
+            endPos++; // space
+            startPos = endPos;
+        }
+
         txtSearchBox.setSelection(newText.length());
     }
 }

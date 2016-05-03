@@ -107,4 +107,7 @@ dependencies {
     // https://github.com/greenrobot/EventBus
     compile "de.greenrobot:eventbus:$eventbusVersion"
 
+    compile 'org.apache.commons:commons-lang3:3.0'
+
+
 }

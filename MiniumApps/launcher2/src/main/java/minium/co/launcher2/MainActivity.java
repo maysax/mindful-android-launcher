@@ -93,7 +93,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public void onContactNameSelected(long contactId, String contactName) {
-//        EventBus.getDefault().post(new MakeChipEvent(6, contactName.length(), contactName));
+        EventBus.getDefault().post(new MakeChipEvent(0, 0, contactName));
         loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).build(), R.id.mainView);
     }
 
