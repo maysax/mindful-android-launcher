@@ -14,6 +14,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
 import minium.co.launcher2.contactspicker.ContactDetailsFragment;
 import minium.co.launcher2.contactspicker.ContactDetailsFragment_;
@@ -98,6 +99,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public void onContactNumberSelected(String contactNumber, String contactName) {
-
+        UIUtils.toast(this, "Number: " + contactName);
     }
 }
