@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.LogConfig;
+import minium.co.core.log.Tracer;
 import minium.co.launcher2.R;
 import minium.co.launcher2.events.SearchTextChangedEvent;
 
@@ -41,6 +42,8 @@ public class SearchLayout extends LinearLayout {
 
     private boolean isWatching;
 
+    private String formattedText;
+
     public SearchLayout(Context context) {
         super(context);
         init();
@@ -56,13 +59,9 @@ public class SearchLayout extends LinearLayout {
         init();
     }
 
-    public SearchLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
     private void init() {
         isWatching = true;
+        formattedText = "";
         setBackgroundResource(R.drawable.edittext_rounded_corners);
         setOrientation(HORIZONTAL);
     }
@@ -89,7 +88,6 @@ public class SearchLayout extends LinearLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 handleAfterTextChanged(s);
             }
         });
@@ -115,6 +113,17 @@ public class SearchLayout extends LinearLayout {
 
         if (isWatching)
             EventBus.getDefault().post(new SearchTextChangedEvent(s.toString()));
+
+        updatedFormattedText(s.toString());
+    }
+
+    private void updatedFormattedText(String s) {
+        if (s.trim().isEmpty()) {
+            formattedText = "";
+        } else if (s.length() < formattedText.length()) {
+            formattedText = formattedText.substring(0, s.length() + 1);
+            Tracer.i("afterTextChanged: " + s + " formatted: " + formattedText);
+        }
     }
 
     @Trace(tag = TRACE_TAG)
@@ -124,14 +133,12 @@ public class SearchLayout extends LinearLayout {
 
     @Trace(tag = TRACE_TAG)
     public void makeChip(String text) {
+        if (formattedText.toLowerCase().startsWith(text.toLowerCase())) return;
         isWatching = false;
-        String currText = txtSearchBox.getText().toString();
-        // Hack 
-        if (currText.endsWith(" ")) currText += "@";
 
-        String[] splits = currText.split(" ");
-        int splitLen = splits.length;
-        splits [splitLen - 1] = text;
+        formattedText += text + "|";
+
+        String[] splits = formattedText.split("\\|");
         String newText = StringUtils.join(splits, " ") + " ";
         txtSearchBox.setText(newText);
 
