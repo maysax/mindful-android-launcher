@@ -6,6 +6,7 @@ import org.androidannotations.annotations.Trace;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.launcher2.MainActivity;
 import minium.co.launcher2.events.FilterContactsEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MakeChipEvent;
@@ -30,17 +31,20 @@ public class SearchTextParser {
 
         if (txt.length() == 4) {
             if (txt.toLowerCase().startsWith(KEY_TEXT)) {
+                MainActivity.SELECTED_OPTION = 1;
                 EventBus.getDefault().post(new MakeChipEvent(0, KEY_TEXT.length(), "Text"));
 
             } else if (txt.toLowerCase().startsWith(KEY_CALL)) {
+                MainActivity.SELECTED_OPTION = 2;
                 EventBus.getDefault().post(new MakeChipEvent(0, KEY_CALL.length(), "Call"));
 
             } else if (txt.toLowerCase().startsWith(KEY_NOTES)) {
+                MainActivity.SELECTED_OPTION = 3;
                 EventBus.getDefault().post(new MakeChipEvent(0, KEY_NOTES.length(), "Note"));
 
             }
         } else if (txt.length() == 5) {
-            if (txt.toLowerCase().startsWith(KEY_TEXT)) {
+            if (txt.toLowerCase().startsWith(KEY_TEXT) || txt.toLowerCase().startsWith(KEY_CALL)) {
                 EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
 
             }

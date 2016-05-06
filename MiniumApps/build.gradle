@@ -36,7 +36,7 @@ allprojects {
 project.ext {
     compileSdkVersion = 21
     buildToolsVersion = "23.0.3"
-    minSdkVersion = 21  // Targeting lollipop
+    minSdkVersion = 19  // Targeting lollipop
     targetSdkVersion = 21
 
     supportVersion = "21.0.3"
