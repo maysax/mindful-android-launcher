@@ -3,6 +3,7 @@ package minium.co.launcher2;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -24,6 +25,8 @@ import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MakeChipEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
 import minium.co.launcher2.helper.SearchTextParser;
+import minium.co.launcher2.ui.EnterMessageFragment;
+import minium.co.launcher2.ui.EnterMessageFragment_;
 import minium.co.launcher2.ui.MainFragment_;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.TopFragment_;
@@ -33,6 +36,8 @@ import minium.co.launcher2.ui.TopFragment_;
 public class MainActivity extends CoreActivity implements OnContactSelectedListener {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "MainActivity";
+
+    public static int SELECTED_OPTION;
 
     @Bean
     SearchTextParser searchTextParser;
@@ -100,5 +105,11 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Override
     public void onContactNumberSelected(String contactNumber, String contactName) {
         UIUtils.toast(this, "Number: " + contactName);
+        EventBus.getDefault().post(new MakeChipEvent(0, 0, contactName));
+        if (SELECTED_OPTION == 1)
+            loadFragment(EnterMessageFragment_.builder().phoneNumber(contactNumber).build(), R.id.mainView);
+        else if (SELECTED_OPTION == 2) {
+            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contactNumber)));
+        }
     }
 }

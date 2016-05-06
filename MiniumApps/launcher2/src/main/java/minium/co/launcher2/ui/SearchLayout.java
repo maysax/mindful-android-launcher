@@ -90,16 +90,7 @@ public class SearchLayout extends LinearLayout {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if (s.length() != 0) {
-                    btnClear.setVisibility(VISIBLE);
-                    constantChar.setTextColor(getResources().getColor(R.color.black));
-                } else {
-                    btnClear.setVisibility(INVISIBLE);
-                    constantChar.setTextColor(getResources().getColor(R.color.colorAccent));
-                }
-
-                if (isWatching)
-                    EventBus.getDefault().post(new SearchTextChangedEvent(s.toString()));
+                handleAfterTextChanged(s);
             }
         });
 
@@ -111,6 +102,19 @@ public class SearchLayout extends LinearLayout {
                 txtSearchBox.getText().clear();
             }
         });
+    }
+
+    private void handleAfterTextChanged(Editable s) {
+        if (s.length() != 0) {
+            btnClear.setVisibility(VISIBLE);
+            constantChar.setTextColor(getResources().getColor(R.color.black));
+        } else {
+            btnClear.setVisibility(INVISIBLE);
+            constantChar.setTextColor(getResources().getColor(R.color.colorAccent));
+        }
+
+        if (isWatching)
+            EventBus.getDefault().post(new SearchTextChangedEvent(s.toString()));
     }
 
     @Trace(tag = TRACE_TAG)
@@ -128,9 +132,9 @@ public class SearchLayout extends LinearLayout {
         String[] splits = currText.split(" ");
         int splitLen = splits.length;
         splits [splitLen - 1] = text;
-        String newText = StringUtils.join(splits, " ");
+        String newText = StringUtils.join(splits, " ") + " ";
         txtSearchBox.setText(newText);
-        isWatching = true;
+
 
         int startPos = 0;
         int endPos = 0;
@@ -140,6 +144,8 @@ public class SearchLayout extends LinearLayout {
             endPos++; // space
             startPos = endPos;
         }
+        EventBus.getDefault().post(new SearchTextChangedEvent(txtSearchBox.getText().toString()));
+        isWatching = true;
 
         txtSearchBox.setSelection(newText.length());
     }
