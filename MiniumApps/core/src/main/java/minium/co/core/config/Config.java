@@ -8,5 +8,5 @@ import minium.co.core.R;
 public class Config {
 
     // RELEASE: false
-    public static final Boolean DEBUG = true;
+    public static final Boolean DEBUG = false;
 }

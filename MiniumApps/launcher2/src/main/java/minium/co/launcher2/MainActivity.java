@@ -15,6 +15,7 @@ import org.androidannotations.annotations.Trace;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
@@ -120,6 +121,11 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         Intent intent = new Intent();
         intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
         intent.putExtra("thread_id", Long.valueOf(threadId));
-        startActivity(intent);
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+            UIUtils.alert(this, "Minium-messages app not found.");
+        }
     }
 }
