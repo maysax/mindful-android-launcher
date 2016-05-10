@@ -260,7 +260,12 @@ public class ContactsPickerFragment extends ListFragment implements
 
         @Override
         protected Void doInBackground(Long... ids) {
-            String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.LABEL};
+            String[] projection = new String[]{
+                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Phone.TYPE,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER,
+                    ContactsContract.CommonDataKinds.Phone.LABEL
+            };
             long contactId = ids[0];
 
             final Cursor phoneCursor = getActivity().getContentResolver().query(
