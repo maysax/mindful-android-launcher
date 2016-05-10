@@ -1,6 +1,8 @@
 package minium.co.launcher2.ui;
 
 
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.telephony.SmsManager;
@@ -18,12 +20,13 @@ import org.androidannotations.annotations.ViewById;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.messages.SmsObserver;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 @EFragment(R.layout.fragment_enter_message)
-public class EnterMessageFragment extends CoreFragment {
+public class EnterMessageFragment extends CoreFragment  {
 
     @ViewById
     EditText composeReplyText;
@@ -43,6 +46,9 @@ public class EnterMessageFragment extends CoreFragment {
     @Click
     void btnSendText() {
         // UIUtils.alert(getActivity(), "Sending sms...");
+
+        new SmsObserver(getActivity(), phoneNumber, composeReplyText.getText().toString()).start();
+
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNumber, null, composeReplyText.getText().toString() , null, null);
     }

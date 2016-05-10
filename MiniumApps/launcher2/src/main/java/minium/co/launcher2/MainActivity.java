@@ -1,6 +1,7 @@
 package minium.co.launcher2;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MakeChipEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
 import minium.co.launcher2.helper.SearchTextParser;
+import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.ui.EnterMessageFragment;
 import minium.co.launcher2.ui.EnterMessageFragment_;
 import minium.co.launcher2.ui.MainFragment_;
@@ -33,7 +35,7 @@ import minium.co.launcher2.ui.TopFragment_;
 
 @Fullscreen
 @EActivity(R.layout.activity_main)
-public class MainActivity extends CoreActivity implements OnContactSelectedListener {
+public class MainActivity extends CoreActivity implements OnContactSelectedListener, SmsObserver.OnSmsSentListener {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "MainActivity";
 
@@ -111,5 +113,13 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         else if (SELECTED_OPTION == 2) {
             startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contactNumber)));
         }
+    }
+
+    @Override
+    public void onSmsSent(int threadId) {
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
+        intent.putExtra("thread_id", Long.valueOf(threadId));
+        startActivity(intent);
     }
 }
