@@ -39,10 +39,14 @@ import com.moez.QKSMS.ui.compose.ComposeFragment;
 import com.moez.QKSMS.ui.dialog.conversationdetails.ConversationDetailsDialog;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.UiThread;
+
 import java.util.Observable;
 import java.util.Observer;
 
-
+@EFragment
 public class ConversationListFragment extends QKFragment implements LoaderManager.LoaderCallbacks<Cursor>,
         RecyclerCursorAdapter.ItemClickListener<Conversation>, RecyclerCursorAdapter.MultiSelectListener, Observer {
 

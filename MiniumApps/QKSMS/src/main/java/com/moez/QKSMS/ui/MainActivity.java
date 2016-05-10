@@ -44,6 +44,7 @@ import com.moez.QKSMS.transaction.SmsHelper;
 import com.moez.QKSMS.ui.base.QKActivity;
 import com.moez.QKSMS.ui.compose.ComposeFragment;
 import com.moez.QKSMS.ui.conversationlist.ConversationListFragment;
+import com.moez.QKSMS.ui.conversationlist.ConversationListFragment_;
 import com.moez.QKSMS.ui.dialog.ConversationSettingsDialog;
 import com.moez.QKSMS.ui.dialog.DefaultSmsHelper;
 import com.moez.QKSMS.ui.dialog.QKDialog;
@@ -109,7 +110,8 @@ public class MainActivity extends QKActivity implements SlidingMenu.SlidingMenuL
 
         mConversationList = (ConversationListFragment) fm.findFragmentById(R.id.menu_frame);
         if (mConversationList == null) {
-            mConversationList = new ConversationListFragment();
+//            mConversationList = new ConversationListFragment();
+            mConversationList = ConversationListFragment_.builder().build();
         }
         FragmentTransaction menuTransaction = fm.beginTransaction();
         menuTransaction.replace(R.id.menu_frame, mConversationList);

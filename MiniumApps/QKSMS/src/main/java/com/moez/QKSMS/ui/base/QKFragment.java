@@ -9,6 +9,9 @@ import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.ui.ThemeManager;
 
+import org.androidannotations.annotations.EFragment;
+
+@EFragment
 public class QKFragment extends Fragment {
 
     protected QKActivity mContext;
