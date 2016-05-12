@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Launcher2</string>
+
+    <string name="format.battery">%1$d%%</string>
+    <string name="format.signal">{fa-signal 12dp} %1$s {fa-wifi 12dp}</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="label_multiple_numbers">Multiple numbers</string>
+</resources>

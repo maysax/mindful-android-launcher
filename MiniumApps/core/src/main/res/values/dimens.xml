@@ -14,7 +14,6 @@
     <dimen name="activity_horizontal_margin">@dimen/margin.4</dimen>
     <dimen name="activity_vertical_margin">@dimen/margin.4</dimen>
     <dimen name="fab_margin">@dimen/margin.4</dimen>
-    <dimen name="tab.max.width">264dp</dimen>
     <dimen name="tab.padding.bottom">@dimen/margin.4</dimen>
     <dimen name="drawer_width">280dp</dimen>
 
