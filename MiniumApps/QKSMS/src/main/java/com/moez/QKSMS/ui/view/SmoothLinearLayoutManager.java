@@ -23,11 +23,6 @@ public class SmoothLinearLayoutManager extends LinearLayoutManager {
         mContext = context;
     }
 
-    public SmoothLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        mContext = context;
-    }
-
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, final int position) {
         super.smoothScrollToPosition(recyclerView, state, position);
