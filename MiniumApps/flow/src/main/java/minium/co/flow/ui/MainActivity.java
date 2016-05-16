@@ -5,11 +5,16 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.Random;
+
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.flow.R;
 
@@ -20,11 +25,19 @@ public class MainActivity extends CoreActivity {
     VerticalProgressBar vpBar;
 
     private boolean isAnimationRunning;
-    private int progress;
+    private float progress;
+    private final float SPAN = 60f;
+    private final float INTERVAL = 15f; // 15 mins
+
+    @AfterViews
+    void afterViews() {
+        progress = 60f;
+        setPercentage(1);
+    }
 
     private void animate() {
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", 0, progress / 100f));
+        set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", vpBar.getPercent(), progress / SPAN));
         set.setDuration(500);
         set.addListener(new Animator.AnimatorListener() {
             @Override
@@ -52,6 +65,19 @@ public class MainActivity extends CoreActivity {
     }
 
     private void setPercentage(int percentage) {
-        vpBar.setSmoothPercent(percentage);
+        vpBar.setSmoothPercent(percentage, 500);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            Tracer.d("onKeyUp: Volume up");
+            if (!isAnimationRunning && progress > 0) {
+                progress -= INTERVAL;
+                animate();
+            }
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
     }
 }
