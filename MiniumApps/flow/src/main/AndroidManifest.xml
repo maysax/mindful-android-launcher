@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="minium.co.flow">
 
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+
     <!--
 On SDK version 23 and up, your app data will be automatically backed up and restored on app install.
 Consider adding the attribute `android:fullBackupContent` to specify an `@xml` resource
@@ -28,6 +30,16 @@ More info: https://developer.android.com/preview/backup/index.html
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".NotificationListener_"
+            android:exported="true"
+            android:enabled="true"
+                  android:label="@string/service_name"
+                  android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+             <intent-filter>
+                 <action android:name="android.service.notification.NotificationListenerService" />
+             </intent-filter>
+         </service>
     </application>
 
 </manifest>
