@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Flow</string>
-    <string name="service_name">NotificationListener</string>
+    <string name="service_name">Minium notification service</string>
 </resources>

@@ -3,6 +3,9 @@ package minium.co.flow.ui;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.service.notification.NotificationListenerService;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,9 +21,11 @@ import java.util.Random;
 
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.UIUtils;
 import minium.co.flow.NotificationListener;
 import minium.co.flow.NotificationListener_;
 import minium.co.flow.R;
+import minium.co.flow.utils.ServiceUtils;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
@@ -37,6 +42,24 @@ public class MainActivity extends CoreActivity {
     void afterViews() {
         progress = 60f;
         setPercentage(1);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isEnabled(this)) {
+            UIUtils.confirm(this, "Minium notification service is not enabled. Please allow Minium to access notification service", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                }
+            });
+        }
+    }
+
+    /** @return True if {@link NotificationListener} is enabled. */
+    public static boolean isEnabled(Context mContext) {
+        return ServiceUtils.isNotificationListenerServiceRunning(mContext, NotificationListener_.class);
     }
 
     private void animate() {

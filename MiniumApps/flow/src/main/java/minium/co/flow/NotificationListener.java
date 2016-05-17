@@ -1,5 +1,6 @@
 package minium.co.flow;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.util.Log;
 import org.androidannotations.annotations.EService;
 
 import minium.co.core.log.Tracer;
+import minium.co.flow.utils.ServiceUtils;
 
 /**
  * Created by Shahab on 5/16/2016.
@@ -47,14 +49,14 @@ public class NotificationListener extends NotificationListenerService {
     }
 
     @Override public void onListenerConnected() {
-        Tracer.i("onListenerConnected()");
+        Tracer.d("onListenerConnected()");
     }
     @Override public void onListenerHintsChanged(int hints) {
-        Tracer.i("onListenerHintsChanged(" + hints + ')');
+        Tracer.d("onListenerHintsChanged(" + hints + ')');
     }
 
     @Override
     public void onInterruptionFilterChanged(int interruptionFilter) {
-        Tracer.e("onInterruptionFilterChanged(" + interruptionFilter + ')');
+        Tracer.d("onInterruptionFilterChanged(" + interruptionFilter + ')');
     }
 }
