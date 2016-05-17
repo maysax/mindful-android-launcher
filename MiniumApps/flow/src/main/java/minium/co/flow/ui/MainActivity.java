@@ -53,7 +53,6 @@ public class MainActivity extends CoreActivity {
     void afterViews() {
         progress = SPAN;
         setPercentage(1);
-        playSound();
     }
 
     @UiThread(delay = 1000L)

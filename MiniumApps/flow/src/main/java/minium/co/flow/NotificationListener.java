@@ -18,12 +18,15 @@ import minium.co.flow.utils.ServiceUtils;
 @EService
 public class NotificationListener extends NotificationListenerService {
 
+    private int currentFilter = INTERRUPTION_FILTER_ALL;
+
     //In the Service I use this to enable and disable silent mode(or priority...)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean start = intent.getBooleanExtra("start", false);
         if(start)
         {
+            currentFilter = getCurrentInterruptionFilter();
             Tracer.d("Starting service");
 
             //Check if at least Lollipop, otherwise use old method
@@ -38,7 +41,7 @@ public class NotificationListener extends NotificationListenerService {
         {
             Tracer.d("Stopping service");
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                requestInterruptionFilter(INTERRUPTION_FILTER_ALL);
+                requestInterruptionFilter(currentFilter);
             else{
                 AudioManager am = (AudioManager) getBaseContext().getSystemService(AUDIO_SERVICE);
                 am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
