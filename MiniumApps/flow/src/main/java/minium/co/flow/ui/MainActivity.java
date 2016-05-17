@@ -15,6 +15,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.Random;
@@ -27,7 +28,7 @@ import minium.co.flow.NotificationListener_;
 import minium.co.flow.R;
 import minium.co.flow.utils.ServiceUtils;
 
-@EActivity(R.layout.activity_main)
+@EActivity(resName = "activity_main")
 public class MainActivity extends CoreActivity {
 
     @ViewById
@@ -35,13 +36,20 @@ public class MainActivity extends CoreActivity {
 
     private boolean isAnimationRunning;
     private float progress;
-    private final float SPAN = 60f;
-    private final float INTERVAL = 15f; // 15 mins
+    private final float SPAN = 60 * 1000f;
+    private final float INTERVAL = 5 * 1000f;
+    private final int ANIMATION_DURATION = 500;
 
     @AfterViews
     void afterViews() {
-        progress = 60f;
+        progress = SPAN;
         setPercentage(1);
+        updateUI();
+    }
+
+    @UiThread(delay = 1000L)
+    void updateUI() {
+
     }
 
     @Override
@@ -65,7 +73,7 @@ public class MainActivity extends CoreActivity {
     private void animate() {
         AnimatorSet set = new AnimatorSet();
         set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", vpBar.getPercent(), progress / SPAN));
-        set.setDuration(500);
+        set.setDuration(ANIMATION_DURATION);
         set.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -92,7 +100,7 @@ public class MainActivity extends CoreActivity {
     }
 
     private void setPercentage(int percentage) {
-        vpBar.setSmoothPercent(percentage, 500);
+        vpBar.setSmoothPercent(percentage, ANIMATION_DURATION);
     }
 
     @Override
