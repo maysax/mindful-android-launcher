@@ -146,10 +146,9 @@ public class MainActivity extends CoreActivity {
         vpBar.setSmoothPercent(percentage, ANIMATION_DURATION);
     }
 
-    @KeyUp(KeyEvent.KEYCODE_VOLUME_UP)
     void onVolumeUpKeyPressed() {
         Tracer.d("onKeyUp: Volume up");
-        if (!isAnimationRunning && progress > 0) {
+        if (progress > 0) {
             if (!isServiceRunning) {
                 NotificationListener_.intent(this).extra("start", true).start();
                 updateUI();
@@ -160,8 +159,28 @@ public class MainActivity extends CoreActivity {
         }
     }
 
-    @KeyUp(KeyEvent.KEYCODE_BACK)
-    void onBackKeyPressed() {
-        Tracer.d("onKeyUp: Back");
+    boolean onBackKeyPressed(int keyCode, KeyEvent keyEvent) {
+        if (isServiceRunning) {
+            Tracer.d("onKeyUp: Back");
+            return true;
+        }
+        else
+            return super.onKeyUp(keyCode, keyEvent);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+            {
+                onVolumeUpKeyPressed();
+                return true;
+            }
+            case KeyEvent.KEYCODE_BACK:
+            {
+                return onBackKeyPressed(keyCode, keyEvent);
+            }
+        }
+        return super.onKeyUp(keyCode, keyEvent);
     }
 }
