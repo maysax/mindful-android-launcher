@@ -109,7 +109,8 @@ public class MainActivity extends CoreActivity {
             Tracer.d("onKeyUp: Volume up");
 
             if (!isAnimationRunning && progress > 0) {
-                NotificationListener_.intent(this).extra("start", true).start();
+                if (!ServiceUtils.isMyServiceRunning(this, NotificationListener_.class))
+                    NotificationListener_.intent(this).extra("start", true).start();
 //                notifService.requestInterruptionFilter(NotificationListenerService.INTERRUPTION_FILTER_NONE);
                 progress -= INTERVAL;
                 animate();

@@ -1,14 +1,17 @@
 package minium.co.flow.utils;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.text.TextUtils;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import minium.co.core.log.Tracer;
+import minium.co.flow.NotificationListener;
 
 /**
  * Created by Shahab on 5/17/2016.
@@ -81,6 +84,22 @@ public class ServiceUtils {
                 if (value == null) return true;
             } else {
                 if (value != null && element.equals(value)) return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isMyServiceRunning(Context context, Class<?> serviceClass) {
+        return isMyServiceRunning(context, serviceClass.getName());
+    }
+
+    public static boolean isMyServiceRunning(Context context, String serviceClass) {
+        if (null == serviceClass || null == context) return false;
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> services = manager.getRunningServices(Integer.MAX_VALUE);
+        for (ActivityManager.RunningServiceInfo service : services) {
+            if (serviceClass.equals(service.service.getClassName())) {
+                return true;
             }
         }
         return false;
