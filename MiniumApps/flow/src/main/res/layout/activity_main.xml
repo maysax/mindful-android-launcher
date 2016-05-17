@@ -10,8 +10,8 @@
         android:id="@+id/vpBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:vpb_background_color="#151719"
-        app:vpb_fill_color="#272C30"
+        app:vpb_background_color="@color/colorPrimaryDark"
+        app:vpb_fill_color="@color/colorPrimary"
         app:vpb_flat="true" />
 
 </RelativeLayout>
