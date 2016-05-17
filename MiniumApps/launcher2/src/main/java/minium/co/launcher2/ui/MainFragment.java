@@ -14,6 +14,7 @@ import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 import de.greenrobot.event.EventBus;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
@@ -64,7 +65,7 @@ public class MainFragment extends CoreFragment {
                     UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
             case 5:
-                UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
+                Tracer.d("Clicked on flow");
                 break;
             case 6:
                 UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
@@ -73,6 +74,9 @@ public class MainFragment extends CoreFragment {
                 UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
             case 8:
+                UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
+                break;
+            case 9:
                 if (!new ActivityHelper(getActivity()).openSettingsApp())
                     UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
@@ -86,6 +90,7 @@ public class MainFragment extends CoreFragment {
                 new MainListItem("{fa-sticky-note-o}", "Add Note"),
                 new MainListItem("{fa-users}", "Conversations"),
                 new MainListItem("{fa-user}", "Address Book"),
+                new MainListItem("{fa-ban}", "Flow"),
                 new MainListItem("{fa-phone}", "Voicemail"),
                 new MainListItem("{fa-sticky-note-o}", "Notes"),
                 new MainListItem("{fa-clock-o}", "Clock"),
