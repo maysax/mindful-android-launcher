@@ -9,7 +9,9 @@ import android.telephony.SmsManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -31,11 +33,26 @@ public class EnterMessageFragment extends CoreFragment  {
     @ViewById
     EditText composeReplyText;
 
+    @ViewById
+    TextView btnSendText;
+
     @FragmentArg
     String phoneNumber;
 
     public EnterMessageFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        resetViews();
+    }
+
+    void resetViews() {
+        btnSendText.setText("{fa-paper-plane 24dp}");
+        btnSendText.setClickable(true);
+        composeReplyText.setText("");
     }
 
     @AfterViews
@@ -45,7 +62,12 @@ public class EnterMessageFragment extends CoreFragment  {
 
     @Click
     void btnSendText() {
-        // UIUtils.alert(getActivity(), "Sending sms...");
+        if (composeReplyText.getText().length() == 0) {
+            UIUtils.alert(getActivity(), "Message box is empty. Please enter text into message box");
+            return;
+        }
+        btnSendText.setText("{fa-spinner 24dp spin}");
+        btnSendText.setClickable(false);
 
         new SmsObserver(getActivity(), phoneNumber, composeReplyText.getText().toString()).start();
 
