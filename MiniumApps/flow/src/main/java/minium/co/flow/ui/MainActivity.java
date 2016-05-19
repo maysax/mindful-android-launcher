@@ -47,7 +47,7 @@ public class MainActivity extends CoreActivity {
     private float progress;
     private final float SPAN = 60 * 1000f;
     private final float INTERVAL = 15 * 1000f;
-    private final int ANIMATION_DURATION = 500;
+    private final int ANIMATION_DURATION = 300;
 
     @AfterViews
     void afterViews() {
@@ -148,7 +148,7 @@ public class MainActivity extends CoreActivity {
 
     void onVolumeUpKeyPressed() {
         Tracer.d("onKeyUp: Volume up");
-        if (progress > 0) {
+        if (progress > 0 && !isAnimationRunning) {
             if (!isServiceRunning) {
                 NotificationListener_.intent(this).extra("start", true).start();
                 updateUI();
@@ -171,16 +171,28 @@ public class MainActivity extends CoreActivity {
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent keyEvent) {
         switch (keyCode) {
-            case KeyEvent.KEYCODE_VOLUME_UP:
-            {
-                onVolumeUpKeyPressed();
-                return true;
-            }
+//            case KeyEvent.KEYCODE_VOLUME_UP:
+//            {
+//                onVolumeUpKeyPressed();
+//                return true;
+//            }
             case KeyEvent.KEYCODE_BACK:
             {
                 return onBackKeyPressed(keyCode, keyEvent);
             }
         }
         return super.onKeyUp(keyCode, keyEvent);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                onVolumeUpKeyPressed();
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
     }
 }
