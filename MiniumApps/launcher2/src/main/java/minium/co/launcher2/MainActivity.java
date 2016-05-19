@@ -128,4 +128,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             UIUtils.alert(this, "Minium-messages app not found.");
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
