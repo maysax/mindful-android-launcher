@@ -20,6 +20,7 @@ import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
 import minium.co.launcher2.events.MainItemClickedEvent;
+import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActivityHelper;
 import minium.co.launcher2.model.MainListItem;
 
@@ -66,6 +67,7 @@ public class MainFragment extends CoreFragment {
                 break;
             case 5:
                 Tracer.d("Clicked on flow");
+                FlowActivity_.intent(this).start();
                 break;
             case 6:
                 UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
