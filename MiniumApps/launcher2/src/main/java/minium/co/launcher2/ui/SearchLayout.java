@@ -132,8 +132,8 @@ public class SearchLayout extends LinearLayout {
     private void updatedFormattedText(String s) {
         if (s.trim().isEmpty()) {
             formattedText = "";
-        } else if (s.length() < formattedText.length()) {
-            formattedText = formattedText.substring(0, s.length() + 1);
+        } else if (s.trim().length() < formattedText.length()) {
+            formattedText = formattedText.substring(0, s.trim().length() + 1);
             Tracer.d("afterTextChanged: " + s + " formatted: " + formattedText);
         }
     }
