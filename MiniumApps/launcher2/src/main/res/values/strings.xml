@@ -9,4 +9,6 @@
 
 
     <string name="label_multiple_numbers">Multiple numbers</string>
+
+    <string name="title.ebbFlowManager">Ebb Flow Manager</string>
 </resources>
