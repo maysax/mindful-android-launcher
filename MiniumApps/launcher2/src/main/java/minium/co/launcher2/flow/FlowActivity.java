@@ -7,11 +7,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
@@ -36,15 +38,28 @@ public class FlowActivity extends CoreActivity {
     @ViewById
     VerticalProgressBar vpBar;
 
+    @ViewById
+    TextView txtTimer;
+
     private boolean isAnimationRunning;
     private boolean isServiceRunning;
     private float progress;
     private final float SPAN = 60 * 1000f;
     private final float INTERVAL = 15 * 1000f;
     private final int ANIMATION_DURATION = 300;
+    private int SCREEN_HEIGHT;
+
+    private int getScreenHeight() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size.y;
+    }
 
     @AfterViews
     void afterViews() {
+        SCREEN_HEIGHT = getScreenHeight();
+        Tracer.d("Screen height: " + SCREEN_HEIGHT);
         progress = SPAN;
         setPercentage(1);
     }
@@ -113,7 +128,8 @@ public class FlowActivity extends CoreActivity {
 
     private void animate() {
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", vpBar.getPercent(), progress / SPAN));
+        set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", vpBar.getPercent(), progress / SPAN),
+                ObjectAnimator.ofFloat(txtTimer, "y", SCREEN_HEIGHT - (SCREEN_HEIGHT * (progress / SPAN))));
         set.setDuration(ANIMATION_DURATION);
         set.addListener(new Animator.AnimatorListener() {
             @Override
@@ -149,6 +165,7 @@ public class FlowActivity extends CoreActivity {
                 isServiceRunning = true;
             }
             progress -= INTERVAL;
+            progress = Math.max(-1, progress);
             animate();
         }
     }

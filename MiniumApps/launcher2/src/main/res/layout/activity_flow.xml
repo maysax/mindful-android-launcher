@@ -14,4 +14,13 @@
         app:vpb_fill_color="@color/colorPrimary"
         app:vpb_flat="true" />
 
+    <TextView
+        android:id="@+id/txtTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hola"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text.size.medium"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>
