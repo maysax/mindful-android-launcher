@@ -36,9 +36,6 @@ public class FlowActivity extends CoreActivity {
     @ViewById
     VerticalProgressBar vpBar;
 
-    @ViewById
-    TextView txtTimer;
-
     private boolean isAnimationRunning;
     private boolean isServiceRunning;
     private float progress;
@@ -116,8 +113,7 @@ public class FlowActivity extends CoreActivity {
 
     private void animate() {
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", vpBar.getPercent(), progress / SPAN),
-                ObjectAnimator.ofFloat(txtTimer, "percent", vpBar.getPercent(), progress / SPAN));
+        set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", vpBar.getPercent(), progress / SPAN));
         set.setDuration(ANIMATION_DURATION);
         set.addListener(new Animator.AnimatorListener() {
             @Override

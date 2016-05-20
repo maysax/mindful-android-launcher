@@ -4,7 +4,9 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import de.greenrobot.event.EventBus;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.R;
+import minium.co.launcher2.events.ImeActionDoneEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
 
 /**
@@ -77,18 +80,27 @@ public class SearchLayout extends LinearLayout {
     void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
                 handleAfterTextChanged(s);
+            }
+        });
+
+        txtSearchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    Tracer.d("Keyboard done pressed.");
+                    EventBus.getDefault().post(new ImeActionDoneEvent());
+                    return false;   // restoring default behavior, dismiss keyboard on press
+                }
+
+                return false;
             }
         });
 
@@ -122,7 +134,7 @@ public class SearchLayout extends LinearLayout {
             formattedText = "";
         } else if (s.length() < formattedText.length()) {
             formattedText = formattedText.substring(0, s.length() + 1);
-            Tracer.i("afterTextChanged: " + s + " formatted: " + formattedText);
+            Tracer.d("afterTextChanged: " + s + " formatted: " + formattedText);
         }
     }
 

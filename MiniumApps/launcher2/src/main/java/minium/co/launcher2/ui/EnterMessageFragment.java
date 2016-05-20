@@ -19,6 +19,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
@@ -63,15 +64,21 @@ public class EnterMessageFragment extends CoreFragment  {
     @Click
     void btnSendText() {
         if (composeReplyText.getText().length() == 0) {
-            UIUtils.alert(getActivity(), "Message box is empty. Please enter text into message box");
+            UIUtils.alert(getActivity(), "Message box is empty. Please enter text into message box.");
             return;
         }
         btnSendText.setText("{fa-spinner 24dp spin}");
         btnSendText.setClickable(false);
 
-        new SmsObserver(getActivity(), phoneNumber, composeReplyText.getText().toString()).start();
+        try {
+            new SmsObserver(getActivity(), phoneNumber, composeReplyText.getText().toString()).start();
 
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(phoneNumber, null, composeReplyText.getText().toString() , null, null);
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumber, null, composeReplyText.getText().toString() , null, null);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+            resetViews();
+            UIUtils.toast(getActivity(), "The message will not get sent.");
+        }
     }
 }

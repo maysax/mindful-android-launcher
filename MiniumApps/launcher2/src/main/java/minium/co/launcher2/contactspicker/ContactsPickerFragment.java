@@ -39,8 +39,10 @@ import java.lang.ref.WeakReference;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.log.Tracer;
 import minium.co.launcher2.R;
 import minium.co.launcher2.events.FilterContactsEvent;
+import minium.co.launcher2.events.ImeActionDoneEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -111,6 +113,12 @@ public class ContactsPickerFragment extends ListFragment implements
         } else {
             mContactsListener.onContactNumberSelected(phoneNumber, name);
         }
+    }
+
+    @Subscribe
+    public void onImeActionDone(ImeActionDoneEvent event) {
+        Tracer.d("onImeActionDone " + mSearchString);
+        mContactsListener.onContactNumberSelected(mSearchString, mSearchString);
     }
 
     @Override
