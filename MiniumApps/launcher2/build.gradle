@@ -42,6 +42,8 @@ dependencies {
     compile project(':core')
     compile project(':chips')
 
+    compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
+
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 
 }
