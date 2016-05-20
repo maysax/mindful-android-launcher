@@ -7,21 +7,24 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <!-- TODO: using it for flow, we might not need this -->
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+
     <application
+        android:name=".app.Launcher2App_"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/CoreTheme"
-        android:name=".app.Launcher2App_">
+        android:theme="@style/CoreTheme">
 
         <!-- Fabric configuration -->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
 
-
-        <activity android:name=".MainActivity_"
+        <activity
+            android:name=".MainActivity_"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,11 +35,23 @@
 
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>
-                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED"/>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".flow.FlowActivity_"/>
+
+        <service android:name=".flow.FlowNotificationService_"
+            android:exported="true"
+            android:enabled="true"
+            android:label="@string/title.ebbFlowManager"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
