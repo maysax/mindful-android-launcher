@@ -19,6 +19,7 @@ import android.provider.ContactsContract;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.UiThread;
 
 import java.lang.ref.WeakReference;
 
@@ -155,11 +157,24 @@ public class ContactsPickerFragment extends ListFragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
+        onSpaceAction();
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
+    }
+
+    @UiThread(delay = 200)
+    public void onSpaceAction() {
+        if (mSearchString != null && mSearchString.endsWith(" ") && PhoneNumberUtils.isGlobalPhoneNumber(mSearchString.trim())) {
+            if (mAdapter.getCount() == 1) {
+                ListView lView = getListView();
+                lView.performItemClick(lView.getChildAt(0), 0, lView.getAdapter().getItemId(0));
+            } else {
+                mContactsListener.onContactNumberSelected(mSearchString.trim(), mSearchString.trim());
+            }
+        }
     }
 
     @Subscribe
