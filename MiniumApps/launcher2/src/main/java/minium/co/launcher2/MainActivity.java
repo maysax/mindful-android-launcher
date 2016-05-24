@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.view.KeyEvent;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -26,6 +27,7 @@ import minium.co.launcher2.contactspicker.OnContactSelectedListener;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MakeChipEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
+import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.ui.EnterMessageFragment;
@@ -132,5 +134,17 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int keyCode = event.getKeyCode();
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                FlowActivity_.intent(this).isVolumeUpInit(true).start();
+                return true;
+            default:
+                return super.dispatchKeyEvent(event);
+        }
     }
 }

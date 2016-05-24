@@ -25,7 +25,8 @@
 
         <activity
             android:name=".MainActivity_"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,7 +42,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".flow.FlowActivity_"/>
+        <activity android:name=".flow.FlowActivity_"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".flow.FlowNotificationService_"
             android:exported="true"
