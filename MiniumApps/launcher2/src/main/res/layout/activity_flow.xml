@@ -6,10 +6,18 @@
     android:layout_height="match_parent"
     tools:context="minium.co.launcher2.flow.FlowActivity">
 
+    <FrameLayout
+        android:id="@+id/statusView"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        tools:background="@color/material.core.red"/>
+
     <minium.co.launcher2.ui.widget.VerticalProgressBar
         android:id="@+id/vpBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/statusView"
         app:vpb_background_color="@color/colorPrimaryDark"
         app:vpb_fill_color="@color/colorPrimary"
         app:vpb_flat="true" />
@@ -18,6 +26,7 @@
         android:id="@+id/txtTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/statusView"
         android:text="Hola"
         android:textColor="@color/white"
         android:textSize="@dimen/text.size.medium"

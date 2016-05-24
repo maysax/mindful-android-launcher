@@ -21,6 +21,7 @@ import android.widget.TextView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
@@ -30,9 +31,11 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.ui.widget.VerticalProgressBar;
 import minium.co.launcher2.utils.ServiceUtils;
 
+@Fullscreen
 @EActivity(R.layout.activity_flow)
 public class FlowActivity extends CoreActivity {
 
@@ -62,10 +65,15 @@ public class FlowActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
+        loadTopView();
         SCREEN_HEIGHT = getScreenHeight();
         Tracer.d("Screen height: " + SCREEN_HEIGHT);
         progress = SPAN;
         setPercentage(1);
+    }
+
+    void loadTopView() {
+        loadFragment(TopFragment_.builder().build(), R.id.statusView);
     }
 
     @UiThread(delay = 1000L)
