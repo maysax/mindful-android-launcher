@@ -26,6 +26,10 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -180,6 +184,11 @@ public class FlowActivity extends CoreActivity {
             }
             progress -= INTERVAL;
             progress = Math.max(-1, progress);
+
+            long gap = (long) (SPAN - progress);
+            long target = Calendar.getInstance().getTimeInMillis() + gap;
+            txtTimer.setText(new SimpleDateFormat("hh:mm:ss a", Locale.US).format(new Date(target)));
+
             animate();
         }
     }
