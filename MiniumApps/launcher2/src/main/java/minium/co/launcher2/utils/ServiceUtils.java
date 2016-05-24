@@ -57,8 +57,13 @@ public class ServiceUtils {
     }
 
     private static boolean contains(String service, String... ids) {
-        for (String id : ids) {
-            if (service.substring(service.lastIndexOf(".")).equals(id.substring(id.lastIndexOf(".")))) return true;
+        try {
+            for (String id : ids) {
+                if (service.substring(service.lastIndexOf(".")).equals(id.substring(id.lastIndexOf(".")))) return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Tracer.e(e, e.getMessage());
         }
 
         return false;

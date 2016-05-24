@@ -53,7 +53,7 @@ public class FlowActivity extends CoreActivity {
     boolean isVolumeUpInit = false;
 
     private boolean isAnimationRunning;
-    private boolean isServiceRunning;
+    private boolean isServiceRunning = false;
     private float progress;
     private final float SPAN = 60 * 1000f;
     private final float INTERVAL = 15 * 1000f;
@@ -71,7 +71,7 @@ public class FlowActivity extends CoreActivity {
     void afterViews() {
         loadTopView();
         SCREEN_HEIGHT = getScreenHeight();
-        Tracer.d("Screen height: " + SCREEN_HEIGHT);
+        //Tracer.d("Screen height: " + SCREEN_HEIGHT);
         progress = SPAN;
         setPercentage(1);
     }
@@ -83,24 +83,29 @@ public class FlowActivity extends CoreActivity {
     @UiThread(delay = 1000L)
     void updateUI() {
         progress += 1000;
-        Tracer.d("updateUI " + progress);
+        // Tracer.d("updateUI " + progress);
         animate();
         if (progress < SPAN)
             updateUI();
         else {
-            playSound();
             FlowNotificationService_.intent(this).extra("start", false).start();
             isServiceRunning = false;
-            finish();
+            onCompletion();
         }
     }
 
+    @UiThread(delay = 300)
+    void onCompletion() {
+        playSound();
+        finish();
+    }
+
     void playSound() {
+        Tracer.i("Playing sound...");
         Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
         MediaPlayer mediaPlayer = new MediaPlayer();
-
         try {
+            mediaPlayer.reset();
             mediaPlayer.setDataSource(this, defaultRingtoneUri);
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
             mediaPlayer.prepare();
@@ -113,14 +118,19 @@ public class FlowActivity extends CoreActivity {
                 }
             });
             mediaPlayer.start();
+            Tracer.i("Playing sound completed");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
+            Tracer.e(e, e.getMessage());
         } catch (SecurityException e) {
             e.printStackTrace();
+            Tracer.e(e, e.getMessage());
         } catch (IllegalStateException e) {
             e.printStackTrace();
+            Tracer.e(e, e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            Tracer.e(e, e.getMessage());
         }
     }
 
@@ -137,6 +147,7 @@ public class FlowActivity extends CoreActivity {
         } else {
             if (isVolumeUpInit) onVolumeUpKeyPressed();
         }
+        isVolumeUpInit = false;
     }
 
     /** @return True if {@link FlowNotificationService} is enabled. */

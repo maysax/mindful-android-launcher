@@ -47,6 +47,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Bean
     SearchTextParser searchTextParser;
 
+    boolean isDispatched = false;
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
@@ -69,6 +71,12 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     protected void onStop() {
         super.onStop();
         this.unregisterReceiver(this.mBatteryInfoReceiver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isDispatched = false;
     }
 
     void loadTopView() {
@@ -141,7 +149,10 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         int keyCode = event.getKeyCode();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                FlowActivity_.intent(this).isVolumeUpInit(true).start();
+                if (!isDispatched) {
+                    FlowActivity_.intent(this).isVolumeUpInit(true).start();
+                    isDispatched = true;
+                }
                 return true;
             default:
                 return super.dispatchKeyEvent(event);
