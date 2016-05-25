@@ -70,8 +70,8 @@ public class FlowActivity extends CoreActivity {
     @AfterViews
     void afterViews() {
         loadTopView();
-        SCREEN_HEIGHT = getScreenHeight();
-        //Tracer.d("Screen height: " + SCREEN_HEIGHT);
+        SCREEN_HEIGHT = getScreenHeight() - UIUtils.dpToPx(this, 20);   // decreasing status bar height 20dp
+        Tracer.d("Screen height: " + SCREEN_HEIGHT);
         progress = SPAN;
         setPercentage(1);
     }
