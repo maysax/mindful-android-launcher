@@ -29,7 +29,7 @@
         android:layout_below="@id/statusView"
         android:text=""
         android:textColor="@color/white"
-        android:textSize="@dimen/text.size.medium"
+        android:textSize="@dimen/text.size.regular"
         android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

@@ -57,7 +57,7 @@ public class FlowActivity extends CoreActivity {
     private float progress;
     private final float SPAN = 60 * 1000f;
     private final float INTERVAL = 15 * 1000f;
-    private final int ANIMATION_DURATION = 300;
+    private final int ANIMATION_DURATION = 100;
     private int SCREEN_HEIGHT;
 
     private int getScreenHeight() {
@@ -80,9 +80,9 @@ public class FlowActivity extends CoreActivity {
         loadFragment(TopFragment_.builder().build(), R.id.statusView);
     }
 
-    @UiThread(delay = 1000L)
+    @UiThread(delay = 100L)
     void updateUI() {
-        progress += 1000;
+        progress += 100;
         // Tracer.d("updateUI " + progress);
         animate();
         if (progress < SPAN)
