@@ -56,7 +56,6 @@ public class ContactsPickerFragment extends ListFragment implements
     private OnContactSelectedListener mContactsListener;
     private SimpleCursorAdapter mAdapter;
     private String mSearchString = null;
-    private SearchView mSearchView;
 
     @SuppressLint("InlinedApi")
     private static String DISPLAY_NAME_COMPAT = Build.VERSION.SDK_INT

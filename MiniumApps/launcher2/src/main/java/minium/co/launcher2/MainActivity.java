@@ -20,6 +20,8 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
+import minium.co.launcher2.calllog.CallLogFragment;
+import minium.co.launcher2.calllog.CallLogFragment_;
 import minium.co.launcher2.contactspicker.ContactDetailsFragment;
 import minium.co.launcher2.contactspicker.ContactDetailsFragment_;
 import minium.co.launcher2.contactspicker.ContactsPickerFragment_;
@@ -43,6 +45,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "MainActivity";
 
     public static int SELECTED_OPTION;
+
+    private int loadedFragmentId = -1;
 
     @Bean
     SearchTextParser searchTextParser;
@@ -103,10 +107,15 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Subscribe
     public void onEvent(LoadFragmentEvent event) {
+        if (loadedFragmentId == event.getId()) return;
         if (event.getId() == LoadFragmentEvent.CONTACTS_LIST)
             loadFragment(ContactsPickerFragment_.builder().build(), R.id.mainView);
         else if (event.getId() == LoadFragmentEvent.MAIN_FRAGMENT)
             loadMainView();
+        else if (event.getId() == LoadFragmentEvent.CALL_LOG)
+            loadFragment(CallLogFragment_.builder().build(), R.id.mainView);
+
+        loadedFragmentId = event.getId();
     }
 
     @Override
