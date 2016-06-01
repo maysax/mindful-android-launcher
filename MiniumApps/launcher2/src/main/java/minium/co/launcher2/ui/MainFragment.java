@@ -19,6 +19,7 @@ import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
+import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MainItemClickedEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActivityHelper;
@@ -62,15 +63,15 @@ public class MainFragment extends CoreFragment {
                     UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
             case 4:
+                // TODO: load call log
+                EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.CALL_LOG));
+                break;
+            case 5:
                 if (!new ActivityHelper(getActivity()).openContactsApp())
                     UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
-            case 5:
-                Tracer.d("Clicked on flow");
-                FlowActivity_.intent(this).start();
-                break;
             case 6:
-                UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
+                FlowActivity_.intent(this).start();
                 break;
             case 7:
                 UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
@@ -79,6 +80,9 @@ public class MainFragment extends CoreFragment {
                 UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
             case 9:
+                UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
+                break;
+            case 10:
                 if (!new ActivityHelper(getActivity()).openSettingsApp())
                     UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
@@ -90,10 +94,11 @@ public class MainFragment extends CoreFragment {
                 new MainListItem("{fa-comment-o}", "Text"),
                 new MainListItem("{fa-phone}", "Call"),
                 new MainListItem("{fa-sticky-note-o}", "Add Note"),
-                new MainListItem("{fa-users}", "Conversations"),
+                new MainListItem("{fa-users}", "Messages"),
+                new MainListItem("{fa-phone}", "Call Log"),
                 new MainListItem("{fa-user}", "Address Book"),
                 new MainListItem("{fa-ban}", "Flow"),
-                new MainListItem("{fa-phone}", "Voicemail"),
+                new MainListItem("{fa-microphone}", "Voicemail"),
                 new MainListItem("{fa-sticky-note-o}", "Notes"),
                 new MainListItem("{fa-clock-o}", "Clock"),
                 new MainListItem("{fa-cogs}", "Settings")

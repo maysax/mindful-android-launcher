@@ -150,7 +150,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public void onBackPressed() {
-
+        EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));
     }
 
     @Override
