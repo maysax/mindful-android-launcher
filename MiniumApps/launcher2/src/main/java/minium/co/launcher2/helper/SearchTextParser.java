@@ -45,24 +45,14 @@ public class SearchTextParser {
 
             }
         } else if (txt.length() == 5) {
-            if (txt.toLowerCase().startsWith(KEY_TEXT)) {
+            if (txt.toLowerCase().startsWith(KEY_TEXT) || txt.toLowerCase().startsWith(KEY_CALL)) {
                 EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
-            } else if (txt.toLowerCase().startsWith(KEY_CALL)) {
-                EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.CALL_LOG));
             }
         } else if (txt.length() > 5) {
-            if (txt.toLowerCase().startsWith(KEY_CALL)) {
-                EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
-            }
-            fireFilterContactEvent(txt.substring(5));
+            EventBus.getDefault().post(new FilterContactsEvent(txt.substring(5)));
         } else {
             // TODO: may be loading same fragment over and over again
             EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));
         }
-    }
-
-    @UiThread(delay = 200)
-    void fireFilterContactEvent(String text) {
-        EventBus.getDefault().post(new FilterContactsEvent(text));
     }
 }
