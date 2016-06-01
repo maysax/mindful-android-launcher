@@ -3,10 +3,12 @@ package minium.co.launcher2.ui;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.ColorInt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
@@ -101,7 +103,8 @@ public class MainFragment extends CoreFragment {
                 new MainListItem("{fa-microphone}", "Voicemail"),
                 new MainListItem("{fa-sticky-note-o}", "Notes"),
                 new MainListItem("{fa-clock-o}", "Clock"),
-                new MainListItem("{fa-cogs}", "Settings")
+                new MainListItem("{fa-cogs}", "Settings"),
+                new MainListItem("{fa-tint}", "Theme")
         };
     }
 

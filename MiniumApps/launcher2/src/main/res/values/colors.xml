@@ -3,4 +3,8 @@
 
     <color name="bg_grey">#e4e4e1</color>
 
+    <array name="theme_colors">
+
+    </array>
+
 </resources>
