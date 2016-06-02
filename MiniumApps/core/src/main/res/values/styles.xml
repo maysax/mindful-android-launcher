@@ -10,6 +10,29 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/text.primary</item>
+        <item name="android:textColorSecondary">@color/text.secondary</item>
+    </style>
+
+    <style name="CoreTheme.Red">
+        <item name="colorPrimary">@color/colorPrimaryRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>
+        <item name="colorAccent">@color/colorAccentRed</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightRed</item>
+    </style>
+
+    <style name="CoreTheme.Pink">
+        <item name="colorPrimary">@color/colorPrimaryPink</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkPink</item>
+        <item name="colorAccent">@color/colorAccentPink</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightPink</item>
+    </style>
+
+    <style name="CoreTheme.Purple">
+        <item name="colorPrimary">@color/colorPrimaryPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkPurple</item>
+        <item name="colorAccent">@color/colorAccentPurple</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightPurple</item>
     </style>
 
 </resources>

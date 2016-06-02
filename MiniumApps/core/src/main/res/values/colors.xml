@@ -6,6 +6,24 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#00BB33</color>
 
+    <!-- Theme Red -->
+    <color name="colorPrimaryRed">@color/material.core.red</color>
+    <color name="colorPrimaryDarkRed">#D32F2F</color>
+    <color name="colorAccentRed">#EF9A9A</color>
+    <color name="colorControlHighlightRed">#ff8a80</color>
+
+    <!-- Theme Pink -->
+    <color name="colorPrimaryPink">@color/material.core.pink</color>
+    <color name="colorPrimaryDarkPink">#C2185B</color>
+    <color name="colorAccentPink">#F48FB1</color>
+    <color name="colorControlHighlightPink">#ff80ab</color>
+
+    <!-- Theme Purple -->
+    <color name="colorPrimaryPurple">@color/material.core.purple</color>
+    <color name="colorPrimaryDarkPurple">#7B1FA2</color>
+    <color name="colorAccentPurple">#CE93D8</color>
+    <color name="colorControlHighlightPurple">#ea80fc</color>
+
     <!-- Material flat UI colors -->
     <color name="materialFlatTurquoise">#1abc9c</color>
     <color name="materialFlatTurquoise.dark">#16a085</color>
