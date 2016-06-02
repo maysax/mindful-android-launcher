@@ -1,6 +1,8 @@
 package minium.co.launcher2.adapters;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconTextView;
 
+import minium.co.core.util.ThemeUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.model.MainListItem;
 
@@ -47,6 +50,7 @@ public class MainAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             holder.icon.setText(item.getIconName());
+            holder.icon.setTextColor(ThemeUtils.getAccentColor(getContext()));
             holder.text.setText(item.getText());
         }
 

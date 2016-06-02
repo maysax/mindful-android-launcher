@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -23,6 +25,13 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 @EActivity
 public class CoreActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setTheme(R.style.CoreTheme_Red);
+    }
 
     @Override
     protected void onStart() {

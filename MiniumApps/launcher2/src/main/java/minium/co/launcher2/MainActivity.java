@@ -12,6 +12,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -19,6 +20,7 @@ import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
+import minium.co.launcher2.app.DroidPrefs_;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
 import minium.co.launcher2.calllog.CallLogFragment;
 import minium.co.launcher2.calllog.CallLogFragment_;
@@ -50,6 +52,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Bean
     SearchTextParser searchTextParser;
+
+    @Pref
+    DroidPrefs_ prefs;
 
     boolean isDispatched = false;
 
