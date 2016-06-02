@@ -1,4 +1,4 @@
-package minium.co.launcher2.app;
+package minium.co.core.app;
 
 import android.graphics.Color;
 

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
 android {
@@ -109,5 +110,12 @@ dependencies {
 
     compile 'org.apache.commons:commons-lang3:3.0'
 
+    apt "org.androidannotations:androidannotations:$annotationsVersion"
+}
 
+apt {
+    arguments {
+        // RELEASE: comment it out
+        trace 'true'
+    }
 }

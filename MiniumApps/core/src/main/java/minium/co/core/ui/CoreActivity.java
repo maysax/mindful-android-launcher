@@ -10,10 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.R;
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.helper.Validate;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -24,7 +26,19 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by shahab on 3/17/16.
  */
 @EActivity
-public class CoreActivity extends AppCompatActivity {
+public abstract class CoreActivity extends AppCompatActivity {
+
+    @Pref
+    public DroidPrefs_ prefs;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (prefs.selectedThemeId().get() != 0) {
+            setTheme(prefs.selectedThemeId().get());
+        }
+    }
 
     @Override
     protected void onStart() {

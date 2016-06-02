@@ -26,7 +26,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  *
  * Created by shahab on 3/17/16.
  */
-@EApplication
 public abstract class CoreApplication extends MultiDexApplication {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "CoreApplication";
@@ -44,7 +43,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         init();
     }
 
-    @Trace(tag = TRACE_TAG)
     protected void init() {
         // set initial configurations here
         configTracer();

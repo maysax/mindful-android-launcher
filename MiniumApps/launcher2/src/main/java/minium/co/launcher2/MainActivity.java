@@ -18,11 +18,11 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
-import minium.co.launcher2.app.DroidPrefs_;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
 import minium.co.launcher2.calllog.CallLogFragment;
 import minium.co.launcher2.calllog.CallLogFragment_;
@@ -55,21 +55,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Bean
     SearchTextParser searchTextParser;
 
-    @Pref
-    DroidPrefs_ prefs;
-
     boolean isDispatched = false;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (prefs.selectedThemeId().get() != 0) {
-            setTheme(prefs.selectedThemeId().get());
-        }
-
-
-    }
 
     @Trace(tag = TRACE_TAG)
     @AfterViews

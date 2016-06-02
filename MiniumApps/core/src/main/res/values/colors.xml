@@ -24,6 +24,18 @@
     <color name="colorAccentPurple">#CE93D8</color>
     <color name="colorControlHighlightPurple">#ea80fc</color>
 
+    <!-- Theme Deep Purple -->
+    <color name="colorPrimarydeepDeepPurple">@color/material.core.deepPurple</color>
+    <color name="colorPrimaryDarkDeepPurple">#512DA8</color>
+    <color name="colorAccentDeepPurple">#B39DDB</color>
+    <color name="colorControlHighlightDeepPurple">#B388FF</color>
+
+    <!-- Theme Indigo -->
+    <color name="colorPrimaryIndigo">@color/material.core.indigo</color>
+    <color name="colorPrimaryDarkIndigo">#303F9F</color>
+    <color name="colorAccentIndigo">#9FA8DA</color>
+    <color name="colorControlHighlightIndigo">#8C9EFF</color>
+
     <!-- Material flat UI colors -->
     <color name="materialFlatTurquoise">#1abc9c</color>
     <color name="materialFlatTurquoise.dark">#16a085</color>

@@ -15,12 +15,12 @@ import org.xdty.preference.colorpicker.ColorPickerDialog;
 import org.xdty.preference.colorpicker.ColorPickerSwatch;
 
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
-import minium.co.launcher2.app.DroidPrefs_;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MainItemClickedEvent;
 import minium.co.launcher2.flow.FlowActivity_;
