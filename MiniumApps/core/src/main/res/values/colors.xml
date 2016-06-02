@@ -49,6 +49,30 @@
     <color name="material.core.brown">#795548</color>
     <color name="material.core.grey">#9E9E9E</color>
     <color name="material.core.blueGrey">#607D8B</color>
+    <color name="material.core.black">@color/black</color>
+
+    <array name="material_core_colors">
+        <item>@color/material.core.red</item>
+        <item>@color/material.core.pink</item>
+        <item>@color/material.core.purple</item>
+        <item>@color/material.core.deepPurple</item>
+        <item>@color/material.core.indigo</item>
+        <item>@color/material.core.blue</item>
+        <item>@color/material.core.lightBlue</item>
+        <item>@color/material.core.cyan</item>
+        <item>@color/material.core.teal</item>
+        <item>@color/material.core.green</item>
+        <item>@color/material.core.lightGreen</item>
+        <item>@color/material.core.lime</item>
+        <item>@color/material.core.yellow</item>
+        <item>@color/material.core.amber</item>
+        <item>@color/material.core.orange</item>
+        <item>@color/material.core.deepOrange</item>
+        <item>@color/material.core.brown</item>
+        <item>@color/material.core.grey</item>
+        <item>@color/material.core.blueGrey</item>
+        <item>@color/material.core.black</item>
+    </array>
 
     <!-- Android core colors for easy access -->
     <color name="white">@android:color/white</color>

@@ -4,6 +4,7 @@ package minium.co.launcher2.ui;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.ColorInt;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
+import org.xdty.preference.colorpicker.ColorPickerDialog;
+import org.xdty.preference.colorpicker.ColorPickerSwatch;
 
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
@@ -88,6 +91,20 @@ public class MainFragment extends CoreFragment {
                 if (!new ActivityHelper(getActivity()).openSettingsApp())
                     UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
+            case 11:
+                ColorPickerDialog dialog = ColorPickerDialog.newInstance(R.string.color_picker_default_title,
+                        getResources().getIntArray(R.array.material_core_colors),
+                        context.getResources().getColor(R.color.material_core_deepOrange),
+                        5, ColorPickerDialog.SIZE_SMALL);
+
+                        dialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
+                    @Override
+                    public void onColorSelected(int color) {
+                        UIUtils.toast(getActivity(), "Color: " + color);
+                    }
+                });
+
+                dialog.show(getFragmentManager(), "color_picker_dialog");
         }
     }
 
