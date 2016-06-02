@@ -1,29 +1,23 @@
 package minium.co.launcher2.ui;
 
 
-import android.os.Bundle;
 import android.app.Fragment;
-import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.xdty.preference.colorpicker.ColorPickerDialog;
 import org.xdty.preference.colorpicker.ColorPickerSwatch;
 
 import de.greenrobot.event.EventBus;
-import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
+import minium.co.launcher2.app.DroidPrefs_;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MainItemClickedEvent;
 import minium.co.launcher2.flow.FlowActivity_;
@@ -38,6 +32,9 @@ public class MainFragment extends CoreFragment {
 
     @ViewById
     ListView listView;
+
+    @Pref
+    DroidPrefs_ prefs;
 
     MainAdapter adapter;
 
@@ -94,12 +91,13 @@ public class MainFragment extends CoreFragment {
             case 11:
                 ColorPickerDialog dialog = ColorPickerDialog.newInstance(R.string.color_picker_default_title,
                         getResources().getIntArray(R.array.material_core_colors),
-                        context.getResources().getColor(R.color.material_core_deepOrange),
+                        prefs.selectedThemeColor().get(),
                         5, ColorPickerDialog.SIZE_SMALL);
 
                         dialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
                     @Override
                     public void onColorSelected(int color) {
+                        prefs.selectedThemeColor().put(color);
                         UIUtils.toast(getActivity(), "Color: " + color);
                     }
                 });
