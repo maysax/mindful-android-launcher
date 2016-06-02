@@ -2,6 +2,8 @@ package minium.co.launcher2.ui;
 
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -15,6 +17,7 @@ import org.xdty.preference.colorpicker.ColorPickerSwatch;
 import de.greenrobot.event.EventBus;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
+import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
 import minium.co.launcher2.app.DroidPrefs_;
@@ -99,6 +102,19 @@ public class MainFragment extends CoreFragment {
                     public void onColorSelected(int color) {
                         prefs.selectedThemeColor().put(color);
                         UIUtils.toast(getActivity(), "Color: " + color);
+
+                        if (color == getResources().getColor(R.color.material_core_red)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Red);
+                        } else if (color == getResources().getColor(R.color.material_core_pink)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Pink);
+                        } else if (color == getResources().getColor(R.color.material_core_purple)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Purple);
+                        } else {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme);
+                        }
+
+                        android.app.TaskStackBuilder.create(getActivity())
+                                .addNextIntent(new Intent(getActivity(), MainActivity_.class)).startActivities();
                     }
                 });
 

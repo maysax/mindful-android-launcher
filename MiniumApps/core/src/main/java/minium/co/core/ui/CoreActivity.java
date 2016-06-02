@@ -27,13 +27,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class CoreActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setTheme(R.style.CoreTheme_Red);
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);

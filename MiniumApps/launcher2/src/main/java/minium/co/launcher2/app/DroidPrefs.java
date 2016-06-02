@@ -15,5 +15,8 @@ public interface DroidPrefs {
     @DefaultInt(Color.BLACK)
     int selectedThemeColor();
 
+    @DefaultInt(0)
+    int selectedThemeId();
+
 
 }
