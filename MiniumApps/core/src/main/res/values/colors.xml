@@ -36,6 +36,30 @@
     <color name="colorAccentIndigo">#9FA8DA</color>
     <color name="colorControlHighlightIndigo">#8C9EFF</color>
 
+    <!-- Theme Blue -->
+    <color name="colorPrimaryBlue">@color/material.core.blue</color>
+    <color name="colorPrimaryDarkBlue">#1976D2</color>
+    <color name="colorAccentBlue">#90CAF9</color>
+    <color name="colorControlHighlightBlue">#82B1FF</color>
+
+    <!-- Theme Light Blue -->
+    <color name="colorPrimaryLightBlue">@color/material.core.lightBlue</color>
+    <color name="colorPrimaryDarkLightBlue">#0288D1</color>
+    <color name="colorAccentLightBlue">#81D4FA</color>
+    <color name="colorControlHighlightLightBlue">#80D8FF</color>
+
+    <!-- Theme Cyan -->
+    <color name="colorPrimaryCyan">@color/material.core.cyan</color>
+    <color name="colorPrimaryDarkCyan">#0097A7</color>
+    <color name="colorAccentCyan">#80DEEA</color>
+    <color name="colorControlHighlightCyan">#84FFFF</color>
+
+    <!-- Theme Teal -->
+    <color name="colorPrimaryTeal">@color/material.core.teal</color>
+    <color name="colorPrimaryDarkTeal">#00796B</color>
+    <color name="colorAccentTeal">#80CBC4</color>
+    <color name="colorControlHighlightTeal">#A7FFEB</color>
+
     <!-- Material flat UI colors -->
     <color name="materialFlatTurquoise">#1abc9c</color>
     <color name="materialFlatTurquoise.dark">#16a085</color>
