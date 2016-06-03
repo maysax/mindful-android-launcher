@@ -50,7 +50,7 @@ public class MainAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             holder.icon.setText(item.getIconName());
-            holder.icon.setTextColor(ThemeUtils.getAccentColor(getContext()));
+            holder.icon.setTextColor(ThemeUtils.getPrimaryColor(getContext()));
             holder.text.setText(item.getText());
         }
 
