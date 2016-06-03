@@ -14,7 +14,7 @@
         android:ellipsize="start"
         android:textSize="@dimen/text.size.large"
         android:textColor="@color/white"
-        android:textColorHint="@color/text.hint"
+        android:alpha=".78"
         android:hint="Make a selection"
         android:layout_gravity="center_vertical"
         tools:background="@color/material.core.blue"
