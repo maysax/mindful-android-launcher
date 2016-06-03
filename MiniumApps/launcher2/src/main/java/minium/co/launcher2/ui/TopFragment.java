@@ -6,6 +6,7 @@ import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.Icon;
@@ -21,6 +22,7 @@ import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;;
+import minium.co.core.util.ThemeUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.battery.BatteryChangeEvent;
 
@@ -29,6 +31,9 @@ import minium.co.launcher2.battery.BatteryChangeEvent;
  */
 @EFragment(R.layout.fragment_top)
 public class TopFragment extends CoreFragment {
+
+    @ViewById
+    LinearLayout containerLayout;
 
     @ViewById
     TextView iTxt1;
@@ -57,6 +62,8 @@ public class TopFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
+        containerLayout.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(getActivity()));
+
         // Default text
         updateBatteryText(50);
     }
@@ -87,7 +94,7 @@ public class TopFragment extends CoreFragment {
 
     private void updateBatteryText(int level) {
         iTxt3.setText(getString(R.string.format_battery, level));
-        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(level)).sizeDp(12), null);
+        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(level)).colorRes(R.color.white).sizeDp(12), null);
     }
 
     private Icon getBatteryIcon(int level) {

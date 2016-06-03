@@ -5,8 +5,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 
 import org.androidannotations.annotations.AfterViews;
@@ -14,19 +12,15 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
-import minium.co.launcher2.calllog.CallLogFragment;
 import minium.co.launcher2.calllog.CallLogFragment_;
-import minium.co.launcher2.contactspicker.ContactDetailsFragment;
 import minium.co.launcher2.contactspicker.ContactDetailsFragment_;
 import minium.co.launcher2.contactspicker.ContactsPickerFragment_;
 import minium.co.launcher2.contactspicker.OnContactSelectedListener;
@@ -36,7 +30,6 @@ import minium.co.launcher2.events.SearchTextChangedEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.messages.SmsObserver;
-import minium.co.launcher2.ui.EnterMessageFragment;
 import minium.co.launcher2.ui.EnterMessageFragment_;
 import minium.co.launcher2.ui.MainFragment_;
 import minium.co.launcher2.ui.SearchFragment_;
@@ -63,7 +56,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         loadTopView();
         loadSearchView();
         loadMainView();
-        loadBottomview();
+        loadBottomView();
     }
 
     // TODO: try to move this inside TopFragment
@@ -99,7 +92,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         loadFragment(MainFragment_.builder().build(), R.id.mainView);
     }
 
-    void loadBottomview() {
+    void loadBottomView() {
 
     }
 
