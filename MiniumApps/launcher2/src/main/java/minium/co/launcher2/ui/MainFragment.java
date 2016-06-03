@@ -123,7 +123,7 @@ public class MainFragment extends CoreFragment {
                             prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Teal);
                         } else if (color == getResources().getColor(R.color.material_core_green)) {
                             prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Green);
-                        } else if (color == getResources().getColor(R.color.material_core_lightBlue)) {
+                        } else if (color == getResources().getColor(R.color.material_core_lightGreen)) {
                             prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_LightGreen);
                         } else if (color == getResources().getColor(R.color.material_core_lime)) {
                             prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Lime);
