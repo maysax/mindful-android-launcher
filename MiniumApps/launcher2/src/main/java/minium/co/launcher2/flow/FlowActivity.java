@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -33,6 +34,7 @@ import java.util.Locale;
 
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.ui.TopFragment_;
@@ -42,6 +44,9 @@ import minium.co.launcher2.utils.ServiceUtils;
 @Fullscreen
 @EActivity(R.layout.activity_flow)
 public class FlowActivity extends CoreActivity {
+
+    @ViewById
+    FrameLayout statusView;
 
     @ViewById
     VerticalProgressBar vpBar;
@@ -69,6 +74,10 @@ public class FlowActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
+        statusView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
+        vpBar.setBackgroundColor(ThemeUtils.getPrimaryColor(this));
+        vpBar.setFillColor(ThemeUtils.getPrimaryDarkColor(this));
+
         loadTopView();
         SCREEN_HEIGHT = getScreenHeight() - UIUtils.dpToPx(this, 20);   // decreasing status bar height 20dp
         Tracer.d("Screen height: " + SCREEN_HEIGHT);
