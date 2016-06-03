@@ -35,9 +35,6 @@ public class SearchLayout extends LinearLayout {
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "SearchLayout";
 
     @ViewById
-    protected TextView constantChar;
-
-    @ViewById
     protected ChipsEditText txtSearchBox;
 
     @ViewById
@@ -65,7 +62,7 @@ public class SearchLayout extends LinearLayout {
     private void init() {
         isWatching = true;
         formattedText = "";
-        setBackgroundResource(R.drawable.edittext_rounded_corners);
+//        setBackgroundResource(R.drawable.edittext_rounded_corners);
         setOrientation(HORIZONTAL);
     }
 
@@ -117,10 +114,8 @@ public class SearchLayout extends LinearLayout {
     private void handleAfterTextChanged(Editable s) {
         if (s.length() != 0) {
             btnClear.setVisibility(VISIBLE);
-            constantChar.setTextColor(getResources().getColor(R.color.black));
         } else {
             btnClear.setVisibility(INVISIBLE);
-            constantChar.setTextColor(getResources().getColor(R.color.colorAccent));
         }
 
         if (isWatching)

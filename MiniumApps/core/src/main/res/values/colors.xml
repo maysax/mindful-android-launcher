@@ -197,6 +197,7 @@
     <!-- Text colors -->
     <color name="text.primary">#212121</color>
     <color name="text.secondary">#727272</color>
+    <color name="text.hint">#98A4A9</color>
     <color name="text.link">@color/colorAccent</color>
 
     <!-- Complementary colors -->
