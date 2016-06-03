@@ -33,9 +33,6 @@ import minium.co.launcher2.battery.BatteryChangeEvent;
 public class TopFragment extends CoreFragment {
 
     @ViewById
-    LinearLayout containerLayout;
-
-    @ViewById
     TextView iTxt1;
 
     @ViewById
@@ -62,8 +59,6 @@ public class TopFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        containerLayout.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(getActivity()));
-
         // Default text
         updateBatteryText(50);
     }

@@ -6,18 +6,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.view.KeyEvent;
+import android.widget.FrameLayout;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.ViewById;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
 import minium.co.launcher2.calllog.CallLogFragment_;
@@ -39,6 +42,12 @@ import minium.co.launcher2.ui.TopFragment_;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements OnContactSelectedListener, SmsObserver.OnSmsSentListener {
 
+    @ViewById
+    FrameLayout statusView;
+
+    @ViewById
+    FrameLayout searchView;
+
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "MainActivity";
 
     public static int SELECTED_OPTION;
@@ -53,6 +62,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
+        statusView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
+        searchView.setBackgroundColor(ThemeUtils.getPrimaryColor(this));
+
         loadTopView();
         loadSearchView();
         loadMainView();
