@@ -109,6 +109,38 @@ public class MainFragment extends CoreFragment {
                             prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Pink);
                         } else if (color == getResources().getColor(R.color.material_core_purple)) {
                             prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Purple);
+                        } else if (color == getResources().getColor(R.color.material_core_deepPurple)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_DeepPurple);
+                        } else if (color == getResources().getColor(R.color.material_core_indigo)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Indigo);
+                        } else if (color == getResources().getColor(R.color.material_core_blue)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Blue);
+                        } else if (color == getResources().getColor(R.color.material_core_lightBlue)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_LightBlue);
+                        } else if (color == getResources().getColor(R.color.material_core_cyan)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Cyan);
+                        } else if (color == getResources().getColor(R.color.material_core_teal)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Teal);
+                        } else if (color == getResources().getColor(R.color.material_core_green)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Green);
+                        } else if (color == getResources().getColor(R.color.material_core_lightBlue)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_LightGreen);
+                        } else if (color == getResources().getColor(R.color.material_core_lime)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Lime);
+                        } else if (color == getResources().getColor(R.color.material_core_yellow)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Yellow);
+                        } else if (color == getResources().getColor(R.color.material_core_amber)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Amber);
+                        } else if (color == getResources().getColor(R.color.material_core_orange)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Orange);
+                        } else if (color == getResources().getColor(R.color.material_core_deepOrange)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_DeepOrange);
+                        } else if (color == getResources().getColor(R.color.material_core_brown)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Brown);
+                        } else if (color == getResources().getColor(R.color.material_core_grey)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_Grey);
+                        } else if (color == getResources().getColor(R.color.material_core_blueGrey)) {
+                            prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme_BlueGrey);
                         } else {
                             prefs.selectedThemeId().put(minium.co.core.R.style.CoreTheme);
                         }
