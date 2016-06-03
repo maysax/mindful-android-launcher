@@ -10,79 +10,79 @@
     <color name="colorPrimaryRed">@color/material.core.red</color>
     <color name="colorPrimaryDarkRed">#D32F2F</color>
     <color name="colorAccentRed">#EF9A9A</color>
-    <color name="colorControlHighlightRed">#ff8a80</color>
+    <color name="colorControlHighlightRed">#FFCDD2</color>
 
     <!-- Theme Pink -->
     <color name="colorPrimaryPink">@color/material.core.pink</color>
     <color name="colorPrimaryDarkPink">#C2185B</color>
     <color name="colorAccentPink">#F48FB1</color>
-    <color name="colorControlHighlightPink">#ff80ab</color>
+    <color name="colorControlHighlightPink">#F8BBD0</color>
 
     <!-- Theme Purple -->
     <color name="colorPrimaryPurple">@color/material.core.purple</color>
     <color name="colorPrimaryDarkPurple">#7B1FA2</color>
     <color name="colorAccentPurple">#CE93D8</color>
-    <color name="colorControlHighlightPurple">#ea80fc</color>
+    <color name="colorControlHighlightPurple">#E1BEE7</color>
 
     <!-- Theme Deep Purple -->
     <color name="colorPrimaryDeepPurple">@color/material.core.deepPurple</color>
     <color name="colorPrimaryDarkDeepPurple">#512DA8</color>
     <color name="colorAccentDeepPurple">#B39DDB</color>
-    <color name="colorControlHighlightDeepPurple">#B388FF</color>
+    <color name="colorControlHighlightDeepPurple">#D1C4E9</color>
 
     <!-- Theme Indigo -->
     <color name="colorPrimaryIndigo">@color/material.core.indigo</color>
     <color name="colorPrimaryDarkIndigo">#303F9F</color>
     <color name="colorAccentIndigo">#9FA8DA</color>
-    <color name="colorControlHighlightIndigo">#8C9EFF</color>
+    <color name="colorControlHighlightIndigo">#C5CAE9</color>
 
     <!-- Theme Blue -->
     <color name="colorPrimaryBlue">@color/material.core.blue</color>
     <color name="colorPrimaryDarkBlue">#1976D2</color>
     <color name="colorAccentBlue">#90CAF9</color>
-    <color name="colorControlHighlightBlue">#82B1FF</color>
+    <color name="colorControlHighlightBlue">#BBDEFB</color>
 
     <!-- Theme Light Blue -->
     <color name="colorPrimaryLightBlue">@color/material.core.lightBlue</color>
     <color name="colorPrimaryDarkLightBlue">#0288D1</color>
     <color name="colorAccentLightBlue">#81D4FA</color>
-    <color name="colorControlHighlightLightBlue">#80D8FF</color>
+    <color name="colorControlHighlightLightBlue">#B3E5FC</color>
 
     <!-- Theme Cyan -->
     <color name="colorPrimaryCyan">@color/material.core.cyan</color>
     <color name="colorPrimaryDarkCyan">#0097A7</color>
     <color name="colorAccentCyan">#80DEEA</color>
-    <color name="colorControlHighlightCyan">#84FFFF</color>
+    <color name="colorControlHighlightCyan">#B2EBF2</color>
 
     <!-- Theme Teal -->
     <color name="colorPrimaryTeal">@color/material.core.teal</color>
     <color name="colorPrimaryDarkTeal">#00796B</color>
     <color name="colorAccentTeal">#80CBC4</color>
-    <color name="colorControlHighlightTeal">#A7FFEB</color>
+    <color name="colorControlHighlightTeal">#B2DFDB</color>
 
     <!-- Theme Green -->
     <color name="colorPrimaryGreen">@color/material.core.green</color>
     <color name="colorPrimaryDarkGreen">#388E3C</color>
     <color name="colorAccentGreen">#A5D6A7</color>
-    <color name="colorControlHighlightGreen">#B9F6CA</color>
+    <color name="colorControlHighlightGreen">#C8E6C9</color>
 
     <!-- Theme Light Green -->
     <color name="colorPrimaryLightGreen">@color/material.core.lightGreen</color>
     <color name="colorPrimaryDarkLightGreen">#689F38</color>
     <color name="colorAccentLightGreen">#C5E1A5</color>
-    <color name="colorControlHighlightLightGreen">#CCFF90</color>
+    <color name="colorControlHighlightLightGreen">#DCEDC8</color>
 
     <!-- Theme Lime -->
     <color name="colorPrimaryLime">@color/material.core.lime</color>
     <color name="colorPrimaryDarkLime">#AFB42B</color>
     <color name="colorAccentLime">#E6EE9C</color>
-    <color name="colorControlHighlightLime">#F4FF81</color>
+    <color name="colorControlHighlightLime">#F0F4C3</color>
 
     <!-- Theme Yellow -->
     <color name="colorPrimaryYellow">@color/material.core.yellow</color>
     <color name="colorPrimaryDarkYellow">#FBC02D</color>
     <color name="colorAccentYellow">#FFF59D</color>
-    <color name="colorControlHighlightYellow">#FFFF8D</color>
+    <color name="colorControlHighlightYellow">#FFF9C4</color>
 
     <!-- Theme Amber -->
     <color name="colorPrimaryAmber">@color/material.core.amber</color>
