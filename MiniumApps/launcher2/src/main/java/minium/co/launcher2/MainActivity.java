@@ -63,7 +63,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @AfterViews
     void afterViews() {
         statusView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
-        searchView.setBackgroundColor(ThemeUtils.getPrimaryColor(this));
+        searchView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
 
         loadTopView();
         loadSearchView();
