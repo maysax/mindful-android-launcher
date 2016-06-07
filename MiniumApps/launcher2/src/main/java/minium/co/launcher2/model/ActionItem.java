@@ -20,6 +20,10 @@ public enum ActionItem {
 
     private String extra;
 
+    private int start;
+
+    private int end;
+
 
     ActionItem(String actionText, boolean isChips, String extra) {
         this.actionText = actionText;

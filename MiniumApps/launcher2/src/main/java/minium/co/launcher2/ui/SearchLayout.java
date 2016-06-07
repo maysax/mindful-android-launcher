@@ -62,7 +62,6 @@ public class SearchLayout extends LinearLayout {
     private void init() {
         isWatching = true;
         formattedText = "";
-//        setBackgroundResource(R.drawable.edittext_rounded_corners);
         setOrientation(HORIZONTAL);
     }
 

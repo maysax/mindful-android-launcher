@@ -15,6 +15,8 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
+
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
@@ -33,6 +35,7 @@ import minium.co.launcher2.events.SearchTextChangedEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.messages.SmsObserver;
+import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.ui.EnterMessageFragment_;
 import minium.co.launcher2.ui.MainFragment_;
 import minium.co.launcher2.ui.SearchFragment_;
@@ -58,6 +61,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     SearchTextParser searchTextParser;
 
     boolean isDispatched = false;
+
+    ArrayList<ActionItem> actionItems;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
