@@ -25,6 +25,7 @@ import minium.co.core.log.Tracer;
 import minium.co.launcher2.R;
 import minium.co.launcher2.events.ImeActionDoneEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
+import minium.co.launcher2.search.SearchTextChangeHandler;
 
 /**
  * Created by Shahab on 4/26/2016.
@@ -42,7 +43,15 @@ public class SearchLayout extends LinearLayout {
 
     private boolean isWatching;
 
-    private String formattedText;
+    /**
+     * "@Text|@Al d. zo|Hello world
+     * text|@Alfred d. zone|Hello World;
+     * text|@Alfred d. zone|Hello world|;
+     * @Alfred d.zone|@Text|Hello world;
+     * Text|Alfred d. zone|Hello World;
+     */
+    private String formattedText = "@Alfred d.zone|@Text|Hello world ";
+
 
     public SearchLayout(Context context) {
         super(context);
@@ -61,7 +70,6 @@ public class SearchLayout extends LinearLayout {
 
     private void init() {
         isWatching = true;
-        formattedText = "";
         setOrientation(HORIZONTAL);
     }
 
@@ -69,7 +77,38 @@ public class SearchLayout extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         setupViews();
+        initFormattedText();
 
+    }
+
+    void initFormattedText() {
+        String[] splits = formattedText.split("\\|");
+
+        String newText = "";
+        for (String s : splits) {
+            String str = s.replaceAll("@", "");
+            str += " ";
+            newText += str;
+        }
+
+        if (!formattedText.endsWith("|")) newText = newText.substring(0, newText.length() - 1);
+
+        txtSearchBox.setText(newText);
+
+        int startPos = 0;
+        int endPos = 0;
+        for (String s : splits) {
+            endPos += s.length();
+            if (s.startsWith("@")) {
+                txtSearchBox.makeChip(startPos, endPos - 1, false);
+            } else {
+                endPos++; // space
+            }
+
+            startPos = endPos;
+        }
+
+        txtSearchBox.setSelection(newText.length());
     }
 
     @Trace(tag = TRACE_TAG)
@@ -120,46 +159,6 @@ public class SearchLayout extends LinearLayout {
         if (isWatching)
             EventBus.getDefault().post(new SearchTextChangedEvent(s.toString()));
 
-        updatedFormattedText(s.toString());
-    }
-
-    private void updatedFormattedText(String s) {
-        if (s.trim().isEmpty()) {
-            formattedText = "";
-        } else if (s.trim().length() < formattedText.length()) {
-            formattedText = formattedText.substring(0, s.trim().length() + 1);
-            Tracer.d("afterTextChanged: " + s + " formatted: " + formattedText);
-        }
-    }
-
-    @Trace(tag = TRACE_TAG)
-    public void setText(String text) {
-        txtSearchBox.setText(text);
-    }
-
-    @Trace(tag = TRACE_TAG)
-    public void makeChip(String text) {
-        if (formattedText.toLowerCase().startsWith(text.toLowerCase())) return;
-        isWatching = false;
-
-        formattedText += text + "|";
-
-        String[] splits = formattedText.split("\\|");
-        String newText = StringUtils.join(splits, " ") + " ";
-        txtSearchBox.setText(newText);
-
-
-        int startPos = 0;
-        int endPos = 0;
-        for (String s : splits) {
-            endPos += s.length();
-            txtSearchBox.makeChip(startPos, endPos, false);
-            endPos++; // space
-            startPos = endPos;
-        }
-        EventBus.getDefault().post(new SearchTextChangedEvent(txtSearchBox.getText().toString()));
-        isWatching = true;
-
-        txtSearchBox.setSelection(newText.length());
+        //updatedFormattedText(s.toString());
     }
 }

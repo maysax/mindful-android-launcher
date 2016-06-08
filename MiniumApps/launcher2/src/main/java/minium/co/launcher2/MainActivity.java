@@ -53,8 +53,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "MainActivity";
 
-    public static int SELECTED_OPTION;
-
     private int loadedFragmentId = -1;
 
     @Bean
@@ -142,11 +140,12 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     public void onContactNumberSelected(String contactNumber, String contactName) {
         UIUtils.toast(this, "Number: " + contactName);
         EventBus.getDefault().post(new MakeChipEvent(0, 0, contactName));
+        /*
         if (SELECTED_OPTION == 1)
             loadFragment(EnterMessageFragment_.builder().phoneNumber(contactNumber).build(), R.id.mainView);
         else if (SELECTED_OPTION == 2) {
             startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contactNumber)));
-        }
+        }*/
     }
 
     @Override

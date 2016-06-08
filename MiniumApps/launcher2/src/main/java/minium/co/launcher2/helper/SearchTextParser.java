@@ -30,6 +30,10 @@ public class SearchTextParser {
     public void onTextChanged(SearchTextChangedEvent event) {
         String txt = event.getText();
 
+        //EventBus.getDefault().post(new ActionAppendEvent(txt));
+
+
+        /*
         if (txt.length() == 4) {
             if (txt.toLowerCase().startsWith(KEY_TEXT)) {
                 MainActivity.SELECTED_OPTION = 1;
@@ -54,5 +58,6 @@ public class SearchTextParser {
             // TODO: may be loading same fragment over and over again
             EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));
         }
+        */
     }
 }
