@@ -50,7 +50,7 @@ public class SearchLayout extends LinearLayout {
      * @Alfred d.zone|@Text|Hello world;
      * Text|Alfred d. zone|Hello World;
      */
-    private String formattedText = "@Alfred d.zone|@Text|Hello world ";
+    private String formattedText = "";
 
 
     public SearchLayout(Context context) {
@@ -77,7 +77,6 @@ public class SearchLayout extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         setupViews();
-        initFormattedText();
 
     }
 
