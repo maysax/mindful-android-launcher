@@ -8,6 +8,7 @@ import de.greenrobot.event.EventBus;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.MainActivity;
+import minium.co.launcher2.events.FilterActionEvent;
 import minium.co.launcher2.events.FilterContactsEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MakeChipEvent;
@@ -29,6 +30,9 @@ public class SearchTextParser {
     @Trace(tag = TRACE_TAG)
     public void onTextChanged(SearchTextChangedEvent event) {
         String txt = event.getText();
+
+        EventBus.getDefault().post(new FilterActionEvent(txt));
+        EventBus.getDefault().post(new FilterContactsEvent(txt));
 
         //EventBus.getDefault().post(new ActionAppendEvent(txt));
 

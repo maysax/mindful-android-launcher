@@ -4,6 +4,7 @@ package minium.co.launcher2.ui;
 import android.app.Fragment;
 import android.content.Intent;
 import android.support.v4.app.TaskStackBuilder;
+import android.text.TextUtils;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -15,12 +16,14 @@ import org.xdty.preference.colorpicker.ColorPickerDialog;
 import org.xdty.preference.colorpicker.ColorPickerSwatch;
 
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
+import minium.co.launcher2.events.FilterActionEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MainItemClickedEvent;
 import minium.co.launcher2.flow.FlowActivity_;
@@ -40,6 +43,8 @@ public class MainFragment extends CoreFragment {
     DroidPrefs_ prefs;
 
     MainAdapter adapter;
+
+    private String mSearchString = null;
 
     public MainFragment() {
         // Required empty public constructor
@@ -169,6 +174,21 @@ public class MainFragment extends CoreFragment {
                 new MainListItem("{fa-cogs}", "Settings"),
                 new MainListItem("{fa-tint}", "Theme")
         };
+    }
+
+    @Subscribe
+    public void onEventFilterActionEvents(FilterActionEvent event) {
+        String newText = event.getText();
+        String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
+
+        if (mSearchString == null && newFilter == null) {
+            return;
+        }
+        if (mSearchString != null && mSearchString.equals(newFilter)) {
+            return;
+        }
+        mSearchString = newFilter;
+        adapter.getFilter().filter(mSearchString);
     }
 
 }
