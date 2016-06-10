@@ -42,6 +42,7 @@ public class FilterFragment extends CoreFragment {
     void afterViews() {
         loadFragment(R.id.actionFragment, MainFragment_.builder().build());
         loadFragment(R.id.contactsFragment, ContactsPickerFragment_.builder().build());
+        loadFragment(R.id.optionsFragment, OptionsFragment_.builder().build());
     }
 
     void loadFragment(int id, android.app.Fragment fragment) {

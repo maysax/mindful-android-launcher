@@ -12,25 +12,11 @@
         android:layout_height="wrap_content"
         tools:background="@color/material.core.green"/>
 
-    <View
-        android:background="@color/text_grey"
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="@dimen/margin.2"
-        android:layout_marginBottom="@dimen/margin.2"/>
-
     <FrameLayout
         android:id="@+id/contactsFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:background="@color/material.core.red"/>
-
-    <View
-        android:background="@color/text_grey"
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:layout_marginTop="@dimen/margin.2"
-        android:layout_marginBottom="@dimen/margin.2"/>
 
     <FrameLayout
         android:id="@+id/optionsFragment"
