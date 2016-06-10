@@ -33,11 +33,11 @@ public class SearchFragment extends CoreFragment {
 
     @Subscribe
     public void onEvent(MainItemClickedEvent event) {
-        searchLayout.setText(event.getText());
+        //searchLayout.setText(event.getText());
     }
 
     @Subscribe
     public void onEvent(MakeChipEvent event) {
-        searchLayout.makeChip(event.getText());
+        //searchLayout.makeChip(event.getText());
     }
 }

@@ -3,18 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     tools:background="@color/material.core.red">
 
     <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/bg_circle"
-        android:gravity="center"
-        android:text="{fa-comment-o 16dp}"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="{fa-comment-o 20dp}"/>
 
     <TextView
         android:id="@+id/text"
@@ -22,9 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_toRightOf="@id/icon"
-        android:paddingLeft="8dp"
+        android:paddingLeft="16dp"
         android:layout_centerVertical="true"
-        android:textSize="@dimen/text.size.medium"
+        android:textSize="@dimen/text.size.regular"
         android:text="@string/app_name"
         android:textColor="@color/text.primary"
         tools:text="Hello World"/>
