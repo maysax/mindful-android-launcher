@@ -1,9 +1,11 @@
 package minium.co.launcher2.ui;
 
+import android.app.Notification;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.EventLog;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -14,17 +16,25 @@ import android.widget.TextView;
 import com.eyeem.chips.ChipsEditText;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.data.ActionItemManager;
+import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.ImeActionDoneEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
+import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.search.SearchTextChangeHandler;
 
 /**
@@ -40,6 +50,9 @@ public class SearchLayout extends LinearLayout {
 
     @ViewById
     protected IconTextView btnClear;
+
+    @Bean
+    ActionItemManager manager;
 
     private boolean isWatching;
 
@@ -71,6 +84,18 @@ public class SearchLayout extends LinearLayout {
     private void init() {
         isWatching = true;
         setOrientation(HORIZONTAL);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -159,5 +184,24 @@ public class SearchLayout extends LinearLayout {
             EventBus.getDefault().post(new SearchTextChangedEvent(s.toString()));
 
         //updatedFormattedText(s.toString());
+    }
+
+    @Subscribe
+    public void onEvent(ActionItemUpdateEvent event) {
+        formattedTextBuilder();
+    }
+
+    private void formattedTextBuilder() {
+        isWatching = false;
+        List<ActionItem> items = manager.getItems();
+        String ret = "";
+        for (ActionItem item : items) {
+            if (item == ActionItem.TEXT || item == ActionItem.CALL || item == ActionItem.NOTE) {
+                ret += "@" + item.getActionText() + "|";
+            }
+        }
+        formattedText = ret;
+        initFormattedText();
+        isWatching = true;
     }
 }

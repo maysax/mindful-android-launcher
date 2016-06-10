@@ -1,18 +1,16 @@
 package minium.co.launcher2.helper;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.UiThread;
 
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.LogConfig;
-import minium.co.core.log.Tracer;
-import minium.co.launcher2.MainActivity;
+import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.FilterActionEvent;
 import minium.co.launcher2.events.FilterContactsEvent;
-import minium.co.launcher2.events.LoadFragmentEvent;
-import minium.co.launcher2.events.MakeChipEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
+import minium.co.launcher2.model.ActionItem;
 
 /**
  * Created by Shahab on 5/2/2016.
@@ -26,13 +24,20 @@ public class SearchTextParser {
     private final String KEY_CALL = "call";
     private final String KEY_NOTES = "note";
 
+    @Bean
+    ActionItemManager manager;
 
     @Trace(tag = TRACE_TAG)
     public void onTextChanged(SearchTextChangedEvent event) {
         String txt = event.getText();
 
-        EventBus.getDefault().post(new FilterActionEvent(txt));
-        EventBus.getDefault().post(new FilterContactsEvent(txt));
+        if (txt.isEmpty()) {
+            manager.clear();
+        } else {
+            EventBus.getDefault().post(new FilterActionEvent(txt));
+            EventBus.getDefault().post(new FilterContactsEvent(txt));
+        }
+
 
         //EventBus.getDefault().post(new ActionAppendEvent(txt));
 
@@ -63,5 +68,15 @@ public class SearchTextParser {
             EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));
         }
         */
+    }
+
+    public void onClickedActionItem(int position) {
+        if (position == 0) {
+            manager.setCurrent(ActionItem.TEXT);
+        } else if (position == 1) {
+            manager.setCurrent(ActionItem.CALL);
+        } else if (position == 2) {
+            manager.setCurrent(ActionItem.NOTE);
+        }
     }
 }

@@ -12,6 +12,7 @@ public enum ActionItem {
     TEXT ("Text", true, ""),
     NOTE ("Note", true, ""),
     CONTACT ("Contact", true, ""),
+    EMPTY("", false, ""),
     DATA ("Data", false, "");
 
     private boolean isChips;

@@ -3,11 +3,11 @@ package minium.co.launcher2.ui;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
@@ -25,9 +25,9 @@ import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
 import minium.co.launcher2.events.FilterActionEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
-import minium.co.launcher2.events.MainItemClickedEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActivityHelper;
+import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.model.MainListItem;
 
 /**
@@ -43,6 +43,9 @@ public class MainFragment extends CoreFragment {
     DroidPrefs_ prefs;
 
     MainAdapter adapter;
+
+    @Bean
+    SearchTextParser parser;
 
     private String mSearchString = null;
 
@@ -60,13 +63,13 @@ public class MainFragment extends CoreFragment {
     public void listItemClicked(int position) {
         switch (position) {
             case 0:
-                EventBus.getDefault().post(new MainItemClickedEvent("Text", 0));
+                parser.onClickedActionItem(0);
                 break;
             case 1:
-                EventBus.getDefault().post(new MainItemClickedEvent("Call", 1));
+                parser.onClickedActionItem(1);
                 break;
             case 2:
-                EventBus.getDefault().post(new MainItemClickedEvent("Note", 2));
+                parser.onClickedActionItem(2);
                 break;
             case 3:
                 if (!new ActivityHelper(getActivity()).openMessagingApp())

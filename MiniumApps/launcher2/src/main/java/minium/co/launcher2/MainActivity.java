@@ -29,6 +29,9 @@ import minium.co.launcher2.calllog.CallLogFragment_;
 import minium.co.launcher2.contactspicker.ContactDetailsFragment_;
 import minium.co.launcher2.contactspicker.ContactsPickerFragment_;
 import minium.co.launcher2.contactspicker.OnContactSelectedListener;
+import minium.co.launcher2.data.ActionItemManager;
+import minium.co.launcher2.data.ActionItemManager_;
+import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MakeChipEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
@@ -60,9 +63,10 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Bean
     SearchTextParser searchTextParser;
 
-    boolean isDispatched = false;
+    @Bean
+    ActionItemManager manager;
 
-    ArrayList<ActionItem> actionItems;
+    boolean isDispatched = false;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -181,6 +185,16 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
                 return true;
             default:
                 return super.dispatchKeyEvent(event);
+        }
+    }
+
+    @Subscribe
+    public void onEvent(ActionItemUpdateEvent event) {
+        ActionItem current = manager.getCurrent();
+        if (current == ActionItem.TEXT || current == ActionItem.CALL) {
+            loadFragment(ContactsPickerFragment_.builder().build());
+        } else if (current == ActionItem.EMPTY) {
+            loadFragment(FilterFragment_.builder().build());
         }
     }
 }
