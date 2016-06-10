@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="minium.co.launcher2.filter.FilterFragment">
+
+
+    <FrameLayout
+        android:id="@+id/actionFragment"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:background="@color/material.core.green"/>
+
+    <FrameLayout
+        android:id="@+id/contactsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        tools:background="@color/material.core.red"/>
+
+    <FrameLayout
+        android:id="@+id/optionsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:background="@color/material.core.orange"/>
+
+</LinearLayout>

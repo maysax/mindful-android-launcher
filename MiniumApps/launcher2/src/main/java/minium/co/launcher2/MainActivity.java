@@ -32,6 +32,8 @@ import minium.co.launcher2.contactspicker.OnContactSelectedListener;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.events.MakeChipEvent;
 import minium.co.launcher2.events.SearchTextChangedEvent;
+import minium.co.launcher2.filter.FilterFragment;
+import minium.co.launcher2.filter.FilterFragment_;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.messages.SmsObserver;
@@ -104,7 +106,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     }
 
     void loadMainView() {
-        loadFragment(MainFragment_.builder().build(), R.id.mainView);
+//        loadFragment(MainFragment_.builder().build(), R.id.mainView);
+        loadFragment(FilterFragment_.builder().build(), R.id.mainView);
     }
 
     void loadBottomView() {
