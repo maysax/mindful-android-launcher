@@ -105,7 +105,7 @@ public class ContactsPickerFragment extends ListFragment implements
         if (phoneLabel.equals(getString(R.string.label_multiple_numbers))) {
             mContactsListener.onContactNameSelected(id, name);
         } else {
-            mContactsListener.onContactNumberSelected(phoneNumber, name);
+            mContactsListener.onContactNumberSelected(name, phoneNumber);
         }
     }
 
