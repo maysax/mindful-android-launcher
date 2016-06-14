@@ -34,6 +34,7 @@ import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.ui.SearchFragment_;
+import minium.co.launcher2.ui.SendFragment_;
 import minium.co.launcher2.ui.TopFragment_;
 
 @Fullscreen
@@ -111,12 +112,22 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Subscribe
     public void onEvent(LoadFragmentEvent event) {
         if (loadedFragmentId == event.getId()) return;
-        if (event.getId() == LoadFragmentEvent.CONTACTS_LIST)
-            loadFragment(ContactsPickerFragment_.builder().build(), R.id.mainView);
-        else if (event.getId() == LoadFragmentEvent.MAIN_FRAGMENT)
-            loadMainView();
-        else if (event.getId() == LoadFragmentEvent.CALL_LOG)
-            loadFragment(CallLogFragment_.builder().build(), R.id.mainView);
+
+        switch (event.getId()) {
+            case LoadFragmentEvent.CONTACTS_LIST:
+                loadFragment(ContactsPickerFragment_.builder().build(), R.id.mainView);
+                break;
+            case LoadFragmentEvent.SEND:
+                loadFragment(SendFragment_.builder().build());
+                break;
+            default:
+            case LoadFragmentEvent.MAIN_FRAGMENT:
+                loadMainView();
+                break;
+            case LoadFragmentEvent.CALL_LOG:
+                loadFragment(CallLogFragment_.builder().build());
+                break;
+        }
 
         loadedFragmentId = event.getId();
     }
