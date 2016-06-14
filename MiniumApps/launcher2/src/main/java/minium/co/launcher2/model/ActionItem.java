@@ -1,19 +1,16 @@
 package minium.co.launcher2.model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 /**
  * Created by Shahab on 6/6/2016.
  */
 public enum ActionItem {
 
-    CALL ("Call", true, ""),
-    TEXT ("Text", true, ""),
-    NOTE ("Note", true, ""),
-    CONTACT ("Contact", true, ""),
-    EMPTY("", false, ""),
-    DATA ("Data", false, "");
+    CALL ("Call", true, true, ""),
+    TEXT ("Text", true, true, ""),
+    NOTE ("Note", true, true, ""),
+    CONTACT ("", true, false, ""),
+    EMPTY("", false, false, ""),
+    DATA ("", false, false, "");
 
     private boolean isChips;
 
@@ -21,14 +18,12 @@ public enum ActionItem {
 
     private String extra;
 
-    private int start;
+    private boolean isCompleted;
 
-    private int end;
-
-
-    ActionItem(String actionText, boolean isChips, String extra) {
+    ActionItem(String actionText, boolean isChips, boolean isCompleted, String extra) {
         this.actionText = actionText;
         this.isChips = isChips;
+        this.isCompleted = isCompleted;
         this.extra = extra;
     }
 
@@ -44,7 +39,29 @@ public enum ActionItem {
         return extra;
     }
 
-    public void setExtra(String extra) {
+    public ActionItem setExtra(String extra) {
         this.extra = extra;
+        return this;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public ActionItem setActionText(String actionText) {
+        this.actionText = actionText;
+        return this;
+    }
+
+    public void addActionText(char ch) {
+        this.actionText += ch;
+    }
+
+    public void removeActionText() {
+        this.actionText = actionText.substring(0, this.actionText.length() - 1);
     }
 }

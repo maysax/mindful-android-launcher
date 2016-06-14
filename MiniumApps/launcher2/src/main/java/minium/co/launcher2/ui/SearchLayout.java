@@ -1,15 +1,12 @@
 package minium.co.launcher2.ui;
 
-import android.app.Notification;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.EventLog;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,7 +17,6 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -28,14 +24,11 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.ImeActionDoneEvent;
-import minium.co.launcher2.events.SearchTextChangedEvent;
 import minium.co.launcher2.model.ActionItem;
-import minium.co.launcher2.search.SearchTextChangeHandler;
 
 /**
  * Created by Shahab on 4/26/2016.
@@ -64,6 +57,8 @@ public class SearchLayout extends LinearLayout {
      * Text|Alfred d. zone|Hello World;
      */
     private String formattedText = "";
+
+    private String previousText = "";
 
 
     public SearchLayout(Context context) {
@@ -132,6 +127,7 @@ public class SearchLayout extends LinearLayout {
             startPos = endPos;
         }
 
+        previousText = newText;
         txtSearchBox.setSelection(newText.length());
     }
 
@@ -168,7 +164,9 @@ public class SearchLayout extends LinearLayout {
         btnClear.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                isWatching = false;
                 txtSearchBox.getText().clear();
+                isWatching = true;
             }
         });
     }
@@ -180,10 +178,18 @@ public class SearchLayout extends LinearLayout {
             btnClear.setVisibility(INVISIBLE);
         }
 
-        if (isWatching)
-            EventBus.getDefault().post(new SearchTextChangedEvent(s.toString()));
+        if (isWatching) {
+            if (previousText.length() > s.length()) {
+                if (formattedText.endsWith("\\|")) {
+                    manager.onTextUpdate(' ', -2);
+                } else {
+                    manager.onTextUpdate(previousText.charAt(previousText.length() - 1), -1);
+                }
+            } else if (previousText.length() < s.length()) {
+                manager.onTextUpdate(s.charAt(s.length() - 1), 1);
+            }
+        }
 
-        //updatedFormattedText(s.toString());
     }
 
     @Subscribe
@@ -196,10 +202,15 @@ public class SearchLayout extends LinearLayout {
         List<ActionItem> items = manager.getItems();
         String ret = "";
         for (ActionItem item : items) {
-            if (item == ActionItem.TEXT || item == ActionItem.CALL || item == ActionItem.NOTE) {
-                ret += "@" + item.getActionText() + "|";
+            if (item.isCompleted()) {
+                if (item == ActionItem.TEXT || item == ActionItem.CALL || item == ActionItem.NOTE || item == ActionItem.CONTACT) {
+                    ret += "@" + item.getActionText() + "|";
+                }
+            } else {
+                ret += item.getActionText();
             }
         }
+        Tracer.d("Previous: " + formattedText + " New: " + ret);
         formattedText = ret;
         initFormattedText();
         isWatching = true;

@@ -3,38 +3,30 @@ package minium.co.launcher2.contactspicker;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.provider.ContactsContract;
-import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 
 import java.lang.ref.WeakReference;
@@ -43,7 +35,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.R;
-import minium.co.launcher2.events.FilterContactsEvent;
+import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.ImeActionDoneEvent;
 
 /**
@@ -177,7 +169,7 @@ public class ContactsPickerFragment extends ListFragment implements
     }
 
     @Subscribe
-    public void onQueryTextChange(FilterContactsEvent event) {
+    public void onQueryTextChange(ActionItemUpdateEvent event) {
         String newText = event.getText();
         String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
 

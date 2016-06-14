@@ -5,4 +5,13 @@ package minium.co.launcher2.events;
  */
 public class ActionItemUpdateEvent {
 
+    private String txt;
+
+    public ActionItemUpdateEvent(String txt) {
+        this.txt = txt;
+    }
+
+    public String getText() {
+        return txt;
+    }
 }

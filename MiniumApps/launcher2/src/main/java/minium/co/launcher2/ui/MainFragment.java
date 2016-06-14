@@ -23,7 +23,7 @@ import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
-import minium.co.launcher2.events.FilterActionEvent;
+import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActivityHelper;
@@ -180,7 +180,7 @@ public class MainFragment extends CoreFragment {
     }
 
     @Subscribe
-    public void onEventFilterActionEvents(FilterActionEvent event) {
+    public void onActionUpdateEvent(ActionItemUpdateEvent event) {
         String newText = event.getText();
         String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
 

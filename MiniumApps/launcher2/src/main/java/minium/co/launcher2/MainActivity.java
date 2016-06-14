@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 
@@ -15,8 +14,6 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.ArrayList;
-
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
@@ -26,23 +23,16 @@ import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
 import minium.co.launcher2.calllog.CallLogFragment_;
-import minium.co.launcher2.contactspicker.ContactDetailsFragment_;
 import minium.co.launcher2.contactspicker.ContactsPickerFragment_;
 import minium.co.launcher2.contactspicker.OnContactSelectedListener;
 import minium.co.launcher2.data.ActionItemManager;
-import minium.co.launcher2.data.ActionItemManager_;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
-import minium.co.launcher2.events.MakeChipEvent;
-import minium.co.launcher2.events.SearchTextChangedEvent;
-import minium.co.launcher2.filter.FilterFragment;
 import minium.co.launcher2.filter.FilterFragment_;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
-import minium.co.launcher2.ui.EnterMessageFragment_;
-import minium.co.launcher2.ui.MainFragment_;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.TopFragment_;
 
@@ -118,12 +108,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     }
 
-    @Trace(tag = TRACE_TAG)
-    @Subscribe
-    public void onEvent(SearchTextChangedEvent event) {
-        searchTextParser.onTextChanged(event);
-    }
-
     @Subscribe
     public void onEvent(LoadFragmentEvent event) {
         if (loadedFragmentId == event.getId()) return;
@@ -139,20 +123,19 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public void onContactNameSelected(long contactId, String contactName) {
-        EventBus.getDefault().post(new MakeChipEvent(0, 0, contactName));
-        loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).build(), R.id.mainView);
+//        EventBus.getDefault().post(new MakeChipEvent(0, 0, contactName));
+//        loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).build(), R.id.mainView);
+        manager.getCurrent().setActionText(contactName);
+        manager.fireEvent();
+        onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_NUMBER_LIST));
     }
 
     @Override
     public void onContactNumberSelected(String contactNumber, String contactName) {
         UIUtils.toast(this, "Number: " + contactName);
-        EventBus.getDefault().post(new MakeChipEvent(0, 0, contactName));
-        /*
-        if (SELECTED_OPTION == 1)
-            loadFragment(EnterMessageFragment_.builder().phoneNumber(contactNumber).build(), R.id.mainView);
-        else if (SELECTED_OPTION == 2) {
-            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contactNumber)));
-        }*/
+        manager.getCurrent().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
+        manager.fireEvent();
+        onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
     }
 
     @Override
@@ -191,10 +174,14 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Subscribe
     public void onEvent(ActionItemUpdateEvent event) {
         ActionItem current = manager.getCurrent();
-        if (current == ActionItem.TEXT || current == ActionItem.CALL) {
-            loadFragment(ContactsPickerFragment_.builder().build());
-        } else if (current == ActionItem.EMPTY) {
-            loadFragment(FilterFragment_.builder().build());
+        if (current == ActionItem.CONTACT) {
+            onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
         }
+//        else if (current == ActionItem.TEXT || current == ActionItem.CALL) {
+//            manager.add(ActionItem.CONTACT);
+//            loadFragment(ContactsPickerFragment_.builder().build());
+//        } else if (current == ActionItem.EMPTY) {
+//            loadFragment(FilterFragment_.builder().build());
+//        }
     }
 }
