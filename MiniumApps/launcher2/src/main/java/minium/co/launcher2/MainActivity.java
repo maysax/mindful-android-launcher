@@ -23,6 +23,7 @@ import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
 import minium.co.launcher2.calllog.CallLogFragment_;
+import minium.co.launcher2.contactspicker.ContactDetailsFragment_;
 import minium.co.launcher2.contactspicker.ContactsPickerFragment_;
 import minium.co.launcher2.contactspicker.OnContactSelectedListener;
 import minium.co.launcher2.data.ActionItemManager;
@@ -50,6 +51,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "MainActivity";
 
     private int loadedFragmentId = -1;
+    private long contactId;
 
     @Bean
     SearchTextParser searchTextParser;
@@ -117,6 +119,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             case LoadFragmentEvent.CONTACTS_LIST:
                 loadFragment(ContactsPickerFragment_.builder().build(), R.id.mainView);
                 break;
+            case LoadFragmentEvent.CONTACTS_NUMBER_LIST:
+                loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).contactName(manager.getCurrent().getActionText()).build());
+                break;
             case LoadFragmentEvent.SEND:
                 loadFragment(SendFragment_.builder().build());
                 break;
@@ -136,6 +141,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     public void onContactNameSelected(long contactId, String contactName) {
 //        EventBus.getDefault().post(new MakeChipEvent(0, 0, contactName));
 //        loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).build(), R.id.mainView);
+        this.contactId = contactId;
         manager.getCurrent().setActionText(contactName);
         manager.fireEvent();
         onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_NUMBER_LIST));

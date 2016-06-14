@@ -99,9 +99,10 @@ public class ContactsPickerFragment extends ListFragment implements
     public void onListItemClick(ListView l, View v, int position, long id) {
         ViewHolder viewHolder = (ViewHolder) v.getTag();
         String phoneNumber = viewHolder.phoneNumber.getText().toString();
+        String phoneLabel = viewHolder.phoneLabel.getText().toString();
         String name = viewHolder.contactName.getText().toString();
 
-        if (phoneNumber.equals(getString(R.string.label_multiple_numbers))) {
+        if (phoneLabel.equals(getString(R.string.label_multiple_numbers))) {
             mContactsListener.onContactNameSelected(id, name);
         } else {
             mContactsListener.onContactNumberSelected(phoneNumber, name);
@@ -312,9 +313,9 @@ public class ContactsPickerFragment extends ListFragment implements
                     viewHolder.phoneLabel.setVisibility(View.VISIBLE);
                     viewHolder.separator.setVisibility(View.VISIBLE);
                 } else {
-                    viewHolder.phoneNumber.setText(getString(R.string.label_multiple_numbers));
-                    viewHolder.phoneLabel.setVisibility(View.GONE);
-                    viewHolder.separator.setVisibility(View.GONE);
+                    viewHolder.phoneLabel.setText(getString(R.string.label_multiple_numbers));
+                    viewHolder.phoneNumber.setVisibility(View.INVISIBLE);
+                    viewHolder.separator.setVisibility(View.INVISIBLE);
                 }
 
             }

@@ -23,19 +23,16 @@
 package minium.co.launcher2.contactspicker;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.app.ListFragment;
-import android.widget.SimpleCursorAdapter;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -56,6 +53,9 @@ public class ContactDetailsFragment extends ListFragment {
 
     @FragmentArg
     long selectedContactId = 0;
+
+	@FragmentArg
+	String contactName;
 
     @AfterViews
     void afterViews() {
@@ -99,7 +99,7 @@ public class ContactDetailsFragment extends ListFragment {
 		String number 	= tv.getText().toString();
 		//String name	= txtName.getText().toString();
 		
-		mContactsListener.onContactNumberSelected(number, number);
+		mContactsListener.onContactNumberSelected(contactName, number);
 	}
 		
 	class PhoneNumbersAdapter extends SimpleCursorAdapter {
