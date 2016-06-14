@@ -31,9 +31,9 @@ import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.filter.FilterFragment_;
 import minium.co.launcher2.flow.FlowActivity_;
+import minium.co.launcher2.helper.ActionRouter;
 import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.messages.SmsObserver;
-import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.SendFragment_;
 import minium.co.launcher2.ui.TopFragment_;
@@ -58,6 +58,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Bean
     ActionItemManager manager;
+
+    @Bean
+    ActionRouter router;
 
     boolean isDispatched = false;
 
@@ -139,8 +142,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public void onContactNameSelected(long contactId, String contactName) {
-//        EventBus.getDefault().post(new MakeChipEvent(0, 0, contactName));
-//        loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).build(), R.id.mainView);
         this.contactId = contactId;
         manager.getCurrent().setActionText(contactName);
         manager.fireEvent();
@@ -190,15 +191,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Subscribe
     public void onEvent(ActionItemUpdateEvent event) {
-        ActionItem current = manager.getCurrent();
-        if (current == ActionItem.CONTACT) {
-            onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
-        }
-//        else if (current == ActionItem.TEXT || current == ActionItem.CALL) {
-//            manager.add(ActionItem.CONTACT);
-//            loadFragment(ContactsPickerFragment_.builder().build());
-//        } else if (current == ActionItem.EMPTY) {
-//            loadFragment(FilterFragment_.builder().build());
-//        }
+        router.onActionItemUpdate(this, event);
     }
 }
