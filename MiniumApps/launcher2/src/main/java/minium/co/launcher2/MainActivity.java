@@ -153,7 +153,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         UIUtils.toast(this, "Number: " + contactName);
         manager.getCurrent().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
         manager.fireEvent();
-        onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
     }
 
     @Override
@@ -191,6 +190,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Subscribe
     public void onEvent(ActionItemUpdateEvent event) {
-        router.onActionItemUpdate(this, event);
+        router.onActionItemUpdate(this, manager);
     }
 }

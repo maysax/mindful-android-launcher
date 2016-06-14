@@ -1,6 +1,5 @@
 package minium.co.launcher2.helper;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
 import minium.co.launcher2.MainActivity;
@@ -14,19 +13,18 @@ import minium.co.launcher2.model.ActionItem;
 @EBean
 public class ActionRouter {
 
-    @Bean
-    ActionItemManager manager;
-
-    public void onActionItemUpdate(MainActivity activity) {
+    public void onActionItemUpdate(MainActivity activity, ActionItemManager manager) {
         ActionItem current = manager.getCurrent();
-        if (current == ActionItem.CONTACT) {
-            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
+        if (current == ActionItem.TEXT) {
+
         }
-//        else if (current == ActionItem.TEXT || current == ActionItem.CALL) {
-//            manager.add(ActionItem.CONTACT);
-//            loadFragment(ContactsPickerFragment_.builder().build());
-//        } else if (current == ActionItem.EMPTY) {
-//            loadFragment(FilterFragment_.builder().build());
-//        }
+
+        if (current == ActionItem.CONTACT) {
+            if (current.isCompleted()) {
+                manager.add(ActionItem.DATA);
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+            } else
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
+        }
     }
 }

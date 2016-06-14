@@ -27,6 +27,10 @@ public class ActionItemManager {
         fireEvent("");
     }
 
+    public ActionItem get(int position) {
+        return actionItems.get(position);
+    }
+
     public void add(ActionItem item) {
         actionItems.add(item);
     }

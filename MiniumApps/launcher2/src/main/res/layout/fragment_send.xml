@@ -1,4 +1,4 @@
-<com.joanzapata.iconify.widget.IconTextView
+<android.support.v7.widget.AppCompatButton
     android:id="@+id/btnSend"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,6 +7,8 @@
     android:paddingStart="@dimen/margin.4"
     android:gravity="start|center_vertical"
     android:clickable="true"
-    android:text="{fa-paper-plane 16dp}   Send" />
+    android:drawableLeft="@drawable/ic_send_black_24dp"
+    android:drawablePadding="@dimen/margin.4"
+    android:text="Send" />
 
 
