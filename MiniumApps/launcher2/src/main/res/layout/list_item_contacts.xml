@@ -33,18 +33,19 @@
     style="@style/ListItem"
     tools:background="@color/material.core.red">
 
-    <com.joanzapata.iconify.widget.IconTextView
+    <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin.4"
-        android:text="{fa-user}"/>
+        android:src="@drawable/ic_person_black_24dp"/>
 
     <TextView
         android:id="@+id/display_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/icon"
+        android:layout_alignBaseline="@id/icon"
         android:singleLine="true"
         android:ellipsize="end"
         android:textColor="@color/text.primary"
