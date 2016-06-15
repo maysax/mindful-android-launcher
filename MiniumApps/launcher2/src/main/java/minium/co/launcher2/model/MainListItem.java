@@ -5,12 +5,18 @@ package minium.co.launcher2.model;
  */
 public class MainListItem {
 
+    int pos;
     String iconName;
     String text;
 
-    public MainListItem(String iconName, String text) {
+    public MainListItem(int pos, String iconName, String text) {
+        this.pos = pos;
         this.iconName = iconName;
         this.text = text;
+    }
+
+    public int getPosition() {
+        return pos;
     }
 
     public String getIconName() {

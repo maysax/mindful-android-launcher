@@ -30,9 +30,9 @@ import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.filter.FilterFragment_;
+import minium.co.launcher2.filter.OptionsFragment_;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActionRouter;
-import minium.co.launcher2.helper.SearchTextParser;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.SendFragment_;
@@ -52,9 +52,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     private int loadedFragmentId = -1;
     private long contactId;
-
-    @Bean
-    SearchTextParser searchTextParser;
 
     @Bean
     ActionItemManager manager;
@@ -134,6 +131,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
                 break;
             case LoadFragmentEvent.CALL_LOG:
                 loadFragment(CallLogFragment_.builder().build());
+                break;
+            case LoadFragmentEvent.OPTIONS:
+                loadFragment(OptionsFragment_.builder().build());
                 break;
         }
 

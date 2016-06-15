@@ -114,6 +114,7 @@ public class SearchLayout extends LinearLayout {
 
         txtSearchBox.setText(newText);
 
+
         int startPos = 0;
         int endPos = 0;
         for (String s : splits) {
@@ -165,7 +166,7 @@ public class SearchLayout extends LinearLayout {
             @Override
             public void onClick(View v) {
                 isWatching = false;
-                txtSearchBox.getText().clear();
+                manager.clear();
                 isWatching = true;
             }
         });
@@ -180,7 +181,7 @@ public class SearchLayout extends LinearLayout {
 
         if (isWatching) {
             if (previousText.length() > s.length()) {
-                if (formattedText.endsWith("\\|")) {
+                if (formattedText.endsWith("|")) {
                     manager.onTextUpdate(' ', -2);
                 } else {
                     manager.onTextUpdate(previousText.charAt(previousText.length() - 1), -1);
@@ -203,7 +204,7 @@ public class SearchLayout extends LinearLayout {
         String ret = "";
         for (ActionItem item : items) {
             if (item.isCompleted()) {
-                if (item == ActionItem.TEXT || item == ActionItem.CALL || item == ActionItem.NOTE || item == ActionItem.CONTACT) {
+                if (item.getType() == ActionItem.ActionItemType.TEXT || item.getType() == ActionItem.ActionItemType.CALL || item.getType() == ActionItem.ActionItemType.NOTE || item.getType() == ActionItem.ActionItemType.CONTACT) {
                     ret += "@" + item.getActionText() + "|";
                 }
             } else {

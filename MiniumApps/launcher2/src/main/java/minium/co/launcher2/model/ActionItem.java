@@ -3,14 +3,20 @@ package minium.co.launcher2.model;
 /**
  * Created by Shahab on 6/6/2016.
  */
-public enum ActionItem {
+public class ActionItem {
 
-    CALL ("Call", true, true, ""),
-    TEXT ("Text", true, true, ""),
-    NOTE ("Note", true, true, ""),
-    CONTACT ("", true, false, ""),
-    EMPTY("", false, false, ""),
-    DATA ("", false, false, "");
+//    CALL ("Call", true, true, ""),
+//    TEXT ("Text", true, true, ""),
+//    NOTE ("Note", true, true, ""),
+//    CONTACT ("", true, false, ""),
+//    EMPTY("", false, false, ""),
+//    DATA ("", false, false, "");
+
+    public enum ActionItemType {
+        CALL, TEXT, NOTE, CONTACT, EMPTY, DATA
+    }
+
+    private ActionItemType type;
 
     private boolean isChips;
 
@@ -20,7 +26,33 @@ public enum ActionItem {
 
     private boolean isCompleted;
 
-    ActionItem(String actionText, boolean isChips, boolean isCompleted, String extra) {
+    public ActionItem(ActionItemType type) {
+        this.type = type;
+
+        switch (type) {
+
+            case CALL:
+                init("Call", true, true, "");
+                break;
+            case TEXT:
+                init("Text", true, true, "");
+                break;
+            case NOTE:
+                init("Note", true, true, "");
+                break;
+            case CONTACT:
+                init("", true, false, "");
+                break;
+            case EMPTY:
+                init("", false, false, "");
+                break;
+            case DATA:
+                init("", false, false, "");
+                break;
+        }
+    }
+
+    private void init(String actionText, boolean isChips, boolean isCompleted, String extra) {
         this.actionText = actionText;
         this.isChips = isChips;
         this.isCompleted = isCompleted;
@@ -42,6 +74,10 @@ public enum ActionItem {
     public ActionItem setExtra(String extra) {
         this.extra = extra;
         return this;
+    }
+
+    public ActionItemType getType() {
+        return type;
     }
 
     public boolean isCompleted() {

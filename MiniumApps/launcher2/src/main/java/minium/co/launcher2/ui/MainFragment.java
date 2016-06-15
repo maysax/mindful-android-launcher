@@ -23,11 +23,12 @@ import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
 import minium.co.launcher2.adapters.MainAdapter;
+import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActivityHelper;
-import minium.co.launcher2.helper.SearchTextParser;
+import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.model.MainListItem;
 
 /**
@@ -42,10 +43,10 @@ public class MainFragment extends CoreFragment {
     @Pref
     DroidPrefs_ prefs;
 
-    MainAdapter adapter;
-
     @Bean
-    SearchTextParser parser;
+    ActionItemManager manager;
+
+    MainAdapter adapter;
 
     private String mSearchString = null;
 
@@ -61,15 +62,20 @@ public class MainFragment extends CoreFragment {
 
     @ItemClick(R.id.listView)
     public void listItemClicked(int position) {
+        position = adapter.getItem(position).getPosition();
+
         switch (position) {
             case 0:
-                parser.onClickedActionItem(0);
+                manager.setCurrent(new ActionItem(ActionItem.ActionItemType.TEXT));
+                manager.fireEvent();
                 break;
             case 1:
-                parser.onClickedActionItem(1);
+                manager.setCurrent(new ActionItem(ActionItem.ActionItemType.CALL));
+                manager.fireEvent();
                 break;
             case 2:
-                parser.onClickedActionItem(2);
+                manager.setCurrent(new ActionItem(ActionItem.ActionItemType.NOTE));
+                manager.fireEvent();
                 break;
             case 3:
                 if (!new ActivityHelper(getActivity()).openMessagingApp())
@@ -164,18 +170,18 @@ public class MainFragment extends CoreFragment {
 
     private MainListItem[] getListItems() {
         return new MainListItem[] {
-                new MainListItem("{fa-comment-o}", "Text"),
-                new MainListItem("{fa-phone}", "Call"),
-                new MainListItem("{fa-sticky-note-o}", "Add Note"),
-                new MainListItem("{fa-users}", "Messages"),
-                new MainListItem("{fa-phone}", "Call Log"),
-                new MainListItem("{fa-user}", "Address Book"),
-                new MainListItem("{fa-ban}", "Flow"),
-                new MainListItem("{fa-microphone}", "Voicemail"),
-                new MainListItem("{fa-sticky-note-o}", "Notes"),
-                new MainListItem("{fa-clock-o}", "Clock"),
-                new MainListItem("{fa-cogs}", "Settings"),
-                new MainListItem("{fa-tint}", "Theme")
+                new MainListItem(0, "{fa-comment-o}", "Text"),
+                new MainListItem(1, "{fa-phone}", "Call"),
+                new MainListItem(2, "{fa-sticky-note-o}", "Add Note"),
+                new MainListItem(3, "{fa-users}", "Messages"),
+                new MainListItem(4, "{fa-phone}", "Call Log"),
+                new MainListItem(5, "{fa-user}", "Address Book"),
+                new MainListItem(6, "{fa-ban}", "Flow"),
+                new MainListItem(7, "{fa-microphone}", "Voicemail"),
+                new MainListItem(8, "{fa-sticky-note-o}", "Notes"),
+                new MainListItem(9, "{fa-clock-o}", "Clock"),
+                new MainListItem(10, "{fa-cogs}", "Settings"),
+                new MainListItem(11, "{fa-tint}", "Theme")
         };
     }
 

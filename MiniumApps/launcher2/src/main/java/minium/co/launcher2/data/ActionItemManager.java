@@ -18,12 +18,12 @@ public class ActionItemManager {
     private List<ActionItem> actionItems = new ArrayList<>();
 
     public void init() {
-        actionItems.add(ActionItem.EMPTY);
+        actionItems.add(new ActionItem(ActionItem.ActionItemType.EMPTY));
     }
 
     public void clear() {
         actionItems.clear();
-        actionItems.add(ActionItem.EMPTY);
+        actionItems.add(new ActionItem(ActionItem.ActionItemType.EMPTY));
         fireEvent("");
     }
 
@@ -41,15 +41,6 @@ public class ActionItemManager {
 
     public void setCurrent(ActionItem item) {
         actionItems.set(actionItems.size() - 1, item);
-        nextRoute();
-
-    }
-
-    private void nextRoute() {
-        if (getCurrent() == ActionItem.TEXT) {
-            add(ActionItem.CONTACT);
-            fireEvent(getCurrent().getActionText());
-        }
     }
 
     public List<ActionItem> getItems() {
@@ -78,7 +69,7 @@ public class ActionItemManager {
             case -2:
                 removeLast();
                 removeLast();
-                if (actionItems.isEmpty()) actionItems.add(ActionItem.EMPTY);
+                if (actionItems.isEmpty()) actionItems.add(new ActionItem(ActionItem.ActionItemType.EMPTY));
                 break;
             case -1:
                 getCurrent().removeActionText();
@@ -89,5 +80,12 @@ public class ActionItemManager {
         }
 
         fireEvent(getCurrent().getActionText());
+    }
+
+    public boolean has(ActionItem.ActionItemType item) {
+        for (ActionItem actionItem : actionItems) {
+            if (actionItem.getType() == item) return true;
+        }
+        return false;
     }
 }

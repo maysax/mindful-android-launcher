@@ -10,6 +10,7 @@ public class LoadFragmentEvent {
     public static final int CALL_LOG = 3;
     public static final int CONTACTS_NUMBER_LIST = 4;
     public static final int SEND = 5;
+    public static final int OPTIONS = 6;
 
     private int id;
 
