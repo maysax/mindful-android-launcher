@@ -208,7 +208,7 @@ public class SearchLayout extends LinearLayout {
                         item.getType() == ActionItem.ActionItemType.CALL ||
                         item.getType() == ActionItem.ActionItemType.NOTE ||
                         item.getType() == ActionItem.ActionItemType.CONTACT) {
-                    
+
                     ret += "@";
                 }
 
