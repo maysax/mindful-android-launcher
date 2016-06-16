@@ -189,6 +189,7 @@ public class SearchLayout extends LinearLayout {
             } else if (previousText.length() < s.length()) {
                 manager.onTextUpdate(s.charAt(s.length() - 1), 1);
             }
+            manager.fireEvent();
         }
 
     }

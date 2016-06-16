@@ -55,11 +55,6 @@ public class ActionItemManager {
         EventBus.getDefault().post(new ActionItemUpdateEvent(txt));
     }
 
-    public void setActionText(String s) {
-        getCurrent().setActionText(s);
-        fireEvent(s);
-    }
-
     private void removeLast() {
         actionItems.remove(actionItems.size() - 1);
     }
@@ -78,8 +73,6 @@ public class ActionItemManager {
                 getCurrent().addActionText(ch);
                 break;
         }
-
-        fireEvent(getCurrent().getActionText());
     }
 
     public boolean has(ActionItem.ActionItemType item) {
