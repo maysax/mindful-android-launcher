@@ -59,7 +59,7 @@ public class ActionItemManager {
         actionItems.remove(actionItems.size() - 1);
     }
 
-    public void onTextUpdate(char ch, int val) {
+    public void onTextUpdate(String str, int val) {
         switch (val) {
             case -2:
                 removeLast();
@@ -70,7 +70,7 @@ public class ActionItemManager {
                 getCurrent().removeActionText();
                 break;
             case 1:
-                getCurrent().addActionText(ch);
+                getCurrent().addActionText(str);
                 break;
         }
     }

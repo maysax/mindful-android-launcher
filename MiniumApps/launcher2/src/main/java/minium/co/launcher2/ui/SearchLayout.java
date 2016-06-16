@@ -182,12 +182,12 @@ public class SearchLayout extends LinearLayout {
         if (isWatching) {
             if (previousText.length() > s.length()) {
                 if (formattedText.endsWith("|")) {
-                    manager.onTextUpdate(' ', -2);
+                    manager.onTextUpdate("", -2);
                 } else {
-                    manager.onTextUpdate(previousText.charAt(previousText.length() - 1), -1);
+                    manager.onTextUpdate(String.valueOf(previousText.charAt(previousText.length() - 1)), -1);
                 }
             } else if (previousText.length() < s.length()) {
-                manager.onTextUpdate(s.charAt(s.length() - 1), 1);
+                manager.onTextUpdate(s.subSequence(previousText.length(), s.length()).toString(), 1);
             }
             manager.fireEvent();
         }

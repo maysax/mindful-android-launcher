@@ -95,8 +95,8 @@ public class ActionItem {
         return this;
     }
 
-    public void addActionText(char ch) {
-        this.actionText += ch;
+    public void addActionText(String str) {
+        this.actionText += str;
     }
 
     public void removeActionText() {
