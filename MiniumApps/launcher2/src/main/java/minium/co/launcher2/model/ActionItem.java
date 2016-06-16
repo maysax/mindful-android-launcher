@@ -13,7 +13,7 @@ public class ActionItem {
 //    DATA ("", false, false, "");
 
     public enum ActionItemType {
-        CALL, TEXT, NOTE, CONTACT, EMPTY, DATA
+        CALL, TEXT, NOTE, CONTACT, EMPTY, DATA, END_OP
     }
 
     private ActionItemType type;
@@ -49,6 +49,8 @@ public class ActionItem {
             case DATA:
                 init("", false, false, "");
                 break;
+            case END_OP:
+                init("", false, true, "");
         }
     }
 

@@ -12,6 +12,7 @@ import org.androidannotations.annotations.EFragment;
 import minium.co.core.ui.CoreFragment;
 import minium.co.launcher2.R;
 import minium.co.launcher2.data.ActionItemManager;
+import minium.co.launcher2.model.ActionItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +34,7 @@ public class SendFragment extends CoreFragment {
         button.setClickable(false);
         button.setText("SENDING...");
         manager.getCurrent().setCompleted(true);
+        manager.add(new ActionItem(ActionItem.ActionItemType.END_OP));
         manager.fireEvent();
     }
 
