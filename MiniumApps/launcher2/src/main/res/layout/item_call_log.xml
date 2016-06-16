@@ -15,8 +15,8 @@
         android:singleLine="true"
         android:ellipsize="end"
         android:gravity="center_vertical"
-        android:textColor="@android:color/black"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/text.primary"
+        android:textSize="@dimen/text.size.regular"
         tools:text="John Doe"
         />
 
@@ -36,7 +36,8 @@
             android:id="@+id/txtCallDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="@dimen/text.size.small"
+            android:textColor="@color/text.secondary"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/margin.2"
             tools:text="5 days ago"/>
@@ -45,7 +46,8 @@
             android:id="@+id/txtCallDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="@dimen/text.size.small"
+            android:textColor="@color/text.secondary"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/margin.2"
             tools:text="(2 sec)"/>
