@@ -204,9 +204,15 @@ public class SearchLayout extends LinearLayout {
         String ret = "";
         for (ActionItem item : items) {
             if (item.isCompleted()) {
-                if (item.getType() == ActionItem.ActionItemType.TEXT || item.getType() == ActionItem.ActionItemType.CALL || item.getType() == ActionItem.ActionItemType.NOTE || item.getType() == ActionItem.ActionItemType.CONTACT) {
-                    ret += "@" + item.getActionText() + "|";
+                if (item.getType() == ActionItem.ActionItemType.TEXT ||
+                        item.getType() == ActionItem.ActionItemType.CALL ||
+                        item.getType() == ActionItem.ActionItemType.NOTE ||
+                        item.getType() == ActionItem.ActionItemType.CONTACT) {
+                    
+                    ret += "@";
                 }
+
+                ret += item.getActionText() + "|";
             } else {
                 ret += item.getActionText();
             }
