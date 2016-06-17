@@ -54,8 +54,10 @@ public class ActionRouter {
                 manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
                 activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
             }
-        } else
+        } else if (manager.getCurrent().getActionText().isEmpty())
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
+        else
+            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_NUMBER_LIST));
     }
 
     private void handleNote() {

@@ -39,6 +39,10 @@ public class ActionItemManager {
         return actionItems.get(actionItems.size() - 1);
     }
 
+    public ActionItem getFirst() {
+        return actionItems.get(0);
+    }
+
     public void setCurrent(ActionItem item) {
         actionItems.set(actionItems.size() - 1, item);
     }

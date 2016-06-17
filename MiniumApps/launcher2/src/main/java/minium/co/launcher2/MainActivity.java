@@ -34,6 +34,7 @@ import minium.co.launcher2.filter.OptionsFragment_;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActionRouter;
 import minium.co.launcher2.messages.SmsObserver;
+import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.SendFragment_;
 import minium.co.launcher2.ui.TopFragment_;
@@ -143,14 +144,15 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Override
     public void onContactNameSelected(long contactId, String contactName) {
         this.contactId = contactId;
+        manager.setCurrent(new ActionItem(ActionItem.ActionItemType.CONTACT));
         manager.getCurrent().setActionText(contactName);
         manager.fireEvent();
-        onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_NUMBER_LIST));
     }
 
     @Override
     public void onContactNumberSelected(String contactName, String contactNumber) {
         UIUtils.toast(this, "Number: " + contactName);
+        manager.setCurrent(new ActionItem(ActionItem.ActionItemType.CONTACT));
         manager.getCurrent().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
         manager.fireEvent();
     }
