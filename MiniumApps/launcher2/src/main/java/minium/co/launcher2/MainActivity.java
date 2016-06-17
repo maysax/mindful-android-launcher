@@ -35,6 +35,7 @@ import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActionRouter;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
+import minium.co.launcher2.ui.OptionsFragment2_;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.SendFragment_;
 import minium.co.launcher2.ui.TopFragment_;
@@ -137,6 +138,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             case LoadFragmentEvent.OPTIONS:
                 loadFragment(OptionsFragment_.builder().build());
                 break;
+            case LoadFragmentEvent.OPTIONS_2:
+                loadFragment(OptionsFragment2_.builder().build());
+                break;
         }
 
         loadedFragmentId = event.getId();
@@ -156,8 +160,12 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT) {
             manager.getCurrent().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT_NUMBER));
-        } else {
+        } else if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER){
             manager.getPrevious().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
+        } else {
+            manager.setCurrent(new ActionItem(ActionItem.ActionItemType.CONTACT));
+            manager.getCurrent().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
+            manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT_NUMBER));
         }
         manager.getCurrent().setActionText(contactNumber).setExtra(contactNumber).setCompleted(true);
         manager.fireEvent();

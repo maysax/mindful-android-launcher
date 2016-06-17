@@ -32,6 +32,13 @@ public class ActionItemManager {
         return actionItems.get(position);
     }
 
+    public ActionItem get(ActionItem.ActionItemType item) {
+        for (ActionItem actionItem : actionItems) {
+            if (actionItem.getType() == item) return actionItem;
+        }
+        return null;
+    }
+
     public void add(ActionItem item) {
         actionItems.add(item);
     }

@@ -11,6 +11,7 @@ public class LoadFragmentEvent {
     public static final int CONTACTS_NUMBER_LIST = 4;
     public static final int SEND = 5;
     public static final int OPTIONS = 6;
+    public static final int OPTIONS_2 = 7;
 
     private int id;
 

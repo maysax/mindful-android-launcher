@@ -42,8 +42,13 @@ public class ActionRouter {
     }
 
     private void handleText() {
-        manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
-        manager.fireEvent();
+        if (manager.has(ActionItem.ActionItemType.CONTACT)) {
+            manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
+            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+        } else {
+            manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
+            manager.fireEvent();
+        }
     }
 
     private void handleContacts() {
@@ -64,6 +69,8 @@ public class ActionRouter {
                 activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
             } else if (manager.has(ActionItem.ActionItemType.CALL)) {
                 activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.getCurrent().getExtra())));
+            } else {
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.OPTIONS_2));
             }
         } else {
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_NUMBER_LIST));
@@ -82,7 +89,12 @@ public class ActionRouter {
     }
 
     private void handleCall() {
-        manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
-        manager.fireEvent();
+        if (manager.has(ActionItem.ActionItemType.CONTACT)) {
+            activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.get(ActionItem.ActionItemType.CONTACT).getExtra())));
+        } else {
+            manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
+            manager.fireEvent();
+        }
+
     }
 }
