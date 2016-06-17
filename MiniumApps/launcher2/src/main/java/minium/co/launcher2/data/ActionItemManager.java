@@ -1,6 +1,7 @@
 package minium.co.launcher2.data;
 
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.UiThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,10 @@ public class ActionItemManager {
         actionItems.add(item);
     }
 
+    public ActionItem getPrevious() {
+        return actionItems.get(actionItems.size() - 2);
+    }
+
     public ActionItem getCurrent() {
         return actionItems.get(actionItems.size() - 1);
     }
@@ -51,6 +56,7 @@ public class ActionItemManager {
         return actionItems;
     }
 
+    @UiThread(delay = 100L)
     public void fireEvent() {
         fireEvent(getCurrent().getActionText());
     }
@@ -59,7 +65,7 @@ public class ActionItemManager {
         EventBus.getDefault().post(new ActionItemUpdateEvent(txt));
     }
 
-    private void removeLast() {
+    public void removeLast() {
         actionItems.remove(actionItems.size() - 1);
     }
 

@@ -121,7 +121,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
                 loadFragment(ContactsPickerFragment_.builder().build(), R.id.mainView);
                 break;
             case LoadFragmentEvent.CONTACTS_NUMBER_LIST:
-                loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).contactName(manager.getCurrent().getActionText()).build());
+                loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).contactName(manager.getPrevious()
+                        .getActionText()).build());
                 break;
             case LoadFragmentEvent.SEND:
                 loadFragment(SendFragment_.builder().build());
@@ -145,15 +146,20 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     public void onContactNameSelected(long contactId, String contactName) {
         this.contactId = contactId;
         manager.setCurrent(new ActionItem(ActionItem.ActionItemType.CONTACT));
-        manager.getCurrent().setActionText(contactName);
+        manager.getCurrent().setActionText(contactName).setCompleted(true);
         manager.fireEvent();
     }
 
     @Override
     public void onContactNumberSelected(String contactName, String contactNumber) {
-        UIUtils.toast(this, "Number: " + contactName);
-        manager.setCurrent(new ActionItem(ActionItem.ActionItemType.CONTACT));
-        manager.getCurrent().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
+        UIUtils.toast(this, "Name: " + contactName + "Number: " + contactNumber);
+        if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT) {
+            manager.getCurrent().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
+            manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT_NUMBER));
+        } else {
+            manager.getPrevious().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
+        }
+        manager.getCurrent().setActionText(contactNumber).setExtra(contactNumber).setCompleted(true);
         manager.fireEvent();
     }
 

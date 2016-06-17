@@ -31,6 +31,7 @@ public class ActionRouter {
             case TEXT: handleText(); break;
             case NOTE: handleNote(); break;
             case CONTACT: handleContacts(); break;
+            case CONTACT_NUMBER: handleContactNumber(); break;
             case EMPTY: handleEmpty(); break;
             case DATA: handleData(); break;
         }
@@ -47,17 +48,26 @@ public class ActionRouter {
 
     private void handleContacts() {
         if (manager.getCurrent().isCompleted()) {
-            if (manager.has(ActionItem.ActionItemType.CALL)) {
-                activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.getCurrent().getExtra())));
+            manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT_NUMBER));
+            manager.fireEvent();
+        } else
+            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
 
+    }
+
+    private void handleContactNumber() {
+        if (manager.getCurrent().isCompleted()) {
+            if (manager.has(ActionItem.ActionItemType.DATA)) {
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
             } else if (manager.has(ActionItem.ActionItemType.TEXT)) {
                 manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
                 activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+            } else if (manager.has(ActionItem.ActionItemType.CALL)) {
+                activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.getCurrent().getExtra())));
             }
-        } else if (manager.getCurrent().getActionText().isEmpty())
-            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
-        else
+        } else {
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_NUMBER_LIST));
+        }
     }
 
     private void handleNote() {

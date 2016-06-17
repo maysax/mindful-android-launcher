@@ -1,20 +1,20 @@
 package minium.co.launcher2.filter;
 
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.data.ActionItemManager;
+import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.model.OptionsListItem;
 
 /**
@@ -27,6 +27,9 @@ public class OptionsFragment extends CoreFragment {
     ListView listView;
 
     OptionsAdapter adapter;
+
+    @Bean
+    ActionItemManager manager;
 
 
     public OptionsFragment() {
@@ -43,6 +46,14 @@ public class OptionsFragment extends CoreFragment {
     public void listItemClicked(int position) {
         switch (position) {
             case 0:
+                String actionText = manager.getCurrent().getActionText();
+                manager.setCurrent(new ActionItem(ActionItem.ActionItemType.DATA));
+                manager.getCurrent().setActionText(actionText).setCompleted(true);
+                manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
+                manager.fireEvent();
+                break;
+            case 1:
+                UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
         }
     }
