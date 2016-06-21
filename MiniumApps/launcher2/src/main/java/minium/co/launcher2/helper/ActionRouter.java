@@ -49,14 +49,14 @@ public class ActionRouter {
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
         } else {
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
-            manager.fireEvent();
+            handleContacts();
         }
     }
 
     private void handleContacts() {
         if (manager.getCurrent().isCompleted()) {
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT_NUMBER));
-            manager.fireEvent();
+            handleContactNumber();
         } else
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_LIST));
 
@@ -92,11 +92,12 @@ public class ActionRouter {
     }
 
     private void handleCall() {
+
         if (manager.has(ActionItem.ActionItemType.CONTACT)) {
             activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.get(ActionItem.ActionItemType.CONTACT).getExtra())));
         } else {
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
-            manager.fireEvent();
+            handleContacts();
         }
 
     }

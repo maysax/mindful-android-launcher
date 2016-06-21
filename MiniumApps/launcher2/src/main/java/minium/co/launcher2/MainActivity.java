@@ -156,7 +156,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public void onContactNumberSelected(String contactName, String contactNumber) {
-        UIUtils.toast(this, "Name: " + contactName + "Number: " + contactNumber);
+        UIUtils.toast(this, "Selected " + contactName + " (" + contactNumber + ")");
         if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT) {
             manager.getCurrent().setActionText(contactName).setExtra(contactNumber).setCompleted(true);
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT_NUMBER));
