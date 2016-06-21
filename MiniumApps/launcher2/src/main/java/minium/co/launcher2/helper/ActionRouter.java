@@ -42,7 +42,9 @@ public class ActionRouter {
     }
 
     private void handleText() {
-        if (manager.has(ActionItem.ActionItemType.CONTACT)) {
+        if (manager.has(ActionItem.ActionItemType.CONTACT) && manager.has(ActionItem.ActionItemType.DATA)) {
+            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+        } else if (manager.has(ActionItem.ActionItemType.CONTACT)) {
             manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
         } else {
@@ -70,6 +72,7 @@ public class ActionRouter {
             } else if (manager.has(ActionItem.ActionItemType.CALL)) {
                 activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.getCurrent().getExtra())));
             } else {
+                manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
                 activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.OPTIONS_2));
             }
         } else {

@@ -50,6 +50,7 @@ public class OptionsFragment2 extends CoreFragment {
                 manager.fireEvent();
                 break;
             case 1:
+                manager.getCurrent().setCompleted(true);
                 manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
                 manager.fireEvent();
                 break;

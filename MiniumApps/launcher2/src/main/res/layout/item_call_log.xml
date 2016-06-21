@@ -16,7 +16,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:textColor="@color/text.primary"
-        android:textSize="@dimen/text.size.regular"
+        android:textSize="@dimen/text.size.medium"
         tools:text="John Doe"
         />
 
@@ -36,7 +36,7 @@
             android:id="@+id/txtCallDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text.size.small"
+            android:textSize="@dimen/text.size.regular"
             android:textColor="@color/text.secondary"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/margin.2"
@@ -46,7 +46,7 @@
             android:id="@+id/txtCallDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text.size.small"
+            android:textSize="@dimen/text.size.regular"
             android:textColor="@color/text.secondary"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/margin.2"
