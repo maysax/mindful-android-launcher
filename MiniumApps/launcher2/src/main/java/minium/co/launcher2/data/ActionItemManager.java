@@ -63,7 +63,7 @@ public class ActionItemManager {
         return actionItems;
     }
 
-    @UiThread(delay = 100L)
+    @UiThread(delay = 10L)
     public void fireEvent() {
         fireEvent(getCurrent().getActionText());
     }

@@ -16,7 +16,7 @@
         android:textSize="@dimen/text.size.large"
         android:textColor="@color/white"
         android:alpha=".78"
-        android:inputType="textCapSentences|textMultiLine"
+        android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
         android:hint="Make a selection"
         android:layout_gravity="center_vertical"
         android:gravity="start"
