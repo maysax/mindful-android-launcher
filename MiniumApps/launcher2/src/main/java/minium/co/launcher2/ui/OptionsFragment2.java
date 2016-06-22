@@ -50,9 +50,19 @@ public class OptionsFragment2 extends CoreFragment {
                 manager.fireEvent();
                 break;
             case 1:
-                manager.getCurrent().setCompleted(true);
-                manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
-                manager.fireEvent();
+                if (manager.getCurrent().getActionText().isEmpty()) {
+                    // Message not entered
+                    manager.setCurrent(new ActionItem(ActionItem.ActionItemType.TEXT));
+                    manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
+                    manager.fireEvent();
+
+                } else {
+                    // Message entered already
+                    manager.getCurrent().setCompleted(true);
+                    manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                    manager.fireEvent();
+                }
+
                 break;
         }
     }

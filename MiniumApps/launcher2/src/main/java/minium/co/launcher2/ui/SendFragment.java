@@ -34,7 +34,11 @@ public class SendFragment extends CoreFragment {
         button.setClickable(false);
         button.setText("SENDING...");
         manager.getCurrent().setCompleted(true);
+        if (!manager.has(ActionItem.ActionItemType.TEXT)) {
+            manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+        }
         manager.add(new ActionItem(ActionItem.ActionItemType.END_OP));
+
         manager.fireEvent();
     }
 

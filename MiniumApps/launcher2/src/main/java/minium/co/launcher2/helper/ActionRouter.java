@@ -111,7 +111,9 @@ public class ActionRouter {
     }
 
     private void handleData() {
-
+        if (manager.has(ActionItem.ActionItemType.CONTACT) && manager.has(ActionItem.ActionItemType.TEXT)) {
+            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+        }
     }
 
     private void handleCall() {
