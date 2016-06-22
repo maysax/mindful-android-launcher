@@ -178,6 +178,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         intent.putExtra("thread_id", Long.valueOf(threadId));
         try {
             startActivity(intent);
+            manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
             UIUtils.alert(this, "Minium-messages app not found.");

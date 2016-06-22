@@ -2,12 +2,16 @@ package minium.co.launcher2.helper;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.telephony.SmsManager;
 
 import org.androidannotations.annotations.EBean;
 
+import minium.co.core.log.Tracer;
+import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.LoadFragmentEvent;
+import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
 
 /**
@@ -34,6 +38,25 @@ public class ActionRouter {
             case CONTACT_NUMBER: handleContactNumber(); break;
             case EMPTY: handleEmpty(); break;
             case DATA: handleData(); break;
+            case END_OP: handleEndOp(); break;
+        }
+    }
+
+    private void handleEndOp() {
+        if (manager.has(ActionItem.ActionItemType.TEXT)) {
+            sendSMS(manager.get(ActionItem.ActionItemType.CONTACT_NUMBER).getActionText(), manager.get(ActionItem.ActionItemType.DATA).getActionText());
+        }
+    }
+
+    private void sendSMS(String phoneNumber, String message) {
+        try {
+            new SmsObserver(activity, phoneNumber, message).start();
+
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumber, null, message , null, null);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+            UIUtils.toast(activity, "The message will not get sent.");
         }
     }
 
