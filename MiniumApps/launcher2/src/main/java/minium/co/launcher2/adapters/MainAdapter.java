@@ -103,8 +103,22 @@ public class MainAdapter extends ArrayAdapter<MainListItem> implements Filterabl
             String filterableStr;
 
             for ( int i = 0; i < count; i++ ) {
-                filterableStr = currData.get(i).getText();
-                if (searchString.isEmpty() || filterableStr.toLowerCase().contains(searchString)) buildData.add(currData.get(i));
+
+                if (searchString.isEmpty()) {
+                    buildData.add(currData.get(i));
+                    
+                } else {
+                    filterableStr = currData.get(i).getText();
+                    String[] splits = filterableStr.split(" ");
+
+                    for ( String split : splits) {
+                        if (split.toLowerCase().startsWith(searchString)) {
+                            buildData.add(currData.get(i));
+                            break;
+                        }
+                    }
+                }
+//                if (searchString.isEmpty() || filterableStr.toLowerCase().contains(searchString)) buildData.add(currData.get(i));
             }
 
             ret.values = buildData;
