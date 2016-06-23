@@ -106,7 +106,7 @@ public class MainAdapter extends ArrayAdapter<MainListItem> implements Filterabl
 
                 if (searchString.isEmpty()) {
                     buildData.add(currData.get(i));
-                    
+
                 } else {
                     filterableStr = currData.get(i).getText();
                     String[] splits = filterableStr.split(" ");
@@ -118,7 +118,6 @@ public class MainAdapter extends ArrayAdapter<MainListItem> implements Filterabl
                         }
                     }
                 }
-//                if (searchString.isEmpty() || filterableStr.toLowerCase().contains(searchString)) buildData.add(currData.get(i));
             }
 
             ret.values = buildData;
