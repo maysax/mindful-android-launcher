@@ -60,6 +60,7 @@ public class OptionsFragment2 extends CoreFragment {
                     // Message entered already
                     manager.getCurrent().setCompleted(true);
                     manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                    manager.add(new ActionItem(ActionItem.ActionItemType.END_OP));
                     manager.fireEvent();
                 }
 
