@@ -89,6 +89,8 @@ dependencies {
     // http://joanzapata.com/android-iconify/
     compile "com.joanzapata.iconify:android-iconify-fontawesome:$iconifyVersion"
 
+    compile 'de.hdodenhof:circleimageview:2.0.0'
+
 
     /**
      * =================== Debug/Log ===================

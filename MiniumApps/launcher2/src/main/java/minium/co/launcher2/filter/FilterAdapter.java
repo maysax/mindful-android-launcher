@@ -5,15 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import minium.co.core.util.ThemeUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.model.ContactListItem;
 import minium.co.launcher2.model.MainListItem;
 
 /**
@@ -23,10 +26,25 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
 
     private Context context;
 
+    private List<MainListItem> originalData = null;
+    private List<MainListItem> filteredData = null;
+    private ItemFilter filter = new ItemFilter();
+
     public FilterAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
-        addAll(items);
+        originalData = items;
+        filteredData = items;
+    }
+
+    @Override
+    public int getCount() {
+        return filteredData.size();
+    }
+
+    @Override
+    public MainListItem getItem(int position) {
+        return filteredData.get(position);
     }
 
     @Override
@@ -173,5 +191,97 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
     static class OptionViewHolder {
         IconTextView icon;
         TextView text;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    public class ItemFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            String searchString = constraint.toString().toLowerCase();
+            FilterResults ret = new FilterResults();
+
+            int count = originalData.size();
+            List<MainListItem> buildData = new ArrayList<>();
+
+            for (int i = 0; i < count; i++) {
+
+                if (searchString.isEmpty()) {
+                    if (originalData.get(i).getType() == MainListItem.ItemType.ACTION_LIST_ITEM)
+                        buildData.add(originalData.get(i));
+                } else {
+                    String filterableString;
+                    String [] splits;
+
+                    switch (originalData.get(i).getType()) {
+
+                        case ACTION_LIST_ITEM:
+                            filterableString = originalData.get(i).getActionListItem().getText();
+                            splits = filterableString.split(" ");
+
+                            for (String str: splits) {
+                                if (str.toLowerCase().startsWith(searchString)) {
+                                    buildData.add(originalData.get(i));
+                                    break;
+                                }
+                            }
+                            break;
+                        case CONTACT_ITEM:
+                            filterableString = originalData.get(i).getContactListItem().getContactName();
+                            splits = filterableString.split(" ");
+                            boolean isAdded = false;
+
+                            for (String str: splits) {
+                                if (str.toLowerCase().startsWith(searchString)) {
+                                    buildData.add(originalData.get(i));
+                                    isAdded = true;
+                                    break;
+                                }
+                            }
+
+                            if (!isAdded) {
+                                searchString = phoneNumberString(searchString);
+                                List<ContactListItem.ContactNumber> numbers = originalData.get(i).getContactListItem().getNumbers();
+                                for (ContactListItem.ContactNumber number : numbers) {
+                                    String phoneNum = phoneNumberString(number.getNumber());
+                                    if (phoneNum.contains(searchString)) {
+                                        buildData.add(originalData.get(i));
+                                        isAdded = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                        case OPTION_ITEM:
+                            buildData.add(originalData.get(i));
+                            break;
+                    }
+                }
+            }
+
+            ret.values = buildData;
+            ret.count = buildData.size();
+
+            return ret;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (results.values != null) {
+                filteredData = (List<MainListItem>) results.values;
+            } else {
+                filteredData = new ArrayList<>(originalData);
+            }
+
+            notifyDataSetChanged();
+        }
+    }
+
+    private String phoneNumberString(String str) {
+        return str.replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\-", "");
     }
 }

@@ -26,6 +26,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -33,12 +34,14 @@
     style="@style/ListItem"
     tools:background="@color/material.core.red">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginRight="@dimen/margin.4"
-        android:src="@drawable/ic_person_black_24dp"/>
+        android:src="@drawable/ic_person_black_24dp"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/black"/>
 
     <TextView
         android:id="@+id/displayName"
