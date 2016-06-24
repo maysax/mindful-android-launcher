@@ -1,15 +1,15 @@
 package minium.co.launcher2.model;
 
 /**
- * Created by Shahab on 6/10/2016.
+ * Created by Shahab on 4/29/2016.
  */
-public class OptionsListItem {
+public class ActionListItem {
 
     int pos;
     String iconName;
     String text;
 
-    public OptionsListItem(int pos, String iconName, String text) {
+    public ActionListItem(int pos, String iconName, String text) {
         this.pos = pos;
         this.iconName = iconName;
         this.text = text;

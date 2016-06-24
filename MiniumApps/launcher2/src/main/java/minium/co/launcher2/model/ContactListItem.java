@@ -6,16 +6,16 @@ import java.util.List;
 /**
  * Created by Shahab on 6/23/2016.
  */
-public class ContactItem {
+public class ContactListItem {
 
     private long contactId;
     private String contactName;
     private List<ContactNumber> numbers;
 
-    public ContactItem() {
+    public ContactListItem() {
     }
 
-    public ContactItem(long contactId, String contactName) {
+    public ContactListItem(long contactId, String contactName) {
         this.contactId = contactId;
         this.contactName = contactName;
         this.numbers = new ArrayList<>();
@@ -33,6 +33,10 @@ public class ContactItem {
         return numbers;
     }
 
+    public ContactNumber getNumber() {
+        return numbers.get(0);
+    }
+
     public void addNumbers(String label, String number) {
         getNumbers().add(new ContactNumber(number, label));
     }
@@ -46,7 +50,7 @@ public class ContactItem {
 
     @Override
     public String toString() {
-        return "ContactItem{" +
+        return "ContactListItem{" +
                 "contactId=" + contactId +
                 ", contactName='" + contactName + '\'' +
                 ", numbers=" + numbers +

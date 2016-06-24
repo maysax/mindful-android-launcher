@@ -41,7 +41,7 @@
         android:src="@drawable/ic_person_black_24dp"/>
 
     <TextView
-        android:id="@+id/display_name"
+        android:id="@+id/displayName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/icon"
@@ -54,31 +54,31 @@
         />
 
     <TextView
-        android:id="@+id/phone_label"
+        android:id="@+id/phoneLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/display_name"
-        android:layout_alignLeft="@id/display_name"
+        android:layout_below="@id/displayName"
+        android:layout_alignLeft="@id/displayName"
         android:textSize="@dimen/text.size.small"
         android:textColor="@color/text.secondary"
         tools:text="Mobile"/>
 
-    <TextView android:id="@+id/label_separator"
+    <TextView android:id="@+id/labelSeparator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/phone_label"
+        android:layout_toRightOf="@id/phoneLabel"
         android:layout_marginEnd="5dp"
-        android:layout_alignBaseline="@id/phone_label"
+        android:layout_alignBaseline="@id/phoneLabel"
         android:textSize="@dimen/text.size.small"
         android:textColor="@color/text.secondary"
         android:text=":"/>
 
     <TextView
-        android:id="@+id/phone_number"
+        android:id="@+id/phoneNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/label_separator"
-        android:layout_alignBaseline="@id/label_separator"
+        android:layout_toRightOf="@id/labelSeparator"
+        android:layout_alignBaseline="@id/labelSeparator"
         android:singleLine="true"
         android:ellipsize="end"
         android:textSize="@dimen/text.size.small"

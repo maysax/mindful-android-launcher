@@ -1,29 +1,48 @@
 package minium.co.launcher2.model;
 
 /**
- * Created by Shahab on 4/29/2016.
+ * Created by Shahab on 6/24/2016.
  */
 public class MainListItem {
 
-    int pos;
-    String iconName;
-    String text;
+    private ActionListItem actionListItem;
+    private ContactListItem contactListItem;
+    private OptionsListItem optionsListItem;
 
-    public MainListItem(int pos, String iconName, String text) {
-        this.pos = pos;
-        this.iconName = iconName;
-        this.text = text;
+    public enum ItemType {
+        ACTION_LIST_ITEM, CONTACT_ITEM, OPTION_ITEM
     }
 
-    public int getPosition() {
-        return pos;
+    private ItemType type;
+
+    public MainListItem(ActionListItem actionListItem) {
+        this.actionListItem = actionListItem;
+        this.type = ItemType.ACTION_LIST_ITEM;
     }
 
-    public String getIconName() {
-        return iconName;
+    public MainListItem(ContactListItem contactListItem) {
+        this.contactListItem = contactListItem;
+        this.type = ItemType.CONTACT_ITEM;
     }
 
-    public String getText() {
-        return text;
+    public MainListItem(OptionsListItem optionsListItem) {
+        this.optionsListItem = optionsListItem;
+        this.type = ItemType.OPTION_ITEM;
+    }
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public ActionListItem getActionListItem() {
+        return actionListItem;
+    }
+
+    public ContactListItem getContactListItem() {
+        return contactListItem;
+    }
+
+    public OptionsListItem getOptionsListItem() {
+        return optionsListItem;
     }
 }

@@ -17,21 +17,21 @@ import java.util.List;
 
 import minium.co.core.util.ThemeUtils;
 import minium.co.launcher2.R;
-import minium.co.launcher2.model.MainListItem;
+import minium.co.launcher2.model.ActionListItem;
 
 /**
  * Created by Shahab on 4/29/2016.
  */
-public class MainAdapter extends ArrayAdapter<MainListItem> implements Filterable {
+public class MainAdapter extends ArrayAdapter<ActionListItem> implements Filterable {
 
     private Context context;
 
-    private List<MainListItem> originalData = null;
-    private List<MainListItem> filteredData = null;
+    private List<ActionListItem> originalData = null;
+    private List<ActionListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
 
 
-    public MainAdapter(Context context, MainListItem... items) {
+    public MainAdapter(Context context, ActionListItem... items) {
         super(context, 0);
         this.context = context;
         originalData = Arrays.asList(items);
@@ -44,7 +44,7 @@ public class MainAdapter extends ArrayAdapter<MainListItem> implements Filterabl
     }
 
     @Override
-    public MainListItem getItem(int position) {
+    public ActionListItem getItem(int position) {
         return filteredData.get(position);
     }
 
@@ -68,7 +68,7 @@ public class MainAdapter extends ArrayAdapter<MainListItem> implements Filterabl
             holder = (ViewHolder) convertView.getTag();
         }
 
-        MainListItem item = filteredData.get(position);
+        ActionListItem item = filteredData.get(position);
 
         if (item != null) {
             holder.icon.setText(item.getIconName());
@@ -96,9 +96,9 @@ public class MainAdapter extends ArrayAdapter<MainListItem> implements Filterabl
             String searchString = constraint.toString().toLowerCase();
             FilterResults ret = new FilterResults();
 
-            List<MainListItem> currData = originalData;
+            List<ActionListItem> currData = originalData;
             int count = currData.size();
-            List<MainListItem> buildData = new ArrayList<>();
+            List<ActionListItem> buildData = new ArrayList<>();
 
             String filterableStr;
 
@@ -129,7 +129,7 @@ public class MainAdapter extends ArrayAdapter<MainListItem> implements Filterabl
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             if (results.values != null)
-                filteredData = (List<MainListItem>) results.values;
+                filteredData = (List<ActionListItem>) results.values;
             else
                 filteredData = new ArrayList<>(originalData);
 

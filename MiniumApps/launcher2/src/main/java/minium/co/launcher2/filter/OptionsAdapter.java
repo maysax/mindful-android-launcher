@@ -11,7 +11,6 @@ import com.joanzapata.iconify.widget.IconTextView;
 
 import minium.co.core.util.ThemeUtils;
 import minium.co.launcher2.R;
-import minium.co.launcher2.model.MainListItem;
 import minium.co.launcher2.model.OptionsListItem;
 
 /**

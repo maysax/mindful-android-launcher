@@ -10,8 +10,8 @@
 
     <style name="ListItem">
         <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
-        <item name="android:paddingLeft">@dimen/margin.4</item>
-        <item name="android:paddingRight">@dimen/margin.4</item>
+        <item name="android:paddingLeft">@dimen/margin.6</item>
+        <item name="android:paddingRight">@dimen/margin.6</item>
     </style>
 
 </resources>

@@ -60,8 +60,8 @@ public class OptionsFragment extends CoreFragment {
 
     private OptionsListItem[] getListItems() {
         return new OptionsListItem[] {
-            new OptionsListItem("{fa-users}", "Select Contacts"),
-                new OptionsListItem("{fa-sticky-note-o}", "Add Note")
+            new OptionsListItem(0, "{fa-users}", "Select Contacts"),
+                new OptionsListItem(1, "{fa-sticky-note-o}", "Add Note")
         };
     }
 }

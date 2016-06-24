@@ -29,7 +29,7 @@ import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActivityHelper;
 import minium.co.launcher2.model.ActionItem;
-import minium.co.launcher2.model.MainListItem;
+import minium.co.launcher2.model.ActionListItem;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -168,20 +168,20 @@ public class MainFragment extends CoreFragment {
         }
     }
 
-    private MainListItem[] getListItems() {
-        return new MainListItem[] {
-                new MainListItem(0, "{fa-comment-o}", "Text"),
-                new MainListItem(1, "{fa-phone}", "Call"),
-                new MainListItem(2, "{fa-sticky-note-o}", "Add Note"),
-                new MainListItem(3, "{fa-users}", "Messages"),
-                new MainListItem(4, "{fa-phone}", "Call Log"),
-                new MainListItem(5, "{fa-user}", "Address Book"),
-                new MainListItem(6, "{fa-ban}", "Flow"),
-                new MainListItem(7, "{fa-microphone}", "Voicemail"),
-                new MainListItem(8, "{fa-sticky-note-o}", "Notes"),
-                new MainListItem(9, "{fa-clock-o}", "Clock"),
-                new MainListItem(10, "{fa-cogs}", "Settings"),
-                new MainListItem(11, "{fa-tint}", "Theme")
+    private ActionListItem[] getListItems() {
+        return new ActionListItem[] {
+                new ActionListItem(0, "{fa-comment-o}", "Text"),
+                new ActionListItem(1, "{fa-phone}", "Call"),
+                new ActionListItem(2, "{fa-sticky-note-o}", "Add Note"),
+                new ActionListItem(3, "{fa-users}", "Messages"),
+                new ActionListItem(4, "{fa-phone}", "Call Log"),
+                new ActionListItem(5, "{fa-user}", "Address Book"),
+                new ActionListItem(6, "{fa-ban}", "Flow"),
+                new ActionListItem(7, "{fa-microphone}", "Voicemail"),
+                new ActionListItem(8, "{fa-sticky-note-o}", "Notes"),
+                new ActionListItem(9, "{fa-clock-o}", "Clock"),
+                new ActionListItem(10, "{fa-cogs}", "Settings"),
+                new ActionListItem(11, "{fa-tint}", "Theme")
         };
     }
 

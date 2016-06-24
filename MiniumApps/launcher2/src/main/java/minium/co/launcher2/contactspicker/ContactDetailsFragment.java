@@ -76,7 +76,7 @@ public class ContactDetailsFragment extends ListFragment {
         ListAdapter adapter = new PhoneNumbersAdapter(this.getActivity(),
                 R.layout.list_item_phone_number, mCursor,
                 new String[] {Phone.TYPE, Phone.NUMBER },
-                new int[] { R.id.label, R.id.phone_number });
+                new int[] { R.id.label, R.id.phoneNumber});
         setListAdapter(adapter);
     }
 	
@@ -95,7 +95,7 @@ public class ContactDetailsFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		TextView tv 		= (TextView) v.findViewById(R.id.phone_number);
+		TextView tv 		= (TextView) v.findViewById(R.id.phoneNumber);
 		String number 	= tv.getText().toString();
 		//String name	= txtName.getText().toString();
 		

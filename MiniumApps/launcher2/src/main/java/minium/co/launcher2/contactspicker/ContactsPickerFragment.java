@@ -88,7 +88,7 @@ public class ContactsPickerFragment extends ListFragment implements
                 R.layout.list_item_contacts,
                 null,
                 new String[]{ContactsContract.Contacts.DISPLAY_NAME},
-                new int[]{R.id.display_name});
+                new int[]{R.id.displayName});
 
         setListAdapter(mAdapter);
         getListView().setFastScrollEnabled(true);
@@ -219,10 +219,10 @@ public class ContactsPickerFragment extends ListFragment implements
                 LayoutInflater inflater = getActivity().getLayoutInflater().cloneInContext(getActivity());
                 convertView = inflater.inflate(R.layout.list_item_contacts, parent, false);
                 viewHolder = new ViewHolder();
-                viewHolder.contactName = (TextView) convertView.findViewById(R.id.display_name);
-                viewHolder.phoneLabel = (TextView) convertView.findViewById(R.id.phone_label);
-                viewHolder.phoneNumber = (TextView) convertView.findViewById(R.id.phone_number);
-                viewHolder.separator = convertView.findViewById(R.id.label_separator);
+                viewHolder.contactName = (TextView) convertView.findViewById(R.id.displayName);
+                viewHolder.phoneLabel = (TextView) convertView.findViewById(R.id.phoneLabel);
+                viewHolder.phoneNumber = (TextView) convertView.findViewById(R.id.phoneNumber);
+                viewHolder.separator = convertView.findViewById(R.id.labelSeparator);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
