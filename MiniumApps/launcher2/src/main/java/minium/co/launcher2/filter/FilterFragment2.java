@@ -1,10 +1,7 @@
 package minium.co.launcher2.filter;
 
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Build;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.widget.ListView;
@@ -62,23 +59,6 @@ public class FilterFragment2 extends CoreFragment {
     List<MainListItem> items;
 
     private String mSearchString = null;
-
-    @SuppressLint("InlinedApi")
-    private static String DISPLAY_NAME_COMPAT = Build.VERSION.SDK_INT
-            >= Build.VERSION_CODES.HONEYCOMB ?
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY :
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME;
-
-
-    private static final String[] CONTACTS_SUMMARY_PROJECTION = new String[]{
-            ContactsContract.Data.CONTACT_ID,
-            DISPLAY_NAME_COMPAT,
-            ContactsContract.CommonDataKinds.Phone.HAS_PHONE_NUMBER,
-            ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY,
-            ContactsContract.CommonDataKinds.Phone.TYPE,
-            ContactsContract.CommonDataKinds.Phone.NUMBER,
-            ContactsContract.CommonDataKinds.Phone.LABEL
-    };
 
 
     public FilterFragment2() {

@@ -24,7 +24,7 @@ import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
 import minium.co.launcher2.calllog.CallLogFragment_;
 import minium.co.launcher2.contactspicker.ContactDetailsFragment_;
-import minium.co.launcher2.contactspicker.ContactsPickerFragment_;
+import minium.co.launcher2.contactspicker.ContactsPickerFragment2_;
 import minium.co.launcher2.contactspicker.OnContactSelectedListener;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
@@ -119,7 +119,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
         switch (event.getId()) {
             case LoadFragmentEvent.CONTACTS_LIST:
-                loadFragment(ContactsPickerFragment_.builder().build(), R.id.mainView);
+                loadFragment(ContactsPickerFragment2_.builder().build(), R.id.mainView);
                 break;
             case LoadFragmentEvent.CONTACTS_NUMBER_LIST:
                 loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).contactName(manager.getPrevious()
