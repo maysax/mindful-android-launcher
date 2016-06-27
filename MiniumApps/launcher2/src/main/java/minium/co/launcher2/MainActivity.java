@@ -35,9 +35,9 @@ import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActionRouter;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
+import minium.co.launcher2.ui.ContextualOptionFragment_;
 import minium.co.launcher2.ui.OptionsFragment2_;
 import minium.co.launcher2.ui.SearchFragment_;
-import minium.co.launcher2.ui.SendFragment_;
 import minium.co.launcher2.ui.TopFragment_;
 
 @Fullscreen
@@ -125,8 +125,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
                 loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).contactName(manager.getPrevious()
                         .getActionText()).build());
                 break;
-            case LoadFragmentEvent.SEND:
-                loadFragment(SendFragment_.builder().build());
+            case LoadFragmentEvent.CONTEXTUAL_OPTIONS:
+                loadFragment(ContextualOptionFragment_.builder().build());
                 break;
             default:
             case LoadFragmentEvent.MAIN_FRAGMENT:

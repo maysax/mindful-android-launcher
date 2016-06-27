@@ -9,9 +9,9 @@ public class LoadFragmentEvent {
     public static final int MAIN_FRAGMENT = 2;
     public static final int CALL_LOG = 3;
     public static final int CONTACTS_NUMBER_LIST = 4;
-    public static final int SEND = 5;
     public static final int OPTIONS = 6;
     public static final int OPTIONS_2 = 7;
+    public static final int CONTEXTUAL_OPTIONS = 8;
 
     private int id;
 

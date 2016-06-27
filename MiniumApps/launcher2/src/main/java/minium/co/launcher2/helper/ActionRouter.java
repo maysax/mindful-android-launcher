@@ -66,10 +66,10 @@ public class ActionRouter {
 
     private void handleText() {
         if (manager.has(ActionItem.ActionItemType.CONTACT) && manager.has(ActionItem.ActionItemType.DATA)) {
-            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
         } else if (manager.has(ActionItem.ActionItemType.CONTACT)) {
             manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
-            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
         } else {
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
             handleContacts();
@@ -88,10 +88,10 @@ public class ActionRouter {
     private void handleContactNumber() {
         if (manager.getCurrent().isCompleted()) {
             if (manager.has(ActionItem.ActionItemType.DATA)) {
-                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
             } else if (manager.has(ActionItem.ActionItemType.TEXT)) {
                 manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
-                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
             } else if (manager.has(ActionItem.ActionItemType.CALL)) {
                 activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.getCurrent().getExtra())));
             } else {
@@ -112,7 +112,7 @@ public class ActionRouter {
 
     private void handleData() {
         if (manager.has(ActionItem.ActionItemType.CONTACT) && manager.has(ActionItem.ActionItemType.TEXT)) {
-            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.SEND));
+            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
         }
     }
 
