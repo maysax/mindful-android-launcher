@@ -3,8 +3,6 @@ package minium.co.launcher2.filter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
@@ -32,6 +30,7 @@ import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
+import minium.co.launcher2.contactspicker.ContactsLoader;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
@@ -135,36 +134,10 @@ public class FilterFragment2 extends CoreFragment {
     }
 
     private void loadContacts() {
-        Uri contactUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        List<ContactListItem> contactListItems = new ContactsLoader().loadContacts(getActivity());
 
-        String selection = "((" + DISPLAY_NAME_COMPAT + " NOTNULL) AND ("
-                + ContactsContract.CommonDataKinds.Phone.HAS_PHONE_NUMBER + "=1) AND ("
-                + DISPLAY_NAME_COMPAT + " != '' ))";
-
-        String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
-
-        Cursor contactCursor = getActivity().getContentResolver().query(contactUri, CONTACTS_SUMMARY_PROJECTION, selection, null, sortOrder);
-
-        ContactListItem currItem = null;
-
-        if (contactCursor != null) {
-            while(contactCursor.moveToNext()) {
-                long id = contactCursor.getLong(contactCursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID));
-                String name = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                String label =  ContactsContract.CommonDataKinds.Phone.getTypeLabel(getResources(),
-                        contactCursor.getInt(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE)),
-                        contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))).toString();
-                String number = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
-                if (currItem == null || currItem.getContactId() != id) {
-                    currItem = new ContactListItem(id, name);
-                    items.add(new MainListItem(currItem));
-                }
-
-                currItem.addNumbers(label, number);
-
-            }
-            contactCursor.close();
+        for (ContactListItem item : contactListItems) {
+            items.add(new MainListItem(item));
         }
     }
 
