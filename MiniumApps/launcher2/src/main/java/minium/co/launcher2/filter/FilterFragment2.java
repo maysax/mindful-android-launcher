@@ -1,6 +1,7 @@
 package minium.co.launcher2.filter;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -28,6 +29,7 @@ import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
 import minium.co.launcher2.contactspicker.ContactsLoader;
+import minium.co.launcher2.contactspicker.OnContactSelectedListener;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
@@ -59,6 +61,8 @@ public class FilterFragment2 extends CoreFragment {
     List<MainListItem> items;
 
     private String mSearchString = null;
+
+    private OnContactSelectedListener mContactsListener;
 
 
     public FilterFragment2() {
@@ -234,13 +238,43 @@ public class FilterFragment2 extends CoreFragment {
                 }
                 break;
             case CONTACT_ITEM:
+                ContactListItem item = adapter.getItem(position).getContactListItem();
+                if (item.hasMultipleNumber()) {
+                    mContactsListener.onContactNameSelected(item.getContactId(), item.getContactName());
+                } else {
+                    mContactsListener.onContactNumberSelected(item.getContactName(), item.getNumber().getNumber());
+                }
                 break;
             case OPTION_ITEM:
+                position = adapter.getItem(position).getOptionsListItem().getPosition();
+
+                switch (position) {
+                    case 0:
+                        manager.getCurrent().setCompleted(true);
+                        manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                        manager.fireEvent();
+                        break;
+                    default:
+                        UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
+                        break;
+
+                }
                 break;
         }
 
 
 
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mContactsListener = (OnContactSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnContactSelectedListener");
+        }
     }
 
     @Subscribe

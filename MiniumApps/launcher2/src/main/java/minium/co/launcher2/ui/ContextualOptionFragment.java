@@ -17,6 +17,7 @@ import java.util.List;
 
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.filter.FilterAdapter;
@@ -70,12 +71,25 @@ public class ContextualOptionFragment extends CoreFragment {
     }
 
     private void loadOptions() {
+        items.clear();
+
         if (manager.has(ActionItem.ActionItemType.TEXT))
             items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send")));
-        else {
-            items.add(new MainListItem(new OptionsListItem(1, "{fa-pencil}", "Save Note")));
-            items.add(new MainListItem(new OptionsListItem(2, "{fa-user-plus}", "Create Contact")));
+        else if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
+            items.add(new MainListItem(new OptionsListItem(1, "{fa-phone}", "Call")));
+            items.add(new MainListItem(new OptionsListItem(2, "{fa-comment-o}", "Text")));
+            items.add(new MainListItem(new OptionsListItem(3, "{fa-user}", "View Contact")));
         }
+        else if (manager.getCurrent().getType() == ActionItem.ActionItemType.DATA) {
+            if (manager.has(ActionItem.ActionItemType.CONTACT_NUMBER)) {
+                items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send")));
+            } else {
+                items.add(new MainListItem(new OptionsListItem(4, "{fa-pencil}", "Save Note")));
+                items.add(new MainListItem(new OptionsListItem(5, "{fa-user-plus}", "Create Contact")));
+            }
+        }
+
+        if (adapter != null) adapter.notifyDataSetChanged();
 
     }
 
@@ -93,6 +107,18 @@ public class ContextualOptionFragment extends CoreFragment {
                 manager.add(new ActionItem(ActionItem.ActionItemType.END_OP));
 
                 manager.fireEvent();
+                break;
+            case 1:
+                manager.add(new ActionItem(ActionItem.ActionItemType.CALL));
+                manager.fireEvent();
+                break;
+            case 2:
+                manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                manager.fireEvent();
+                loadOptions();
+                break;
+            default:
+                UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
         }
 

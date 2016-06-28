@@ -96,7 +96,7 @@ public class ActionRouter {
                 activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.getCurrent().getExtra())));
             } else {
                 manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
-                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.OPTIONS_2));
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
             }
         } else {
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTACTS_NUMBER_LIST));

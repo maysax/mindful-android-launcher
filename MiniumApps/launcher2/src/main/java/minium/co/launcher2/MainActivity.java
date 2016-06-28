@@ -115,7 +115,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Subscribe
     public void onEvent(LoadFragmentEvent event) {
-        if (loadedFragmentId == event.getId()) return;
+        if (loadedFragmentId == event.getId()) {
+            return;
+        }
 
         switch (event.getId()) {
             case LoadFragmentEvent.CONTACTS_LIST:
