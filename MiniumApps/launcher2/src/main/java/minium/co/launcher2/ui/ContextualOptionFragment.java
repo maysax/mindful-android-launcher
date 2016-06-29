@@ -119,7 +119,13 @@ public class ContextualOptionFragment extends CoreFragment {
                 manager.fireEvent();
                 break;
             case 2:
-                manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                if (manager.getCurrent().getActionText().isEmpty()) {
+                    manager.setCurrent(new ActionItem(ActionItem.ActionItemType.TEXT));
+                } else {
+                    manager.getCurrent().setCompleted(true);
+                    manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                }
+
                 manager.fireEvent();
                 loadOptions();
                 break;
