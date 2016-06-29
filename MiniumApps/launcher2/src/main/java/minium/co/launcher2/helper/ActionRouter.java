@@ -106,10 +106,11 @@ public class ActionRouter {
     }
 
     private void handleNote() {
-        if (manager.getCurrent().isCompleted()) {
+        if (!manager.has(ActionItem.ActionItemType.DATA)) {
             manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
-            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.OPTIONS));
         }
+        activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
+
     }
 
     private void handleData() {

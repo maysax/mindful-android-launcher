@@ -1,6 +1,7 @@
 package minium.co.launcher2.ui;
 
 
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.widget.ListView;
 
@@ -79,7 +80,10 @@ public class ContextualOptionFragment extends CoreFragment {
 
         }
         else if (manager.getCurrent().getType() == ActionItem.ActionItemType.DATA) {
-            if (manager.getCurrent().getActionText().isEmpty()) {
+            if (manager.has(ActionItem.ActionItemType.NOTE)) {
+                items.add(new MainListItem(new OptionsListItem(4, "{fa-pencil}", "Save Note")));
+            }
+            else if (manager.getCurrent().getActionText().isEmpty()) {
                 if (manager.has(ActionItem.ActionItemType.CONTACT_NUMBER)) {
                     items.add(new MainListItem(new OptionsListItem(1, "{fa-phone}", "Call")));
                     items.add(new MainListItem(new OptionsListItem(2, "{fa-comment-o}", "Text")));
@@ -93,6 +97,8 @@ public class ContextualOptionFragment extends CoreFragment {
                     items.add(new MainListItem(new OptionsListItem(5, "{fa-user-plus}", "Create Contact")));
                 }
             }
+        } else if (manager.getCurrent().getType() == ActionItem.ActionItemType.NOTE) {
+            items.add(new MainListItem(new OptionsListItem(4, "{fa-pencil}", "Save Note")));
         }
 
         if (adapter != null) adapter.notifyDataSetChanged();
@@ -130,8 +136,12 @@ public class ContextualOptionFragment extends CoreFragment {
                 loadOptions();
                 break;
             case 4:
-                UIUtils.alert(getActivity(), getString(R.string.msg_noteSaved));
-                manager.clear();
+                UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        manager.clear();
+                    }
+                });
                 break;
             default:
                 UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
