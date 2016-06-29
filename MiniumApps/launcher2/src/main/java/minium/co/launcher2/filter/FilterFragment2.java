@@ -2,6 +2,7 @@ package minium.co.launcher2.filter;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -253,6 +254,15 @@ public class FilterFragment2 extends CoreFragment {
                         manager.getCurrent().setCompleted(true);
                         manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
                         manager.fireEvent();
+                        break;
+                    case 1:
+                        UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                manager.clear();
+                            }
+                        });
+
                         break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));

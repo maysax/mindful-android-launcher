@@ -129,6 +129,10 @@ public class ContextualOptionFragment extends CoreFragment {
                 manager.fireEvent();
                 loadOptions();
                 break;
+            case 4:
+                UIUtils.alert(getActivity(), getString(R.string.msg_noteSaved));
+                manager.clear();
+                break;
             default:
                 UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                 break;
