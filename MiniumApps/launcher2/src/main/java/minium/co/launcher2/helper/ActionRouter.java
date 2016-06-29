@@ -54,6 +54,8 @@ public class ActionRouter {
 
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message , null, null);
+
+            manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
             UIUtils.toast(activity, "The message will not get sent.");
@@ -113,6 +115,8 @@ public class ActionRouter {
     private void handleData() {
         if (manager.has(ActionItem.ActionItemType.CONTACT) && manager.has(ActionItem.ActionItemType.TEXT)) {
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
+        } else if (manager.getLength() == 1) {
+            handleEmpty();
         }
     }
 
@@ -120,6 +124,7 @@ public class ActionRouter {
 
         if (manager.has(ActionItem.ActionItemType.CONTACT)) {
             activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.get(ActionItem.ActionItemType.CONTACT).getExtra())));
+            manager.clear();
         } else {
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));
             handleContacts();

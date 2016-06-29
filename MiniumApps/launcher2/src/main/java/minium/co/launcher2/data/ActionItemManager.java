@@ -19,12 +19,12 @@ public class ActionItemManager {
     private List<ActionItem> actionItems = new ArrayList<>();
 
     public void init() {
-        actionItems.add(new ActionItem(ActionItem.ActionItemType.EMPTY));
+        actionItems.clear();
+        actionItems.add(new ActionItem(ActionItem.ActionItemType.DATA));
     }
 
     public void clear() {
-        actionItems.clear();
-        actionItems.add(new ActionItem(ActionItem.ActionItemType.EMPTY));
+        init();
         fireEvent("");
     }
 
@@ -97,5 +97,9 @@ public class ActionItemManager {
             if (actionItem.getType() == item) return true;
         }
         return false;
+    }
+
+    public int getLength() {
+        return actionItems.size();
     }
 }
