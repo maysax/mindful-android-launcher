@@ -71,7 +71,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
         loadTopView();
         loadSearchView();
-        loadMainView();
+//        loadMainView();
         loadBottomView();
     }
 

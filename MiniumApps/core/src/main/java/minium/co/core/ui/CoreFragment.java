@@ -9,6 +9,7 @@ import org.androidannotations.annotations.Trace;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
+import minium.co.core.log.Tracer;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +33,7 @@ public abstract class CoreFragment extends Fragment {
     @Trace(tag = TRACE_TAG)
     @Override
     public void onStart() {
+        Tracer.d("Fragment onStart(): " + this.getClass().getSimpleName());
         super.onStart();
         EventBus.getDefault().register(this);
     }
@@ -39,6 +41,7 @@ public abstract class CoreFragment extends Fragment {
     @Trace(tag = TRACE_TAG)
     @Override
     public void onStop() {
+        Tracer.d("Fragment onStop(): " + this.getClass().getSimpleName());
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
