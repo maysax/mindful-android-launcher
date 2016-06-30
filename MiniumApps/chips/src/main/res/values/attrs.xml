@@ -67,4 +67,22 @@
       <item name="bubble_textPadding">@dimen/default_bubble_text_pad</item>
    </style>
 
+   <style name="bubble_style_empty">
+      <item name="bubble_stateActive">@drawable/default_bubble_background</item>
+      <item name="bubble_statePressed">@drawable/default_bubble_background_pressed</item>
+      <item name="bubble_textSize">15sp</item>
+      <item name="bubble_textColor">@color/default_bubble_text_color</item>
+      <item name="bubble_textColorActive">@color/default_bubble_text_color_active</item>
+      <item name="bubble_textPadding">3dp</item>
+   </style>
+
+   <style name="bubble_style_selected">
+      <item name="bubble_stateActive">@drawable/greentext_background_active</item>
+      <item name="bubble_statePressed">@drawable/greentext_background_pressed</item>
+      <item name="bubble_textSize">15sp</item>
+      <item name="bubble_textColor">@color/default_bubble_text_color</item>
+      <item name="bubble_textColorActive">@color/default_bubble_text_color_active</item>
+      <item name="bubble_textPadding">3dp</item>
+   </style>
+
 </resources>

@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.eyeem.chips.BubbleStyle;
 import com.eyeem.chips.ChipsEditText;
 import com.joanzapata.iconify.widget.IconTextView;
 
@@ -105,7 +106,7 @@ public class SearchLayout extends LinearLayout {
 
         String newText = "";
         for (String s : splits) {
-            String str = s.replaceAll("@", "");
+            String str = s.replaceAll("@", "").replaceAll("#", "");
             str += " ";
             newText += str;
         }
@@ -115,11 +116,16 @@ public class SearchLayout extends LinearLayout {
         txtSearchBox.setText(newText);
 
 
+
         int startPos = 0;
         int endPos = 0;
         for (String s : splits) {
             endPos += s.length();
             if (s.startsWith("@")) {
+                txtSearchBox.setCurrentBubbleStyle(BubbleStyle.build(getContext(), R.style.bubble_style_selected));
+                txtSearchBox.makeChip(startPos, endPos - 1, false);
+            } else if (s.startsWith("#")) {
+                txtSearchBox.setCurrentBubbleStyle(BubbleStyle.build(getContext(), R.style.bubble_style_empty));
                 txtSearchBox.makeChip(startPos, endPos - 1, false);
             } else {
                 endPos++; // space
@@ -207,14 +213,25 @@ public class SearchLayout extends LinearLayout {
             if (item.isCompleted()) {
                 if (item.getType() == ActionItem.ActionItemType.TEXT ||
                         item.getType() == ActionItem.ActionItemType.CALL ||
-                        item.getType() == ActionItem.ActionItemType.NOTE ||
-                        item.getType() == ActionItem.ActionItemType.CONTACT ||
-                        item.getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
+                        item.getType() == ActionItem.ActionItemType.NOTE) {
 
                     ret += "@";
-                }
+                    ret += item.getActionText() + "|";
+                } else if (item.getType() == ActionItem.ActionItemType.CONTACT) {
+                    if (manager.has(ActionItem.ActionItemType.CONTACT_NUMBER) && manager.get(ActionItem.ActionItemType.CONTACT_NUMBER).isCompleted()) {
+                        ret += "@";
+                    } else {
+                        ret += "#";
+                    }
+                    ret += item.getActionText() + "|";
+                } else if (item.getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
+                    if (!manager.has(ActionItem.ActionItemType.CONTACT)) {
+                        ret += "@";
+                        ret += item.getActionText() + "|";
+                    }
+                } else
+                    ret += item.getActionText() + "|";
 
-                ret += item.getActionText() + "|";
             } else {
                 ret += item.getActionText();
             }
