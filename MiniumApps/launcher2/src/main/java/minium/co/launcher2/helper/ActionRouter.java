@@ -54,8 +54,6 @@ public class ActionRouter {
 
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(phoneNumber, null, message , null, null);
-
-            manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
             UIUtils.toast(activity, "The message will not get sent.");

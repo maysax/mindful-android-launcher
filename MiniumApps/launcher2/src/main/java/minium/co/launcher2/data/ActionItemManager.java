@@ -81,7 +81,7 @@ public class ActionItemManager {
             case -2:
                 removeLast();
                 removeLast();
-                if (actionItems.isEmpty()) actionItems.add(new ActionItem(ActionItem.ActionItemType.EMPTY));
+                if (actionItems.isEmpty()) init();
                 break;
             case -1:
                 getCurrent().removeActionText();

@@ -105,6 +105,13 @@ public class ContextualOptionFragment extends CoreFragment {
 
     }
 
+    private void loadSendingOption() {
+        items.clear();
+
+        items.add(new MainListItem(new OptionsListItem(6, "{fa-spinner spin}", "Sending...")));
+        if (adapter != null) adapter.notifyDataSetChanged();
+    }
+
     @ItemClick(R.id.listView)
     public void listItemClicked(int position) {
         position = adapter.getItem(position).getOptionsListItem().getPosition();
@@ -112,11 +119,13 @@ public class ContextualOptionFragment extends CoreFragment {
         switch (position) {
             case 0:
                 // TODO: progress bar
+                loadSendingOption();
                 manager.getCurrent().setCompleted(true);
                 if (!manager.has(ActionItem.ActionItemType.TEXT)) {
                     manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
                 }
                 manager.add(new ActionItem(ActionItem.ActionItemType.END_OP));
+
 
                 manager.fireEvent();
                 break;
@@ -142,6 +151,8 @@ public class ContextualOptionFragment extends CoreFragment {
                         manager.clear();
                     }
                 });
+                break;
+            case 6:
                 break;
             default:
                 UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
