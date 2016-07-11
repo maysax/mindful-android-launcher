@@ -273,6 +273,7 @@ public class FilterFragment2 extends CoreFragment {
                         } else {
                             startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
                         }
+                        manager.clear();
                         break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
