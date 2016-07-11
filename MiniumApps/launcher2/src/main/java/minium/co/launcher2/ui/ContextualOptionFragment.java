@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.telephony.PhoneNumberUtils;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.Background;
@@ -173,6 +174,14 @@ public class ContextualOptionFragment extends CoreFragment {
                         manager.clear();
                     }
                 });
+                break;
+            case 5:
+                String inputStr = manager.getCurrent().getActionText();
+                if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
+                    startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
+                } else {
+                    startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
+                }
                 break;
             case 6:
                 break;

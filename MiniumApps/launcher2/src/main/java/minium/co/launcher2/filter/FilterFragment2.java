@@ -4,7 +4,9 @@ package minium.co.launcher2.filter;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.widget.ListView;
 
@@ -263,6 +265,14 @@ public class FilterFragment2 extends CoreFragment {
                             }
                         });
 
+                        break;
+                    case 2:
+                        String inputStr = manager.getCurrent().getActionText();
+                        if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
+                            startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
+                        } else {
+                            startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
+                        }
                         break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
