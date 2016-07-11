@@ -19,11 +19,13 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.data.ActionItemManager;
+import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.filter.FilterAdapter;
 import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.model.MainListItem;
@@ -92,9 +94,15 @@ public class ContextualOptionFragment extends CoreFragment {
                     items.add(new MainListItem(new OptionsListItem(2, "{fa-comment-o}", "Text")));
                     items.add(new MainListItem(new OptionsListItem(3, "{fa-user}", "View Contact")));
                 }
-            } else {
+            }
+            else {
                 if (manager.has(ActionItem.ActionItemType.CONTACT_NUMBER)) {
-                    items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send")));
+                    if (manager.has(ActionItem.ActionItemType.TEXT))
+                        items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send")));
+                    else {
+                        items.add(new MainListItem(new OptionsListItem(2, "{fa-comment-o}", "Text")));
+                        items.add(new MainListItem(new OptionsListItem(3, "{fa-user}", "View Contact")));
+                    }
                 } else {
                     items.add(new MainListItem(new OptionsListItem(4, "{fa-pencil}", "Save Note")));
                     items.add(new MainListItem(new OptionsListItem(5, "{fa-user-plus}", "Create Contact")));
@@ -103,6 +111,8 @@ public class ContextualOptionFragment extends CoreFragment {
         } else if (manager.getCurrent().getType() == ActionItem.ActionItemType.NOTE) {
             items.add(new MainListItem(new OptionsListItem(4, "{fa-pencil}", "Save Note")));
         }
+
+        notifyDataSetChanged();
     }
 
     @UiThread
@@ -171,5 +181,12 @@ public class ContextualOptionFragment extends CoreFragment {
                 break;
         }
 
+    }
+
+    @Subscribe
+    public void onActionUpdateEvent(ActionItemUpdateEvent event) {
+        if (manager.getCurrent().getType() == ActionItem.ActionItemType.DATA) {
+            loadOptions();
+        }
     }
 }
