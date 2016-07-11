@@ -99,7 +99,7 @@ public class ContactDetailsFragment extends ListFragment {
 		String number 	= tv.getText().toString();
 		//String name	= txtName.getText().toString();
 		
-		mContactsListener.onContactNumberSelected(contactName, number);
+		mContactsListener.onContactNumberSelected(selectedContactId, contactName, number);
 	}
 		
 	class PhoneNumbersAdapter extends SimpleCursorAdapter {

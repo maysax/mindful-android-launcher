@@ -2,6 +2,9 @@ package minium.co.launcher2.ui;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.widget.ListView;
 
@@ -100,9 +103,11 @@ public class ContextualOptionFragment extends CoreFragment {
         } else if (manager.getCurrent().getType() == ActionItem.ActionItemType.NOTE) {
             items.add(new MainListItem(new OptionsListItem(4, "{fa-pencil}", "Save Note")));
         }
+    }
 
+    @UiThread
+    void notifyDataSetChanged() {
         if (adapter != null) adapter.notifyDataSetChanged();
-
     }
 
     private void loadSendingOption() {
@@ -144,6 +149,12 @@ public class ContextualOptionFragment extends CoreFragment {
                     manager.fireEvent();
                     loadSendingOption();
                 }
+                break;
+            case 3:
+                Intent contactView = new Intent(Intent.ACTION_VIEW);
+                Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, manager.get(ActionItem.ActionItemType.CONTACT).getExtra());
+                contactView.setData(uri);
+                startActivity(contactView);
                 break;
             case 4:
                 UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {

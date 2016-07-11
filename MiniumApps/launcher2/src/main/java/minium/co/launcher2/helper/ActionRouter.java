@@ -125,8 +125,8 @@ public class ActionRouter {
 
     private void handleCall() {
 
-        if (manager.has(ActionItem.ActionItemType.CONTACT)) {
-            activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.get(ActionItem.ActionItemType.CONTACT).getExtra())));
+        if (manager.has(ActionItem.ActionItemType.CONTACT_NUMBER)) {
+            activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.get(ActionItem.ActionItemType.CONTACT_NUMBER).getActionText())));
             manager.clear();
         } else {
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT));

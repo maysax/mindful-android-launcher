@@ -35,5 +35,5 @@ public interface OnContactSelectedListener {
 	 * @param contactNumber String with the number which was selected
 	 * @param contactName Name of the contact which was selected as String
 	 */
-	void onContactNumberSelected(String contactNumber, String contactName);
+	void onContactNumberSelected(long contactId, String contactNumber, String contactName);
 }

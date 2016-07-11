@@ -105,14 +105,14 @@ public class ContactsPickerFragment extends ListFragment implements
         if (phoneLabel.equals(getString(R.string.label_multiple_numbers))) {
             mContactsListener.onContactNameSelected(id, name);
         } else {
-            mContactsListener.onContactNumberSelected(name, phoneNumber);
+            mContactsListener.onContactNumberSelected(id, name, phoneNumber);
         }
     }
 
     @Subscribe
     public void onImeActionDone(ImeActionDoneEvent event) {
         Tracer.d("onImeActionDone " + mSearchString);
-        mContactsListener.onContactNumberSelected(mSearchString, mSearchString);
+        mContactsListener.onContactNumberSelected(0, mSearchString, mSearchString);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class ContactsPickerFragment extends ListFragment implements
                 ListView lView = getListView();
                 lView.performItemClick(lView.getChildAt(0), 0, lView.getAdapter().getItemId(0));
             } else {
-                mContactsListener.onContactNumberSelected(mSearchString.trim(), mSearchString.trim());
+                mContactsListener.onContactNumberSelected(0, mSearchString.trim(), mSearchString.trim());
             }
         }
     }

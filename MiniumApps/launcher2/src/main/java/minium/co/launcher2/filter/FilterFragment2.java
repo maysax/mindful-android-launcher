@@ -243,7 +243,7 @@ public class FilterFragment2 extends CoreFragment {
                 if (item.hasMultipleNumber()) {
                     mContactsListener.onContactNameSelected(item.getContactId(), item.getContactName());
                 } else {
-                    mContactsListener.onContactNumberSelected(item.getContactName(), item.getNumber().getNumber());
+                    mContactsListener.onContactNumberSelected(item.getContactId(), item.getContactName(), item.getNumber().getNumber());
                 }
                 break;
             case OPTION_ITEM:
