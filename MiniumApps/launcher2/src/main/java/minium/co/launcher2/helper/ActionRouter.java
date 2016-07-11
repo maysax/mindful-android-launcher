@@ -66,7 +66,10 @@ public class ActionRouter {
 
     private void handleText() {
         if (manager.has(ActionItem.ActionItemType.CONTACT) && manager.has(ActionItem.ActionItemType.DATA)) {
-            activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
+            if (manager.get(ActionItem.ActionItemType.DATA).isCompleted()) {
+                handleEndOp();
+            } else
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
         } else if (manager.has(ActionItem.ActionItemType.CONTACT)) {
             manager.add(new ActionItem(ActionItem.ActionItemType.DATA));
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));

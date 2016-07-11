@@ -136,13 +136,14 @@ public class ContextualOptionFragment extends CoreFragment {
             case 2:
                 if (manager.getCurrent().getActionText().isEmpty()) {
                     manager.setCurrent(new ActionItem(ActionItem.ActionItemType.TEXT));
+                    manager.fireEvent();
+                    loadOptions();
                 } else {
                     manager.getCurrent().setCompleted(true);
                     manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                    manager.fireEvent();
+                    loadSendingOption();
                 }
-
-                manager.fireEvent();
-                loadOptions();
                 break;
             case 4:
                 UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {
