@@ -121,6 +121,8 @@ public class ActionRouter {
         } else if (manager.getLength() == 1) {
             if (manager.getCurrent().getActionText().isEmpty())
                 handleEmpty();
+            else
+                activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));
         }
     }
 

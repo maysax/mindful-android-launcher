@@ -79,6 +79,11 @@ public class ActionItemManager {
     public void onTextUpdate(String str, int val) {
         switch (val) {
             case -2:
+                if (getCurrent().getType() == ActionItem.ActionItemType.DATA && !getCurrent().getActionText().isEmpty()) {
+                    getCurrent().removeActionText();
+                    getCurrent().setCompleted(false);
+                    break;
+                }
                 removeLast();
                 if (getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
                     removeLast();

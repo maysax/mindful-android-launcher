@@ -96,7 +96,7 @@ public class FilterFragment extends CoreFragment {
     void loadView() {
         adapter = new FilterAdapter(getActivity(), items);
         listView.setAdapter(adapter);
-        adapter.getFilter().filter("");
+        adapter.getFilter().filter(manager.getCurrent().getActionText());
     }
 
     private void loadOptions() {
