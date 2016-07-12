@@ -80,7 +80,22 @@ public class ActionItemManager {
         switch (val) {
             case -2:
                 removeLast();
-                removeLast();
+                if (getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
+                    removeLast();
+                }
+
+                if (getLength() == 1) {
+                    removeLast();
+                } else if (getCurrent().getType() == ActionItem.ActionItemType.TEXT ||
+                        getCurrent().getType() == ActionItem.ActionItemType.CALL ||
+                        getCurrent().getType() == ActionItem.ActionItemType.NOTE) {
+                    removeLast();
+                }
+                else {
+                    getCurrent().setActionText("").setCompleted(false);
+                }
+
+                fireEvent();
                 if (actionItems.isEmpty()) init();
                 break;
             case -1:

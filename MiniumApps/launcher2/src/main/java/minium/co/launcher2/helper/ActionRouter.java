@@ -119,7 +119,8 @@ public class ActionRouter {
         if (manager.has(ActionItem.ActionItemType.CONTACT) && manager.has(ActionItem.ActionItemType.TEXT)) {
             activity.onEvent(new LoadFragmentEvent(LoadFragmentEvent.CONTEXTUAL_OPTIONS));
         } else if (manager.getLength() == 1) {
-            handleEmpty();
+            if (manager.getCurrent().getActionText().isEmpty())
+                handleEmpty();
         }
     }
 
