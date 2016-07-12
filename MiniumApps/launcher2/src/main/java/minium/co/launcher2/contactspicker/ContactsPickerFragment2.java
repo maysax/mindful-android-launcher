@@ -28,7 +28,7 @@ import minium.co.launcher2.model.ContactListItem;
 /**
  * A simple {@link Fragment} subclass.
  */
-@EFragment(R.layout.fragment_filter_2)
+@EFragment(R.layout.fragment_filter)
 public class ContactsPickerFragment2 extends CoreFragment {
 
     @ViewById

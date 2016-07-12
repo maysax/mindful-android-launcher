@@ -29,7 +29,7 @@ import minium.co.launcher2.contactspicker.OnContactSelectedListener;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
-import minium.co.launcher2.filter.FilterFragment2_;
+import minium.co.launcher2.filter.FilterFragment_;
 import minium.co.launcher2.filter.OptionsFragment_;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActionRouter;
@@ -106,7 +106,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     void loadMainView() {
 //        loadFragment(MainFragment_.builder().build(), R.id.mainView);
-        loadFragment(FilterFragment2_.builder().build(), R.id.mainView);
+        loadFragment(FilterFragment_.builder().build(), R.id.mainView);
     }
 
     void loadBottomView() {

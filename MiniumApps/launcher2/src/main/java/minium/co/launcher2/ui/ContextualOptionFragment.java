@@ -35,7 +35,7 @@ import minium.co.launcher2.model.OptionsListItem;
 /**
  * A simple {@link Fragment} subclass.
  */
-@EFragment(R.layout.fragment_filter_2)
+@EFragment(R.layout.fragment_filter)
 public class ContextualOptionFragment extends CoreFragment {
 
     @ViewById
