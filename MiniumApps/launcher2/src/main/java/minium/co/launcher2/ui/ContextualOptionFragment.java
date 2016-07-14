@@ -101,8 +101,7 @@ public class ContextualOptionFragment extends CoreFragment {
                     if (manager.has(ActionItem.ActionItemType.TEXT))
                         items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send")));
                     else {
-                        items.add(new MainListItem(new OptionsListItem(2, "{fa-comment-o}", "Text")));
-                        items.add(new MainListItem(new OptionsListItem(3, "{fa-user}", "View Contact")));
+                        items.add(new MainListItem(new OptionsListItem(2, "{fa-comment-o}", "Send Message")));
                     }
                 } else {
                     items.add(new MainListItem(new OptionsListItem(4, "{fa-pencil}", "Save Note")));
