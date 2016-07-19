@@ -77,6 +77,10 @@ public class ActionItemManager {
     }
 
     public void onTextUpdate(String str, int val) {
+        if (getLength() == 0) {
+            clear();
+            return;
+        }
         switch (val) {
             case -2:
                 if (getCurrent().getType() == ActionItem.ActionItemType.DATA && !getCurrent().getActionText().isEmpty()) {
