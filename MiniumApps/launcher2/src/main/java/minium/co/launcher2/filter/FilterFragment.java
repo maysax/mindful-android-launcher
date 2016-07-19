@@ -100,7 +100,7 @@ public class FilterFragment extends CoreFragment {
     }
 
     private void loadOptions() {
-        items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send Text")));
+        items.add(new MainListItem(new OptionsListItem(0, "{fa-comment}", "Send as SMS")));
         items.add(new MainListItem(new OptionsListItem(1, "{fa-pencil}", "Save Note")));
         items.add(new MainListItem(new OptionsListItem(2, "{fa-user-plus}", "Create Contact")));
     }
@@ -109,7 +109,8 @@ public class FilterFragment extends CoreFragment {
         items.add(new MainListItem(new ActionListItem(0, "{fa-comment}", "Text")));
         items.add(new MainListItem(new ActionListItem(1, "{fa-phone}", "Call")));
         items.add(new MainListItem(new ActionListItem(2, "{fa-sticky-note}", "Note")));
-        items.add(new MainListItem(new ActionListItem(3, "{fa-users}", "Messages")));
+        items.add(new MainListItem(new ActionListItem(3, "{fa-" +
+                "users}", "Messages")));
         items.add(new MainListItem(new ActionListItem(4, "{fa-phone}", "Call Log")));
         items.add(new MainListItem(new ActionListItem(5, "{fa-user}", "Contacts")));
         items.add(new MainListItem(new ActionListItem(6, "{fa-ban}", "Flow")));
