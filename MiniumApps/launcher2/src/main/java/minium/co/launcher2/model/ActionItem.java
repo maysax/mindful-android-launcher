@@ -103,6 +103,7 @@ public class ActionItem {
     }
 
     public void removeActionText() {
+        if (actionText == null || actionText.isEmpty()) return;
         this.actionText = actionText.substring(0, this.actionText.length() - 1);
     }
 }
