@@ -81,7 +81,7 @@ public class ContextualOptionFragment extends CoreFragment {
         items.clear();
 
         if (manager.has(ActionItem.ActionItemType.TEXT))
-            items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send")));
+            items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send Message")));
         else if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
 
         }
@@ -98,11 +98,7 @@ public class ContextualOptionFragment extends CoreFragment {
             }
             else {
                 if (manager.has(ActionItem.ActionItemType.CONTACT_NUMBER)) {
-                    if (manager.has(ActionItem.ActionItemType.TEXT))
-                        items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send")));
-                    else {
-                        items.add(new MainListItem(new OptionsListItem(2, "{fa-comment-o}", "Send Message")));
-                    }
+                    items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send Message")));
                 } else {
                     items.add(new MainListItem(new OptionsListItem(4, "{fa-pencil}", "Save Note")));
                     items.add(new MainListItem(new OptionsListItem(5, "{fa-user-plus}", "Create Contact")));
