@@ -54,14 +54,17 @@ public class FlowActivity extends CoreActivity {
     @ViewById
     TextView txtTimer;
 
+    @ViewById
+    TextView txtRemainingTime;
+
     @Extra
     boolean isVolumeUpInit = false;
 
     private boolean isAnimationRunning;
     private boolean isServiceRunning = false;
     private float progress;
-    private final float SPAN = 60 * 1000f;
-    private final float INTERVAL = 15 * 1000f;
+    private final float SPAN = 4 * 60 * 1000f;
+    private final float INTERVAL = 4 * 15 * 1000f;
     private final int ANIMATION_DURATION = 100;
     private int SCREEN_HEIGHT;
 
@@ -97,10 +100,14 @@ public class FlowActivity extends CoreActivity {
         if (progress < SPAN)
             updateUI();
         else {
-            FlowNotificationService_.intent(this).extra("start", false).start();
-            isServiceRunning = false;
-            onCompletion();
+            endFlow();
         }
+    }
+
+    void endFlow() {
+        FlowNotificationService_.intent(this).extra("start", false).start();
+        isServiceRunning = false;
+        onCompletion();
     }
 
     @UiThread(delay = 300)
@@ -188,6 +195,9 @@ public class FlowActivity extends CoreActivity {
         });
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.start();
+
+        long gap = (long) (SPAN - progress);
+        txtRemainingTime.setText(String.format(Locale.US, "%dm", (gap / 60000) + (gap % 60000 == 0 ? 0 : 1)));
     }
 
     private void setPercentage(int percentage) {
@@ -207,7 +217,7 @@ public class FlowActivity extends CoreActivity {
 
             long gap = (long) (SPAN - progress);
             long target = Calendar.getInstance().getTimeInMillis() + gap;
-            txtTimer.setText(new SimpleDateFormat("hh:mm:ss a", Locale.US).format(new Date(target)));
+            txtTimer.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(new Date(target)));
 
             animate();
         }
@@ -216,6 +226,12 @@ public class FlowActivity extends CoreActivity {
     boolean onBackKeyPressed(int keyCode, KeyEvent keyEvent) {
         if (isServiceRunning) {
             Tracer.d("onKeyUp: Back");
+            UIUtils.confirm(this, "Want to end your flow?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    progress = SPAN;
+                }
+            });
             return true;
         }
         else
