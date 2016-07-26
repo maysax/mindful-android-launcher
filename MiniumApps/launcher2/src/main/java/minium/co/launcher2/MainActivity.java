@@ -35,6 +35,7 @@ import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActionRouter;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
+import minium.co.launcher2.notificationscheduler.NotificationSchedulerFragment_;
 import minium.co.launcher2.ui.ContextualOptionFragment_;
 import minium.co.launcher2.ui.OptionsFragment2_;
 import minium.co.launcher2.ui.SearchFragment_;
@@ -142,6 +143,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
                 break;
             case LoadFragmentEvent.OPTIONS_2:
                 loadFragment(OptionsFragment2_.builder().build());
+                break;
+            case LoadFragmentEvent.NOTIFICATION_SCHEDULER:
+                loadFragment(NotificationSchedulerFragment_.builder().build());
                 break;
         }
 
