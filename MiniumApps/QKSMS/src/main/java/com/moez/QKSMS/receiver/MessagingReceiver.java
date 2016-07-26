@@ -19,6 +19,8 @@ import com.moez.QKSMS.transaction.SmsHelper;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 import org.mistergroup.muzutozvednout.ShouldIAnswerBinder;
 
+import minium.co.core.log.Tracer;
+
 public class MessagingReceiver extends BroadcastReceiver {
     private final String TAG = "MessagingReceiver";
 
@@ -33,7 +35,7 @@ public class MessagingReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG, "onReceive");
+        Tracer.d("Messages: onReceive");
         abortBroadcast();
 
         mContext = context;
