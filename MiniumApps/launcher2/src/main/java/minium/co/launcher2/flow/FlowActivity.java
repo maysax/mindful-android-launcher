@@ -3,7 +3,6 @@ package minium.co.launcher2.flow;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -217,7 +215,7 @@ public class FlowActivity extends CoreActivity {
 
             long gap = (long) (SPAN - progress);
             long target = Calendar.getInstance().getTimeInMillis() + gap;
-            txtTimer.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(new Date(target)));
+            txtTimer.setText(new SimpleDateFormat("h:mm a", Locale.US).format(new Date(target)));
 
             animate();
         }

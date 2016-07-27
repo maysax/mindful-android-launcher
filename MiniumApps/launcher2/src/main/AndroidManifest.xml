@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <!-- TODO: using it for flow, we might not need this -->
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
 
     <application
         android:name=".app.Launcher2App_"
@@ -26,8 +26,8 @@
 
         <activity
             android:name=".MainActivity_"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,18 +43,23 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".flow.FlowActivity_"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".flow.FlowActivity_"
+            android:screenOrientation="portrait" />
 
-        <service android:name=".flow.FlowNotificationService_"
-            android:exported="true"
+        <service
+            android:name=".flow.FlowNotificationService_"
             android:enabled="true"
+            android:exported="true"
             android:label="@string/title.ebbFlowManager"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name=".notificationscheduler.NotificationScheduleReceiver_" android:enabled="true"/>
     </application>
 
 </manifest>
