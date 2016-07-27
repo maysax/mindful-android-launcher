@@ -1,7 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="minium.co.launcher2.notificationscheduler.NotificationSchedulerFragment">
 
@@ -12,4 +13,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/txtMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text.size.medium"
+        tools:text="Hello world"
+        android:gravity="center"/>
+
+</LinearLayout>
