@@ -44,6 +44,7 @@ dependencies {
     compile project(':color-picker')
 
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
+    compile 'com.github.satyan:sugar:1.5'
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 

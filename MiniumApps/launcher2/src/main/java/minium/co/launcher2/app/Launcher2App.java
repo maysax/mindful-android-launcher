@@ -1,5 +1,7 @@
 package minium.co.launcher2.app;
 
+import com.orm.SugarContext;
+
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.Trace;
@@ -35,5 +37,13 @@ public class Launcher2App extends CoreApplication {
                 + " || Build type: " + minium.co.launcher2.BuildConfig.BUILD_TYPE);
 
         manager.init();
+
+        SugarContext.init(this);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        SugarContext.terminate();
     }
 }

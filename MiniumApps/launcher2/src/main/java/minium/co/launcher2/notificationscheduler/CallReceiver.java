@@ -7,6 +7,7 @@ import org.androidannotations.annotations.EReceiver;
 import java.util.Date;
 
 import minium.co.core.log.Tracer;
+import minium.co.launcher2.model.MissedCallItem;
 
 @EReceiver
 public class CallReceiver extends PhonecallReceiver {
@@ -34,5 +35,7 @@ public class CallReceiver extends PhonecallReceiver {
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
         Tracer.d("onMissedCall()");
+        MissedCallItem callItem = new MissedCallItem(number, start, 0);
+        callItem.save();
     }
 }

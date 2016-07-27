@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
 
     <!-- TODO: using it for flow, we might not need this -->
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
@@ -25,6 +25,15 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
+        <meta-data
+            android:name="DATABASE"
+            android:value="ebb.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="5" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
 
         <activity
             android:name=".MainActivity_"
@@ -63,8 +72,7 @@
         <receiver
             android:name=".notificationscheduler.NotificationScheduleReceiver_"
             android:enabled="true" />
-        <receiver
-            android:name=".notificationscheduler.CallReceiver_">
+        <receiver android:name=".notificationscheduler.CallReceiver_">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
@@ -72,6 +80,8 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".notificationscheduler.DisplayAlertActivity_"></activity>
     </application>
 
 </manifest>
