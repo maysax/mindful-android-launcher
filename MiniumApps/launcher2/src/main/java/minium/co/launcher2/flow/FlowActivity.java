@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -54,9 +53,6 @@ public class FlowActivity extends CoreActivity {
 
     @ViewById
     TextView txtRemainingTime;
-
-    @Extra
-    boolean isVolumeUpInit = false;
 
     private boolean isAnimationRunning;
     private boolean isServiceRunning = false;
@@ -165,10 +161,9 @@ public class FlowActivity extends CoreActivity {
                     startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
                 }
             });
-        } else {
-            if (isVolumeUpInit) onVolumeUpKeyPressed();
+        } else if (!isServiceRunning) {
+            onVolumeUpKeyPressed();
         }
-        isVolumeUpInit = false;
     }
 
     /** @return True if {@link FlowNotificationService} is enabled. */

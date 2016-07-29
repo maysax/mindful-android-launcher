@@ -202,7 +202,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
                 if (!isDispatched) {
-                    FlowActivity_.intent(this).isVolumeUpInit(true).start();
+                    FlowActivity_.intent(this).start();
                     isDispatched = true;
                 }
                 return true;

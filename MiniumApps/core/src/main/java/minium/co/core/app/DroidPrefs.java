@@ -22,7 +22,7 @@ public interface DroidPrefs {
     int notificationScheduleIndex();
 
     // Flow related configurations
-    
+
     @DefaultFloat(0)
     float flowMaxTimeLimitMillis();
 
