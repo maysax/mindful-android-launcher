@@ -37,7 +37,7 @@ public class Launcher2App extends CoreApplication {
         Tracer.i("Application Id: " + minium.co.launcher2.BuildConfig.APPLICATION_ID
                 + " || Version code: " + minium.co.launcher2.BuildConfig.VERSION_CODE
                 + " || Version name: " + minium.co.launcher2.BuildConfig.VERSION_NAME
-                + " || Git Sha: " + BuildConfig.GIT_SHA
+                + "\nGit Sha: " + BuildConfig.GIT_SHA
                 + " || Build time:  " + BuildConfig.BUILD_TIME
                 + " || Build flavor: " + minium.co.launcher2.BuildConfig.FLAVOR
                 + " || Build type: " + minium.co.launcher2.BuildConfig.BUILD_TYPE);

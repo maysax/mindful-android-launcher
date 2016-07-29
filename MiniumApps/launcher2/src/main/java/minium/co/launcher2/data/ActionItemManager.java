@@ -89,6 +89,7 @@ public class ActionItemManager {
                     break;
                 }
                 removeLast();
+
                 if (getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
                     removeLast();
                 }

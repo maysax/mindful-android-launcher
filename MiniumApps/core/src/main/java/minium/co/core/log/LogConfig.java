@@ -5,6 +5,6 @@ package minium.co.core.log;
  */
 public class LogConfig {
 
-    public static final String TRACE_TAG = "t-min:";
-    public static final String LOG_TAG = "d-min";
+    public static final String TRACE_TAG = "t-tag:";
+    public static final String LOG_TAG = "d-tag";
 }
