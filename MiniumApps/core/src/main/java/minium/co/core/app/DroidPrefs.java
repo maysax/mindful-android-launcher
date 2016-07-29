@@ -36,7 +36,7 @@ public interface DroidPrefs {
 
     /**
      * true - Notification Scheduler could not display scheduled notification due to other prioritized action (i.e. Flow)
-     * false - otherwise 
+     * false - otherwise
      * @return
      */
     @DefaultBoolean(false)
