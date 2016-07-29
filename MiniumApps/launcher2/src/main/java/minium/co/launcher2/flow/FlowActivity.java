@@ -61,8 +61,8 @@ public class FlowActivity extends CoreActivity {
     private boolean isAnimationRunning;
     private boolean isServiceRunning = false;
     private float progress;
-    private final float SPAN = 4 * 60 * 1000f;
-    private final float INTERVAL = 4 * 15 * 1000f;
+    private float flowMaxTimeLimitMillis = 4 * 60 * 1000f;
+    private float flowSegmentDurationMillis = 4 * 15 * 1000f;
     private final int ANIMATION_DURATION = 100;
     private int SCREEN_HEIGHT;
 
@@ -75,6 +75,8 @@ public class FlowActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
+        loadConfigValues();
+
         statusView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
         vpBar.setBackgroundColor(ThemeUtils.getPrimaryColor(this));
         vpBar.setFillColor(ThemeUtils.getPrimaryDarkColor(this));
@@ -82,8 +84,13 @@ public class FlowActivity extends CoreActivity {
         loadTopView();
         SCREEN_HEIGHT = getScreenHeight() - UIUtils.dpToPx(this, 20);   // decreasing status bar height 20dp
         Tracer.d("Screen height: " + SCREEN_HEIGHT);
-        progress = SPAN;
+        progress = flowMaxTimeLimitMillis;
         setPercentage(1);
+    }
+
+    void loadConfigValues() {
+        flowMaxTimeLimitMillis = prefs.flowMaxTimeLimitMillis().get();
+        flowSegmentDurationMillis = prefs.flowSegmentDurationMillis().get();
     }
 
     void loadTopView() {
@@ -95,7 +102,7 @@ public class FlowActivity extends CoreActivity {
         progress += 100;
         // Tracer.d("updateUI " + progress);
         animate();
-        if (progress < SPAN)
+        if (progress < flowMaxTimeLimitMillis)
             updateUI();
         else {
             endFlow();
@@ -171,8 +178,8 @@ public class FlowActivity extends CoreActivity {
 
     private void animate() {
         AnimatorSet set = new AnimatorSet();
-        set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", vpBar.getPercent(), progress / SPAN),
-                ObjectAnimator.ofFloat(txtTimer, "y", SCREEN_HEIGHT - (SCREEN_HEIGHT * (progress / SPAN))));
+        set.playTogether(ObjectAnimator.ofFloat(vpBar, "percent", vpBar.getPercent(), progress / flowMaxTimeLimitMillis),
+                ObjectAnimator.ofFloat(txtTimer, "y", SCREEN_HEIGHT - (SCREEN_HEIGHT * (progress / flowMaxTimeLimitMillis))));
         set.setDuration(ANIMATION_DURATION);
         set.addListener(new Animator.AnimatorListener() {
             @Override
@@ -194,7 +201,7 @@ public class FlowActivity extends CoreActivity {
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.start();
 
-        long gap = (long) (SPAN - progress);
+        long gap = (long) (flowMaxTimeLimitMillis - progress);
         txtRemainingTime.setText(String.format(Locale.US, "%dm", (gap / 60000) + (gap % 60000 == 0 ? 0 : 1)));
     }
 
@@ -210,10 +217,10 @@ public class FlowActivity extends CoreActivity {
                 updateUI();
                 isServiceRunning = true;
             }
-            progress -= INTERVAL;
+            progress -= flowSegmentDurationMillis;
             progress = Math.max(-1, progress);
 
-            long gap = (long) (SPAN - progress);
+            long gap = (long) (flowMaxTimeLimitMillis - progress);
             long target = Calendar.getInstance().getTimeInMillis() + gap;
             txtTimer.setText(new SimpleDateFormat("h:mm a", Locale.US).format(new Date(target)));
 
@@ -227,7 +234,7 @@ public class FlowActivity extends CoreActivity {
             UIUtils.confirm(this, "Want to end your flow?", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    progress = SPAN;
+                    progress = flowMaxTimeLimitMillis;
                 }
             });
             return true;

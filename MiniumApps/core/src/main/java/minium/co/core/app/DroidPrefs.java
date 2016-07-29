@@ -2,6 +2,7 @@ package minium.co.core.app;
 
 import android.graphics.Color;
 
+import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
@@ -19,4 +20,12 @@ public interface DroidPrefs {
 
     @DefaultInt(0)
     int notificationScheduleIndex();
+
+    // Flow related configurations
+    
+    @DefaultFloat(0)
+    float flowMaxTimeLimitMillis();
+
+    @DefaultFloat(0)
+    float flowSegmentDurationMillis();
 }

@@ -29,7 +29,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public abstract class CoreActivity extends AppCompatActivity {
 
     @Pref
-    public DroidPrefs_ prefs;
+    protected DroidPrefs_ prefs;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
