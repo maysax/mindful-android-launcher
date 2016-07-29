@@ -13,11 +13,13 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.UiThread;
@@ -41,6 +43,9 @@ import minium.co.launcher2.utils.ServiceUtils;
 @Fullscreen
 @EActivity(R.layout.activity_flow)
 public class FlowActivity extends CoreActivity {
+
+    @ViewById
+    ViewGroup parentLayout;
 
     @ViewById
     FrameLayout statusView;
@@ -164,6 +169,11 @@ public class FlowActivity extends CoreActivity {
         } else if (!isServiceRunning) {
             onVolumeUpKeyPressed();
         }
+    }
+
+    @Click
+    void parentLayout() {
+        UIUtils.toastShort(this, "Press Volume-Up key to increase by 15 min");
     }
 
     /** @return True if {@link FlowNotificationService} is enabled. */

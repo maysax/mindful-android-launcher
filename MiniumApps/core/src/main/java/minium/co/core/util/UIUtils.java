@@ -25,6 +25,10 @@ public class UIUtils {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
+    public static void toastShort(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
+
     public static void alert(Context context, String msg) {
         alert(context, null, msg);
     }
