@@ -54,8 +54,8 @@ public class Launcher2App extends CoreApplication {
 
         if (Config.DEBUG) {
             prefs.edit()
-                    .flowMaxTimeLimitMillis().put(flowSegmentCount * 60 * 1000f)
-                    .flowSegmentDurationMillis().put(60 * 1000f)
+                    .flowMaxTimeLimitMillis().put(flowSegmentCount * 5 * 1000f)
+                    .flowSegmentDurationMillis().put(5 * 1000f)
                     .apply();
 
         } else {
