@@ -72,10 +72,12 @@ public class NotificationSchedulerFragment extends CoreFragment {
     }
 
     private void updateUI(int newVal) {
-        switch (newVal) {
-            case 0: txtMsg.setText("Notification is enabled always"); break;
-            default: txtMsg.setText(String.format(Locale.US, "Notification will be enabled for every %s minutes", pickerData [newVal]));
+        if (newVal == 0) {
+            txtMsg.setText("Notification is enabled always");
+        } else if (newVal < pickerData.length){
+            txtMsg.setText(String.format(Locale.US, "Notification will be enabled for every %s minutes", pickerData [newVal]));
         }
+
     }
 
     private void setAlarm(int newVal) {
