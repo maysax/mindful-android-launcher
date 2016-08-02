@@ -23,7 +23,7 @@ public class CallReceiver extends PhonecallReceiver {
     @Override
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
-        //rejectCalls();
+        rejectCalls();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class CallReceiver extends PhonecallReceiver {
             ITelephony telephonyService = (ITelephony) m.invoke(telephonyManager);
 
             telephonyService.silenceRinger();
-            telephonyService.endCall();
+            //telephonyService.endCall();
 
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
