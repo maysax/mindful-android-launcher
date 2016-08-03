@@ -23,6 +23,7 @@ import java.util.Locale;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.model.MissedCallItem;
+import minium.co.launcher2.utils.AudioUtils;
 
 @EReceiver
 public class NotificationScheduleReceiver extends BroadcastReceiver {
@@ -58,6 +59,8 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
         Tracer.d("Generating missed call notifications: " + missedCalls.size());
 
         if (missedCalls.size() > 0) {
+            new AudioUtils().playNotificationSound(context);
+
             for (MissedCallItem item : missedCalls)
                 showCallNotifications(context, item.getNumber());
 
