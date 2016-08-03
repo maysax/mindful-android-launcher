@@ -7,10 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -26,7 +22,6 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,6 +36,7 @@ import minium.co.launcher2.R;
 import minium.co.launcher2.notificationscheduler.NotificationScheduleReceiver_;
 import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.ui.widget.VerticalProgressBar;
+import minium.co.launcher2.utils.AudioUtils;
 import minium.co.launcher2.utils.ServiceUtils;
 
 @Fullscreen
@@ -128,43 +124,8 @@ public class FlowActivity extends CoreActivity {
 
     @UiThread(delay = 300)
     void onCompletion() {
-
-        playSound();
+        new AudioUtils().playNotificationSound(this);
         finish();
-    }
-
-    void playSound() {
-        Tracer.i("Playing sound...");
-        Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        MediaPlayer mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(this, defaultRingtoneUri);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_NOTIFICATION);
-            mediaPlayer.prepare();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-
-                @Override
-                public void onCompletion(MediaPlayer mp)
-                {
-                    mp.release();
-                }
-            });
-            mediaPlayer.start();
-            Tracer.i("Playing sound completed");
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            Tracer.e(e, e.getMessage());
-        } catch (SecurityException e) {
-            e.printStackTrace();
-            Tracer.e(e, e.getMessage());
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            Tracer.e(e, e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-            Tracer.e(e, e.getMessage());
-        }
     }
 
     @Override
