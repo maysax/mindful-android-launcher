@@ -24,6 +24,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -31,11 +32,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.notificationscheduler.NotificationScheduleReceiver_;
 import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.ui.widget.VerticalProgressBar;
 import minium.co.launcher2.utils.ServiceUtils;
@@ -58,6 +61,9 @@ public class FlowActivity extends CoreActivity {
 
     @ViewById
     TextView txtRemainingTime;
+
+    @Pref
+    DroidPrefs_ prefs;
 
     private boolean isAnimationRunning;
     private boolean isServiceRunning = false;
@@ -87,6 +93,8 @@ public class FlowActivity extends CoreActivity {
         Tracer.d("Screen height: " + SCREEN_HEIGHT);
         progress = flowMaxTimeLimitMillis;
         setPercentage(1);
+
+        prefs.isFlowRunning().put(true);
     }
 
     void loadConfigValues() {
@@ -111,13 +119,16 @@ public class FlowActivity extends CoreActivity {
     }
 
     void endFlow() {
-        FlowNotificationService_.intent(this).extra("start", false).start();
+//        FlowNotificationService_.intent(this).extra("start", false).start();
+        prefs.isFlowRunning().put(false);
         isServiceRunning = false;
+        sendBroadcast(new Intent(this, NotificationScheduleReceiver_.class));
         onCompletion();
     }
 
     @UiThread(delay = 300)
     void onCompletion() {
+
         playSound();
         finish();
     }
@@ -159,14 +170,16 @@ public class FlowActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isEnabled(this)) {
-            UIUtils.confirm(this, "Ebb flow manager service is not enabled. Please allow Ebb flow manager to access notification service", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
-                }
-            });
-        } else if (!isServiceRunning) {
+//        if (!isEnabled(this)) {
+//            UIUtils.confirm(this, "Ebb flow manager service is not enabled. Please allow Ebb flow manager to access notification service", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+//                }
+//            });
+//        } else
+
+        if (!isServiceRunning) {
             onVolumeUpKeyPressed();
         }
     }
@@ -218,7 +231,7 @@ public class FlowActivity extends CoreActivity {
         Tracer.d("onKeyUp: Volume up");
         if (progress > 0 && !isAnimationRunning) {
             if (!isServiceRunning) {
-                FlowNotificationService_.intent(this).extra("start", true).start();
+//                FlowNotificationService_.intent(this).extra("start", true).start();
                 updateUI();
                 isServiceRunning = true;
             }

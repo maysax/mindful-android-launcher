@@ -4,6 +4,7 @@ package minium.co.launcher2.notificationscheduler;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -66,9 +67,18 @@ public class NotificationSchedulerFragment extends CoreFragment {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 updateUI(newVal);
                 setAlarm(newVal);
+                makeEnabled(newVal);
                 prefs.notificationScheduleIndex().put(newVal);
             }
         });
+    }
+
+    private void makeEnabled(int newVal) {
+        if (newVal == 0) {
+            prefs.isNotificationSchedulerEnabled().put(false);
+        } else {
+            prefs.isNotificationSchedulerEnabled().put(true);
+        }
     }
 
     private void updateUI(int newVal) {
@@ -85,7 +95,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
 
         if (newVal != 0) {
             alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    Integer.parseInt(pickerData [newVal]) * 60 * 1000,
+                    SystemClock.elapsedRealtime() + Integer.parseInt(pickerData [newVal]) * 60 * 1000,
                     Integer.parseInt(pickerData [newVal]) * 60 * 1000, alarmIntent);
 
             Tracer.d("NotificationScheduleAlarm set: " + new SimpleDateFormat("hh:mm:ss.SSS a", Locale.US).format(new Date()));

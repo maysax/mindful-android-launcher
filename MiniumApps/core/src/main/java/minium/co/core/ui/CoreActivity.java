@@ -35,7 +35,7 @@ public abstract class CoreActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (prefs.selectedThemeId().get() != 0) {
+        if (prefs != null && prefs.selectedThemeId().get() != 0) {
             setTheme(prefs.selectedThemeId().get());
         }
     }

@@ -1,27 +1,38 @@
 package minium.co.launcher2.notificationscheduler;
 
-import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
 import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.annotations.UiThread;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.model.MissedCallItem;
 
 @EReceiver
 public class NotificationScheduleReceiver extends BroadcastReceiver {
+
+    @Pref
+    DroidPrefs_ prefs;
+
+    @SystemService
+    NotificationManager notificationManager;
+
     public NotificationScheduleReceiver() {
     }
 
@@ -29,26 +40,41 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Tracer.d("NotificationScheduleReceiver onReceive: " + new SimpleDateFormat("hh:mm:ss.SSS a", Locale.US).format(new Date()));
 
-        long count = Select.from(MissedCallItem.class)
-                .where(Condition.prop("has_displayed").eq(0)).count();
-        if (count > 0) {
-            DisplayAlertActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
+        if (prefs.isFlowRunning().get()) {
+            prefs.isNotificationSupressed().put(true);
+        } else if (prefs.isNotificationSupressed().get()) {
+            showNotifications(context);
+            prefs.isNotificationSupressed().put(false);
+        } else {
+            showNotifications(context);
         }
     }
 
-    @UiThread
-    void displayAlert(Context context, List<MissedCallItem> callList) {
-        Tracer.d("callList: " + callList);
+    void showNotifications(Context context) {
+        List<MissedCallItem> missedCalls = Select.from(MissedCallItem.class)
+                .where(Condition.prop("has_displayed").eq(0))
+                .list();
 
-        for (final MissedCallItem item : callList) {
-            new AlertDialog.Builder(context)
-                    .setMessage(item.getNumber() + "called you at " + new SimpleDateFormat("hh:mm a", Locale.US).format(item.getDate()))
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            MissedCallItem.findById(MissedCallItem.class, item.getId()).setDisplayed(1).save();
-                        }
-                    }).show();
+        Tracer.d("Generating missed call notifications: " + missedCalls.size());
+
+        if (missedCalls.size() > 0) {
+            for (MissedCallItem item : missedCalls)
+                showCallNotifications(context, item.getNumber());
+
+            MissedCallItem.deleteAll(MissedCallItem.class);
         }
+    }
+
+    private void showCallNotifications(Context context, String number) {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification  = new Notification.Builder(context)
+                .setContentTitle("Missed Call!")
+                .setContentText("Missed call from " + number)
+                .setSmallIcon(android.R.drawable.sym_call_missed)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true).build();
+        notificationManager.notify(0, notification);
     }
 }

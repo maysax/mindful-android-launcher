@@ -7,10 +7,12 @@ import com.android.internal.telephony.ITelephony;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.model.MissedCallItem;
 
@@ -20,10 +22,15 @@ public class CallReceiver extends PhonecallReceiver {
     @SystemService
     TelephonyManager telephonyManager;
 
+    @Pref
+    DroidPrefs_ prefs;
+
     @Override
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
-        rejectCalls();
+
+        if(prefs.isFlowRunning().get() || prefs.isNotificationSchedulerEnabled().get())
+            rejectCalls(ctx, number, start);
     }
 
     @Override
@@ -44,19 +51,19 @@ public class CallReceiver extends PhonecallReceiver {
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
         Tracer.d("onMissedCall()");
-        MissedCallItem callItem = new MissedCallItem(number, start, 0);
-        callItem.save();
     }
 
-    private void rejectCalls() {
+    private void rejectCalls(Context ctx, String number, Date start) {
         try {
+            new MissedCallItem(number, start, 0).save();
+
             Class c = Class.forName(telephonyManager.getClass().getName());
             Method m = c.getDeclaredMethod("getITelephony");
             m.setAccessible(true);
             ITelephony telephonyService = (ITelephony) m.invoke(telephonyManager);
 
             telephonyService.silenceRinger();
-            //telephonyService.endCall();
+            telephonyService.endCall();
 
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

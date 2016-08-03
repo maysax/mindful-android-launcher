@@ -41,4 +41,7 @@ public interface DroidPrefs {
      */
     @DefaultBoolean(false)
     boolean isNotificationSupressed();
+
+    @DefaultBoolean(false)
+    boolean isNotificationSchedulerEnabled();
 }
