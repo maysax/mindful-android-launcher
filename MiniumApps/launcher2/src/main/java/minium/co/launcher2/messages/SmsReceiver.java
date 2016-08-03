@@ -1,15 +1,22 @@
 package minium.co.launcher2.messages;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.telephony.SmsMessage;
 
 import org.androidannotations.annotations.EReceiver;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.Date;
 
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
+import minium.co.launcher2.model.ReceivedSMSItem;
+import minium.co.launcher2.notificationscheduler.NotificationScheduleReceiver_;
 
 /**
  * Created by Shahab on 7/29/2016.
@@ -20,6 +27,11 @@ public class SmsReceiver extends BroadcastReceiver {
     private String mAddress;
     private String mBody;
     private Date mDate;
+
+    @Pref
+    DroidPrefs_ prefs;
+
+    public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -47,7 +59,32 @@ public class SmsReceiver extends BroadcastReceiver {
             mAddress = sms.getDisplayOriginatingAddress();
             mDate = new Date(sms.getTimestampMillis());
 
+            new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
+            addMessageToInbox(context, mAddress, mBody, mDate.getTime());
 
+            if (!prefs.isFlowRunning().get() && !prefs.isNotificationSchedulerEnabled().get()) {
+                context.sendBroadcast(new Intent(context, NotificationScheduleReceiver_.class));
+            }
         }
+    }
+
+    /**
+     * Add incoming SMS to inbox
+     *
+     * @param context
+     * @param address Address of sender
+     * @param body    Body of incoming SMS message
+     * @param time    Time that incoming SMS message was sent at
+     */
+    public static Uri addMessageToInbox(Context context, String address, String body, long time) {
+
+        ContentResolver contentResolver = context.getContentResolver();
+        ContentValues cv = new ContentValues();
+
+        cv.put("address", address);
+        cv.put("body", body);
+        cv.put("date_sent", time);
+
+        return contentResolver.insert(RECEIVED_MESSAGE_CONTENT_PROVIDER, cv);
     }
 }

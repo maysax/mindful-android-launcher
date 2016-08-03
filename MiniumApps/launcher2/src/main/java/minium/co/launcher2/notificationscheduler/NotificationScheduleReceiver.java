@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import java.util.Locale;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.model.MissedCallItem;
+import minium.co.launcher2.model.ReceivedSMSItem;
 import minium.co.launcher2.utils.AudioUtils;
 
 @EReceiver
@@ -56,25 +58,55 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
                 .where(Condition.prop("has_displayed").eq(0))
                 .list();
 
-        Tracer.d("Generating missed call notifications: " + missedCalls.size());
+        List<ReceivedSMSItem> smsItems = Select.from(ReceivedSMSItem.class)
+                .where(Condition.prop("has_displayed").eq(0))
+                .list();
+
+        Tracer.d("Generating missed call notifications: " + missedCalls.size() + " and SMS: " + smsItems.size());
+
+        if (missedCalls.size() > 0 || smsItems.size() > 0) {
+            new AudioUtils().playNotificationSound(context);
+        }
 
         if (missedCalls.size() > 0) {
-            new AudioUtils().playNotificationSound(context);
-
             for (MissedCallItem item : missedCalls)
-                showCallNotifications(context, item.getNumber());
+                showCallNotifications(context, item.getNumber(), missedCalls.size());
 
             MissedCallItem.deleteAll(MissedCallItem.class);
         }
+
+        if (smsItems.size() > 0) {
+            for (ReceivedSMSItem item : smsItems) {
+                showSMSNotifications(context, item.getNumber(), item.getBody(), smsItems.size());
+            }
+
+            ReceivedSMSItem.deleteAll(ReceivedSMSItem.class);
+        }
     }
 
-    private void showCallNotifications(Context context, String number) {
-        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
+    private void showSMSNotifications(Context context, String number, String body, int size) {
+        Intent intent = new Intent();
+        intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification notification  = new Notification.Builder(context)
+                .setContentTitle(number)
+                .setContentText(body)
+                .setContentInfo(size == 1 ? "" : String.valueOf(size))
+                .setSmallIcon(android.R.drawable.sym_action_email)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true).build();
+        notificationManager.notify(1, notification);
+    }
+
+    private void showCallNotifications(Context context, String number, int size) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + number));
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification  = new Notification.Builder(context)
                 .setContentTitle("Missed Call!")
                 .setContentText("Missed call from " + number)
+                .setContentInfo(size == 1 ? "" : String.valueOf(size))
                 .setSmallIcon(android.R.drawable.sym_call_missed)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true).build();
