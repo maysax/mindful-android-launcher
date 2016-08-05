@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
+import android.os.Vibrator;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -60,6 +62,9 @@ public class FlowActivity extends CoreActivity {
 
     @Pref
     DroidPrefs_ prefs;
+
+    @SystemService
+    Vibrator vibrator;
 
     private boolean isAnimationRunning;
     private boolean isServiceRunning = false;
@@ -124,6 +129,7 @@ public class FlowActivity extends CoreActivity {
 
     @UiThread(delay = 300)
     void onCompletion() {
+        vibrator.vibrate(800);
         new AudioUtils().playNotificationSound(this);
         finish();
     }
