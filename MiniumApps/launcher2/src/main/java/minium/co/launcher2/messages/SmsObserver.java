@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberUtils;
 
+import minium.co.core.log.Tracer;
+
 /**
  * Created by Shahab on 5/10/2016.
  */
@@ -77,6 +79,8 @@ public class SmsObserver extends ContentObserver {
                     }
                 }
             }
+        } catch (IllegalStateException e) {
+            Tracer.e(e, e.getMessage());
         }
         finally {
             if (cursor != null) {

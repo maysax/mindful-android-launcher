@@ -100,6 +100,8 @@ public class NotificationSchedulerFragment extends CoreFragment {
 
             Tracer.d("NotificationScheduleAlarm set: " + new SimpleDateFormat("hh:mm:ss.SSS a", Locale.US).format(new Date()));
         } else {
+            prefs.isNotificationSupressed().put(true);
+            getActivity().sendBroadcast(new Intent(getActivity(), NotificationScheduleReceiver_.class));
             Tracer.d("NotificationScheduleAlarm cancelled");
         }
     }

@@ -37,9 +37,13 @@ public class DefaultSmsHelper implements View.OnClickListener {
             long deltaTime = (System.nanoTime() / 1000000) - sLastShown;
             long duration = deltaTime > 60 * 1000 ? 8000 : 3000;
 
-            android.support.design.widget.Snackbar
-                    .make(viewGroup == null ? ((QKActivity) mContext).findViewById(android.R.id.content) : viewGroup, mMessage, android.support.design.widget.Snackbar.LENGTH_LONG)
-                    .setAction(R.string.upgrade_now, this).setActionTextColor(ThemeManager.getColor()).show();
+            try {
+                android.support.design.widget.Snackbar
+                        .make(viewGroup == null ? ((QKActivity) mContext).findViewById(android.R.id.content) : viewGroup, mMessage, android.support.design.widget.Snackbar.LENGTH_LONG)
+                        .setAction(R.string.upgrade_now, this).setActionTextColor(ThemeManager.getColor()).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             sLastShown = System.nanoTime() / 1000000;
             return true;
