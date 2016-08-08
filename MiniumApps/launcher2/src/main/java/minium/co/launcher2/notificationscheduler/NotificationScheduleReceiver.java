@@ -54,6 +54,19 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
     }
 
     void showNotifications(Context context) {
+        long count =
+                Select.from(MissedCallItem.class)
+                .where(Condition.prop("has_displayed").eq(0))
+                .count() +
+
+                Select.from(ReceivedSMSItem.class)
+                        .where(Condition.prop("has_displayed").eq(0))
+                        .count();
+
+        if (count > 0) {
+
+        }
+
         List<MissedCallItem> missedCalls = Select.from(MissedCallItem.class)
                 .where(Condition.prop("has_displayed").eq(0))
                 .list();

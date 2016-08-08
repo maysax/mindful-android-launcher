@@ -9,15 +9,13 @@
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Becoming default SMS app -->
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
-
 
     <!-- TODO: using it for flow, we might not need this -->
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
@@ -90,7 +88,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".notificationscheduler.DisplayAlertActivity_"></activity>
+        <activity android:name=".utils.DisplayAlertActivity_" />
 
         <!-- Becoming default SMS app -->
         <!-- Broadcast receiver for SMS -->
@@ -113,12 +111,14 @@
             </intent-filter>
         </receiver>
         <!-- Activity that allows the user to send new SMS/MMS messages -->
-        <activity android:name=".messages.ComposeSmsActivity_" >
+        <activity android:name=".messages.ComposeSmsActivity_">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />
@@ -126,12 +126,15 @@
             </intent-filter>
         </activity>
         <!-- Service that delivers messages from the phone "quick response" -->
-        <service android:name=".messages.HeadlessSmsSendService_"
-            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
-            android:exported="true" >
+        <service
+            android:name=".messages.HeadlessSmsSendService_"
+            android:exported="true"
+            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
                 <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
                 <data android:scheme="mms" />
