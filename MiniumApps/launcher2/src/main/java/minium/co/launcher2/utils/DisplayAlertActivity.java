@@ -29,6 +29,12 @@ public class DisplayAlertActivity extends Activity {
 
     @AfterViews
     void afterViews() {
+        Tracer.d("afterViews called DisplayAlertActivity");
+
+        loadAndFire();
+    }
+
+    private void loadAndFire() {
         List<MissedCallItem> missedCalls = Select.from(MissedCallItem.class)
                 .where(Condition.prop("has_displayed").eq(0))
                 .list();
@@ -102,4 +108,10 @@ public class DisplayAlertActivity extends Activity {
         });
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Tracer.d("onNewIntent received in DisplayAlertActivity");
+        loadAndFire();
+    }
 }
