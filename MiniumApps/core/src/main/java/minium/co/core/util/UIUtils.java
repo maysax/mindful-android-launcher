@@ -2,6 +2,7 @@ package minium.co.core.util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
@@ -58,6 +59,16 @@ public class UIUtils {
                 .setMessage(msg)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    public static void notification (Context context, String title, String msg, @StringRes int resOk, @StringRes int resCancel, @DrawableRes int resIcon, DialogInterface.OnClickListener listener) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(msg)
+                .setIcon(resIcon)
+                .setPositiveButton(resOk, listener)
+                .setNegativeButton(resCancel, listener)
                 .show();
     }
 

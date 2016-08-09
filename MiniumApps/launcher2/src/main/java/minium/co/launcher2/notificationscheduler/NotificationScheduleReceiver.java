@@ -18,14 +18,13 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.model.MissedCallItem;
 import minium.co.launcher2.model.ReceivedSMSItem;
-import minium.co.launcher2.utils.AudioUtils;
+import minium.co.launcher2.utils.DisplayAlertActivity_;
 
 @EReceiver
 public class NotificationScheduleReceiver extends BroadcastReceiver {
@@ -64,10 +63,10 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
                         .count();
 
         if (count > 0) {
-
+            DisplayAlertActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
         }
 
-        List<MissedCallItem> missedCalls = Select.from(MissedCallItem.class)
+        /*List<MissedCallItem> missedCalls = Select.from(MissedCallItem.class)
                 .where(Condition.prop("has_displayed").eq(0))
                 .list();
 
@@ -94,7 +93,7 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
             }
 
             ReceivedSMSItem.deleteAll(ReceivedSMSItem.class);
-        }
+        }*/
     }
 
     private void showSMSNotifications(Context context, String number, String body, int size) {

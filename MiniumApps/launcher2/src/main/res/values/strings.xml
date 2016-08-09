@@ -10,10 +10,19 @@
 
 
     <string name="label_multiple_numbers">Multiple numbers</string>
+    <string name="label.callBack">Callback</string>
+    <string name="label.showDetails">Show details</string>
 
     <string name="title.ebbFlowManager">Ebb Flow Manager</string>
 
     <string name="icon.outgoingCall">{fa-arrow-up @color/material.core.green 12dp}</string>
     <string name="icon.incomingCall">{fa-arrow-down @color/material.core.indigo 12dp}</string>
     <string name="icon.missedCall">{fa-arrow-down @color/material.core.red 12dp}</string>
+
+    <string-array name="socialNetworks">
+        <item>Twitter</item>
+        <item>Google+</item>
+        <item>Instagram</item>
+        <item>Facebook</item>
+    </string-array>
 </resources>
