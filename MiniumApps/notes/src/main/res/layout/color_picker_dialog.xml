@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:gravity="center" />
 
-        <com.moonpi.swiftnotes.ColorPicker.ColorPickerPalette
+        <minium.co.notes.colorpicker.ColorPickerPalette
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/color_picker"
