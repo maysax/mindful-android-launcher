@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context=".MainActivity"
+    tools:context=".ui.MainActivity"
     android:background="@color/white" >
 
     <include
@@ -41,7 +41,8 @@
         android:layout_marginRight="30dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@android:drawable/ic_dialog_email" />
+        android:tint="@color/white"
+        android:src="@drawable/ic_add_circle_outline_black_24dp" />
 
     <TextView
         android:layout_width="wrap_content"

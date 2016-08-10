@@ -23,5 +23,15 @@
     <color name="black_10">#1A000000</color>
     <color name="black_05">#0E000000</color>
 
-
+    <string-array name="colours" translatable="false">
+        <item>#44A1EB</item> <!-- blue -->
+        <item>#77DDBB</item> <!-- teal -->
+        <item>#BBE535</item> <!-- green -->
+        <item>#F56545</item> <!-- red -->
+        <item>#FFBB22</item> <!-- orange -->
+        <item>#EEEE22</item> <!-- yellow -->
+        <item>#FF5997</item> <!-- pink -->
+        <item>#A767FF</item> <!-- purple -->
+        <item>#FFFFFF</item> <!-- white -->
+    </string-array>
 </resources>

@@ -8,7 +8,7 @@
     android:background="@color/white"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
-    tools:context=".EditActivity" >
+    tools:context=".ui.EditActivity" >
 
     <include
         android:id="@+id/toolbarEdit"
