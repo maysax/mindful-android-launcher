@@ -28,6 +28,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 @EActivity
 public abstract class CoreActivity extends AppCompatActivity {
 
+    int onStartCount = 0;
+
     @Pref
     protected DroidPrefs_ prefs;
 
@@ -35,8 +37,32 @@ public abstract class CoreActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //onCreateAnimation(savedInstanceState);
+
         if (prefs != null && prefs.selectedThemeId().get() != 0) {
             setTheme(prefs.selectedThemeId().get());
+        }
+
+
+    }
+
+    private void onCreateAnimation(Bundle savedInstanceState) {
+        onStartCount = 1;
+
+        if (savedInstanceState == null) {
+            this.overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
+        } else {
+            onStartCount = 2;
+        }
+    }
+
+    private void onStartAnimation() {
+        if (onStartCount > 1) {
+            this.overridePendingTransition(R.anim.anim_slide_in_right,
+                    R.anim.anim_slide_out_right);
+
+        } else if (onStartCount == 1) {
+            onStartCount++;
         }
     }
 
@@ -44,6 +70,8 @@ public abstract class CoreActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+
+        //onStartAnimation();
     }
 
     @Override
