@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".EditActivity" >
+
+    <item android:id="@+id/action_note_colour"
+        android:title="@string/label.color"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_color_lens_black_24dp"
+        app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_font_size"
+        android:title="@string/label.fontSize"
+        android:orderInCategory="102"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_hide_show_body"
+        android:title="@string/label.hideNoteBody"
+        android:orderInCategory="103"
+        app:showAsAction="never" />
+
+</menu>
