@@ -6,7 +6,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/CoreTheme">
+
+        <!-- Fabric configuration -->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
 
     </application>
 
