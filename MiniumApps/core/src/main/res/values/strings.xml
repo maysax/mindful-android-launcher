@@ -63,5 +63,8 @@
     <string name="label.color">Color</string>
     <string name="label.delete">Delete</string>
     <string name="label.fontSize">Font size</string>
+    <string name="label.title">Title</string>
+    <string name="label.note">Note</string>
+    <string name="label.favorite">Favorite</string>
 
 </resources>
