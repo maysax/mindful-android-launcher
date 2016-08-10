@@ -3,4 +3,6 @@
 
     <string name="label.hideNoteBody">Hide note body in list</string>
     <string name="label.showNoteBody">Show note body in list</string>
+
+    <string name="msg.emptyNotes">Press \'+\' to add new note</string>
 </resources>
