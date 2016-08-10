@@ -170,7 +170,8 @@ public class FilterFragment extends CoreFragment {
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                         break;
                     case 8:
-                        UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
+                        if (!new ActivityHelper(getActivity()).openNotesApp())
+                            UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                         break;
                     case 9:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));

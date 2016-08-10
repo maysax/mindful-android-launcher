@@ -50,6 +50,16 @@ public class ActivityHelper {
         return false;
     }
 
+    public boolean openNotesApp() {
+        try {
+            getContext().startActivity(getContext().getPackageManager().getLaunchIntentForPackage("minium.co.notes"));
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+        return false;
+    }
+
     public boolean openDialerApp() {
         try {
             getContext().startActivity(new Intent().setAction(Intent.ACTION_DIAL));
