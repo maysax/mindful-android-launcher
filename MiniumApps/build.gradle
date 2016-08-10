@@ -53,13 +53,13 @@ project.ext {
      gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
     // get the current build time
-    buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
+    buildTime = new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
 
     // Manifest version information!
     versionMajor = 0
     versionMinor = 0
     versionPatch = 0
-    versionBuild = 1 // bump for internal builds, public betas, etc.
+    versionBuild = 2 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {
