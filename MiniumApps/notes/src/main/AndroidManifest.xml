@@ -2,6 +2,7 @@
     package="minium.co.notes">
 
     <application
+        android:name=".app.NotesApp_"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
