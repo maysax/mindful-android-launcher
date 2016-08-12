@@ -62,7 +62,7 @@ public class MainFragment extends CoreFragment {
 
     @ItemClick(R.id.listView)
     public void listItemClicked(int position) {
-        position = adapter.getItem(position).getPosition();
+        position = adapter.getItem(position).getId();
 
         switch (position) {
             case 0:

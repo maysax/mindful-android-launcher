@@ -136,7 +136,7 @@ public class FilterFragment extends CoreFragment {
         switch (type) {
 
             case ACTION_LIST_ITEM:
-                position = adapter.getItem(position).getActionListItem().getPosition();
+                position = adapter.getItem(position).getActionListItem().getId();
 
                 switch (position) {
                     case 0:
@@ -259,7 +259,7 @@ public class FilterFragment extends CoreFragment {
                 }
                 break;
             case OPTION_ITEM:
-                position = adapter.getItem(position).getOptionsListItem().getPosition();
+                position = adapter.getItem(position).getOptionsListItem().getId();
 
                 switch (position) {
                     case 0:

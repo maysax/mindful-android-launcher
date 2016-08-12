@@ -67,8 +67,8 @@ public class ContextualOptionFragment extends CoreFragment {
     @Background
     void loadData() {
         items = new ArrayList<>();
-        loadOptions();
         loadView();
+        loadOptions();
     }
 
     @UiThread
@@ -80,8 +80,9 @@ public class ContextualOptionFragment extends CoreFragment {
     private void loadOptions() {
         items.clear();
 
-        if (manager.has(ActionItem.ActionItemType.TEXT))
+        if (manager.has(ActionItem.ActionItemType.TEXT)) {
             items.add(new MainListItem(new OptionsListItem(0, "{fa-paper-plane}", "Send Message")));
+        }
         else if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
 
         }
@@ -111,9 +112,28 @@ public class ContextualOptionFragment extends CoreFragment {
         notifyDataSetChanged();
     }
 
+    private void afterUI() {
+
+        MainListItem item = adapter.getItemById(MainListItem.ItemType.OPTION_ITEM, 0);
+
+        if (item != null) {
+            if (manager.get(ActionItem.ActionItemType.DATA).getActionText().isEmpty()) {
+                // Data Empty
+                item.setEnabled(false);
+            }
+            else {
+                // Has Data
+                item.setEnabled(true);
+            }
+        }
+    }
+
     @UiThread
     void notifyDataSetChanged() {
-        if (adapter != null) adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            afterUI();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void loadSendingOption() {
@@ -125,9 +145,9 @@ public class ContextualOptionFragment extends CoreFragment {
 
     @ItemClick(R.id.listView)
     public void listItemClicked(int position) {
-        position = adapter.getItem(position).getOptionsListItem().getPosition();
+        int id = adapter.getItem(position).getOptionsListItem().getId();
 
-        switch (position) {
+        switch (id) {
             case 0:
                 // TODO: progress bar
                 loadSendingOption();

@@ -62,6 +62,30 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
         return getItem(position).getType().ordinal();
     }
 
+    public MainListItem getItemById(MainListItem.ItemType type, int id) {
+
+        for (MainListItem item : filteredData) {
+            switch (type) {
+
+                case ACTION_LIST_ITEM:
+                    if (item.getActionListItem().getId() == id) return item;
+                    break;
+                case CONTACT_ITEM:
+                    break;
+                case OPTION_ITEM:
+                    if (item.getOptionsListItem().getId() == id) return item;
+                    break;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return filteredData.get(position).isEnabled();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         MainListItem.ItemType itemViewType = MainListItem.ItemType.values() [getItemViewType(position)];
@@ -102,7 +126,7 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             holder.icon.setText(item.getOptionsListItem().getIconName());
-            holder.icon.setTextColor(ThemeUtils.getPrimaryColor(getContext()));
+            holder.icon.setTextColor(item.isEnabled() ?  ThemeUtils.getPrimaryColor(getContext()) : getContext().getResources().getColor(R.color.material_core_grey));
             holder.text.setText(item.getOptionsListItem().getText());
         }
 

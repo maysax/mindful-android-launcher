@@ -5,18 +5,18 @@ package minium.co.launcher2.model;
  */
 public class OptionsListItem {
 
-    int pos;
+    int id;
     String iconName;
     String text;
 
-    public OptionsListItem(int pos, String iconName, String text) {
-        this.pos = pos;
+    public OptionsListItem(int id, String iconName, String text) {
+        this.id = id;
         this.iconName = iconName;
         this.text = text;
     }
 
-    public int getPosition() {
-        return pos;
+    public int getId() {
+        return id;
     }
 
     public String getIconName() {

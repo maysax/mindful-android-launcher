@@ -8,6 +8,13 @@ public class MainListItem {
     private ActionListItem actionListItem;
     private ContactListItem contactListItem;
     private OptionsListItem optionsListItem;
+    private boolean isEnabled = true;
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+
 
     public enum ItemType {
         ACTION_LIST_ITEM, CONTACT_ITEM, OPTION_ITEM
@@ -15,9 +22,14 @@ public class MainListItem {
 
     private ItemType type;
 
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
     public MainListItem(ActionListItem actionListItem) {
         this.actionListItem = actionListItem;
         this.type = ItemType.ACTION_LIST_ITEM;
+
     }
 
     public MainListItem(ContactListItem contactListItem) {
