@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.notes.R;
 import minium.co.notes.adapter.NoteAdapter;
@@ -186,6 +187,22 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         initDialogs(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Tracer.d("Notes onResume called");
+        // Retrieve from local path
+        JSONArray tempNotes = retrieveData(localPath);
+
+        Tracer.d("All notes: " + tempNotes);
+
+        // If not null -> equal main notes to retrieved notes
+        if (tempNotes != null) {
+            notes = tempNotes;
+            adapter.setAdapterData(notes);
+            adapter.notifyDataSetChanged();
+        }
+    }
 
     /**
      * Initialize toolbar with required components such as

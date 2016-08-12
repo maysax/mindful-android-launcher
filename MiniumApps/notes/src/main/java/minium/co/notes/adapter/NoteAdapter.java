@@ -62,6 +62,10 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
             return null;
     }
 
+    public void setAdapterData(JSONArray adapterData) {
+        this.adapterData = adapterData;
+    }
+
     @Override
     public long getItemId(int position) {
         return 0;
