@@ -5,6 +5,7 @@ import android.graphics.Color;
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
+import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
 /**
@@ -21,6 +22,9 @@ public interface DroidPrefs {
 
     @DefaultInt(0)
     int notificationScheduleIndex();
+
+    @DefaultLong(0)
+    long notificationScheulerNextMillis();
 
     // Flow related configurations
     @DefaultBoolean(false)

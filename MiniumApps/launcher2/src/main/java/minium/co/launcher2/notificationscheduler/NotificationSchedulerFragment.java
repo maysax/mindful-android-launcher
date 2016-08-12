@@ -71,6 +71,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
                 setAlarm(newVal);
                 makeEnabled(newVal);
                 prefs.notificationScheduleIndex().put(newVal);
+                prefs.notificationScheulerNextMillis().put(new Date().getTime() + Integer.parseInt(pickerData [newVal]) * 60 * 1000L);
                 EventBus.getDefault().post(new NotificationSchedulerEvent(newVal != 0));
             }
         });

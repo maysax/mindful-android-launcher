@@ -18,6 +18,10 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.DroidPrefs_;
@@ -119,7 +123,9 @@ public class TopFragment extends CoreFragment {
 
     private void updateSignalText(int strength) {
 //        Tracer.i("Signal strength: " + strength + " Operator: " + telephonyManager.getNetworkOperatorName());
-        iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName(), prefs.isNotificationSchedulerEnabled().get() ? "{fa-bell 12dp}" : ""));
+        iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName(),
+                prefs.isNotificationSchedulerEnabled().get() ? String.format(Locale.US, "{fa-bell 12dp} %s",
+                        new SimpleDateFormat("h:mm a").format(new Date(prefs.notificationScheulerNextMillis().get()))) : ""));
     }
 
     @Subscribe
