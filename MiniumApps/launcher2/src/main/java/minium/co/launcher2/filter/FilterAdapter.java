@@ -83,7 +83,9 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
 
     @Override
     public boolean isEnabled(int position) {
-        return filteredData.get(position).isEnabled();
+        if (filteredData.size() > position)
+            return filteredData.get(position).isEnabled();
+        return super.isEnabled(position);
     }
 
     @Override
