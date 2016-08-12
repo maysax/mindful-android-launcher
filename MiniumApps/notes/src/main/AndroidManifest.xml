@@ -40,7 +40,8 @@
 
         <receiver
             android:name=".receiver.NoteEventReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="minium.co.notes.CREATE_NOTES"/>
             </intent-filter>

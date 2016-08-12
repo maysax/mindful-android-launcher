@@ -182,7 +182,8 @@ public class ContextualOptionFragment extends CoreFragment {
                 startActivity(contactView);
                 break;
             case 4:
-                getActivity().sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES"));
+                getActivity().sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES").putExtra("body", manager.get(ActionItem.ActionItemType.DATA).getActionText()));
+                manager.clear();
 //                UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {
 //                    @Override
 //                    public void onClick(DialogInterface dialog, int which) {
