@@ -19,10 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.launcher2.R;
+import minium.co.launcher2.events.NotificationSchedulerEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,6 +71,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
                 setAlarm(newVal);
                 makeEnabled(newVal);
                 prefs.notificationScheduleIndex().put(newVal);
+                EventBus.getDefault().post(new NotificationSchedulerEvent(newVal != 0));
             }
         });
     }

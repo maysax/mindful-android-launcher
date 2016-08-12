@@ -6,7 +6,6 @@ import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.Icon;
@@ -17,14 +16,18 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreFragment;;
-import minium.co.core.util.ThemeUtils;
+import minium.co.core.ui.CoreFragment;
 import minium.co.launcher2.R;
 import minium.co.launcher2.battery.BatteryChangeEvent;
+import minium.co.launcher2.events.NotificationSchedulerEvent;
+
+;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +43,9 @@ public class TopFragment extends CoreFragment {
 
     @ViewById
     TextView iTxt3;
+
+    @Pref
+    DroidPrefs_ prefs;
 
     FontAwesomeIcons [] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
@@ -113,6 +119,11 @@ public class TopFragment extends CoreFragment {
 
     private void updateSignalText(int strength) {
 //        Tracer.i("Signal strength: " + strength + " Operator: " + telephonyManager.getNetworkOperatorName());
-        iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName()));
+        iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName(), prefs.isNotificationSchedulerEnabled().get() ? "{fa-bell 12dp}" : ""));
+    }
+
+    @Subscribe
+    public void onNotificationScheulerEvent(NotificationSchedulerEvent event) {
+        updateSignalText(0);
     }
 }
