@@ -1,7 +1,6 @@
 package minium.co.launcher2.ui;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -183,12 +182,13 @@ public class ContextualOptionFragment extends CoreFragment {
                 startActivity(contactView);
                 break;
             case 4:
-                UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        manager.clear();
-                    }
-                });
+                getActivity().sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES"));
+//                UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        manager.clear();
+//                    }
+//                });
                 break;
             case 5:
                 String inputStr = manager.getCurrent().getActionText();
