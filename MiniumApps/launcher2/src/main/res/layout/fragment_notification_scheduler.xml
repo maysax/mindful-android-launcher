@@ -6,6 +6,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="minium.co.launcher2.notificationscheduler.NotificationSchedulerFragment">
 
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switchSuppressCalls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/margin.2"
+        android:text="Suppress Calls"
+        android:padding="@dimen/margin.2"
+        app:switchPadding="@dimen/margin.2"
+        android:checked="true"/>
+
 
     <NumberPicker
         android:id="@+id/valPicker"

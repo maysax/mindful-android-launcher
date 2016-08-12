@@ -29,7 +29,7 @@ public class CallReceiver extends PhonecallReceiver {
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
 
-        if(prefs.isFlowRunning().get() || prefs.isNotificationSchedulerEnabled().get())
+        if(prefs.isFlowRunning().get() || (prefs.isNotificationSchedulerEnabled().get() && prefs.notificationSchedulerSupressCalls().get()))
             rejectCalls(ctx, number, start);
     }
 

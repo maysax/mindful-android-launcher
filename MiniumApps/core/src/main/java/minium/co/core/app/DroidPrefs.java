@@ -26,6 +26,9 @@ public interface DroidPrefs {
     @DefaultLong(0)
     long notificationScheulerNextMillis();
 
+    @DefaultBoolean(true)
+    boolean notificationSchedulerSupressCalls();
+
     // Flow related configurations
     @DefaultBoolean(false)
     boolean isFlowRunning();

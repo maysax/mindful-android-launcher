@@ -6,10 +6,12 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
@@ -108,5 +110,11 @@ public class NotificationSchedulerFragment extends CoreFragment {
             getActivity().sendBroadcast(new Intent(getActivity(), NotificationScheduleReceiver_.class));
             Tracer.d("NotificationScheduleAlarm cancelled");
         }
+    }
+
+    @CheckedChange
+    void switchSuppressCalls(CompoundButton btn, boolean isChecked) {
+        Tracer.d("switchSuppressCalls " + isChecked);
+        prefs.notificationSchedulerSupressCalls().put(isChecked);
     }
 }
