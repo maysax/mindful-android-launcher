@@ -2,8 +2,12 @@ package minium.co.launcher2.filter;
 
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberUtils;
@@ -27,6 +31,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity_;
@@ -119,6 +124,7 @@ public class FilterFragment extends CoreFragment {
         items.add(new MainListItem(new ActionListItem(10, "{fa-cogs}", "Settings")));
         items.add(new MainListItem(new ActionListItem(11, "{fa-tint}", "Theme")));
         items.add(new MainListItem(new ActionListItem(12, "{fa-bell}", "Notification Scheduler")));
+        items.add(new MainListItem(new ActionListItem(13, "{fa-home}", "Default Launcher")));
     }
 
     private void loadContacts() {
@@ -244,6 +250,9 @@ public class FilterFragment extends CoreFragment {
                     case 12:
                         EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.NOTIFICATION_SCHEDULER));
                         break;
+                    case 13:
+                        handleDefaultLauncher();
+                        break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                         break;
@@ -297,6 +306,7 @@ public class FilterFragment extends CoreFragment {
 
     }
 
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -305,6 +315,64 @@ public class FilterFragment extends CoreFragment {
             mContactsListener = (OnContactSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnContactSelectedListener");
+        }
+    }
+
+    private void handleDefaultLauncher() {
+        if (isMyLauncherDefault()) {
+            Tracer.d("Launcher2 is the default launcher");
+            getActivity().getPackageManager().clearPackagePreferredActivities(getActivity().getPackageName());
+            openChooser();
+        } else {
+            Tracer.d("Launcher2 is not the default launcher: " + getLauncherPackageName());
+            if (getLauncherPackageName().equals("android")) {
+                openChooser();
+            } else
+                openSettings();
+        }
+    }
+
+    private void openChooser() {
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+    }
+
+    private boolean isMyLauncherDefault() {
+        return getLauncherPackageName().equals(getActivity().getPackageName());
+    }
+
+    private String getLauncherPackageName() {
+        PackageManager localPackageManager = getActivity().getPackageManager();
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.HOME");
+        String str = localPackageManager.resolveActivity(intent,
+                PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
+        return str;
+    }
+
+    private void openSettings() {
+        try {
+            Tracer.d("Opening specific app settings");
+            //Open the specific App Info page:
+            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+
+            Intent launcherIntent = new Intent(Intent.ACTION_MAIN);
+            launcherIntent.addCategory(Intent.CATEGORY_HOME);
+            ResolveInfo resolveInfo = getActivity().getPackageManager().resolveActivity(launcherIntent, PackageManager.MATCH_DEFAULT_ONLY);
+            String currentHomePackage = resolveInfo.activityInfo.packageName;
+
+            intent.setData(Uri.parse("package:" + currentHomePackage));
+            startActivity(intent);
+
+        } catch ( ActivityNotFoundException e ) {
+            Tracer.e(e, e.getMessage());
+
+            //Open the generic Apps page:
+            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+            startActivity(intent);
+
         }
     }
 
