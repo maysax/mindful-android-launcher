@@ -76,6 +76,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         loadBottomView();
     }
 
+
+
     // TODO: try to move this inside TopFragment
     private BroadcastReceiver mBatteryInfoReceiver = new BatteryChangeReceiver_();
 
