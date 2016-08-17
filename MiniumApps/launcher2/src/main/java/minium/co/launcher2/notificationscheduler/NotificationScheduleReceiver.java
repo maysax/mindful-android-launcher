@@ -20,8 +20,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
+import minium.co.core.util.DateUtils;
+import minium.co.launcher2.events.NotificationSchedulerEvent;
 import minium.co.launcher2.model.MissedCallItem;
 import minium.co.launcher2.model.ReceivedSMSItem;
 import minium.co.launcher2.utils.DisplayAlertActivity_;
@@ -34,6 +37,8 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
 
     @SystemService
     NotificationManager notificationManager;
+
+    public static final String KEY_IS_NOTIFICATION_SCHEDULER = "isNotificationScheduler";
 
     public NotificationScheduleReceiver() {
     }
@@ -50,7 +55,15 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
         } else {
             showNotifications(context);
         }
+
+        if (intent.hasExtra(KEY_IS_NOTIFICATION_SCHEDULER) && intent.getBooleanExtra(KEY_IS_NOTIFICATION_SCHEDULER, false)) {
+            prefs.notificationScheulerNextMillis().put(DateUtils.nextIntervalMillis(prefs.notificationSchedulerValue().get() * 60 * 1000));
+            Tracer.d("Next NotificationScheduler: " + DateUtils.log(prefs.notificationScheulerNextMillis().get()));
+            EventBus.getDefault().post(new NotificationSchedulerEvent(true));
+        }
     }
+
+
 
     void showNotifications(Context context) {
         long count =

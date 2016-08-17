@@ -7,12 +7,16 @@ import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.core.util.DateUtils;
 import minium.co.launcher2.data.ActionItemManager;
 
 /**
@@ -47,6 +51,29 @@ public class Launcher2App extends CoreApplication {
         manager.init();
 
         SugarContext.init(this);
+
+        //testCases();
+    }
+
+    private void testCases() {
+        Tracer.d("Current Time: " + SimpleDateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime()));
+        DateUtils.nextIntervalMillis(1 * 60 * 1000);
+        DateUtils.nextIntervalMillis(2 * 60 * 1000);
+        DateUtils.nextIntervalMillis(5 * 60 * 1000);
+        DateUtils.nextIntervalMillis(10 * 60 * 1000);
+        DateUtils.nextIntervalMillis(15 * 60 * 1000);
+        DateUtils.nextIntervalMillis(20 * 60 * 1000);
+        DateUtils.nextIntervalMillis(25 * 60 * 1000);
+        DateUtils.nextIntervalMillis(30 * 60 * 1000);
+        DateUtils.nextIntervalMillis(35 * 60 * 1000);
+        DateUtils.nextIntervalMillis(40 * 60 * 1000);
+        DateUtils.nextIntervalMillis(45 * 60 * 1000);
+        DateUtils.nextIntervalMillis(50 * 60 * 1000);
+        DateUtils.nextIntervalMillis(55 * 60 * 1000);
+        DateUtils.nextIntervalMillis(60 * 60 * 1000);
+        DateUtils.nextIntervalMillis(65 * 60 * 1000);
+        DateUtils.nextIntervalMillis(70 * 60 * 1000);
+        DateUtils.nextIntervalMillis(80 * 60 * 1000);
     }
 
     private void loadConfigurationValues() {

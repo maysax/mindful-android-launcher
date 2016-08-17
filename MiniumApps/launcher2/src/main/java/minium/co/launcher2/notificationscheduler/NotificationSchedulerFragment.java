@@ -17,14 +17,13 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.DateUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.events.NotificationSchedulerEvent;
 
@@ -64,7 +63,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
         valPicker.setValue(prefs.notificationScheduleIndex().get());
         updateUI(prefs.notificationScheduleIndex().get());
 
-        alarmIntent = PendingIntent.getBroadcast(getActivity(), 23, new Intent(getActivity(), NotificationScheduleReceiver_.class), 0);
+        alarmIntent = PendingIntent.getBroadcast(getActivity(), 23, new Intent(getActivity(), NotificationScheduleReceiver_.class).putExtra(NotificationScheduleReceiver.KEY_IS_NOTIFICATION_SCHEDULER, true), 0);
 
         valPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -73,7 +72,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
                 setAlarm(newVal);
                 makeEnabled(newVal);
                 prefs.notificationScheduleIndex().put(newVal);
-                prefs.notificationScheulerNextMillis().put(new Date().getTime() + Integer.parseInt(pickerData [newVal]) * 60 * 1000L);
+                prefs.notificationSchedulerValue().put(Integer.parseInt(pickerData [newVal]));
                 EventBus.getDefault().post(new NotificationSchedulerEvent(newVal != 0));
             }
         });
@@ -100,11 +99,18 @@ public class NotificationSchedulerFragment extends CoreFragment {
         if (alarmMgr != null) alarmMgr.cancel(alarmIntent);
 
         if (newVal != 0) {
-            alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime() + Integer.parseInt(pickerData [newVal]) * 60 * 1000,
+            long nextIntervalMillis = DateUtils.nextIntervalMillis(Integer.parseInt(pickerData [newVal]) * 60 * 1000);
+            long systemElapsedRealTime = SystemClock.elapsedRealtime();
+            long elapsedRealTime = systemElapsedRealTime + (nextIntervalMillis - systemElapsedRealTime);
+
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
+                    nextIntervalMillis,
                     Integer.parseInt(pickerData [newVal]) * 60 * 1000, alarmIntent);
 
-            Tracer.d("NotificationScheduleAlarm set: " + new SimpleDateFormat("hh:mm:ss.SSS a", Locale.US).format(new Date()));
+            Tracer.d("NotificationScheduleAlarm set at: " + DateUtils.log() + " || Next fire: " + DateUtils.log(nextIntervalMillis));
+
+            prefs.notificationScheulerNextMillis().put(nextIntervalMillis);
+
         } else {
             prefs.isNotificationSupressed().put(true);
             getActivity().sendBroadcast(new Intent(getActivity(), NotificationScheduleReceiver_.class));

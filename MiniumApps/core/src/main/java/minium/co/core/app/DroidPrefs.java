@@ -23,6 +23,9 @@ public interface DroidPrefs {
     @DefaultInt(0)
     int notificationScheduleIndex();
 
+    @DefaultInt(0)
+    int notificationSchedulerValue();
+
     @DefaultLong(0)
     long notificationScheulerNextMillis();
 
