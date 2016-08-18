@@ -9,8 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import minium.co.core.log.Tracer;
 import minium.co.core.util.UIUtils;
@@ -62,7 +60,8 @@ public class NoteEventReceiver extends BroadcastReceiver {
         try {
             // Add new note to array
             newNoteObject = new JSONObject();
-            newNoteObject.put(NOTE_TITLE, SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(new Date()));
+//            newNoteObject.put(NOTE_TITLE, SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(new Date()));
+            newNoteObject.put(NOTE_TITLE, getTitle(intent.getStringExtra(NOTE_BODY)));
             newNoteObject.put(NOTE_BODY, intent.getStringExtra(NOTE_BODY));
             newNoteObject.put(NOTE_COLOUR, "#FFFFFF");
             newNoteObject.put(NOTE_FAVOURED, false);
@@ -86,5 +85,29 @@ public class NoteEventReceiver extends BroadcastReceiver {
                 UIUtils.toast(context, context.getString(R.string.msg_noteCreated));
             }
         }
+    }
+
+    private String getTitle(String body) {
+        if (body.isEmpty()) return "";
+        String[] splits = body.split(" ");
+        String ret = "";
+
+        if (splits.length > 0) {
+            ret += splits [0];
+            ret += " ";
+        }
+
+        if (splits.length > 1) {
+            ret += splits [1];
+            ret += " ";
+        }
+
+
+        if (splits.length > 2) {
+            ret += splits [2];
+        }
+
+        return ret;
+
     }
 }
