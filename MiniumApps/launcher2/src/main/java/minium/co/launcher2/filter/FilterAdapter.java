@@ -81,12 +81,12 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
         return null;
     }
 
-    @Override
-    public boolean isEnabled(int position) {
-        if (filteredData.size() > position)
-            return filteredData.get(position).isEnabled();
-        return super.isEnabled(position);
-    }
+//    @Override
+//    public boolean isEnabled(int position) {
+//        if (filteredData.size() > position)
+//            return filteredData.get(position).isEnabled();
+//        return super.isEnabled(position);
+//    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -130,6 +130,7 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
             holder.icon.setText(item.getOptionsListItem().getIconName());
             holder.icon.setTextColor(item.isEnabled() ?  ThemeUtils.getPrimaryColor(getContext()) : getContext().getResources().getColor(R.color.material_core_grey));
             holder.text.setText(item.getOptionsListItem().getText());
+            holder.text.setTextColor(item.isEnabled() ?  ThemeUtils.getPrimaryColor(getContext()) : getContext().getResources().getColor(R.color.material_core_grey));
         }
 
         return view;

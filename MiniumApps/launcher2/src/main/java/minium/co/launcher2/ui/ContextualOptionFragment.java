@@ -148,16 +148,21 @@ public class ContextualOptionFragment extends CoreFragment {
 
         switch (id) {
             case 0:
-                // TODO: progress bar
-                loadSendingOption();
-                manager.getCurrent().setCompleted(true);
-                if (!manager.has(ActionItem.ActionItemType.TEXT)) {
-                    manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                MainListItem item = adapter.getItemById(MainListItem.ItemType.OPTION_ITEM, 0);
+                if (item.isEnabled()) {
+                    loadSendingOption();
+                    manager.getCurrent().setCompleted(true);
+                    if (!manager.has(ActionItem.ActionItemType.TEXT)) {
+                        manager.add(new ActionItem(ActionItem.ActionItemType.TEXT));
+                    }
+                    manager.add(new ActionItem(ActionItem.ActionItemType.END_OP));
+
+
+                    manager.fireEvent();
+                } else {
+                    UIUtils.toast(getActivity(), "Type your message before sending.");
                 }
-                manager.add(new ActionItem(ActionItem.ActionItemType.END_OP));
 
-
-                manager.fireEvent();
                 break;
             case 1:
                 manager.add(new ActionItem(ActionItem.ActionItemType.CALL));
