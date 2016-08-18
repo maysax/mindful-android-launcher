@@ -189,12 +189,6 @@ public class ContextualOptionFragment extends CoreFragment {
             case 4:
                 getActivity().sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES").putExtra("body", manager.get(ActionItem.ActionItemType.DATA).getActionText()));
                 manager.clear();
-//                UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        manager.clear();
-//                    }
-//                });
                 break;
             case 5:
                 String inputStr = manager.getCurrent().getActionText();

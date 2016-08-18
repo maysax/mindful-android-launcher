@@ -3,7 +3,6 @@ package minium.co.launcher2.filter;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -277,13 +276,8 @@ public class FilterFragment extends CoreFragment {
                         manager.fireEvent();
                         break;
                     case 1:
-                        UIUtils.confirm(getActivity(), getString(R.string.msg_noteSaved), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                manager.clear();
-                            }
-                        });
-
+                        getActivity().sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES").putExtra("body", manager.get(ActionItem.ActionItemType.DATA).getActionText()));
+                        manager.clear();
                         break;
                     case 2:
                         String inputStr = manager.getCurrent().getActionText();
