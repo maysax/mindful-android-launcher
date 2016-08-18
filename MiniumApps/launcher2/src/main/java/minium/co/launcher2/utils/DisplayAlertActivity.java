@@ -76,7 +76,7 @@ public class DisplayAlertActivity extends Activity {
     private void showCallAlert(final String number, Date date) {
         notificationCounter++;
 
-        UIUtils.notification(this, "Missed call " +  SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date), "Got a missed call from " + number, R.string.label_callBack, android.R.string.cancel, R.drawable.ic_phone_missed_black_24dp, new DialogInterface.OnClickListener() {
+        UIUtils.notification(this, "Missed call " +  SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date), "Got a missed call from " + number, R.string.label_callBack, R.string.label_dismiss, R.drawable.ic_phone_missed_black_24dp, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
@@ -93,7 +93,7 @@ public class DisplayAlertActivity extends Activity {
     private void showSMSAlert(String number, String body, Date date) {
         notificationCounter++;
 
-        UIUtils.notification(this, "Messages " +  SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date), "From: " + number + "\n" + body, R.string.label_showDetails, android.R.string.cancel,  R.drawable.ic_sms_black_24dp,  new DialogInterface.OnClickListener() {
+        UIUtils.notification(this, "Messages " +  SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date), "From: " + number + "\n" + body, R.string.label_view, R.string.label_dismiss,  R.drawable.ic_sms_black_24dp,  new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
