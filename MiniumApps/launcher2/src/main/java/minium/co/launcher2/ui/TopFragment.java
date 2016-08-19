@@ -18,8 +18,6 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import de.greenrobot.event.Subscribe;
@@ -103,8 +101,8 @@ public class TopFragment extends CoreFragment {
             currentBatteryLevel = level;
 
         iTxt3.setText(getString(R.string.format_battery,
-                prefs.isNotificationSchedulerEnabled().get() ? String.format(Locale.US, "{fa-bell 12dp} %s",
-                new SimpleDateFormat("h:mm a").format(new Date(prefs.notificationScheulerNextMillis().get()))) : "", currentBatteryLevel));
+                prefs.isNotificationSchedulerEnabled().get() ? String.format(Locale.US, "{fa-bell 12dp} %d min",
+                prefs.notificationSchedulerValue().get()) : "", currentBatteryLevel));
 
         iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(currentBatteryLevel)).colorRes(R.color.white).sizeDp(12), null);
     }
