@@ -61,6 +61,7 @@ public class TopFragment extends CoreFragment {
 
     TelephonyManager telephonyManager;
     SignalStrengthListener listener;
+    private int currentBatteryLevel;
 
 
     public TopFragment() {
@@ -98,8 +99,14 @@ public class TopFragment extends CoreFragment {
     }
 
     private void updateBatteryText(int level) {
-        iTxt3.setText(getString(R.string.format_battery, level));
-        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(level)).colorRes(R.color.white).sizeDp(12), null);
+        if (level > 0)
+            currentBatteryLevel = level;
+
+        iTxt3.setText(getString(R.string.format_battery,
+                prefs.isNotificationSchedulerEnabled().get() ? String.format(Locale.US, "{fa-bell 12dp} %s",
+                new SimpleDateFormat("h:mm a").format(new Date(prefs.notificationScheulerNextMillis().get()))) : "", currentBatteryLevel));
+
+        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(currentBatteryLevel)).colorRes(R.color.white).sizeDp(12), null);
     }
 
     private Icon getBatteryIcon(int level) {
@@ -123,13 +130,11 @@ public class TopFragment extends CoreFragment {
 
     private void updateSignalText(int strength) {
 //        Tracer.i("Signal strength: " + strength + " Operator: " + telephonyManager.getNetworkOperatorName());
-        iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName(),
-                prefs.isNotificationSchedulerEnabled().get() ? String.format(Locale.US, "{fa-bell 12dp} %s",
-                        new SimpleDateFormat("h:mm a").format(new Date(prefs.notificationScheulerNextMillis().get()))) : ""));
+        iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName()));
     }
 
     @Subscribe
     public void onNotificationScheulerEvent(NotificationSchedulerEvent event) {
-        updateSignalText(0);
+        updateBatteryText(-1);
     }
 }

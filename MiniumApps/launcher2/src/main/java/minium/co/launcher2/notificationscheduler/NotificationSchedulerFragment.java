@@ -4,7 +4,6 @@ package minium.co.launcher2.notificationscheduler;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
@@ -47,7 +46,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
 
     PendingIntent alarmIntent;
 
-    private String[] pickerData = new String[] { "0", "1", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60" };
+    private String[] pickerData = new String[] { "0", "5", "10", "15", "30", "60" };
 
 
     public NotificationSchedulerFragment() {
@@ -100,8 +99,6 @@ public class NotificationSchedulerFragment extends CoreFragment {
 
         if (newVal != 0) {
             long nextIntervalMillis = DateUtils.nextIntervalMillis(Integer.parseInt(pickerData [newVal]) * 60 * 1000);
-            long systemElapsedRealTime = SystemClock.elapsedRealtime();
-            long elapsedRealTime = systemElapsedRealTime + (nextIntervalMillis - systemElapsedRealTime);
 
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
                     nextIntervalMillis,
