@@ -90,18 +90,14 @@ public abstract class CoreActivity extends AppCompatActivity {
      * Load fragment by replacing all previous fragments
      * @param fragment
      */
-    public void loadFragment(Fragment fragment) {
-        loadFragment(fragment, R.id.mainView);
-    }
-
-    public void loadFragment(Fragment fragment, int containerViewId) {
+    public void loadFragment(Fragment fragment, int containerViewId, String tag) {
         FragmentManager fragmentManager = getFragmentManager();
         // clear back stack
         for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
             fragmentManager.popBackStack();
         }
         FragmentTransaction t = fragmentManager.beginTransaction();
-        t.replace(containerViewId, fragment, "main");
+        t.replace(containerViewId, fragment, tag);
         fragmentManager.popBackStack();
         // TODO: we have to allow state loss here
         // since this function can get called from an AsyncTask which
@@ -116,11 +112,11 @@ public abstract class CoreActivity extends AppCompatActivity {
      * Load Fragment on top of other fragments
      * @param fragment
      */
-    public void loadChildFragment(Fragment fragment) {
+    public void loadChildFragment(Fragment fragment, int containerViewId) {
         Validate.notNull(fragment);
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.mainView, fragment, "main")
+        ft.replace(containerViewId, fragment, "main")
                 .addToBackStack(null)
                 .commit();
     }

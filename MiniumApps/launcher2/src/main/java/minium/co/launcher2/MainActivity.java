@@ -1,5 +1,6 @@
 package minium.co.launcher2;
 
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -14,7 +15,6 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
-import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
@@ -100,21 +100,30 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     }
 
     void loadTopView() {
-        loadFragment(TopFragment_.builder().build(), R.id.statusView);
+        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
     }
 
     void loadSearchView() {
-        loadFragment(SearchFragment_.builder().build(), R.id.searchView);
+        loadFragment(SearchFragment_.builder().build(), R.id.searchView, "search");
     }
 
     void loadMainView() {
 //        loadFragment(MainFragment_.builder().build(), R.id.mainView);
-        loadFragment(FilterFragment_.builder().build(), R.id.mainView);
+        loadFragment(FilterFragment_.builder().build(), R.id.mainView, "main");
     }
 
     void loadBottomView() {
 
     }
+
+//    void resetView() {
+//        FragmentManager fragmentManager = getFragmentManager();
+//        FragmentTransaction t = fragmentManager.beginTransaction();
+//            Fragment f = fragmentManager.findFragmentByTag("body");
+//            if(f!=null) t.remove(f);
+//
+//        t.commitAllowingStateLoss();
+//    }
 
     @Subscribe
     public void onEvent(LoadFragmentEvent event) {
@@ -124,30 +133,31 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
         switch (event.getId()) {
             case LoadFragmentEvent.CONTACTS_LIST:
-                loadFragment(ContactsPickerFragment2_.builder().build(), R.id.mainView);
+                loadFragment(ContactsPickerFragment2_.builder().build(), R.id.mainView, "main");
                 break;
             case LoadFragmentEvent.CONTACTS_NUMBER_LIST:
                 loadFragment(ContactDetailsFragment_.builder().selectedContactId(contactId).contactName(manager.getPrevious()
-                        .getActionText()).build());
+                        .getActionText()).build(), R.id.mainView, "main");
                 break;
             case LoadFragmentEvent.CONTEXTUAL_OPTIONS:
-                loadFragment(ContextualOptionFragment_.builder().build());
+                loadFragment(ContextualOptionFragment_.builder().build(), R.id.mainView, "main");
                 break;
             default:
             case LoadFragmentEvent.MAIN_FRAGMENT:
                 loadMainView();
                 break;
             case LoadFragmentEvent.CALL_LOG:
-                loadFragment(CallLogFragment_.builder().build());
+//                loadFragment(CallLogFragment_.builder().build(), R.id.bodyView, "body");
+                loadChildFragment(CallLogFragment_.builder().build(), R.id.bodyView);
                 break;
             case LoadFragmentEvent.OPTIONS:
-                loadFragment(OptionsFragment_.builder().build());
+                loadFragment(OptionsFragment_.builder().build(), R.id.mainView, "main");
                 break;
             case LoadFragmentEvent.OPTIONS_2:
-                loadFragment(OptionsFragment2_.builder().build());
+                loadFragment(OptionsFragment2_.builder().build(), R.id.mainView, "main");
                 break;
             case LoadFragmentEvent.NOTIFICATION_SCHEDULER:
-                loadFragment(NotificationSchedulerFragment_.builder().build());
+                loadChildFragment(NotificationSchedulerFragment_.builder().build(), R.id.bodyView);
                 break;
         }
 
@@ -195,7 +205,13 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public void onBackPressed() {
-        EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.MAIN_FRAGMENT));
+        FragmentManager fragmentManager = getFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() == 1) {
+            loadedFragmentId = LoadFragmentEvent.MAIN_FRAGMENT;
+            loadMainView();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

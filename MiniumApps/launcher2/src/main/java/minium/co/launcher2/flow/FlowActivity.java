@@ -104,7 +104,7 @@ public class FlowActivity extends CoreActivity {
     }
 
     void loadTopView() {
-        loadFragment(TopFragment_.builder().build(), R.id.statusView);
+        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
     }
 
     @UiThread(delay = 100L)

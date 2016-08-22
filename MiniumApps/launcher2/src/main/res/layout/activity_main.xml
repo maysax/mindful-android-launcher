@@ -11,6 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         tools:background="@color/material.core.red"/>
+
+    <FrameLayout
+        android:id="@+id/bodyView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:background="@color/material.core.teal"/>
     
     <FrameLayout
         android:id="@+id/searchView"
@@ -21,8 +27,7 @@
     <FrameLayout
         android:id="@+id/mainView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         tools:background="@color/material.core.orange">
 
     </FrameLayout>

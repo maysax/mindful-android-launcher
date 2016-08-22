@@ -104,26 +104,26 @@ public class FilterFragment extends CoreFragment {
     }
 
     private void loadOptions() {
-        items.add(new MainListItem(new OptionsListItem(0, "{fa-comment}", "Send as SMS")));
-        items.add(new MainListItem(new OptionsListItem(1, "{fa-pencil}", "Save Note")));
-        items.add(new MainListItem(new OptionsListItem(2, "{fa-user-plus}", "Create Contact")));
+        items.add(new MainListItem(new OptionsListItem(0, "{fa-comment}", getString(R.string.title__sendAsSMS))));
+        items.add(new MainListItem(new OptionsListItem(1, "{fa-pencil}", getString(R.string.title_saveNote))));
+        items.add(new MainListItem(new OptionsListItem(2, "{fa-user-plus}", getString(R.string.title_createContact))));
     }
 
     private void loadActions() {
-        items.add(new MainListItem(new ActionListItem(0, "{fa-comment}", "Text")));
-        items.add(new MainListItem(new ActionListItem(1, "{fa-phone}", "Call")));
-        items.add(new MainListItem(new ActionListItem(2, "{fa-sticky-note}", "Note")));
-        items.add(new MainListItem(new ActionListItem(3, "{fa-users}", "Messages")));
-        items.add(new MainListItem(new ActionListItem(4, "{fa-phone}", "Call Log")));
-        items.add(new MainListItem(new ActionListItem(5, "{fa-user}", "Contacts")));
-        items.add(new MainListItem(new ActionListItem(6, "{fa-ban}", "Flow")));
-        items.add(new MainListItem(new ActionListItem(7, "{fa-microphone}", "Voicemail")));
-        items.add(new MainListItem(new ActionListItem(8, "{fa-sticky-note}", "Notes")));
-        items.add(new MainListItem(new ActionListItem(9, "{fa-clock-o}", "Clock")));
-        items.add(new MainListItem(new ActionListItem(10, "{fa-cogs}", "Settings")));
-        items.add(new MainListItem(new ActionListItem(11, "{fa-tint}", "Theme")));
-        items.add(new MainListItem(new ActionListItem(12, "{fa-bell}", "Notification Scheduler")));
-        items.add(new MainListItem(new ActionListItem(13, "{fa-home}", "Default Launcher")));
+        items.add(new MainListItem(new ActionListItem(0, "{fa-comment}", getString(R.string.title_text))));
+        items.add(new MainListItem(new ActionListItem(1, "{fa-phone}", getString(R.string.title_call))));
+        items.add(new MainListItem(new ActionListItem(2, "{fa-sticky-note}", getString(R.string.title_note))));
+        items.add(new MainListItem(new ActionListItem(3, "{fa-users}", getString(R.string.title_messages))));
+        items.add(new MainListItem(new ActionListItem(4, "{fa-phone}", getString(R.string.title_callLog))));
+        items.add(new MainListItem(new ActionListItem(5, "{fa-user}", getString(R.string.title_contacts))));
+        items.add(new MainListItem(new ActionListItem(6, "{fa-ban}", getString(R.string.title_flow))));
+        items.add(new MainListItem(new ActionListItem(7, "{fa-microphone}", getString(R.string.title_voicemail))));
+        items.add(new MainListItem(new ActionListItem(8, "{fa-sticky-note}", getString(R.string.title_notes))));
+        items.add(new MainListItem(new ActionListItem(9, "{fa-clock-o}", getString(R.string.title_clock))));
+        items.add(new MainListItem(new ActionListItem(10, "{fa-cogs}", getString(R.string.title_settings))));
+        items.add(new MainListItem(new ActionListItem(11, "{fa-tint}", getString(R.string.title_theme))));
+        items.add(new MainListItem(new ActionListItem(12, "{fa-bell}", getString(R.string.title_notificationScheduler))));
+        items.add(new MainListItem(new ActionListItem(13, "{fa-home}", getString(R.string.title_defaultLauncher))));
     }
 
     private void loadContacts() {
