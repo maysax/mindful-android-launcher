@@ -44,6 +44,14 @@
         tools:text="Hello world"
         android:gravity="center"/>
 
+    <Button
+        android:id="@+id/btnSet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/margin.2"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
@@ -63,18 +64,6 @@ public class NotificationSchedulerFragment extends CoreFragment {
         updateUI(prefs.notificationScheduleIndex().get());
 
         alarmIntent = PendingIntent.getBroadcast(getActivity(), 23, new Intent(getActivity(), NotificationScheduleReceiver_.class).putExtra(NotificationScheduleReceiver.KEY_IS_NOTIFICATION_SCHEDULER, true), 0);
-
-        valPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                updateUI(newVal);
-                setAlarm(newVal);
-                makeEnabled(newVal);
-                prefs.notificationScheduleIndex().put(newVal);
-                prefs.notificationSchedulerValue().put(Integer.parseInt(pickerData [newVal]));
-                EventBus.getDefault().post(new NotificationSchedulerEvent(newVal != 0));
-            }
-        });
     }
 
     private void makeEnabled(int newVal) {
@@ -119,5 +108,16 @@ public class NotificationSchedulerFragment extends CoreFragment {
     void switchSuppressCalls(CompoundButton btn, boolean isChecked) {
         Tracer.d("switchSuppressCalls " + isChecked);
         prefs.notificationSchedulerSupressCalls().put(isChecked);
+    }
+
+    @Click
+    void btnSet() {
+        int newVal = valPicker.getValue();
+        updateUI(newVal);
+        setAlarm(newVal);
+        makeEnabled(newVal);
+        prefs.notificationScheduleIndex().put(newVal);
+        prefs.notificationSchedulerValue().put(Integer.parseInt(pickerData [newVal]));
+        EventBus.getDefault().post(new NotificationSchedulerEvent(newVal != 0));
     }
 }
