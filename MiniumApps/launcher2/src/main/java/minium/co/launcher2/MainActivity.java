@@ -2,9 +2,9 @@ package minium.co.launcher2;
 
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 
@@ -191,11 +191,21 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public void onSmsSent(int threadId) {
-        Intent intent = new Intent();
+/*        Intent intent = new Intent();
         intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
         intent.putExtra("thread_id", Long.valueOf(threadId));
         try {
             startActivity(intent);
+            manager.clear();
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+            UIUtils.alert(this, "Minium-messages app not found.");
+        }*/
+
+        Intent defineIntent = new Intent(Intent.ACTION_VIEW);
+        defineIntent.setData(Uri.parse("content://mms-sms/conversations/"+threadId));
+        try {
+            startActivity(defineIntent);
             manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
