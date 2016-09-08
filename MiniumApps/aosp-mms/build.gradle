@@ -41,6 +41,8 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
+    compile project(':aosp-core')
+
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 }
 

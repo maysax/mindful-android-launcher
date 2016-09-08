@@ -51,6 +51,8 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
+    compile project(':aosp-mms')
+
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 }
 
