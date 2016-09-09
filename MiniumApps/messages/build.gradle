@@ -27,14 +27,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    compileOptions {
-        compileOptions.encoding = "UTF-8"
-
-        // Use Java 1.7, requires minSdk 8
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 }
 
 repositories {
@@ -52,6 +44,7 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
 
     compile project(':aosp-mms')
+    compile project(':core')
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 }

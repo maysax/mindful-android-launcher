@@ -50,7 +50,7 @@ project.ext {
     junitVersion = "4.12"
 
     // get the current build SHA
-    // gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+    gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
     // get the current build time
     buildTime = new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))

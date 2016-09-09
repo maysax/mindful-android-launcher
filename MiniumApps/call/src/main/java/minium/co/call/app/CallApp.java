@@ -27,7 +27,7 @@ public class CallApp extends CoreApplication {
         Tracer.i("Application Id: " + minium.co.call.BuildConfig.APPLICATION_ID
                 + " || Version code: " + minium.co.call.BuildConfig.VERSION_CODE
                 + " || Version name: " + minium.co.call.BuildConfig.VERSION_NAME
-                // + " || Git Sha: " + BuildConfig.GIT_SHA
+                + " || Git Sha: " + BuildConfig.GIT_SHA
                 + " || Build time:  " + BuildConfig.BUILD_TIME
                 + " || Build flavor: " + minium.co.call.BuildConfig.FLAVOR
                 + " || Build type: " + minium.co.call.BuildConfig.BUILD_TYPE);

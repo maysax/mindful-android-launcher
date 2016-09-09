@@ -13,7 +13,7 @@ android {
 
         versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
 
-        // buildConfigField "String", project.KEY_GIT_SHA, "\"${gitSha}\""
+        buildConfigField "String", project.KEY_GIT_SHA, "\"${gitSha}\""
         buildConfigField "String", project.KEY_BUILD_TIME, "\"${buildTime}\""
 
         multiDexEnabled true
