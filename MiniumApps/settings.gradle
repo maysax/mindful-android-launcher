@@ -1,6 +1,4 @@
 include ':launcher'
-include ':aosp-core'
-include ':aosp-mms'
 include ':launcher2'
 include ':core'
 include ':calculator'
