@@ -120,7 +120,7 @@ public class FlowActivity extends CoreActivity {
     }
 
     void endFlow() {
-//        FlowNotificationService_.intent(this).extra("start", false).start();
+        SiempoNotificationService_.intent(this).extra("start", false).start();
         prefs.isFlowRunning().put(false);
         isServiceRunning = false;
         sendBroadcast(new Intent(this, NotificationScheduleReceiver_.class));
@@ -137,16 +137,14 @@ public class FlowActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        if (!isEnabled(this)) {
-//            UIUtils.confirm(this, "Ebb flow manager service is not enabled. Please allow Ebb flow manager to access notification service", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
-//                }
-//            });
-//        } else
-
-        if (!isServiceRunning) {
+        if (!isEnabled(this)) {
+            UIUtils.confirm(this, "Ebb flow manager service is not enabled. Please allow Ebb flow manager to access notification service", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                }
+            });
+        } else if (!isServiceRunning) {
             onVolumeUpKeyPressed();
         }
     }
@@ -156,9 +154,9 @@ public class FlowActivity extends CoreActivity {
         UIUtils.toastShort(this, "Press Volume-Up key to increase by 15 min");
     }
 
-    /** @return True if {@link FlowNotificationService} is enabled. */
+    /** @return True if {@link SiempoNotificationService} is enabled. */
     public static boolean isEnabled(Context mContext) {
-        return ServiceUtils.isNotificationListenerServiceRunning(mContext, FlowNotificationService_.class);
+        return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationService_.class);
     }
 
     private void animate() {
@@ -198,7 +196,7 @@ public class FlowActivity extends CoreActivity {
         Tracer.d("onKeyUp: Volume up");
         if (progress > 0 && !isAnimationRunning) {
             if (!isServiceRunning) {
-//                FlowNotificationService_.intent(this).extra("start", true).start();
+                SiempoNotificationService_.intent(this).extra("start", true).start();
                 updateUI();
                 isServiceRunning = true;
             }

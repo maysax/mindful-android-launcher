@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.provider.Settings;
 
 import com.orm.query.Condition;
 import com.orm.query.Select;
@@ -97,9 +99,15 @@ public class DisplayAlertActivity extends Activity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
-                    Intent intent = new Intent();
-                    intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
-                    startActivity(intent);
+//                    Intent intent = new Intent(Intent.ACTION_VIEW);
+//                    intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
+                    String defaultApplication = Settings.Secure.getString(getContentResolver(), "sms_default_application");
+                    PackageManager pm = getPackageManager();
+                    Intent intent = pm.getLaunchIntentForPackage(defaultApplication );
+                    if (intent != null) {
+                        startActivity(intent);
+                    }
+
                     dialog.dismiss();
                 }
 

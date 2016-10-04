@@ -26,6 +26,7 @@ import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.DateUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.events.NotificationSchedulerEvent;
+import minium.co.launcher2.flow.SiempoNotificationService_;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,8 +70,10 @@ public class NotificationSchedulerFragment extends CoreFragment {
     private void makeEnabled(int newVal) {
         if (newVal == 0) {
             prefs.isNotificationSchedulerEnabled().put(false);
+            SiempoNotificationService_.intent(getActivity()).extra("start", false).start();
         } else {
             prefs.isNotificationSchedulerEnabled().put(true);
+            SiempoNotificationService_.intent(getActivity()).extra("start", true).start();
         }
     }
 

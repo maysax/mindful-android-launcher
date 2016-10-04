@@ -36,7 +36,7 @@ allprojects {
 project.ext {
     compileSdkVersion = 22
     buildToolsVersion = "24.0.2"
-    minSdkVersion = 17  // Targeting lollipop
+    minSdkVersion = 22  // Targeting lollipop
     targetSdkVersion = 22
 
     supportVersion = "22.1.0"
@@ -59,7 +59,7 @@ project.ext {
     versionMajor = 0
     versionMinor = 0
     versionPatch = 0
-    versionBuild = 2 // bump for internal builds, public betas, etc.
+    versionBuild = 4 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {

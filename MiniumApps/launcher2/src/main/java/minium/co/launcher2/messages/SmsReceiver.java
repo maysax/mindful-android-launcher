@@ -59,12 +59,15 @@ public class SmsReceiver extends BroadcastReceiver {
             mAddress = sms.getDisplayOriginatingAddress();
             mDate = new Date(sms.getTimestampMillis());
 
-            new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
-            addMessageToInbox(context, mAddress, mBody, mDate.getTime());
+
+            if (prefs.isFlowRunning().get() || prefs.isNotificationSchedulerEnabled().get()) {
+                new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
+            }
+            /*addMessageToInbox(context, mAddress, mBody, mDate.getTime());
 
             if (!prefs.isFlowRunning().get() && !prefs.isNotificationSchedulerEnabled().get()) {
                 context.sendBroadcast(new Intent(context, NotificationScheduleReceiver_.class));
-            }
+            }*/
         }
     }
 

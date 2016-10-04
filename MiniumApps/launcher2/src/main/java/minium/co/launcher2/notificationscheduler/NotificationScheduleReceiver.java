@@ -78,37 +78,9 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
         if (count > 0) {
             DisplayAlertActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
         }
-
-        /*List<MissedCallItem> missedCalls = Select.from(MissedCallItem.class)
-                .where(Condition.prop("has_displayed").eq(0))
-                .list();
-
-        List<ReceivedSMSItem> smsItems = Select.from(ReceivedSMSItem.class)
-                .where(Condition.prop("has_displayed").eq(0))
-                .list();
-
-        Tracer.d("Generating missed call notifications: " + missedCalls.size() + " and SMS: " + smsItems.size());
-
-        if (missedCalls.size() > 0 || smsItems.size() > 0) {
-            new AudioUtils().playNotificationSound(context);
-        }
-
-        if (missedCalls.size() > 0) {
-            for (MissedCallItem item : missedCalls)
-                showCallNotifications(context, item.getNumber(), missedCalls.size());
-
-            MissedCallItem.deleteAll(MissedCallItem.class);
-        }
-
-        if (smsItems.size() > 0) {
-            for (ReceivedSMSItem item : smsItems) {
-                showSMSNotifications(context, item.getNumber(), item.getBody(), smsItems.size());
-            }
-
-            ReceivedSMSItem.deleteAll(ReceivedSMSItem.class);
-        }*/
     }
 
+    @Deprecated
     private void showSMSNotifications(Context context, String number, String body, int size) {
         Intent intent = new Intent();
         intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
@@ -124,6 +96,7 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
         notificationManager.notify(1, notification);
     }
 
+    @Deprecated
     private void showCallNotifications(Context context, String number, int size) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + number));
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);

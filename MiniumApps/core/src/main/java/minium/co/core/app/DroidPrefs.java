@@ -54,4 +54,7 @@ public interface DroidPrefs {
 
     @DefaultBoolean(false)
     boolean isNotificationSchedulerEnabled();
+
+    @DefaultBoolean(false)
+    boolean isSiempoNotificationServiceRunning();
 }

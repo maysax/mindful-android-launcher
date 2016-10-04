@@ -27,7 +27,8 @@
         android:text="Suppress Calls"
         android:padding="@dimen/margin.2"
         app:switchPadding="@dimen/margin.2"
-        android:checked="true"/>
+        android:checked="true"
+        android:visibility="invisible" />
 
 
     <NumberPicker
