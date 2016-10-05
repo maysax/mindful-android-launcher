@@ -32,6 +32,9 @@ public interface DroidPrefs {
     @DefaultBoolean(true)
     boolean notificationSchedulerSupressCalls();
 
+    @DefaultBoolean(true)
+    boolean notificationSchedulerSupressSMS();
+
     // Flow related configurations
     @DefaultBoolean(false)
     boolean isFlowRunning();

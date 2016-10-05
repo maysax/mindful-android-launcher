@@ -18,6 +18,22 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/chkSuppressCalls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suppress Calls"
+        android:layout_margin="@dimen/margin.2"
+        android:layout_gravity="end"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/chkSuppressSMS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Suppress SMS"
+        android:layout_margin="@dimen/margin.2"
+        android:layout_gravity="end"/>
+
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/switchSuppressCalls"
         android:layout_width="wrap_content"
@@ -28,7 +44,7 @@
         android:padding="@dimen/margin.2"
         app:switchPadding="@dimen/margin.2"
         android:checked="true"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
 
     <NumberPicker

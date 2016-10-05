@@ -113,6 +113,18 @@ public class NotificationSchedulerFragment extends CoreFragment {
         prefs.notificationSchedulerSupressCalls().put(isChecked);
     }
 
+    @CheckedChange
+    void chkSuppressCalls(boolean isChecked) {
+        Tracer.d("chkSuppressCalls " + isChecked);
+        prefs.notificationSchedulerSupressCalls().put(isChecked);
+    }
+
+    @CheckedChange
+    void chkSuppressSMS(boolean isChecked) {
+        Tracer.d("chkSuppressSMS " + isChecked);
+        prefs.notificationSchedulerSupressSMS().put(isChecked);
+    }
+
     @Click
     void btnSet() {
         int newVal = valPicker.getValue();
