@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="Suppress Calls"
         android:layout_margin="@dimen/margin.2"
-        android:layout_gravity="end"/>
+        android:layout_gravity="start"/>
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/chkSuppressSMS"
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:text="Suppress SMS"
         android:layout_margin="@dimen/margin.2"
-        android:layout_gravity="end"/>
+        android:layout_gravity="start"/>
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/switchSuppressCalls"
