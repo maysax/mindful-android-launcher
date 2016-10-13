@@ -91,7 +91,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".utils.DisplayAlertActivity_" android:launchMode="singleTask" />
+        <activity android:name=".notification.DisplayAlertActivity_" android:launchMode="singleTask" />
 
         <!-- Becoming default SMS app -->
         <!-- Broadcast receiver for SMS -->

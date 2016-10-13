@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_gravity="center"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="2dp"
+    card_view:cardUseCompatPadding="true">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/notificationAvatar"
+            android:layout_margin="@dimen/smallSpace"
+            android:layout_width="@dimen/avatarSize"
+            android:layout_height="@dimen/avatarSize"
+            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            android:src="@mipmap/ic_launcher"
+            />
+
+        <TextView
+            android:id="@+id/notificationTitle"
+            style="@style/tweetName"
+            android:layout_marginBottom="1dp"
+            android:layout_toRightOf="@+id/notificationAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chad"/>
+
+        <TextView
+            android:id="@+id/notificationText"
+            style="@style/tweetText"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/notificationAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/notificationTitle"
+            android:text="Hello world!"/>
+
+        <TextView
+            android:id="@+id/notificationDate"
+            style="@style/tweetDate"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="04/06/13"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/notificationAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="Hello world"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/notificationText"
+            android:textColor="@color/colorAccent"/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

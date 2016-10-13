@@ -29,6 +29,7 @@ android {
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -44,7 +45,8 @@ dependencies {
     compile project(':color-picker')
 
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
-    compile 'com.github.satyan:sugar:1.5'
+    compile "com.github.satyan:sugar:$sugarOrmVersion"
+    compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 

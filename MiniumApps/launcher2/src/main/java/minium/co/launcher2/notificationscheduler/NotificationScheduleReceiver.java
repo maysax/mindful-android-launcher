@@ -27,7 +27,7 @@ import minium.co.core.util.DateUtils;
 import minium.co.launcher2.events.NotificationSchedulerEvent;
 import minium.co.launcher2.model.MissedCallItem;
 import minium.co.launcher2.model.ReceivedSMSItem;
-import minium.co.launcher2.utils.DisplayAlertActivity_;
+import minium.co.launcher2.notification.DisplayAlertActivity_;
 
 @EReceiver
 public class NotificationScheduleReceiver extends BroadcastReceiver {

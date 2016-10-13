@@ -10,7 +10,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -36,7 +36,7 @@ allprojects {
 project.ext {
     compileSdkVersion = 22
     buildToolsVersion = "24.0.2"
-    minSdkVersion = 22  // Targeting lollipop
+    minSdkVersion = 21  // Targeting lollipop
     targetSdkVersion = 22
 
     supportVersion = "22.1.0"
@@ -46,6 +46,8 @@ project.ext {
     eventbusVersion = "3.0.0-beta1"
     loggerVersion = "1.11"
     crashlyticsVersion = "2.5.5@aar"
+    baseRecyclerViewAdapterHelperVersion = "2.2.0"
+    sugarOrmVersion = "1.5"
 
     junitVersion = "4.12"
 
