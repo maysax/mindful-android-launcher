@@ -16,6 +16,7 @@ import java.util.Date;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.model.ReceivedSMSItem;
+import minium.co.launcher2.notification.DisplayAlertActivity_;
 import minium.co.launcher2.notificationscheduler.NotificationScheduleReceiver_;
 
 /**
@@ -60,8 +61,12 @@ public class SmsReceiver extends BroadcastReceiver {
             mDate = new Date(sms.getTimestampMillis());
 
 
-            if (prefs.isFlowRunning().get() || prefs.isNotificationSchedulerEnabled().get()) {
-                new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
+            new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
+
+            if (prefs.isFlowRunning().get() || (prefs.isNotificationSchedulerEnabled().get() && prefs.notificationSchedulerSupressSMS().get())) {
+                // Suppress notification
+            } else {
+                DisplayAlertActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
             }
             /*addMessageToInbox(context, mAddress, mBody, mDate.getTime());
 

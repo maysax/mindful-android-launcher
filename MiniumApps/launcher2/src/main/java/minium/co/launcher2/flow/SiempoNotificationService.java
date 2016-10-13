@@ -76,8 +76,7 @@ public class SiempoNotificationService extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         Tracer.d("notification posted");
         if (Build.VERSION.SDK_INT >= 21) {
-            if(prefs.isFlowRunning().get() || (prefs.isNotificationSchedulerEnabled().get() && prefs.notificationSchedulerSupressSMS().get()))
-                cancelNotification(notification.getKey());
+            cancelNotification(notification.getKey());
         }
     }
 

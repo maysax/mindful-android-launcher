@@ -116,13 +116,12 @@ public class ContextualOptionFragment extends CoreFragment {
         MainListItem item = adapter.getItemById(MainListItem.ItemType.OPTION_ITEM, 0);
 
         if (item != null) {
-            if (manager.get(ActionItem.ActionItemType.DATA).getActionText().isEmpty()) {
-                // Data Empty
-                item.setEnabled(false);
-            }
-            else {
+            if (manager.has(ActionItem.ActionItemType.DATA) && !manager.get(ActionItem.ActionItemType.DATA).getActionText().isEmpty()) {
                 // Has Data
                 item.setEnabled(true);
+            } else {
+                // Data Empty
+                item.setEnabled(false);
             }
         }
     }

@@ -61,10 +61,19 @@
             android:id="@+id/notificationAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
             android:text="Hello world"
             android:layout_alignParentEnd="true"
             android:layout_below="@id/notificationText"
+            android:textColor="@color/colorAccent"/>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/dismissAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dismiss"
+            android:layout_toStartOf="@id/notificationAction"
+            android:layout_marginEnd="@dimen/margin.2"
+            android:layout_alignBaseline="@id/notificationAction"
             android:textColor="@color/colorAccent"/>
 
     </RelativeLayout>

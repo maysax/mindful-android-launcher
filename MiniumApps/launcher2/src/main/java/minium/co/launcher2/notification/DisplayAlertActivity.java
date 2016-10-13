@@ -11,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemChildClickListener;
@@ -19,6 +21,7 @@ import com.orm.query.Select;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ViewById;
 
 import java.text.SimpleDateFormat;
@@ -27,27 +30,43 @@ import java.util.Date;
 import java.util.List;
 
 import minium.co.core.log.Tracer;
+import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.model.MissedCallItem;
 import minium.co.launcher2.model.ReceivedSMSItem;
+import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.utils.AudioUtils;
+import minium.co.launcher2.utils.RecyclerViewItemClickListener;
 
+@Fullscreen
 @EActivity(R.layout.activity_display_alert)
-public class DisplayAlertActivity extends Activity {
+public class DisplayAlertActivity extends CoreActivity implements RecyclerViewItemClickListener {
+
+    @ViewById
+    FrameLayout statusView;
 
     @ViewById
     RecyclerView rView;
 
     private SiempoNotificationAdapter mAdapter;
 
+    private List<SiempoNotification> notificationList;
+
     private int notificationCounter;
 
     @AfterViews
     void afterViews() {
         Tracer.d("afterViews called DisplayAlertActivity");
+        statusView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
+        loadTopView();
 
         loadAndFire();
+    }
+
+    void loadTopView() {
+        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
     }
 
     private void loadAndFire() {
@@ -65,7 +84,7 @@ public class DisplayAlertActivity extends Activity {
             new AudioUtils().playNotificationSound(this);
         }
 
-        List<SiempoNotification> notificationList = new ArrayList<>();
+        notificationList = new ArrayList<>();
 
         if (missedCalls.size() > 0) {
             for (MissedCallItem item : missedCalls) {
@@ -73,7 +92,7 @@ public class DisplayAlertActivity extends Activity {
                 //showCallAlert(item.getNumber(), item.getDate());
             }
 
-            MissedCallItem.deleteAll(MissedCallItem.class);
+            //MissedCallItem.deleteAll(MissedCallItem.class);
         }
 
         if (smsItems.size() > 0) {
@@ -82,37 +101,13 @@ public class DisplayAlertActivity extends Activity {
                 //showSMSAlert(item.getNumber(), item.getBody(), item.getDate());
             }
 
-            ReceivedSMSItem.deleteAll(ReceivedSMSItem.class);
+            //ReceivedSMSItem.deleteAll(ReceivedSMSItem.class);
         }
 
         if (!notificationList.isEmpty()) {
             rView.setHasFixedSize(true);
             rView.setLayoutManager(new LinearLayoutManager(this));
-            mAdapter = new SiempoNotificationAdapter(notificationList);
-            mAdapter.openLoadAnimation();
-            rView.addOnItemTouchListener(new OnItemChildClickListener() {
-                @Override
-                public void SimpleOnItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-                    SiempoNotification notification = (SiempoNotification) baseQuickAdapter.getItem(position);
-                    if (notification.isMissedCallItem()) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + notification.getMissedCallItem().getNumber()));
-                        startActivity(intent);
-                    } else {
-                        String defaultApplication = Settings.Secure.getString(getContentResolver(), "sms_default_application");
-                        PackageManager pm = getPackageManager();
-                        Intent intent = pm.getLaunchIntentForPackage(defaultApplication);
-                        if (intent != null) {
-                            startActivity(intent);
-                        }
-                    }
-                    baseQuickAdapter.remove(position);
-                    baseQuickAdapter.notifyItemRemoved(position);
-
-                    if (baseQuickAdapter.getItemCount() == 0) {
-                        finish();
-                    }
-                }
-            });
+            mAdapter = new SiempoNotificationAdapter(notificationList, this);
             rView.setAdapter(mAdapter);
         }
     }
@@ -171,5 +166,42 @@ public class DisplayAlertActivity extends Activity {
         super.onNewIntent(intent);
         Tracer.d("onNewIntent received in DisplayAlertActivity");
         loadAndFire();
+    }
+
+    @Override
+    public void onItemClick(int id, View view, int position) {
+        Tracer.d("SimpleOnItemChildClick called for position: " + position);
+        SiempoNotification notification = notificationList.get(position);
+
+        switch (view.getId()) {
+            case R.id.notificationAction:
+
+                if (notification.isMissedCallItem()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + notification.getMissedCallItem().getNumber()));
+                    startActivity(intent);
+                } else {
+                    String defaultApplication = Settings.Secure.getString(getContentResolver(), "sms_default_application");
+                    PackageManager pm = getPackageManager();
+                    Intent intent = pm.getLaunchIntentForPackage(defaultApplication);
+                    if (intent != null) {
+                        startActivity(intent);
+                    }
+                }
+                break;
+        }
+
+        if (notification.isMissedCallItem()) {
+            MissedCallItem missedCallItem = MissedCallItem.findById(MissedCallItem.class, notification.getMissedCallItem().getId());
+            MissedCallItem.delete(missedCallItem);
+        } else {
+            ReceivedSMSItem smsItem = ReceivedSMSItem.findById(ReceivedSMSItem.class, notification.getSmsItem().getId());
+            ReceivedSMSItem.delete(smsItem);
+        }
+
+        notificationList.remove(position);
+        mAdapter.notifyItemRemoved(position);
+        if (mAdapter.getItemCount() == 0) {
+            finish();
+        }
     }
 }
