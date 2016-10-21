@@ -1,15 +1,18 @@
 package minium.co.core.ui;
 
+import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import de.greenrobot.event.EventBus;
@@ -33,6 +36,9 @@ public abstract class CoreActivity extends AppCompatActivity {
     @Pref
     protected DroidPrefs_ prefs;
 
+    @SystemService
+    protected ActivityManager activityManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +50,13 @@ public abstract class CoreActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        activityManager.moveTaskToFront(getTaskId(), 0);
     }
 
     private void onCreateAnimation(Bundle savedInstanceState) {
