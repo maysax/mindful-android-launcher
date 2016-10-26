@@ -90,7 +90,7 @@ public class ActionItemManager {
                 }
                 removeLast();
 
-                if (getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
+                if (getCurrent() != null && getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
                     removeLast();
                 }
 

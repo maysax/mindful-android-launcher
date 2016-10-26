@@ -10,7 +10,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -61,7 +61,7 @@ project.ext {
     versionMajor = 0
     versionMinor = 0
     versionPatch = 0
-    versionBuild = 5 // bump for internal builds, public betas, etc.
+    versionBuild = 6 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {
