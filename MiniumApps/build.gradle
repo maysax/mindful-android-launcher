@@ -39,7 +39,7 @@ project.ext {
     minSdkVersion = 21  // Targeting lollipop
     targetSdkVersion = 22
 
-    supportVersion = "22.1.0"
+    supportVersion = "22.2.0"
     annotationsVersion = "4.0.0"
     iconifyVersion = "2.2.1"
     calligraphyVersion = "2.1.0@aar"

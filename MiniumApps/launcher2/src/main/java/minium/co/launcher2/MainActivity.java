@@ -7,7 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import org.androidannotations.annotations.AfterViews;
@@ -42,6 +47,7 @@ import minium.co.launcher2.ui.ContextualOptionFragment_;
 import minium.co.launcher2.ui.OptionsFragment2_;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.TopFragment_;
+import minium.co.launcher2.utils.AppCompatActivityMenuKeyInterceptor;
 
 @Fullscreen
 @EActivity(R.layout.activity_main)
@@ -65,6 +71,12 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     ActionRouter router;
 
     boolean isDispatched = false;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        AppCompatActivityMenuKeyInterceptor.intercept(this);
+    }
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -230,6 +242,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        Tracer.d("Keycode any pressed " + event.getKeyCode());
         int keyCode = event.getKeyCode();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
@@ -239,22 +252,12 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
                     isDispatched = true;
                 }
                 return true;
-            case KeyEvent.KEYCODE_MENU:
-                Tracer.d("Keycode menu pressed");
+            case KeyEvent.KEYCODE_APP_SWITCH:
+                Tracer.d("Keycode app switch pressed");
                 return true;
             default:
                 return super.dispatchKeyEvent(event);
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Tracer.d("Keycode any pressed " + keyCode);
-        if (keyCode == KeyEvent.KEYCODE_APP_SWITCH) {
-            Tracer.d("Keycode menu pressed");
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Subscribe
