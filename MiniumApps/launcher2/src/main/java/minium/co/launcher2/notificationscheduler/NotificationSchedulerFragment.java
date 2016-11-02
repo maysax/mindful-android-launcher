@@ -60,6 +60,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
 
     PendingIntent alarmIntent;
 
+
     private String[] pickerData = new String[] { "0", "5", "10", "15", "30", "60" };
 
 

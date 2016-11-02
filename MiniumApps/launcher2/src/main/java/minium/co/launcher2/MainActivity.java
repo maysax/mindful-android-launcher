@@ -69,6 +69,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
+        //startLockTask();
+
         statusView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
         searchView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
 
@@ -222,7 +224,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             loadedFragmentId = LoadFragmentEvent.MAIN_FRAGMENT;
             loadMainView();
         } else {
-            super.onBackPressed();
+            // super.onBackPressed();
         }
     }
 
@@ -231,14 +233,28 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         int keyCode = event.getKeyCode();
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
+                Tracer.d("Keycode volume up pressed");
                 if (!isDispatched) {
                     FlowActivity_.intent(this).start();
                     isDispatched = true;
                 }
                 return true;
+            case KeyEvent.KEYCODE_MENU:
+                Tracer.d("Keycode menu pressed");
+                return true;
             default:
                 return super.dispatchKeyEvent(event);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Tracer.d("Keycode any pressed " + keyCode);
+        if (keyCode == KeyEvent.KEYCODE_APP_SWITCH) {
+            Tracer.d("Keycode menu pressed");
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Subscribe

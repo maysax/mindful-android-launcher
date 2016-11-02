@@ -56,7 +56,7 @@ public abstract class CoreActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        activityManager.moveTaskToFront(getTaskId(), 0);
+        //activityManager.moveTaskToFront(getTaskId(), 0);
     }
 
     private void onCreateAnimation(Bundle savedInstanceState) {
