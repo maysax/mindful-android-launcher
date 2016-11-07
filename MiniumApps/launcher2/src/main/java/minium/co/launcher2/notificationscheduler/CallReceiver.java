@@ -6,6 +6,7 @@ import android.telephony.TelephonyManager;
 
 import com.android.internal.telephony.ITelephony;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -16,6 +17,7 @@ import java.util.Date;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.model.MissedCallItem;
+import minium.co.launcher2.utils.VibrationUtils;
 
 @EReceiver
 public class CallReceiver extends PhonecallReceiver {
@@ -26,8 +28,8 @@ public class CallReceiver extends PhonecallReceiver {
     @Pref
     DroidPrefs_ prefs;
 
-    @SystemService
-    Vibrator vibrator;
+    @Bean
+    VibrationUtils vibration;
 
     @Override
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
@@ -39,26 +41,12 @@ public class CallReceiver extends PhonecallReceiver {
             if (prefs.notificationSchedulerSupressCalls().get()) {
                 rejectCalls(ctx, number, start);
             } else {
-                simulateCallVibration();
+                vibration.callVibration();
             }
 
         }
     }
 
-    private void simulateCallVibration() {
-        Tracer.d("simulateCallVibration called");
-        // 1. Vibrate for 1000 milliseconds
-        long milliseconds = 1000;
-        vibrator.vibrate(milliseconds);
-
-        // 2. Vibrate in a Pattern with 500ms on, 300ms off for 5 times
-        // Start without a delay
-        // Each element then alternates between vibrate, sleep, vibrate, sleep...
-        long[] pattern = {0, 2000, 3000, 2000, 3000, 2000, 3000, 2000, 3000, 2000, 3000, 2000, 3000};
-
-        // The '-1' here means to vibrate once, as '-1' is out of bounds in the pattern array
-        vibrator.vibrate(pattern, -1);
-    }
 
     @Override
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
@@ -68,7 +56,7 @@ public class CallReceiver extends PhonecallReceiver {
     @Override
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onIncomingCallEnded()");
-        vibrator.cancel();
+        vibration.cancel();
     }
 
     @Override

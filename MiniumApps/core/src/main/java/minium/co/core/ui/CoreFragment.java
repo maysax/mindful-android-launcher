@@ -33,7 +33,7 @@ public abstract class CoreFragment extends Fragment {
     @Trace(tag = TRACE_TAG)
     @Override
     public void onStart() {
-        Tracer.d("Fragment onStart(): " + this.getClass().getSimpleName());
+        Tracer.v("Fragment onStart(): " + this.getClass().getSimpleName());
         super.onStart();
         EventBus.getDefault().register(this);
     }
@@ -41,7 +41,7 @@ public abstract class CoreFragment extends Fragment {
     @Trace(tag = TRACE_TAG)
     @Override
     public void onStop() {
-        Tracer.d("Fragment onStop(): " + this.getClass().getSimpleName());
+        Tracer.v("Fragment onStop(): " + this.getClass().getSimpleName());
         EventBus.getDefault().unregister(this);
         super.onStop();
     }

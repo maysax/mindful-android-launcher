@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +21,10 @@ import com.orm.query.Condition;
 import com.orm.query.Select;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.text.SimpleDateFormat;
@@ -34,11 +37,13 @@ import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.flow.SiempoNotificationService_;
 import minium.co.launcher2.model.MissedCallItem;
 import minium.co.launcher2.model.ReceivedSMSItem;
 import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.utils.AudioUtils;
 import minium.co.launcher2.utils.RecyclerViewItemClickListener;
+import minium.co.launcher2.utils.VibrationUtils;
 
 @Fullscreen
 @EActivity(R.layout.activity_display_alert)
@@ -49,6 +54,9 @@ public class DisplayAlertActivity extends CoreActivity implements RecyclerViewIt
 
     @ViewById
     RecyclerView rView;
+
+    @Bean
+    VibrationUtils vibration;
 
     private SiempoNotificationAdapter mAdapter;
 
@@ -81,7 +89,7 @@ public class DisplayAlertActivity extends CoreActivity implements RecyclerViewIt
         Tracer.d("Generating missed call notifications: " + missedCalls.size() + " and SMS: " + smsItems.size());
 
         if (missedCalls.size() > 0 || smsItems.size() > 0) {
-            new AudioUtils().playNotificationSound(this);
+            alertUser();
         }
 
         notificationList = new ArrayList<>();
@@ -110,6 +118,32 @@ public class DisplayAlertActivity extends CoreActivity implements RecyclerViewIt
             mAdapter = new SiempoNotificationAdapter(notificationList, this);
             rView.setAdapter(mAdapter);
         }
+    }
+
+    @UiThread(delay = 2000)
+    void enableService() {
+        if (prefs.isNotificationSchedulerEnabled().get()) {
+            SiempoNotificationService_.intent(this).extra("start", true).start();
+        }
+    }
+
+    void disableService() {
+        if (prefs.isNotificationSchedulerEnabled().get()) {
+            SiempoNotificationService_.intent(this).extra("start", false).start();
+        }
+    }
+
+    @UiThread(delay = 1000)
+    void fireNotification() {
+        new AudioUtils().playNotificationSound(DisplayAlertActivity.this);
+        vibration.vibrate();
+    }
+
+    private void alertUser() {
+        Tracer.d("Alerting user ..");
+        disableService();
+        fireNotification();
+        enableService();
     }
 
     void decreaseNotificationCounter() {
@@ -164,7 +198,7 @@ public class DisplayAlertActivity extends CoreActivity implements RecyclerViewIt
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Tracer.d("onNewIntent received in DisplayAlertActivity");
+        Tracer.v("onNewIntent received in DisplayAlertActivity");
         loadAndFire();
     }
 

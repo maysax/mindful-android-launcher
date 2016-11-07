@@ -12,7 +12,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Used to disable recent apps button -->
-    <!--<uses-permission android:name="android.permission.REORDER_TASKS" />-->
+    <!-- <uses-permission android:name="android.permission.REORDER_TASKS" /> -->
+
 
     <!-- Becoming default SMS app -->
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
@@ -47,12 +48,13 @@
 
         <activity
             android:name=".MainActivity_"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
-            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -95,7 +97,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".notification.DisplayAlertActivity_" android:launchMode="singleTask" />
+        <activity
+            android:name=".notification.DisplayAlertActivity_"
+            android:launchMode="singleTask" />
 
         <!-- Becoming default SMS app -->
         <!-- Broadcast receiver for SMS -->
@@ -104,7 +108,7 @@
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
         <!-- Broadcast receiver for MMS -->
@@ -150,6 +154,16 @@
             </intent-filter>
         </service>
 
+        <receiver
+            android:name=".notificationscheduler.TempoSettingsReceiver_"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="minium.co.intent.action.TEMPO_SETTINGS">
+                </action>
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>
