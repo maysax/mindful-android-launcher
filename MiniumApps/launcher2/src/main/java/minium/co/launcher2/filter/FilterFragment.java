@@ -247,8 +247,11 @@ public class FilterFragment extends CoreFragment {
                         dialog.show(getFragmentManager(), "color_picker_dialog");
                         break;
                     case 12:
-                        EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.NOTIFICATION_SCHEDULER));
+                        if (!new ActivityHelper(getActivity()).openSettingsApp())
+                            UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                         break;
+//                        EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.NOTIFICATION_SCHEDULER));
+//                        break;
                     case 13:
                         handleDefaultLauncher();
                         break;
