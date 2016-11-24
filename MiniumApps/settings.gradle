@@ -1,4 +1,4 @@
-include ':launcher'
+include ':launcher', ':tracking'
 include ':launcher2'
 include ':core'
 include ':calculator'

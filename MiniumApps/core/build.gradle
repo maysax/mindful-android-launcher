@@ -17,6 +17,7 @@ android {
         buildConfigField "String", project.KEY_BUILD_TIME, "\"${buildTime}\""
 
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         debug {

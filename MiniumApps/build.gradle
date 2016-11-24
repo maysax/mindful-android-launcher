@@ -34,12 +34,12 @@ allprojects {
 }
 
 project.ext {
-    compileSdkVersion = 22
+    compileSdkVersion = 23
     buildToolsVersion = "24.0.2"
-    minSdkVersion = 21  // Targeting lollipop
-    targetSdkVersion = 22
+    minSdkVersion = 23  // Targeting lollipop
+    targetSdkVersion = 23
 
-    supportVersion = "22.2.0"
+    supportVersion = "23.2.0"
     annotationsVersion = "4.0.0"
     iconifyVersion = "2.2.1"
     calligraphyVersion = "2.1.0@aar"

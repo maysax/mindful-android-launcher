@@ -34,6 +34,9 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 
     /**
      * =================== Test suit  ===================
@@ -41,17 +44,12 @@ dependencies {
     testCompile "junit:junit:$junitVersion"
 
     compile project(':core')
-    compile project(':chips')
-    compile project(':color-picker')
-
-    compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
-    compile "com.github.satyan:sugar:$sugarOrmVersion"
-    compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
 
+    testCompile 'junit:junit:4.12'
 }
 
 apt {
