@@ -217,7 +217,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             loadedFragmentId = LoadFragmentEvent.MAIN_FRAGMENT;
             loadMainView();
         } else {
-             super.onBackPressed();
+
         }
     }
 
