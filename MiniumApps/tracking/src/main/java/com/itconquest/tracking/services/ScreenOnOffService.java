@@ -1,21 +1,23 @@
 package com.itconquest.tracking.services;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.itconquest.tracking.receivers.ScreenReceiver;
+import com.itconquest.tracking.receivers.ScreenOnOffReceiver;
+import com.itconquest.tracking.receivers.ScreenOnOffReceiver_;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.Receiver;
 
 /**
  * Created by Shahab on 11/24/2016.
  */
 @EService
-public class UpdateService extends Service {
+public class ScreenOnOffService extends Service {
 
     @Override
     public void onCreate() {
@@ -23,18 +25,25 @@ public class UpdateService extends Service {
         // REGISTER RECEIVER THAT HANDLES SCREEN ON AND SCREEN OFF LOGIC
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        BroadcastReceiver mReceiver = new ScreenReceiver();
-        registerReceiver(mReceiver, filter);
+        ScreenOnOffReceiver_ receiver = new ScreenOnOffReceiver_();
+        registerReceiver(receiver, filter);
     }
 
     @Override
-    public void onStart(Intent intent, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         boolean screenOn = intent.getBooleanExtra("screen_state", false);
         if (!screenOn) {
             // YOUR CODE
         } else {
             // YOUR CODE
         }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 
     @Nullable

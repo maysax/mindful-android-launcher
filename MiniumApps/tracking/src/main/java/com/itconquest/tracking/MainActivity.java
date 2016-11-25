@@ -1,42 +1,23 @@
 package com.itconquest.tracking;
 
-import android.Manifest;
-import android.app.ActionBar;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.PixelFormat;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-import com.itconquest.tracking.receivers.ScreenReceiver;
-import com.itconquest.tracking.services.GlobalTouchService;
 import com.itconquest.tracking.services.GlobalTouchService_;
+import com.itconquest.tracking.services.ScreenOnOffService_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.ArrayList;
-
-import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
@@ -67,8 +48,6 @@ public class MainActivity extends CoreActivity {
     }
 
     void loadViews() {
-        initScreenOnOffReceiver();
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,15 +58,8 @@ public class MainActivity extends CoreActivity {
         });
 
         GlobalTouchService_.intent(getApplication()).start();
+        ScreenOnOffService_.intent(getApplication()).start();
 
-    }
-
-    private void initScreenOnOffReceiver() {
-        // INITIALIZE RECEIVER
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        BroadcastReceiver mReceiver = new ScreenReceiver();
-        registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -111,19 +83,6 @@ public class MainActivity extends CoreActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    PermissionListener permissionlistener = new PermissionListener() {
-        @Override
-        public void onPermissionGranted() {
-            loadViews();
-        }
-
-        @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-            UIUtils.toast(MainActivity.this, "Permission denied");
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,  Intent data) {

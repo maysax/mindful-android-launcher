@@ -18,7 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".services.UpdateService_"/>
+        <service android:name=".services.ScreenOnOffService_"/>
         <service android:name=".services.GlobalTouchService_"/>
     </application>
 
