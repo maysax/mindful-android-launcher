@@ -1,30 +1,72 @@
 package com.itconquest.tracking;
 
+import android.Manifest;
+import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.itconquest.tracking.receivers.ScreenReceiver;
+import com.itconquest.tracking.services.GlobalTouchService;
+import com.itconquest.tracking.services.GlobalTouchService_;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.ViewById;
+
+import java.util.ArrayList;
+
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.UIUtils;
 
+@EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    public final static int REQUEST_CODE = 20;
 
+    @ViewById
+    Toolbar toolbar;
+
+    @AfterViews
+    void afterViews() {
+        setSupportActionBar(toolbar);
+        checkDrawOverlayPermission();
+
+    }
+
+    private void checkDrawOverlayPermission() {
+        /** check if we already  have permission to draw over other apps */
+        if (!Settings.canDrawOverlays(this)) {
+            /** if not construct intent to request permission */
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            /** request permission via start activity for result */
+            startActivityForResult(intent, REQUEST_CODE);
+        } else {
+            loadViews();
+        }
+    }
+
+    void loadViews() {
         initScreenOnOffReceiver();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -35,6 +77,9 @@ public class MainActivity extends CoreActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        GlobalTouchService_.intent(getApplication()).start();
+
     }
 
     private void initScreenOnOffReceiver() {
@@ -65,5 +110,30 @@ public class MainActivity extends CoreActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            loadViews();
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            UIUtils.toast(MainActivity.this, "Permission denied");
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
+        /** check if received result code
+         is equal our requested code for draw permission  */
+        if (requestCode == REQUEST_CODE) {
+            if (Settings.canDrawOverlays(this)) {
+                // continue here - permission was granted
+                loadViews();
+            }
+        }
     }
 }
