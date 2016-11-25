@@ -1,5 +1,8 @@
 package com.itconquest.tracking;
 
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.itconquest.tracking.receivers.ScreenReceiver;
 
 import minium.co.core.ui.CoreActivity;
 
@@ -20,6 +25,8 @@ public class MainActivity extends CoreActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        initScreenOnOffReceiver();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,6 +35,14 @@ public class MainActivity extends CoreActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    private void initScreenOnOffReceiver() {
+        // INITIALIZE RECEIVER
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        BroadcastReceiver mReceiver = new ScreenReceiver();
+        registerReceiver(mReceiver, filter);
     }
 
     @Override

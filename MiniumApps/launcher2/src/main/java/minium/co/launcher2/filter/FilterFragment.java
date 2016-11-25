@@ -1,6 +1,7 @@
 package minium.co.launcher2.filter;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -12,6 +13,10 @@ import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;

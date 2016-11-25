@@ -48,6 +48,7 @@ project.ext {
     crashlyticsVersion = "2.5.5@aar"
     baseRecyclerViewAdapterHelperVersion = "2.2.0"
     sugarOrmVersion = "1.5"
+    tedPermissionVersion = "1.0.2"
 
     junitVersion = "4.12"
 

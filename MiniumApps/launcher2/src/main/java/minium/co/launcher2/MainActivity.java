@@ -1,19 +1,16 @@
 package minium.co.launcher2;
 
-import android.app.ActivityManager;
+import android.Manifest;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.FrameLayout;
+
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -21,6 +18,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
+
+import java.util.ArrayList;
 
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.LogConfig;
@@ -47,7 +46,6 @@ import minium.co.launcher2.ui.ContextualOptionFragment_;
 import minium.co.launcher2.ui.OptionsFragment2_;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.TopFragment_;
-import minium.co.launcher2.utils.AppCompatActivityMenuKeyInterceptor;
 
 @Fullscreen
 @EActivity(R.layout.activity_main)
@@ -78,13 +76,20 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     void afterViews() {
         statusView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
         searchView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
+        new TedPermission(this)
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+                .setPermissions(Manifest.permission.READ_CONTACTS)
+                .check();
 
+    }
+
+    void loadViews() {
         loadTopView();
         loadSearchView();
 //        loadMainView();
         loadBottomView();
     }
-
 
 
     // TODO: try to move this inside TopFragment
@@ -242,4 +247,17 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     public void onEvent(ActionItemUpdateEvent event) {
         router.onActionItemUpdate(this, manager);
     }
+
+
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            loadViews();
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            UIUtils.toast(MainActivity.this, "Permission denied");
+        }
+    };
 }

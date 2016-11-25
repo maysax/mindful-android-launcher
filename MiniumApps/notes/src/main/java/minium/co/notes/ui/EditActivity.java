@@ -154,7 +154,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         toolbar.setTitle("");
 
         // Set a 'Back' navigation icon in the Toolbar and handle the click
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_material);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
