@@ -19,13 +19,14 @@ import org.androidannotations.annotations.Receiver;
 @EService
 public class ScreenOnOffService extends Service {
 
+    ScreenOnOffReceiver_ receiver = new ScreenOnOffReceiver_();
+
     @Override
     public void onCreate() {
         super.onCreate();
         // REGISTER RECEIVER THAT HANDLES SCREEN ON AND SCREEN OFF LOGIC
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
-        ScreenOnOffReceiver_ receiver = new ScreenOnOffReceiver_();
         registerReceiver(receiver, filter);
     }
 
@@ -43,6 +44,7 @@ public class ScreenOnOffService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(receiver);
 
     }
 

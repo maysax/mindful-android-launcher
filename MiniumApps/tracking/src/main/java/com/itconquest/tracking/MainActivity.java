@@ -16,7 +16,9 @@ import com.itconquest.tracking.services.ScreenOnOffService_;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreActivity;
 
 @EActivity(R.layout.activity_main)
@@ -27,10 +29,16 @@ public class MainActivity extends CoreActivity {
     @ViewById
     Toolbar toolbar;
 
+    @Pref
+    DroidPrefs_ prefs;
+
+    @ViewById
+    FloatingActionButton fab;
+
     @AfterViews
     void afterViews() {
         setSupportActionBar(toolbar);
-        checkDrawOverlayPermission();
+        loadViews();
 
     }
 
@@ -43,23 +51,43 @@ public class MainActivity extends CoreActivity {
             /** request permission via start activity for result */
             startActivityForResult(intent, REQUEST_CODE);
         } else {
-            loadViews();
+            if (prefs.isTrackingRunning().get()) {
+                GlobalTouchService_.intent(getApplication()).start();
+                ScreenOnOffService_.intent(getApplication()).start();
+            } else {
+                GlobalTouchService_.intent(getApplication()).stop();
+                ScreenOnOffService_.intent(getApplication()).stop();
+            }
+
         }
     }
 
     void loadViews() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (prefs.isTrackingRunning().get()) {
+                    Snackbar.make(view, "Tracking paused", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    fab.setImageResource(android.R.drawable.ic_media_play);
+
+                } else {
+                    Snackbar.make(view, "Tracking started", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    fab.setImageResource(android.R.drawable.ic_media_pause);
+                }
+
+                prefs.isTrackingRunning().put(!prefs.isTrackingRunning().get());
+                checkDrawOverlayPermission();
+
             }
         });
 
-        GlobalTouchService_.intent(getApplication()).start();
-        ScreenOnOffService_.intent(getApplication()).start();
-
+        if (prefs.isTrackingRunning().get()) {
+            fab.setImageResource(android.R.drawable.ic_media_pause);
+        } else {
+            fab.setImageResource(android.R.drawable.ic_media_pause);
+        }
     }
 
     @Override

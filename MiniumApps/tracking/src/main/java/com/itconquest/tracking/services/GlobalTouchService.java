@@ -68,4 +68,10 @@ public class GlobalTouchService extends Service implements View.OnTouchListener 
         Tracer.d("Touch event: " + event.toString());
         return false;
     }
+
+    @Override
+    public void onDestroy() {
+        windowManager.removeView(dummyView);
+        super.onDestroy();
+    }
 }
