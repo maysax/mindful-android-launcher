@@ -1,5 +1,6 @@
 package com.itconquest.tracking;
 
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.itconquest.tracking.services.GlobalTouchService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
 
@@ -18,8 +21,11 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.util.ArrayList;
+
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.UIUtils;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
@@ -38,27 +44,20 @@ public class MainActivity extends CoreActivity {
     @AfterViews
     void afterViews() {
         setSupportActionBar(toolbar);
-        loadViews();
-
+        new TedPermission(this)
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+                .setPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
+                .check();
     }
 
-    private void checkDrawOverlayPermission() {
-        /** check if we already  have permission to draw over other apps */
-        if (!Settings.canDrawOverlays(this)) {
-            /** if not construct intent to request permission */
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + getPackageName()));
-            /** request permission via start activity for result */
-            startActivityForResult(intent, REQUEST_CODE);
+    private void startServices() {
+        if (prefs.isTrackingRunning().get()) {
+            GlobalTouchService_.intent(getApplication()).start();
+            ScreenOnOffService_.intent(getApplication()).start();
         } else {
-            if (prefs.isTrackingRunning().get()) {
-                GlobalTouchService_.intent(getApplication()).start();
-                ScreenOnOffService_.intent(getApplication()).start();
-            } else {
-                GlobalTouchService_.intent(getApplication()).stop();
-                ScreenOnOffService_.intent(getApplication()).stop();
-            }
-
+            GlobalTouchService_.intent(getApplication()).stop();
+            ScreenOnOffService_.intent(getApplication()).stop();
         }
     }
 
@@ -78,7 +77,7 @@ public class MainActivity extends CoreActivity {
                 }
 
                 prefs.isTrackingRunning().put(!prefs.isTrackingRunning().get());
-                checkDrawOverlayPermission();
+                startServices();
 
             }
         });
@@ -112,15 +111,25 @@ public class MainActivity extends CoreActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+/*    @Override
     protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
-        /** check if received result code
-         is equal our requested code for draw permission  */
         if (requestCode == REQUEST_CODE) {
             if (Settings.canDrawOverlays(this)) {
                 // continue here - permission was granted
                 loadViews();
             }
         }
-    }
+    }*/
+
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            loadViews();
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            UIUtils.toast(MainActivity.this, "Permission denied");
+        }
+    };
 }

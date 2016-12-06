@@ -41,26 +41,19 @@ public abstract class LogFormatter {
 
         @Override
         public String format(LEVEL level, String tag, String msg, Throwable tr) {
-            if (level == null || TextUtils.isEmpty(tag) || TextUtils.isEmpty(msg)){
+            if (TextUtils.isEmpty(msg)){
                 return "";
             }
 
             StringBuffer buffer = new StringBuffer();
-            buffer.append(level.getLevelString());
-            buffer.append("\t");
             buffer.append(formatter.format(System.currentTimeMillis()));
-            buffer.append("\t");
-            buffer.append(android.os.Process.myPid());
-            buffer.append("\t");
-            buffer.append(android.os.Process.myTid());
-            buffer.append("\t");
-            buffer.append(tag);
             buffer.append("\t");
             buffer.append(msg);
             if (tr != null) {
                 buffer.append(System.getProperty("line.separator"));
                 buffer.append(android.util.Log.getStackTraceString(tr));
             }
+            buffer.append("\n");
 
             return buffer.toString();
         }

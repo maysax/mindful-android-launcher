@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.itconquest.tracking.util.TrackingLogger;
+
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.SystemService;
 
@@ -66,6 +68,7 @@ public class GlobalTouchService extends Service implements View.OnTouchListener 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Tracer.d("Touch event: " + event.toString());
+        TrackingLogger.log("Touch event:" + event.toString(), null);
         return false;
     }
 

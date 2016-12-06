@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.itconquest.tracking.services.ScreenOnOffService_;
+import com.itconquest.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EReceiver;
 
@@ -27,6 +28,7 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
             screenOff = false;
         }
         Tracer.d("Screen on/off event: " + screenOff);
+        TrackingLogger.log("Screen turned " + (screenOff ? "On" : "Off"), null);
         ScreenOnOffService_.intent(context).extra("screen_state", screenOff).start();
     }
 }
