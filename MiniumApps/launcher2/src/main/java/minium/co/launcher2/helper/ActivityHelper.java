@@ -2,9 +2,9 @@ package minium.co.launcher2.helper;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.Settings;
 
 import minium.co.core.log.Tracer;
+import minium.co.settings.SiempoSettingsActivity_;
 
 
 /**
@@ -82,7 +82,8 @@ public class ActivityHelper {
 
     public boolean openSettingsApp() {
         try {
-            getContext().startActivity(new Intent(Settings.ACTION_SETTINGS));
+//            getContext().startActivity(new Intent(Settings.ACTION_SETTINGS));
+            SiempoSettingsActivity_.intent(getContext()).start();
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

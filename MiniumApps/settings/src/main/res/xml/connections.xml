@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/connections_key"
+    android:summary="@string/connections_summary"
+    android:title="@string/connections_title" >
+
+    <Preference android:title="@string/pref_wifi_title"
+                android:key="@string/wifi_key">
+    </Preference>
+
+    <Preference android:title="@string/pref_bluetooth">
+        <intent android:action="android.settings.BLUETOOTH_SETTINGS" />
+    </Preference>
+
+    <Preference android:title="@string/pref_data_usage"
+        android:key="@string/data_usage_key">
+    </Preference>
+
+    <Preference android:title="@string/wireless_and_network">
+        <intent android:action="android.settings.WIRELESS_SETTINGS" />
+    </Preference>
+
+
+</PreferenceScreen>

@@ -1,3 +1,130 @@
 <resources>
     <string name="app_name">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+
+    <string name="connections_key">connections_screen</string>
+    <string name="connections_summary">Custom Settings</string>
+    <string name="connections_title">Settings</string>
+
+    <string name="pref_connection">Wireless and Connections</string>
+
+    <string name="pref_wifi_title">Wi-Fi</string>
+    <string name="wifi_key">key_wifi</string>
+
+    <string name="pref_bluetooth">Bluetooth</string>
+
+    <string name="data_usage_key">data_usage</string>
+    <string name="pref_data_usage">Data Usage</string>
+
+    <string name="wireless_and_network">More</string>
+    <string name="device_settings_key">key_device</string>
+    <string name="device_settings_summary">Device Related Settings</string>
+    <string name="device_settings_title">Device</string>
+    <string name="pref_home">Home</string>
+    <string name="home_key">key_home</string>
+    <string name="pref_display">Display</string>
+    <string name="pref_device">Device</string>
+    <string name="pref_notification">Sound and Notification</string>
+    <string name="pref_apps">Apps</string>
+    <string name="pref_storage_usb">Storage and USB</string>
+    <string name="pref_battery">Battery</string>
+    <string name="pref_memory">Memory</string>
+    <string name="pref_users">Users</string>
+    <string name="pref_tap_pay">Tap and Pay</string>
+    <string name="key_battery">key_battery</string>
+    <string name="key_memory">key_process_usage</string>
+    <string name="personal_settings_key">key_personal</string>
+    <string name="personal_settings_summary">Personal Settings</string>
+    <string name="personal_settings_title">Personal</string>
+    <string name="pref_location">Location</string>
+    <string name="location_key">key_location</string>
+    <string name="location_settings_summary">Location Settings</string>
+    <string name="pref_security">Security</string>
+    <string name="pref_accounts">Accounts</string>
+    <string name="pref_language_input"><![CDATA[Language & input]]></string>
+    <string name="pref_backup_reset"><![CDATA[Backup & reset]]></string>
+    <string name="pref_personal">Personal</string>
+    <string name="pref_language_key">key_pref_language_input</string>
+    <string name="system_settings_key">key_system_settings</string>
+    <string name="system_settings_summary">Systen Settings</string>
+    <string name="system_settings_title">System</string>
+    <string name="pref_date_time"><![CDATA[Date & time]]></string>
+    <string name="date_time_key">key_date_time</string>
+    <string name="date_time_settings_summary">Date and time</string>
+    <string name="pref_accessibility">Accessibility</string>
+    <string name="pref_printing">Printing</string>
+    <string name="pref_developer_option">Developer options</string>
+    <string name="pref_about_phone">About phone</string>
+    <string name="pref_system">System</string>
 </resources>
