@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
@@ -11,19 +11,15 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode "${versionMajor}".toInteger() * 10000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
         versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}-${buildTime}"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
-        debug {
-            debuggable true
-            minifyEnabled false
-        }
         release {
-            debuggable false
-            // RELEASE: true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
     }
 }
 
@@ -40,18 +36,13 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
-    compile project(':chips')
-    compile project(':color-picker')
-    compile project(':settings')
+    compile project(':core')
 
-    compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
-    compile "com.github.satyan:sugar:$sugarOrmVersion"
-    compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
-
-    debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
-
 }
 
 apt {
