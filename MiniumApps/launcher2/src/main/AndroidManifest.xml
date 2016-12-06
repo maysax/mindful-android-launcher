@@ -28,7 +28,7 @@
     <application
         android:name=".app.Launcher2App_"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_2"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/CoreTheme">

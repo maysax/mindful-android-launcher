@@ -86,7 +86,7 @@ public class MainActivity extends CoreActivity {
         if (prefs.isTrackingRunning().get()) {
             fab.setImageResource(android.R.drawable.ic_media_pause);
         } else {
-            fab.setImageResource(android.R.drawable.ic_media_pause);
+            fab.setImageResource(android.R.drawable.ic_media_play);
         }
     }
 
