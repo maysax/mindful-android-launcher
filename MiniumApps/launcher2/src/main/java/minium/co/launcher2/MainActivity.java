@@ -81,6 +81,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG)
                 .check();
+        loadViews();
 
     }
 
@@ -252,7 +253,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
-            loadViews();
+
         }
 
         @Override
