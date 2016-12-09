@@ -32,7 +32,7 @@ import minium.co.launcher2.R;
 import minium.co.launcher2.events.NotificationSchedulerEvent;
 import minium.co.launcher2.flow.SiempoNotificationService;
 import minium.co.launcher2.flow.SiempoNotificationService_;
-import minium.co.launcher2.utils.ServiceUtils;
+import minium.co.core.util.ServiceUtils;
 
 /**
  * A simple {@link Fragment} subclass.

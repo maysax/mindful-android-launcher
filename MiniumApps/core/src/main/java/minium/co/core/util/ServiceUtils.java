@@ -1,8 +1,10 @@
-package minium.co.launcher2.utils;
+package minium.co.core.util;
 
 import android.accessibilityservice.AccessibilityService;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.text.TextUtils;

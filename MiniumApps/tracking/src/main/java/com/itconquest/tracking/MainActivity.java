@@ -1,6 +1,8 @@
 package com.itconquest.tracking;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.itconquest.tracking.listener.NotificationListener_;
 import com.itconquest.tracking.services.GlobalTouchService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
 
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
 
 @EActivity(R.layout.activity_main)
@@ -59,6 +63,24 @@ public class MainActivity extends CoreActivity {
             GlobalTouchService_.intent(getApplication()).stop();
             ScreenOnOffService_.intent(getApplication()).stop();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isEnabled(this)) {
+            UIUtils.confirm(this, "Tracker service is not enabled. Please allow Tracking to access notification service", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                }
+            });
+        }
+    }
+
+    /** @return True if {@link NotificationListener_} is enabled. */
+    public static boolean isEnabled(Context mContext) {
+        return ServiceUtils.isNotificationListenerServiceRunning(mContext, NotificationListener_.class);
     }
 
     void loadViews() {

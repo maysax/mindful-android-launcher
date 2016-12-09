@@ -1,5 +1,7 @@
 package com.itconquest.tracking.listener;
 
+import android.content.Intent;
+import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
@@ -16,16 +18,9 @@ import minium.co.core.log.Tracer;
 public class NotificationListener extends NotificationListenerService {
 
     @Override
-    public void onNotificationPosted(StatusBarNotification sbn, RankingMap rankingMap) {
-        super.onNotificationPosted(sbn, rankingMap);
-        TrackingLogger.log(sbn.toString(), null);
-        Tracer.d("onNotificationPosted " + sbn.toString());
-    }
-
-    @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        super.onNotificationPosted(sbn);
-        TrackingLogger.log(sbn.toString(), null);
         Tracer.d("onNotificationPosted " + sbn.toString());
+        TrackingLogger.log(sbn.toString(), null);
+
     }
 }

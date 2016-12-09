@@ -32,12 +32,15 @@ public class ScreenOnOffService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        boolean screenOn = intent.getBooleanExtra("screen_state", false);
-        if (!screenOn) {
-            // YOUR CODE
-        } else {
-            // YOUR CODE
+        if (intent != null) {
+            boolean screenOn = intent.getBooleanExtra("screen_state", false);
+            if (!screenOn) {
+                // YOUR CODE
+            } else {
+                // YOUR CODE
+            }
         }
+
         return super.onStartCommand(intent, flags, startId);
     }
 

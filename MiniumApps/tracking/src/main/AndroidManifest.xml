@@ -2,31 +2,57 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.itconquest.tracking">
 
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
 
-    <application android:allowBackup="true" android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name" android:supportsRtl="true" android:theme="@style/CoreTheme"
-        android:name=".App_">
+    <application
+        android:name=".App_"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/CoreTheme">
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
 
-        <activity android:name=".MainActivity_" android:label="@string/app_name">
+        <activity
+            android:name=".MainActivity_"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".services.ScreenOnOffService_"/>
-        <service android:name=".services.GlobalTouchService_"/>
-    </application>
 
-    <service android:name=".listener.NotificationListener_"
-        android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-        <intent-filter>
-            <action android:name="android.service.notification.NotificationListenerService" />
+        <service android:name=".services.ScreenOnOffService_" />
+        <service android:name=".services.GlobalTouchService_" />
+
+        <service
+            android:name=".listener.NotificationListener_"
+            android:label="@string/app_name"
+            android:exported="true"
+            android:enabled="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".receivers.PowerOnOffReceiver_"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <category android:name="android.intent.category.DEFAULT" />
         </intent-filter>
-    </service>
+        </receiver>
+    </application>
 
 </manifest>

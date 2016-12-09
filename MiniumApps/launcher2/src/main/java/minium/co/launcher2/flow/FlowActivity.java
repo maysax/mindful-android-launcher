@@ -39,7 +39,7 @@ import minium.co.launcher2.notificationscheduler.NotificationScheduleReceiver_;
 import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.ui.widget.VerticalProgressBar;
 import minium.co.launcher2.utils.AudioUtils;
-import minium.co.launcher2.utils.ServiceUtils;
+import minium.co.core.util.ServiceUtils;
 
 @Fullscreen
 @EActivity(R.layout.activity_flow)
