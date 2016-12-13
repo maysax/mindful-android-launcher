@@ -1,6 +1,8 @@
 package com.itconquest.tracking;
 
 import android.Manifest;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,15 +20,20 @@ import com.gun0912.tedpermission.TedPermission;
 import com.itconquest.tracking.listener.NotificationListener_;
 import com.itconquest.tracking.services.GlobalTouchService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
+import com.itconquest.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 import minium.co.core.app.DroidPrefs_;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
@@ -45,6 +52,9 @@ public class MainActivity extends CoreActivity {
     @ViewById
     FloatingActionButton fab;
 
+    @SystemService
+    UsageStatsManager usageStatsManager;
+
     @AfterViews
     void afterViews() {
         setSupportActionBar(toolbar);
@@ -59,9 +69,23 @@ public class MainActivity extends CoreActivity {
         if (prefs.isTrackingRunning().get()) {
             GlobalTouchService_.intent(getApplication()).start();
             ScreenOnOffService_.intent(getApplication()).start();
+            getAppUsage();
         } else {
             GlobalTouchService_.intent(getApplication()).stop();
             ScreenOnOffService_.intent(getApplication()).stop();
+        }
+    }
+
+    private void getAppUsage() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -1);
+        List<UsageStats> queryUsageStats = usageStatsManager
+                .queryUsageStats(UsageStatsManager.INTERVAL_DAILY, cal.getTimeInMillis(),
+                        System.currentTimeMillis());
+
+        for (UsageStats stat : queryUsageStats) {
+            TrackingLogger.log("Package name: " + stat.getPackageName() + " Total time: " + stat.getTotalTimeInForeground(), null);
+            Tracer.d("Package name: " + stat.getPackageName() + " Total time: " + stat.getTotalTimeInForeground());
         }
     }
 
