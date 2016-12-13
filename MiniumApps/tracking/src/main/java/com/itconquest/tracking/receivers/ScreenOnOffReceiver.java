@@ -24,11 +24,13 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
 
         if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
             screenOff = true;
+            Tracer.d("Screen off event");
         } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
             screenOff = false;
+            Tracer.d("Screen on event");
         }
-        Tracer.d("Screen on/off event: " + screenOff);
+
         TrackingLogger.log("Screen turned " + (screenOff ? "On" : "Off"), null);
-        ScreenOnOffService_.intent(context).extra("screen_state", screenOff).start();
+//        ScreenOnOffService_.intent(context).extra("screen_state", screenOff).start();
     }
 }
