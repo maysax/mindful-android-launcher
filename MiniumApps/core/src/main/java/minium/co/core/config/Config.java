@@ -6,5 +6,5 @@ package minium.co.core.config;
 public class Config {
 
     // RELEASE: false
-    public static final Boolean DEBUG = true;
+    public static final Boolean DEBUG = false;
 }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.adeel.library.easyFTP;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.itconquest.tracking.listener.NotificationListener_;
@@ -23,11 +24,14 @@ import com.itconquest.tracking.services.ScreenOnOffService_;
 import com.itconquest.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -152,6 +156,9 @@ public class MainActivity extends CoreActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_upload) {
+            UIUtils.toast(this, "Uploading file...");
+            uploadFile();
         }
 
         return super.onOptionsItemSelected(item);
@@ -178,4 +185,21 @@ public class MainActivity extends CoreActivity {
             UIUtils.toast(MainActivity.this, "Permission denied");
         }
     };
+
+    @Background
+    void uploadFile() {
+
+        com.adeel.library.easyFTP ftp = new easyFTP();
+        try {
+            ftp.connect("dropbox.sandbox2000.com", "junkspace", "C!55iL9p");
+            Tracer.d("FTP connected");
+            ftp.setWorkingDirectory("/dropbox.sandbox2000.com/Ebb/Tracking");
+            ftp.uploadFile(new File(TrackingLogger.getCurrentFileName()).toString());
+            ftp.disconnect();
+            Tracer.d("File uploaded");
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }

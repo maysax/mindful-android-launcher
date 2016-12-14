@@ -47,6 +47,8 @@ dependencies {
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 
+    compile 'com.adeel:easyFTP:1.0'
+
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
 
     testCompile 'junit:junit:4.12'

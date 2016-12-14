@@ -1,6 +1,8 @@
 package com.itconquest.tracking.util;
 
+import android.content.Context;
 import android.os.Environment;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -21,6 +23,8 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.LogFormatter;
 
+import static java.security.AccessController.getContext;
+
 /**
  * Created by Shahab on 12/6/2016.
  */
@@ -28,6 +32,8 @@ import minium.co.core.log.LogFormatter;
 public class TrackingLogger {
 
     private static ExecutorService executor = null;
+
+    private Context context;
 
     /**
      * Get the ExecutorService
@@ -38,11 +44,19 @@ public class TrackingLogger {
         return executor;
     }
 
+    private static String fileName = "";
+
+    public static String getCurrentFileName() {
+        return fileName;
+    }
+
 
     protected static void log2file(final String path, final String str) {
         if (executor == null) {
             executor = Executors.newSingleThreadExecutor();
         }
+
+        fileName = path;
 
         executor.execute(new Runnable() {
             @Override
@@ -129,6 +143,8 @@ public class TrackingLogger {
     }
 
     private static String getFileName() {
-        return new SimpleDateFormat("yyMMdd_", Locale.ENGLISH).format(Calendar.getInstance().getTime()) + BuildConfig.VERSION_NAME + ".txt";
+        String deviceId = Settings.Secure.getString(CoreApplication.getInstance().getContentResolver(),
+                Settings.Secure.ANDROID_ID).substring(0, 6);
+        return deviceId + "_" + new SimpleDateFormat("yyMMdd_", Locale.ENGLISH).format(Calendar.getInstance().getTime()) + BuildConfig.VERSION_NAME + ".txt";
     }
 }

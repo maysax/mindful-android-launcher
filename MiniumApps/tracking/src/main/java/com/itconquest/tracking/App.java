@@ -1,5 +1,9 @@
 package com.itconquest.tracking;
 
+import android.app.ActivityManager;
+
+import com.itconquest.tracking.util.TrackingLogger;
+
 import org.androidannotations.annotations.EApplication;
 
 import minium.co.core.app.CoreApplication;
@@ -10,4 +14,10 @@ import minium.co.core.app.CoreApplication;
 
 @EApplication
 public class App extends CoreApplication {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        TrackingLogger.log("Tracking app started", null);
+    }
 }
