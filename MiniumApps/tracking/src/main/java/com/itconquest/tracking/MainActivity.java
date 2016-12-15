@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +18,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.adeel.library.easyFTP;
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.DownloadListener;
+import com.androidnetworking.interfaces.DownloadProgressListener;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.androidnetworking.interfaces.UploadProgressListener;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.itconquest.tracking.listener.NotificationListener_;
@@ -30,12 +40,14 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -67,6 +79,7 @@ public class MainActivity extends CoreActivity {
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
+        checkVersion();
     }
 
     private void startServices() {
@@ -159,6 +172,7 @@ public class MainActivity extends CoreActivity {
         } else if (id == R.id.action_upload) {
             UIUtils.toast(this, "Uploading file...");
             uploadFile();
+            uploadFileToAWS();
         }
 
         return super.onOptionsItemSelected(item);
@@ -201,5 +215,82 @@ public class MainActivity extends CoreActivity {
             Tracer.e(e, e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    void uploadFileToAWS() {
+        AndroidNetworking.upload("http://54.202.207.96/upload.php?token=SN2NaFFSMPkKRhMOioNEPERrCl2iCuhRcHwpm0J9")
+                .addMultipartFile("file", new File(TrackingLogger.getCurrentFileName()))
+                .setTag("uploadTest")
+                .setPriority(Priority.HIGH)
+                .build()
+                .setUploadProgressListener(new UploadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesUploaded, long totalBytes) {
+                        Tracer.d("Upload to AWS " + bytesUploaded + "/" + totalBytes);
+                    }
+                })
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        Tracer.i("Upload to AWS " + response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Tracer.e(anError.getCause(), anError.getErrorDetail());
+                    }
+                });
+    }
+
+    private void checkVersion() {
+        AndroidNetworking.get("http://54.202.207.96/count")
+                .setTag("test")
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (Integer.parseInt(response.trim()) > BuildConfig.VERSION_CODE) {
+                            downloadApk();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Tracer.e(anError.getCause(), anError.getErrorDetail());
+                    }
+                });
+    }
+
+    private void downloadApk() {
+        String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
+        final File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
+        AndroidNetworking.download("http://54.202.207.96/72d637_161215_0.0.0.12.txt", externalFilesDir.getAbsolutePath(), "newer.apk")
+                .setTag("downloadTest")
+                .setPriority(Priority.MEDIUM)
+                .build()
+                .setDownloadProgressListener(new DownloadProgressListener() {
+                    @Override
+                    public void onProgress(long bytesDownloaded, long totalBytes) {
+                        Tracer.d("Download apk " + bytesDownloaded + "/" + totalBytes);
+                    }
+                })
+                .startDownload(new DownloadListener() {
+                    @Override
+                    public void onDownloadComplete() {
+                        Tracer.i("Download completed");
+                        try {
+                            Intent updateIntent = new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse(externalFilesDir.getAbsolutePath() + File.separator + "newer.apk"));
+                            startActivity(updateIntent);
+                        } catch (Exception e) {
+                            Tracer.e(e, e.getMessage());
+                        }
+                    }
+                    @Override
+                    public void onError(ANError error) {
+                        Tracer.e(error.getCause(), error.getErrorDetail());
+                    }
+                });
     }
 }

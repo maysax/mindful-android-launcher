@@ -49,6 +49,7 @@ project.ext {
     baseRecyclerViewAdapterHelperVersion = "2.2.0"
     sugarOrmVersion = "1.5"
     tedPermissionVersion = "1.0.2"
+    fastAndroidNetworkingVersion = "0.3.0";
 
     junitVersion = "4.12"
 
@@ -62,7 +63,7 @@ project.ext {
     versionMajor = 0
     versionMinor = 0
     versionPatch = 0
-    versionBuild = 12 // bump for internal builds, public betas, etc.
+    versionBuild = 13 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {

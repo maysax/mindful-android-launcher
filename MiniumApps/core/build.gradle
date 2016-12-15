@@ -121,6 +121,8 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.0'
 
     apt "org.androidannotations:androidannotations:$annotationsVersion"
+
+    compile "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
 }
 
 apt {

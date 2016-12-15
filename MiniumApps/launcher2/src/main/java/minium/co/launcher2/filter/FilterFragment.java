@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberUtils;
@@ -128,7 +129,9 @@ public class FilterFragment extends CoreFragment {
         items.add(new MainListItem(new ActionListItem(10, "{fa-cogs}", getString(R.string.title_settings))));
         items.add(new MainListItem(new ActionListItem(11, "{fa-tint}", getString(R.string.title_theme))));
         items.add(new MainListItem(new ActionListItem(12, "{fa-bell}", getString(R.string.title_notificationScheduler))));
-        items.add(new MainListItem(new ActionListItem(13, "{fa-home}", getString(R.string.title_defaultLauncher))));
+
+        if (!Build.FINGERPRINT.toLowerCase().contains("siempo"))
+            items.add(new MainListItem(new ActionListItem(13, "{fa-home}", getString(R.string.title_defaultLauncher))));
     }
 
     private void loadContacts() {
