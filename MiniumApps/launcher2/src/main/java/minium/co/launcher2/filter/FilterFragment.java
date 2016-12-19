@@ -130,7 +130,7 @@ public class FilterFragment extends CoreFragment {
         items.add(new MainListItem(new ActionListItem(11, "{fa-tint}", getString(R.string.title_theme))));
         items.add(new MainListItem(new ActionListItem(12, "{fa-bell}", getString(R.string.title_notificationScheduler))));
 
-        if (!Build.FINGERPRINT.toLowerCase().contains("siempo"))
+        if (!Build.MODEL.toLowerCase().contains("siempo"))
             items.add(new MainListItem(new ActionListItem(13, "{fa-home}", getString(R.string.title_defaultLauncher))));
     }
 
