@@ -1,5 +1,7 @@
 package minium.co.launcher2.app;
 
+import android.os.Build;
+
 import com.orm.SugarContext;
 
 import org.androidannotations.annotations.Bean;
@@ -45,6 +47,12 @@ public class Launcher2App extends CoreApplication {
                 + " || Build time:  " + BuildConfig.BUILD_TIME
                 + " || Build flavor: " + minium.co.launcher2.BuildConfig.FLAVOR
                 + " || Build type: " + minium.co.launcher2.BuildConfig.BUILD_TYPE);
+
+        Tracer.i("Model: " + Build.MODEL
+                + " || Build No: " + Build.FINGERPRINT
+                + " || Brand: " + Build.BRAND
+                + " || Device: " + Build.DEVICE
+                + " || Manufacturer: " + Build.MANUFACTURER);
 
         loadConfigurationValues();
 

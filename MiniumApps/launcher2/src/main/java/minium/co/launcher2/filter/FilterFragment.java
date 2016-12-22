@@ -84,7 +84,6 @@ public class FilterFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-
     }
 
     @Override
