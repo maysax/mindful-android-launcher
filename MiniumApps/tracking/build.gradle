@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
@@ -58,5 +58,6 @@ apt {
     arguments {
         // RELEASE: comment it out
         trace 'true'
+        library 'true'
     }
 }

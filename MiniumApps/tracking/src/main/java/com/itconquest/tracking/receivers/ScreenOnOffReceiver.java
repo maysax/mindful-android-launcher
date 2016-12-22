@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.itconquest.tracking.services.ScreenOnOffService_;
+
 import com.itconquest.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EReceiver;

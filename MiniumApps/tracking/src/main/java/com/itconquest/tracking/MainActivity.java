@@ -54,7 +54,7 @@ import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
 
-@EActivity(R.layout.activity_main)
+@EActivity(resName = "activity_main")
 public class MainActivity extends CoreActivity {
 
     public final static int REQUEST_CODE = 20;

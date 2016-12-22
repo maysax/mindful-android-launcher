@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="minium.co.launcher2">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -20,7 +21,6 @@
     <!-- Becoming default SMS app -->
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
 
     <!-- TODO: using it for flow, we might not need this -->
@@ -32,7 +32,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/CoreTheme">
+        android:theme="@style/CoreTheme"
+        tools:replace="name">
 
         <!-- Fabric configuration -->
         <meta-data

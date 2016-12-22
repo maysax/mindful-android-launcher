@@ -43,6 +43,7 @@ dependencies {
     compile project(':chips')
     compile project(':color-picker')
     compile project(':settings')
+    compile project(':tracking')
 
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
     compile "com.github.satyan:sugar:$sugarOrmVersion"
