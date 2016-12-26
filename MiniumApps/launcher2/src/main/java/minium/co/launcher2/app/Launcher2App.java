@@ -52,6 +52,7 @@ public class Launcher2App extends CoreApplication {
                 + " || Build No: " + Build.FINGERPRINT
                 + " || Brand: " + Build.BRAND
                 + " || Device: " + Build.DEVICE
+                + " || Build Id: " + Build.ID
                 + " || Manufacturer: " + Build.MANUFACTURER);
 
         loadConfigurationValues();
