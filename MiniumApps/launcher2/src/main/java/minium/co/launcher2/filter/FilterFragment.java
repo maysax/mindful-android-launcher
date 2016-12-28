@@ -131,6 +131,8 @@ public class FilterFragment extends CoreFragment {
 
         if (!Build.MODEL.toLowerCase().contains("siempo"))
             items.add(new MainListItem(new ActionListItem(13, "{fa-home}", getString(R.string.title_defaultLauncher))));
+
+        items.add(new MainListItem(new ActionListItem(14, "{fa-search}", getString(R.string.title_tracking))));
     }
 
     private void loadContacts() {
@@ -260,6 +262,10 @@ public class FilterFragment extends CoreFragment {
                         break;
                     case 13:
                         handleDefaultLauncher();
+                        break;
+                    case 14:
+                        if (!new ActivityHelper(getActivity()).openTrackingApp())
+                            UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                         break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
