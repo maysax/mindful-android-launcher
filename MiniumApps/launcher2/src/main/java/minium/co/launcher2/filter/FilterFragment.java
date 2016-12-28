@@ -1,7 +1,6 @@
 package minium.co.launcher2.filter;
 
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -14,10 +13,6 @@ import android.support.v4.app.Fragment;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -133,6 +128,7 @@ public class FilterFragment extends CoreFragment {
             items.add(new MainListItem(new ActionListItem(13, "{fa-home}", getString(R.string.title_defaultLauncher))));
 
         items.add(new MainListItem(new ActionListItem(14, "{fa-search}", getString(R.string.title_tracking))));
+        items.add(new MainListItem(new ActionListItem(15, "{fa-info-circle}", getString(R.string.title_about))));
     }
 
     private void loadContacts() {
@@ -170,7 +166,6 @@ public class FilterFragment extends CoreFragment {
                             UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                         break;
                     case 4:
-                        // TODO: load call log
                         EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.CALL_LOG));
                         break;
                     case 5:
@@ -266,6 +261,9 @@ public class FilterFragment extends CoreFragment {
                     case 14:
                         if (!new ActivityHelper(getActivity()).openTrackingApp())
                             UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
+                        break;
+                    case 15:
+                        EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.ABOUT));
                         break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));

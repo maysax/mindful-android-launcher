@@ -13,6 +13,7 @@ public class LoadFragmentEvent {
     public static final int OPTIONS_2 = 7;
     public static final int CONTEXTUAL_OPTIONS = 8;
     public static final int NOTIFICATION_SCHEDULER = 9;
+    public static final int ABOUT = 10;
 
     private int id;
 

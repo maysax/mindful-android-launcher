@@ -31,6 +31,7 @@
     <string name="title.notificationScheduler">Tempo</string>
     <string name="title.defaultLauncher">Default Launcher</string>
     <string name="title_tracking">Tracking</string>
+    <string name="title.about">About</string>
     <string name="title..sendAsSMS">Send as SMS</string>
     <string name="title.saveNote">Save Note</string>
     <string name="title.createContact">Create Contact</string>
