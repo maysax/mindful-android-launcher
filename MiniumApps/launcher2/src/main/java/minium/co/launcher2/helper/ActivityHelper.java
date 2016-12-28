@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import minium.co.core.log.Tracer;
+import minium.co.notes.ui.MainActivity;
 import minium.co.settings.SiempoSettingsActivity_;
 
 
@@ -52,7 +53,8 @@ public class ActivityHelper {
 
     public boolean openNotesApp() {
         try {
-            getContext().startActivity(getContext().getPackageManager().getLaunchIntentForPackage("minium.co.notes"));
+//            getContext().startActivity(getContext().getPackageManager().getLaunchIntentForPackage("minium.co.notes"));
+            getContext().startActivity(new Intent(getContext(), MainActivity.class));
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

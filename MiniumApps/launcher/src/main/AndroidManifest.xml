@@ -19,7 +19,7 @@
         <!-- Fabric configuration -->
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
+            android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
         <activity android:name=".ui.MainActivity_"
             android:label="@string/app_name"

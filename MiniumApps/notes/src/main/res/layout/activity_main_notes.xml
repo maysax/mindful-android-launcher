@@ -27,7 +27,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/toolbarMain"
+        android:layout_below="@id/toolbarMain"
         android:paddingTop="8dp"
         android:paddingBottom="8dp" />
 
@@ -65,7 +65,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin.2"
-        android:layout_below="@+id/toolbarMain"
+        android:layout_below="@id/toolbarMain"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
         android:background="@drawable/drop_shadow" />

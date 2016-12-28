@@ -116,7 +116,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         if (tempNotes != null)
             notes = tempNotes;
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_notes);
 
         // Init layout components
         toolbar = (Toolbar)findViewById(R.id.toolbarMain);
