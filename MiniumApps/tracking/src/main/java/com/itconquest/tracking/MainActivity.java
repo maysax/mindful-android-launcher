@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -44,14 +45,17 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.DateUtils;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
 
@@ -71,6 +75,9 @@ public class MainActivity extends CoreActivity {
 
     @SystemService
     UsageStatsManager usageStatsManager;
+
+    @SystemService
+    ConnectivityManager connectivityManager;
 
     boolean isDisplayedActionNotificationListenerDialog = false;
     boolean isDisplayedPermitUsageAccessDialog = false;
@@ -102,12 +109,17 @@ public class MainActivity extends CoreActivity {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, -1);
         List<UsageStats> queryUsageStats = usageStatsManager
-                .queryUsageStats(UsageStatsManager.INTERVAL_YEARLY, cal.getTimeInMillis(),
+                .queryUsageStats(UsageStatsManager.INTERVAL_BEST, cal.getTimeInMillis(),
                         System.currentTimeMillis());
 
         for (UsageStats stat : queryUsageStats) {
-            TrackingLogger.log("Package name: " + stat.getPackageName() + " Total time: " + stat.getTotalTimeInForeground(), null);
-            Tracer.d("Package name: " + stat.getPackageName() + " Total time: " + stat.getTotalTimeInForeground());
+
+            String info = "Package name: " + stat.getPackageName()
+                    + " Total usage time: " + DateUtils.interval(stat.getTotalTimeInForeground())
+                    + " Last time used: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()));
+
+            TrackingLogger.log(info, null);
+            Tracer.d(info);
         }
     }
 
@@ -277,34 +289,37 @@ public class MainActivity extends CoreActivity {
     }
 
     private void downloadApk() {
-        String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
-        final File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
-        AndroidNetworking.download("http://54.202.207.96/72d637_161215_0.0.0.12.txt", externalFilesDir.getAbsolutePath(), "newer.apk")
-                .setTag("downloadTest")
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .setDownloadProgressListener(new DownloadProgressListener() {
-                    @Override
-                    public void onProgress(long bytesDownloaded, long totalBytes) {
-                        Tracer.d("Download apk " + bytesDownloaded + "/" + totalBytes);
-                    }
-                })
-                .startDownload(new DownloadListener() {
-                    @Override
-                    public void onDownloadComplete() {
-                        Tracer.i("Download completed");
-                        try {
-                            Intent updateIntent = new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse(externalFilesDir.getAbsolutePath() + File.separator + "newer.apk"));
-                            startActivity(updateIntent);
-                        } catch (Exception e) {
-                            Tracer.e(e, e.getMessage());
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+            String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
+            final File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
+            AndroidNetworking.download("http://54.202.207.96/72d637_161215_0.0.0.12.txt", externalFilesDir.getAbsolutePath(), "newer.apk")
+                    .setTag("downloadTest")
+                    .setPriority(Priority.MEDIUM)
+                    .build()
+                    .setDownloadProgressListener(new DownloadProgressListener() {
+                        @Override
+                        public void onProgress(long bytesDownloaded, long totalBytes) {
+                            Tracer.d("Download apk " + bytesDownloaded + "/" + totalBytes);
                         }
-                    }
-                    @Override
-                    public void onError(ANError error) {
-                        Tracer.e(error.getCause(), error.getErrorDetail());
-                    }
-                });
+                    })
+                    .startDownload(new DownloadListener() {
+                        @Override
+                        public void onDownloadComplete() {
+                            Tracer.i("Download completed");
+                            try {
+                                Intent updateIntent = new Intent(Intent.ACTION_VIEW,
+                                        Uri.parse(externalFilesDir.getAbsolutePath() + File.separator + "newer.apk"));
+                                startActivity(updateIntent);
+                            } catch (Exception e) {
+                                Tracer.e(e, e.getMessage());
+                            }
+                        }
+                        @Override
+                        public void onError(ANError error) {
+                            Tracer.e(error.getCause(), error.getErrorDetail());
+                        }
+                    });
+        }
+
     }
 }
