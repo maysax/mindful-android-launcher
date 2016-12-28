@@ -4,6 +4,6 @@
     tools:context="com.itconquest.tracking.MainActivity">
     <item android:id="@+id/action_upload" android:orderInCategory="1"
         android:title="Upload" app:showAsAction="never"/>
-    <item android:id="@+id/action_settings" android:orderInCategory="100"
-        android:title="@string/action_settings" app:showAsAction="never" />
+    <!--<item android:id="@+id/action_settings" android:orderInCategory="100"-->
+        <!--android:title="@string/action_settings" app:showAsAction="never" />-->
 </menu>

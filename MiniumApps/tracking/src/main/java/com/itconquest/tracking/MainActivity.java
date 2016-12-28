@@ -6,6 +6,7 @@ import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -71,6 +72,9 @@ public class MainActivity extends CoreActivity {
     @SystemService
     UsageStatsManager usageStatsManager;
 
+    boolean isDisplayedActionNotificationListenerDialog = false;
+    boolean isDisplayedPermitUsageAccessDialog = false;
+
     @AfterViews
     void afterViews() {
         setSupportActionBar(toolbar);
@@ -80,13 +84,14 @@ public class MainActivity extends CoreActivity {
                 .setPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
         checkVersion();
+        getAppUsage();
     }
 
     private void startServices() {
         if (prefs.isTrackingRunning().get()) {
             GlobalTouchService_.intent(getApplication()).start();
             ScreenOnOffService_.intent(getApplication()).start();
-            getAppUsage();
+
         } else {
             GlobalTouchService_.intent(getApplication()).stop();
             ScreenOnOffService_.intent(getApplication()).stop();
@@ -97,7 +102,7 @@ public class MainActivity extends CoreActivity {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.YEAR, -1);
         List<UsageStats> queryUsageStats = usageStatsManager
-                .queryUsageStats(UsageStatsManager.INTERVAL_DAILY, cal.getTimeInMillis(),
+                .queryUsageStats(UsageStatsManager.INTERVAL_YEARLY, cal.getTimeInMillis(),
                         System.currentTimeMillis());
 
         for (UsageStats stat : queryUsageStats) {
@@ -109,11 +114,22 @@ public class MainActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isEnabled(this)) {
+        if (!isEnabled(this) && !isDisplayedActionNotificationListenerDialog) {
+            isDisplayedActionNotificationListenerDialog = true;
             UIUtils.confirm(this, "Tracker service is not enabled. Please allow Tracking to access notification service", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                    dialog.dismiss();
+                }
+            });
+        } else if (getPackageManager().checkPermission(Manifest.permission.PACKAGE_USAGE_STATS, getPackageName()) != PackageManager.PERMISSION_GRANTED && !isDisplayedPermitUsageAccessDialog) {
+            isDisplayedPermitUsageAccessDialog = true;
+            UIUtils.confirm(this, "Tracker usage stats is not enabled. Please allow Tracking to access usage stats", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                    dialog.dismiss();
                 }
             });
         }
@@ -167,9 +183,7 @@ public class MainActivity extends CoreActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_upload) {
+        if (id == R.id.action_upload) {
             UIUtils.toast(this, "Uploading file...");
             uploadFile();
             uploadFileToAWS();
