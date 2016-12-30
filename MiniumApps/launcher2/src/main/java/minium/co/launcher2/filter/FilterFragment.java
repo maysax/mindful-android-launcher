@@ -3,6 +3,7 @@ package minium.co.launcher2.filter;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -49,6 +50,7 @@ import minium.co.launcher2.model.ActionListItem;
 import minium.co.launcher2.model.ContactListItem;
 import minium.co.launcher2.model.MainListItem;
 import minium.co.launcher2.model.OptionsListItem;
+import minium.co.launcher2.utils.FakeLauncherActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -335,7 +337,8 @@ public class FilterFragment extends CoreFragment {
             if (getLauncherPackageName().equals("android")) {
                 openChooser();
             } else
-                openSettings();
+            resetPreferredLauncherAndOpenChooser();
+//                openSettings();
         }
     }
 
@@ -357,6 +360,14 @@ public class FilterFragment extends CoreFragment {
         String str = localPackageManager.resolveActivity(intent,
                 PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
         return str;
+    }
+
+    private void resetPreferredLauncherAndOpenChooser() {
+        PackageManager packageManager = getActivity().getPackageManager();
+        ComponentName componentName = new ComponentName(getActivity(), FakeLauncherActivity.class);
+        packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        openChooser();
+        packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
     }
 
     private void openSettings() {
