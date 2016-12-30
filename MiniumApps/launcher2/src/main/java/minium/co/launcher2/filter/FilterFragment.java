@@ -34,6 +34,7 @@ import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
+import minium.co.launcher2.BuildConfig;
 import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
 import minium.co.launcher2.contactspicker.ContactsLoader;
@@ -128,7 +129,7 @@ public class FilterFragment extends CoreFragment {
             items.add(new MainListItem(new ActionListItem(13, "{fa-home}", getString(R.string.title_defaultLauncher))));
 
         items.add(new MainListItem(new ActionListItem(14, "{fa-search}", getString(R.string.title_tracking))));
-        items.add(new MainListItem(new ActionListItem(15, "{fa-info-circle}", getString(R.string.title_about))));
+        items.add(new MainListItem(new ActionListItem(15, "{fa-info-circle}", getString(R.string.title_version, BuildConfig.VERSION_NAME))));
     }
 
     private void loadContacts() {
@@ -263,7 +264,6 @@ public class FilterFragment extends CoreFragment {
                             UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
                         break;
                     case 15:
-                        EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.ABOUT));
                         break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));

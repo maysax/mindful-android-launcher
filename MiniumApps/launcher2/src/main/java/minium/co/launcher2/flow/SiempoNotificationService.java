@@ -9,8 +9,13 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
+import com.itconquest.tracking.util.TrackingLogger;
+
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
@@ -77,6 +82,12 @@ public class SiempoNotificationService extends NotificationListenerService {
         Tracer.d("notification posted");
         if (Build.VERSION.SDK_INT >= 21) {
             cancelNotification(notification.getKey());
+            String info = "Notification package: " + notification.getPackageName()
+                    + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
+                    + " Details: " + notification.getNotification().toString();
+
+            Tracer.d(info);
+            TrackingLogger.log(info, null);
         }
     }
 

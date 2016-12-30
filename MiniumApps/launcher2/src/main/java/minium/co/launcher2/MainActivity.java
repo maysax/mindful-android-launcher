@@ -173,9 +173,6 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             case LoadFragmentEvent.NOTIFICATION_SCHEDULER:
                 loadChildFragment(NotificationSchedulerFragment_.builder().build(), R.id.bodyView);
                 break;
-            case LoadFragmentEvent.ABOUT:
-//                loadChildFragment();
-                break;
         }
 
         loadedFragmentId = event.getId();

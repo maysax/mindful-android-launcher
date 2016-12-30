@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -25,7 +24,6 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
 import com.androidnetworking.interfaces.DownloadProgressListener;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.gun0912.tedpermission.PermissionListener;
@@ -39,10 +37,8 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -114,12 +110,15 @@ public class MainActivity extends CoreActivity {
 
         for (UsageStats stat : queryUsageStats) {
 
-            String info = "Package name: " + stat.getPackageName()
-                    + " Total usage time: " + DateUtils.interval(stat.getTotalTimeInForeground())
-                    + " Last time used: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()));
+            if (stat.getTotalTimeInForeground() != 0) {
 
-            TrackingLogger.log(info, null);
-            Tracer.d(info);
+                String info = "Package name: " + stat.getPackageName()
+                        + " Total usage time: " + DateUtils.interval(stat.getTotalTimeInForeground())
+                        + " Last time used: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()));
+
+                TrackingLogger.log(info, null);
+                Tracer.d(info);
+            }
         }
     }
 
@@ -183,7 +182,7 @@ public class MainActivity extends CoreActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_tracking, menu);
         return true;
     }
 
