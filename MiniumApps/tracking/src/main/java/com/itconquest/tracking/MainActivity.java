@@ -243,7 +243,7 @@ public class MainActivity extends CoreActivity {
     }
 
     void uploadFileToAWS() {
-        AndroidNetworking.upload("http://54.202.207.96/upload.php?token=SN2NaFFSMPkKRhMOioNEPERrCl2iCuhRcHwpm0J9")
+        AndroidNetworking.upload("http://34.193.40.200:8001/upload.php?token=SN2NaFFSMPkKRhMOioNEPERrCl2iCuhRcHwpm0J9")
                 .addMultipartFile("file", new File(TrackingLogger.getCurrentFileName()))
                 .setTag("uploadTest")
                 .setPriority(Priority.HIGH)
@@ -268,7 +268,7 @@ public class MainActivity extends CoreActivity {
     }
 
     private void checkVersion() {
-        AndroidNetworking.get("http://54.202.207.96/count")
+        AndroidNetworking.get("http://34.193.40.200:8001/count")
                 .setTag("test")
                 .setPriority(Priority.LOW)
                 .build()
@@ -291,7 +291,7 @@ public class MainActivity extends CoreActivity {
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
             String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
             final File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
-            AndroidNetworking.download("http://54.202.207.96/72d637_161215_0.0.0.12.txt", externalFilesDir.getAbsolutePath(), "newer.apk")
+            AndroidNetworking.download("http://34.193.40.200:8001/72d637_161215_0.0.0.12.txt", externalFilesDir.getAbsolutePath(), "newer.apk")
                     .setTag("downloadTest")
                     .setPriority(Priority.MEDIUM)
                     .build()
