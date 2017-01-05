@@ -32,7 +32,7 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
             TrackingLogger.log("Screen turned on", null);
         }
 
-        TrackingLogger.log("Screen turned " + (screenOff ? "On" : "Off"), null);
+        TrackingLogger.log("Screen event: " + (screenOff ? "On" : "Off"), null);
 //        ScreenOnOffService_.intent(context).extra("screen_state", screenOff).start();
     }
 }

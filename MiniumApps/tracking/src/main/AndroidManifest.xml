@@ -30,6 +30,7 @@
 
         <service android:name=".services.ScreenOnOffService_" />
         <service android:name=".services.GlobalTouchService_" />
+        <service android:name=".services.HomePressService_" />
 
         <service
             android:name=".listener.NotificationListener_"

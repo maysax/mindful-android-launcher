@@ -33,6 +33,8 @@ import com.itconquest.tracking.event.DownloadApkEvent;
 import com.itconquest.tracking.listener.NotificationListener_;
 import com.itconquest.tracking.services.ApiClient;
 import com.itconquest.tracking.services.GlobalTouchService_;
+import com.itconquest.tracking.services.HomePressService;
+import com.itconquest.tracking.services.HomePressService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
 import com.itconquest.tracking.util.TrackingLogger;
 
@@ -91,17 +93,20 @@ public class MainActivity extends CoreActivity {
                 .setPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
         checkVersion();
-        getAppUsage();
+
     }
 
     private void startServices() {
         if (prefs.isTrackingRunning().get()) {
             GlobalTouchService_.intent(getApplication()).start();
             ScreenOnOffService_.intent(getApplication()).start();
+            HomePressService_.intent(getApplication()).start();
 
         } else {
+            getAppUsage();
             GlobalTouchService_.intent(getApplication()).stop();
             ScreenOnOffService_.intent(getApplication()).stop();
+            HomePressService_.intent(getApplication()).stop();
         }
     }
 
@@ -116,8 +121,8 @@ public class MainActivity extends CoreActivity {
 
             if (stat.getTotalTimeInForeground() != 0) {
 
-                String info = "Package name: " + stat.getPackageName()
-                        + " Total usage time: " + DateUtils.interval(stat.getTotalTimeInForeground())
+                String info = "Package: " + stat.getPackageName()
+                        + " Usage time: " + DateUtils.interval(stat.getTotalTimeInForeground())
                         + " Last time used: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()));
 
                 TrackingLogger.log(info, null);
@@ -206,16 +211,6 @@ public class MainActivity extends CoreActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-/*    @Override
-    protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
-        if (requestCode == REQUEST_CODE) {
-            if (Settings.canDrawOverlays(this)) {
-                // continue here - permission was granted
-                loadViews();
-            }
-        }
-    }*/
 
     PermissionListener permissionlistener = new PermissionListener() {
         @Override

@@ -17,6 +17,8 @@ import com.itconquest.tracking.util.TrackingLogger;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.SystemService;
 
+import java.util.Locale;
+
 import minium.co.core.log.Tracer;
 
 /**
@@ -68,7 +70,7 @@ public class GlobalTouchService extends Service implements View.OnTouchListener 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Tracer.d("Touch event: " + event.toString());
-        TrackingLogger.log("Touch event:" + event.toString(), null);
+        TrackingLogger.log(String.format(Locale.US, "Touch event: x = %f, y = %f", event.getX(), event.getY()), null);
         return false;
     }
 
