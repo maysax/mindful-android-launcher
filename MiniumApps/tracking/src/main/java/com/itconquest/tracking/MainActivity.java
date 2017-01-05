@@ -1,31 +1,26 @@
 package com.itconquest.tracking;
 
 import android.Manifest;
+import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import com.adeel.library.easyFTP;
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.DownloadListener;
-import com.androidnetworking.interfaces.DownloadProgressListener;
-import com.androidnetworking.interfaces.StringRequestListener;
-import com.androidnetworking.interfaces.UploadProgressListener;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.itconquest.tracking.event.CheckVersionEvent;
@@ -33,7 +28,6 @@ import com.itconquest.tracking.event.DownloadApkEvent;
 import com.itconquest.tracking.listener.NotificationListener_;
 import com.itconquest.tracking.services.ApiClient;
 import com.itconquest.tracking.services.GlobalTouchService_;
-import com.itconquest.tracking.services.HomePressService;
 import com.itconquest.tracking.services.HomePressService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
 import com.itconquest.tracking.util.TrackingLogger;
@@ -42,6 +36,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -53,7 +48,6 @@ import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -75,6 +69,9 @@ public class MainActivity extends CoreActivity {
     @ViewById
     FloatingActionButton fab;
 
+    @ViewById
+    TextView txtVersion;
+
     @SystemService
     UsageStatsManager usageStatsManager;
 
@@ -93,10 +90,12 @@ public class MainActivity extends CoreActivity {
                 .setPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
         checkVersion();
+        txtVersion.setText("Version: " + BuildConfig.VERSION_NAME);
 
     }
 
-    private void startServices() {
+    @Background
+    void startServices() {
         if (prefs.isTrackingRunning().get()) {
             GlobalTouchService_.intent(getApplication()).start();
             ScreenOnOffService_.intent(getApplication()).start();
@@ -107,6 +106,7 @@ public class MainActivity extends CoreActivity {
             GlobalTouchService_.intent(getApplication()).stop();
             ScreenOnOffService_.intent(getApplication()).stop();
             HomePressService_.intent(getApplication()).stop();
+            startUpload();
         }
     }
 
@@ -143,7 +143,7 @@ public class MainActivity extends CoreActivity {
                     dialog.dismiss();
                 }
             });
-        } else if (getPackageManager().checkPermission(Manifest.permission.PACKAGE_USAGE_STATS, getPackageName()) != PackageManager.PERMISSION_GRANTED && !isDisplayedPermitUsageAccessDialog) {
+        } else if (!checkUserStatPermission() && !isDisplayedPermitUsageAccessDialog) {
             isDisplayedPermitUsageAccessDialog = true;
             UIUtils.confirm(this, "Tracker usage stats is not enabled. Please allow Tracking to access usage stats", new DialogInterface.OnClickListener() {
                 @Override
@@ -152,6 +152,21 @@ public class MainActivity extends CoreActivity {
                     dialog.dismiss();
                 }
             });
+        }
+    }
+
+    private boolean checkUserStatPermission() {
+        try {
+            PackageManager packageManager = getPackageManager();
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(), 0);
+            AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+            int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, applicationInfo.uid, applicationInfo.packageName);
+            Tracer.d("Usage stat permission: " + mode);
+            return (mode == AppOpsManager.MODE_ALLOWED);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            Tracer.d("Usage stat permission: " + e.getMessage());
+            return false;
         }
     }
 
@@ -191,7 +206,7 @@ public class MainActivity extends CoreActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tracking, menu);
+        // getMenuInflater().inflate(R.menu.menu_tracking, menu);
         return true;
     }
 
@@ -204,12 +219,17 @@ public class MainActivity extends CoreActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_upload) {
-            UIUtils.toast(this, "Uploading file...");
-            uploadFile();
-            uploadFileToAWS();
+            startUpload();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @UiThread
+    void startUpload() {
+        UIUtils.toast(this, "Uploading file...");
+        uploadFileToFTP();
+        uploadFileToAWS();
     }
 
     PermissionListener permissionlistener = new PermissionListener() {
@@ -225,7 +245,7 @@ public class MainActivity extends CoreActivity {
     };
 
     @Background
-    void uploadFile() {
+    void uploadFileToFTP() {
         new ApiClient().uploadFileToFTP();
     }
 
@@ -234,7 +254,6 @@ public class MainActivity extends CoreActivity {
         new ApiClient().uploadFileToAWS();
     }
 
-    @Background
     void checkVersion() {
         new ApiClient().checkAppVersion();
     }
@@ -255,8 +274,14 @@ public class MainActivity extends CoreActivity {
     @Subscribe
     public void downloadApkEvent(DownloadApkEvent event) {
         try {
-            Intent updateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getPath()));
-            startActivity(updateIntent);
+//            Intent updateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getPath()));
+//            startActivity(updateIntent);
+
+            Intent installIntent = new Intent(Intent.ACTION_VIEW);
+            installIntent.setDataAndType(Uri.fromFile(new File(event.getPath())),
+                    "application/vnd.android.package-archive");
+            installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(installIntent);
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }

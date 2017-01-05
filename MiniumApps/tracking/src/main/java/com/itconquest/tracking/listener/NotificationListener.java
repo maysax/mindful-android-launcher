@@ -9,6 +9,8 @@ import com.itconquest.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EService;
 
+import java.util.Locale;
+
 import minium.co.core.log.Tracer;
 
 /**

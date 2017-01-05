@@ -84,7 +84,7 @@ public class ApiClient {
 
     public void checkAppVersion() {
 
-        AndroidNetworking.get(String.format(Locale.US, "%s/count", AWS_TOKEN))
+        AndroidNetworking.get(String.format(Locale.US, "%s/count", AWS_HOST))
                 .setTag("test")
                 .setPriority(Priority.LOW)
                 .build()
@@ -105,7 +105,7 @@ public class ApiClient {
         String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
         final File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
 
-        AndroidNetworking.download(String.format(Locale.US, "%s/tracking.apk", AWS_HOST), externalFilesDir.getAbsolutePath(), "tracking.apk")
+        AndroidNetworking.download(String.format(Locale.US, "%s/apk/tracking.apk", AWS_HOST), externalFilesDir.getAbsolutePath(), "tracking.apk")
                 .setTag("downloadTest")
                 .setPriority(Priority.MEDIUM)
                 .build()
@@ -126,8 +126,6 @@ public class ApiClient {
                         Tracer.e(error.getCause(), error.getErrorDetail());
                     }
                 });
-
-
     }
 
 
