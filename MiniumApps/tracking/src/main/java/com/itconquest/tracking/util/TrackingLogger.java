@@ -144,7 +144,7 @@ public class TrackingLogger {
 
     private static String getFileName() {
         String deviceId = Settings.Secure.getString(CoreApplication.getInstance().getContentResolver(),
-                Settings.Secure.ANDROID_ID).substring(0, 6);
+                Settings.Secure.ANDROID_ID);
         return deviceId + "_" + new SimpleDateFormat("yyMMdd_", Locale.ENGLISH).format(Calendar.getInstance().getTime()) + BuildConfig.VERSION_NAME + ".txt";
     }
 }

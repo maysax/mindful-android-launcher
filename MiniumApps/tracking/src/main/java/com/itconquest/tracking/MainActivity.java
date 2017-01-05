@@ -28,7 +28,10 @@ import com.androidnetworking.interfaces.StringRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.itconquest.tracking.event.CheckVersionEvent;
+import com.itconquest.tracking.event.DownloadApkEvent;
 import com.itconquest.tracking.listener.NotificationListener_;
+import com.itconquest.tracking.services.ApiClient;
 import com.itconquest.tracking.services.GlobalTouchService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
 import com.itconquest.tracking.util.TrackingLogger;
@@ -47,6 +50,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
@@ -227,98 +231,39 @@ public class MainActivity extends CoreActivity {
 
     @Background
     void uploadFile() {
-
-        com.adeel.library.easyFTP ftp = new easyFTP();
-        try {
-            ftp.connect("dropbox.sandbox2000.com", "junkspace", "C!55iL9p");
-            Tracer.d("FTP connected");
-            ftp.setWorkingDirectory("/dropbox.sandbox2000.com/Ebb/Tracking");
-            ftp.uploadFile(new File(TrackingLogger.getCurrentFileName()).toString());
-            ftp.disconnect();
-            Tracer.d("File uploaded");
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-            e.printStackTrace();
-        }
+        new ApiClient().uploadFileToFTP();
     }
 
+    @Background
     void uploadFileToAWS() {
-        AndroidNetworking.upload("http://34.193.40.200:8001/upload.php?token=SN2NaFFSMPkKRhMOioNEPERrCl2iCuhRcHwpm0J9")
-                .addMultipartFile("file", new File(TrackingLogger.getCurrentFileName()))
-                .setTag("uploadTest")
-                .setPriority(Priority.HIGH)
-                .build()
-                .setUploadProgressListener(new UploadProgressListener() {
-                    @Override
-                    public void onProgress(long bytesUploaded, long totalBytes) {
-                        Tracer.d("Upload to AWS " + bytesUploaded + "/" + totalBytes);
-                    }
-                })
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        Tracer.i("Upload to AWS " + response);
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        Tracer.e(anError.getCause(), anError.getErrorDetail());
-                    }
-                });
+        new ApiClient().uploadFileToAWS();
     }
 
-    private void checkVersion() {
-        AndroidNetworking.get("http://34.193.40.200:8001/count")
-                .setTag("test")
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (Integer.parseInt(response.trim()) > BuildConfig.VERSION_CODE) {
-                            downloadApk();
-                        }
-                    }
+    @Background
+    void checkVersion() {
+        new ApiClient().checkAppVersion();
+    }
 
-                    @Override
-                    public void onError(ANError anError) {
-                        Tracer.e(anError.getCause(), anError.getErrorDetail());
-                    }
-                });
+    @Subscribe
+    public void checkVersionEvent(CheckVersionEvent event) {
+        if (event.getVersion() > BuildConfig.VERSION_CODE) {
+            downloadApk();
+        }
     }
 
     private void downloadApk() {
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-            String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
-            final File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
-            AndroidNetworking.download("http://34.193.40.200:8001/72d637_161215_0.0.0.12.txt", externalFilesDir.getAbsolutePath(), "newer.apk")
-                    .setTag("downloadTest")
-                    .setPriority(Priority.MEDIUM)
-                    .build()
-                    .setDownloadProgressListener(new DownloadProgressListener() {
-                        @Override
-                        public void onProgress(long bytesDownloaded, long totalBytes) {
-                            Tracer.d("Download apk " + bytesDownloaded + "/" + totalBytes);
-                        }
-                    })
-                    .startDownload(new DownloadListener() {
-                        @Override
-                        public void onDownloadComplete() {
-                            Tracer.i("Download completed");
-                            try {
-                                Intent updateIntent = new Intent(Intent.ACTION_VIEW,
-                                        Uri.parse(externalFilesDir.getAbsolutePath() + File.separator + "newer.apk"));
-                                startActivity(updateIntent);
-                            } catch (Exception e) {
-                                Tracer.e(e, e.getMessage());
-                            }
-                        }
-                        @Override
-                        public void onError(ANError error) {
-                            Tracer.e(error.getCause(), error.getErrorDetail());
-                        }
-                    });
+            new ApiClient().downloadApk();
         }
+    }
 
+    @Subscribe
+    public void downloadApkEvent(DownloadApkEvent event) {
+        try {
+            Intent updateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getPath()));
+            startActivity(updateIntent);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
     }
 }
