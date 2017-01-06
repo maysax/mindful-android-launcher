@@ -27,10 +27,13 @@ import com.itconquest.tracking.event.CheckVersionEvent;
 import com.itconquest.tracking.event.DownloadApkEvent;
 import com.itconquest.tracking.listener.NotificationListener_;
 import com.itconquest.tracking.services.ApiClient;
+import com.itconquest.tracking.services.ApiClient_;
 import com.itconquest.tracking.services.GlobalTouchService_;
 import com.itconquest.tracking.services.HomePressService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
+import com.itconquest.tracking.util.FileUtil;
 import com.itconquest.tracking.util.TrackingLogger;
+import com.itconquest.tracking.util.TrackingPref_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -46,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
@@ -64,7 +68,7 @@ public class MainActivity extends CoreActivity {
     Toolbar toolbar;
 
     @Pref
-    DroidPrefs_ prefs;
+    TrackingPref_ trackingPrefs;
 
     @ViewById
     FloatingActionButton fab;
@@ -87,16 +91,19 @@ public class MainActivity extends CoreActivity {
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                .setPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW)
+                .setPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
                 .check();
-        checkVersion();
-        txtVersion.setText("Version: " + BuildConfig.VERSION_NAME);
+
+        txtVersion.setText(String.format(Locale.getDefault(), "Version: %s", BuildConfig.VERSION_NAME));
+        new FileUtil().deleteOldApk();
 
     }
 
     @Background
     void startServices() {
-        if (prefs.isTrackingRunning().get()) {
+        if (trackingPrefs.isTrackingRunning().get()) {
             GlobalTouchService_.intent(getApplication()).start();
             ScreenOnOffService_.intent(getApplication()).start();
             HomePressService_.intent(getApplication()).start();
@@ -179,7 +186,7 @@ public class MainActivity extends CoreActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (prefs.isTrackingRunning().get()) {
+                if (trackingPrefs.isTrackingRunning().get()) {
                     Snackbar.make(view, "Tracking paused", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     fab.setImageResource(android.R.drawable.ic_media_play);
@@ -190,13 +197,13 @@ public class MainActivity extends CoreActivity {
                     fab.setImageResource(android.R.drawable.ic_media_pause);
                 }
 
-                prefs.isTrackingRunning().put(!prefs.isTrackingRunning().get());
+                trackingPrefs.isTrackingRunning().put(!trackingPrefs.isTrackingRunning().get());
                 startServices();
 
             }
         });
 
-        if (prefs.isTrackingRunning().get()) {
+        if (trackingPrefs.isTrackingRunning().get()) {
             fab.setImageResource(android.R.drawable.ic_media_pause);
         } else {
             fab.setImageResource(android.R.drawable.ic_media_play);
@@ -236,6 +243,7 @@ public class MainActivity extends CoreActivity {
         @Override
         public void onPermissionGranted() {
             loadViews();
+            checkVersion();
         }
 
         @Override
@@ -246,16 +254,16 @@ public class MainActivity extends CoreActivity {
 
     @Background
     void uploadFileToFTP() {
-        new ApiClient().uploadFileToFTP();
+        ApiClient_.getInstance_(this).uploadFileToFTP();
     }
 
     @Background
     void uploadFileToAWS() {
-        new ApiClient().uploadFileToAWS();
+        ApiClient_.getInstance_(this).uploadFileToAWS();
     }
 
     void checkVersion() {
-        new ApiClient().checkAppVersion();
+        ApiClient_.getInstance_(this).checkAppVersion();
     }
 
     @Subscribe
@@ -267,16 +275,13 @@ public class MainActivity extends CoreActivity {
 
     private void downloadApk() {
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-            new ApiClient().downloadApk();
+            ApiClient_.getInstance_(this).downloadApk();
         }
     }
 
     @Subscribe
     public void downloadApkEvent(DownloadApkEvent event) {
         try {
-//            Intent updateIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getPath()));
-//            startActivity(updateIntent);
-
             Intent installIntent = new Intent(Intent.ACTION_VIEW);
             installIntent.setDataAndType(Uri.fromFile(new File(event.getPath())),
                     "application/vnd.android.package-archive");

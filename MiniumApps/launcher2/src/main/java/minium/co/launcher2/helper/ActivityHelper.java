@@ -3,8 +3,6 @@ package minium.co.launcher2.helper;
 import android.content.Context;
 import android.content.Intent;
 
-import com.itconquest.tracking.MainActivity_;
-
 import minium.co.core.log.Tracer;
 import minium.co.notes.ui.MainActivity;
 import minium.co.settings.SiempoSettingsActivity_;
@@ -88,16 +86,6 @@ public class ActivityHelper {
         try {
 //            getContext().startActivity(new Intent(Settings.ACTION_SETTINGS));
             SiempoSettingsActivity_.intent(getContext()).start();
-            return true;
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-        }
-        return false;
-    }
-
-    public boolean openTrackingApp() {
-        try {
-            getContext().startActivity(new Intent(getContext(), MainActivity_.class));
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

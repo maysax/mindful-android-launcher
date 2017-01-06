@@ -60,7 +60,4 @@ public interface DroidPrefs {
 
     @DefaultBoolean(false)
     boolean isSiempoNotificationServiceRunning();
-
-    @DefaultBoolean(false)
-    boolean isTrackingRunning();
 }

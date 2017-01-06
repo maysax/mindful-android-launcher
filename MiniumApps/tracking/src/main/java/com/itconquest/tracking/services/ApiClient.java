@@ -17,8 +17,10 @@ import com.itconquest.tracking.BuildConfig;
 import com.itconquest.tracking.event.CheckVersionEvent;
 import com.itconquest.tracking.event.DownloadApkEvent;
 import com.itconquest.tracking.util.TrackingLogger;
+import com.itconquest.tracking.util.TrackingPref_;
 
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.File;
 import java.util.Locale;
@@ -34,13 +36,15 @@ import minium.co.core.log.Tracer;
 @EBean
 public class ApiClient {
 
+    @Pref
+    TrackingPref_ trackingPrefs;
+
     private final String FTP_HOST = "dropbox.sandbox2000.com";
     private final String FTP_USER = "junkspace";
     private final String FTP_PASS = "C!55iL9p";
 
     private final String AWS_HOST = "http://34.193.40.200:8001";
     private final String AWS_TOKEN = "SN2NaFFSMPkKRhMOioNEPERrCl2iCuhRcHwpm0J9";
-
 
     public void uploadFileToFTP() {
         com.adeel.library.easyFTP ftp = new easyFTP();
@@ -73,6 +77,7 @@ public class ApiClient {
                     @Override
                     public void onResponse(String response) {
                         Tracer.i("Upload to AWS " + response);
+                        trackingPrefs.trackingLogFileName().put("");
                     }
 
                     @Override
@@ -102,8 +107,12 @@ public class ApiClient {
     }
 
     public void downloadApk() {
-        String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
-        final File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
+        final File externalFilesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+        if (!externalFilesDir.exists()) {
+            boolean mkdirs = externalFilesDir.mkdirs();
+            Tracer.d("Creating " + externalFilesDir.getAbsolutePath() + ": " + mkdirs);
+        }
 
         AndroidNetworking.download(String.format(Locale.US, "%s/apk/tracking.apk", AWS_HOST), externalFilesDir.getAbsolutePath(), "tracking.apk")
                 .setTag("downloadTest")

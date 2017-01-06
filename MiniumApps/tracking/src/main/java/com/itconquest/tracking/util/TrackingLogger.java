@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.itconquest.tracking.App_;
 import com.itconquest.tracking.BuildConfig;
 
 import java.io.BufferedWriter;
@@ -138,13 +139,8 @@ public class TrackingLogger {
         String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
         File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
         if (externalFilesDir != null) {
-            log2file(externalFilesDir.getAbsolutePath() + File.separator + getFileName(), formatMsg);
+            log2file(externalFilesDir.getAbsolutePath() + File.separator + App_.getInstance().getFileName(), formatMsg);
         }
     }
 
-    private static String getFileName() {
-        String deviceId = Settings.Secure.getString(CoreApplication.getInstance().getContentResolver(),
-                Settings.Secure.ANDROID_ID);
-        return deviceId + "_" + new SimpleDateFormat("yyMMdd_", Locale.ENGLISH).format(Calendar.getInstance().getTime()) + BuildConfig.VERSION_NAME + ".txt";
-    }
 }

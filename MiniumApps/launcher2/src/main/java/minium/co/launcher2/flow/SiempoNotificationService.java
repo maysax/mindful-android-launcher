@@ -9,8 +9,6 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-import com.itconquest.tracking.util.TrackingLogger;
-
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
