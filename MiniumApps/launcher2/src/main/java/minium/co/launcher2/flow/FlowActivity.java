@@ -29,12 +29,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
+import minium.co.launcher2.events.NFCEvent;
 import minium.co.launcher2.notificationscheduler.NotificationScheduleReceiver_;
 import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.ui.widget.VerticalProgressBar;
@@ -251,6 +253,15 @@ public class FlowActivity extends CoreActivity {
                 return true;
             default:
                 return super.dispatchKeyEvent(event);
+        }
+    }
+
+    @Subscribe
+    public void onNFCEvent(NFCEvent event) {
+        Tracer.d("NFC event received: " + event);
+        if (!event.isConnected()) {
+            if (isServiceRunning)
+                progress = flowMaxTimeLimitMillis;
         }
     }
 }

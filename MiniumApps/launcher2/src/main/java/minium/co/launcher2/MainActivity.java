@@ -47,6 +47,7 @@ import minium.co.launcher2.intro.SiempoIntroActivity;
 import minium.co.launcher2.intro.SiempoIntroActivity_;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
+import minium.co.launcher2.nfc.NfcManager;
 import minium.co.launcher2.notificationscheduler.NotificationSchedulerFragment_;
 import minium.co.launcher2.ui.ContextualOptionFragment_;
 import minium.co.launcher2.ui.OptionsFragment2_;
@@ -74,6 +75,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Bean
     ActionRouter router;
 
+    NfcManager nfcManager = new NfcManager();
+
     boolean isDispatched = false;
 
     @Override
@@ -84,6 +87,8 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             SiempoIntroActivity_.intent(this).start();
             finish();
         }
+
+        nfcManager.init(this);
     }
 
     @Trace(tag = TRACE_TAG)
@@ -95,11 +100,10 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             new TedPermission(this)
                     .setPermissionListener(permissionlistener)
                     .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                    .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG)
+                    .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG, Manifest.permission.NFC)
                     .check();
         }
         loadViews();
-
     }
 
     void loadViews() {
@@ -128,6 +132,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Override
     protected void onResume() {
         super.onResume();
+        nfcManager.onResume();
         isDispatched = false;
     }
 
@@ -277,4 +282,10 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             UIUtils.toast(MainActivity.this, "Permission denied");
         }
     };
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        nfcManager.onNewIntent(intent);
+    }
 }

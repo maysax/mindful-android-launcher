@@ -14,6 +14,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.NFC" />
 
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+
     <!-- Used to disable recent apps button -->
     <!-- <uses-permission android:name="android.permission.REORDER_TASKS" /> -->
 
