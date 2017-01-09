@@ -39,6 +39,10 @@
     <string name="icon.outgoingCall">{fa-arrow-up @color/material.core.green 12dp}</string>
     <string name="icon.incomingCall">{fa-arrow-down @color/material.core.indigo 12dp}</string>
     <string name="icon.missedCall">{fa-arrow-down @color/material.core.red 12dp}</string>
+    <string name="title_welcome_siempo">Welcome to Siempo</string>
+    <string name="title_welcome_siempo2">New Experience</string>
+    <string name="title_welcome_siempo3">Distraction Free</string>
+    <string name="msg_siempo_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
 
     <string-array name="socialNetworks">
         <item>Twitter</item>

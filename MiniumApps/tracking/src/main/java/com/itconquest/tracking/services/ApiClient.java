@@ -114,7 +114,7 @@ public class ApiClient {
             Tracer.d("Creating " + externalFilesDir.getAbsolutePath() + ": " + mkdirs);
         }
 
-        AndroidNetworking.download(String.format(Locale.US, "%s/apk/tracking.apk", AWS_HOST), externalFilesDir.getAbsolutePath(), "tracking.apk")
+        AndroidNetworking.download(String.format(Locale.US, "%s/tracking/app/tracking.apk", AWS_HOST), externalFilesDir.getAbsolutePath(), "tracking.apk")
                 .setTag("downloadTest")
                 .setPriority(Priority.MEDIUM)
                 .build()

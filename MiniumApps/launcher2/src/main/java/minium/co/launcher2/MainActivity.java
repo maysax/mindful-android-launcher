@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 
@@ -18,10 +20,12 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.DroidPrefs;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -39,6 +43,8 @@ import minium.co.launcher2.filter.FilterFragment_;
 import minium.co.launcher2.filter.OptionsFragment_;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActionRouter;
+import minium.co.launcher2.intro.SiempoIntroActivity;
+import minium.co.launcher2.intro.SiempoIntroActivity_;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.notificationscheduler.NotificationSchedulerFragment_;
@@ -70,17 +76,28 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
 
     boolean isDispatched = false;
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (!prefs.hasShownIntroScreen().get()) {
+            SiempoIntroActivity_.intent(this).start();
+            finish();
+        }
+    }
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
         statusView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
         searchView.setBackgroundColor(ThemeUtils.getPrimaryDarkColor(this));
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG)
-                .check();
+        if (prefs.hasShownIntroScreen().get()) {
+            new TedPermission(this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+                    .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG)
+                    .check();
+        }
         loadViews();
 
     }

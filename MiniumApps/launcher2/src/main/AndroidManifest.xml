@@ -73,6 +73,9 @@
 
         </activity>
 
+        <activity android:name=".intro.SiempoIntroActivity_"
+            android:label="@string/app_name"/>
+
         <activity android:name=".utils.FakeLauncherActivity"
             android:enabled="false">
             <intent-filter>

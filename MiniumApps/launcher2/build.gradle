@@ -44,12 +44,14 @@ dependencies {
     compile project(':color-picker')
     compile project(':settings')
     compile project (':notes')
-    compile project (':core')
+    //compile project (':core')
 
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
     compile "com.github.satyan:sugar:$sugarOrmVersion"
     compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
-
+    compile ('com.github.paolorotolo:appintro:4.1.0') {
+        exclude module: 'appcompat-v7'
+    }
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
