@@ -85,7 +85,6 @@ public class SiempoNotificationService extends NotificationListenerService {
                     + " Details: " + notification.getNotification().toString();
 
             Tracer.d(info);
-            //TrackingLogger.log(info, null);
         }
     }
 

@@ -28,6 +28,7 @@ import minium.co.core.log.Tracer;
 import minium.co.launcher2.R;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
+import minium.co.launcher2.events.BackPressEvent;
 import minium.co.launcher2.events.ImeActionDoneEvent;
 import minium.co.launcher2.model.ActionItem;
 
@@ -240,5 +241,11 @@ public class SearchLayout extends LinearLayout {
         formattedText = ret;
         initFormattedText();
         isWatching = true;
+    }
+
+    @Subscribe
+    public void onBackPressed(BackPressEvent event) {
+        if (btnClear.getVisibility() == VISIBLE)
+            btnClear.performClick();
     }
 }

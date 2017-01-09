@@ -3,6 +3,8 @@ package minium.co.launcher2;
 import android.Manifest;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -24,11 +26,13 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.battery.BatteryChangeReceiver_;
@@ -38,10 +42,13 @@ import minium.co.launcher2.contactspicker.ContactsPickerFragment2_;
 import minium.co.launcher2.contactspicker.OnContactSelectedListener;
 import minium.co.launcher2.data.ActionItemManager;
 import minium.co.launcher2.events.ActionItemUpdateEvent;
+import minium.co.launcher2.events.BackPressEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.filter.FilterFragment_;
 import minium.co.launcher2.filter.OptionsFragment_;
 import minium.co.launcher2.flow.FlowActivity_;
+import minium.co.launcher2.flow.SiempoNotificationService;
+import minium.co.launcher2.flow.SiempoNotificationService_;
 import minium.co.launcher2.helper.ActionRouter;
 import minium.co.launcher2.intro.SiempoIntroActivity;
 import minium.co.launcher2.intro.SiempoIntroActivity_;
@@ -100,10 +107,24 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             new TedPermission(this)
                     .setPermissionListener(permissionlistener)
                     .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                    .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG, Manifest.permission.NFC)
+                    .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG)
                     .check();
+
+            if (!isEnabled(this)) {
+                UIUtils.confirm(this, "Ebb flow manager service is not enabled. Please allow Ebb flow manager to access notification service", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                    }
+                });
+            }
         }
         loadViews();
+    }
+
+    /** @return True if {@link SiempoNotificationService} is enabled. */
+    public static boolean isEnabled(Context mContext) {
+        return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationService_.class);
     }
 
     void loadViews() {
@@ -245,6 +266,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             loadedFragmentId = LoadFragmentEvent.MAIN_FRAGMENT;
             loadMainView();
         } else {
+            EventBus.getDefault().post(new BackPressEvent());
         }
     }
 
