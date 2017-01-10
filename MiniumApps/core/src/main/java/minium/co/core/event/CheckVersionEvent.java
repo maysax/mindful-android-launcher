@@ -1,4 +1,4 @@
-package com.itconquest.tracking.event;
+package minium.co.core.event;
 
 /**
  * Created by Shahab on 1/5/2017.

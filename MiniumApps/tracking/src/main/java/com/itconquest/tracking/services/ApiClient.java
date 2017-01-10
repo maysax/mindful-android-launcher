@@ -1,22 +1,13 @@
 package com.itconquest.tracking.services;
 
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.Uri;
-import android.os.Environment;
 import android.util.Base64;
 
 import com.adeel.library.easyFTP;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.DownloadListener;
-import com.androidnetworking.interfaces.DownloadProgressListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
-import com.itconquest.tracking.BuildConfig;
-import com.itconquest.tracking.event.CheckVersionEvent;
-import com.itconquest.tracking.event.DownloadApkEvent;
 import com.itconquest.tracking.util.TrackingLogger;
 import com.itconquest.tracking.util.TrackingPref_;
 
@@ -26,16 +17,15 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.io.File;
 import java.util.Locale;
 
-import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
+import minium.co.core.service.CoreAPIClient;
 
 /**
  * Created by Shahab on 1/5/2017.
  */
 
 @EBean
-public class ApiClient {
+public class ApiClient extends CoreAPIClient {
 
     @Pref
     TrackingPref_ trackingPrefs;
@@ -44,8 +34,7 @@ public class ApiClient {
     private final String FTP_USER = "junkspace";
     private final String FTP_PASS = "C!55iL9p";
 
-    private final String AWS_HOST = "http://34.193.40.200:8001";
-    private final String AWS_TOKEN = "SN2NaFFSMPkKRhMOioNEPERrCl2iCuhRcHwpm0J9";
+
 
     public void uploadFileToFTP() {
         com.adeel.library.easyFTP ftp = new easyFTP();
@@ -90,55 +79,9 @@ public class ApiClient {
                 });
     }
 
-    public void checkAppVersion() {
 
-        AndroidNetworking.get(String.format(Locale.US, "%s/tracking/version", AWS_HOST))
-                .setTag("test")
-                .setPriority(Priority.LOW)
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        EventBus.getDefault().post(new CheckVersionEvent(Integer.parseInt(response.trim())));
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        Tracer.e(anError.getCause(), anError.getErrorDetail());
-                    }
-                });
+    @Override
+    protected String getAppName() {
+        return "tracking";
     }
-
-    public void downloadApk() {
-        final File externalFilesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-        if (!externalFilesDir.exists()) {
-            boolean mkdirs = externalFilesDir.mkdirs();
-            Tracer.d("Creating " + externalFilesDir.getAbsolutePath() + ": " + mkdirs);
-        }
-
-        AndroidNetworking.download(String.format(Locale.US, "%s/tracking/app/tracking.apk", AWS_HOST), externalFilesDir.getAbsolutePath(), "tracking.apk")
-                .setTag("downloadTest")
-                .setPriority(Priority.MEDIUM)
-                .build()
-                .setDownloadProgressListener(new DownloadProgressListener() {
-                    @Override
-                    public void onProgress(long bytesDownloaded, long totalBytes) {
-                        Tracer.d("Download apk " + bytesDownloaded + "/" + totalBytes);
-                    }
-                })
-                .startDownload(new DownloadListener() {
-                    @Override
-                    public void onDownloadComplete() {
-                        Tracer.i("Download completed");
-                        EventBus.getDefault().post(new DownloadApkEvent(externalFilesDir.getAbsolutePath() + File.separator + "tracking.apk"));
-                    }
-                    @Override
-                    public void onError(ANError error) {
-                        Tracer.e(error.getCause(), error.getErrorDetail());
-                    }
-                });
-    }
-
-
 }

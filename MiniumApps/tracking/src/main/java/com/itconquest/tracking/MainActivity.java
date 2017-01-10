@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
@@ -23,10 +22,9 @@ import android.widget.TextView;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.itconquest.tracking.event.CheckVersionEvent;
-import com.itconquest.tracking.event.DownloadApkEvent;
+import minium.co.core.event.CheckVersionEvent;
+import minium.co.core.event.DownloadApkEvent;
 import com.itconquest.tracking.listener.NotificationListener_;
-import com.itconquest.tracking.services.ApiClient;
 import com.itconquest.tracking.services.ApiClient_;
 import com.itconquest.tracking.services.GlobalTouchService_;
 import com.itconquest.tracking.services.HomePressService_;
@@ -52,7 +50,6 @@ import java.util.List;
 import java.util.Locale;
 
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.DateUtils;
