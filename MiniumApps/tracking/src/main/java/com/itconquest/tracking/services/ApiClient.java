@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Base64;
 
 import com.adeel.library.easyFTP;
 import com.androidnetworking.AndroidNetworking;
@@ -62,7 +63,9 @@ public class ApiClient {
     }
 
     public void uploadFileToAWS() {
-        AndroidNetworking.upload(String.format(Locale.US, "%s/upload.php?token=%s", AWS_HOST, AWS_TOKEN))
+        AndroidNetworking.upload(String.format(Locale.US, "%s/upload.php?secret=%s", AWS_HOST, AWS_TOKEN))
+                .addHeaders("Authorization", Base64.encodeToString("user:@#132".getBytes(), Base64.DEFAULT))
+                .addMultipartParameter("app", "tracking")
                 .addMultipartFile("file", new File(TrackingLogger.getCurrentFileName()))
                 .setTag("uploadTest")
                 .setPriority(Priority.HIGH)
@@ -89,7 +92,7 @@ public class ApiClient {
 
     public void checkAppVersion() {
 
-        AndroidNetworking.get(String.format(Locale.US, "%s/count", AWS_HOST))
+        AndroidNetworking.get(String.format(Locale.US, "%s/tracking/version", AWS_HOST))
                 .setTag("test")
                 .setPriority(Priority.LOW)
                 .build()

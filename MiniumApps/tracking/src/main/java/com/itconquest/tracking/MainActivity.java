@@ -268,7 +268,9 @@ public class MainActivity extends CoreActivity {
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
+        Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
         if (event.getVersion() > BuildConfig.VERSION_CODE) {
+            UIUtils.toast(this, "New version found! Downloading apk...");
             downloadApk();
         }
     }
