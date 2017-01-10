@@ -9,6 +9,8 @@ import com.androidnetworking.interfaces.DownloadListener;
 import com.androidnetworking.interfaces.DownloadProgressListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 
+import org.androidannotations.annotations.EBean;
+
 import java.io.File;
 import java.util.Locale;
 
@@ -21,6 +23,7 @@ import minium.co.core.log.Tracer;
  * Created by Shahab on 1/10/2017.
  */
 
+@EBean
 public abstract class CoreAPIClient {
 
     protected final String AWS_HOST = "http://34.193.40.200:8001";

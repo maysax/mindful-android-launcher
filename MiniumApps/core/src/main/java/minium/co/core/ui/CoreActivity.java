@@ -5,6 +5,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityManagerCompat;
@@ -15,11 +18,16 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.io.File;
+
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.R;
 import minium.co.core.app.DroidPrefs_;
+import minium.co.core.event.DownloadApkEvent;
 import minium.co.core.helper.Validate;
+import minium.co.core.log.Tracer;
+import minium.co.core.service.CoreAPIClient;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -38,6 +46,8 @@ public abstract class CoreActivity extends AppCompatActivity {
 
     @SystemService
     protected ActivityManager activityManager;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -160,6 +170,19 @@ public abstract class CoreActivity extends AppCompatActivity {
             this.finish();
         } else {
             getFragmentManager().popBackStack();
+        }
+    }
+
+    @Subscribe
+    public void downloadApkEvent(DownloadApkEvent event) {
+        try {
+            Intent installIntent = new Intent(Intent.ACTION_VIEW);
+            installIntent.setDataAndType(Uri.fromFile(new File(event.getPath())),
+                    "application/vnd.android.package-archive");
+            installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(installIntent);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
         }
     }
 }

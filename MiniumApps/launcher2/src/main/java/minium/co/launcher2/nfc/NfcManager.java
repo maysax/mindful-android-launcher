@@ -77,7 +77,8 @@ public class NfcManager {
     }
 
     public void onResume() {
-        _nfcAdapter.enableForegroundDispatch(context, _pendingIntent, _intentFilters, null);
+        if (_nfcAdapter != null)
+            _nfcAdapter.enableForegroundDispatch(context, _pendingIntent, _intentFilters, null);
     }
 
 

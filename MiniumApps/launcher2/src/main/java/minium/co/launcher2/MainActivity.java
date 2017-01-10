@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs;
+import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -56,6 +59,7 @@ import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.nfc.NfcManager;
 import minium.co.launcher2.notificationscheduler.NotificationSchedulerFragment_;
+import minium.co.launcher2.service.ApiClient_;
 import minium.co.launcher2.ui.ContextualOptionFragment_;
 import minium.co.launcher2.ui.OptionsFragment2_;
 import minium.co.launcher2.ui.SearchFragment_;
@@ -82,6 +86,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Bean
     ActionRouter router;
 
+    @SystemService
+    ConnectivityManager connectivityManager;
+
     NfcManager nfcManager = new NfcManager();
 
     boolean isDispatched = false;
@@ -107,7 +114,10 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             new TedPermission(this)
                     .setPermissionListener(permissionlistener)
                     .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                    .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.READ_CALL_LOG)
+                    .setPermissions(Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.READ_CALL_LOG,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
                     .check();
 
             if (!isEnabled(this)) {
@@ -296,7 +306,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
-
+            checkVersion();
         }
 
         @Override
@@ -304,6 +314,23 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
             UIUtils.toast(MainActivity.this, "Permission denied");
         }
     };
+
+    void checkVersion() {
+        ApiClient_.getInstance_(this).checkAppVersion();
+    }
+
+    @Subscribe
+    public void checkVersionEvent(CheckVersionEvent event) {
+        Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+        if (event.getVersion() > BuildConfig.VERSION_CODE) {
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+                UIUtils.toast(this, "New version found! Downloading apk...");
+                ApiClient_.getInstance_(this).downloadApk();
+            } else {
+                UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
+            }
+        }
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {

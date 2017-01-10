@@ -51,6 +51,7 @@ import java.util.Locale;
 
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
+import minium.co.core.service.CoreAPIClient;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.DateUtils;
 import minium.co.core.util.ServiceUtils;
@@ -272,22 +273,9 @@ public class MainActivity extends CoreActivity {
         }
     }
 
-    private void downloadApk() {
+    protected void downloadApk() {
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
             ApiClient_.getInstance_(this).downloadApk();
-        }
-    }
-
-    @Subscribe
-    public void downloadApkEvent(DownloadApkEvent event) {
-        try {
-            Intent installIntent = new Intent(Intent.ACTION_VIEW);
-            installIntent.setDataAndType(Uri.fromFile(new File(event.getPath())),
-                    "application/vnd.android.package-archive");
-            installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(installIntent);
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
         }
     }
 }
