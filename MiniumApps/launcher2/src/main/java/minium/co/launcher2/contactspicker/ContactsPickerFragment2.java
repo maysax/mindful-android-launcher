@@ -67,9 +67,11 @@ public class ContactsPickerFragment2 extends CoreFragment {
 
     @UiThread
     void loadView() {
-        adapter = new ContactsPickerAdapter(getActivity(), items);
-        listView.setAdapter(adapter);
-        listView.setFastScrollEnabled(true);
+        if (getActivity() != null) {
+            adapter = new ContactsPickerAdapter(getActivity(), items);
+            listView.setAdapter(adapter);
+            listView.setFastScrollEnabled(true);
+        }
     }
 
     private void loadContacts() {

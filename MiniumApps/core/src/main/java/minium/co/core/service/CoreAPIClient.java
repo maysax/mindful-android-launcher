@@ -5,6 +5,7 @@ import android.os.Environment;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.AnalyticsListener;
 import com.androidnetworking.interfaces.DownloadListener;
 import com.androidnetworking.interfaces.DownloadProgressListener;
 import com.androidnetworking.interfaces.StringRequestListener;
@@ -31,12 +32,23 @@ public abstract class CoreAPIClient {
 
     protected abstract String getAppName();
 
+    protected AnalyticsListener analyticsListener = new AnalyticsListener() {
+        @Override
+        public void onReceived(long timeTakenInMillis, long bytesSent, long bytesReceived, boolean isFromCache) {
+            Tracer.d("timeTakenInMillis: " + timeTakenInMillis
+                    + " bytesSent: " + bytesSent
+                    + " bytesReceived: " + bytesReceived
+                    + " isFromCache: " + isFromCache);
+        }
+    };
+
     public void checkAppVersion() {
 
         AndroidNetworking.get(String.format(Locale.US, "%s/%s/version", AWS_HOST, getAppName()))
                 .setTag("test")
-                .setPriority(Priority.LOW)
+                .setPriority(Priority.MEDIUM)
                 .build()
+                .setAnalyticsListener(analyticsListener)
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
@@ -62,6 +74,7 @@ public abstract class CoreAPIClient {
                 .setTag("downloadTest")
                 .setPriority(Priority.MEDIUM)
                 .build()
+                .setAnalyticsListener(analyticsListener)
                 .setDownloadProgressListener(new DownloadProgressListener() {
                     @Override
                     public void onProgress(long bytesDownloaded, long totalBytes) {

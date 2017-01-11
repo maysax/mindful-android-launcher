@@ -4,6 +4,7 @@ package minium.co.launcher2.filter;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -90,6 +91,12 @@ public class FilterFragment extends CoreFragment {
         loadData();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+    }
+
     @Background
     void loadData() {
         items = new ArrayList<>();
@@ -101,15 +108,19 @@ public class FilterFragment extends CoreFragment {
 
     @UiThread
     void loadView() {
-        adapter = new FilterAdapter(getActivity(), items);
-        listView.setAdapter(adapter);
-        adapter.getFilter().filter(manager.getCurrent().getActionText());
+        if (getActivity() != null) {
+            adapter = new FilterAdapter(getActivity(), items);
+            listView.setAdapter(adapter);
+            adapter.getFilter().filter(manager.getCurrent().getActionText());
+        }
     }
 
     private void loadOptions() {
-        items.add(new MainListItem(new OptionsListItem(0, "{fa-comment}", getString(R.string.title__sendAsSMS))));
-        items.add(new MainListItem(new OptionsListItem(1, "{fa-pencil}", getString(R.string.title_saveNote))));
-        items.add(new MainListItem(new OptionsListItem(2, "{fa-user-plus}", getString(R.string.title_createContact))));
+        if (getActivity() != null) {
+            items.add(new MainListItem(new OptionsListItem(0, "{fa-comment}", getString(R.string.title__sendAsSMS))));
+            items.add(new MainListItem(new OptionsListItem(1, "{fa-pencil}", getString(R.string.title_saveNote))));
+            items.add(new MainListItem(new OptionsListItem(2, "{fa-user-plus}", getString(R.string.title_createContact))));
+        }
     }
 
     private void loadActions() {

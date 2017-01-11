@@ -59,6 +59,7 @@ public class ApiClient extends CoreAPIClient {
                 .setTag("uploadTest")
                 .setPriority(Priority.HIGH)
                 .build()
+                .setAnalyticsListener(analyticsListener)
                 .setUploadProgressListener(new UploadProgressListener() {
                     @Override
                     public void onProgress(long bytesUploaded, long totalBytes) {

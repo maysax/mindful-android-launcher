@@ -268,14 +268,13 @@ public class MainActivity extends CoreActivity {
     public void checkVersionEvent(CheckVersionEvent event) {
         Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
         if (event.getVersion() > BuildConfig.VERSION_CODE) {
-            UIUtils.toast(this, "New version found! Downloading apk...");
-            downloadApk();
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+                UIUtils.toast(this, "New version found! Downloading apk...");
+                ApiClient_.getInstance_(this).downloadApk();
+            } else {
+                UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
+            }
         }
     }
 
-    protected void downloadApk() {
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-            ApiClient_.getInstance_(this).downloadApk();
-        }
-    }
 }
