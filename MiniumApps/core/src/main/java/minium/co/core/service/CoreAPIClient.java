@@ -47,6 +47,7 @@ public abstract class CoreAPIClient {
         AndroidNetworking.get(String.format(Locale.US, "%s/%s/version", AWS_HOST, getAppName()))
                 .setTag("test")
                 .setPriority(Priority.MEDIUM)
+                .doNotCacheResponse()
                 .build()
                 .setAnalyticsListener(analyticsListener)
                 .getAsString(new StringRequestListener() {

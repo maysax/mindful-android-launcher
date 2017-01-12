@@ -69,8 +69,9 @@ public class GlobalTouchService extends Service implements View.OnTouchListener 
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Tracer.d("Touch event: " + event.toString());
-        TrackingLogger.log(String.format(Locale.US, "Touch event: x = %f, y = %f", event.getX(), event.getY()), null);
+        String info = String.format(Locale.US, "Touch event");
+        Tracer.d(info);
+        TrackingLogger.log(info, null);
         return false;
     }
 

@@ -31,6 +31,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".permission.PermissionActivity_"
+            android:label="Tracking permission"/>
+
         <service android:name=".services.ScreenOnOffService_" />
         <service android:name=".services.GlobalTouchService_" />
         <service android:name=".services.HomePressService_" />

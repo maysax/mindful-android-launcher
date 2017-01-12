@@ -25,17 +25,22 @@ import com.gun0912.tedpermission.TedPermission;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.DownloadApkEvent;
 import com.itconquest.tracking.listener.NotificationListener_;
+import com.itconquest.tracking.permission.PermissionActivity_;
 import com.itconquest.tracking.services.ApiClient_;
 import com.itconquest.tracking.services.GlobalTouchService_;
 import com.itconquest.tracking.services.HomePressService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
 import com.itconquest.tracking.util.FileUtil;
+import com.itconquest.tracking.util.PermissionUtil;
 import com.itconquest.tracking.util.TrackingLogger;
 import com.itconquest.tracking.util.TrackingPref_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -57,10 +62,10 @@ import minium.co.core.util.DateUtils;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
 
+@OptionsMenu(R.menu.menu_tracking)
 @EActivity(resName = "activity_main_tracking")
 public class MainActivity extends CoreActivity {
 
-    public final static int REQUEST_CODE = 20;
 
     @ViewById
     Toolbar toolbar;
@@ -80,23 +85,23 @@ public class MainActivity extends CoreActivity {
     @SystemService
     ConnectivityManager connectivityManager;
 
-    boolean isDisplayedActionNotificationListenerDialog = false;
-    boolean isDisplayedPermitUsageAccessDialog = false;
-
     @AfterViews
     void afterViews() {
         setSupportActionBar(toolbar);
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                .setPermissions(Manifest.permission.SYSTEM_ALERT_WINDOW,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .check();
-
         txtVersion.setText(String.format(Locale.getDefault(), "Version: %s", BuildConfig.VERSION_NAME));
         new FileUtil().deleteOldApk();
+        loadViews();
+        if (!new PermissionUtil(this).isAllPermissionGiven()) {
+            UIUtils.confirm(this, "The Siempo Tracking app needs permissions to read data from your device to function properly. You can grant the permission(s) in the following prompt(s).", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE)
+                        PermissionActivity_.intent(MainActivity.this).start();
+                }
+            });
 
+        }
+        checkVersion();
     }
 
     @Background
@@ -117,18 +122,21 @@ public class MainActivity extends CoreActivity {
 
     private void getAppUsage() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -1);
+        cal.add(Calendar.DATE, -1);
         List<UsageStats> queryUsageStats = usageStatsManager
-                .queryUsageStats(UsageStatsManager.INTERVAL_BEST, cal.getTimeInMillis(),
+                .queryUsageStats(UsageStatsManager.INTERVAL_DAILY, cal.getTimeInMillis(),
                         System.currentTimeMillis());
 
         for (UsageStats stat : queryUsageStats) {
 
             if (stat.getTotalTimeInForeground() != 0) {
 
-                String info = "Package: " + stat.getPackageName()
-                        + " Usage time: " + DateUtils.interval(stat.getTotalTimeInForeground())
-                        + " Last time used: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()));
+                String info = "Usage event\t" + stat.getPackageName()
+                        + "\tDuration: " + DateUtils.interval(stat.getTotalTimeInForeground())
+                        + "\tFrom: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getFirstTimeStamp()))
+                        + "\tTo: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeStamp()))
+                        + "\tLast: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()));
+
 
                 TrackingLogger.log(info, null);
                 Tracer.d(info);
@@ -136,71 +144,8 @@ public class MainActivity extends CoreActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!isEnabled(this) && !isDisplayedActionNotificationListenerDialog) {
-            isDisplayedActionNotificationListenerDialog = true;
-            UIUtils.confirm(this, "Tracker service is not enabled. Please allow Tracking to access notification service", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
-                    dialog.dismiss();
-                }
-            });
-        } else if (!checkUserStatPermission() && !isDisplayedPermitUsageAccessDialog) {
-            isDisplayedPermitUsageAccessDialog = true;
-            UIUtils.confirm(this, "Tracker usage stats is not enabled. Please allow Tracking to access usage stats", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
-                    dialog.dismiss();
-                }
-            });
-        }
-    }
-
-    private boolean checkUserStatPermission() {
-        try {
-            PackageManager packageManager = getPackageManager();
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(getPackageName(), 0);
-            AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
-            int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, applicationInfo.uid, applicationInfo.packageName);
-            Tracer.d("Usage stat permission: " + mode);
-            return (mode == AppOpsManager.MODE_ALLOWED);
-
-        } catch (PackageManager.NameNotFoundException e) {
-            Tracer.d("Usage stat permission: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /** @return True if {@link NotificationListener_} is enabled. */
-    public static boolean isEnabled(Context mContext) {
-        return ServiceUtils.isNotificationListenerServiceRunning(mContext, NotificationListener_.class);
-    }
 
     void loadViews() {
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (trackingPrefs.isTrackingRunning().get()) {
-                    Snackbar.make(view, "Tracking paused", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    fab.setImageResource(android.R.drawable.ic_media_play);
-
-                } else {
-                    Snackbar.make(view, "Tracking started", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    fab.setImageResource(android.R.drawable.ic_media_pause);
-                }
-
-                trackingPrefs.isTrackingRunning().put(!trackingPrefs.isTrackingRunning().get());
-                startServices();
-
-            }
-        });
-
         if (trackingPrefs.isTrackingRunning().get()) {
             fab.setImageResource(android.R.drawable.ic_media_pause);
         } else {
@@ -208,26 +153,32 @@ public class MainActivity extends CoreActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // getMenuInflater().inflate(R.menu.menu_tracking, menu);
-        return true;
-    }
+    @Click
+    void fab() {
+        if (!new PermissionUtil(this).isAllPermissionGiven()) {
+            UIUtils.confirm(MainActivity.this, "You need to allow the app to access everything it asks for.", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) PermissionActivity_.intent(MainActivity.this).start();
+                }
+            });
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_upload) {
-            startUpload();
+            return;
         }
 
-        return super.onOptionsItemSelected(item);
+        if (trackingPrefs.isTrackingRunning().get()) {
+            Snackbar.make(fab, "All tracking has stopped.", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            fab.setImageResource(android.R.drawable.ic_media_play);
+
+        } else {
+            Snackbar.make(fab, "Tracking started", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            fab.setImageResource(android.R.drawable.ic_media_pause);
+        }
+
+        trackingPrefs.isTrackingRunning().put(!trackingPrefs.isTrackingRunning().get());
+        startServices();
     }
 
     @UiThread
@@ -237,18 +188,7 @@ public class MainActivity extends CoreActivity {
         uploadFileToAWS();
     }
 
-    PermissionListener permissionlistener = new PermissionListener() {
-        @Override
-        public void onPermissionGranted() {
-            loadViews();
-            checkVersion();
-        }
 
-        @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-            UIUtils.toast(MainActivity.this, "Permission denied");
-        }
-    };
 
     @Background
     void uploadFileToFTP() {
@@ -275,6 +215,11 @@ public class MainActivity extends CoreActivity {
                 UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
             }
         }
+    }
+
+    @OptionsItem
+    void actionPermission() {
+        PermissionActivity_.intent(this).start();
     }
 
 }

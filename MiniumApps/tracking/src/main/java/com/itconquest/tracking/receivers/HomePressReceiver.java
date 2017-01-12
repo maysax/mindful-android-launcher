@@ -28,7 +28,7 @@ public class HomePressReceiver extends BroadcastReceiver {
             String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
             if (reason != null) {
                 Tracer.d("Home pressed: action = " + action + " reason: " + reason);
-                TrackingLogger.log("Home event: Press reason: " + reason, null);
+                TrackingLogger.log("Home event\t" + reason, null);
             }
         }
     }

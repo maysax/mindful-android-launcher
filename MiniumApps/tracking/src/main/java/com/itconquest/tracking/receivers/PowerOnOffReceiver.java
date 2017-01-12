@@ -19,9 +19,9 @@ public class PowerOnOffReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            TrackingLogger.log("Power event: On", null);
+            TrackingLogger.log("Power event\tOn", null);
         } else if (intent.getAction().equals(Intent.ACTION_SHUTDOWN)) {
-            TrackingLogger.log("Power event: Off", null);
+            TrackingLogger.log("Power event\tOff", null);
         }
     }
 }
