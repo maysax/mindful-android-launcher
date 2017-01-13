@@ -74,6 +74,7 @@ public abstract class CoreAPIClient {
         AndroidNetworking.download(String.format(Locale.US, "%s/%s/app/%s.apk", AWS_HOST, getAppName(), getAppName()), externalFilesDir.getAbsolutePath(), getAppName() + ".apk")
                 .setTag("downloadTest")
                 .setPriority(Priority.MEDIUM)
+                .doNotCacheResponse()
                 .build()
                 .setAnalyticsListener(analyticsListener)
                 .setDownloadProgressListener(new DownloadProgressListener() {
