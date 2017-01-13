@@ -30,6 +30,7 @@ import com.itconquest.tracking.services.ApiClient_;
 import com.itconquest.tracking.services.GlobalTouchService_;
 import com.itconquest.tracking.services.HomePressService_;
 import com.itconquest.tracking.services.ScreenOnOffService_;
+import com.itconquest.tracking.services.TrackingService_;
 import com.itconquest.tracking.util.FileUtil;
 import com.itconquest.tracking.util.PermissionUtil;
 import com.itconquest.tracking.util.TrackingLogger;
@@ -79,8 +80,7 @@ public class MainActivity extends CoreActivity {
     @ViewById
     TextView txtVersion;
 
-    @SystemService
-    UsageStatsManager usageStatsManager;
+
 
     @SystemService
     ConnectivityManager connectivityManager;
@@ -103,47 +103,6 @@ public class MainActivity extends CoreActivity {
         }
         checkVersion();
     }
-
-    @Background
-    void startServices() {
-        if (trackingPrefs.isTrackingRunning().get()) {
-            GlobalTouchService_.intent(getApplication()).start();
-            ScreenOnOffService_.intent(getApplication()).start();
-            HomePressService_.intent(getApplication()).start();
-
-        } else {
-            getAppUsage();
-            GlobalTouchService_.intent(getApplication()).stop();
-            ScreenOnOffService_.intent(getApplication()).stop();
-            HomePressService_.intent(getApplication()).stop();
-            startUpload();
-        }
-    }
-
-    private void getAppUsage() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        List<UsageStats> queryUsageStats = usageStatsManager
-                .queryUsageStats(UsageStatsManager.INTERVAL_DAILY, cal.getTimeInMillis(),
-                        System.currentTimeMillis());
-
-        for (UsageStats stat : queryUsageStats) {
-
-            if (stat.getTotalTimeInForeground() != 0) {
-
-                String info = "Usage event\t" + stat.getPackageName()
-                        + "\tDuration: " + DateUtils.interval(stat.getTotalTimeInForeground())
-                        + "\tFrom: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getFirstTimeStamp()))
-                        + "\tTo: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeStamp()))
-                        + "\tLast: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()));
-
-
-                TrackingLogger.log(info, null);
-                Tracer.d(info);
-            }
-        }
-    }
-
 
     void loadViews() {
         if (trackingPrefs.isTrackingRunning().get()) {
@@ -178,26 +137,7 @@ public class MainActivity extends CoreActivity {
         }
 
         trackingPrefs.isTrackingRunning().put(!trackingPrefs.isTrackingRunning().get());
-        startServices();
-    }
-
-    @UiThread
-    void startUpload() {
-        UIUtils.toast(this, "Uploading file...");
-        uploadFileToFTP();
-        uploadFileToAWS();
-    }
-
-
-
-    @Background
-    void uploadFileToFTP() {
-        ApiClient_.getInstance_(this).uploadFileToFTP();
-    }
-
-    @Background
-    void uploadFileToAWS() {
-        ApiClient_.getInstance_(this).uploadFileToAWS();
+        TrackingService_.getInstance_(getApplication()).startServices();
     }
 
     void checkVersion() {
