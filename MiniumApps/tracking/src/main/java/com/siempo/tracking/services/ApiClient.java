@@ -1,4 +1,4 @@
-package com.itconquest.tracking.services;
+package com.siempo.tracking.services;
 
 import android.util.Base64;
 
@@ -8,8 +8,8 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.androidnetworking.interfaces.UploadProgressListener;
-import com.itconquest.tracking.util.TrackingLogger;
-import com.itconquest.tracking.util.TrackingPref_;
+import com.siempo.tracking.util.TrackingLogger;
+import com.siempo.tracking.util.TrackingPref_;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.sharedpreferences.Pref;

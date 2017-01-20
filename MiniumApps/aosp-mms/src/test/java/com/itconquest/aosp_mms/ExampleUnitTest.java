@@ -1,4 +1,4 @@
-package com.itconquest.aosp_mms;
+package com.siempo.aosp_mms;
 
 import org.junit.Test;
 

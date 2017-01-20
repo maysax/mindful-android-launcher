@@ -1,23 +1,19 @@
-package com.itconquest.tracking;
+package com.siempo.tracking;
 
-import android.app.ActivityManager;
 import android.provider.Settings;
 
-import com.itconquest.tracking.util.TrackingLogger;
-import com.itconquest.tracking.util.TrackingPref_;
+import com.siempo.tracking.util.TrackingLogger;
+import com.siempo.tracking.util.TrackingPref_;
 
-import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs;
 
 /**
  * Created by Shahab on 11/24/2016.

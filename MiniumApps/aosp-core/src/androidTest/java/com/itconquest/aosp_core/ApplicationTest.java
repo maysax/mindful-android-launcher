@@ -1,4 +1,4 @@
-package com.itconquest.aosp_core;
+package com.siempo.aosp_core;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

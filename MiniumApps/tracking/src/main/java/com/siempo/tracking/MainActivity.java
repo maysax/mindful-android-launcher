@@ -1,66 +1,35 @@
-package com.itconquest.tracking;
+package com.siempo.tracking;
 
-import android.Manifest;
-import android.app.AppOpsManager;
-import android.app.usage.UsageStats;
-import android.app.usage.UsageStatsManager;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
-import android.net.Uri;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.event.DownloadApkEvent;
-import com.itconquest.tracking.listener.NotificationListener_;
-import com.itconquest.tracking.permission.PermissionActivity_;
-import com.itconquest.tracking.services.ApiClient_;
-import com.itconquest.tracking.services.GlobalTouchService_;
-import com.itconquest.tracking.services.HomePressService_;
-import com.itconquest.tracking.services.ScreenOnOffService_;
-import com.itconquest.tracking.services.TrackingService_;
-import com.itconquest.tracking.util.FileUtil;
-import com.itconquest.tracking.util.PermissionUtil;
-import com.itconquest.tracking.util.TrackingLogger;
-import com.itconquest.tracking.util.TrackingPref_;
+
+import com.siempo.tracking.permission.PermissionActivity_;
+import com.siempo.tracking.services.ApiClient_;
+import com.siempo.tracking.services.TrackingService_;
+import com.siempo.tracking.util.FileUtil;
+import com.siempo.tracking.util.PermissionUtil;
+import com.siempo.tracking.util.TrackingPref_;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
-import minium.co.core.service.CoreAPIClient;
 import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.DateUtils;
-import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
 
 @OptionsMenu(R.menu.menu_tracking)

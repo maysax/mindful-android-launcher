@@ -1,17 +1,14 @@
-package com.itconquest.tracking.listener;
+package com.siempo.tracking.listener;
 
-import android.content.Intent;
-import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
-import com.itconquest.tracking.util.TrackingLogger;
+import com.siempo.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import minium.co.core.log.Tracer;
 

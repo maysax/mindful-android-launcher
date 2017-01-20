@@ -1,10 +1,10 @@
-package com.itconquest.tracking.services;
+package com.siempo.tracking.services;
 
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 
-import com.itconquest.tracking.util.TrackingLogger;
-import com.itconquest.tracking.util.TrackingPref_;
+import com.siempo.tracking.util.TrackingLogger;
+import com.siempo.tracking.util.TrackingPref_;
 
 import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Background;
@@ -17,7 +17,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DateUtils;
 
@@ -35,7 +34,7 @@ public class TrackingService {
     UsageStatsManager usageStatsManager;
 
     @App
-    com.itconquest.tracking.App application;
+    com.siempo.tracking.App application;
 
     @Background
     public void startServices() {

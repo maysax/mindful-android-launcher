@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.itconquest.tracking"
+    package="com.siempo.tracking"
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -12,7 +12,7 @@
     <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
 
     <application
-        android:name=".App_"
+        android:name="com.siempo.tracking.App_"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,7 +24,7 @@
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
         <activity
-            android:name=".MainActivity_"
+            android:name="com.siempo.tracking.MainActivity_"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,15 +32,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".permission.PermissionActivity_"
+        <activity android:name="com.siempo.tracking.permission.PermissionActivity_"
             android:label="Tracking permission"/>
 
-        <service android:name=".services.ScreenOnOffService_" />
-        <service android:name=".services.GlobalTouchService_" />
-        <service android:name=".services.HomePressService_" />
+        <service android:name="com.siempo.tracking.services.ScreenOnOffService_" />
+        <service android:name="com.siempo.tracking.services.GlobalTouchService_" />
+        <service android:name="com.siempo.tracking.services.HomePressService_" />
 
         <service
-            android:name=".listener.NotificationListener_"
+            android:name="com.siempo.tracking.listener.NotificationListener_"
             android:label="@string/app_name"
             android:exported="true"
             android:enabled="true"
@@ -51,7 +51,7 @@
         </service>
 
         <receiver
-            android:name=".receivers.PowerOnOffReceiver_"
+            android:name="com.siempo.tracking.receivers.PowerOnOffReceiver_"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

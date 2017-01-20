@@ -1,30 +1,23 @@
-package com.itconquest.tracking.util;
+package com.siempo.tracking.util;
 
 import android.content.Context;
 import android.os.Environment;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.itconquest.tracking.App_;
-import com.itconquest.tracking.BuildConfig;
+import com.siempo.tracking.App_;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.LogFormatter;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by Shahab on 12/6/2016.

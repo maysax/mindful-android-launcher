@@ -1,10 +1,10 @@
-package com.itconquest.tracking.receivers;
+package com.siempo.tracking.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.itconquest.tracking.util.TrackingLogger;
+import com.siempo.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EReceiver;
 

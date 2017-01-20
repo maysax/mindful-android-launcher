@@ -1,4 +1,4 @@
-package com.itconquest.tracking.util;
+package com.siempo.tracking.util;
 
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;

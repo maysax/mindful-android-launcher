@@ -1,6 +1,5 @@
-package com.itconquest.tracking.services;
+package com.siempo.tracking.services;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -12,7 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import com.itconquest.tracking.util.TrackingLogger;
+import com.siempo.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.SystemService;

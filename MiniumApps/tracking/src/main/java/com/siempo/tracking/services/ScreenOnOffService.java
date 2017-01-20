@@ -1,4 +1,4 @@
-package com.itconquest.tracking.services;
+package com.siempo.tracking.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -6,12 +6,9 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.itconquest.tracking.receivers.ScreenOnOffReceiver;
-import com.itconquest.tracking.receivers.ScreenOnOffReceiver_;
+import com.siempo.tracking.receivers.ScreenOnOffReceiver_;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
-import org.androidannotations.annotations.Receiver;
 
 /**
  * Created by Shahab on 11/24/2016.

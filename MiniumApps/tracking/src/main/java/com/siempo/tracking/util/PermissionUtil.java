@@ -1,7 +1,6 @@
-package com.itconquest.tracking.util;
+package com.siempo.tracking.util;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -9,9 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 
-import com.gun0912.tedpermission.BuildConfig;
-import com.gun0912.tedpermission.TedPermission;
-import com.itconquest.tracking.listener.NotificationListener_;
+import com.siempo.tracking.listener.NotificationListener_;
 
 import minium.co.core.log.Tracer;
 import minium.co.core.util.ServiceUtils;
