@@ -5,7 +5,9 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.siempo.tracking.App_;
+import com.siempo.tracking.model.LogEvent;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -129,6 +131,15 @@ public class TrackingLogger {
     public static void log(String message, Throwable tr) {
         LogFormatter.EclipseFormatter formatter = new LogFormatter.EclipseFormatter();
         String formatMsg = formatter.format(LogFormatter.LEVEL.DEBUG, LogConfig.LOG_TAG, message, tr);
+        String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
+        File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
+        if (externalFilesDir != null) {
+            log2file(externalFilesDir.getAbsolutePath() + File.separator + App_.getInstance().getFileName(), formatMsg);
+        }
+    }
+
+    public static void log(LogEvent event) {
+        String formatMsg = new Gson().toJson(event);
         String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
         File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
         if (externalFilesDir != null) {

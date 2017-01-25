@@ -2,6 +2,8 @@ package com.siempo.tracking;
 
 import android.provider.Settings;
 
+import com.google.gson.Gson;
+import com.siempo.tracking.model.LogEvent;
 import com.siempo.tracking.util.TrackingLogger;
 import com.siempo.tracking.util.TrackingPref_;
 
@@ -28,7 +30,8 @@ public class App extends CoreApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        TrackingLogger.log("Tracking app started", null);
+        //TrackingLogger.log("Tracking app started", null);
+        TrackingLogger.log(new LogEvent(LogEvent.EventType.STARTED));
     }
 
     public String getFileName() {
