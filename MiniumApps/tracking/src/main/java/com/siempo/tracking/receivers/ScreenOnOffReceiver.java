@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 
+import com.siempo.tracking.model.LogEvent;
 import com.siempo.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EReceiver;
@@ -29,8 +30,7 @@ public class ScreenOnOffReceiver extends BroadcastReceiver {
             screenOff = false;
             Tracer.d("Screen on event");
         }
-
-        TrackingLogger.log("Screen event\t" + (screenOff ? "On" : "Off"), null);
-//        ScreenOnOffService_.intent(context).extra("screen_state", screenOff).start();
+        TrackingLogger.log(new LogEvent(LogEvent.EventType.SCREEN_ON).setEffect(screenOff ? "On" : "Off"));
+        //TrackingLogger.log("Screen event\t" + (screenOff ? "On" : "Off"), null);
     }
 }

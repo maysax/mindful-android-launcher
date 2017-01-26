@@ -3,6 +3,7 @@ package com.siempo.tracking.services;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 
+import com.siempo.tracking.model.LogEvent;
 import com.siempo.tracking.util.TrackingLogger;
 import com.siempo.tracking.util.TrackingPref_;
 
@@ -73,7 +74,13 @@ public class TrackingService {
                         + "\tLast: " + SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()));
 
 
-                TrackingLogger.log(info, null);
+                TrackingLogger.log(new LogEvent(LogEvent.EventType.APP_USAGE)
+                    .setDuration(DateUtils.interval(stat.getTotalTimeInForeground()))
+                    .setFrom(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getFirstTimeStamp())))
+                    .setTo(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeStamp())))
+                    .setLastUsed(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()))));
+
+                //TrackingLogger.log(info, null);
                 Tracer.d(info);
             }
         }

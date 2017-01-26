@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.siempo.tracking.model.LogEvent;
 import com.siempo.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EReceiver;
@@ -28,7 +29,9 @@ public class HomePressReceiver extends BroadcastReceiver {
             String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
             if (reason != null) {
                 Tracer.d("Home pressed: action = " + action + " reason: " + reason);
-                TrackingLogger.log("Home event\t" + reason, null);
+                TrackingLogger.log(new LogEvent(LogEvent.EventType.HOME).setEffect(reason));
+                //TrackingLogger.log("Home event\t" + reason, null);
+
             }
         }
     }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.siempo.tracking.model.LogEvent;
 import com.siempo.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EService;
@@ -70,7 +71,8 @@ public class GlobalTouchService extends Service implements View.OnTouchListener 
     public boolean onTouch(View v, MotionEvent event) {
         String info = String.format(Locale.US, "Touch event");
         Tracer.d(info);
-        TrackingLogger.log(info, null);
+        TrackingLogger.log(new LogEvent(LogEvent.EventType.SCREEN_TAP));
+        //TrackingLogger.log(info, null);
         return false;
     }
 

@@ -3,6 +3,7 @@ package com.siempo.tracking.listener;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
+import com.siempo.tracking.model.LogEvent;
 import com.siempo.tracking.util.TrackingLogger;
 
 import org.androidannotations.annotations.EService;
@@ -25,13 +26,17 @@ public class NotificationListener extends NotificationListenerService {
                 + "\tText: " + sbn.getNotification().tickerText;
         Tracer.d("onNotificationPosted " + sbn.toString());
 
-        TrackingLogger.log(info, null);
+        TrackingLogger.log(new LogEvent(LogEvent.EventType.NOTIFICATION)
+                .setPkg(sbn.getPackageName())
+                .setPostedOn(SimpleDateFormat.getDateTimeInstance().format(new Date(sbn.getPostTime())))
+                .setText(sbn.getNotification() == null ? "..." : sbn.getNotification().tickerText));
+
+        //TrackingLogger.log(info, null);
 
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
-
     }
 }
