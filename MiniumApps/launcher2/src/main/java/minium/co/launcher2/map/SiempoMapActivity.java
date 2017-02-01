@@ -44,7 +44,7 @@ public class SiempoMapActivity extends CoreActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains("google")) return true;
+                //if (url.contains("google")) return true;
                 return false;
             }
         });
