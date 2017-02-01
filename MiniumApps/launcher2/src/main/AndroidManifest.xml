@@ -191,6 +191,8 @@
             </intent-filter>
 
         </receiver>
+
+        <activity android:name=".map.SiempoMapActivity_"/>
     </application>
 
 </manifest>

@@ -46,6 +46,9 @@ import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActivityHelper;
+import minium.co.launcher2.intro.SiempoIntroActivity;
+import minium.co.launcher2.map.SiempoMapActivity;
+import minium.co.launcher2.map.SiempoMapActivity_;
 import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.model.ActionListItem;
 import minium.co.launcher2.model.ContactListItem;
@@ -137,11 +140,12 @@ public class FilterFragment extends CoreFragment {
         items.add(new MainListItem(new ActionListItem(10, "{fa-cogs}", getString(R.string.title_settings))));
         items.add(new MainListItem(new ActionListItem(11, "{fa-tint}", getString(R.string.title_theme))));
         items.add(new MainListItem(new ActionListItem(12, "{fa-bell}", getString(R.string.title_notificationScheduler))));
+        items.add(new MainListItem(new ActionListItem(13, "{fa-street-view}", getString(R.string.title_map))));
 
         if (!Build.MODEL.toLowerCase().contains("siempo"))
-            items.add(new MainListItem(new ActionListItem(13, "{fa-home}", getString(R.string.title_defaultLauncher))));
+            items.add(new MainListItem(new ActionListItem(14, "{fa-home}", getString(R.string.title_defaultLauncher))));
 
-        items.add(new MainListItem(new ActionListItem(14, "{fa-info-circle}", getString(R.string.title_version, BuildConfig.VERSION_NAME))));
+        items.add(new MainListItem(new ActionListItem(15, "{fa-info-circle}", getString(R.string.title_version, BuildConfig.VERSION_NAME))));
     }
 
     private void loadContacts() {
@@ -269,9 +273,12 @@ public class FilterFragment extends CoreFragment {
                         EventBus.getDefault().post(new LoadFragmentEvent(LoadFragmentEvent.NOTIFICATION_SCHEDULER));
                         break;
                     case 13:
-                        handleDefaultLauncher();
+                        SiempoMapActivity_.intent(getActivity()).start();
                         break;
                     case 14:
+                        handleDefaultLauncher();
+                        break;
+                    case 15:
                         break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));
