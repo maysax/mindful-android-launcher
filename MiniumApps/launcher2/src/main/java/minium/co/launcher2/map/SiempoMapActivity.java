@@ -1,5 +1,6 @@
 package minium.co.launcher2.map;
 
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.AfterViews;
@@ -31,14 +33,19 @@ public class SiempoMapActivity extends CoreActivity {
     @ViewById
     ProgressBar pBar;
 
+    @ViewById
+    ImageView imgLogo;
+
     @AfterViews
     void afterViews() {
         mWebView.setVerticalScrollbarPosition(2);
         mWebView.loadUrl(HOME_PAGE);
         mWebView.setWebViewClient(new WebViewClient() {
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                imgLogo.setVisibility(GONE);
                 pBar.setVisibility(GONE);
             }
 

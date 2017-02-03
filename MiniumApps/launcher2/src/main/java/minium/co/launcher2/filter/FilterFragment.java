@@ -54,6 +54,7 @@ import minium.co.launcher2.model.ActionListItem;
 import minium.co.launcher2.model.ContactListItem;
 import minium.co.launcher2.model.MainListItem;
 import minium.co.launcher2.model.OptionsListItem;
+import minium.co.launcher2.service.ApiClient_;
 import minium.co.launcher2.utils.FakeLauncherActivity;
 
 /**
@@ -279,6 +280,7 @@ public class FilterFragment extends CoreFragment {
                         handleDefaultLauncher();
                         break;
                     case 15:
+                        ApiClient_.getInstance_(getActivity()).checkAppVersion();
                         break;
                     default:
                         UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented));

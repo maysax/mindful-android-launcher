@@ -77,8 +77,11 @@ public class NfcManager {
     }
 
     public void onResume() {
-        if (_nfcAdapter != null)
+        try {
             _nfcAdapter.enableForegroundDispatch(context, _pendingIntent, _intentFilters, null);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
     }
 
 
