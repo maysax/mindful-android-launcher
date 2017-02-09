@@ -23,4 +23,9 @@
         android:orderInCategory="102"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_evernote"
+        android:title="Evernote"
+        android:orderInCategory="103"
+        app:showAsAction="never"/>
+
 </menu>

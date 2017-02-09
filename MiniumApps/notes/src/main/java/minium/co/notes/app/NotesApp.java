@@ -1,5 +1,7 @@
 package minium.co.notes.app;
 
+import com.evernote.client.android.EvernoteSession;
+
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.Trace;
 

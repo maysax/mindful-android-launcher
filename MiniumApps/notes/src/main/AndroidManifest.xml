@@ -48,6 +48,9 @@
                 <action android:name="minium.co.notes.EDIT_NOTES"/>
             </intent-filter>
         </receiver>
+
+        <activity android:name="com.evernote.client.android.EvernoteOAuthActivity" />
+        <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity"/>
     </application>
 
 </manifest>

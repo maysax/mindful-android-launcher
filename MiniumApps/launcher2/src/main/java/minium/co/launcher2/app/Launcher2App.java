@@ -2,6 +2,7 @@ package minium.co.launcher2.app;
 
 import android.os.Build;
 
+import com.evernote.client.android.EvernoteSession;
 import com.orm.SugarContext;
 
 import org.androidannotations.annotations.Bean;
@@ -56,7 +57,7 @@ public class Launcher2App extends CoreApplication {
                 + " || Manufacturer: " + Build.MANUFACTURER);
 
         loadConfigurationValues();
-
+        configureEverNote();
         manager.init();
 
         SugarContext.init(this);
@@ -100,6 +101,17 @@ public class Launcher2App extends CoreApplication {
                     .flowSegmentDurationMillis().put(15 * 60 * 1000f)
                     .apply();
         }
+    }
+
+    private void configureEverNote() {
+        new EvernoteSession.Builder(this)
+                .setEvernoteService(minium.co.notes.app.Config.EVERNOTE_SERVICE)
+                .setSupportAppLinkedNotebooks(true)
+                .setForceAuthenticationInThirdPartyApp(true)
+                .build(minium.co.notes.app.Config.CONSUMER_KEY, minium.co.notes.app.Config.CONSUMER_SECRET)
+                .asSingleton();
+
+//        registerActivityLifecycleCallbacks(new LoginChecker());
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,17 +24,26 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.evernote.client.android.EvernoteSession;
+import com.evernote.client.android.asyncclient.EvernoteCallback;
+import com.evernote.client.android.asyncclient.EvernoteNoteStoreClient;
+import com.evernote.client.android.login.EvernoteLoginFragment;
+import com.evernote.edam.type.Notebook;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.notes.R;
 import minium.co.notes.adapter.NoteAdapter;
+import minium.co.notes.app.Config;
+import minium.co.notes.evernote.EvernoteManager;
 
 import static minium.co.notes.utils.DataUtils.BACKUP_FILE_NAME;
 import static minium.co.notes.utils.DataUtils.BACKUP_FOLDER_PATH;
@@ -55,7 +65,7 @@ import static minium.co.notes.utils.DataUtils.saveData;
 
 public class MainActivity extends CoreActivity implements AdapterView.OnItemClickListener,
         Toolbar.OnMenuItemClickListener, AbsListView.MultiChoiceModeListener,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener, EvernoteLoginFragment.ResultCallback {
 
     private static File localPath, backupPath;
 
@@ -499,6 +509,11 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
             return true;
         }
 
+        if (id == R.id.action_evernote) {
+            EvernoteSession.getInstance().authenticate(this);
+            return true;
+        }
+
         /*
         // 'Rate app' pressed -> create new dialog to ask the user if he wants to go to the PlayStore
         // If yes -> start PlayStore and go to app link < If Exception thrown, open in Browser >
@@ -802,6 +817,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         adapter.notifyDataSetChanged();
 
                         Boolean saveSuccessful = saveData(localPath, notes);
+                        new EvernoteManager().createNote(newNoteObject);
 
                         if (saveSuccessful) {
                             Toast toast = Toast.makeText(getApplicationContext(),
@@ -1019,5 +1035,14 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     // Static method to return File at backupPath
     public static File getBackupPath() {
         return backupPath;
+    }
+
+    @Override
+    public void onLoginFinished(boolean successful) {
+        if (successful) {
+
+            new EvernoteManager().createSiempoNotebook();
+            //new EvernoteManager().listNoteBooks(this);
+        }
     }
 }
