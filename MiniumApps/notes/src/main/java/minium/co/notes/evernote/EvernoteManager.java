@@ -46,8 +46,7 @@ public class EvernoteManager {
         noteStoreClient.createNotebookAsync(siempoNotebook, new EvernoteCallback<Notebook>() {
             @Override
             public void onSuccess(Notebook result) {
-                Tracer.i("Siempo notebook created: " + result);
-                listNoteBooks(result.getGuid());
+                Tracer.i("Note || Siempo notebook created: " + result);
             }
 
             @Override
@@ -76,7 +75,7 @@ public class EvernoteManager {
         noteStoreClient.createNoteAsync(note, new EvernoteCallback<Note>() {
             @Override
             public void onSuccess(Note result) {
-                Tracer.d("Note successfully created: " + result);
+                Tracer.d("Note || Siempo note successfully created: " + result);
                 //Toast.makeText(getApplicationContext(), result.getTitle() + " has been created", Toast.LENGTH_LONG).show();
             }
 
@@ -93,24 +92,23 @@ public class EvernoteManager {
         }
 
         EvernoteNoteStoreClient noteStoreClient = EvernoteSession.getInstance().getEvernoteClientFactory().getNoteStoreClient();
-//        noteStoreClient.listNotebooksAsync(new EvernoteCallback<List<Notebook>>() {
-//            @Override
-//            public void onSuccess(List<Notebook> result) {
-//                List<String> namesList = new ArrayList<>(result.size());
-//                for (Notebook notebook : result) {
-//                    namesList.add(notebook.getName());
-//                }
-//
-//                String notebookNames = TextUtils.join(", ", namesList);
-//                Toast.makeText(context.getApplicationContext(), notebookNames + " notebooks have been retrieved", Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onException(Exception exception) {
-//                Tracer.e(exception, "Error retrieving notebooks: " + exception.getMessage());
-//            }
-//        });
+        noteStoreClient.listNotebooksAsync(new EvernoteCallback<List<Notebook>>() {
+            @Override
+            public void onSuccess(List<Notebook> result) {
+                List<String> namesList = new ArrayList<>(result.size());
+                for (Notebook notebook : result) {
+                    namesList.add(notebook.getName());
+                    Tracer.i("Note || List notebooks: " + notebook);
+                }
+            }
 
+            @Override
+            public void onException(Exception exception) {
+                Tracer.e(exception, "Error retrieving notebooks: " + exception.getMessage());
+            }
+        });
+
+        /*
         //create filter for findNotesMetadata
         NoteFilter filter = new NoteFilter();
         //set the notebook guid filter to the GUID of the default notebook
@@ -131,6 +129,7 @@ public class EvernoteManager {
 
             }
         });
+        */
     }
 
     public void deleteNote(final Context context) {

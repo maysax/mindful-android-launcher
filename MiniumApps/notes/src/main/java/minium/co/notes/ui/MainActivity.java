@@ -1042,6 +1042,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         if (successful) {
 
             new EvernoteManager().createSiempoNotebook();
+            new EvernoteManager().listNoteBooks("");
             //new EvernoteManager().listNoteBooks(this);
         }
     }
