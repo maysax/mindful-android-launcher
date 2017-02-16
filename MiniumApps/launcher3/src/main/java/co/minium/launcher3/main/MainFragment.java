@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -22,9 +23,13 @@ import java.util.List;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.contact.ContactsLoader;
+import co.minium.launcher3.event.SearchLayoutEvent;
 import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.model.MainListItemType;
+import co.minium.launcher3.token.TokenManager;
+import co.minium.launcher3.token.TokenManagerEvent;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
 
@@ -39,6 +44,9 @@ public class MainFragment extends CoreFragment {
 
     @Pref
     DroidPrefs_ prefs;
+
+    @Bean
+    TokenManager manager;
 
     List<MainListItem> items;
 
@@ -73,10 +81,10 @@ public class MainFragment extends CoreFragment {
         items.add(new MainListItem(1, getString(R.string.title_text), "{fa-comment}"));
         items.add(new MainListItem(2, getString(R.string.title_call), "{fa-phone}"));
         items.add(new MainListItem(3, getString(R.string.title_note), "{fa-sticky-note}"));
+        items.add(new MainListItem(4, getString(R.string.title_messages), "{fa-users}"));
 
 
         /*
-        items.add(new MainListItem(new ActionListItem(3, "{fa-users}", getString(R.string.title_messages))));
         items.add(new MainListItem(new ActionListItem(4, "{fa-phone}", getString(R.string.title_callLog))));
         items.add(new MainListItem(new ActionListItem(5, "{fa-user}", getString(R.string.title_contacts))));
         items.add(new MainListItem(new ActionListItem(6, "{fa-ban}", getString(R.string.title_flow))));
@@ -111,7 +119,17 @@ public class MainFragment extends CoreFragment {
         if (getActivity() != null) {
             adapter = new MainListAdapter(getActivity(), items);
             listView.setAdapter(adapter);
-            //adapter.getFilter().filter(manager.getCurrent().getActionText());
+            adapter.getFilter().filter(manager.getCurrent().getTitle());
         }
+    }
+
+    @Subscribe
+    public void searchLayoutEvent(SearchLayoutEvent event) {
+
+    }
+
+    @Subscribe
+    public void tokenManagerEvent(TokenManagerEvent event) {
+        adapter.getFilter().filter(manager.getCurrent().getTitle());
     }
 }

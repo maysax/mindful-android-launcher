@@ -19,6 +19,7 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.event.SearchLayoutEvent;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -106,6 +107,10 @@ public class SearchLayout extends CardView {
             btnClear.setVisibility(VISIBLE);
         } else {
             btnClear.setVisibility(INVISIBLE);
+        }
+
+        if (isWatching) {
+            EventBus.getDefault().post(new SearchLayoutEvent(s.toString()));
         }
     }
 

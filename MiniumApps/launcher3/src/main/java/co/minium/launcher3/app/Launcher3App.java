@@ -14,6 +14,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import co.minium.launcher3.token.TokenManager;
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -27,10 +28,14 @@ import minium.co.core.util.DateUtils;
  */
 @EApplication
 public class Launcher3App extends CoreApplication {
+
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
 
     @Pref
     DroidPrefs_ prefs;
+
+    @Bean
+    TokenManager manager;
 
     @Trace(tag = TRACE_TAG)
     @Override
@@ -54,7 +59,7 @@ public class Launcher3App extends CoreApplication {
 
         loadConfigurationValues();
         configureEverNote();
-        //manager.init();
+        manager.init();
 
         SugarContext.init(this);
 
