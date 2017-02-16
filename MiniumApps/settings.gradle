@@ -1,4 +1,4 @@
-include ':launcher'
+include ':launcher', ':launcher3'
 include ':tracking'
 include ':settings'
 include ':launcher2'
