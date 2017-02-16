@@ -112,7 +112,7 @@ public class ActionItemManager {
                 getCurrent().removeActionText();
                 break;
             case 1:
-                getCurrent().addActionText(str);
+                getCurrent().setActionText(str);
                 break;
         }
     }

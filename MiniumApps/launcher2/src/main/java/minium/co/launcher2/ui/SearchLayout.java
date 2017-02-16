@@ -62,6 +62,8 @@ public class SearchLayout extends LinearLayout {
 
     private String previousText = "";
 
+    private int nextAvailablePos = 0;
+
 
     public SearchLayout(Context context) {
         super(context);
@@ -193,12 +195,23 @@ public class SearchLayout extends LinearLayout {
                 } else {
                     manager.onTextUpdate(String.valueOf(previousText.charAt(previousText.length() - 1)), -1);
                 }
-            } else if (previousText.length() < s.length()) {
-                manager.onTextUpdate(s.subSequence(previousText.length(), s.length()).toString(), 1);
+            } else if (previousText.length() <= s.length()) {
+                manager.onTextUpdate(s.subSequence(getCurrentAvailablePos(), s.length()).toString(), 1);
             }
             manager.fireEvent();
         }
 
+    }
+
+    private int getCurrentAvailablePos() {
+        List<ActionItem> items = manager.getItems();
+        int ret = 0;
+        for ( ActionItem item : items ) {
+            if (item.isCompleted() && item.getType() != ActionItem.ActionItemType.CONTACT_NUMBER) {
+                ret += item.getActionText().length() + 1;
+            }
+        }
+        return ret;
     }
 
     @Subscribe
