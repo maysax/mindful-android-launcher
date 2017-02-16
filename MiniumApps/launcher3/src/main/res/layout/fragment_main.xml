@@ -1,13 +1,42 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.minium.launcher3.ui.MainFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="@dimen/margin.2"
+    android:paddingLeft="@dimen/margin.2"
+    android:paddingRight="@dimen/margin.2"
+    android:paddingTop="@dimen/margin.2"
+    tools:context="co.minium.launcher3.main.MainFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <co.minium.launcher3.ui.SearchLayout_
+        android:id="@+id/searchLayout"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_centerInParent="true"
+        android:elevation="8dp"
+        android:layout_height="wrap_content" />
 
-</FrameLayout>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchLayout"
+        android:layout_marginTop="8dp"
+        app:cardElevation="4dp">
+
+        <ListView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawSelectorOnTop="false"
+            android:footerDividersEnabled="true"
+            tools:context=".filter.FilterFragment"/>
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+</RelativeLayout>

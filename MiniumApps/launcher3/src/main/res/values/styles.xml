@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="ListItem">
+        <item name="android:minHeight">?android:attr/listPreferredItemHeightSmall</item>
+        <item name="android:paddingLeft">@dimen/margin.6</item>
+        <item name="android:paddingRight">@dimen/margin.6</item>
+    </style>
+
 </resources>

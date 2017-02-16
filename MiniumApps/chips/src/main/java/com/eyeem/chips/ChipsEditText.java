@@ -554,7 +554,7 @@ public class ChipsEditText extends MultilineEditText {
       if (this.currentBubbleStyle == currentBubbleStyle) return;
       this.currentBubbleStyle = currentBubbleStyle;
       float width = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1.5f, getContext().getResources().getDisplayMetrics());
-      this.cursorDrawable = new CursorDrawable(this, getTextSize()*1.5f, width, getContext());
+      this.cursorDrawable = new CursorDrawable(this, getTextSize()*1.7f, width, getContext());
    }
 
    public SpannableString snapshot() {

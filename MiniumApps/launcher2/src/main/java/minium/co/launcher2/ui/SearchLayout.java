@@ -101,7 +101,6 @@ public class SearchLayout extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         setupViews();
-
     }
 
     void initFormattedText() {
