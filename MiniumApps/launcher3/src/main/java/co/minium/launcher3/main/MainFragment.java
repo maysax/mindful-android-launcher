@@ -1,34 +1,29 @@
 package co.minium.launcher3.main;
 
 
-import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
+import android.app.Activity;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import co.minium.launcher3.R;
-import co.minium.launcher3.contact.ContactsLoader;
+import co.minium.launcher3.contact.PhoneNumbersAdapter;
 import co.minium.launcher3.event.SearchLayoutEvent;
-import co.minium.launcher3.model.ContactListItem;
-import co.minium.launcher3.model.MainListItem;
-import co.minium.launcher3.model.MainListItemType;
+import co.minium.launcher3.token.TokenCompleteType;
+import co.minium.launcher3.token.TokenItem;
+import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenManager;
-import co.minium.launcher3.token.TokenManagerEvent;
+import co.minium.launcher3.token.TokenRouter;
+import co.minium.launcher3.token.TokenUpdateEvent;
+import co.minium.launcher3.token.TokenParser;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
@@ -48,9 +43,15 @@ public class MainFragment extends CoreFragment {
     @Bean
     TokenManager manager;
 
-    List<MainListItem> items;
+    @Bean
+    TokenRouter router;
+
+    @Bean
+    TokenParser parser;
 
     private MainListAdapter adapter;
+
+    private MainFragmentMediator mediator;
 
 
     public MainFragment() {
@@ -63,73 +64,60 @@ public class MainFragment extends CoreFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mediator = new MainFragmentMediator(this);
         loadData();
     }
 
     @Background
     void loadData() {
-        items = new ArrayList<>();
-        loadActions();
-        loadContacts();
-        loadDefaults();
+        mediator.loadData();
         loadView();
-    }
-
-    private void loadActions() {
-        items.add(new MainListItem(1, getString(R.string.title_text), "{fa-comment}"));
-        items.add(new MainListItem(2, getString(R.string.title_call), "{fa-phone}"));
-        items.add(new MainListItem(3, getString(R.string.title_note), "{fa-sticky-note}"));
-        items.add(new MainListItem(4, getString(R.string.title_messages), "{fa-users}"));
-
-
-        /*
-        items.add(new MainListItem(new ActionListItem(4, "{fa-phone}", getString(R.string.title_callLog))));
-        items.add(new MainListItem(new ActionListItem(5, "{fa-user}", getString(R.string.title_contacts))));
-        items.add(new MainListItem(new ActionListItem(6, "{fa-ban}", getString(R.string.title_flow))));
-        items.add(new MainListItem(new ActionListItem(7, "{fa-microphone}", getString(R.string.title_voicemail))));
-        items.add(new MainListItem(new ActionListItem(8, "{fa-sticky-note}", getString(R.string.title_notes))));
-        items.add(new MainListItem(new ActionListItem(9, "{fa-clock-o}", getString(R.string.title_clock))));
-        items.add(new MainListItem(new ActionListItem(10, "{fa-cogs}", getString(R.string.title_settings))));
-        items.add(new MainListItem(new ActionListItem(11, "{fa-tint}", getString(R.string.title_theme))));
-        items.add(new MainListItem(new ActionListItem(12, "{fa-bell}", getString(R.string.title_notificationScheduler))));
-        items.add(new MainListItem(new ActionListItem(13, "{fa-street-view}", getString(R.string.title_map))));
-
-        if (!Build.MODEL.toLowerCase().contains("siempo"))
-            items.add(new MainListItem(new ActionListItem(14, "{fa-home}", getString(R.string.title_defaultLauncher))));
-
-        items.add(new MainListItem(new ActionListItem(15, "{fa-info-circle}", getString(R.string.title_version, BuildConfig.VERSION_NAME))));
-        */
-    }
-
-    private void loadContacts() {
-        List<ContactListItem> contactListItems = new ContactsLoader().loadContacts(getActivity());
-        items.addAll(contactListItems);
-    }
-
-    private void loadDefaults() {
-        items.add(new MainListItem(1, getString(R.string.title_sendAsSMS), "{fa-comment}"));
-        items.add(new MainListItem(2, getString(R.string.title_saveNote), "{fa-pencil}"));
-        items.add(new MainListItem(3, getString(R.string.title_createContact), "{fa-user-plus}"));
     }
 
     @UiThread
     void loadView() {
         if (getActivity() != null) {
-            adapter = new MainListAdapter(getActivity(), items);
+            adapter = new MainListAdapter(getActivity(), mediator.getItems());
             listView.setAdapter(adapter);
             adapter.getFilter().filter(manager.getCurrent().getTitle());
         }
     }
 
-    @Subscribe
-    public void searchLayoutEvent(SearchLayoutEvent event) {
+    @ItemClick(R.id.listView)
+    public void listItemClicked(int position) {
+        if (listView.getAdapter() instanceof PhoneNumbersAdapter) {
+            mediator.listItemClicked2(router, position);
+        } else {
+            mediator.listItemClicked(router, position);
+        }
 
     }
 
+    public MainListAdapter getAdapter() {
+        return adapter;
+    }
+
     @Subscribe
-    public void tokenManagerEvent(TokenManagerEvent event) {
+    public void searchLayoutEvent(SearchLayoutEvent event) {
+        parser.parse(event.getString());
         adapter.getFilter().filter(manager.getCurrent().getTitle());
+    }
+
+    @Subscribe
+    public void tokenManagerEvent(TokenUpdateEvent event) {
+        TokenItem current = manager.getCurrent();
+
+        if (current.getCompleteType() == TokenCompleteType.FULL) {
+            adapter.getFilter().filter("");
+        } else if (current.getItemType() == TokenItemType.CONTACT) {
+            if (current.getCompleteType() == TokenCompleteType.HALF) {
+                mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
+            } else {
+                mediator.contactPicker();
+            }
+
+        }
     }
 }

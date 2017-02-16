@@ -19,7 +19,6 @@ import co.minium.launcher3.R;
 import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.model.MainListItemType;
-import minium.co.core.util.ThemeUtils;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -36,6 +35,10 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
+        loadData(items);
+    }
+
+    public void loadData(List<MainListItem> items) {
         originalData = items;
         filteredData = items;
     }
@@ -189,7 +192,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+
             String searchString = constraint.toString().toLowerCase();
+
             FilterResults ret = new FilterResults();
 
             int count = originalData.size();
@@ -205,13 +210,14 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
                     switch (originalData.get(i).getItemType()) {
                         case CONTACT:
+                            String searchString2 = searchString.replaceAll("@", "");
                             ContactListItem item = (ContactListItem) originalData.get(i);
                             filterableString =  item.getContactName();
                             splits = filterableString.split(" ");
                             boolean isAdded = false;
 
                             for (String str: splits) {
-                                if (str.toLowerCase().startsWith(searchString)) {
+                                if (str.toLowerCase().startsWith(searchString2)) {
                                     buildData.add(originalData.get(i));
                                     isAdded = true;
                                     break;
@@ -219,11 +225,11 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             }
 
                             if (!isAdded) {
-                                searchString = phoneNumberString(searchString);
+                                searchString2 = phoneNumberString(searchString);
                                 List<ContactListItem.ContactNumber> numbers = item.getNumbers();
                                 for (ContactListItem.ContactNumber number : numbers) {
                                     String phoneNum = phoneNumberString(number.getNumber());
-                                    if (phoneNum.contains(searchString)) {
+                                    if (phoneNum.contains(searchString2)) {
                                         buildData.add(originalData.get(i));
                                         break;
                                     }
@@ -248,8 +254,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
                 }
             }
-
-
 
             ret.values = buildData;
             ret.count = buildData.size();

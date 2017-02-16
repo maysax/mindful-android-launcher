@@ -13,7 +13,6 @@
         android:id="@+id/searchLayout"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_centerInParent="true"
         android:elevation="8dp"
         android:layout_height="wrap_content" />
 
@@ -29,7 +28,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="240dp"
             android:drawSelectorOnTop="false"
             android:footerDividersEnabled="true"
             tools:context=".filter.FilterFragment"/>

@@ -19,20 +19,22 @@ public class TokenItem {
         switch (itemType) {
 
             case CALL:
+                init("Call", true, TokenCompleteType.FULL);
                 break;
             case TEXT:
+                init("Text", true, TokenCompleteType.FULL);
                 break;
             case NOTE:
+                init("Note", true, TokenCompleteType.FULL);
                 break;
             case CONTACT:
-                break;
-            case CONTACT_NUMBER:
-                break;
-            case EMPTY:
+                init("", true, TokenCompleteType.DEFAULT);
                 break;
             case DATA:
+                init("", false, TokenCompleteType.DEFAULT);
                 break;
             case END_OP:
+                init("", false, TokenCompleteType.FULL);
                 break;
         }
     }

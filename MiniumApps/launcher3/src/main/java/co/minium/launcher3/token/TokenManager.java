@@ -24,7 +24,7 @@ public class TokenManager {
 
     public void clear() {
         init();
-        fireEvent();
+        EventBus.getDefault().post(new TokenUpdateEvent());
     }
 
     public TokenItem get(int pos) {
@@ -53,13 +53,9 @@ public class TokenManager {
         return items;
     }
 
-    public void fireEvent() {
-        EventBus.getDefault().post(new TokenManagerEvent());
-    }
-
-    public boolean has(TokenItem item) {
+    public boolean has(TokenItemType type) {
         for (TokenItem token: items) {
-            if (token.getItemType() == item.getItemType()) return true;
+            if (token.getItemType() == type) return true;
         }
         return false;
     }

@@ -9,7 +9,7 @@ public class SearchLayoutEvent {
     private String str;
 
     public SearchLayoutEvent(String s) {
-
+        this.str = s;
     }
 
     public String getString() {

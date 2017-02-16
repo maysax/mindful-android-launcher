@@ -6,13 +6,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
+import com.eyeem.chips.BubbleStyle;
 import com.eyeem.chips.ChipsEditText;
 import com.joanzapata.iconify.widget.IconTextView;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
@@ -20,6 +19,10 @@ import org.androidannotations.annotations.ViewById;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.event.SearchLayoutEvent;
+import co.minium.launcher3.token.TokenCompleteType;
+import co.minium.launcher3.token.TokenItem;
+import co.minium.launcher3.token.TokenManager;
+import co.minium.launcher3.token.TokenUpdateEvent;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -37,7 +40,11 @@ public class SearchLayout extends CardView {
     @ViewById
     protected IconTextView btnClear;
 
-    private boolean isWatching;
+    @Bean
+    TokenManager manager;
+
+    private String formattedTxt;
+    private boolean isWatching = true;
 
     public SearchLayout(Context context) {
         super(context);
@@ -53,6 +60,7 @@ public class SearchLayout extends CardView {
         super(context, attrs, defStyleAttr);
         init();
     }
+
 
     private void init() {
         isWatching = true;
@@ -99,7 +107,7 @@ public class SearchLayout extends CardView {
             }
         });
 
-        txtSearchBox.setText("");
+//        txtSearchBox.setText("");
     }
 
     private void handleAfterTextChanged(Editable s) {
@@ -116,13 +124,67 @@ public class SearchLayout extends CardView {
 
     @Click
     void btnClear() {
-        isWatching = false;
         txtSearchBox.setText("");
-        isWatching = true;
     }
 
     @Subscribe
-    public void fao(Object obj) {
+    public void tokenManagerEvent(TokenUpdateEvent event) {
+        buildFormattedText();
+        updateSearchField();
+    }
 
+    private void updateSearchField() {
+        String[] splits = formattedTxt.split("\\|");
+
+        String newText = "";
+        boolean space = false;
+        for (String s : splits) {
+            if (space) newText += " "; space = true;
+            newText += s.replaceAll("@", "").replaceAll("#", "");
+        }
+
+        if (formattedTxt.endsWith("|")) newText += " ";
+
+        isWatching = false;
+        txtSearchBox.setText(newText);
+        isWatching = true;
+
+        int startPos = 0;
+        int endPos = 0;
+        for (String s : splits) {
+            endPos += s.length();
+            if (s.startsWith("@")) {
+                txtSearchBox.setCurrentBubbleStyle(BubbleStyle.build(getContext(), R.style.bubble_style_selected));
+                txtSearchBox.makeChip(startPos, endPos - 1, false);
+            } else if (s.startsWith("#")) {
+                txtSearchBox.setCurrentBubbleStyle(BubbleStyle.build(getContext(), R.style.bubble_style_empty));
+                txtSearchBox.makeChip(startPos, endPos - 1, false);
+            } else {
+                endPos++; // space
+            }
+
+            startPos = endPos;
+        }
+        txtSearchBox.setSelection(newText.length());
+    }
+
+    private void buildFormattedText() {
+        formattedTxt = "";
+
+        for (TokenItem item : manager.getItems()) {
+            if (item.getCompleteType() == TokenCompleteType.FULL) {
+                if (item.isChipable()) {
+                    formattedTxt += "@";
+                    formattedTxt += item.getTitle() + "|";
+                }
+            } else if (item.getCompleteType() == TokenCompleteType.HALF) {
+                if (item.isChipable()) {
+                    formattedTxt += "#";
+                    formattedTxt += item.getTitle() + "|";
+                }
+            } else {
+                formattedTxt += item.getTitle();
+            }
+        }
     }
 }
