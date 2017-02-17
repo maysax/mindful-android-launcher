@@ -1,12 +1,16 @@
 package minium.co.core.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.Toast;
+
+import minium.co.core.ui.CoreActivity;
 
 /**
  * Created by shahab on 12/21/15.
@@ -70,6 +74,13 @@ public class UIUtils {
                 .setPositiveButton(resOk, listener)
                 .setNegativeButton(resCancel, listener)
                 .show();
+    }
+
+    public static float getScreenHeight(Activity activity) {
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        return (float) displaymetrics.heightPixels;
+
     }
 
 }

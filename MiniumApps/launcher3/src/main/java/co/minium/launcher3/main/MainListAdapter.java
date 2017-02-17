@@ -19,6 +19,7 @@ import co.minium.launcher3.R;
 import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.model.MainListItemType;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -268,6 +269,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             } else {
                 filteredData = new ArrayList<>(originalData);
             }
+
+            EventBus.getDefault().post(new MainListAdapterEvent(filteredData.size()));
 
             notifyDataSetChanged();
         }

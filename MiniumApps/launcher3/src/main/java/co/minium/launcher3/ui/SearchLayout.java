@@ -107,7 +107,7 @@ public class SearchLayout extends CardView {
             }
         });
 
-//        txtSearchBox.setText("");
+        txtSearchBox.setText("");
     }
 
     private void handleAfterTextChanged(Editable s) {
