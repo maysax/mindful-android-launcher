@@ -31,7 +31,7 @@ public class TokenRouter {
 
     public void setCurrent(TokenItem tokenItem) {
         manager.setCurrent(tokenItem);
-        route();
+        add(new TokenItem(TokenItemType.DATA));
     }
 
     public void add(TokenItem tokenItem) {

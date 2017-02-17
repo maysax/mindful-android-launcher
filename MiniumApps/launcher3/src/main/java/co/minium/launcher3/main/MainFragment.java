@@ -2,20 +2,27 @@ package co.minium.launcher3.main;
 
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ActionProvider;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.FocusChange;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -23,7 +30,9 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
+import co.minium.launcher3.event.CreateNoteEvent;
 import co.minium.launcher3.event.SearchLayoutEvent;
+import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.token.TokenCompleteType;
 import co.minium.launcher3.token.TokenItem;
 import co.minium.launcher3.token.TokenItemType;
@@ -54,6 +63,12 @@ public class MainFragment extends CoreFragment {
     @ViewById
     CardView listViewLayout;
 
+    @ViewById
+    CardView afterEffectLayout;
+
+    @ViewById
+    TextView txtAfterEffect;
+
     @Pref
     DroidPrefs_ prefs;
 
@@ -77,13 +92,22 @@ public class MainFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        listViewLayout.setVisibility(View.INVISIBLE);
+        listViewLayout.setVisibility(View.GONE);
+        afterEffectLayout.setVisibility(View.GONE);
+
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mediator = new MainFragmentMediator(this);
+        KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {
+            @Override
+            public void onVisibilityChanged(boolean isOpen) {
+                if (isOpen) txtSearchBox2(true);
+                else txtSearchBox2(false);
+            }
+        });
         loadData();
     }
 
@@ -118,6 +142,7 @@ public class MainFragment extends CoreFragment {
 
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
+        if (!event.getString().isEmpty()) afterEffectLayout.setVisibility(View.INVISIBLE);
         parser.parse(event.getString());
         adapter.getFilter().filter(manager.getCurrent().getTitle());
     }
@@ -134,23 +159,23 @@ public class MainFragment extends CoreFragment {
             } else {
                 mediator.contactPicker();
             }
-
+        } else if (current.getItemType() == TokenItemType.DATA) {
+            adapter.getFilter().filter(current.getTitle());
         }
     }
 
-    @Click
-    void txtSearchBox() {
+    void txtSearchBox2(boolean isUp) {
         Tracer.v("searchLayout clicked " + searchLayout.getY());
-        if (searchLayout.getY() < 100) return;
-        boolean isUp = true;
+        if (isUp && searchLayout.getY() < 100) return;
+
         final float direction = (isUp) ? -1 : 1;
         final float yDelta = UIUtils.getScreenHeight(getActivity())/2 - (2 * searchLayout.getHeight());
         final float yPos = searchLayout.getY();
-        final int layoutTopOrBottomRule = (isUp) ? RelativeLayout.ALIGN_PARENT_TOP : RelativeLayout.CENTER_VERTICAL;
+        final int layoutTopOrBottomRule = (isUp) ? RelativeLayout.ALIGN_PARENT_TOP : RelativeLayout.CENTER_IN_PARENT;
 
         final Animation animation = new TranslateAnimation(0,0,0, yDelta * direction);
 
-        animation.setDuration(500);
+        animation.setDuration(160);
 
         animation.setAnimationListener(new Animation.AnimationListener() {
 
@@ -180,11 +205,26 @@ public class MainFragment extends CoreFragment {
         searchLayout.startAnimation(animation);
     }
 
+    @Click
+    void txtAfterEffect() {
+        String id = (String) txtAfterEffect.getTag();
+        if (id.equals("1")) {
+            new ActivityHelper(getActivity()).openNotesApp();
+        }
+    }
+
     @Subscribe
     public void mainListAdapterEvent(MainListAdapterEvent event) {
         if (event.getDataSize() == 0)
-            listViewLayout.setVisibility(View.INVISIBLE);
+            listViewLayout.setVisibility(View.GONE);
         else
             listViewLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Subscribe
+    public void createNoteEvent(CreateNoteEvent event) {
+        txtAfterEffect.setText("{fa-floppy-o}  View saved note");
+        afterEffectLayout.setVisibility(View.VISIBLE);
+        txtAfterEffect.setTag("1");
     }
 }

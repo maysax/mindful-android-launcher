@@ -13,6 +13,7 @@ import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
 import co.minium.launcher3.contact.ContactsLoader;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
+import co.minium.launcher3.event.CreateNoteEvent;
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
@@ -20,6 +21,7 @@ import co.minium.launcher3.model.MainListItemType;
 import co.minium.launcher3.token.TokenItem;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenRouter;
+import de.greenrobot.event.EventBus;
 import minium.co.core.util.UIUtils;
 
 import static co.minium.launcher3.R.string.title_defaultLauncher;
@@ -77,9 +79,9 @@ class MainFragmentMediator {
     }
 
     private void loadDefaults() {
-        items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), "{fa-comment}"));
-        items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), "{fa-pencil}"));
-        items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), "{fa-user-plus}"));
+        items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), "{fa-comment}", MainListItemType.DEFAULT));
+        items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), "{fa-pencil}", MainListItemType.DEFAULT));
+        items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), "{fa-user-plus}", MainListItemType.DEFAULT));
     }
 
     List<MainListItem> getItems() {
@@ -99,31 +101,33 @@ class MainFragmentMediator {
                 router.contactPicked((ContactListItem) getAdapter().getItem(position));
                 break;
             case ACTION:
+                position = getAdapter().getItem(position).getId();
                 switch (position) {
-                    case 0: router.setCurrent(new TokenItem(TokenItemType.TEXT)); break;
-                    case 1: router.setCurrent(new TokenItem(TokenItemType.CALL)); break;
-                    case 2: router.setCurrent(new TokenItem(TokenItemType.NOTE)); break;
-                    case 3: new ActivityHelper(fragment.getActivity()).openMessagingApp(); break;
-                    case 4: break;
+                    case 1: router.setCurrent(new TokenItem(TokenItemType.TEXT)); break;
+                    case 2: router.setCurrent(new TokenItem(TokenItemType.CALL)); break;
+                    case 3: router.setCurrent(new TokenItem(TokenItemType.NOTE)); break;
+                    case 4: new ActivityHelper(fragment.getActivity()).openMessagingApp(); break;
                     case 5: break;
                     case 6: break;
                     case 7: break;
                     case 8: break;
-                    case 9: break;
+                    case 9: new ActivityHelper(fragment.getActivity()).openNotesApp(); break;
                     case 10: break;
+                    case 11: break;
                 }
                 break;
             case DEFAULT:
                 position = getAdapter().getItem(position).getId();
 
                 switch (position) {
-                    case 0:
+                    case 1:
                         router.add(new TokenItem(TokenItemType.TEXT));
                         break;
-                    case 1:
-                        router.createNote(fragment.getActivity());
-                        break;
                     case 2:
+                        router.createNote(fragment.getActivity());
+                        EventBus.getDefault().post(new CreateNoteEvent());
+                        break;
+                    case 3:
                         router.createContact(fragment.getActivity());
                         break;
                     default:
