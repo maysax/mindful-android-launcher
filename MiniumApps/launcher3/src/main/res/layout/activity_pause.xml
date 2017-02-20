@@ -21,13 +21,15 @@
         android:id="@+id/picker"
         android:layout_width="285dp"
         android:layout_height="290dp"
-        app:max="100"
+        app:max="60"
         app:init_position="15"
         app:pointer_color="@color/pointer"
         app:pointer_halo_color="@color/pointerHalo"
         app:pointer_size="20dp"
-        app:text_color="@color/text.primary"
-        app:text_size="65sp"
+        app:title_color="@color/text.primary"
+        app:title_size="65sp"
+        app:subTitle_color="@color/text.secondary"
+        app:subTitle_size="20sp"
         app:wheel_active_color="@color/pauseSeekBarActive"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
 
