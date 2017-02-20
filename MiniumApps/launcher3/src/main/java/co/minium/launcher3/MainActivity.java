@@ -15,6 +15,7 @@ import org.androidannotations.annotations.Trace;
 import java.util.ArrayList;
 
 import co.minium.launcher3.main.MainFragment_;
+import co.minium.launcher3.ui.PauseActivity_;
 import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -38,6 +39,8 @@ public class MainActivity extends CoreActivity {
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION)
                 .check();
+
+        PauseActivity_.intent(this).start();
     }
 
     private void loadViews() {

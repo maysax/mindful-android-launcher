@@ -3,4 +3,9 @@
     <color name="colorPrimary">#FBFBFA</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
     <color name="colorAccent">#d61a1e20</color>
+
+    <color name="pointer">#f7f8f9</color>
+    <color name="pointerHalo">@color/colorAccent</color>
+    <color name="pauseSeekBarActive">#332d6d</color>
+    <color name="pauseSeekBarInactive">#26000000</color>
 </resources>
