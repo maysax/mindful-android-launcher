@@ -13,8 +13,47 @@
         android:id="@+id/toolbar"
         android:minHeight="?attr/actionBarSize"
         android:background="@color/colorPrimary"
+        android:elevation="4dp"
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/crossActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/text.primary"
+                android:text="{fa-times 20dp}" />
+
+            <TextView
+                android:id="@+id/titleActionBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/text.primary"
+                android:textStyle="bold"
+                android:text="Pause"/>
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/settingsActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/text.primary"
+                android:text="{fa-cog 20dp}" />
+
+        </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
 
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
@@ -30,6 +69,9 @@
         app:title_size="65sp"
         app:subTitle_color="@color/text.secondary"
         app:subTitle_size="20sp"
+        app:show_title="false"
+        app:text_size="25sp"
+        app:text_color="@color/text.primary"
         app:wheel_active_color="@color/pauseSeekBarActive"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
 

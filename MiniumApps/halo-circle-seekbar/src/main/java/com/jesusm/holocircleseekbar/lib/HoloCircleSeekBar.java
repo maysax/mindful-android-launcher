@@ -40,6 +40,7 @@ public class HoloCircleSeekBar extends View {
     private static final String STATE_ANGLE = "angle";
     private static final int TITLE_SIZE_DEFAULT_VALUE = 25;
     private static final int SUBTITLE_SIZE_DEFAULT_VALUE = 15;
+    private static final int TEXT_SIZE_DEFAULT_VALUE = 20;
     private static final int END_WHEEL_DEFAULT_VALUE = 360;
     public static final int COLOR_WHEEL_STROKE_WIDTH_DEF_VALUE = 16;
     public static final float POINTER_RADIUS_DEF_VALUE = 8;
@@ -121,10 +122,12 @@ public class HoloCircleSeekBar extends View {
     private String titleText;
     private Paint subTitlePaint;
     private String subTitleText = "minutes";
+    private Paint textPaint;
+    private String text = "Done";
     private int max = 100;
     private SweepGradient s;
     private Paint mArcColor;
-    private int wheel_color, unactive_wheel_color, pointer_color, pointer_halo_color, title_size, title_color, subTitle_size, subTitle_color;
+    private int wheel_color, unactive_wheel_color, pointer_color, pointer_halo_color, title_size, title_color, subTitle_size, subTitle_color, text_size, text_color;
     private int init_position = -1;
     private boolean block_end = false;
     private float lastX;
@@ -139,8 +142,9 @@ public class HoloCircleSeekBar extends View {
     private int end_wheel;
 
     private boolean showTitle = true;
-    private Rect bounds = new Rect();
-    private Rect subBounds = new Rect();
+    private Rect titleBounds = new Rect();
+    private Rect subTitleBounds = new Rect();
+    private Rect textBounds = new Rect();
 
     public HoloCircleSeekBar(Context context) {
         super(context);
@@ -198,6 +202,13 @@ public class HoloCircleSeekBar extends View {
         // canvas.drawPaint(subTitlePaint);
         subTitlePaint.setTextSize(subTitle_size);
 
+        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.LINEAR_TEXT_FLAG);
+        textPaint.setColor(text_color);
+        textPaint.setStyle(Style.FILL_AND_STROKE);
+        textPaint.setTextAlign(Align.LEFT);
+        // canvas.drawPaint(textPaint);
+        textPaint.setTextSize(text_size);
+
         mPointerColor = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPointerColor.setStrokeWidth(mPointerRadius);
 
@@ -246,9 +257,11 @@ public class HoloCircleSeekBar extends View {
 
         String title_color_attr = a.getString(R.styleable.HoloCircleSeekBar_title_color);
         String sub_title_color_attr = a.getString(R.styleable.HoloCircleSeekBar_subTitle_color);
+        String text_color_attr = a.getString(R.styleable.HoloCircleSeekBar_text_color);
 
         title_size = a.getDimensionPixelSize(R.styleable.HoloCircleSeekBar_title_size, TITLE_SIZE_DEFAULT_VALUE);
         subTitle_size = a.getDimensionPixelSize(R.styleable.HoloCircleSeekBar_subTitle_size, SUBTITLE_SIZE_DEFAULT_VALUE);
+        text_size = a.getDimensionPixelSize(R.styleable.HoloCircleSeekBar_text_size, TEXT_SIZE_DEFAULT_VALUE);
 
         init_position = a.getInteger(R.styleable.HoloCircleSeekBar_init_position, 0);
 
@@ -326,6 +339,16 @@ public class HoloCircleSeekBar extends View {
             subTitle_color = Color.CYAN;
         }
 
+        if (text_color_attr != null) {
+            try {
+                text_color = Color.parseColor(text_color_attr);
+            } catch (IllegalArgumentException e) {
+                text_color = Color.CYAN;
+            }
+        } else {
+            text_color = Color.CYAN;
+        }
+
     }
 
     @Override
@@ -352,24 +375,32 @@ public class HoloCircleSeekBar extends View {
         // top.
         canvas.drawCircle(pointerPosition[0], pointerPosition[1],
                 (float) (mPointerRadius / 1.2), mPointerColor);
-        titlePaint.getTextBounds(titleText, 0, titleText.length(), bounds);
-        subTitlePaint.getTextBounds(subTitleText, 0, subTitleText.length(), subBounds);
+        titlePaint.getTextBounds(titleText, 0, titleText.length(), titleBounds);
+        subTitlePaint.getTextBounds(subTitleText, 0, subTitleText.length(), subTitleBounds);
+        textPaint.getTextBounds(text, 0, text.length(), textBounds);
         // canvas.drawCircle(mColorWheelRectangle.centerX(),
-        // mColorWheelRectangle.centerY(), (bounds.width() / 2) + 5,
+        // mColorWheelRectangle.centerY(), (titleBounds.width() / 2) + 5,
         // mCircleTextColor);
         if (showTitle) {
             canvas.drawText(
                     titleText,
                     (mColorWheelRectangle.centerX())
                             - (titlePaint.measureText(titleText) / 2),
-                    mColorWheelRectangle.centerY() + bounds.height() / 2,
+                    mColorWheelRectangle.centerY() + titleBounds.height() / 2,
                     titlePaint);
 
             canvas.drawText(
                     subTitleText,
                     (mColorWheelRectangle.centerX())
                             - (subTitlePaint.measureText(subTitleText) / 2),
-                    mColorWheelRectangle.centerY() + bounds.height() + subBounds.height() / 2, subTitlePaint);
+                    mColorWheelRectangle.centerY() + titleBounds.height() + subTitleBounds.height() / 2, subTitlePaint);
+        } else {
+            canvas.drawText(
+                    text,
+                    (mColorWheelRectangle.centerX())
+                            - (textPaint.measureText(text) / 2),
+                    mColorWheelRectangle.centerY() + textBounds.height() / 2,
+                    textPaint);
         }
 
         // last_radians = calculateRadiansFromAngle(mAngle);

@@ -10,6 +10,7 @@
         <attr name="end_angle" format="integer"/>
         <attr name="title_size" format="dimension"/>
         <attr name="subTitle_size" format="dimension"/>
+        <attr name="text_size" format="dimension"/>
         <attr name="init_position" format="integer"/>
         <attr name="wheel_active_color" format="string"/>
         <attr name="wheel_unactive_color" format="string"/>
@@ -17,6 +18,7 @@
         <attr name="pointer_halo_color" format="string"/>
         <attr name="title_color" format="string"/>
         <attr name="subTitle_color" format="string"/>
+        <attr name="text_color" format="string"/>
     </declare-styleable>
 
 </resources>
