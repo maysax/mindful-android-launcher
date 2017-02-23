@@ -29,7 +29,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/text.primary"
-                android:text="{fa-times 20dp}" />
+                android:text="{fa-times 24dp}" />
 
             <TextView
                 android:id="@+id/titleActionBar"
@@ -49,7 +49,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="20dp"
                 android:textColor="@color/text.primary"
-                android:text="{fa-cog 20dp}" />
+                android:text="{fa-cog 24dp}" />
 
         </LinearLayout>
 
@@ -69,7 +69,7 @@
         app:title_size="65sp"
         app:subTitle_color="@color/text.secondary"
         app:subTitle_size="20sp"
-        app:show_title="false"
+        app:show_title="true"
         app:text_size="25sp"
         app:text_color="@color/text.primary"
         app:wheel_active_color="@color/pauseSeekBarActive"

@@ -21,8 +21,11 @@ import java.util.List;
 import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
+import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.model.MainListItem;
+import co.minium.launcher3.ui.PauseActivity_;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.UIUtils;
 
 import static co.minium.launcher3.R.string.title_defaultLauncher;
 
@@ -59,7 +62,7 @@ public class OldMenuFragment extends CoreFragment {
         items.add(new MainListItem(1, getString(R.string.title_messages), "fa-users"));
         items.add(new MainListItem(2, getString(R.string.title_callLog), "fa-phone"));
         items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user"));
-        items.add(new MainListItem(4, getString(R.string.title_flow), "fa-ban"));
+        items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
         items.add(new MainListItem(5, getString(R.string.title_voicemail), "fa-microphone"));
         items.add(new MainListItem(6, getString(R.string.title_notes), "fa-sticky-note"));
         items.add(new MainListItem(7, getString(R.string.title_clock), "fa-clock-o"));
@@ -69,7 +72,7 @@ public class OldMenuFragment extends CoreFragment {
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
 
         if (!Build.MODEL.toLowerCase().contains("siempo")) {
-            items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-street-view"));
+            items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
         }
 
         items.add(new MainListItem(13, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
@@ -82,20 +85,22 @@ public class OldMenuFragment extends CoreFragment {
     public void listItemClicked(int position) {
         int id = items.get(position).getId();
         switch (id) {
-            case 1: break;
-            case 2: break;
-            case 3: break;
-            case 4: break;
-            case 5: break;
-            case 6: break;
-            case 7: break;
-            case 8: break;
-            case 9: break;
-            case 10: break;
-            case 11: break;
-            case 12: break;
+            case 1: new ActivityHelper(getActivity()).openMessagingApp(); break;
+            case 2:
+                UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 3: new ActivityHelper(getActivity()).openContactsApp(); break;
+            case 4:
+                PauseActivity_.intent(getActivity()).start(); break;
+            case 5: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 6: new ActivityHelper(getActivity()).openNotesApp(); break;
+            case 7: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 8: new ActivityHelper(getActivity()).openSettingsApp(); break;
+            case 9: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 10: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 11: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 12: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
             case 13: break;
-            default: break;
+            default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
 
         }
 
