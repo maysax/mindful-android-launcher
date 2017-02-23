@@ -29,16 +29,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:gravity="center_vertical"
     style="@style/ListItem"
     tools:background="@color/material.core.red">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginRight="@dimen/margin.4"
+        android:layout_marginLeft="@dimen/margin.4"
+        android:layout_marginTop="@dimen/margin.2"
+        android:layout_marginBottom="@dimen/margin.2"
         android:src="@drawable/ic_person_black_24dp"
         app:civ_border_width="2dp"
         app:civ_border_color="@color/black"/>
@@ -46,45 +49,45 @@
     <TextView
         android:id="@+id/displayName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_toRightOf="@id/icon"
         android:layout_alignBaseline="@id/icon"
         android:singleLine="true"
         android:ellipsize="end"
         android:textColor="@color/text.primary"
-        android:textSize="@dimen/text.size.regular"
+        android:textSize="@dimen/text.size.medium"
         tools:text="John Doe"
         />
 
     <TextView
         android:id="@+id/phoneLabel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_below="@id/displayName"
         android:layout_alignLeft="@id/displayName"
-        android:textSize="@dimen/text.size.small"
+        android:textSize="@dimen/text.size.medium"
         android:textColor="@color/text.secondary"
         tools:text="Mobile"/>
 
     <TextView android:id="@+id/labelSeparator"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_toRightOf="@id/phoneLabel"
         android:layout_marginEnd="5dp"
         android:layout_alignBaseline="@id/phoneLabel"
-        android:textSize="@dimen/text.size.small"
+        android:textSize="@dimen/text.size.medium"
         android:textColor="@color/text.secondary"
         android:text=":"/>
 
     <TextView
         android:id="@+id/phoneNumber"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_toRightOf="@id/labelSeparator"
         android:layout_alignBaseline="@id/labelSeparator"
         android:singleLine="true"
         android:ellipsize="end"
-        android:textSize="@dimen/text.size.small"
+        android:textSize="@dimen/text.size.medium"
         android:textColor="@color/text.secondary"
         tools:text="+1-555-12345"/>
 </RelativeLayout>
