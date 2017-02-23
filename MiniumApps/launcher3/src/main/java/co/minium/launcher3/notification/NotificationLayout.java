@@ -41,12 +41,17 @@ public class NotificationLayout extends Activity {
 
     private void prepareNotifications() {
 
-        Notification n = new Notification("Shahab Vai","Hi, vai",R.drawable.rounded_card  ,"11:11 am",false);
+        Notification n = new Notification("Shahab Vai","Hi, vai",R.drawable.ic_person_black_24dp  ,"11:11 am",false);
         notificationList.add(n);
 
-        n = new Notification("Shahab Vai","Hi, vai",R.drawable.rounded_card  ,"11:11 am",false);
+        n = new Notification("Shahab Vai","Hi, vai",R.drawable.ic_person_black_24dp  ,"11:11 am",false);
         notificationList.add(n);
 
+        n = new Notification("Shahab Vai","Hello, vai",R.drawable.ic_person_black_24dp  ,"11:11 am",false);
+        notificationList.add(n);
+
+        n = new Notification("Shahab Vai","Hi, vai :-)",R.drawable.ic_person_black_24dp  ,"11:11 am",false);
+        notificationList.add(n);
 
 
         adapter.notifyDataSetChanged();

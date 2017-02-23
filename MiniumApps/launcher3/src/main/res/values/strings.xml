@@ -27,4 +27,5 @@
     <string name="title.createContact">Create Contact</string>
 
     <string name="label_multiple_numbers">Multiple numbers</string>
+    <string name="string_notification_title">Notifications</string>
 </resources>
