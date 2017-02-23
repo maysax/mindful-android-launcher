@@ -1,6 +1,7 @@
 package co.minium.launcher3.notification;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import co.minium.launcher3.R;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by itc on 20/02/17.
@@ -21,17 +23,30 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private Context mContext;
     private List<Notification> notificationList;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView _name, _text,_time;
-        public ImageView thumbnail,overflow;
+        public ImageView overflow;
+        public CircleImageView thumbnail;
 
         public MyViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             _name = (TextView) view.findViewById(R.id.text_name_notification);
             _text = (TextView) view.findViewById(R.id.text_mesage_notification);
             _time = (TextView) view.findViewById(R.id.text_time_notification);
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail_notification);
+            thumbnail = (CircleImageView) view.findViewById(R.id.thumbnail_notification);
             overflow = (ImageView) view.findViewById(R.id.image_checked_notification);
+        }
+
+        @Override
+        public void onClick(View v) {
+            System.out.println("Recycle view is clicked");
+            _name.setVisibility(View.INVISIBLE);
+            _text.setVisibility(View.INVISIBLE);
+            _time.setVisibility(View.INVISIBLE);
+            thumbnail.setVisibility(View.INVISIBLE);
+            overflow.setVisibility(View.VISIBLE);
+         //   v.setBackgroundColor(mContext.getColor(R.color.white));
         }
     }
 
