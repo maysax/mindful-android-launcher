@@ -42,6 +42,7 @@
                 android:layout_toRightOf="@+id/thumbnail_notification"
                 tools:text="Jaineel shah"
                 android:textSize="14sp"
+                android:textColor="#de000000"
                 android:textStyle="bold"/>
 
             <TextView
@@ -53,6 +54,7 @@
                 android:layout_toRightOf="@+id/thumbnail_notification"
                 android:layout_marginBottom="13.5dp"
                 tools:text="Haha. Sure ! :-)"
+                android:textColor="#8b000000"
                 android:textSize="14sp" />
 
             <TextView
@@ -67,6 +69,7 @@
                 android:layout_marginLeft="9.6dp"
                 android:id="@+id/text_time_notification"
                 android:textSize="12sp"
+                android:textColor="#8a000000"
                 tools:text="12:52 pm"/>
 
             <ImageView

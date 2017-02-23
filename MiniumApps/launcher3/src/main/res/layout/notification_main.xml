@@ -15,7 +15,8 @@
         android:layout_height="33dp"
         android:textSize="28sp"
         android:fontFamily="sans-serif"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:textColor="#de000000"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
