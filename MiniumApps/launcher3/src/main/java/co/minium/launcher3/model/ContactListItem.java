@@ -12,7 +12,7 @@ public class ContactListItem extends MainListItem {
     private long contactId;
     private String contactName;
     private List<ContactNumber> numbers;
-
+    private String imageUri;
     public ContactListItem(long contactId, String contactName) {
         super(0, contactName, "{fa-user-o}", MainListItemType.CONTACT);
         this.contactId = contactId;
@@ -54,6 +54,14 @@ public class ContactListItem extends MainListItem {
                 ", contactName='" + contactName + '\'' +
                 ", numbers=" + numbers +
                 '}';
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     public class ContactNumber {

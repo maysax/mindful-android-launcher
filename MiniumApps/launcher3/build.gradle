@@ -34,7 +34,9 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
 }
-
+repositories {
+    mavenCentral() // jcenter() works as well because it pulls from Maven Central
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -66,6 +68,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:appcompat-v7:23.4.0'
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }
 
 apt {

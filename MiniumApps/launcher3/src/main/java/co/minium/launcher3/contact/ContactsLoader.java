@@ -31,7 +31,8 @@ public class ContactsLoader {
             ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY,
             ContactsContract.CommonDataKinds.Phone.TYPE,
             ContactsContract.CommonDataKinds.Phone.NUMBER,
-            ContactsContract.CommonDataKinds.Phone.LABEL
+            ContactsContract.CommonDataKinds.Phone.LABEL,
+            ContactsContract.CommonDataKinds.Phone.PHOTO_URI
     };
 
 
@@ -53,6 +54,11 @@ public class ContactsLoader {
             while(contactCursor.moveToNext()) {
                 long id = contactCursor.getLong(contactCursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID));
                 String name = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+
+                String image_uri = contactCursor
+                        .getString(contactCursor
+                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+
                 String label =  ContactsContract.CommonDataKinds.Phone.getTypeLabel(context.getResources(),
                         contactCursor.getInt(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE)),
                         contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))).toString();
@@ -62,7 +68,9 @@ public class ContactsLoader {
                     currItem = new ContactListItem(id, name);
                     items.add(currItem);
                 }
-
+                if (image_uri!=null){
+                    currItem.setImageUri(image_uri);
+                }
                 currItem.addNumbers(label, number);
 
             }
