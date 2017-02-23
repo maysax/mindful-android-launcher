@@ -104,10 +104,10 @@ public abstract class CoreActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+//    }
 
     /**
      * Load fragment by replacing all previous fragments

@@ -1,6 +1,7 @@
 package co.minium.launcher3;
 
 import android.Manifest;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -11,10 +12,13 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+
 import co.minium.launcher3.main.MainFragment_;
+import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.ui.PauseActivity_;
 import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.ui.CoreActivity;
@@ -25,6 +29,11 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 @Fullscreen
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
+
+    @ViewById
+    ViewPager pager;
+
+    MainSlidePagerAdapter sliderAdapter;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -40,12 +49,13 @@ public class MainActivity extends CoreActivity {
                         Manifest.permission.ACCESS_COARSE_LOCATION)
                 .check();
 
-        PauseActivity_.intent(this).start();
+        sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
+        pager.setAdapter(sliderAdapter);
     }
 
     private void loadViews() {
         loadTopBar();
-        loadMainView();
+        //loadMainView();
     }
 
     private void loadMainView() {
