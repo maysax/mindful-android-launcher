@@ -1,5 +1,6 @@
 package co.minium.launcher3.ui;
 
+import android.content.Intent;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.notification.NotificationActivity;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -50,7 +52,8 @@ public class PauseActivity extends CoreActivity {
 
     @Click
     void settingsActionBar() {
-        UIUtils.alert(this, getString(R.string.msg_not_yet_implemented));
+        startActivity(new Intent(this, NotificationActivity.class));
+//        UIUtils.alert(this, getString(R.string.msg_not_yet_implemented));
     }
 
     private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {

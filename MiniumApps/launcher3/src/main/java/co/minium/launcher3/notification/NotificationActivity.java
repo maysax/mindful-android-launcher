@@ -13,7 +13,7 @@ import co.minium.launcher3.R;
 /**
  * Created by itc on 17/02/17.
  */
-public class NotificationLayout extends Activity {
+public class NotificationActivity extends Activity {
 
     private RecyclerView recyclerView;
     private NotificationAdapter adapter;
@@ -41,16 +41,13 @@ public class NotificationLayout extends Activity {
 
     private void prepareNotifications() {
 
-        Notification n = new Notification("Shahab Vai","Hi, vai",R.drawable.ic_person_black_24dp  ,"11:11 am",false);
+        Notification n = new Notification("Jaineel Shah","Haha. Sure! 7.",R.drawable.ic_person_black_24dp  ,"12:52 pm",false);
         notificationList.add(n);
 
-        n = new Notification("Shahab Vai","Hi, vai",R.drawable.ic_person_black_24dp  ,"11:11 am",false);
+        n = new Notification("Stephanie Wise","Excellent example of the",R.drawable.ic_person_black_24dp  ,"12:45 pm",false);
         notificationList.add(n);
 
-        n = new Notification("Shahab Vai","Hello, vai",R.drawable.ic_person_black_24dp  ,"11:11 am",false);
-        notificationList.add(n);
-
-        n = new Notification("Shahab Vai","Hi, vai :-)",R.drawable.ic_person_black_24dp  ,"11:11 am",false);
+        n = new Notification("Hilah Lucida","Good call, I'll do the same",R.drawable.ic_person_black_24dp  ,"12:31 pm",false);
         notificationList.add(n);
 
 
