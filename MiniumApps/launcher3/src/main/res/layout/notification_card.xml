@@ -42,8 +42,7 @@
                 android:layout_toRightOf="@+id/thumbnail_notification"
                 tools:text="Jaineel shah"
                 android:textSize="14sp"
-                android:textColor="#de000000"
-                android:textStyle="bold"/>
+                android:textColor="#de000000"/>
 
             <TextView
                 android:id="@+id/text_mesage_notification"
