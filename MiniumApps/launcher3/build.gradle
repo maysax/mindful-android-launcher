@@ -52,7 +52,6 @@ dependencies {
     compile project(':settings')
     compile project(':notes')
     compile project(':halo-circle-seekbar')
-    //compile project (':core')
 
     compile "com.github.satyan:sugar:$sugarOrmVersion"
     compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
@@ -63,9 +62,6 @@ dependencies {
 
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.0.1'
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
-   // compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'com.android.support:appcompat-v7:23.4.0'
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
 
 }
