@@ -82,7 +82,14 @@ public class PauseActivity extends CoreActivity {
     @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
     void volumeUpPressed() {
         Tracer.i("Volume up pressed in PauseActivity");
-        seekbar.setValue(Math.min(seekbar.getValue() + 15, 60));
+        int currVal = seekbar.getValue();
+
+        if (currVal < 15) currVal = 15;
+        else if (currVal < 30) currVal = 30;
+        else if (currVal < 45) currVal = 45;
+        else if (currVal <= 60) currVal = 60;
+        
+        seekbar.setValue(currVal);
     }
 
 }
