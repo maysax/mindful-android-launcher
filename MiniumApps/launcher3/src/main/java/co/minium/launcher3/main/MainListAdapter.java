@@ -1,6 +1,7 @@
 package co.minium.launcher3.main;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
@@ -141,6 +143,13 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             holder.displayName.setText(item.getContactName());
+
+            if (item.getImageUri() != null) {
+                Glide.with(context)
+                        .load(Uri.parse(item.getImageUri()))
+                        .into(holder.icon);
+            }
+
             if (item.hasMultipleNumber()) {
                 holder.phoneLabel.setText(context.getString(R.string.label_multiple_numbers));
                 holder.phoneNumber.setVisibility(View.INVISIBLE);
