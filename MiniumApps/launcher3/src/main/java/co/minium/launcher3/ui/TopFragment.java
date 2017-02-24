@@ -37,15 +37,6 @@ import minium.co.core.ui.CoreFragment;
 @EFragment(R.layout.fragment_top)
 public class TopFragment extends CoreFragment {
 
-    @ViewById
-    TextView iTxt1;
-
-    @ViewById
-    TextView iTxt2;
-
-    @ViewById
-    TextView iTxt3;
-
     @Pref
     DroidPrefs_ prefs;
 
@@ -69,7 +60,7 @@ public class TopFragment extends CoreFragment {
     @AfterViews
     void afterViews() {
         // Default text
-        updateBatteryText(50);
+        //updateBatteryText(50);
     }
 
     @Override
@@ -97,14 +88,16 @@ public class TopFragment extends CoreFragment {
     }
 
     private void updateBatteryText(int level) {
-        if (level > 0)
-            currentBatteryLevel = level;
 
-        iTxt3.setText(getString(R.string.format_battery,
-                prefs.isNotificationSchedulerEnabled().get() ? String.format(Locale.US, "{fa-bell 12dp} %d min",
-                prefs.notificationSchedulerValue().get()) : "", currentBatteryLevel));
-
-        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(currentBatteryLevel)).colorRes(R.color.white).sizeDp(12), null);
+//        if (level > 0)
+//            currentBatteryLevel = level;
+//
+//        iTxt3.setText(getString(R.string.format_battery,
+//                prefs.isNotificationSchedulerEnabled().get() ? String.format(Locale.US, "{fa-bell 12dp} %d min",
+//                prefs.notificationSchedulerValue().get()) : "", currentBatteryLevel));
+//
+//        iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(currentBatteryLevel)).colorRes(R.color.white).sizeDp(12), null);
+//
     }
 
     private Icon getBatteryIcon(int level) {
@@ -128,8 +121,8 @@ public class TopFragment extends CoreFragment {
 
     private void updateSignalText(int strength) {
 //        Tracer.i("Signal strength: " + strength + " Operator: " + telephonyManager.getNetworkOperatorName());
-        if (isAdded())
-            iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName()));
+//        if (isAdded())
+//            iTxt1.setText(getString(R.string.format_signal, telephonyManager.getNetworkOperatorName()));
     }
 
     @Subscribe
