@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#FBFBFA</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
-    <color name="colorAccent">#d61a1e20</color>
+    <color name="colorAccent">#331749</color>
 
     <color name="pointer">#f7f8f9</color>
     <color name="pointerHalo">@color/colorAccent</color>
