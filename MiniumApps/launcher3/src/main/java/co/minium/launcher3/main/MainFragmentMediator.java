@@ -50,9 +50,6 @@ class MainFragmentMediator {
     }
 
     private void loadActions() {
-        items.add(new MainListItem(1, fragment.getString(R.string.title_text), "fa-comment"));
-        items.add(new MainListItem(2, fragment.getString(R.string.title_call), "fa-phone"));
-        items.add(new MainListItem(3, fragment.getString(R.string.title_note), "fa-sticky-note"));
         items.add(new MainListItem(4, fragment.getString(R.string.title_messages), "fa-users"));
         items.add(new MainListItem(5, fragment.getString(R.string.title_callLog), "fa-phone"));
         items.add(new MainListItem(6, fragment.getString(R.string.title_contacts), "fa-user"));
