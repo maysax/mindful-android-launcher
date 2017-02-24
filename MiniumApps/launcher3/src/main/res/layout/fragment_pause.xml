@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="co.minium.launcher3.ui.PauseActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:elevation="8dp"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/crossActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/text.primary"
+                android:text="{fa-times 24dp}" />
+
+            <TextView
+                android:id="@+id/titleActionBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/text.primary"
+                android:textStyle="bold"
+                android:text="Pause"/>
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/settingsActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/text.primary"
+                android:text="{fa-cog 24dp}" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+      <TextView
+        android:id="@+id/txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        android:layout_marginBottom="30dp"
+        android:layout_centerHorizontal="true"
+        tools:text="30 minute" />
+
+    <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
+        android:layout_centerInParent="true"
+        android:id="@+id/seekbar"
+        android:layout_width="285dp"
+        android:layout_height="290dp"
+        app:max="60"
+        app:init_position="15"
+        app:pointer_color="@color/pointer"
+        app:pointer_halo_color="@color/pointerHalo"
+        app:pointer_size="20dp"
+        app:title_color="@color/text.primary"
+        app:title_size="90sp"
+        app:subTitle_color="@color/text.secondary"
+        app:subTitle_size="20sp"
+        app:show_title="true"
+        app:text_size="24sp"
+        app:text_color="@color/text.primary"
+        app:wheel_active_color="@color/pauseSeekBarActive"
+        app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            tools:text="Ending at " />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            tools:text="01:00 pm" />
+    </LinearLayout>
+
+
+
+</RelativeLayout>
