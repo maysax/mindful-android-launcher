@@ -31,14 +31,14 @@
         />
 
 
-    <com.joanzapata.iconify.widget.IconTextView
+    <ImageView
         android:id="@+id/btnClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="{fa-times-circle @color/colorAccent 20dp}"
         android:paddingStart="4dp"
-        android:paddingEnd="4dp"
+        android:paddingEnd="8dp"
+        android:src="@drawable/icon_clear_field"
         android:layout_gravity="center_vertical"
-        />
+        android:contentDescription="@null" />
 
 </LinearLayout>

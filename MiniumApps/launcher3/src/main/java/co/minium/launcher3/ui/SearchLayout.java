@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
 import com.eyeem.chips.ChipsEditText;
@@ -38,7 +39,7 @@ public class SearchLayout extends CardView {
     protected ChipsEditText txtSearchBox;
 
     @ViewById
-    protected IconTextView btnClear;
+    protected ImageView btnClear;
 
     @Bean
     TokenManager manager;
