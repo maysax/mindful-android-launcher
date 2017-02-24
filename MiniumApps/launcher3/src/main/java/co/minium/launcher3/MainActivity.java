@@ -4,6 +4,7 @@ import android.Manifest;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -11,6 +12,7 @@ import com.gun0912.tedpermission.TedPermission;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
@@ -21,6 +23,7 @@ import co.minium.launcher3.main.MainFragment_;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.ui.PauseActivity_;
 import co.minium.launcher3.ui.TopFragment_;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
@@ -78,4 +81,11 @@ public class MainActivity extends CoreActivity {
             UIUtils.toast(MainActivity.this, "Permission denied");
         }
     };
+
+    @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
+    void volumeUpPressed() {
+        Tracer.i("Volume up pressed in MainActivity");
+        PauseActivity_.intent(this).start();
+    }
+
 }
