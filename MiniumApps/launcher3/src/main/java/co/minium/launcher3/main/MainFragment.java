@@ -16,6 +16,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
@@ -44,6 +47,7 @@ import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.UIUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,6 +86,8 @@ public class MainFragment extends CoreFragment {
 
     private MainFragmentMediator mediator;
 
+    private boolean isKeyboardOpen;
+
 
     public MainFragment() {
         // Required empty public constructor
@@ -91,7 +97,35 @@ public class MainFragment extends CoreFragment {
     void afterViews() {
         listViewLayout.setVisibility(View.GONE);
         afterEffectLayout.setVisibility(View.GONE);
+        KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {
+            @Override
+            public void onVisibilityChanged(boolean isOpen) {
+                isKeyboardOpen = isOpen;
+                updateListViewLayout();
+            }
+        });
         moveSearchBar(false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.getFilter().filter("");
+    }
+
+    void updateListViewLayout() {
+        int val;
+        if (isKeyboardOpen) {
+            val = Math.min(adapter.getCount() * 54, 240);
+        } else {
+            val = Math.min(adapter.getCount() * 54, 54 * 9);
+        }
+
+        // extra padding when there is something in listView
+        if (val != 0) val += 8;
+
+        listViewLayout.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
+        listViewLayout.requestLayout();
     }
 
     @Override
@@ -185,8 +219,10 @@ public class MainFragment extends CoreFragment {
     public void mainListAdapterEvent(MainListAdapterEvent event) {
         if (event.getDataSize() == 0)
             listViewLayout.setVisibility(View.GONE);
-        else
+        else {
             listViewLayout.setVisibility(View.VISIBLE);
+            updateListViewLayout();
+        }
     }
 
     @Subscribe
