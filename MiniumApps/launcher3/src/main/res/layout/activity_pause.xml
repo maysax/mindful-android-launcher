@@ -6,55 +6,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="co.minium.launcher3.ui.PauseActivity">
+    <!--
+        <android.support.v7.widget.Toolbar
+           android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:elevation="8dp"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-    <android.support.v7.widget.Toolbar
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/crossActionBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/text.primary"
+                    android:text="{fa-times 24dp}" />
+
+                <TextView
+                    android:id="@+id/titleActionBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@color/text.primary"
+                    android:textStyle="bold"
+                    android:text="Pause"/>
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/settingsActionBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/text.primary"
+                    android:text="{fa-cog 24dp}" />
+
+            </LinearLayout>
+
+            </android.support.v7.widget.Toolbar>-->
+    <FrameLayout
+        android:id="@+id/mainView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
-        android:elevation="8dp"
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <com.joanzapata.iconify.widget.IconTextView
-                android:id="@+id/crossActionBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
-                android:textColor="@color/text.primary"
-                android:text="{fa-times 24dp}" />
-
-            <TextView
-                android:id="@+id/titleActionBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:textColor="@color/text.primary"
-                android:textStyle="bold"
-                android:text="Pause"/>
-
-            <com.joanzapata.iconify.widget.IconTextView
-                android:id="@+id/settingsActionBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="20dp"
-                android:textColor="@color/text.primary"
-                android:text="{fa-cog 24dp}" />
-
-        </LinearLayout>
-
-        </android.support.v7.widget.Toolbar>
-
-    <TextView
+        android:layout_height="match_parent"
+        android:background="?android:attr/detailsElementBackground" />
+    <!--<TextView
         android:id="@+id/txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -106,7 +110,7 @@
             android:fontFamily="sans-serif"
             android:textStyle="bold"
             tools:text="01:00 pm" />
-    </LinearLayout>
+    </LinearLayout>-->
 
 
 

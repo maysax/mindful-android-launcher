@@ -51,6 +51,8 @@ public class MainActivity extends CoreActivity {
 
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
+
+        PauseActivity_.intent(this).start();
     }
 
     private void loadViews() {
