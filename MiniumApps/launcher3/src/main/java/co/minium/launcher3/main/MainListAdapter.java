@@ -144,7 +144,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             if (item.getImageUri() != null) {
                 Glide.with(context)
                         .load(Uri.parse(item.getImageUri()))
-                        .placeholder(R.mipmap.ic_launcher)
+                        .placeholder(R.drawable.placeholder_blank_contact)
                         .into(holder.icon);
             }
 
