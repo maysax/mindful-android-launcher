@@ -59,8 +59,7 @@ dependencies {
         exclude module: 'appcompat-v7'
     }
     apt "org.androidannotations:androidannotations:$annotationsVersion"
-
-    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.0.1'
+    
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
 

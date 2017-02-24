@@ -1,6 +1,8 @@
 package co.minium.launcher3.main;
 
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
@@ -13,9 +15,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
-import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -42,11 +41,9 @@ import co.minium.launcher3.token.TokenUpdateEvent;
 import co.minium.launcher3.token.TokenParser;
 import co.minium.launcher3.ui.SearchLayout;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
-import minium.co.core.util.UIUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,20 +91,13 @@ public class MainFragment extends CoreFragment {
     void afterViews() {
         listViewLayout.setVisibility(View.GONE);
         afterEffectLayout.setVisibility(View.GONE);
-
+        moveSearchBar(false);
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mediator = new MainFragmentMediator(this);
-        KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {
-            @Override
-            public void onVisibilityChanged(boolean isOpen) {
-                if (isOpen) txtSearchBox2(true);
-                else txtSearchBox2(false);
-            }
-        });
         loadData();
     }
 
@@ -142,7 +132,12 @@ public class MainFragment extends CoreFragment {
 
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
-        if (!event.getString().isEmpty()) afterEffectLayout.setVisibility(View.INVISIBLE);
+        if (!event.getString().isEmpty()) {
+            afterEffectLayout.setVisibility(View.INVISIBLE);
+            moveSearchBar(true);
+        } else {
+            moveSearchBar(false);
+        }
         parser.parse(event.getString());
         adapter.getFilter().filter(manager.getCurrent().getTitle());
     }
@@ -164,45 +159,18 @@ public class MainFragment extends CoreFragment {
         }
     }
 
-    void txtSearchBox2(boolean isUp) {
-        Tracer.v("searchLayout clicked " + searchLayout.getY());
-        if (isUp && searchLayout.getY() < 100) return;
+    void moveSearchBar(boolean isUp) {
+        ObjectAnimator animY;
 
-        final float direction = (isUp) ? -1 : 1;
-        final float yDelta = UIUtils.getScreenHeight(getActivity())/2 - (2 * searchLayout.getHeight());
-        final float yPos = searchLayout.getY();
-        final int layoutTopOrBottomRule = (isUp) ? RelativeLayout.ALIGN_PARENT_TOP : RelativeLayout.CENTER_IN_PARENT;
+        if (isUp) {
+            animY = ObjectAnimator.ofFloat(searchLayout, "y", 0);
+        } else {
+            animY = ObjectAnimator.ofFloat(searchLayout, "y", 540);
+        }
 
-        final Animation animation = new TranslateAnimation(0,0,0, yDelta * direction);
-
-        animation.setDuration(160);
-
-        animation.setAnimationListener(new Animation.AnimationListener() {
-
-            public void onAnimationStart(Animation animation) {
-            }
-
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            public void onAnimationEnd(Animation animation) {
-
-                // fix flicking
-                // Source : http://stackoverflow.com/questions/9387711/android-animation-flicker
-                TranslateAnimation anim = new TranslateAnimation(0.0f, 0.0f, 0.0f, 0.0f);
-                anim.setDuration(1);
-                searchLayout.startAnimation(anim);
-
-
-                //set new params
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(searchLayout.getLayoutParams());
-                params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-                params.addRule(layoutTopOrBottomRule);
-                searchLayout.setLayoutParams(params);
-            }
-        });
-
-        searchLayout.startAnimation(animation);
+        AnimatorSet animSet = new AnimatorSet();
+        animSet.play(animY);
+        animSet.start();
     }
 
     @Click
