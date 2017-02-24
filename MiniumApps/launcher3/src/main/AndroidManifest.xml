@@ -50,7 +50,7 @@
             android:name="io.fabric.ApiKey"
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
-        <activity android:name=".MainActivity_">
+        <activity android:name=".MainActivity_" android:windowSoftInputMode="stateVisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
