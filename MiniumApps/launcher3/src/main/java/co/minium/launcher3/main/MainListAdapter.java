@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
@@ -107,16 +108,14 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     }
 
     private static class ActionViewHolder {
-        IconTextView icon;
+        ImageView icon;
         TextView text;
     }
 
     private static class ContactViewHolder {
         ImageView icon;
-        TextView displayName;
-        TextView phoneLabel;
-        TextView phoneNumber;
-        TextView labelSeparator;
+        TextView text;
+        TextView txtNumber;
     }
 
     private View getContactItemView(int position, View view, ViewGroup parent) {
@@ -129,10 +128,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             view = inflater.inflate(R.layout.list_item_contacts, parent, false);
 
             holder.icon = (ImageView) view.findViewById(R.id.icon);
-            holder.displayName = (TextView) view.findViewById(R.id.displayName);
-            holder.phoneLabel = (TextView) view.findViewById(R.id.phoneLabel);
-            holder.labelSeparator = (TextView) view.findViewById(R.id.labelSeparator);
-            holder.phoneNumber = (TextView) view.findViewById(R.id.phoneNumber);
+            holder.txtNumber = (TextView) view.findViewById(R.id.txtNumber);
+            holder.text = (TextView) view.findViewById(R.id.text);
             view.setTag(holder);
 
         } else {
@@ -142,23 +139,19 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         ContactListItem item = (ContactListItem) getItem(position);
 
         if (item != null) {
-            holder.displayName.setText(item.getContactName());
+            holder.text.setText(item.getContactName());
 
             if (item.getImageUri() != null) {
                 Glide.with(context)
                         .load(Uri.parse(item.getImageUri()))
+                        .placeholder(R.mipmap.ic_launcher)
                         .into(holder.icon);
             }
 
             if (item.hasMultipleNumber()) {
-                holder.phoneLabel.setText(context.getString(R.string.label_multiple_numbers));
-                holder.phoneNumber.setVisibility(View.INVISIBLE);
-                holder.labelSeparator.setVisibility(View.INVISIBLE);
+                holder.txtNumber.setText(context.getString(R.string.label_multiple_numbers));
             } else {
-                holder.phoneLabel.setText(item.getNumber().getLabel());
-                holder.phoneNumber.setText(item.getNumber().getNumber());
-                holder.labelSeparator.setVisibility(View.VISIBLE);
-                holder.phoneNumber.setVisibility(View.VISIBLE);
+                holder.txtNumber.setText(item.getNumber().getNumber());
             }
         }
 
@@ -172,9 +165,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             holder = new ActionViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            view = inflater.inflate(R.layout.list_item_action, parent, false);
+            view = inflater.inflate(R.layout.list_item, parent, false);
 
-            holder.icon = (IconTextView) view.findViewById(R.id.icon);
+            holder.icon = (ImageView) view.findViewById(R.id.icon);
             holder.text = (TextView) view.findViewById(R.id.text);
             view.setTag(holder);
         } else {
@@ -184,8 +177,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         MainListItem item = getItem(position);
 
         if (item != null) {
-            holder.icon.setText(item.getIcon());
-//            holder.icon.setTextColor(ThemeUtils.getPrimaryColor(getContext()));
+            holder.icon.setImageResource(item.getIconRes());
             holder.text.setText(item.getTitle());
         }
 

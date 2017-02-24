@@ -88,7 +88,7 @@ public class PauseActivity extends CoreActivity {
         else if (currVal < 30) currVal = 30;
         else if (currVal < 45) currVal = 45;
         else if (currVal <= 60) currVal = 60;
-        
+
         seekbar.setValue(currVal);
     }
 

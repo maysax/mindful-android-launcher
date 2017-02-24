@@ -21,6 +21,7 @@ import co.minium.launcher3.model.MainListItemType;
 import co.minium.launcher3.token.TokenItem;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenRouter;
+import co.minium.launcher3.ui.PauseActivity_;
 import de.greenrobot.event.EventBus;
 import minium.co.core.util.UIUtils;
 
@@ -49,26 +50,26 @@ class MainFragmentMediator {
     }
 
     private void loadActions() {
-        items.add(new MainListItem(1, fragment.getString(R.string.title_text), "{fa-comment}"));
-        items.add(new MainListItem(2, fragment.getString(R.string.title_call), "{fa-phone}"));
-        items.add(new MainListItem(3, fragment.getString(R.string.title_note), "{fa-sticky-note}"));
-        items.add(new MainListItem(4, fragment.getString(R.string.title_messages), "{fa-users}"));
-        items.add(new MainListItem(5, fragment.getString(R.string.title_callLog), "{fa-phone}"));
-        items.add(new MainListItem(6, fragment.getString(R.string.title_contacts), "{fa-user}"));
-        items.add(new MainListItem(7, fragment.getString(R.string.title_pause), "{fa-ban}"));
-        items.add(new MainListItem(8, fragment.getString(R.string.title_voicemail), "{fa-microphone}"));
-        items.add(new MainListItem(9, fragment.getString(R.string.title_notes), "{fa-sticky-note}"));
-        items.add(new MainListItem(10, fragment.getString(R.string.title_clock), "{fa-clock-o}"));
-        items.add(new MainListItem(11, fragment.getString(R.string.title_settings), "{fa-cogs}"));
-        items.add(new MainListItem(12, fragment.getString(R.string.title_theme), "{fa-tint}"));
-        items.add(new MainListItem(13, fragment.getString(R.string.title_notificationScheduler), "{fa-bell}"));
-        items.add(new MainListItem(14, fragment.getString(R.string.title_map), "{fa-street-view}"));
+        items.add(new MainListItem(1, fragment.getString(R.string.title_text), "fa-comment"));
+        items.add(new MainListItem(2, fragment.getString(R.string.title_call), "fa-phone"));
+        items.add(new MainListItem(3, fragment.getString(R.string.title_note), "fa-sticky-note"));
+        items.add(new MainListItem(4, fragment.getString(R.string.title_messages), "fa-users"));
+        items.add(new MainListItem(5, fragment.getString(R.string.title_callLog), "fa-phone"));
+        items.add(new MainListItem(6, fragment.getString(R.string.title_contacts), "fa-user"));
+        items.add(new MainListItem(7, fragment.getString(R.string.title_pause), "fa-ban"));
+        items.add(new MainListItem(8, fragment.getString(R.string.title_voicemail), "fa-microphone"));
+        items.add(new MainListItem(9, fragment.getString(R.string.title_notes), "fa-sticky-note"));
+        items.add(new MainListItem(10, fragment.getString(R.string.title_clock), "fa-clock-o"));
+        items.add(new MainListItem(11, fragment.getString(R.string.title_settings), "fa-cogs"));
+        items.add(new MainListItem(12, fragment.getString(R.string.title_theme), "fa-tint"));
+        items.add(new MainListItem(13, fragment.getString(R.string.title_notificationScheduler), "fa-bell"));
+        items.add(new MainListItem(14, fragment.getString(R.string.title_map), "fa-street-view"));
 
         if (!Build.MODEL.toLowerCase().contains("siempo")) {
-            items.add(new MainListItem(15, fragment.getString(title_defaultLauncher), "{fa-street-view}"));
+            items.add(new MainListItem(15, fragment.getString(title_defaultLauncher), "fa-street-view"));
         }
 
-        items.add(new MainListItem(16, fragment.getString(R.string.title_version, BuildConfig.VERSION_NAME), "{fa-info-circle}"));
+        items.add(new MainListItem(16, fragment.getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
     }
 
     private void loadContacts() {
@@ -79,9 +80,9 @@ class MainFragmentMediator {
     }
 
     private void loadDefaults() {
-        items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), "{fa-comment}", MainListItemType.DEFAULT));
-        items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), "{fa-pencil}", MainListItemType.DEFAULT));
-        items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), "{fa-user-plus}", MainListItemType.DEFAULT));
+        items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+        items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+        items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
     }
 
     List<MainListItem> getItems() {
@@ -109,7 +110,8 @@ class MainFragmentMediator {
                     case 4: new ActivityHelper(fragment.getActivity()).openMessagingApp(); break;
                     case 5: break;
                     case 6: break;
-                    case 7: break;
+                    case 7:
+                        PauseActivity_.intent(fragment.getActivity()).start(); break;
                     case 8: break;
                     case 9: new ActivityHelper(fragment.getActivity()).openNotesApp(); break;
                     case 10: break;

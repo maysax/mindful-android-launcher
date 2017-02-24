@@ -1,5 +1,7 @@
 package co.minium.launcher3.model;
 
+import co.minium.launcher3.R;
+
 /**
  * Created by Shahab on 2/16/2017.
  */
@@ -12,6 +14,7 @@ public class MainListItem {
     private boolean isEnabled = true;
     private MainListItemType itemType = MainListItemType.ACTION;
     private String icon;
+    private int iconRes;
 
     public MainListItem(int id, String title, String icon) {
         this(id, title, icon, MainListItemType.ACTION);
@@ -22,6 +25,14 @@ public class MainListItem {
         this.title = title;
         this.icon = icon;
         this.itemType = itemType;
+        this.iconRes = R.drawable.icon_sms;
+    }
+
+    public MainListItem(int id, String title, int iconRes, MainListItemType itemType) {
+        this.id = id;
+        this.title = title;
+        this.itemType = itemType;
+        this.iconRes = iconRes;
     }
 
     public int getId() {
@@ -58,6 +69,10 @@ public class MainListItem {
 
     public String getIcon() {
         return icon;
+    }
+
+    public int getIconRes() {
+        return iconRes;
     }
 
     public void setIcon(String icon) {
