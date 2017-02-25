@@ -3,6 +3,9 @@ package co.minium.launcher3.token;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
+import co.minium.launcher3.event.AtFoundEvent;
+import de.greenrobot.event.EventBus;
+
 /**
  * Created by shahab on 2/16/17.
  */
@@ -26,9 +29,8 @@ public class TokenParser {
             }
         }
 
-        if (str.trim().equals("@")) {
-            router.add(new TokenItem(TokenItemType.CONTACT));
-            manager.getCurrent().setTitle("@");
+        if (str.endsWith("@")) {
+            EventBus.getDefault().post(new AtFoundEvent());
         } else {
             manager.getCurrent().setTitle(str);
         }

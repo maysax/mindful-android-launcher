@@ -17,16 +17,6 @@ public class TokenItem {
         this.itemType = itemType;
 
         switch (itemType) {
-
-            case CALL:
-                init("Call", true, TokenCompleteType.FULL);
-                break;
-            case TEXT:
-                init("Text", true, TokenCompleteType.FULL);
-                break;
-            case NOTE:
-                init("Note", true, TokenCompleteType.FULL);
-                break;
             case CONTACT:
                 init("", true, TokenCompleteType.DEFAULT);
                 break;

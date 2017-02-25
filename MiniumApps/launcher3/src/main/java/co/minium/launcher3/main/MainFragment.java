@@ -32,6 +32,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
+import co.minium.launcher3.event.AtFoundEvent;
 import co.minium.launcher3.event.CreateNoteEvent;
 import co.minium.launcher3.event.SearchLayoutEvent;
 import co.minium.launcher3.helper.ActivityHelper;
@@ -191,6 +192,11 @@ public class MainFragment extends CoreFragment {
         } else if (current.getItemType() == TokenItemType.DATA) {
             adapter.getFilter().filter(current.getTitle());
         }
+    }
+
+    @Subscribe
+    public void atFoundEvent(AtFoundEvent event) {
+        mediator.contactPicker();
     }
 
     void moveSearchBar(boolean isUp) {

@@ -101,9 +101,9 @@ class MainFragmentMediator {
             case ACTION:
                 position = getAdapter().getItem(position).getId();
                 switch (position) {
-                    case 1: router.setCurrent(new TokenItem(TokenItemType.TEXT)); break;
-                    case 2: router.setCurrent(new TokenItem(TokenItemType.CALL)); break;
-                    case 3: router.setCurrent(new TokenItem(TokenItemType.NOTE)); break;
+                    case 1:
+                    case 2:
+                    case 3:
                     case 4: new ActivityHelper(fragment.getActivity()).openMessagingApp(); break;
                     case 5: break;
                     case 6: break;
@@ -120,7 +120,7 @@ class MainFragmentMediator {
 
                 switch (position) {
                     case 1:
-                        router.add(new TokenItem(TokenItemType.TEXT));
+                        //router.add(new TokenItem(TokenItemType.TEXT));
                         break;
                     case 2:
                         router.createNote(fragment.getActivity());
@@ -140,6 +140,7 @@ class MainFragmentMediator {
     public void contactPicker() {
         items.clear();
         loadContacts();
+        loadDefaults();
         getAdapter().loadData(items);
         getAdapter().notifyDataSetChanged();
     }

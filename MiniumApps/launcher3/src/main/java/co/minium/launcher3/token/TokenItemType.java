@@ -5,5 +5,5 @@ package co.minium.launcher3.token;
  */
 
 public enum TokenItemType {
-    CALL, TEXT, NOTE, CONTACT, DATA, END_OP
+    CONTACT, DATA, END_OP
 }
