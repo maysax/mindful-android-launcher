@@ -11,22 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="63dp"
         android:id="@+id/toolbar"
-
         android:elevation="8dp"
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+
+          >
 
             <ImageButton
                 android:id="@+id/crossActionBar"
                 android:layout_width="22.5dp"
                 android:layout_height="22.5dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="18dp"
+                android:layout_alignParentLeft="true"
                 android:layout_marginTop="20.3dp"
                 android:layout_marginBottom="20.3dp"
                 android:background="@null"
@@ -35,20 +34,14 @@
 
             <TextView
                 android:id="@+id/titleActionBar"
-                android:layout_width="0dp"
-                android:layout_height="27dp"
-                android:layout_weight="1"
-                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="#de000000"
                 android:textStyle="bold"
-                android:layout_gravity="center"
-
+                android:layout_centerInParent="true"
                 android:text="Preference"/>
-
-
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
@@ -56,7 +49,7 @@
         android:id="@+id/pref_recyclerview"
         android:layout_width="match_parent"
         android:layout_marginTop="63dp"
-        android:layout_marginEnd="27dp"
+
         android:layout_height="match_parent"
         />
 </FrameLayout>

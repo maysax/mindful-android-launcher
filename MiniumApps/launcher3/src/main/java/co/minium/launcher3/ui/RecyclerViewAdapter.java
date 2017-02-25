@@ -2,11 +2,14 @@ package co.minium.launcher3.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import co.minium.launcher3.R;
 
@@ -51,9 +54,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position){
+    public void onBindViewHolder(ViewHolder holder, final int position){
 
         holder.textView.setText(SubjectValues[position]);
+        holder.option_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Toast.makeText(context,""+SubjectValues[position]+" Checked: "+b,Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

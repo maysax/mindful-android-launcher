@@ -1,18 +1,11 @@
 package co.minium.launcher3.ui;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -22,8 +15,7 @@ import minium.co.core.ui.CoreFragment;
 
 @EFragment(R.layout.fragment_pause_preference)
 public class PausePreferenceFragment extends CoreFragment {
-    RecyclerView recyclerView;
-    RelativeLayout relativeLayout;
+
     RecyclerViewAdapter recyclerViewAdapter;
     RecyclerView.LayoutManager recylerViewLayoutManager;
 
@@ -31,6 +23,12 @@ public class PausePreferenceFragment extends CoreFragment {
         // Required empty public constructor
     }
 
+    @Click
+    void crossActionBar() {
+        FragmentManager fm = getFragmentManager();
+        fm.popBackStack();
+        //((CoreActivity)getActivity()).finish();
+    }
 
     @ViewById
     RecyclerView pref_recyclerview;
