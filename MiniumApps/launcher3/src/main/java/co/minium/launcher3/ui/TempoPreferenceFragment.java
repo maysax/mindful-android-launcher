@@ -13,12 +13,12 @@ import co.minium.launcher3.R;
 import minium.co.core.ui.CoreFragment;
 
 @EFragment(R.layout.fragment_pause_preference)
-public class PausePreferenceFragment extends CoreFragment {
+public class TempoPreferenceFragment extends CoreFragment {
 
     PauseRecyclerViewAdapter recyclerViewAdapter;
     RecyclerView.LayoutManager recylerViewLayoutManager;
 
-    public PausePreferenceFragment() {
+    public TempoPreferenceFragment() {
         // Required empty public constructor
     }
 
@@ -35,7 +35,6 @@ public class PausePreferenceFragment extends CoreFragment {
     void afterViews() {
         String[] subjects =
                 {"Allow favorites","Allow calls"};
-
         recylerViewLayoutManager =
                 new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         pref_recyclerview.setLayoutManager(recylerViewLayoutManager);

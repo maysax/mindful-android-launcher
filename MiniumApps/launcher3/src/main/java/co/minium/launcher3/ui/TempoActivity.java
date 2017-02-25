@@ -9,7 +9,7 @@ import minium.co.core.ui.CoreActivity;
 
 @Fullscreen
 @EActivity(R.layout.activity_pause)
-public class PauseActivity extends CoreActivity {
+public class TempoActivity extends CoreActivity {
 
    /* @ViewById
     Toolbar toolbar;
@@ -27,7 +27,7 @@ public class PauseActivity extends CoreActivity {
     void afterViews() {
         //setSupportActionBar(toolbar);
         //seekbar.setOnSeekBarChangeListener(seekbarListener);
-        loadFragment(PauseFragment_.builder().build(),R.id.mainView,"Main");
+        loadFragment(TempoFragment_.builder().build(),R.id.mainView,"Main");
 
     }
 

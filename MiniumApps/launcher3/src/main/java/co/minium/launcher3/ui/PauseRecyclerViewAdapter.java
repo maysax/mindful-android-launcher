@@ -15,14 +15,14 @@ import co.minium.launcher3.R;
  * Created by tkb on 2017-02-24.
  */
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecyclerViewAdapter.ViewHolder>{
 
     String[] SubjectValues;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
-    public RecyclerViewAdapter(Context context1, String[] SubjectValues1){
+    public PauseRecyclerViewAdapter(Context context1, String[] SubjectValues1){
 
         SubjectValues = SubjectValues1;
         context = context1;
@@ -42,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public PauseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
 
         view1 = LayoutInflater.from(context).inflate(R.layout.pause_pref_row,parent,false);
 

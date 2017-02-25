@@ -69,6 +69,7 @@
         </receiver>
 
         <activity android:name=".ui.PauseActivity_" />
+        <activity android:name=".ui.TempoActivity_" />
     </application>
 
 </manifest>
