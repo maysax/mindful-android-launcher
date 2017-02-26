@@ -69,6 +69,7 @@ public class TokenRouter {
             manager.getCurrent().setCompleteType(TokenCompleteType.HALF);
             route();
         } else {
+            manager.setCurrent(new TokenItem(TokenItemType.CONTACT));
             manager.getCurrent().setTitle(item.getContactName());
             manager.getCurrent().setExtra1(String.valueOf(item.getContactId()));
             manager.getCurrent().setExtra2(item.getNumber().getNumber());
@@ -80,6 +81,9 @@ public class TokenRouter {
     private void contactPickedDone() {
         if (manager.hasCompleted(TokenItemType.DATA) && manager.hasCompleted(TokenItemType.CONTACT)) {
             manager.add(new TokenItem(TokenItemType.END_OP));
+            route();
+        } else if (manager.hasCompleted(TokenItemType.CONTACT)) {
+            manager.add(new TokenItem(TokenItemType.DATA));
             route();
         }
     }
