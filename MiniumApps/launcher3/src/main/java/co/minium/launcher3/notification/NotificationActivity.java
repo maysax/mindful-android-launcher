@@ -32,8 +32,6 @@ public class NotificationActivity extends Activity implements OnStartDragListene
     RecyclerListAdapter adapter;
     private List<Notification> notificationList;
 
-    private GestureDetector mDetector;
-
 
     private ItemTouchHelper mItemTouchHelper;
 
@@ -61,8 +59,6 @@ public class NotificationActivity extends Activity implements OnStartDragListene
         mSlop = vc.getScaledTouchSlop();
 
 
-//        this.setTitle("Notifications");
-
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
         notificationList = new ArrayList<>();
@@ -81,29 +77,7 @@ public class NotificationActivity extends Activity implements OnStartDragListene
 
         prepareNotifications();
 
-      //  addGestureListener();
 
-    }
-
-    private void addGestureListener(){
-        GestureListener simpleGestureListener = new GestureListener();
-        simpleGestureListener.setListener(new GestureListener.Listener() {
-            @Override
-            public void onScrollHorizontal(float dx) {
-              //  Log.i(TAG,"horizontal = " +dx);
-            }
-
-            @Override
-            public void onScrollVertical(float dy) {
-             //   Log.i(TAG,"vertical = " +dy);
-                if(dy>0)
-                {
-                    finish();
-                 //   NotificationActivity.this.overridePendingTransition(0,R.anim.abc_slide_out_top);
-                }
-            }
-        });
-        mDetector = new GestureDetector(this, simpleGestureListener);
     }
 
     private void prepareNotifications() {
@@ -122,14 +96,6 @@ public class NotificationActivity extends Activity implements OnStartDragListene
 
 
     }
-
-/*    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        mDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }*/
-
-
 
 
     @Override
@@ -175,13 +141,10 @@ public class NotificationActivity extends Activity implements OnStartDragListene
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-//                mDetector.onTouchEvent(ev);
                 float x = ev.getX();
                 float y = ev.getY();
                 float xDelta = Math.abs(x - mDownX);
                 float yDelta = Math.abs(y - mDownY);
-
-                System.out.println("dy == "+ (mDownY-y) );
                 if(mDownY-y<100)
                     mSwipe = mSwipeDirection.DOWN;
                 else if(mDownY - y > 100)

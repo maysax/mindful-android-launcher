@@ -218,7 +218,7 @@ public class MainActivity extends CoreActivity {
 
             @Override
             public void onScrollVertical(float dy) {
-                Log.i(TAG,"vertical = " +dy);
+            //    Log.i(TAG,"vertical = " +dy);
                 if(!isNotificationTrayVisible && dy < 0)
                 {
                     Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
