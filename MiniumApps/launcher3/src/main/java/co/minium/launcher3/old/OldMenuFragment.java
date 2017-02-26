@@ -24,6 +24,7 @@ import co.minium.launcher3.contact.PhoneNumbersAdapter;
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.ui.PauseActivity_;
+import co.minium.launcher3.ui.TempoActivity_;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 
@@ -96,7 +97,8 @@ public class OldMenuFragment extends CoreFragment {
             case 7: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
             case 8: new ActivityHelper(getActivity()).openSettingsApp(); break;
             case 9: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
-            case 10: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 10:
+                TempoActivity_.intent(getActivity()).start(); break;
             case 11: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
             case 12: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
             case 13: break;
