@@ -49,6 +49,15 @@ class MainFragmentMediator {
         loadDefaults();
     }
 
+    void resetData() {
+        items.clear();
+        loadActions();
+        loadContacts();
+        loadDefaults();
+        getAdapter().loadData(items);
+        getAdapter().notifyDataSetChanged();
+    }
+
     private void loadActions() {
         items.add(new MainListItem(4, fragment.getString(R.string.title_messages), "fa-users"));
         items.add(new MainListItem(5, fragment.getString(R.string.title_callLog), "fa-phone"));
@@ -120,7 +129,7 @@ class MainFragmentMediator {
 
                 switch (position) {
                     case 1:
-                        //router.add(new TokenItem(TokenItemType.TEXT));
+                        router.sendText(fragment.getActivity());
                         break;
                     case 2:
                         router.createNote(fragment.getActivity());

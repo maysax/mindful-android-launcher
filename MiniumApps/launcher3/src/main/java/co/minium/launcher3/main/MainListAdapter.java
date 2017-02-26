@@ -212,31 +212,36 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
                     switch (originalData.get(i).getItemType()) {
                         case CONTACT:
-                            String searchString2 = searchString.replaceAll("@", "");
-                            ContactListItem item = (ContactListItem) originalData.get(i);
-                            filterableString =  item.getContactName();
-                            splits = filterableString.split(" ");
-                            boolean isAdded = false;
+                            if (searchString.equals("@")) {
+                                buildData.add(originalData.get(i));
+                            } else {
+                                String searchString2 = searchString.replaceAll("@", "");
+                                ContactListItem item = (ContactListItem) originalData.get(i);
+                                filterableString =  item.getContactName();
+                                splits = filterableString.split(" ");
+                                boolean isAdded = false;
 
-                            for (String str: splits) {
-                                if (str.toLowerCase().startsWith(searchString2)) {
-                                    buildData.add(originalData.get(i));
-                                    isAdded = true;
-                                    break;
-                                }
-                            }
-
-                            if (!isAdded) {
-                                searchString2 = phoneNumberString(searchString);
-                                List<ContactListItem.ContactNumber> numbers = item.getNumbers();
-                                for (ContactListItem.ContactNumber number : numbers) {
-                                    String phoneNum = phoneNumberString(number.getNumber());
-                                    if (phoneNum.contains(searchString2)) {
+                                for (String str: splits) {
+                                    if (str.toLowerCase().startsWith(searchString2)) {
                                         buildData.add(originalData.get(i));
+                                        isAdded = true;
                                         break;
                                     }
                                 }
+
+                                if (!isAdded) {
+                                    searchString2 = phoneNumberString(searchString);
+                                    List<ContactListItem.ContactNumber> numbers = item.getNumbers();
+                                    for (ContactListItem.ContactNumber number : numbers) {
+                                        String phoneNum = phoneNumberString(number.getNumber());
+                                        if (phoneNum.contains(searchString2)) {
+                                            buildData.add(originalData.get(i));
+                                            break;
+                                        }
+                                    }
+                                }
                             }
+
                             break;
                         case ACTION:
                             filterableString = originalData.get(i).getTitle();

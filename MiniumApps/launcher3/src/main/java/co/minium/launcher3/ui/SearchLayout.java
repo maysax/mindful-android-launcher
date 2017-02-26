@@ -22,6 +22,7 @@ import co.minium.launcher3.R;
 import co.minium.launcher3.event.SearchLayoutEvent;
 import co.minium.launcher3.token.TokenCompleteType;
 import co.minium.launcher3.token.TokenItem;
+import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenManager;
 import co.minium.launcher3.token.TokenUpdateEvent;
 import de.greenrobot.event.EventBus;
@@ -141,7 +142,7 @@ public class SearchLayout extends CardView {
         boolean space = false;
         for (String s : splits) {
             if (space) newText += " "; space = true;
-            newText += s.replaceAll("@", "").replaceAll("#", "");
+            newText += s.replaceAll("\\^", "").replaceAll("~", "");
         }
 
         if (formattedTxt.endsWith("|")) newText += " ";
@@ -154,10 +155,10 @@ public class SearchLayout extends CardView {
         int endPos = 0;
         for (String s : splits) {
             endPos += s.length();
-            if (s.startsWith("@")) {
+            if (s.startsWith("^")) {
                 txtSearchBox.setCurrentBubbleStyle(BubbleStyle.build(getContext(), R.style.bubble_style_selected));
                 txtSearchBox.makeChip(startPos, endPos - 1, false);
-            } else if (s.startsWith("#")) {
+            } else if (s.startsWith("~")) {
                 txtSearchBox.setCurrentBubbleStyle(BubbleStyle.build(getContext(), R.style.bubble_style_empty));
                 txtSearchBox.makeChip(startPos, endPos - 1, false);
             } else {
@@ -175,14 +176,20 @@ public class SearchLayout extends CardView {
         for (TokenItem item : manager.getItems()) {
             if (item.getCompleteType() == TokenCompleteType.FULL) {
                 if (item.isChipable()) {
-                    formattedTxt += "@";
-                    formattedTxt += item.getTitle() + "|";
+                    formattedTxt += "^";
                 }
+
+                if (item.getItemType() == TokenItemType.CONTACT) {
+                    formattedTxt += "@";
+                }
+
+                formattedTxt += item.getTitle() + "|";
             } else if (item.getCompleteType() == TokenCompleteType.HALF) {
                 if (item.isChipable()) {
-                    formattedTxt += "#";
-                    formattedTxt += item.getTitle() + "|";
+                    formattedTxt += "~";
                 }
+                formattedTxt += item.getTitle() + "|";
+
             } else {
                 formattedTxt += item.getTitle();
             }

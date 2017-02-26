@@ -31,6 +31,13 @@ public class TokenManager {
         return items.get(pos);
     }
 
+    public TokenItem get(TokenItemType type) {
+        for (TokenItem token: items) {
+            if (token.getItemType() == type) return token;
+        }
+        return null;
+    }
+
     public void add(TokenItem item) {
         items.add(item);
     }
@@ -56,6 +63,13 @@ public class TokenManager {
     public boolean has(TokenItemType type) {
         for (TokenItem token: items) {
             if (token.getItemType() == type) return true;
+        }
+        return false;
+    }
+
+    public boolean hasCompleted(TokenItemType type) {
+        for (TokenItem token: items) {
+            if (token.getItemType() == type && token.getCompleteType() == TokenCompleteType.FULL) return true;
         }
         return false;
     }

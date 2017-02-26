@@ -181,7 +181,9 @@ public class MainFragment extends CoreFragment {
     public void tokenManagerEvent(TokenUpdateEvent event) {
         TokenItem current = manager.getCurrent();
 
-        if (current.getCompleteType() == TokenCompleteType.FULL) {
+        if (current.getItemType() == TokenItemType.END_OP) {
+            adapter.getFilter().filter("^");
+        } else if (current.getCompleteType() == TokenCompleteType.FULL) {
             adapter.getFilter().filter("");
         } else if (current.getItemType() == TokenItemType.CONTACT) {
             if (current.getCompleteType() == TokenCompleteType.HALF) {
@@ -190,13 +192,9 @@ public class MainFragment extends CoreFragment {
                 mediator.contactPicker();
             }
         } else if (current.getItemType() == TokenItemType.DATA) {
+            if (current.getTitle().isEmpty()) mediator.resetData();
             adapter.getFilter().filter(current.getTitle());
         }
-    }
-
-    @Subscribe
-    public void atFoundEvent(AtFoundEvent event) {
-        mediator.contactPicker();
     }
 
     void moveSearchBar(boolean isUp) {

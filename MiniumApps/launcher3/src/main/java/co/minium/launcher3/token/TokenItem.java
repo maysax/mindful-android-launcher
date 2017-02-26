@@ -18,7 +18,7 @@ public class TokenItem {
 
         switch (itemType) {
             case CONTACT:
-                init("", true, TokenCompleteType.DEFAULT);
+                init("@", true, TokenCompleteType.DEFAULT);
                 break;
             case DATA:
                 init("", false, TokenCompleteType.DEFAULT);

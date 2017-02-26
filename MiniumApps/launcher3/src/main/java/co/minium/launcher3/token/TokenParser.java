@@ -21,19 +21,20 @@ public class TokenParser {
     public void parse(String str) {
         if (str.isEmpty()) {
             manager.clear();
-            return;
-        }
-        for (TokenItem item : manager.getItems()) {
-            if (item.getCompleteType() == TokenCompleteType.FULL) {
-                str = str.substring(item.getTitle().length() + 1);
+        } else if (str.equals("@")) {
+            router.setCurrent(new TokenItem(TokenItemType.CONTACT));
+        } else {
+            for (TokenItem item : manager.getItems()) {
+                if (item.getCompleteType() == TokenCompleteType.FULL) {
+                    str = str.substring(item.getTitle().length() + 1);
+                }
+            }
+
+            if (str.endsWith("@")) {
+                router.add(new TokenItem(TokenItemType.CONTACT));
+            } else {
+                manager.getCurrent().setTitle(str);
             }
         }
-
-        if (str.endsWith("@")) {
-            EventBus.getDefault().post(new AtFoundEvent());
-        } else {
-            manager.getCurrent().setTitle(str);
-        }
-
     }
 }
