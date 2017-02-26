@@ -60,7 +60,7 @@
         </activity>
 
         <!-- Notification Activity -->
-        <activity android:name=".notification.NotificationActivity"/>
+        <activity android:name=".notification.NotificationActivity" android:theme="@style/AppTheme"/>
 
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>

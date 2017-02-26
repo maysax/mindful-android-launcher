@@ -44,7 +44,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         implements ItemTouchHelperAdapter {
 
     private Context mContext;
-    private List<Notification> notificationList;
+    private List<Notification> notificationList = new ArrayList<>();
 
   //  private final List<String> mItems = new ArrayList<>();
 
