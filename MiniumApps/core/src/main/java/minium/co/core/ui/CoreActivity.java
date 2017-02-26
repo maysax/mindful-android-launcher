@@ -1,18 +1,28 @@
 package minium.co.core.ui;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
@@ -38,6 +48,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 @EActivity
 public abstract class CoreActivity extends AppCompatActivity {
+
 
     int onStartCount = 0;
 
@@ -185,4 +196,6 @@ public abstract class CoreActivity extends AppCompatActivity {
             Tracer.e(e, e.getMessage());
         }
     }
+
+
 }
