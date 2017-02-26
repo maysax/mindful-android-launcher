@@ -34,9 +34,7 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
 }
-repositories {
-    mavenCentral() // jcenter() works as well because it pulls from Maven Central
-}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -62,10 +60,10 @@ dependencies {
     }
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 
+    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.0.1'
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
-    compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.0.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+   compile 'com.github.bumptech.glide:glide:3.7.0'
 }
 
 apt {

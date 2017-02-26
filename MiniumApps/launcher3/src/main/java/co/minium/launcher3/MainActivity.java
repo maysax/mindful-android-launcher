@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import co.minium.launcher3.main.MainFragment_;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.ui.PauseActivity_;
+import co.minium.launcher3.ui.TempoActivity_;
 import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -55,6 +56,9 @@ public class MainActivity extends CoreActivity {
 
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
+
+       // PauseActivity_.intent(this).start();
+        TempoActivity_.intent(this).start();
     }
 
     private void loadViews() {
