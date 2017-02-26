@@ -1,6 +1,8 @@
 package co.minium.launcher3.notification;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,6 +57,9 @@ public class NotificationActivity extends Activity implements OnStartDragListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_main);
 
+/*        ColorDrawable colorDrawable = new ColorDrawable( Color.TRANSPARENT );
+        getWindow().setBackgroundDrawable( colorDrawable );*/
+
         ViewConfiguration vc = ViewConfiguration.get(this);
         mSlop = vc.getScaledTouchSlop();
 
@@ -64,18 +69,20 @@ public class NotificationActivity extends Activity implements OnStartDragListene
         notificationList = new ArrayList<>();
 
 //        adapter = new NotificationAdapter(this,notificationList);
+        prepareNotifications();
+        adapter = new RecyclerListAdapter(this,notificationList,this);
 
-         adapter = new RecyclerListAdapter(this,notificationList,this);
-
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapter);
+
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-        prepareNotifications();
+
 
 
     }
@@ -92,7 +99,7 @@ public class NotificationActivity extends Activity implements OnStartDragListene
         notificationList.add(n);
 
 
-        adapter.notifyDataSetChanged();
+  //      adapter.notifyDataSetChanged();
 
 
     }
