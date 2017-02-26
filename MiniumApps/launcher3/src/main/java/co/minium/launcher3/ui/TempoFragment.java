@@ -18,6 +18,8 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.event.TempoEvent;
+import de.greenrobot.event.EventBus;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
@@ -46,8 +48,8 @@ public class TempoFragment extends CoreFragment {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         seekbar.setOnSeekBarChangeListener(seekbarListener);
 
-        button_off.setActivated(true);
-        button_on.setActivated(false);
+        btnOff.setActivated(true);
+        btnOn.setActivated(false);
     }
 
     @Click
@@ -55,30 +57,31 @@ public class TempoFragment extends CoreFragment {
         ((CoreActivity)getActivity()).finish();
     }
     @ViewById
-    Button button_off;
-    @ViewById
-    Button button_on;
+    Button btnOff;
+    @ViewById 
+    Button btnOn;
 
     @ViewById
     TextView text_status;
     @Click
-    void button_off(){
-        button_on.setTextColor(Color.parseColor("#4d332d6d"));
-        button_off.setTextColor(Color.parseColor("#332d6d"));
-        button_off.setActivated(true);
-        button_on.setActivated(false);
+    void btnOff(){
+        btnOn.setTextColor(Color.parseColor("#4d332d6d"));
+        btnOff.setTextColor(Color.parseColor("#332d6d"));
+        btnOff.setActivated(true);
+        btnOn.setActivated(false);
         text_status.setText("Turn on Tempo to batch notifications at set intervals");
+        EventBus.getDefault().post(new TempoEvent(false));
 
     }
     @Click
-    void button_on(){
-        button_on.setTextColor(Color.parseColor("#332d6d"));
-        button_off.setTextColor(Color.parseColor("#4d332d6d"));
-        button_off.setActivated(false);
-        button_on.setActivated(true);
+    void btnOn(){
+        btnOn.setTextColor(Color.parseColor("#332d6d"));
+        btnOff.setTextColor(Color.parseColor("#4d332d6d"));
+        btnOff.setActivated(false);
+        btnOn.setActivated(true);
 
             text_status.setText("Notifications now come batched every  "+seekbar.getValue() +"  minutes, starting at the top of the hour");
-
+        EventBus.getDefault().post(new TempoEvent(true));
     }
     @Click
     void settingsActionBar() {
@@ -90,7 +93,7 @@ public class TempoFragment extends CoreFragment {
 
         @Override
         public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
-            if (button_on.isActivated()){
+            if (btnOn.isActivated()){
                 text_status.setText("Notifications now come batched every  "+progress +"  minutes, starting at the top of the hour");
             }
         }

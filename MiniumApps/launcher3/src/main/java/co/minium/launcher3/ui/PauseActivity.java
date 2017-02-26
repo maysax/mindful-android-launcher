@@ -24,78 +24,27 @@ import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
+import static co.minium.launcher3.R.id.seekbar;
+
 @Fullscreen
 @EActivity(R.layout.activity_pause)
 public class PauseActivity extends CoreActivity {
 
-   /* @ViewById
-    Toolbar toolbar;
-
-    @ViewById
-    HoloCircleSeekBar seekbar;
-
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
-
-    @SystemService
-    Vibrator vibrator;*/
-
-    private final int SEEKBAR_MAX = 60;
+    private PauseFragment pauseFragment;
 
     @AfterViews
     void afterViews() {
-        //setSupportActionBar(toolbar);
-        //seekbar.setOnSeekBarChangeListener(seekbarListener);
-        loadFragment(PauseFragment_.builder().build(),R.id.mainView,"Main");
-
+        pauseFragment = PauseFragment_.builder().build();
+        loadFragment(pauseFragment, R.id.mainView, "main");
+        loadTopBar();
     }
 
-    /*@Click
-    void crossActionBar() {
-        finish();
+    private void loadTopBar() {
+        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
     }
-
-    @Click
-    void settingsActionBar() {
-        //startActivity(new Intent(this, NotificationActivity.class));
-//        UIUtils.alert(this, getString(R.string.msg_not_yet_implemented));
-        *//*FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        PausePreferenceFragment fragment = new PausePreferenceFragment();
-        fragmentTransaction.add(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();*//*
-        loadFragment(PausePreferenceFragment_.builder().build(),R.id.mainView,"Main");
-    }
-
-    private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {
-
-        @Override
-        public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
-
-        }
-
-        @Override
-        public void onStartTrackingTouch(HoloCircleSeekBar seekBar) {
-
-        }
-
-        @Override
-        public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
-
-        }
-    };*/
 
     @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
     void volumeUpPressed() {
-        Tracer.i("Volume up pressed in PauseActivity");
-        int currVal = seekbar.getValue();
-
-        if (currVal < 15) currVal = 15;
-        else if (currVal < 30) currVal = 30;
-        else if (currVal < 45) currVal = 45;
-        else if (currVal <= 60) currVal = 60;
-
-        seekbar.setValue(currVal);
+        pauseFragment.volumeUpPresses();
     }
-
 }

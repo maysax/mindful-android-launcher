@@ -7,6 +7,26 @@
     tools:context=".ui.TopFragment">
 
     <ImageView
+        android:id="@+id/imgNotification"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/system_notification"
+        android:padding="6dp"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:contentDescription="@null" />
+
+    <ImageView
+        android:id="@+id/imgTempo"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/system_tempo"
+        android:padding="6dp"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:contentDescription="@null" />
+
+    <ImageView
         android:id="@+id/imgBattery"
         android:layout_width="27dp"
         android:layout_height="27dp"

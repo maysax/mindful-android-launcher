@@ -22,6 +22,7 @@ import co.minium.launcher3.token.TokenItem;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenRouter;
 import co.minium.launcher3.ui.PauseActivity_;
+import co.minium.launcher3.ui.TempoActivity_;
 import de.greenrobot.event.EventBus;
 import minium.co.core.util.UIUtils;
 
@@ -122,6 +123,9 @@ class MainFragmentMediator {
                     case 9: new ActivityHelper(fragment.getActivity()).openNotesApp(); break;
                     case 10: break;
                     case 11: break;
+                    case 12: break;
+                    case 13:
+                        TempoActivity_.intent(fragment.getActivity()).start(); break;
                 }
                 break;
             case DEFAULT:

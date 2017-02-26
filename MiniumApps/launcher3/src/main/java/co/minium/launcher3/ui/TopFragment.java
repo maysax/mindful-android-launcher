@@ -6,6 +6,8 @@ import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.Icon;
@@ -23,6 +25,7 @@ import java.util.Locale;
 import co.minium.launcher3.R;
 import co.minium.launcher3.battery.BatteryChangeEvent;
 import co.minium.launcher3.event.NotificationSchedulerEvent;
+import co.minium.launcher3.event.TempoEvent;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.DroidPrefs_;
@@ -39,6 +42,9 @@ public class TopFragment extends CoreFragment {
 
     @Pref
     DroidPrefs_ prefs;
+
+    @ViewById
+    ImageView imgTempo;
 
     FontAwesomeIcons [] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
@@ -128,5 +134,13 @@ public class TopFragment extends CoreFragment {
     @Subscribe
     public void onNotificationScheulerEvent(NotificationSchedulerEvent event) {
         updateBatteryText(-1);
+    }
+
+    @Subscribe
+    public void onTempoEvent(TempoEvent event) {
+        if (event.isStarting())
+            imgTempo.setVisibility(View.VISIBLE);
+        else
+            imgTempo.setVisibility(View.GONE);
     }
 }
