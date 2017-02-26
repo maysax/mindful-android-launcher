@@ -12,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,7 +70,10 @@ public class MainFragment extends CoreFragment {
     CardView afterEffectLayout;
 
     @ViewById
-    TextView txtAfterEffect;
+    ImageView icon;
+
+    @ViewById
+    TextView text;
 
     @Pref
     DroidPrefs_ prefs;
@@ -212,8 +216,8 @@ public class MainFragment extends CoreFragment {
     }
 
     @Click
-    void txtAfterEffect() {
-        String id = (String) txtAfterEffect.getTag();
+    void text() {
+        String id = (String) text.getTag();
         if (id.equals("1")) {
             new ActivityHelper(getActivity()).openNotesApp();
         }
@@ -231,8 +235,9 @@ public class MainFragment extends CoreFragment {
 
     @Subscribe
     public void createNoteEvent(CreateNoteEvent event) {
-        txtAfterEffect.setText("{fa-floppy-o}  View saved note");
+        icon.setImageResource(R.drawable.icon_save_note);
+        text.setText("View saved note");
         afterEffectLayout.setVisibility(View.VISIBLE);
-        txtAfterEffect.setTag("1");
+        text.setTag("1");
     }
 }

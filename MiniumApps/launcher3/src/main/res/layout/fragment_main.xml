@@ -38,13 +38,8 @@
         android:layout_marginTop="@dimen/margin.2"
         android:layout_below="@id/listViewLayout">
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/txtAfterEffect"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="@dimen/margin.2"
-            android:textSize="14sp"/>
+    <include
+        layout="@layout/list_item" />
 
     </android.support.v7.widget.CardView>
 
