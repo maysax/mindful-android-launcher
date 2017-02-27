@@ -8,7 +8,6 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
 
 import co.minium.launcher3.R;
-import co.minium.launcher3.ui.PauseFragment_;
 import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.ui.CoreActivity;
 

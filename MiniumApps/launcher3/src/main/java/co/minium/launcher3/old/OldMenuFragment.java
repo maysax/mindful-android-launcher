@@ -23,7 +23,7 @@ import co.minium.launcher3.R;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.model.MainListItem;
-import co.minium.launcher3.ui.PauseActivity_;
+import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.ui.TempoActivity_;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;

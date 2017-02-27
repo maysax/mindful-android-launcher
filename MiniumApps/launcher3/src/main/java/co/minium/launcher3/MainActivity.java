@@ -37,11 +37,9 @@ import java.util.ArrayList;
 
 
 import co.minium.launcher3.main.GestureListener;
-import co.minium.launcher3.main.MainFragment_;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.notification.NotificationActivity;
-import co.minium.launcher3.ui.PauseActivity_;
-import co.minium.launcher3.ui.TempoActivity_;
+import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;

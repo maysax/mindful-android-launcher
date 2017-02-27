@@ -70,7 +70,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.PauseActivity_" />
+        <activity android:name=".pause.PauseActivity_" />
         <activity android:name=".ui.TempoActivity_" />
     </application>
 

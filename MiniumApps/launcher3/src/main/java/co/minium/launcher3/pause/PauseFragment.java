@@ -17,7 +17,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
-import co.minium.launcher3.ui.PausePreferenceFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
