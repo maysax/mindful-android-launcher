@@ -140,6 +140,7 @@ public class HoloCircleSeekBar extends View {
     private float[] pointerPosition;
     private RectF mColorCenterHaloRectangle = new RectF();
     private int end_wheel;
+    private boolean isActive = true;
 
     private boolean showTitle = true;
     private Rect titleBounds = new Rect();
@@ -501,12 +502,23 @@ public class HoloCircleSeekBar extends View {
         invalidate();
     }
 
+    public void setShowTitle(boolean shouldShow) {
+        showTitle = shouldShow;
+        invalidate();
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     private void updatePointerPosition() {
         pointerPosition = calculatePointerPosition(mAngle);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!isActive) return true;
+
         // Convert coordinates to our internal coordinate system
         float x = event.getX() - mTranslationOffset;
         float y = event.getY() - mTranslationOffset;

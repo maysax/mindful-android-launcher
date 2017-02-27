@@ -1,5 +1,6 @@
 package co.minium.launcher3.app;
 
+import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
 /**
@@ -7,5 +8,14 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
  */
 @SharedPref(SharedPref.Scope.UNIQUE)
 public interface Launcher3Prefs {
+
+    @DefaultBoolean(true)
+    boolean isPauseActive();
+
+    @DefaultBoolean(false)
+    boolean isPauseAllowFavoriteChecked();
+
+    @DefaultBoolean(false)
+    boolean isPauseAllowCallsChecked();
 
 }

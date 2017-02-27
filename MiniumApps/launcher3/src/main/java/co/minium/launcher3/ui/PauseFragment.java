@@ -1,5 +1,6 @@
 package co.minium.launcher3.ui;
 
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -21,6 +22,7 @@ import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
 import static co.minium.launcher3.R.id.seekbar;
+import static co.minium.launcher3.R.id.start;
 
 @EFragment(R.layout.fragment_pause)
 public class PauseFragment extends CoreFragment {
@@ -42,15 +44,22 @@ public class PauseFragment extends CoreFragment {
     @SystemService
     Vibrator vibrator;
 
+    Handler handler;
+
+    private int atMillis = 0;
+    private int maxMillis = 0;
+
     @AfterViews
     void afterViews() {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         seekbar.setOnSeekBarChangeListener(seekbarListener);
+        handler = new Handler();
     }
 
     @Click
     void crossActionBar() {
-        ((CoreActivity)getActivity()).finish();
+        stopPause();
+        getActivity().finish();
     }
 
     @Click
@@ -73,21 +82,63 @@ public class PauseFragment extends CoreFragment {
 
         @Override
         public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
+            handler.removeCallbacks(startPauseRunnable);
+            handler.postDelayed(startPauseRunnable, 2000);
+        }
+    };
 
+    private Runnable startPauseRunnable = new Runnable() {
+        @Override
+        public void run() {
+            startPause();
+            handler.removeCallbacks(startPauseRunnable);
+        }
+    };
+
+    private Runnable pauseActiveRunnable = new Runnable() {
+        @Override
+        public void run() {
+            atMillis += 500;
+
+            if (atMillis >= maxMillis) {
+                stopPause();
+            } else {
+                Tracer.d("Setting seekbar value: " + atMillis / 1000 / 60.0f);
+                seekbar.setValue(atMillis / 1000 / 60.0f);
+            }
+
+            handler.postDelayed(this, 500);
         }
     };
 
 
     public void volumeUpPresses() {
-        Tracer.i("Volume up pressed in PauseFragment");
+        if (!launcherPrefs.isPauseActive().get()) {
+            Tracer.i("Volume up pressed in PauseFragment");
 
-        int currVal = seekbar.getValue();
+            int currVal = seekbar.getValue();
 
-        if (currVal < 15) currVal = 15;
-        else if (currVal < 30) currVal = 30;
-        else if (currVal < 45) currVal = 45;
-        else if (currVal <= 60) currVal = 60;
+            if (currVal < 15) currVal = 15;
+            else if (currVal < 30) currVal = 30;
+            else if (currVal < 45) currVal = 45;
+            else if (currVal <= 60) currVal = 60;
 
-        seekbar.setValue(currVal);
+            seekbar.setValue(currVal);
+        }
+    }
+
+    private void startPause() {
+        atMillis = 0;
+        maxMillis = seekbar.getValue() * 60 * 1000;
+        seekbar.setMax(seekbar.getValue());
+        seekbar.setValue(0);
+        seekbar.setActive(false);
+        handler.postDelayed(pauseActiveRunnable, 500);
+    }
+
+    private void stopPause() {
+        seekbar.setValue(0);
+        seekbar.setShowTitle(false);
+        launcherPrefs.isPauseActive().put(false);
     }
 }
