@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.minium.launcher3.ui.PauseActivity">
+    tools:context="co.minium.launcher3.pause.PauseActivity">
 
     <FrameLayout
         android:id="@+id/statusView"

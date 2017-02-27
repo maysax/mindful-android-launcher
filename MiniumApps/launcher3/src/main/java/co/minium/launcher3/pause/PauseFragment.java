@@ -1,4 +1,4 @@
-package co.minium.launcher3.ui;
+package co.minium.launcher3.pause;
 
 import android.os.Handler;
 import android.os.Vibrator;
@@ -17,6 +17,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.ui.PausePreferenceFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
@@ -139,6 +140,7 @@ public class PauseFragment extends CoreFragment {
     private void stopPause() {
         seekbar.setValue(0);
         seekbar.setShowTitle(false);
+        handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
     }
 }

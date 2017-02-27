@@ -10,6 +10,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.pause.PauseRecyclerViewAdapter;
 import minium.co.core.ui.CoreFragment;
 
 @EFragment(R.layout.fragment_pause_preference)

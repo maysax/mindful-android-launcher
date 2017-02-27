@@ -1,4 +1,4 @@
-package co.minium.launcher3.ui;
+package co.minium.launcher3.pause;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import co.minium.launcher3.R;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by tkb on 2017-02-24.
@@ -58,7 +59,14 @@ public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecycler
         holder.option_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(context,""+SubjectValues[position]+" Checked: "+b,Toast.LENGTH_SHORT).show();
+                switch (position) {
+                    case 0:
+                        EventBus.getDefault().post(new PausePreferenceEvent().setAllowFavorites(b));
+                        break;
+                    case 1:
+                        EventBus.getDefault().post(new PausePreferenceEvent().setAllowCalls(b));
+                        break;
+                }
             }
         });
     }

@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="co.minium.launcher3.ui.PausePreferenceFragment"
+    tools:context="co.minium.launcher3.pause.PausePreferenceFragment"
     tools:listitem="@layout/fragment_pause_item" />
