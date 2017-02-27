@@ -115,7 +115,7 @@ public class MainFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        adapter.getFilter().filter("");
+        if (adapter != null) adapter.getFilter().filter("");
     }
 
     void updateListViewLayout() {

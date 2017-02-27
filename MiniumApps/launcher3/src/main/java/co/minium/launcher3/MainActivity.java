@@ -73,6 +73,7 @@ public class MainActivity extends CoreActivity {
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Manifest.permission.READ_CONTACTS,
+                        Manifest.permission.WRITE_CONTACTS,
                         Manifest.permission.READ_CALL_LOG,
                         Manifest.permission.SEND_SMS,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -90,12 +91,6 @@ public class MainActivity extends CoreActivity {
         loadTopBar();
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
-
-        //loadMainView();
-    }
-
-    private void loadMainView() {
-        loadFragment(MainFragment_.builder().build(), R.id.mainView, "main");
     }
 
     private void loadTopBar() {
