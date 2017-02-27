@@ -30,7 +30,7 @@ public class NotificationActivity extends Activity implements OnStartDragListene
     private static final String TAG = "NotificationActivity";
 
     private RecyclerView recyclerView;
-//    private NotificationAdapter adapter;
+//   private NotificationAdapter adapter;
     RecyclerListAdapter adapter;
     private List<Notification> notificationList;
 
@@ -68,7 +68,7 @@ public class NotificationActivity extends Activity implements OnStartDragListene
 
         notificationList = new ArrayList<>();
 
-//        adapter = new NotificationAdapter(this,notificationList);
+//      adapter = new NotificationAdapter(this,notificationList);
         prepareNotifications();
         adapter = new RecyclerListAdapter(this,notificationList,this);
 
@@ -152,7 +152,7 @@ public class NotificationActivity extends Activity implements OnStartDragListene
                 float y = ev.getY();
                 float xDelta = Math.abs(x - mDownX);
                 float yDelta = Math.abs(y - mDownY);
-                if(mDownY-y<100)
+                if(mDownY-y<=100)
                     mSwipe = mSwipeDirection.DOWN;
                 else if(mDownY - y > 100)
                     mSwipe = mSwipeDirection.UP;

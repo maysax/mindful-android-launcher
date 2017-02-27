@@ -2,6 +2,7 @@
 
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
+        <item name="android:colorForeground">@android:color/primary_text_dark</item>
     </style>
 
     <!-- Base application theme. -->

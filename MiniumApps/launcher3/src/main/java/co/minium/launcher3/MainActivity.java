@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +35,7 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.WindowFeature;
 
 import java.util.ArrayList;
 
@@ -40,6 +44,9 @@ import co.minium.launcher3.main.GestureListener;
 import co.minium.launcher3.main.MainFragment_;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.notification.NotificationActivity;
+import co.minium.launcher3.notification.NotificationFragment;
+import co.minium.launcher3.notification.TestActivity;
+import co.minium.launcher3.notification.TestFragment_;
 import co.minium.launcher3.ui.PauseActivity_;
 import co.minium.launcher3.ui.TempoActivity_;
 import co.minium.launcher3.ui.TopFragment_;
@@ -59,11 +66,12 @@ public class MainActivity extends CoreActivity {
 
     private static final String TAG = "MainActivity";
 
+    private int status_bar_height = 0;
+
     @ViewById
     ViewPager pager;
 
     MainSlidePagerAdapter sliderAdapter;
-    private GestureDetector mDetector;
 
 
     @Trace(tag = TRACE_TAG)
@@ -162,6 +170,8 @@ public class MainActivity extends CoreActivity {
             result = activity.getResources().getDimensionPixelSize(resId);
         }
 
+        status_bar_height = result;
+
         localLayoutParams.height = result;
 
         localLayoutParams.format = PixelFormat.TRANSPARENT;
@@ -169,7 +179,6 @@ public class MainActivity extends CoreActivity {
         blockingView = new customViewGroup(context);
 
         manager.addView(blockingView, localLayoutParams);
-        addGestureListener();
     }
 
     private class customViewGroup extends ViewGroup {
@@ -190,9 +199,24 @@ public class MainActivity extends CoreActivity {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
 
-            if(event.getAction()== MotionEvent.ACTION_MOVE){
-                mDetector.onTouchEvent(event);
+            if(event.getY() > status_bar_height){
+                if(!isNotificationTrayVisible)
+                {
+                    System.out.println("y position on Touch on notification tray "+ event.getY() + "status_bar_height " + status_bar_height);
+//                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+//                    startActivity(intent);
+
+                 //   Intent intent = new Intent(MainActivity.this, TestActivity.class);
+                  //  startActivity(intent);
+
+
+                     loadChildFragment(TestFragment_.builder().build(),R.id.mainView);
+
+                    isNotificationTrayVisible = true;
+                }
             }
+
+
             return super.onTouchEvent(event);
         }
 
@@ -214,29 +238,6 @@ public class MainActivity extends CoreActivity {
     }
 
 
-    private void addGestureListener(){
-        GestureListener simpleGestureListener = new GestureListener();
-        simpleGestureListener.setListener(new GestureListener.Listener() {
-
-            @Override
-            public void onScrollHorizontal(float dx) {
-                //  Log.i(TAG,"horizontal = " +dx);
-            }
-
-            @Override
-            public void onScrollVertical(float dy) {
-            //    Log.i(TAG,"vertical = " +dy);
-                if(!isNotificationTrayVisible && dy < 0)
-                {
-                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-                    startActivity(intent);
-                    isNotificationTrayVisible = true;
-                }
-            }
-        });
-
-        mDetector = new GestureDetector(this, simpleGestureListener);
-    }
 
 
 }

@@ -54,6 +54,14 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         mContext = context;
         mDragStartListener = dragStartListener;
         this.notificationList = notificationList;
+        System.out.println("Notification fragment calling adapter");
+    }
+
+
+    public RecyclerListAdapter(Context context,List<Notification> notificationList) {
+        mContext = context;
+        mDragStartListener = null;
+        this.notificationList = notificationList;
     }
 
     @Override
