@@ -9,7 +9,7 @@
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="63dp"
         android:id="@+id/toolbar"
         android:minHeight="?attr/actionBarSize"
         android:elevation="8dp"
@@ -19,16 +19,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <com.joanzapata.iconify.widget.IconTextView
+            <ImageView
                 android:id="@+id/crossActionBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
-                android:textColor="@color/text.primary"
-                android:text="{fa-times 24dp}" />
+                android:padding="4dp"
+                android:src="@drawable/icon_close_app"
+                android:layout_marginStart="18dp"
+                android:contentDescription="@null"/>
 
             <TextView
                 android:id="@+id/titleActionBar"
@@ -37,18 +38,18 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:textColor="@color/text.primary"
-                android:textStyle="bold"
+                android:textColor="#de000000"
+                android:fontFamily="sans-serif-medium"
                 android:text="Pause"/>
 
-            <com.joanzapata.iconify.widget.IconTextView
+            <ImageView
                 android:id="@+id/settingsActionBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="20dp"
-                android:textColor="@color/text.primary"
-                android:text="{fa-cog 24dp}" />
+                android:padding="4dp"
+                android:src="@drawable/icon_settings"
+                android:layout_marginEnd="18dp"
+                android:contentDescription="@null"/>
 
         </LinearLayout>
 
@@ -70,7 +71,7 @@
         android:layout_height="290dp"
         app:max="60"
         app:init_position="15"
-        app:pointer_color="@color/pointer"
+        app:pointer_color="@color/white"
         app:pointer_halo_color="@color/pointerHalo"
         app:pointer_size="20dp"
         app:title_color="@color/text.primary"
