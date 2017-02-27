@@ -5,26 +5,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
-import android.view.KeyEvent;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -35,20 +24,12 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.WindowFeature;
 
 import java.util.ArrayList;
 
-
-import co.minium.launcher3.main.GestureListener;
-import co.minium.launcher3.main.MainFragment_;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.notification.NotificationActivity;
-import co.minium.launcher3.notification.NotificationFragment;
-import co.minium.launcher3.notification.TestActivity;
-import co.minium.launcher3.notification.TestFragment_;
 import co.minium.launcher3.ui.PauseActivity_;
-import co.minium.launcher3.ui.TempoActivity_;
 import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -203,14 +184,8 @@ public class MainActivity extends CoreActivity {
                 if(!isNotificationTrayVisible)
                 {
                     System.out.println("y position on Touch on notification tray "+ event.getY() + "status_bar_height " + status_bar_height);
-//                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-//                    startActivity(intent);
-
-                 //   Intent intent = new Intent(MainActivity.this, TestActivity.class);
-                  //  startActivity(intent);
-
-
-                     loadChildFragment(TestFragment_.builder().build(),R.id.mainView);
+                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                    startActivity(intent);
 
                     isNotificationTrayVisible = true;
                 }

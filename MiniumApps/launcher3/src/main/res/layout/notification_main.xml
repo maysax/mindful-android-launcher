@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material.core.amber"
+    android:background="@color/colorPrimary"
     android:layout_marginLeft="18dp"
     android:layout_marginRight="18dp"
-    android:layout_marginTop="27dp"
-    tools:context="co.minium.launcher3.notification.NotificationFragment">
+    android:layout_marginTop="27dp">
 
     <TextView
         android:id="@+id/textView_notification_title"
