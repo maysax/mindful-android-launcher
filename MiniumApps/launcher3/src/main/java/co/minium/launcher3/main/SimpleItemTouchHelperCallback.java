@@ -16,7 +16,10 @@
 
 package co.minium.launcher3.main;
 
+import android.app.Application;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -89,8 +92,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             // Fade out the view as it is swiped out of the parent's bounds
             final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
             viewHolder.itemView.setAlpha(alpha);
-//            viewHolder.itemView.setBackgroundResource(R.drawable.ic_check);
             viewHolder.itemView.setTranslationX(dX);
+
+         //   Drawable d = recyclerView.getBackground();
+           // d.setBounds(viewHolder.itemView.getLeft(), viewHolder.itemView.getTop(), (int) dX, viewHolder.itemView.getBottom());
+            //d.draw(c);
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
