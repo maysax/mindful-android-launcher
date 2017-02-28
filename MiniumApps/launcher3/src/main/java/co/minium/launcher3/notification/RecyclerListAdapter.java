@@ -18,18 +18,14 @@ package co.minium.launcher3.notification;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,8 +41,6 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     private Context mContext;
     private List<Notification> notificationList = new ArrayList<>();
-
-  //  private final List<String> mItems = new ArrayList<>();
 
     private final OnStartDragListener mDragStartListener;
 
@@ -76,23 +70,11 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
-
         Notification notification  = notificationList.get(position);
         holder._name.setText(notification.get_name());
         holder._text.setText(notification.get_text());
         holder._time.setText(notification.get_time());
         holder.thumbnail.setImageResource(notification.get_image());
-
-        // Start a drag whenever the handle view it touched
-/*        holder._name.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
-                }
-                return false;
-            }
-        });*/
     }
 
     @Override
@@ -136,13 +118,12 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
         @Override
         public void onItemSelected() {
-          //  System.out.println("item selected");
             itemView.setBackgroundColor(Color.LTGRAY);
         }
 
         @Override
         public void onItemClear() {
-           // itemView.setBackgroundResource(R.drawable.ic_check);
+            itemView.setBackgroundColor(0);
         }
     }
 }
