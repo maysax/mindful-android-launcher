@@ -1,15 +1,10 @@
 package co.minium.launcher3.notification;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.telecom.Call;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
@@ -18,19 +13,18 @@ import java.util.List;
 
 import co.minium.launcher3.MainActivity_;
 import co.minium.launcher3.R;
-import co.minium.launcher3.main.GestureListener;
 import co.minium.launcher3.main.OnStartDragListener;
 import co.minium.launcher3.main.SimpleItemTouchHelperCallback;
 
 /**
  * Created by itc on 17/02/17.
  */
-public class NotificationActivity extends Activity implements OnStartDragListener{
+public class NotificationActivity extends Activity{
 
     private static final String TAG = "NotificationActivity";
 
     private RecyclerView recyclerView;
-//    private NotificationAdapter adapter;
+//   private NotificationAdapter adapter;
     RecyclerListAdapter adapter;
     private List<Notification> notificationList;
 
@@ -41,11 +35,6 @@ public class NotificationActivity extends Activity implements OnStartDragListene
     private float mDownX;
     private float mDownY;
     private boolean mSwiping;
-
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-       // mItemTouchHelper.startDrag(viewHolder);
-    }
 
     private enum mSwipeDirection{UP,DOWN,NONE};
 
@@ -68,9 +57,9 @@ public class NotificationActivity extends Activity implements OnStartDragListene
 
         notificationList = new ArrayList<>();
 
-//        adapter = new NotificationAdapter(this,notificationList);
+//      adapter = new NotificationAdapter(this,notificationList);
         prepareNotifications();
-        adapter = new RecyclerListAdapter(this,notificationList,this);
+        adapter = new RecyclerListAdapter(this,notificationList);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -78,7 +67,7 @@ public class NotificationActivity extends Activity implements OnStartDragListene
         recyclerView.setLayoutManager(mLayoutManager);
 
 
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter,this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
@@ -98,10 +87,7 @@ public class NotificationActivity extends Activity implements OnStartDragListene
         n = new Notification("Hilah Lucida","Good call, I'll do the same",R.drawable.ic_person_black_24dp  ,"12:31 pm",false);
         notificationList.add(n);
 
-
   //      adapter.notifyDataSetChanged();
-
-
     }
 
 
@@ -152,7 +138,7 @@ public class NotificationActivity extends Activity implements OnStartDragListene
                 float y = ev.getY();
                 float xDelta = Math.abs(x - mDownX);
                 float yDelta = Math.abs(y - mDownY);
-                if(mDownY-y<100)
+                if(mDownY-y<=100)
                     mSwipe = mSwipeDirection.DOWN;
                 else if(mDownY - y > 100)
                     mSwipe = mSwipeDirection.UP;

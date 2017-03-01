@@ -16,12 +16,17 @@
 
 package co.minium.launcher3.main;
 
+import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.View;
 
 import co.minium.launcher3.R;
+import minium.co.core.util.UIUtils;
 
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
@@ -38,8 +43,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;
 
-    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
+    private final Context mContext;
+
+    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, Context context) {
         mAdapter = adapter;
+        mContext = context;
     }
 
     @Override
@@ -89,8 +97,24 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             // Fade out the view as it is swiped out of the parent's bounds
             final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
             viewHolder.itemView.setAlpha(alpha);
-//            viewHolder.itemView.setBackgroundResource(R.drawable.ic_check);
             viewHolder.itemView.setTranslationX(dX);
+
+            View itemView = viewHolder.itemView;
+
+            Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_check);
+
+            int r = UIUtils.dpToPx(mContext,24);
+            int left = itemView.getLeft()+ itemView.getWidth()/2-r;
+            int right = itemView.getRight()- itemView.getWidth()/2+r;
+            int top = itemView.getTop()+ itemView.getHeight()/2-r;
+            int bottom  = itemView.getBottom()- itemView.getHeight()/2+r;
+
+//          d.setBounds(itemView.getLeft(), itemView.getTop(), (int) dx, itemView.getBottom());
+            d.setBounds(left, top, right, bottom);
+
+            d.draw(c);
+
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         } else {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }

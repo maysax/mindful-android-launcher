@@ -62,6 +62,8 @@
         <!-- Notification Activity -->
         <activity android:name=".notification.NotificationActivity" android:theme="@style/AppTheme"/>
 
+        <activity android:name=".notification.TestActivity" android:theme="@style/AppTheme"/>
+
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />
