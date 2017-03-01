@@ -1,16 +1,15 @@
 package co.minium.launcher3.ui;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
 import com.eyeem.chips.ChipsEditText;
-import com.joanzapata.iconify.widget.IconTextView;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
@@ -27,6 +26,7 @@ import co.minium.launcher3.token.TokenManager;
 import co.minium.launcher3.token.TokenUpdateEvent;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.util.UIUtils;
 
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
@@ -47,6 +47,7 @@ public class SearchLayout extends CardView {
 
     private String formattedTxt;
     private boolean isWatching = true;
+    private Handler handler;
 
     public SearchLayout(Context context) {
         super(context);
@@ -67,6 +68,7 @@ public class SearchLayout extends CardView {
     private void init() {
         isWatching = true;
         setCardElevation(4.0f);
+        handler = new Handler();
     }
 
     @Override
@@ -89,13 +91,6 @@ public class SearchLayout extends CardView {
 
     @Trace(tag = TRACE_TAG)
     void setupViews() {
-        txtSearchBox.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-            }
-        });
-
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -108,9 +103,20 @@ public class SearchLayout extends CardView {
                 handleAfterTextChanged(s);
             }
         });
-
-        txtSearchBox.setText("");
     }
+
+    public void askFocus() {
+        txtSearchBox.requestFocus();
+        txtSearchBox.setText("");
+        handler.postDelayed(showKeyboardRunnable, 200);
+    }
+
+    private Runnable showKeyboardRunnable = new Runnable() {
+        @Override
+        public void run() {
+            UIUtils.showKeyboard(txtSearchBox);
+        }
+    };
 
     private void handleAfterTextChanged(Editable s) {
         if (s.length() != 0) {

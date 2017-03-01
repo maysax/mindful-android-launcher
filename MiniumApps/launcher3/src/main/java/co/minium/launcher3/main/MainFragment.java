@@ -4,17 +4,11 @@ package co.minium.launcher3.main;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ActionProvider;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
@@ -25,7 +19,6 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.FocusChange;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -33,7 +26,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
-import co.minium.launcher3.event.AtFoundEvent;
 import co.minium.launcher3.event.CreateNoteEvent;
 import co.minium.launcher3.event.SearchLayoutEvent;
 import co.minium.launcher3.helper.ActivityHelper;
@@ -41,13 +33,12 @@ import co.minium.launcher3.token.TokenCompleteType;
 import co.minium.launcher3.token.TokenItem;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenManager;
+import co.minium.launcher3.token.TokenParser;
 import co.minium.launcher3.token.TokenRouter;
 import co.minium.launcher3.token.TokenUpdateEvent;
-import co.minium.launcher3.token.TokenParser;
 import co.minium.launcher3.ui.SearchLayout;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
-import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 
@@ -115,7 +106,9 @@ public class MainFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
+        searchLayout.askFocus();
         if (adapter != null) adapter.getFilter().filter("");
+
     }
 
     void updateListViewLayout() {
@@ -175,14 +168,18 @@ public class MainFragment extends CoreFragment {
 
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
-        if (!event.getString().isEmpty()) {
+        emptyChecker(event.getString());
+        parser.parse(event.getString());
+        adapter.getFilter().filter(manager.getCurrent().getTitle());
+    }
+
+    private void emptyChecker(String string) {
+        if (!string.isEmpty()) {
             afterEffectLayout.setVisibility(View.INVISIBLE);
             moveSearchBar(true);
         } else {
             moveSearchBar(false);
         }
-        parser.parse(event.getString());
-        adapter.getFilter().filter(manager.getCurrent().getTitle());
     }
 
     @Subscribe

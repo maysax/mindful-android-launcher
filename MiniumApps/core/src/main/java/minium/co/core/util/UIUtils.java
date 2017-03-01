@@ -8,9 +8,9 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
-
-import minium.co.core.ui.CoreActivity;
 
 /**
  * Created by shahab on 12/21/15.
@@ -81,6 +81,11 @@ public class UIUtils {
         activity.getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         return (float) displaymetrics.heightPixels;
 
+    }
+
+    public static void showKeyboard(EditText editText) {
+        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
 }
