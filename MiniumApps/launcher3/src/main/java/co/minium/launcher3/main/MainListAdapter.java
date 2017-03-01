@@ -215,19 +215,22 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             if (searchString.equals("@")) {
                                 buildData.add(originalData.get(i));
                             } else {
-                                String searchString2 = searchString.replaceAll("@", "");
+                                String searchString2 = searchString.replaceAll("@", "").trim();
                                 ContactListItem item = (ContactListItem) originalData.get(i);
                                 filterableString =  item.getContactName();
-                                splits = filterableString.split(" ");
+                                //splits = filterableString.split(" ");
                                 boolean isAdded = false;
-
-                                for (String str: splits) {
+                                if (filterableString.toString().toLowerCase().contains(searchString2)){
+                                    buildData.add(originalData.get(i));
+                                    isAdded = true;
+                                }
+                                /*for (String str: splits) {
                                     if (str.toLowerCase().startsWith(searchString2)) {
                                         buildData.add(originalData.get(i));
                                         isAdded = true;
                                         break;
                                     }
-                                }
+                                }*/
 
                                 if (!isAdded) {
                                     searchString2 = phoneNumberString(searchString);
