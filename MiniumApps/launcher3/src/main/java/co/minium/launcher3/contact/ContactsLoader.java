@@ -70,6 +70,8 @@ public class ContactsLoader {
                 }
                 if (image_uri!=null){
                     currItem.setImageUri(image_uri);
+                } else {
+                    currItem.setImageUri("");
                 }
                 currItem.addNumbers(label, number);
 
