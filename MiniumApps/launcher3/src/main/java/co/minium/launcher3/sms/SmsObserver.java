@@ -16,7 +16,7 @@ import minium.co.core.log.Tracer;
  */
 public class SmsObserver extends ContentObserver {
     private static final Handler handler = new Handler();
-    private static final Uri uri = Uri.parse("content://sms/");
+    private static final Uri uri = Uri.parse("content://mms-sms/");
 
     private final Context context;
     private final ContentResolver resolver;

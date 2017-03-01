@@ -119,18 +119,22 @@ public class MainFragment extends CoreFragment {
     }
 
     void updateListViewLayout() {
-        int val;
-        if (isKeyboardOpen) {
-            val = Math.min(adapter.getCount() * 54, 240);
-        } else {
-            val = Math.min(adapter.getCount() * 54, 54 * 9);
+        try {
+            int val;
+            if (isKeyboardOpen) {
+                val = Math.min(adapter.getCount() * 54, 240);
+            } else {
+                val = Math.min(adapter.getCount() * 54, 54 * 9);
+            }
+
+            // extra padding when there is something in listView
+            if (val != 0) val += 8;
+
+            listViewLayout.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
+            listViewLayout.requestLayout();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        // extra padding when there is something in listView
-        if (val != 0) val += 8;
-
-        listViewLayout.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
-        listViewLayout.requestLayout();
     }
 
     @Override

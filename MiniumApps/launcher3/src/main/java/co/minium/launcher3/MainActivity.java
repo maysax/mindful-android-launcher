@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.view.ViewPager;
@@ -32,6 +33,7 @@ import co.minium.launcher3.main.GestureListener;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.notification.NotificationActivity;
 import co.minium.launcher3.pause.PauseActivity_;
+import co.minium.launcher3.sms.SmsObserver;
 import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -41,7 +43,7 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 
 @Fullscreen
 @EActivity(R.layout.activity_main)
-public class MainActivity extends CoreActivity {
+public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
     public static boolean isNotificationTrayVisible = false;
 
@@ -162,6 +164,21 @@ public class MainActivity extends CoreActivity {
         blockingView = new customViewGroup(context);
 
         manager.addView(blockingView, localLayoutParams);
+    }
+
+    @Override
+    public void onSmsSent(int threadId) {
+        Intent defineIntent = new Intent(Intent.ACTION_VIEW);
+        defineIntent.setData(Uri.parse("content://mms-sms/conversations/"+threadId));
+//        defineIntent.setType("vnd.android-dir/mms-sms");
+//        defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        try {
+            // startActivity(defineIntent);
+            //.clear();
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+            UIUtils.alert(this, "Minium-messages app not found.");
+        }
     }
 
     private class customViewGroup extends ViewGroup {
