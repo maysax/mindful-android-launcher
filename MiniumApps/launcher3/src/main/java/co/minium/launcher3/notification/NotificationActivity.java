@@ -11,15 +11,19 @@ import android.view.ViewConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.minium.launcher3.MainActivity;
 import co.minium.launcher3.MainActivity_;
 import co.minium.launcher3.R;
 import co.minium.launcher3.main.OnStartDragListener;
 import co.minium.launcher3.main.SimpleItemTouchHelperCallback;
+import de.greenrobot.event.Subscribe;
+import minium.co.core.event.CheckActivityEvent;
+import minium.co.core.ui.CoreActivity;
 
 /**
  * Created by itc on 17/02/17.
  */
-public class NotificationActivity extends Activity{
+public class NotificationActivity extends CoreActivity{
 
     private static final String TAG = "NotificationActivity";
 
@@ -40,11 +44,15 @@ public class NotificationActivity extends Activity{
 
     private mSwipeDirection mSwipe = mSwipeDirection.NONE;
 
+  //  private  StatusBarHandler statusBarHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification_main);
+
+       // statusBarHandler = new StatusBarHandler(this);
 
 /*        ColorDrawable colorDrawable = new ColorDrawable( Color.TRANSPARENT );
         getWindow().setBackgroundDrawable( colorDrawable );*/
@@ -94,7 +102,7 @@ public class NotificationActivity extends Activity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MainActivity_.isNotificationTrayVisible = false;
+        StatusBarHandler.isNotificationTrayVisible = false;
     }
 
     @Override
@@ -159,5 +167,24 @@ public class NotificationActivity extends Activity{
     private void swipeScreen(mSwipeDirection mSwipe) {
         if(mSwipe == mSwipeDirection.UP)
         finish();
+    }
+
+    @Subscribe
+    public void onCheckActivityEvent(CheckActivityEvent event){
+        try {
+            if(event.isResume())
+            {
+                //statusBarHandler.requestStatusBarCustomization();
+            }
+            else
+            {
+               // statusBarHandler.restoreStatusBarExpansion();
+                finish();
+            }
+        }catch (Exception e){
+            System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());
+        }
+
+
     }
 }

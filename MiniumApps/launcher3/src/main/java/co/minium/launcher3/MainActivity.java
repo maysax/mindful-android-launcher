@@ -32,9 +32,13 @@ import java.util.ArrayList;
 import co.minium.launcher3.main.GestureListener;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.notification.NotificationActivity;
+import co.minium.launcher3.notification.StatusBarHandler;
+import co.minium.launcher3.ui.PauseActivity_;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.sms.SmsObserver;
 import co.minium.launcher3.ui.TopFragment_;
+import de.greenrobot.event.Subscribe;
+import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -45,19 +49,16 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
-    public static boolean isNotificationTrayVisible = false;
-
-    protected static customViewGroup blockingView = null;
-
     private static final String TAG = "MainActivity";
 
-    private int status_bar_height = 0;
 
     @ViewById
     ViewPager pager;
 
     MainSlidePagerAdapter sliderAdapter;
 
+
+    StatusBarHandler statusBarHandler;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -80,7 +81,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
 
     private void loadViews() {
-        requestStatusBarCustomization();
+        statusBarHandler = new StatusBarHandler(this);
+        statusBarHandler.requestStatusBarCustomization();
         loadTopBar();
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
@@ -111,59 +113,22 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 
 
-    private void requestStatusBarCustomization(){
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(this)) {
-                Toast.makeText(this, "User can access system settings without this permission!", Toast.LENGTH_SHORT).show();
-            }
+
+    @Subscribe
+    public void onCheckActivityEvent(CheckActivityEvent event){
+        try {
+            if(event.isResume())
+                statusBarHandler.requestStatusBarCustomization();
             else
-            {
-                preventStatusBarExpansion(this);
-            }
-        }
-    }
-
-    // preventStatusBarExpansion
-
-    private void preventStatusBarExpansion(Context context) {
-        WindowManager manager = ((WindowManager) context.getApplicationContext()
-                .getSystemService(Context.WINDOW_SERVICE));
-
-        Activity activity = (Activity)context;
-        WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams();
-        localLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-        localLayoutParams.gravity = Gravity.TOP;
-        localLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
-
-                // this is to enable the notification to recieve touch events
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
-
-                // Draws over status bar
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-
-        localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        int resId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        int result = 0;
-        if (resId > 0) {
-            result = activity.getResources().getDimensionPixelSize(resId);
+                statusBarHandler.restoreStatusBarExpansion();
+        }catch (Exception e){
+            System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());
         }
 
-        status_bar_height = result;
 
-        localLayoutParams.height = result;
-
-        localLayoutParams.format = PixelFormat.TRANSPARENT;
-
-        blockingView = new customViewGroup(context);
-
-        manager.addView(blockingView, localLayoutParams);
     }
 
     @Override
