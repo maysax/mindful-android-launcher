@@ -179,7 +179,7 @@ public class NotificationActivity extends CoreActivity{
             else
             {
                // statusBarHandler.restoreStatusBarExpansion();
-                finish();
+               // finish();
             }
         }catch (Exception e){
             System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());

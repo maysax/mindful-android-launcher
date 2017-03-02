@@ -1,20 +1,10 @@
 package co.minium.launcher3;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
@@ -28,12 +18,8 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
-
-import co.minium.launcher3.main.GestureListener;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
-import co.minium.launcher3.notification.NotificationActivity;
 import co.minium.launcher3.notification.StatusBarHandler;
-import co.minium.launcher3.ui.PauseActivity_;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.sms.SmsObserver;
 import co.minium.launcher3.ui.TopFragment_;
@@ -145,5 +131,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             UIUtils.alert(this, "Minium-messages app not found.");
         }
     }
+
+
 
 }
