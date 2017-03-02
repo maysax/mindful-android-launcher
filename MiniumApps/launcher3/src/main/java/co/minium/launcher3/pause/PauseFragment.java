@@ -57,6 +57,9 @@ public class PauseFragment extends CoreFragment {
     ImageView imgBackground;
 
     @ViewById
+    TextView titleActionBar;
+
+    @ViewById
     TextView txtRemainingTime;
 
     @ViewById
@@ -125,17 +128,17 @@ public class PauseFragment extends CoreFragment {
     private Runnable pauseActiveRunnable = new Runnable() {
         @Override
         public void run() {
-            atMillis += 500;
+            atMillis += 1000;
 
             if (atMillis >= maxMillis) {
                 stopPause();
             } else {
-                Tracer.d("Setting seekbar value: " + atMillis / 1000 / 60.0f);
-                seekbar.setValue(atMillis / 1000 / 60.0f);
+                Tracer.d("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
+                seekbar.setValue(atMillis / (1000 * 60.0f));
                 txtRemainingTime.setText(String.format(Locale.US, "%d minute", TimeUnit.MILLISECONDS.toMinutes(maxMillis - atMillis)));
             }
 
-            handler.postDelayed(this, 500);
+            handler.postDelayed(this, 1000);
         }
     };
 
@@ -161,12 +164,14 @@ public class PauseFragment extends CoreFragment {
         seekbar.setMax(seekbar.getValue());
         seekbar.setValue(0);
         seekbar.setActive(false);
-        handler.postDelayed(pauseActiveRunnable, 500);
+        handler.postDelayed(pauseActiveRunnable, 1000);
         imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
         imgBackground.setVisibility(View.VISIBLE);
         endingLayout.setVisibility(View.VISIBLE);
         seekbar.setTitleColor(ContextCompat.getColor(getActivity(), R.color.white));
         seekbar.setSubtitleColor(ContextCompat.getColor(getActivity(), R.color.white));
+        seekbar.setActiveWheelColor(ContextCompat.getColor(getActivity(), R.color.white));
+        titleActionBar.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         txtRemainingTime.setVisibility(View.VISIBLE);
 
         Calendar cal = Calendar.getInstance(Locale.US);
@@ -179,7 +184,6 @@ public class PauseFragment extends CoreFragment {
         seekbar.setShowTitle(false);
         handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
-        imgBackground.setVisibility(View.INVISIBLE);
         endingLayout.setVisibility(View.INVISIBLE);
     }
 }

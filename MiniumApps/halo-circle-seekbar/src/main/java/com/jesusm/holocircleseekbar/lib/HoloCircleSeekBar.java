@@ -387,14 +387,14 @@ public class HoloCircleSeekBar extends View {
                     titleText,
                     (mColorWheelRectangle.centerX())
                             - (titlePaint.measureText(titleText) / 2),
-                    mColorWheelRectangle.centerY() + titleBounds.height() / 2,
+                    mColorWheelRectangle.centerY() + titleBounds.height() / 3,
                     titlePaint);
 
             canvas.drawText(
                     subTitleText,
                     (mColorWheelRectangle.centerX())
                             - (subTitlePaint.measureText(subTitleText) / 2),
-                    mColorWheelRectangle.centerY() + titleBounds.height() + subTitleBounds.height() / 2, subTitlePaint);
+                    mColorWheelRectangle.centerY() + titleBounds.height() / 2 + subTitleBounds.height(), subTitlePaint);
         } else {
             canvas.drawText(
                     text,
@@ -514,6 +514,11 @@ public class HoloCircleSeekBar extends View {
 
     public void setSubtitleColor(int color) {
         subTitlePaint.setColor(color);
+        invalidate();
+    }
+
+    public void setActiveWheelColor(int color) {
+        mArcColor.setColor(color);
         invalidate();
     }
 

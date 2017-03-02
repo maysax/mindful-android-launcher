@@ -87,10 +87,10 @@
         app:title_color="@color/text.primary"
         app:title_size="90sp"
         app:subTitle_color="@color/text.secondary"
-        app:subTitle_size="20sp"
+        app:subTitle_size="14sp"
         app:show_title="true"
         app:text_size="24sp"
-        app:text_color="@color/text.primary"
+        app:text_color="@color/white"
         app:wheel_active_color="@color/pauseSeekBarActive"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
 
