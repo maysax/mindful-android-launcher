@@ -8,7 +8,6 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
 
 import co.minium.launcher3.R;
-import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.ui.CoreActivity;
 
 @Fullscreen
@@ -21,11 +20,6 @@ public class PauseActivity extends CoreActivity {
     void afterViews() {
         pauseFragment = PauseFragment_.builder().build();
         loadFragment(pauseFragment, R.id.mainView, "main");
-        loadTopBar();
-    }
-
-    private void loadTopBar() {
-        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
     }
 
     @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)

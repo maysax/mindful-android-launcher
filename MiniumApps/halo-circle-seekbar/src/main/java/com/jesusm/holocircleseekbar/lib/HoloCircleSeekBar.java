@@ -507,6 +507,16 @@ public class HoloCircleSeekBar extends View {
         invalidate();
     }
 
+    public void setTitleColor(int color) {
+        titlePaint.setColor(color);
+        invalidate();
+    }
+
+    public void setSubtitleColor(int color) {
+        subTitlePaint.setColor(color);
+        invalidate();
+    }
+
     public void setActive(boolean active) {
         isActive = active;
     }
