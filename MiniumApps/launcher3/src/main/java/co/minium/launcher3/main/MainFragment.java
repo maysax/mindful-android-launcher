@@ -110,7 +110,6 @@ public class MainFragment extends CoreFragment {
                 updateListViewLayout();
             }
         });
-        searchLayout.requestFocus();
         moveSearchBar(false);
     }
 
