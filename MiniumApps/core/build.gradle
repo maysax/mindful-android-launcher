@@ -117,9 +117,6 @@ dependencies {
     // https://github.com/ParkSangGwon/TedPermission
     compile "gun0912.ted:tedpermission:$tedPermissionVersion"
 
-
-    compile 'org.apache.commons:commons-lang3:3.0'
-
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 
     compile "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
