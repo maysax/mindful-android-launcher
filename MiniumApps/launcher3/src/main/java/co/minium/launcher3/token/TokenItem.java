@@ -21,7 +21,7 @@ public class TokenItem {
                 init("@", true, TokenCompleteType.DEFAULT);
                 break;
             case DATA:
-                init("", false, TokenCompleteType.DEFAULT);
+                init("", true, TokenCompleteType.DEFAULT);
                 break;
             case END_OP:
                 init("", false, TokenCompleteType.FULL);
