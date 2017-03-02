@@ -1,14 +1,18 @@
 package co.minium.launcher3.main;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
@@ -101,7 +105,7 @@ public class MainFragment extends CoreFragment {
                 updateListViewLayout();
             }
         });
-        moveSearchBar(false);
+        moveSearchBar(false, null);
     }
 
     @Override
@@ -176,10 +180,10 @@ public class MainFragment extends CoreFragment {
 
     private void emptyChecker(String string) {
         if (!string.isEmpty()) {
-            afterEffectLayout.setVisibility(View.INVISIBLE);
-            moveSearchBar(true);
+            afterEffectLayout.setVisibility(View.GONE);
+            moveSearchBar(true, null);
         } else {
-            moveSearchBar(false);
+            moveSearchBar(false, null);
         }
     }
 
@@ -203,13 +207,17 @@ public class MainFragment extends CoreFragment {
         }
     }
 
-    void moveSearchBar(boolean isUp) {
+    void moveSearchBar(boolean isUp, final AnimatorListenerAdapter adapter) {
         ObjectAnimator animY;
 
         if (isUp) {
             animY = ObjectAnimator.ofFloat(searchLayout, "y", 0);
         } else {
             animY = ObjectAnimator.ofFloat(searchLayout, "y", 540);
+        }
+
+        if (adapter != null) {
+            animY.addListener(adapter);
         }
 
         AnimatorSet animSet = new AnimatorSet();
@@ -223,6 +231,8 @@ public class MainFragment extends CoreFragment {
         if (id.equals("1")) {
             new ActivityHelper(getActivity()).openNotesApp();
         }
+        afterEffectLayout.setVisibility(View.GONE);
+        moveSearchBar(false, null);
     }
 
     @Subscribe
@@ -239,7 +249,8 @@ public class MainFragment extends CoreFragment {
     public void createNoteEvent(CreateNoteEvent event) {
         icon.setImageResource(R.drawable.icon_save_note);
         text.setText("View saved note");
-        afterEffectLayout.setVisibility(View.VISIBLE);
         text.setTag("1");
+        afterEffectLayout.setVisibility(View.VISIBLE);
+
     }
 }
