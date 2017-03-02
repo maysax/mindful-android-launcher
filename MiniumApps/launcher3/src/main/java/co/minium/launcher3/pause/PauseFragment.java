@@ -32,6 +32,8 @@ import java.util.concurrent.TimeUnit;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.event.PauseResetEvent;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
@@ -88,8 +90,7 @@ public class PauseFragment extends CoreFragment {
 
     @Click
     void crossActionBar() {
-        stopPause();
-        getActivity().finish();
+        getActivity().onBackPressed();
     }
 
     @Click
@@ -128,17 +129,21 @@ public class PauseFragment extends CoreFragment {
     private Runnable pauseActiveRunnable = new Runnable() {
         @Override
         public void run() {
-            atMillis += 1000;
+            try {
+                atMillis += 1000;
 
-            if (atMillis >= maxMillis) {
-                stopPause();
-            } else {
-                Tracer.d("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
-                seekbar.setValue(atMillis / (1000 * 60.0f));
-                txtRemainingTime.setText(String.format(Locale.US, "%d minute", TimeUnit.MILLISECONDS.toMinutes(maxMillis - atMillis)));
+                if (atMillis >= maxMillis) {
+                    stopPause();
+                } else {
+                    Tracer.d("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
+                    seekbar.setValue(atMillis / (1000 * 60.0f));
+                    txtRemainingTime.setText(String.format(Locale.US, "%d minute", TimeUnit.MILLISECONDS.toMinutes(maxMillis - atMillis)));
+                }
+
+                handler.postDelayed(this, 1000);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            handler.postDelayed(this, 1000);
         }
     };
 
@@ -165,6 +170,7 @@ public class PauseFragment extends CoreFragment {
         seekbar.setValue(0);
         seekbar.setActive(false);
         handler.postDelayed(pauseActiveRunnable, 1000);
+        launcherPrefs.isPauseActive().put(true);
         imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
         imgBackground.setVisibility(View.VISIBLE);
         endingLayout.setVisibility(View.VISIBLE);
@@ -185,5 +191,10 @@ public class PauseFragment extends CoreFragment {
         handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
         endingLayout.setVisibility(View.INVISIBLE);
+    }
+
+    @Subscribe
+    public void onPauseResetEvenet(PauseResetEvent event) {
+
     }
 }

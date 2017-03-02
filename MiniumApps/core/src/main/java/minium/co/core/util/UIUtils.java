@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import minium.co.core.R;
+
 /**
  * Created by shahab on 12/21/15.
  */
@@ -63,6 +65,15 @@ public class UIUtils {
                 .setMessage(msg)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    public static void ask(Context context, String msg, DialogInterface.OnClickListener listener) {
+        new AlertDialog.Builder(context)
+                .setTitle(null)
+                .setMessage(msg)
+                .setPositiveButton(R.string.label_yes, listener)
+                .setNegativeButton(R.string.label_no, null)
                 .show();
     }
 
