@@ -91,6 +91,7 @@ public class MainFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
+
         listViewLayout.setVisibility(View.GONE);
         afterEffectLayout.setVisibility(View.GONE);
         KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {

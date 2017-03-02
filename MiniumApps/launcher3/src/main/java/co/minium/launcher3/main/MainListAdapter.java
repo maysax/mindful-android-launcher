@@ -215,18 +215,16 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             if (searchString.equals("@")) {
                                 buildData.add(originalData.get(i));
                             } else {
-                                String searchString2 = searchString.replaceAll("@", "");
+                                /**
+                                 * A blank space was added with searchString2. After using trim the search problem is resolved
+                                 */
+                                String searchString2 = searchString.replaceAll("@", "").trim();
                                 ContactListItem item = (ContactListItem) originalData.get(i);
                                 filterableString =  item.getContactName();
-                                splits = filterableString.split(" ");
                                 boolean isAdded = false;
-
-                                for (String str: splits) {
-                                    if (str.toLowerCase().startsWith(searchString2)) {
-                                        buildData.add(originalData.get(i));
-                                        isAdded = true;
-                                        break;
-                                    }
+                                if (filterableString.toString().toLowerCase().contains(searchString2)){
+                                    buildData.add(originalData.get(i));
+                                    isAdded = true;
                                 }
 
                                 if (!isAdded) {
