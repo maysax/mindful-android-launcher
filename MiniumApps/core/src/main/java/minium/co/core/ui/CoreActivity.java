@@ -38,6 +38,7 @@ import minium.co.core.event.DownloadApkEvent;
 import minium.co.core.helper.Validate;
 import minium.co.core.log.Tracer;
 import minium.co.core.service.CoreAPIClient;
+import minium.co.core.util.ActiveActivitiesTracker;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -104,15 +105,16 @@ public abstract class CoreActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        ActiveActivitiesTracker.activityStarted();
 
         //onStartAnimation();
     }
 
     @Override
     protected void onStop() {
+        ActiveActivitiesTracker.activityStopped();
         EventBus.getDefault().unregister(this);
         super.onStop();
-
     }
 
 //    @Override
