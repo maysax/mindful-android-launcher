@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,7 +52,8 @@ public class PauseFragment extends CoreFragment {
 
     @ViewById
     Toolbar toolbar;
-
+    @ViewById
+    ImageButton pause_button;
     @ViewById
     HoloCircleSeekBar seekbar;
 
@@ -87,7 +89,12 @@ public class PauseFragment extends CoreFragment {
         seekbar.setOnSeekBarChangeListener(seekbarListener);
         handler = new Handler();
     }
+    @Click
+    void pause_button(){
+        startPause();
+        pause_button.setVisibility(View.INVISIBLE);
 
+    }
     @Click
     void crossActionBar() {
         getActivity().onBackPressed();
@@ -113,8 +120,8 @@ public class PauseFragment extends CoreFragment {
 
         @Override
         public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
-            handler.removeCallbacks(startPauseRunnable);
-            handler.postDelayed(startPauseRunnable, 2000);
+           /* handler.removeCallbacks(startPauseRunnable);
+            handler.postDelayed(startPauseRunnable, 2000);*/
         }
     };
 
