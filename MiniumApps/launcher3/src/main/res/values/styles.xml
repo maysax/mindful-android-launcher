@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorControlHighlight">@color/colorAccent</item>
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowBackground">@drawable/bg_siempo</item>
     </style>
 
     <style name="ListItem">
