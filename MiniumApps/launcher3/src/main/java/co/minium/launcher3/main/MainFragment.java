@@ -1,7 +1,6 @@
 package co.minium.launcher3.main;
 
 
-import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -9,10 +8,8 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
@@ -252,5 +249,15 @@ public class MainFragment extends CoreFragment {
         text.setTag("1");
         afterEffectLayout.setVisibility(View.VISIBLE);
 
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if(menuVisible)
+        {
+            if(searchLayout!=null)
+                searchLayout.askFocus();
+        }
     }
 }

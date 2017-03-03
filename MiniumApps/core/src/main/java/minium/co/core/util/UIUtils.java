@@ -3,6 +3,7 @@ package minium.co.core.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
@@ -97,6 +98,14 @@ public class UIUtils {
     public static void showKeyboard(EditText editText) {
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    /**
+     * Hides the soft keyboard
+     */
+    public static void hideSoftKeyboard(Context mContext, IBinder windowToken) {
+        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
     }
 
 }
