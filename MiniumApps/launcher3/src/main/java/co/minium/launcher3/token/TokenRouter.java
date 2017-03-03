@@ -90,12 +90,12 @@ public class TokenRouter {
 
     public void sendText(Context context) {
         try {
-            //new SmsObserver(context, phoneNumber, message).start();
+            new SmsObserver(context, manager.get(TokenItemType.CONTACT).getExtra2(), manager.get(TokenItemType.DATA).getTitle()).start();
 
             SmsManager smsManager = SmsManager.getDefault();
             smsManager.sendTextMessage(manager.get(TokenItemType.CONTACT).getExtra2(), null, manager.get(TokenItemType.DATA).getTitle() , null, null);
-            new ActivityHelper(context).openMessagingApp();
-            manager.clear();
+//            new ActivityHelper(context).openMessagingApp();
+//            manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
 //            UIUtils.toast(context, "The message will not get sent.");
