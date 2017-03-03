@@ -77,6 +77,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         loadTopBar();
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
+
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 1)
+                    UIUtils.hideSoftKeyboard(MainActivity.this,getCurrentFocus().getWindowToken());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {}
+        });
     }
 
     private void loadTopBar() {
