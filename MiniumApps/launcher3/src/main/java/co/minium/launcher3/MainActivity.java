@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.notification.StatusBarHandler;
-import co.minium.launcher3.pause.PauseActivity;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.sms.SmsObserver;
 import co.minium.launcher3.token.TokenItemType;
@@ -69,7 +68,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
-        startActivity(new Intent(MainActivity.this, PauseActivity_.class));
     }
 
 
