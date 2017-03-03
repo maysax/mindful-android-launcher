@@ -145,6 +145,9 @@ class MainFragmentMediator {
                     case 3:
                         router.createContact(fragment.getActivity());
                         break;
+                    case 4:
+                        router.call(fragment.getActivity());
+                        break;
                     default:
                         UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
                         break;

@@ -1,22 +1,24 @@
 package co.minium.launcher3.token;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
-import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.sms.SmsObserver;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by shahab on 2/16/17.
@@ -101,12 +103,31 @@ public class TokenRouter {
             new SmsObserver(context, manager.get(TokenItemType.CONTACT).getExtra2(), manager.get(TokenItemType.DATA).getTitle()).start();
 
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(manager.get(TokenItemType.CONTACT).getExtra2(), null, manager.get(TokenItemType.DATA).getTitle() , null, null);
+            smsManager.sendTextMessage(manager.get(TokenItemType.CONTACT).getExtra2(), null, manager.get(TokenItemType.DATA).getTitle(), null, null);
 //            new ActivityHelper(context).openMessagingApp();
 //            manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
 //            UIUtils.toast(context, "The message will not get sent.");
+        }
+    }
+
+    public void call(Activity activity) {
+
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        try {
+            activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.get(TokenItemType.CONTACT).getExtra2())));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
