@@ -122,6 +122,16 @@
             tools:text="01:00 pm" />
     </LinearLayout>
 
+    <ImageButton
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/endingLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp"
+        android:src="@drawable/control_play"
+        android:background="@null"
+        android:id="@+id/pause_button" />
 
 
 </RelativeLayout>
