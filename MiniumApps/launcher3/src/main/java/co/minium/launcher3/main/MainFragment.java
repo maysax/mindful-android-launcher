@@ -260,4 +260,8 @@ public class MainFragment extends CoreFragment {
                 searchLayout.askFocus();
         }
     }
+
+    public TokenManager getManager() {
+        return manager;
+    }
 }
