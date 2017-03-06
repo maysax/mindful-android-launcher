@@ -15,6 +15,8 @@ import co.minium.launcher3.contact.ContactsLoader;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
 import co.minium.launcher3.event.CreateNoteEvent;
 import co.minium.launcher3.helper.ActivityHelper;
+import co.minium.launcher3.map.SiempoMapActivity;
+import co.minium.launcher3.map.SiempoMapActivity_;
 import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.model.MainListItemType;
@@ -125,6 +127,8 @@ class MainFragmentMediator {
                     case 12: break;
                     case 13:
                         TempoActivity_.intent(fragment.getActivity()).start(); break;
+                    case 14:
+                        SiempoMapActivity_.intent(fragment.getActivity()).start(); break;
                 }
                 break;
             case DEFAULT:
