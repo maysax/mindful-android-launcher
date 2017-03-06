@@ -22,6 +22,7 @@ import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
 import co.minium.launcher3.helper.ActivityHelper;
+import co.minium.launcher3.map.SiempoMapActivity_;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.ui.TempoActivity_;
@@ -99,7 +100,8 @@ public class OldMenuFragment extends CoreFragment {
             case 9: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
             case 10:
                 TempoActivity_.intent(getActivity()).start(); break;
-            case 11: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 11:
+                SiempoMapActivity_.intent(getActivity()).start(); break;
             case 12: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
             case 13: break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;

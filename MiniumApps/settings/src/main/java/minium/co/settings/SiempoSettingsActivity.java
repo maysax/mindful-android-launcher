@@ -21,12 +21,14 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Fullscreen;
 
 import java.util.List;
 
 /**
  * Created by shahab on 12/6/16.
  */
+@Fullscreen
 @EActivity
 public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
     /**
