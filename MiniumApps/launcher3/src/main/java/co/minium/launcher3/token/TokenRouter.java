@@ -91,11 +91,10 @@ public class TokenRouter {
     private void contactPickedDone() {
         if (manager.hasCompleted(TokenItemType.DATA) && manager.hasCompleted(TokenItemType.CONTACT)) {
             manager.add(new TokenItem(TokenItemType.END_OP));
-            route();
         } else if (manager.hasCompleted(TokenItemType.CONTACT)) {
             manager.add(new TokenItem(TokenItemType.DATA));
-            route();
         }
+        route();
     }
 
     public void sendText(Context context) {

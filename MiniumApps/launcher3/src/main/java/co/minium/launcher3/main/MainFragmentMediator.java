@@ -81,6 +81,9 @@ class MainFragmentMediator {
     }
 
     private void loadContacts() {
+        if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
+            return;
+        }
         if (contactItems == null) {
             contactItems = new ContactsLoader().loadContacts(fragment.getActivity());
         }
@@ -88,10 +91,21 @@ class MainFragmentMediator {
     }
 
     private void loadDefaults() {
+        if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()){
+            items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+        }
+        else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)){
+            items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+            items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
+        } else if (fragment.getManager().hasCompleted(TokenItemType.DATA)) {
             items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
             items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
-            items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
             items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+        } else {
+            items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+            items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
+            items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+        }
     }
 
     List<MainListItem> getItems() {
@@ -122,7 +136,7 @@ class MainFragmentMediator {
                     case 7:
                         PauseActivity_.intent(fragment.getActivity()).start(); break;
                     case 8: break;
-                    case 9: new ActivityHelper(fragment.getActivity()).openNotesApp(); break;
+                    case 9: new ActivityHelper(fragment.getActivity()).openNotesApp(false); break;
                     case 10: break;
                     case 11: break;
                     case 12: break;
