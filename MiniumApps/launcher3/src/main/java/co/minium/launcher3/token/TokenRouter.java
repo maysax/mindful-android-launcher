@@ -12,6 +12,7 @@ import org.androidannotations.annotations.EBean;
 
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.model.ContactListItem;
+import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.sms.SmsObserver;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
@@ -64,6 +65,7 @@ public class TokenRouter {
 
     public void contactPicked(ContactListItem item) {
         if (item.hasMultipleNumber()) {
+            manager.setCurrent(new TokenItem(TokenItemType.CONTACT));
             manager.getCurrent().setTitle(item.getContactName());
             manager.getCurrent().setExtra1(String.valueOf(item.getContactId()));
             manager.getCurrent().setCompleteType(TokenCompleteType.HALF);
@@ -76,6 +78,12 @@ public class TokenRouter {
             manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
             contactPickedDone();
         }
+    }
+
+    public void contactNumberPicked(MainListItem item) {
+        manager.getCurrent().setExtra2(item.getTitle());
+        manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
+        contactPickedDone();
     }
 
     private void contactPickedDone() {

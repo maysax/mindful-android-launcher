@@ -84,6 +84,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 case DEFAULT:
                     if (item.getId() == id) return item;
                     break;
+                case NUMBERS:
+                    break;
             }
         }
 
@@ -101,6 +103,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 break;
             case ACTION:
             case DEFAULT:
+            case NUMBERS:
                 convertView = getActionItemView(position, convertView, parent);
         }
 
@@ -116,6 +119,35 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         ImageView icon;
         TextView text;
         TextView txtNumber;
+    }
+
+    private View getNumberPickerView(int position, View view, ViewGroup parent) {
+        ContactViewHolder holder;
+
+        if (view == null) {
+            holder = new ContactViewHolder();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            view = inflater.inflate(R.layout.list_item_contacts, parent, false);
+
+            holder.icon = (ImageView) view.findViewById(R.id.icon);
+            holder.txtNumber = (TextView) view.findViewById(R.id.txtNumber);
+            holder.text = (TextView) view.findViewById(R.id.text);
+            view.setTag(holder);
+
+        } else {
+            holder = (ContactViewHolder) view.getTag();
+        }
+
+        MainListItem item = getItem(position);
+
+        if (item != null) {
+            holder.text.setText(item.getTitle());
+            holder.icon.setImageResource(item.getIconRes());
+            holder.txtNumber.setText(item.getSubTitle());
+        }
+
+        return view;
     }
 
     private View getContactItemView(int position, View view, ViewGroup parent) {
@@ -253,6 +285,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             }
                             break;
                         case DEFAULT:
+                            buildData.add(originalData.get(i));
+                            break;
+                        case NUMBERS:
                             buildData.add(originalData.get(i));
                             break;
                     }

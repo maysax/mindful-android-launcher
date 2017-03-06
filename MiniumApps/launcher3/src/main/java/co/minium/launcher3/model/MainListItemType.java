@@ -5,5 +5,5 @@ package co.minium.launcher3.model;
  */
 
 public enum MainListItemType {
-    CONTACT, ACTION, DEFAULT
+    CONTACT, ACTION, DEFAULT, NUMBERS
 }
