@@ -146,6 +146,9 @@ class MainFragmentMediator {
                         break;
                 }
                 break;
+            case NUMBERS:
+                router.contactNumberPicked(getAdapter().getItem(position));
+                break;
         }
     }
 
@@ -158,25 +161,18 @@ class MainFragmentMediator {
     }
 
     public void contactNumberPicker(int selectedContactId) {
-        Uri phonesUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        String[] projection = new String[] {
-                ContactsContract.CommonDataKinds.Phone._ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.CommonDataKinds.Phone.LABEL };
-        String selection 		= ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?";
-        String[] 	selectionArgs 	= new String[] { Long.toString(selectedContactId) };
 
-        Cursor mCursor = fragment.getActivity().getContentResolver().query(phonesUri,
-                projection, selection, selectionArgs, null);
+        items.clear();
 
-        if (mCursor.moveToFirst()){
-//            txtName.setText(mCursor.getString(mCursor.getColumnIndex(Phone.DISPLAY_NAME)));
+        for (ContactListItem item : contactItems) {
+            if (item.getContactId() == selectedContactId) {
+                for (ContactListItem.ContactNumber number : item.getNumbers()) {
+                    items.add(new MainListItem(selectedContactId, number.getNumber(), R.drawable.icon_call, MainListItemType.NUMBERS));
+                }
+            }
         }
-
-        ListAdapter adapter = new PhoneNumbersAdapter(fragment.getActivity(),
-                R.layout.list_item_contact_numbers, mCursor,
-                new String[] {ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.NUMBER },
-                new int[] { R.id.txtTitle, R.id.txtSubTitle});
-
+        getAdapter().loadData(items);
+        getAdapter().notifyDataSetChanged();
     }
 
     public void listItemClicked2(TokenRouter router, int position) {
