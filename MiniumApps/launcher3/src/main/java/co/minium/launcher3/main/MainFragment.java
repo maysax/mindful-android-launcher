@@ -189,7 +189,7 @@ public class MainFragment extends CoreFragment {
         TokenItem current = manager.getCurrent();
 
         if (current.getItemType() == TokenItemType.END_OP) {
-            adapter.getFilter().filter("^");
+            mediator.defaultData();
         } else if (current.getCompleteType() == TokenCompleteType.FULL) {
             adapter.getFilter().filter("");
         } else if (current.getItemType() == TokenItemType.CONTACT) {
