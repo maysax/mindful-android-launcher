@@ -560,4 +560,9 @@ public class ChipsEditText extends MultilineEditText {
    public SpannableString snapshot() {
       return new SpannableString(getText());
    }
+
+   @Override
+   public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+      return true;
+   }
 }

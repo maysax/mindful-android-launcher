@@ -21,6 +21,7 @@ import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.model.MainListItemType;
 import co.minium.launcher3.pause.PauseActivity_;
+import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenRouter;
 import co.minium.launcher3.ui.TempoActivity_;
 import de.greenrobot.event.EventBus;
@@ -87,10 +88,10 @@ class MainFragmentMediator {
     }
 
     private void loadDefaults() {
-        items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-        items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
-        items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
-        items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
+            items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+            items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
+            items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
+            items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
     }
 
     List<MainListItem> getItems() {
