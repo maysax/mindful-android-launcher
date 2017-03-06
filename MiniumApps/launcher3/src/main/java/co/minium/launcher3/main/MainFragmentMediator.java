@@ -185,4 +185,11 @@ class MainFragmentMediator {
     public void listItemClicked2(TokenRouter router, int position) {
 
     }
+
+    public void defaultData() {
+        items.clear();
+        loadDefaults();
+        getAdapter().loadData(items);
+        getAdapter().notifyDataSetChanged();
+    }
 }
