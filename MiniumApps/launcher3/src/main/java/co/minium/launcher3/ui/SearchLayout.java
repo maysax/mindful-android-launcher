@@ -147,7 +147,11 @@ public class SearchLayout extends CardView {
         String newText = "";
         boolean space = false;
         for (String s : splits) {
-            if (space) newText += " "; space = true;
+            if (space) {
+                if (!s.startsWith(" "))
+                    newText += " ";
+            }
+            space = true;
             newText += s.replaceAll("\\^", "").replaceAll("~", "");
         }
 

@@ -94,7 +94,7 @@ public class OldMenuFragment extends CoreFragment {
             case 4:
                 PauseActivity_.intent(getActivity()).start(); break;
             case 5: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
-            case 6: new ActivityHelper(getActivity()).openNotesApp(); break;
+            case 6: new ActivityHelper(getActivity()).openNotesApp(false); break;
             case 7: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
             case 8: new ActivityHelper(getActivity()).openSettingsApp(); break;
             case 9: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;

@@ -190,8 +190,6 @@ public class MainFragment extends CoreFragment {
 
         if (current.getItemType() == TokenItemType.END_OP) {
             mediator.defaultData();
-        } else if (current.getCompleteType() == TokenCompleteType.FULL) {
-            adapter.getFilter().filter("");
         } else if (current.getItemType() == TokenItemType.CONTACT) {
             if (current.getCompleteType() == TokenCompleteType.HALF) {
                 mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
@@ -199,8 +197,18 @@ public class MainFragment extends CoreFragment {
                 mediator.contactPicker();
             }
         } else if (current.getItemType() == TokenItemType.DATA) {
-            if (current.getTitle().isEmpty()) mediator.resetData();
-            adapter.getFilter().filter(current.getTitle());
+            if (manager.get(0).getItemType() == TokenItemType.DATA) {
+                mediator.resetData();
+                adapter.getFilter().filter(current.getTitle());
+            } else {
+                mediator.resetData();
+                if (current.getTitle().trim().isEmpty()) {
+                    adapter.getFilter().filter("^");
+                } else {
+                    adapter.getFilter().filter(current.getTitle());
+                }
+
+            }
         }
     }
 
@@ -226,7 +234,7 @@ public class MainFragment extends CoreFragment {
     void text() {
         String id = (String) text.getTag();
         if (id.equals("1")) {
-            new ActivityHelper(getActivity()).openNotesApp();
+            new ActivityHelper(getActivity()).openNotesApp(true);
         }
         afterEffectLayout.setVisibility(View.GONE);
         moveSearchBar(false, null);

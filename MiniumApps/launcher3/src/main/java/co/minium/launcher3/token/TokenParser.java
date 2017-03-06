@@ -21,7 +21,7 @@ public class TokenParser {
     public void parse(String str) {
         if (str.isEmpty()) {
             manager.clear();
-        } else if (str.equals("@")) {
+        } else if (str.equals("@") && !manager.hasCompleted(TokenItemType.CONTACT)) {
             router.setCurrent(new TokenItem(TokenItemType.CONTACT));
         } else {
             for (TokenItem item : manager.getItems()) {
@@ -30,10 +30,14 @@ public class TokenParser {
                 }
             }
 
-            if (str.endsWith("@")) {
+            if (str.endsWith("@")  && !manager.hasCompleted(TokenItemType.CONTACT)) {
                 router.add(new TokenItem(TokenItemType.CONTACT));
             } else {
                 manager.getCurrent().setTitle(str);
+            }
+
+            if (manager.get(0).getItemType() == TokenItemType.CONTACT && manager.getCurrent().getItemType() == TokenItemType.DATA) {
+                if (!manager.getCurrent().getTitle().trim().isEmpty()) router.route();
             }
         }
     }

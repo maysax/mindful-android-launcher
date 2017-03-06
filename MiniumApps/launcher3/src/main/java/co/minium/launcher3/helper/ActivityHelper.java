@@ -53,10 +53,11 @@ public class ActivityHelper {
         UIUtils.alert(context, context.getString(R.string.msg_not_yet_implemented));
     }
 
-    public boolean openNotesApp() {
+    public boolean openNotesApp(boolean openLast) {
         try {
-//            getContext().startActivity(getContext().getPackageManager().getLaunchIntentForPackage("minium.co.notes"));
-            getContext().startActivity(new Intent(getContext(), MainActivity.class));
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            intent.putExtra("Open", openLast);
+            getContext().startActivity(intent);
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
