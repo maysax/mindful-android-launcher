@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="co.minium.launcher3.call.CallLogActivity">
+
+    <FrameLayout
+        android:id="@+id/statusView"
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        tools:background="@color/material.core.red"/>
+
+    <FrameLayout
+        android:id="@+id/mainView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:background="@color/material.core.orange"/>
+</LinearLayout>

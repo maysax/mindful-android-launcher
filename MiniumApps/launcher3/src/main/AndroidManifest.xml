@@ -19,8 +19,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
-
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -52,15 +51,20 @@
             android:name="io.fabric.ApiKey"
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
-        <activity android:name=".MainActivity_" android:windowSoftInputMode="stateVisible">
+        <activity
+            android:name=".MainActivity_"
+            android:windowSoftInputMode="stateVisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <!-- Notification Activity -->
-        <activity android:name=".notification.NotificationActivity" android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".notification.NotificationActivity"
+            android:theme="@style/AppTheme" />
 
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>
@@ -72,7 +76,8 @@
 
         <activity android:name=".pause.PauseActivity_" />
         <activity android:name=".ui.TempoActivity_" />
-        <activity android:name=".map.SiempoMapActivity_"/>
+        <activity android:name=".map.SiempoMapActivity_" />
+        <activity android:name=".call.CallLogActivity_"></activity>
     </application>
 
 </manifest>

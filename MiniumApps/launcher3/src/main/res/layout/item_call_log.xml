@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@color/material.core.blue"
+    android:gravity="center_vertical"
+    style="@style/ListItem">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:textColor="@color/text.primary"
+        android:textSize="@dimen/text.size.medium"
+        tools:text="John Doe"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/txtCallType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            tools:background="@color/material.core.red" />
+
+        <TextView
+            android:id="@+id/txtCallDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text.size.regular"
+            android:textColor="@color/text.secondary"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin.2"
+            tools:text="5 days ago"/>
+
+        <TextView
+            android:id="@+id/txtCallDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text.size.regular"
+            android:textColor="@color/text.secondary"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/margin.2"
+            tools:text="(2 sec)"/>
+
+    </LinearLayout>
+
+</LinearLayout>

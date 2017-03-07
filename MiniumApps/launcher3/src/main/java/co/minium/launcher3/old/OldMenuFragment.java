@@ -20,6 +20,7 @@ import java.util.List;
 
 import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
+import co.minium.launcher3.call.CallLogActivity_;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.map.SiempoMapActivity_;
@@ -89,7 +90,7 @@ public class OldMenuFragment extends CoreFragment {
         switch (id) {
             case 1: new ActivityHelper(getActivity()).openMessagingApp(); break;
             case 2:
-                UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+                CallLogActivity_.intent(getActivity()).start(); break;
             case 3: new ActivityHelper(getActivity()).openContactsApp(); break;
             case 4:
                 PauseActivity_.intent(getActivity()).start(); break;
