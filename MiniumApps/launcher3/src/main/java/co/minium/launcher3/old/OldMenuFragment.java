@@ -4,6 +4,7 @@ package co.minium.launcher3.old;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,11 +56,6 @@ public class OldMenuFragment extends CoreFragment {
     @AfterViews
     void afterViews() {
         loadData();
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 
     private void loadData() {
@@ -120,6 +116,19 @@ public class OldMenuFragment extends CoreFragment {
         {
             try {
                 UIUtils.hideSoftKeyboard(getActivity(),getActivity().getCurrentFocus().getWindowToken());
+            } catch (Exception e) {
+                Tracer.e(e, e.getMessage());
+            }
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            try {
+                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
             } catch (Exception e) {
                 Tracer.e(e, e.getMessage());
             }

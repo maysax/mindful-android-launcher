@@ -84,8 +84,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
             @Override
             public void onPageSelected(int position) {
-//                if(position == 1)
-//                    UIUtils.hideSoftKeyboard(MainActivity.this,getCurrentFocus().getWindowToken());
+                try {
+                    if(position == 1)
+                        UIUtils.hideSoftKeyboard(MainActivity.this,getCurrentFocus().getWindowToken());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -149,6 +153,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
