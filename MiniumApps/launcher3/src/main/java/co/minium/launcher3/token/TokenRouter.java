@@ -99,12 +99,16 @@ public class TokenRouter {
 
     public void sendText(Context context) {
         try {
-            new SmsObserver(context, manager.get(TokenItemType.CONTACT).getExtra2(), manager.get(TokenItemType.DATA).getTitle()).start();
 
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(manager.get(TokenItemType.CONTACT).getExtra2(), null, manager.get(TokenItemType.DATA).getTitle(), null, null);
-//            new ActivityHelper(context).openMessagingApp();
-//            manager.clear();
+            if (manager.hasCompleted(TokenItemType.CONTACT) && manager.has(TokenItemType.DATA)) {
+                new SmsObserver(context, manager.get(TokenItemType.CONTACT).getExtra2(), manager.get(TokenItemType.DATA).getTitle()).start();
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(manager.get(TokenItemType.CONTACT).getExtra2(), null, manager.get(TokenItemType.DATA).getTitle(), null, null);
+            } else if (!manager.has(TokenItemType.CONTACT)) {
+                manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
+                manager.add(new TokenItem(TokenItemType.CONTACT));
+                route();
+            }
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
 //            UIUtils.toast(context, "The message will not get sent.");
