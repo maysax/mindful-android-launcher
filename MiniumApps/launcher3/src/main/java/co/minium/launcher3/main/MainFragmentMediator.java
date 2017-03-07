@@ -11,6 +11,7 @@ import java.util.List;
 
 import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
+import co.minium.launcher3.call.CallLogActivity_;
 import co.minium.launcher3.contact.ContactsLoader;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
 import co.minium.launcher3.event.CreateNoteEvent;
@@ -131,7 +132,8 @@ class MainFragmentMediator {
                     case 2:
                     case 3:
                     case 4: new ActivityHelper(fragment.getActivity()).openMessagingApp(); break;
-                    case 5: break;
+                    case 5:
+                        CallLogActivity_.intent(fragment.getActivity()).start(); break;
                     case 6: break;
                     case 7:
                         PauseActivity_.intent(fragment.getActivity()).start(); break;
