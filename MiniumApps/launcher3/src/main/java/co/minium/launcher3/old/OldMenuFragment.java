@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.minium.launcher3.BuildConfig;
+import co.minium.launcher3.MainActivity;
 import co.minium.launcher3.R;
 import co.minium.launcher3.call.CallLogActivity_;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
@@ -27,6 +28,7 @@ import co.minium.launcher3.map.SiempoMapActivity_;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.ui.TempoActivity_;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
@@ -58,7 +60,6 @@ public class OldMenuFragment extends CoreFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
     }
 
     private void loadData() {
@@ -110,5 +111,18 @@ public class OldMenuFragment extends CoreFragment {
 
         }
 
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        if(menuVisible)
+        {
+            try {
+                UIUtils.hideSoftKeyboard(getActivity(),getActivity().getCurrentFocus().getWindowToken());
+            } catch (Exception e) {
+                Tracer.e(e, e.getMessage());
+            }
+        }
     }
 }

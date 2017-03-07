@@ -53,7 +53,8 @@
 
         <activity
             android:name=".MainActivity_"
-            android:windowSoftInputMode="stateVisible">
+            android:windowSoftInputMode="stateVisible"
+            android:screenOrientation="portrait">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
 
@@ -67,7 +68,8 @@
         <!-- Notification Activity -->
         <activity
             android:name=".notification.NotificationActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
 
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>
@@ -77,10 +79,10 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".pause.PauseActivity_" />
-        <activity android:name=".ui.TempoActivity_" />
-        <activity android:name=".map.SiempoMapActivity_" />
-        <activity android:name=".call.CallLogActivity_" />
+        <activity android:name=".pause.PauseActivity_" android:screenOrientation="portrait" />
+        <activity android:name=".ui.TempoActivity_" android:screenOrientation="portrait" />
+        <activity android:name=".map.SiempoMapActivity_" android:screenOrientation="portrait" />
+        <activity android:name=".call.CallLogActivity_" android:screenOrientation="portrait" />
 
         <activity android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">
