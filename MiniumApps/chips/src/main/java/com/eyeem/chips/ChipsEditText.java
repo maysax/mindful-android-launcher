@@ -5,6 +5,7 @@ import android.graphics.*;
 import android.text.*;
 import android.text.style.ReplacementSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -12,6 +13,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 public class ChipsEditText extends MultilineEditText {
 
@@ -563,6 +566,7 @@ public class ChipsEditText extends MultilineEditText {
 
    @Override
    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-      return true;
+      if (keyCode == KeyEvent.KEYCODE_BACK) return true;
+      return false;
    }
 }
