@@ -27,6 +27,7 @@ import co.minium.launcher3.map.SiempoMapActivity_;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.ui.TempoActivity_;
+import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 
@@ -103,7 +104,7 @@ public class OldMenuFragment extends CoreFragment {
                 TempoActivity_.intent(getActivity()).start(); break;
             case 11:
                 SiempoMapActivity_.intent(getActivity()).start(); break;
-            case 12: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
+            case 12: new ActivityHelper(getActivity()).handleDefaultLauncher((CoreActivity) getActivity()); break;
             case 13: break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
 

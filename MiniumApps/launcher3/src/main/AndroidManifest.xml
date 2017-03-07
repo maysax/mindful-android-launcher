@@ -54,10 +54,13 @@
         <activity
             android:name=".MainActivity_"
             android:windowSoftInputMode="stateVisible">
-            <intent-filter>
+            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="RUN_AT_BOOT" />
             </intent-filter>
         </activity>
 
@@ -72,7 +75,16 @@
         <activity android:name=".pause.PauseActivity_" />
         <activity android:name=".ui.TempoActivity_" />
         <activity android:name=".map.SiempoMapActivity_" />
-        <activity android:name=".call.CallLogActivity_"></activity>
+        <activity android:name=".call.CallLogActivity_" />
+
+        <activity android:name=".launcher.FakeLauncherActivity"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.HOME"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

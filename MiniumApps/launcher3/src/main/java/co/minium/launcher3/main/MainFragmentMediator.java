@@ -82,7 +82,7 @@ class MainFragmentMediator {
     }
 
     private void loadContacts() {
-        if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
+        if (fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
             return;
         }
         if (contactItems == null) {
