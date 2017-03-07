@@ -62,6 +62,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
 
         // Android version >= 18 -> set orientation fullUser

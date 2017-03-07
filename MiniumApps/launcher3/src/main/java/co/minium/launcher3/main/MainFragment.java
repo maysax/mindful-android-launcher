@@ -40,6 +40,7 @@ import co.minium.launcher3.token.TokenUpdateEvent;
 import co.minium.launcher3.ui.SearchLayout;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 
@@ -170,9 +171,13 @@ public class MainFragment extends CoreFragment {
 
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
-        emptyChecker(event.getString());
-        parser.parse(event.getString());
-        adapter.getFilter().filter(manager.getCurrent().getTitle());
+        try {
+            emptyChecker(event.getString());
+            parser.parse(event.getString());
+            adapter.getFilter().filter(manager.getCurrent().getTitle());
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
     }
 
     private void emptyChecker(String string) {
