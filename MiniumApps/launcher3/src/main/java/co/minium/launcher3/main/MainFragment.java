@@ -191,29 +191,33 @@ public class MainFragment extends CoreFragment {
 
     @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {
-        TokenItem current = manager.getCurrent();
+        try {
+            TokenItem current = manager.getCurrent();
 
-        if (current.getItemType() == TokenItemType.END_OP) {
-            mediator.defaultData();
-        } else if (current.getItemType() == TokenItemType.CONTACT) {
-            if (current.getCompleteType() == TokenCompleteType.HALF) {
-                mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
-            } else {
-                mediator.contactPicker();
-            }
-        } else if (current.getItemType() == TokenItemType.DATA) {
-            if (manager.get(0).getItemType() == TokenItemType.DATA) {
-                mediator.resetData();
-                adapter.getFilter().filter(current.getTitle());
-            } else {
-                mediator.resetData();
-                if (current.getTitle().trim().isEmpty()) {
-                    adapter.getFilter().filter("^");
+            if (current.getItemType() == TokenItemType.END_OP) {
+                mediator.defaultData();
+            } else if (current.getItemType() == TokenItemType.CONTACT) {
+                if (current.getCompleteType() == TokenCompleteType.HALF) {
+                    mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
                 } else {
-                    adapter.getFilter().filter(current.getTitle());
+                    mediator.contactPicker();
                 }
+            } else if (current.getItemType() == TokenItemType.DATA) {
+                if (manager.get(0).getItemType() == TokenItemType.DATA) {
+                    mediator.resetData();
+                    adapter.getFilter().filter(current.getTitle());
+                } else {
+                    mediator.resetData();
+                    if (current.getTitle().trim().isEmpty()) {
+                        adapter.getFilter().filter("^");
+                    } else {
+                        adapter.getFilter().filter(current.getTitle());
+                    }
 
+                }
             }
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
         }
     }
 

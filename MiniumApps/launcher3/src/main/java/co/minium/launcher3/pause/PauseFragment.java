@@ -102,8 +102,11 @@ public class PauseFragment extends CoreFragment {
 
     @Click
     void settingsActionBar() {
-
-        ((CoreActivity)getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(),R.id.mainView);
+        if (launcherPrefs.isPauseActive().get()) {
+            getActivity().onBackPressed();
+        } else {
+            ((CoreActivity)getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(),R.id.mainView);
+        }
     }
 
     private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {

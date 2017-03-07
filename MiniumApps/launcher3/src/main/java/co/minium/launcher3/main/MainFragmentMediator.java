@@ -57,8 +57,10 @@ class MainFragmentMediator {
         loadActions();
         loadContacts();
         loadDefaults();
-        getAdapter().loadData(items);
-        getAdapter().notifyDataSetChanged();
+        if (getAdapter() != null) {
+            getAdapter().loadData(items);
+            getAdapter().notifyDataSetChanged();
+        }
     }
 
     private void loadActions() {

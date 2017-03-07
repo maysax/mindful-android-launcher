@@ -84,8 +84,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
             @Override
             public void onPageSelected(int position) {
-                if(position == 1)
-                    UIUtils.hideSoftKeyboard(MainActivity.this,getCurrentFocus().getWindowToken());
+//                if(position == 1)
+//                    UIUtils.hideSoftKeyboard(MainActivity.this,getCurrentFocus().getWindowToken());
             }
 
             @Override
