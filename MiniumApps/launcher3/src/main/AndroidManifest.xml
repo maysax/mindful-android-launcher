@@ -52,7 +52,7 @@
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
         <activity
-            android:name=".mm.TimePickerCustomViewsActivity"
+            android:name=".MainActivity_"
             android:windowSoftInputMode="stateVisible"
             android:screenOrientation="portrait"
             android:theme="@style/WheelDemoTheme.Light">
@@ -85,8 +85,15 @@
         <activity android:name=".ui.TempoActivity_" android:screenOrientation="portrait" />
         <activity android:name=".map.SiempoMapActivity_" android:screenOrientation="portrait" />
         <activity android:name=".call.CallLogActivity_" android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity_" android:screenOrientation="portrait"
-           />
+        <activity android:name=".mm.TimePickerActivity" android:screenOrientation="portrait">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+             />
+            </intent-filter>
+           </activity>
 
         <activity android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">
