@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import co.minium.launcher3.MainActivity;
+import co.minium.launcher3.R;
+import minium.co.core.ui.CoreActivity;
 
 /**
  * Created by itc on 02/03/17.
@@ -102,8 +103,9 @@ public class StatusBarHandler {
                 if(!isNotificationTrayVisible)
                 {
                     System.out.println(TAG + " y position on Touch on notification tray "+ event.getY() + "status_bar_height " + status_bar_height);
-                    Intent intent = new Intent(mContext, NotificationActivity.class);
-                   mContext. startActivity(intent);
+                    //Intent intent = new Intent(mContext, NotificationFragment.class);
+                   //mContext. startActivity(intent);
+                    ((CoreActivity) mContext).loadChildFragment(NotificationFragment_.builder().build(), R.id.mainView);
 
                     isNotificationTrayVisible = true;
                 }
