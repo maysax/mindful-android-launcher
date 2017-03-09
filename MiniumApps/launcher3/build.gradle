@@ -52,6 +52,8 @@ dependencies {
     compile project(':settings')
     compile project(':notes')
     compile project(':halo-circle-seekbar')
+    compile project(':horizontal-timepicker')
+
 
     compile "com.github.satyan:sugar:$sugarOrmVersion"
     compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"

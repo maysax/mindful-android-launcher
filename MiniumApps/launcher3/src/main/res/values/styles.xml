@@ -17,4 +17,10 @@
         <item name="android:paddingRight">@dimen/margin.6</item>
     </style>
 
+        <style name="WheelDemoTheme.Light" parent="android:Theme.Light">
+        </style>
+        <style name="WheelDemoTheme" parent="android:Theme">
+        </style>
+
+
 </resources>

@@ -44,7 +44,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:theme,name">
+        tools:replace="android:theme,name,label">
 
         <!-- Fabric configuration -->
         <meta-data
@@ -52,9 +52,11 @@
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
         <activity
-            android:name=".MainActivity_"
+            android:name=".mm.TimePickerCustomViewsActivity"
             android:windowSoftInputMode="stateVisible"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/WheelDemoTheme.Light">
+
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
 
@@ -83,6 +85,8 @@
         <activity android:name=".ui.TempoActivity_" android:screenOrientation="portrait" />
         <activity android:name=".map.SiempoMapActivity_" android:screenOrientation="portrait" />
         <activity android:name=".call.CallLogActivity_" android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity_" android:screenOrientation="portrait"
+           />
 
         <activity android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">
