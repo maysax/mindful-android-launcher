@@ -33,4 +33,7 @@
     <string name="icon.outgoingCall">{fa-arrow-up @color/material.core.green 12dp}</string>
     <string name="icon.incomingCall">{fa-arrow-down @color/material.core.indigo 12dp}</string>
     <string name="icon.missedCall">{fa-arrow-down @color/material.core.red 12dp}</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -39,8 +39,7 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
-import static co.minium.launcher3.R.id.seekbar;
-import static co.minium.launcher3.R.id.start;
+
 
 @EFragment(R.layout.fragment_pause)
 public class PauseFragment extends CoreFragment {
@@ -160,7 +159,7 @@ public class PauseFragment extends CoreFragment {
 
     public void volumeUpPresses() {
         if (!launcherPrefs.isPauseActive().get()) {
-            Tracer.i("Volume up pressed in PauseFragment");
+            Tracer.i("Volume up pressed in TimePickerFragment");
 
             int currVal = seekbar.getValue();
 
