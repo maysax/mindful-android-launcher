@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content">
-    <TextView android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="72sp"
-            android:lines="1"
-            android:textColor="#777"
-        android:textStyle="normal"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:fontFamily="sans-serif-light"
-        android:layout_gravity="center" />
+        android:lines="1"
+        android:textColor="#777"
+        android:textSize="72sp"
+        android:textStyle="normal" />
 </FrameLayout>

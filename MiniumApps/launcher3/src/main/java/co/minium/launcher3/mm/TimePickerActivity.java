@@ -22,10 +22,11 @@ public class TimePickerActivity extends Activity {
         setContentView(R.layout.time_picker_custom);
 
         final AbstractWheel hours = (AbstractWheel) findViewById(R.id.hour_horizontal);
-        NumericWheelAdapter hourAdapter = new NumericWheelAdapter(this, 0, 23, "%01d");
+        NumericWheelAdapter hourAdapter = new NumericWheelAdapter(this, 1, 12, "%01d");
         hourAdapter.setItemResource(R.layout.wheel_text_centered);
         hourAdapter.setItemTextResource(R.id.text);
         hours.setViewAdapter(hourAdapter);
+
         hours.addScrollingListener(new OnWheelScrollListener() {
             @Override
             public void onScrollingStarted(AbstractWheel wheel) {
