@@ -76,7 +76,8 @@ public class OldMenuFragment extends CoreFragment {
             items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
         }
 
-        items.add(new MainListItem(13, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
+        items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
+        items.add(new MainListItem(14, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
 
         adapter = new OldMenuAdapter(getActivity(), items);
         listView.setAdapter(adapter);
@@ -102,7 +103,10 @@ public class OldMenuFragment extends CoreFragment {
             case 11:
                 SiempoMapActivity_.intent(getActivity()).start(); break;
             case 12: new ActivityHelper(getActivity()).handleDefaultLauncher((CoreActivity) getActivity()); break;
-            case 13: break;
+            case 13:
+                // mindful morning 
+                break;
+            case 14: break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
 
         }

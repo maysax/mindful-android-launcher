@@ -80,7 +80,8 @@ class MainFragmentMediator {
             items.add(new MainListItem(15, fragment.getString(title_defaultLauncher), "fa-street-view"));
         }
 
-        items.add(new MainListItem(16, fragment.getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
+        items.add(new MainListItem(16, fragment.getString(R.string.title_mindfulMorning), "fa-coffee"));
+        items.add(new MainListItem(17, fragment.getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
     }
 
     private void loadContacts() {
@@ -148,6 +149,13 @@ class MainFragmentMediator {
                         TempoActivity_.intent(fragment.getActivity()).start(); break;
                     case 14:
                         SiempoMapActivity_.intent(fragment.getActivity()).start(); break;
+                    case 15:
+                        break;
+                    case 16:
+                        // mindful morning
+                        break;
+                    case 17:
+                        break;
                 }
                 break;
             case DEFAULT:
