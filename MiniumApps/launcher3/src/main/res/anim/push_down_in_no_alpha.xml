@@ -15,7 +15,7 @@
 -->
 
 <set xmlns:android="http://schemas.android.com/apk/res/android">
-	<objectAnimator
+	<objectanimator
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		android:duration="500"
 		android:propertyName="y"
