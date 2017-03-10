@@ -15,6 +15,11 @@
 -->
 
 <set xmlns:android="http://schemas.android.com/apk/res/android">
-	<translate android:fromYDelta="0" android:toYDelta="100%p"
-            android:duration="@android:integer/config_longAnimTime"/>
+	<objectAnimator
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:duration="500"
+		android:propertyName="y"
+		android:valueFrom="1000"
+		android:valueTo="0"
+		android:valueType="floatType" />
 </set>

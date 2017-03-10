@@ -65,12 +65,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Notification Activity -->
-        <activity
-            android:name=".notification.NotificationActivity"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
-
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />

@@ -1,6 +1,7 @@
 package co.minium.launcher3.notification;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -12,7 +13,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import co.minium.launcher3.MainActivity;
+import co.minium.launcher3.R;
+import minium.co.core.ui.CoreActivity;
 
 /**
  * Created by itc on 02/03/17.
@@ -102,9 +104,14 @@ public class StatusBarHandler {
                 if(!isNotificationTrayVisible)
                 {
                     System.out.println(TAG + " y position on Touch on notification tray "+ event.getY() + "status_bar_height " + status_bar_height);
-                    Intent intent = new Intent(mContext, NotificationActivity.class);
-                   mContext. startActivity(intent);
-
+                    //Intent intent = new Intent(mContext, NotificationFragment.class);
+                   //mContext. startActivity(intent);
+//                    ((CoreActivity) mContext).loadChildFragment(NotificationFragment_.builder().build(), R.id.mainView);
+//                    ((CoreActivity) mContext).getFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_down, R.anim.slide_out_down);
+                    FragmentTransaction ft = ((CoreActivity) mContext).getFragmentManager().beginTransaction();
+                    ft.setCustomAnimations(R.anim.push_down_in_no_alpha,R.anim.push_down_out_no_alpha,R.anim.push_down_in_no_alpha,R.anim.push_down_out_no_alpha);
+                    ft.replace(R.id.mainView,NotificationFragment_.builder().build());
+                    ft.commit();
                     isNotificationTrayVisible = true;
                 }
             }
