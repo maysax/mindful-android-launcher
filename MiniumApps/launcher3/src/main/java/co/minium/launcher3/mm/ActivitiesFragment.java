@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 
@@ -52,6 +53,14 @@ public class ActivitiesFragment  extends Fragment {
                         ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
                         break;
                 }
+            }
+        });
+
+        ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
+        crossActionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
             }
         });
     }

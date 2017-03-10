@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,6 +33,12 @@ public class MeditationTimeFragment extends Fragment {
 
         TextView titleActionBar = (TextView)view.findViewById(R.id.titleActionBar);
         titleActionBar.setText(title);
-
+        ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
+        crossActionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 }

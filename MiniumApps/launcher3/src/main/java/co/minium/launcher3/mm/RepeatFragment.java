@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,5 +32,13 @@ public class RepeatFragment extends Fragment {
         ListView listView = (ListView)view.findViewById(R.id.activity_list_view);
         RepeatAdapter repeatAdapter = new RepeatAdapter(getActivity());
         listView.setAdapter(repeatAdapter);
+
+        ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
+        crossActionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 }

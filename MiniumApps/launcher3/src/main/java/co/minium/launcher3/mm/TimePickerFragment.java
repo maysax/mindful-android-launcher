@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TableRow;
 
 import java.util.Calendar;
@@ -32,16 +34,23 @@ public class TimePickerFragment extends Fragment {
         TableRow row2 = (TableRow) view.findViewById(R.id.row2);
         TableRow row3 = (TableRow) view.findViewById(R.id.row3);
         TableRow row4 = (TableRow) view.findViewById(R.id.row4);
+        ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
+        crossActionBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().onBackPressed();
+            }
+        });
         row1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new ActivitiesFragment(),R.id.mainView);
+
             }
         });
         row2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                ((CoreActivity)getActivity()).loadChildFragment(new ActivitiesFragment(),R.id.mainView);
             }
         });
         row3.setOnClickListener(new View.OnClickListener() {
