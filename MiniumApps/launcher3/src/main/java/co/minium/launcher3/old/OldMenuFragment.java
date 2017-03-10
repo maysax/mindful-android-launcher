@@ -104,7 +104,7 @@ public class OldMenuFragment extends CoreFragment {
                 SiempoMapActivity_.intent(getActivity()).start(); break;
             case 12: new ActivityHelper(getActivity()).handleDefaultLauncher((CoreActivity) getActivity()); break;
             case 13:
-                // mindful morning 
+                // mindful morning
                 break;
             case 14: break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
