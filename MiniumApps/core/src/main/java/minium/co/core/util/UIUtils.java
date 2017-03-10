@@ -108,4 +108,10 @@ public class UIUtils {
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
     }
 
+    public static int getDensity(Context context)
+    {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return (int)metrics.density;
+    }
+
 }

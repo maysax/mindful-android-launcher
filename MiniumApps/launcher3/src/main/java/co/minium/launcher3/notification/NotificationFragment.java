@@ -1,16 +1,25 @@
 package co.minium.launcher3.notification;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+
+import com.eyeem.chips.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -19,12 +28,15 @@ import java.util.List;
 import co.minium.launcher3.MainActivity;
 import co.minium.launcher3.MainActivity_;
 import co.minium.launcher3.R;
+import co.minium.launcher3.main.MainFragment_;
 import co.minium.launcher3.main.OnStartDragListener;
 import co.minium.launcher3.main.SimpleItemTouchHelperCallback;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.UIUtils;
 
 /**
  * Created by itc on 17/02/17.
@@ -56,11 +68,7 @@ public class NotificationFragment extends CoreFragment{
 
     @AfterViews
     void afterViews() {
-        // statusBarHandler = new StatusBarHandler(this);
-
-/*        ColorDrawable colorDrawable = new ColorDrawable( Color.TRANSPARENT );
-        getWindow().setBackgroundDrawable( colorDrawable );*/
-
+        
         ViewConfiguration vc = ViewConfiguration.get(getActivity());
         mSlop = vc.getScaledTouchSlop();
 
@@ -79,6 +87,79 @@ public class NotificationFragment extends CoreFragment{
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter,getActivity());
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                return gesture.onTouchEvent(event);
+            }
+        });
+
+    }
+
+
+    final GestureDetector gesture = new GestureDetector(getActivity(),
+            new GestureDetector.SimpleOnGestureListener() {
+
+                @Override
+                public boolean onDown(MotionEvent e) {
+                    return true;
+                }
+
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+                                       float velocityY) {
+                    Log.i(TAG, "onFling has been called!");
+                    final int SWIPE_MIN_DISTANCE = 120;
+                    final int SWIPE_MAX_OFF_PATH = 250;
+                    final int SWIPE_THRESHOLD_VELOCITY = 200;
+                    try {
+                        if (Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_OFF_PATH)
+                            return false;
+                        if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
+                                && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                            Log.i(TAG, "Down to Top");
+                            animateOut();
+
+                        } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
+                                && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                            Log.i(TAG, "Top to Down");
+                        }
+                    } catch (Exception e) {
+                        // nothing
+                    }
+                    return super.onFling(e1, e2, velocityX, velocityY);
+                }
+            });
+
+    public void animateOut()
+    {
+        TranslateAnimation trans=new TranslateAnimation(0,0,0,-300* UIUtils.getDensity(getActivity()));
+        trans.setDuration(500);
+        trans.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                // TODO Auto-generated method stub
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                // TODO Auto-generated method stub
+                getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
+            }
+        });
+        getView().startAnimation(trans);
     }
 
 
@@ -103,8 +184,19 @@ public class NotificationFragment extends CoreFragment{
         StatusBarHandler.isNotificationTrayVisible = false;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            UIUtils.hideSoftKeyboard(getActivity(),getActivity().getCurrentFocus().getWindowToken());
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+    }
 
-//    @Override
+
+
+    //    @Override
 //    protected void onResume() {
 //        super.onResume();
 //        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
