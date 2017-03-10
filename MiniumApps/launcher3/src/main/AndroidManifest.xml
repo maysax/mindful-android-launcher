@@ -54,8 +54,7 @@
         <activity
             android:name=".MainActivity_"
             android:windowSoftInputMode="stateVisible"
-            android:screenOrientation="portrait"
-            android:theme="@style/WheelDemoTheme.Light">
+            android:screenOrientation="portrait">
 
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
@@ -80,13 +79,6 @@
         <activity android:name=".map.SiempoMapActivity_" android:screenOrientation="portrait" />
         <activity android:name=".call.CallLogActivity_" android:screenOrientation="portrait" />
         <activity android:name=".mm.TimePickerActivity" android:screenOrientation="portrait">
-            <intent-filter android:priority="1000">
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-             />
-            </intent-filter>
            </activity>
 
         <activity android:name=".launcher.FakeLauncherActivity"
