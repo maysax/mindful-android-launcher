@@ -101,10 +101,21 @@ public class NotificationFragment extends CoreFragment{
 
 
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 // do it
                 Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position "+ position, Toast.LENGTH_SHORT).show();
+            }
+
+
+        });
+
+        ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+               Toast.makeText(getActivity().getApplicationContext(), "Item long clicked at position "+ position, Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
 
