@@ -68,7 +68,7 @@ public class NotificationFragment extends CoreFragment{
 
     @AfterViews
     void afterViews() {
-        
+
         ViewConfiguration vc = ViewConfiguration.get(getActivity());
         mSlop = vc.getScaledTouchSlop();
 
