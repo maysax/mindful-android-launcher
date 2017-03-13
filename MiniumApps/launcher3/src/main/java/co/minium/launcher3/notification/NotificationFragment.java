@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.Toast;
 
 import com.eyeem.chips.Utils;
 
@@ -95,6 +96,15 @@ public class NotificationFragment extends CoreFragment{
             public boolean onTouch(View v, MotionEvent event) {
 
                 return gesture.onTouchEvent(event);
+            }
+        });
+
+
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                // do it
+                Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position "+ position, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -254,22 +264,4 @@ public class NotificationFragment extends CoreFragment{
         //finish();
     }
 
-    @Subscribe
-    public void onCheckActivityEvent(CheckActivityEvent event){
-        try {
-            if(event.isResume())
-            {
-                //statusBarHandler.requestStatusBarCustomization();
-            }
-            else
-            {
-               // statusBarHandler.restoreStatusBarExpansion();
-               // finish();
-            }
-        }catch (Exception e){
-            System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());
-        }
-
-
-    }
 }
