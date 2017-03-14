@@ -8,6 +8,7 @@ import minium.co.core.ui.CoreActivity;
 public class TimePickerActivity extends CoreActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.time_picker_custom);
 
