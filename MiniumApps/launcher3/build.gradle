@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -66,6 +67,10 @@ dependencies {
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:support-v4:23.4.0'
+
+    compile 'org.greenrobot:greendao:3.2.0'
+
+
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
 }
 
