@@ -5,36 +5,36 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 
 import co.minium.launcher3.R;
 import minium.co.core.ui.CoreActivity;
-import minium.co.core.ui.CoreFragment;
 
 /**
- * Created by tkb on 2017-03-13.
+ * Created by tkb on 2017-03-10.
  */
-
-public class MindfulMorningFragment extends CoreFragment {
+@EFragment
+public class MindfulMorningListDetails extends Fragment {
+    @FragmentArg
+    String title;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.mm_layout, parent, false);
+        return inflater.inflate(R.layout.mindful_morning_details, parent, false);
 
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        /*ImageView imgBackground = (ImageView)view.findViewById(R.id.imgBackground);
-        imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
-        imgBackground.setVisibility(View.VISIBLE);*/
 
+        TextView titleActionBar = (TextView)view.findViewById(R.id.titleActionBar);
+        titleActionBar.setText(title);
         ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
         crossActionBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,14 +43,14 @@ public class MindfulMorningFragment extends CoreFragment {
             }
         });
 
-       Button pause_button = (Button) view.findViewById(R.id.pause_button);
+        ImageButton pause_button = (ImageButton)view.findViewById(R.id.pause_button);
         pause_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningList(),R.id.mainView);
-
+                ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningFragment(),R.id.mainView);
             }
         });
+
 
     }
 }

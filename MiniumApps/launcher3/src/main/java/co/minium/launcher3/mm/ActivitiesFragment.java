@@ -36,23 +36,8 @@ public class ActivitiesFragment  extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String [] title = {"Meditation","Workout","Reading","Journaling","Pause"};
-                switch (i) {
-                    case 0:
-                        ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
-                        break;
-                    case 1:
-                        ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
-                        break;
-                    case 2:
-                        ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
-                        break;
-                    case 3:
-                        ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
-                        break;
-                    case 4:
-                        ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
-                        break;
-                }
+                ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
+
             }
         });
 
