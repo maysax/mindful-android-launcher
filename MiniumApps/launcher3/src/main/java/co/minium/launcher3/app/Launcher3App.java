@@ -10,10 +10,13 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.greenrobot.greendao.database.Database;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import co.minium.launcher3.db.DaoMaster;
+import co.minium.launcher3.db.DaoSession;
 import co.minium.launcher3.token.TokenManager;
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
@@ -23,6 +26,7 @@ import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DateUtils;
 
+
 /**
  * Created by Shahab on 2/16/2017.
  */
@@ -30,6 +34,13 @@ import minium.co.core.util.DateUtils;
 public class Launcher3App extends CoreApplication {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
+
+
+
+    private DaoSession daoSession;
+
+
+
 
     @Pref
     DroidPrefs_ prefs;
@@ -63,8 +74,18 @@ public class Launcher3App extends CoreApplication {
 
         SugarContext.init(this);
 
+
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"noti-db");
+        Database db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
+
         //testCases();
     }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
+    }
+
 
     private void testCases() {
         Tracer.d("Current Time: " + SimpleDateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime()));
