@@ -21,17 +21,17 @@
         android:layout_height="wrap_content" />
 
 
-      <TextView
+    <TextView
         android:id="@+id/txtRemainingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:fontFamily="sans-serif"
-        android:layout_marginTop="105dp"
         android:layout_alignParentTop="true"
-          android:layout_centerHorizontal="true"
-          android:textColor="@color/white"
-          android:text="7:00 AM  -  7:15 AM" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="105dp"
+        android:fontFamily="sans-serif"
+        android:text="7:00 AM  -  7:15 AM"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
 
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
