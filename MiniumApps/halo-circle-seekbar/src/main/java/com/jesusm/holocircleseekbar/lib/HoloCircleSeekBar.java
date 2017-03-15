@@ -149,6 +149,7 @@ public class HoloCircleSeekBar extends View {
     private Rect textBounds = new Rect();
 
     private Drawable mThumbImage;
+    private int mThumbSize;
 
     public HoloCircleSeekBar(Context context) {
         super(context);
@@ -273,6 +274,8 @@ public class HoloCircleSeekBar extends View {
         end_wheel = a.getInteger(R.styleable.HoloCircleSeekBar_end_angle, END_WHEEL_DEFAULT_VALUE);
 
         showTitle = a.getBoolean(R.styleable.HoloCircleSeekBar_show_title, true);
+        mThumbImage = a.getDrawable(R.styleable.HoloCircleSeekBar_thumb_image);
+        mThumbSize = a.getDimensionPixelSize(R.styleable.HoloCircleSeekBar_thumb_size, 50);
 
         last_radians = end_wheel;
 
@@ -371,14 +374,26 @@ public class HoloCircleSeekBar extends View {
                 (arc_finish_radians) > (end_wheel) ? end_wheel - (start_arc)
                         : arc_finish_radians - start_arc, false, mArcColor);
 
-        // Draw the pointer's "halo"
-        canvas.drawCircle(pointerPosition[0], pointerPosition[1],
-                mPointerRadius, mPointerHaloPaint);
+        if (mThumbImage != null) {
+            // draw png
+            mThumbImage.setBounds((int) pointerPosition[0] - mThumbSize / 2,
+                    (int) pointerPosition[1] - mThumbSize / 2,
+                    (int) pointerPosition[0] + mThumbSize / 2,
+                    (int) pointerPosition[1] + mThumbSize / 2);
+            mThumbImage.draw(canvas);
+        } else {
+            // draw colored circle
+            // Draw the pointer's "halo"
+            canvas.drawCircle(pointerPosition[0], pointerPosition[1],
+                    mPointerRadius, mPointerHaloPaint);
 
-        // Draw the pointer (the currently selected color) slightly smaller on
-        // top.
-        canvas.drawCircle(pointerPosition[0], pointerPosition[1],
-                (float) (mPointerRadius / 1.2), mPointerColor);
+            // Draw the pointer (the currently selected color) slightly smaller on
+            // top.
+            canvas.drawCircle(pointerPosition[0], pointerPosition[1],
+                    (float) (mPointerRadius / 1.2), mPointerColor);
+        }
+
+
         titlePaint.getTextBounds(titleText, 0, titleText.length(), titleBounds);
         subTitlePaint.getTextBounds(subTitleText, 0, subTitleText.length(), subTitleBounds);
         textPaint.getTextBounds(text, 0, text.length(), textBounds);

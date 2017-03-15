@@ -19,6 +19,8 @@
         <attr name="title_color" format="string"/>
         <attr name="subTitle_color" format="string"/>
         <attr name="text_color" format="string"/>
+        <attr name="thumb_size" format="dimension" />
+        <attr name="thumb_image" format="reference" />
     </declare-styleable>
 
 </resources>
