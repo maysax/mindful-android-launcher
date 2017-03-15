@@ -20,6 +20,7 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 
 import co.minium.launcher3.main.MainSlidePagerAdapter;
+import co.minium.launcher3.nfc.NfcManager;
 import co.minium.launcher3.notification.StatusBarHandler;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.sms.SmsObserver;
@@ -52,6 +53,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Bean
     TokenManager manager;
 
+    NfcManager nfcManager;
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
@@ -68,8 +71,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
+
+        nfcManager = new NfcManager();
+        nfcManager.init(this);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (nfcManager != null) nfcManager.onResume();
+    }
 
     private void loadViews() {
         statusBarHandler = new StatusBarHandler(this);
@@ -164,5 +175,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (nfcManager != null) nfcManager.onNewIntent(intent);
     }
 }
