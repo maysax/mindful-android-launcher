@@ -26,6 +26,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.AttributeSet;
@@ -146,6 +147,8 @@ public class HoloCircleSeekBar extends View {
     private Rect titleBounds = new Rect();
     private Rect subTitleBounds = new Rect();
     private Rect textBounds = new Rect();
+
+    private Drawable mThumbImage;
 
     public HoloCircleSeekBar(Context context) {
         super(context);
