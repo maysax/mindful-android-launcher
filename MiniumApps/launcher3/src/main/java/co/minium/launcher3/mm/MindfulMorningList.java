@@ -8,20 +8,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
 
 import co.minium.launcher3.R;
 import minium.co.core.ui.CoreActivity;
 
 /**
- * Created by tkb on 2017-03-10.
+ * Created by tkb on 2017-03-14.
  */
 
-public class ActivitiesFragment  extends Fragment {
+public class MindfulMorningList  extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activities_layout, parent, false);
+        return inflater.inflate(R.layout.mm_list, parent, false);
 
     }
 
@@ -29,14 +28,14 @@ public class ActivitiesFragment  extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         ListView listView = (ListView)view.findViewById(R.id.activity_list_view);
-        ActivitiesAdapter activitiesAdapter = new ActivitiesAdapter(getActivity(),new ActivitiesModel().getActivityModel());
-        listView.setAdapter(activitiesAdapter);
+        MindfulMorningListAdapter mindfulMorningListAdapter = new MindfulMorningListAdapter(getActivity(),new ActivitiesModel().getActivityModel2());
+        listView.setAdapter(mindfulMorningListAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String [] title = {"Meditation","Workout","Reading","Journaling","Pause"};
-                ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
+                String [] title = {"Meditation","Workout","Reading"};
+                ((CoreActivity)getActivity()).loadChildFragment(MindfulMorningListDetails_.builder().title(title[i]).build(),R.id.mainView);
 
             }
         });
