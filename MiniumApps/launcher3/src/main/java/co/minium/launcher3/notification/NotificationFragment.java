@@ -25,6 +25,7 @@ import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.greendao.query.Query;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +46,7 @@ import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.DateUtils;
 import minium.co.core.util.UIUtils;
 
 /**
@@ -125,7 +127,7 @@ public class NotificationFragment extends CoreFragment{
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 // do it
-                Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position "+ position, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position "+ notificationList.get(position).get_name(), Toast.LENGTH_SHORT).show();
             }
 
 
@@ -144,7 +146,10 @@ public class NotificationFragment extends CoreFragment{
     private void setUpNotifications(List<TableNotificationSms> items) {
 
         for(int i = 0; i < items.size(); i++){
-            Notification n = new Notification(items.get(i).get_contact_title(),items.get(i).get_message(),R.drawable.ic_person_black_24dp  ,items.get(i).get_date().toString(),false);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a");
+            String time = sdf.format(items.get(i).get_date());
+            Notification n = new Notification(items.get(i).get_contact_title(),items.get(i).get_message(),R.drawable.ic_person_black_24dp,time,false);
             notificationList.add(n);
         }
     }
