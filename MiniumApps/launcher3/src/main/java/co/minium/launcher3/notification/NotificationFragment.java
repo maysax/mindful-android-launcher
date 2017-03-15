@@ -19,20 +19,28 @@ import android.widget.Toast;
 import com.eyeem.chips.Utils;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
+import org.greenrobot.greendao.query.Query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import co.minium.launcher3.MainActivity;
 import co.minium.launcher3.MainActivity_;
 import co.minium.launcher3.R;
+import co.minium.launcher3.app.Launcher3App;
+import co.minium.launcher3.db.DaoSession;
+import co.minium.launcher3.db.TableNotificationSms;
+import co.minium.launcher3.db.TableNotificationSmsDao;
 import co.minium.launcher3.main.MainFragment_;
 import co.minium.launcher3.main.OnStartDragListener;
 import co.minium.launcher3.main.SimpleItemTouchHelperCallback;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -67,6 +75,9 @@ public class NotificationFragment extends CoreFragment{
 
   //  private  StatusBarHandler statusBarHandler;
 
+    TableNotificationSmsDao smsDao;
+    private Query<TableNotificationSms> smsQuery;
+
     @AfterViews
     void afterViews() {
 
@@ -74,9 +85,18 @@ public class NotificationFragment extends CoreFragment{
         mSlop = vc.getScaledTouchSlop();
 
         notificationList = new ArrayList<>();
+        DaoSession daoSession = ((Launcher3App)CoreApplication.getInstance()).getDaoSession();
+        smsDao = daoSession.getTableNotificationSmsDao();
+
 
 //      adapter = new NotificationAdapter(this,notificationList);
         prepareNotifications();
+
+        // query all notes, sorted a-z by their text
+//        smsQuery = smsDao.queryBuilder().orderAsc(TableNotificationSmsDao.Properties._contact_title).build();
+        List<TableNotificationSms> items = smsDao.loadAll();
+        setUpNotifications(items);
+
         adapter = new RecyclerListAdapter(getActivity(),notificationList);
 
         recyclerView.setHasFixedSize(true);
@@ -119,6 +139,14 @@ public class NotificationFragment extends CoreFragment{
             }
         });
 
+    }
+
+    private void setUpNotifications(List<TableNotificationSms> items) {
+
+        for(int i = 0; i < items.size(); i++){
+            Notification n = new Notification(items.get(i).get_contact_title(),items.get(i).get_message(),R.drawable.ic_person_black_24dp  ,items.get(i).get_date().toString(),false);
+            notificationList.add(n);
+        }
     }
 
 
@@ -184,6 +212,8 @@ public class NotificationFragment extends CoreFragment{
     }
 
 
+
+
     private void prepareNotifications() {
 
         Notification n = new Notification("Jaineel Shah","Haha. Sure! 7.",R.drawable.ic_person_black_24dp  ,"12:52 pm",false);
@@ -196,6 +226,30 @@ public class NotificationFragment extends CoreFragment{
         notificationList.add(n);
 
   //      adapter.notifyDataSetChanged();
+
+        TableNotificationSms smsNoti = new TableNotificationSms();
+        smsNoti.set_contact_id(1);
+        smsNoti.set_contact_title("Jaineel Shah");
+        smsNoti.set_message("Haha. Sure! 7 :-)");
+        smsNoti.set_sms_id(1);
+        smsNoti.set_date(new Date());
+        smsNoti.set_snooze_time(30l);
+        smsNoti.set_is_read(false);
+        smsDao.insert(smsNoti);
+        Log.d(TAG, "Inserted new sms noti , ID: " + smsNoti.getId());
+
+        smsNoti = new TableNotificationSms();
+        smsNoti.set_contact_id(2);
+        smsNoti.set_contact_title("Leigh Wasson");
+        smsNoti.set_message("Thank you");
+        smsNoti.set_sms_id(2);
+        smsNoti.set_date(new Date());
+        smsNoti.set_snooze_time(30l);
+        smsNoti.set_is_read(false);
+        smsDao.insert(smsNoti);
+        Log.d(TAG, "Inserted new sms noti , ID: " + smsNoti.getId());
+
+
     }
 
 
