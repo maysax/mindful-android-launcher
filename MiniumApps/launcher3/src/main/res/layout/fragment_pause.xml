@@ -7,72 +7,7 @@
     android:layout_height="match_parent"
     tools:context="co.minium.launcher3.pause.PauseActivity">
 
-    <ImageView
-        android:id="@+id/imgBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/pause_background"
-        android:contentDescription="@null"
-        android:visibility="invisible"/>
-
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="63dp"
-        android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
-        android:elevation="8dp"
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/crossActionBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:src="@drawable/icon_close_app"
-                android:layout_marginStart="18dp"
-                android:contentDescription="@null"/>
-
-            <TextView
-                android:id="@+id/titleActionBar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:textColor="#de000000"
-                android:fontFamily="sans-serif-medium"
-                android:text="Pause"/>
-
-            <ImageView
-                android:id="@+id/settingsActionBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:src="@drawable/icon_settings"
-                android:layout_marginEnd="18dp"
-                android:contentDescription="@null"/>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
-      <TextView
-        android:id="@+id/txtRemainingTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif"
-        android:layout_marginTop="105dp"
-        android:layout_alignParentTop="true"
-          android:layout_centerHorizontal="true"
-          android:textColor="@color/white"
-        tools:text="30 minute" />
+    <include layout="@layout/siempo_toolbar"/>
 
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
@@ -92,48 +27,20 @@
         app:text_size="24sp"
         app:text_color="@color/white"
         app:thumb_image="@drawable/control_dial_handle"
-        app:thumb_size="24dp"
+        app:thumb_size="32dp"
         app:wheel_active_color="@color/pauseSeekBarActive"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
 
-    <LinearLayout
-        android:id="@+id/endingLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="sans-serif"
-            android:text="Ending at "
-            android:textColor="@color/white"/>
-
-        <TextView
-            android:id="@+id/txtEndingTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:fontFamily="sans-serif"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            tools:text="01:00 pm" />
-    </LinearLayout>
-
     <ImageButton
-        android:text="Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/endingLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp"
+        android:layout_marginTop="18dp"
         android:src="@drawable/control_play"
+        android:layout_below="@id/seekbar"
         android:background="@null"
-        android:id="@+id/pause_button" />
+        android:id="@+id/pause_button"
+        android:contentDescription="@null" />
 
 
 </RelativeLayout>

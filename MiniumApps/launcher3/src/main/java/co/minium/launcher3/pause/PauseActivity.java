@@ -12,8 +12,8 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
-import co.minium.launcher3.event.PauseResetEvent;
-import de.greenrobot.event.EventBus;
+import co.minium.launcher3.event.PauseStartEvent;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
@@ -62,9 +62,13 @@ public class PauseActivity extends CoreActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 launcherPrefs.isPauseActive().put(false);
-                pauseFragment.onStop();
-                init();
+                finish();
             }
         });
+    }
+
+    @Subscribe
+    public void pauseStartEvent(PauseStartEvent event) {
+        loadFragment(PauseActivatedFragment_.builder().maxMillis(event.getMaxMillis()).build(), R.id.mainView, "main");
     }
 }

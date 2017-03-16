@@ -21,6 +21,7 @@
         <attr name="text_color" format="string"/>
         <attr name="thumb_size" format="dimension" />
         <attr name="thumb_image" format="reference" />
+        <attr name="show_thumb" format="boolean"/>
     </declare-styleable>
 
 </resources>

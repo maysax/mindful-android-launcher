@@ -231,7 +231,7 @@ public class NotificationFragment extends CoreFragment{
         notificationList.add(n);
 
   //      adapter.notifyDataSetChanged();
-
+/*
         TableNotificationSms smsNoti = new TableNotificationSms();
         smsNoti.set_contact_id(1);
         smsNoti.set_contact_title("Jaineel Shah");
@@ -252,7 +252,7 @@ public class NotificationFragment extends CoreFragment{
         smsNoti.set_snooze_time(30l);
         smsNoti.set_is_read(false);
         smsDao.insert(smsNoti);
-        Log.d(TAG, "Inserted new sms noti , ID: " + smsNoti.getId());
+        Log.d(TAG, "Inserted new sms noti , ID: " + smsNoti.getId());*/
 
 
     }

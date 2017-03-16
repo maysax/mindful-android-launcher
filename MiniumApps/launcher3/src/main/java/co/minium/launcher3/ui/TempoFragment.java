@@ -37,6 +37,9 @@ public class TempoFragment extends CoreFragment {
     @ViewById
     HoloCircleSeekBar seekbar;
 
+    @ViewById
+    TextView titleActionBar;
+
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
@@ -47,14 +50,14 @@ public class TempoFragment extends CoreFragment {
     void afterViews() {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         seekbar.setOnSeekBarChangeListener(seekbarListener);
-
+        titleActionBar.setText(R.string.title_tempo);
         btnOff.setActivated(true);
         btnOn.setActivated(false);
     }
 
     @Click
-    void crossActionBar() {
-        ((CoreActivity)getActivity()).finish();
+    void imgLeft() {
+        getActivity().finish();
     }
     @ViewById
     Button btnOff;
@@ -84,7 +87,7 @@ public class TempoFragment extends CoreFragment {
         EventBus.getDefault().post(new TempoEvent(true));
     }
     @Click
-    void settingsActionBar() {
+    void imgRight() {
 
         ((CoreActivity)getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(),R.id.mainView);
     }
@@ -99,15 +102,17 @@ public class TempoFragment extends CoreFragment {
         }
 
         @Override
-        public void onStartTrackingTouch(HoloCircleSeekBar seekBar) {
-
-
-        }
+        public void onStartTrackingTouch(HoloCircleSeekBar seekBar) {}
 
         @Override
         public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
+            int currVal = seekbar.getValue();
 
+            if (currVal <= 15) currVal = 15;
+            else if (currVal <= 30) currVal = 30;
+            else if (currVal <= 60) currVal = 60;
 
+            seekbar.setValue(currVal);
         }
     };
 
