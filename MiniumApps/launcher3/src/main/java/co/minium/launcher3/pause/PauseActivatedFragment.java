@@ -48,6 +48,9 @@ public class PauseActivatedFragment extends CoreFragment {
     @ViewById
     TextView txtEndingTime;
 
+    @ViewById
+    TextView titleActionBar;
+
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
@@ -66,6 +69,7 @@ public class PauseActivatedFragment extends CoreFragment {
     void afterViews() {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         handler = new Handler();
+        titleActionBar.setText(R.string.title_pause);
         startPause();
     }
 
@@ -82,12 +86,12 @@ public class PauseActivatedFragment extends CoreFragment {
     }
 
     @Click
-    void crossActionBar() {
+    void imgLeft() {
         getActivity().onBackPressed();
     }
 
     @Click
-    void settingsActionBar() {
+    void imgRight() {
         ((CoreActivity)getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(),R.id.mainView);
     }
 

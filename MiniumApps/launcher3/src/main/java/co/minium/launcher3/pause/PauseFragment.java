@@ -60,11 +60,11 @@ public class PauseFragment extends CoreFragment {
     Handler handler;
 
 
-
     @AfterViews
     void afterViews() {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         seekbar.setOnSeekBarChangeListener(seekbarListener);
+        titleActionBar.setText(R.string.title_pause);
         handler = new Handler();
     }
     @Click
@@ -73,12 +73,12 @@ public class PauseFragment extends CoreFragment {
 
     }
     @Click
-    void crossActionBar() {
+    void imgLeft() {
         getActivity().onBackPressed();
     }
 
     @Click
-    void settingsActionBar() {
+    void imgRight() {
         if (launcherPrefs.isPauseActive().get()) {
             getActivity().onBackPressed();
         } else {
@@ -100,8 +100,7 @@ public class PauseFragment extends CoreFragment {
 
         @Override
         public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
-           /* handler.removeCallbacks(startPauseRunnable);
-            handler.postDelayed(startPauseRunnable, 2000);*/
+
         }
     };
 
