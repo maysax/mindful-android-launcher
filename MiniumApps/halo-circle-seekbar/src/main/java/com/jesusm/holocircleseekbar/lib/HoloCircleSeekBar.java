@@ -141,7 +141,6 @@ public class HoloCircleSeekBar extends View {
     private float[] pointerPosition;
     private RectF mColorCenterHaloRectangle = new RectF();
     private int end_wheel;
-    private boolean isActive = true;
 
     private boolean showTitle = true;
     private Rect titleBounds = new Rect();
@@ -150,6 +149,7 @@ public class HoloCircleSeekBar extends View {
 
     private Drawable mThumbImage;
     private int mThumbSize;
+    private boolean showThumb;
 
     public HoloCircleSeekBar(Context context) {
         super(context);
@@ -276,6 +276,7 @@ public class HoloCircleSeekBar extends View {
         showTitle = a.getBoolean(R.styleable.HoloCircleSeekBar_show_title, true);
         mThumbImage = a.getDrawable(R.styleable.HoloCircleSeekBar_thumb_image);
         mThumbSize = a.getDimensionPixelSize(R.styleable.HoloCircleSeekBar_thumb_size, 50);
+        showThumb = a.getBoolean(R.styleable.HoloCircleSeekBar_show_thumb, true);
 
         last_radians = end_wheel;
 
@@ -374,25 +375,26 @@ public class HoloCircleSeekBar extends View {
                 (arc_finish_radians) > (end_wheel) ? end_wheel - (start_arc)
                         : arc_finish_radians - start_arc, false, mArcColor);
 
-        if (mThumbImage != null) {
-            // draw png
-            mThumbImage.setBounds((int) pointerPosition[0] - mThumbSize / 2,
-                    (int) pointerPosition[1] - mThumbSize / 2,
-                    (int) pointerPosition[0] + mThumbSize / 2,
-                    (int) pointerPosition[1] + mThumbSize / 2);
-            mThumbImage.draw(canvas);
-        } else {
-            // draw colored circle
-            // Draw the pointer's "halo"
-            canvas.drawCircle(pointerPosition[0], pointerPosition[1],
-                    mPointerRadius, mPointerHaloPaint);
+        if (showThumb) {
+            if (mThumbImage != null) {
+                // draw png
+                mThumbImage.setBounds((int) pointerPosition[0] - mThumbSize / 2,
+                        (int) pointerPosition[1] - mThumbSize / 2,
+                        (int) pointerPosition[0] + mThumbSize / 2,
+                        (int) pointerPosition[1] + mThumbSize / 2);
+                mThumbImage.draw(canvas);
+            } else {
+                // draw colored circle
+                // Draw the pointer's "halo"
+                canvas.drawCircle(pointerPosition[0], pointerPosition[1],
+                        mPointerRadius, mPointerHaloPaint);
 
-            // Draw the pointer (the currently selected color) slightly smaller on
-            // top.
-            canvas.drawCircle(pointerPosition[0], pointerPosition[1],
-                    (float) (mPointerRadius / 1.2), mPointerColor);
+                // Draw the pointer (the currently selected color) slightly smaller on
+                // top.
+                canvas.drawCircle(pointerPosition[0], pointerPosition[1],
+                        (float) (mPointerRadius / 1.2), mPointerColor);
+            }
         }
-
 
         titlePaint.getTextBounds(titleText, 0, titleText.length(), titleBounds);
         subTitlePaint.getTextBounds(subTitleText, 0, subTitleText.length(), subTitleBounds);
@@ -540,17 +542,12 @@ public class HoloCircleSeekBar extends View {
         invalidate();
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
     private void updatePointerPosition() {
         pointerPosition = calculatePointerPosition(mAngle);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!isActive) return true;
 
         // Convert coordinates to our internal coordinate system
         float x = event.getX() - mTranslationOffset;
