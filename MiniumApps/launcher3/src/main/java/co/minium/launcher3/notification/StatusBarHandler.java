@@ -111,7 +111,7 @@ public class StatusBarHandler {
                     FragmentTransaction ft = ((CoreActivity) mContext).getFragmentManager().beginTransaction();
                      ft.setCustomAnimations(R.animator.push_down_in_no_alpha,R.animator.push_down_out_no_alpha);
                     ft.replace(R.id.mainView,NotificationFragment_.builder().build());
-                    ft.commit();
+                    ft.commitAllowingStateLoss();
                     isNotificationTrayVisible = true;
                 }
             }
