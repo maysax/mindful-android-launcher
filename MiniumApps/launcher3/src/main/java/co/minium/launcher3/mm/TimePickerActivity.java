@@ -14,7 +14,7 @@ public class TimePickerActivity extends CoreActivity {
         setContentView(R.layout.time_picker_custom);
 
         loadTopBar();
-        loadFragment(new TimePickerFragment(),R.id.mainView,"Main");
+        loadFragment(new TimePickerFragment_(),R.id.mainView,"Main");
 
     }
 
