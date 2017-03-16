@@ -8,9 +8,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Switch;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.app.Launcher3App;
+import co.minium.launcher3.db.DaoSession;
+import co.minium.launcher3.mm.model.ActivitiesStorage;
+import co.minium.launcher3.mm.model.ActivitiesStorageDao;
+import co.minium.launcher3.mm.model.DBUtility;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.ui.CoreActivity;
 
 /**
@@ -18,7 +27,8 @@ import minium.co.core.ui.CoreActivity;
  */
 
 public class ActivitiesFragment  extends Fragment {
-
+    List<ActivitiesStorage>activitiesStorageList;
+    ListView listView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activities_layout, parent, false);
@@ -28,15 +38,15 @@ public class ActivitiesFragment  extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        ListView listView = (ListView)view.findViewById(R.id.activity_list_view);
-        ActivitiesAdapter activitiesAdapter = new ActivitiesAdapter(getActivity(),new ActivitiesModel().getActivityModel());
-        listView.setAdapter(activitiesAdapter);
+
+
+        listView = (ListView)view.findViewById(R.id.activity_list_view);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String [] title = {"Meditation","Workout","Reading","Journaling","Pause"};
-                ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(title[i]).build(),R.id.mainView);
+               // String [] title = {"Meditation Timer","Workout Timer","Reading Timer","Journaling Timer","Pause Timer"};
+                ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(activitiesStorageList.get(i).getName()).build(),R.id.mainView);
 
             }
         });
@@ -48,5 +58,34 @@ public class ActivitiesFragment  extends Fragment {
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    private ArrayList<ActivitiesStorage> insertDefaultValue() {
+        String[] name = {"Meditation","Workout","Reading","Journaling","Pause"};
+        int[] values = {30,10,20,0,0};
+        ActivitiesStorage aActivityStorage;
+        ArrayList<ActivitiesStorage>activitiesStorageList = new ArrayList<>();
+        for (int i=0; i<name.length;i++){
+            aActivityStorage = new ActivitiesStorage();
+            aActivityStorage.setName(name[i]);
+            aActivityStorage.setTime(values[i]);
+            activitiesStorageList.add(aActivityStorage);
+        }
+        DBUtility.GetActivitySession().insertInTx(activitiesStorageList);
+        return activitiesStorageList;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        activitiesStorageList = DBUtility.GetActivitySession().loadAll();
+        if (activitiesStorageList.size()==0){
+            activitiesStorageList = insertDefaultValue();
+        }
+        ActivitiesAdapter activitiesAdapter = new ActivitiesAdapter(getActivity(),activitiesStorageList);
+        listView.setAdapter(activitiesAdapter);
+
+
     }
 }
