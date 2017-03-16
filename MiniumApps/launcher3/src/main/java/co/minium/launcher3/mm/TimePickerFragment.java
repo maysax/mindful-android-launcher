@@ -44,7 +44,7 @@ public class TimePickerFragment extends Fragment {
         row1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new AwayFragment(),R.id.mainView);
+                ((CoreActivity)getActivity()).loadChildFragment(new AwayFragment_(),R.id.mainView);
             }
         });
         row2.setOnClickListener(new View.OnClickListener() {
@@ -124,4 +124,6 @@ public class TimePickerFragment extends Fragment {
         mins.setCurrentItem(calendar.get(Calendar.MINUTE));
         ampm.setCurrentItem(calendar.get(Calendar.AM_PM));
     }
+
+
 }

@@ -18,4 +18,8 @@ public interface Launcher3Prefs {
     @DefaultBoolean(false)
     boolean isPauseAllowCallsChecked();
 
+
+    @DefaultBoolean(false)
+    boolean isAwayChecked();
+
 }
