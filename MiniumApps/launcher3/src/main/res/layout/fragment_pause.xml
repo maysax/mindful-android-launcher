@@ -92,7 +92,7 @@
         app:text_size="24sp"
         app:text_color="@color/white"
         app:thumb_image="@drawable/control_dial_handle"
-        app:thumb_size="24dp"
+        app:thumb_size="32dp"
         app:wheel_active_color="@color/pauseSeekBarActive"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
 
