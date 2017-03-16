@@ -65,7 +65,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+           >
             <TextView
                 android:id="@+id/txt_time"
                 android:layout_width="wrap_content"
@@ -84,6 +85,7 @@
                 android:layout_weight="1"
                 android:gravity="left"
                 android:textSize="14sp"
+                android:paddingLeft="10dp"
                 android:textColor="#de000000"
                 android:fontFamily="sans-serif-medium"
                 android:text="  7:30 AM"
