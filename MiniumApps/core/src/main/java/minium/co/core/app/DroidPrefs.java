@@ -63,4 +63,6 @@ public interface DroidPrefs {
 
     @DefaultBoolean(false)
     boolean hasShownIntroScreen();
+
+
 }
