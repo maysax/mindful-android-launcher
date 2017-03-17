@@ -32,11 +32,7 @@ public class ActivitiesFragment  extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-
-
         listView = (ListView)view.findViewById(R.id.activity_list_view);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

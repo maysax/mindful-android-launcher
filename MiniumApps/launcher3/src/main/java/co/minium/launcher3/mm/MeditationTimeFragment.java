@@ -59,7 +59,7 @@ public class MeditationTimeFragment extends Fragment {
         pause_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningFragment(),R.id.mainView);
+                ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningFragment_(),R.id.mainView);
             }
         });
 
