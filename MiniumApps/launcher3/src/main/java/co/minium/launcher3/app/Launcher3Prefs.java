@@ -1,6 +1,7 @@
 package co.minium.launcher3.app;
 
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
 /**
@@ -22,4 +23,6 @@ public interface Launcher3Prefs {
     @DefaultBoolean(false)
     boolean isAwayChecked();
 
+    @DefaultString("10:20:1")
+    String time();
 }

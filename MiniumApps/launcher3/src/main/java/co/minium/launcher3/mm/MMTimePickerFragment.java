@@ -29,6 +29,7 @@ import minium.co.core.ui.CoreActivity;
 @EFragment(R.layout.fragment_time_picker)
 public class MMTimePickerFragment extends Fragment {
     String []AmPm = new String[] {"AM", "PM"};
+    boolean isTimeChanged = false;
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
@@ -81,25 +82,11 @@ public class MMTimePickerFragment extends Fragment {
         hour_horizontal.setCyclic(true);
         hour_horizontal.addChangingListener(new OnWheelChangedListener() {
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
-
+                isTimeChanged = true;
                 time.setText((Integer.parseInt(wheel.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+AmPm[ampm.getCurrentItem()]);
             }
         });
 
-        /*hour_horizontal.addScrollingListener(new OnWheelScrollListener() {
-            @Override
-            public void onScrollingStarted(AbstractWheel wheel) {
-                Log.e("TKB","onScrollingStarted");
-
-                time.setText((Integer.parseInt(wheel.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+ampm.getCurrentItem());
-            }
-
-            @Override
-            public void onScrollingFinished(AbstractWheel wheel) {
-                Log.e("TKB","onScrollingFinished");
-                time.setText((Integer.parseInt(wheel.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+ampm.getCurrentItem());
-            }
-        });*/
 
         NumericWheelAdapter minAdapter = new NumericWheelAdapter(getActivity(), 0, 59, "%02d");
         minAdapter.setItemResource(R.layout.wheel_text_centered_dark_back);
@@ -108,22 +95,10 @@ public class MMTimePickerFragment extends Fragment {
         mins.setCyclic(true);
         mins.addChangingListener(new OnWheelChangedListener() {
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
+                isTimeChanged = true;
                 time.setText((Integer.parseInt(hour_horizontal.getCurrentItem()+"")+1)+":"+wheel.getCurrentItem()+" "+AmPm[ampm.getCurrentItem()]);
             }
         });
-      /*  mins.addScrollingListener(new OnWheelScrollListener() {
-            @Override
-            public void onScrollingStarted(AbstractWheel wheel) {
-                time.setText(hour_horizontal.getCurrentItem()+":"+wheel.getCurrentItem()+" "+ampm.getCurrentItem()+"");
-
-            }
-
-            @Override
-            public void onScrollingFinished(AbstractWheel wheel) {
-                time.setText(hour_horizontal.getCurrentItem()+":"+wheel.getCurrentItem()+" "+ampm.getCurrentItem()+"");
-
-            }
-        });*/
 
         ArrayWheelAdapter<String> ampmAdapter =
                 new ArrayWheelAdapter<>(getActivity(), AmPm);
@@ -132,22 +107,11 @@ public class MMTimePickerFragment extends Fragment {
         ampm.setViewAdapter(ampmAdapter);
         ampm.addChangingListener(new OnWheelChangedListener() {
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
+                isTimeChanged = true;
                 time.setText((Integer.parseInt(hour_horizontal.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+AmPm[wheel.getCurrentItem()]);
             }
         });
-        /*ampm.addScrollingListener(new OnWheelScrollListener() {
-            @Override
-            public void onScrollingStarted(AbstractWheel wheel) {
-                time.setText(hocur_horizontal.getCurrentItem()+":"+mins.getCurrentItem()+" "+wheel.getCurrentItem()+"");
 
-            }
-
-            @Override
-            public void onScrollingFinished(AbstractWheel wheel) {
-                time.setText(hour_horizontal.getCurrentItem()+":"+mins.getCurrentItem()+" "+wheel.getCurrentItem()+"");
-
-            }
-        });*/
         // set current time
         Calendar calendar = Calendar.getInstance(Locale.US);
         hour_horizontal.setCurrentItem(calendar.get(Calendar.HOUR_OF_DAY));
@@ -164,14 +128,28 @@ public class MMTimePickerFragment extends Fragment {
             txt_away.setText("Off");
         }
 
+        String SavedTime = launcherPrefs.time().get();
+        String [] timeArray = SavedTime.split(":");
+        hour_horizontal.setCurrentItem(Integer.parseInt(timeArray[0])-1);
+        mins.setCurrentItem(Integer.parseInt(timeArray[1]));
+        ampm.setCurrentItem(Integer.parseInt(timeArray[2]));
+
         List<ActivitiesStorage> activitiesStorageList = DBUtility.GetActivitySession().loadAll();
         int time=0;
         for(ActivitiesStorage activitiesStorage: activitiesStorageList){
             time = time+activitiesStorage.getTime();
         }
         txt_total_time.setText("Total: "+time+" min");
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.e("TKB Paused","Paused");
 
-
+        if (isTimeChanged){
+            launcherPrefs.time().put((Integer.parseInt(hour_horizontal.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+":"+ampm.getCurrentItem());
+        }
+        isTimeChanged = false;
     }
 }
