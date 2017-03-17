@@ -34,7 +34,7 @@ public class MindfulMorningFragment extends CoreFragment {
     Button pause_button;
     @Click
     void pause_button(){
-
+        ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningList_(),R.id.mainView);
     }
     @Click
     void crossActionBar(){
@@ -42,7 +42,6 @@ public class MindfulMorningFragment extends CoreFragment {
     }
     @AfterViews
     public void afterViews(){
-        ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningList(),R.id.mainView);
 
     }
 }

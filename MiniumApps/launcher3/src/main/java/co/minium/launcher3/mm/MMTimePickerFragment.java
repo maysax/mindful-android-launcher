@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import antistatic.spinnerwheel.AbstractWheel;
+import antistatic.spinnerwheel.OnWheelChangedListener;
 import antistatic.spinnerwheel.OnWheelScrollListener;
 import antistatic.spinnerwheel.adapters.ArrayWheelAdapter;
 import antistatic.spinnerwheel.adapters.NumericWheelAdapter;
@@ -26,7 +27,8 @@ import co.minium.launcher3.mm.model.DBUtility;
 import minium.co.core.ui.CoreActivity;
 
 @EFragment(R.layout.fragment_time_picker)
-public class TimePickerFragment extends Fragment {
+public class MMTimePickerFragment extends Fragment {
+    String []AmPm = new String[] {"AM", "PM"};
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
@@ -76,8 +78,15 @@ public class TimePickerFragment extends Fragment {
         hourAdapter.setItemResource(R.layout.wheel_text_centered);
         hourAdapter.setItemTextResource(R.id.text);
         hour_horizontal.setViewAdapter(hourAdapter);
+        hour_horizontal.setCyclic(true);
+        hour_horizontal.addChangingListener(new OnWheelChangedListener() {
+            public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
 
-        hour_horizontal.addScrollingListener(new OnWheelScrollListener() {
+                time.setText((Integer.parseInt(wheel.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+AmPm[ampm.getCurrentItem()]);
+            }
+        });
+
+        /*hour_horizontal.addScrollingListener(new OnWheelScrollListener() {
             @Override
             public void onScrollingStarted(AbstractWheel wheel) {
                 Log.e("TKB","onScrollingStarted");
@@ -90,13 +99,19 @@ public class TimePickerFragment extends Fragment {
                 Log.e("TKB","onScrollingFinished");
                 time.setText((Integer.parseInt(wheel.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+ampm.getCurrentItem());
             }
-        });
+        });*/
 
         NumericWheelAdapter minAdapter = new NumericWheelAdapter(getActivity(), 0, 59, "%02d");
         minAdapter.setItemResource(R.layout.wheel_text_centered_dark_back);
         minAdapter.setItemTextResource(R.id.text);
         mins.setViewAdapter(minAdapter);
-        mins.addScrollingListener(new OnWheelScrollListener() {
+        mins.setCyclic(true);
+        mins.addChangingListener(new OnWheelChangedListener() {
+            public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
+                time.setText((Integer.parseInt(hour_horizontal.getCurrentItem()+"")+1)+":"+wheel.getCurrentItem()+" "+AmPm[ampm.getCurrentItem()]);
+            }
+        });
+      /*  mins.addScrollingListener(new OnWheelScrollListener() {
             @Override
             public void onScrollingStarted(AbstractWheel wheel) {
                 time.setText(hour_horizontal.getCurrentItem()+":"+wheel.getCurrentItem()+" "+ampm.getCurrentItem()+"");
@@ -108,17 +123,22 @@ public class TimePickerFragment extends Fragment {
                 time.setText(hour_horizontal.getCurrentItem()+":"+wheel.getCurrentItem()+" "+ampm.getCurrentItem()+"");
 
             }
-        });
+        });*/
 
         ArrayWheelAdapter<String> ampmAdapter =
-                new ArrayWheelAdapter<>(getActivity(), new String[] {"AM", "PM"});
+                new ArrayWheelAdapter<>(getActivity(), AmPm);
         ampmAdapter.setItemResource(R.layout.wheel_text_centered_am_pm);
         ampmAdapter.setItemTextResource(R.id.text);
         ampm.setViewAdapter(ampmAdapter);
-        ampm.addScrollingListener(new OnWheelScrollListener() {
+        ampm.addChangingListener(new OnWheelChangedListener() {
+            public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
+                time.setText((Integer.parseInt(hour_horizontal.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+AmPm[wheel.getCurrentItem()]);
+            }
+        });
+        /*ampm.addScrollingListener(new OnWheelScrollListener() {
             @Override
             public void onScrollingStarted(AbstractWheel wheel) {
-                time.setText(hour_horizontal.getCurrentItem()+":"+mins.getCurrentItem()+" "+wheel.getCurrentItem()+"");
+                time.setText(hocur_horizontal.getCurrentItem()+":"+mins.getCurrentItem()+" "+wheel.getCurrentItem()+"");
 
             }
 
@@ -127,7 +147,7 @@ public class TimePickerFragment extends Fragment {
                 time.setText(hour_horizontal.getCurrentItem()+":"+mins.getCurrentItem()+" "+wheel.getCurrentItem()+"");
 
             }
-        });
+        });*/
         // set current time
         Calendar calendar = Calendar.getInstance(Locale.US);
         hour_horizontal.setCurrentItem(calendar.get(Calendar.HOUR_OF_DAY));

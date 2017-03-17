@@ -78,8 +78,8 @@
         <activity android:name=".ui.TempoActivity_" android:screenOrientation="portrait" />
         <activity android:name=".map.SiempoMapActivity_" android:screenOrientation="portrait" />
         <activity android:name=".call.CallLogActivity_" android:screenOrientation="portrait" />
-        <activity android:name=".mm.MMTimePickerActivity_" android:screenOrientation="portrait">
-           </activity>
+        <activity android:name=".mm.MMTimePickerActivity_" android:screenOrientation="portrait"/>
+        <activity android:name=".mm.MindfulMorningActivity_" android:screenOrientation="portrait"/>
 
         <activity android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">

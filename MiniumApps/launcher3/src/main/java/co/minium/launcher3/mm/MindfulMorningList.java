@@ -9,43 +9,54 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
+
 import co.minium.launcher3.R;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.ui.CoreFragment;
 
 /**
  * Created by tkb on 2017-03-14.
  */
 
-public class MindfulMorningList  extends Fragment {
+@EFragment(R.layout.mm_list)
+public class MindfulMorningList  extends CoreFragment {
 
-    @Override
+   /* @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.mm_list, parent, false);
 
+    }*/
+
+   @ViewById
+   ListView activity_list_view;
+
+    @ViewById
+    ImageView crossActionBar;
+
+    @Click
+    void crossActionBar(){
+        getActivity().onBackPressed();
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+   @AfterViews
+   void afterViews(){
+       MindfulMorningListAdapter mindfulMorningListAdapter = new MindfulMorningListAdapter(getActivity(),new ActivitiesModel().getActivityModel2());
+       activity_list_view.setAdapter(mindfulMorningListAdapter);
 
-        ListView listView = (ListView)view.findViewById(R.id.activity_list_view);
-        MindfulMorningListAdapter mindfulMorningListAdapter = new MindfulMorningListAdapter(getActivity(),new ActivitiesModel().getActivityModel2());
-        listView.setAdapter(mindfulMorningListAdapter);
+       activity_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           @Override
+           public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+               String [] title = {"Meditation","Workout","Reading"};
+               ((CoreActivity)getActivity()).loadChildFragment(MindfulMorningListDetails_.builder().title(title[i]).build(),R.id.mainView);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String [] title = {"Meditation","Workout","Reading"};
-                ((CoreActivity)getActivity()).loadChildFragment(MindfulMorningListDetails_.builder().title(title[i]).build(),R.id.mainView);
+           }
+       });
 
-            }
-        });
 
-        ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
-        crossActionBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-    }
+   }
+
 }

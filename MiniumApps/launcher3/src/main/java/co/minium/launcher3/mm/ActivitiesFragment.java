@@ -38,6 +38,7 @@ public class ActivitiesFragment  extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                // String [] title = {"Meditation Timer","Workout Timer","Reading Timer","Journaling Timer","Pause Timer"};
                 ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(activitiesStorageList.get(i).getName()).build(),R.id.mainView);
+                //MindfulMorningActivity_.intent(getActivity()).start();
 
             }
         });

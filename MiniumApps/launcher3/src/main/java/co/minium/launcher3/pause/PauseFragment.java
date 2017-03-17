@@ -114,7 +114,7 @@ public class PauseFragment extends CoreFragment {
 
     public void volumeUpPresses() {
         if (!launcherPrefs.isPauseActive().get()) {
-            Tracer.i("Volume up pressed in TimePickerFragment");
+            Tracer.i("Volume up pressed in MMTimePickerFragment");
 
             int currVal = seekbar.getValue();
 

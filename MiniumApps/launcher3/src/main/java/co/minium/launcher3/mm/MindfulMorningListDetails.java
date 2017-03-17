@@ -36,7 +36,7 @@ public class MindfulMorningListDetails extends CoreFragment {
     ImageButton pause_button;
     @Click
     void pause_button(){
-        ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningFragment_(),R.id.mainView);
+      //  MMTimePickerActivity_.intent(getActivity()).start();
     }
     @Click
     void crossActionBar(){

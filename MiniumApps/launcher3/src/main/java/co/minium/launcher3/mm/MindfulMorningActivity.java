@@ -5,18 +5,21 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 
 import co.minium.launcher3.R;
-import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.ui.CoreActivity;
 
+/**
+ * Created by tkb on 2017-03-17.
+ */
 @Fullscreen
-@EActivity(R.layout.time_picker_custom)
+@EActivity(R.layout.mindful_morning_activity)
 
-public class MMTimePickerActivity extends CoreActivity {
-
+public class MindfulMorningActivity extends CoreActivity {
 
     @AfterViews
     public void afterViews(){
-        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
-        loadFragment(new MMTimePickerFragment_(),R.id.mainView,"Main");
+
+        loadFragment(new MindfulMorningFragment_(),R.id.mainView,"Main");
+
     }
+
 }
