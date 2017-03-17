@@ -1,10 +1,7 @@
 package co.minium.launcher3.mm;
+
 import android.app.Fragment;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -13,25 +10,34 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
-
 import antistatic.spinnerwheel.AbstractWheel;
 import antistatic.spinnerwheel.OnWheelScrollListener;
 import antistatic.spinnerwheel.adapters.ArrayWheelAdapter;
 import antistatic.spinnerwheel.adapters.NumericWheelAdapter;
 import co.minium.launcher3.R;
-import co.minium.launcher3.ui.TempoActivity;
+import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.mm.model.ActivitiesStorage;
+import co.minium.launcher3.mm.model.DBUtility;
 import minium.co.core.ui.CoreActivity;
 
 @EFragment(R.layout.fragment_time_picker)
 public class TimePickerFragment extends Fragment {
-
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
 
     @ViewById
     TableRow row1,row2,row3,row4;
 
+    @ViewById
+    TextView txt_total_time;
+
+    @ViewById
+    TextView txt_away;
     @ViewById
     ImageView crossActionBar;
 
@@ -66,7 +72,6 @@ public class TimePickerFragment extends Fragment {
     void afterViews(){
 
         //String _hour,_minute,_amPM;
-
         NumericWheelAdapter hourAdapter = new NumericWheelAdapter(getActivity(), 1, 12, "%01d");
         hourAdapter.setItemResource(R.layout.wheel_text_centered);
         hourAdapter.setItemTextResource(R.id.text);
@@ -130,105 +135,23 @@ public class TimePickerFragment extends Fragment {
         ampm.setCurrentItem(calendar.get(Calendar.AM_PM));
     }
 
-/*
-
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onResume() {
+        super.onResume();
+        if (launcherPrefs.isAwayChecked().get()==true){
+            txt_away.setText("On");
+        }else {
+            txt_away.setText("Off");
+        }
 
-        TableRow row1 = (TableRow) view.findViewById(R.id.row1);
-        TableRow row2 = (TableRow) view.findViewById(R.id.row2);
-        TableRow row3 = (TableRow) view.findViewById(R.id.row3);
-        TableRow row4 = (TableRow) view.findViewById(R.id.row4);
-        ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
-        crossActionBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-        row1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new AwayFragment_(),R.id.mainView);
-            }
-        });
-        row2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new ActivitiesFragment(),R.id.mainView);
-            }
-        });
-        row3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        List<ActivitiesStorage> activitiesStorageList = DBUtility.GetActivitySession().loadAll();
+        int time=0;
+        for(ActivitiesStorage activitiesStorage: activitiesStorageList){
+            time = time+activitiesStorage.getTime();
+        }
+        txt_total_time.setText("Total: "+time+" min");
 
-            }
-        });
-        row4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new RepeatFragment(),R.id.mainView);
-            }
-        });
-        final AbstractWheel hours = (AbstractWheel) view.findViewById(R.id.hour_horizontal);
-        NumericWheelAdapter hourAdapter = new NumericWheelAdapter(getActivity(), 1, 12, "%01d");
-        hourAdapter.setItemResource(R.layout.wheel_text_centered);
-        hourAdapter.setItemTextResource(R.id.text);
-        hours.setViewAdapter(hourAdapter);
 
-        hours.addScrollingListener(new OnWheelScrollListener() {
-            @Override
-            public void onScrollingStarted(AbstractWheel wheel) {
-                Log.e("TKB","onScrollingStarted");
-            }
 
-            @Override
-            public void onScrollingFinished(AbstractWheel wheel) {
-                Log.e("TKB","onScrollingFinished");
-
-            }
-        });
-
-        final AbstractWheel mins = (AbstractWheel) view.findViewById(R.id.mins);
-        NumericWheelAdapter minAdapter = new NumericWheelAdapter(getActivity(), 0, 59, "%02d");
-        minAdapter.setItemResource(R.layout.wheel_text_centered_dark_back);
-        minAdapter.setItemTextResource(R.id.text);
-        mins.setViewAdapter(minAdapter);
-        mins.addScrollingListener(new OnWheelScrollListener() {
-            @Override
-            public void onScrollingStarted(AbstractWheel wheel) {
-
-            }
-
-            @Override
-            public void onScrollingFinished(AbstractWheel wheel) {
-
-            }
-        });
-
-        final AbstractWheel ampm = (AbstractWheel) view.findViewById(R.id.ampm);
-        ArrayWheelAdapter<String> ampmAdapter =
-                new ArrayWheelAdapter<>(getActivity(), new String[] {"AM", "PM"});
-        ampmAdapter.setItemResource(R.layout.wheel_text_centered_am_pm);
-        ampmAdapter.setItemTextResource(R.id.text);
-        ampm.setViewAdapter(ampmAdapter);
-        ampm.addScrollingListener(new OnWheelScrollListener() {
-            @Override
-            public void onScrollingStarted(AbstractWheel wheel) {
-
-            }
-
-            @Override
-            public void onScrollingFinished(AbstractWheel wheel) {
-
-            }
-        });
-        // set current time
-        Calendar calendar = Calendar.getInstance(Locale.US);
-        hours.setCurrentItem(calendar.get(Calendar.HOUR_OF_DAY));
-        mins.setCurrentItem(calendar.get(Calendar.MINUTE));
-        ampm.setCurrentItem(calendar.get(Calendar.AM_PM));
     }
-*/
-
 }
