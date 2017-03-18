@@ -11,7 +11,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.ViewById;
 
 import co.minium.launcher3.R;
 import minium.co.core.ui.CoreActivity;
@@ -21,36 +25,23 @@ import minium.co.core.ui.CoreFragment;
  * Created by tkb on 2017-03-13.
  */
 
+@EFragment(R.layout.mm_layout)
 public class MindfulMorningFragment extends CoreFragment {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.mm_layout, parent, false);
-
+     @ViewById
+    ImageView crossActionBar;
+    @ViewById
+    Button pause_button;
+    @Click
+    void pause_button(){
+        ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningList_(),R.id.mainView);
     }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        /*ImageView imgBackground = (ImageView)view.findViewById(R.id.imgBackground);
-        imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
-        imgBackground.setVisibility(View.VISIBLE);*/
-
-        ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
-        crossActionBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-
-       Button pause_button = (Button) view.findViewById(R.id.pause_button);
-        pause_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningList(),R.id.mainView);
-
-            }
-        });
+    @Click
+    void crossActionBar(){
+        getActivity().onBackPressed();
+    }
+    @AfterViews
+    public void afterViews(){
 
     }
 }

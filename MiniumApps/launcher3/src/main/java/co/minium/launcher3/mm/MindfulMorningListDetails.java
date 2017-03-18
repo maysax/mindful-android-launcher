@@ -1,56 +1,76 @@
 package co.minium.launcher3.mm;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
+import org.androidannotations.annotations.ViewById;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.event.PauseStartEvent;
+import de.greenrobot.event.EventBus;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.ui.CoreFragment;
 
 /**
  * Created by tkb on 2017-03-10.
  */
-@EFragment
-public class MindfulMorningListDetails extends Fragment {
+@EFragment(R.layout.mindful_morning_details)
+public class MindfulMorningListDetails extends CoreFragment {
     @FragmentArg
     String title;
-
-    @Override
+    @ViewById
+    HoloCircleSeekBar seekbar;
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.mindful_morning_details, parent, false);
 
+    }*/
+
+    @ViewById
+    TextView titleActionBar;
+    @ViewById
+    ImageView crossActionBar;
+    @ViewById
+    ImageButton pause_button;
+    @Click
+    void pause_button(){
+      //  MMTimePickerActivity_.intent(getActivity()).start();
+        startPause();
     }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        TextView titleActionBar = (TextView)view.findViewById(R.id.titleActionBar);
-        titleActionBar.setText(title);
-        ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
-        crossActionBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getActivity().onBackPressed();
-            }
-        });
-
-        ImageButton pause_button = (ImageButton)view.findViewById(R.id.pause_button);
-        pause_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((CoreActivity)getActivity()).loadChildFragment(new MindfulMorningFragment(),R.id.mainView);
-            }
-        });
-
+    @Click
+    void crossActionBar(){
+        getActivity().onBackPressed();
+    }
+    @AfterViews
+    public void afterViews(){
+        seekbar.setOnSeekBarChangeListener(seekbarListener);
 
     }
+    private void startPause() {
+        EventBus.getDefault().post(new PauseStartEvent(seekbar.getValue() * 60 * 1000));
+    }
+    private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {
+
+        @Override
+        public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(HoloCircleSeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
+
+        }
+    };
 }

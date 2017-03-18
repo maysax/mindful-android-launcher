@@ -5,15 +5,16 @@
     android:id="@+id/pauseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/pause_background"
     tools:context="co.minium.launcher3.pause.PauseActivity">
 
-    <ImageView
+   <!-- <ImageView
         android:id="@+id/imgBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/pause_background"
         android:contentDescription="@null"
-        android:visibility="visible"/>
+        android:visibility="visible"/>-->
     <include
         android:id="@+id/included"
         layout="@layout/custom_toolbar_with_settings"

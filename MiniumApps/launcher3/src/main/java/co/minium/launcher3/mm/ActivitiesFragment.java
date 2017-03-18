@@ -9,17 +9,12 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import co.minium.launcher3.R;
-import co.minium.launcher3.app.Launcher3App;
-import co.minium.launcher3.db.DaoSession;
 import co.minium.launcher3.mm.model.ActivitiesStorage;
-import co.minium.launcher3.mm.model.ActivitiesStorageDao;
 import co.minium.launcher3.mm.model.DBUtility;
-import minium.co.core.app.CoreApplication;
 import minium.co.core.ui.CoreActivity;
 
 /**
@@ -37,16 +32,13 @@ public class ActivitiesFragment  extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-
-
-
         listView = (ListView)view.findViewById(R.id.activity_list_view);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                // String [] title = {"Meditation Timer","Workout Timer","Reading Timer","Journaling Timer","Pause Timer"};
                 ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(activitiesStorageList.get(i).getName()).build(),R.id.mainView);
+                //MindfulMorningActivity_.intent(getActivity()).start();
 
             }
         });

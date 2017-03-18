@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="56dp"
     android:showDividers="none">
     <TableRow
         android:layout_width="fill_parent"
         android:layout_marginLeft="18dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="18dp"
         android:id="@+id/row3"
         android:gravity="center_vertical"
         android:layout_height="wrap_content">

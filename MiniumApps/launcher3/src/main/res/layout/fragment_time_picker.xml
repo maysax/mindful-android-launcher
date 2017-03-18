@@ -46,6 +46,7 @@
                 android:padding="4dp"
                 android:src="@drawable/icon_settings"
                 android:layout_marginEnd="18dp"
+                android:visibility="invisible"
                 android:contentDescription="@null"/>
 
         </LinearLayout>
@@ -132,17 +133,25 @@
                 android:textColor="#de000000"
                 android:layout_height="wrap_content"
                 />
-
-            <com.joanzapata.iconify.widget.IconTextView
-                android:text="On   {fa-angle-right 27dp}"
+            <TextView
+                android:text="message"
+                android:id="@+id/txt_away"
                 android:layout_width="wrap_content"
-                android:layout_marginRight="18dp"
                 android:textSize="14sp"
                 android:fontFamily="sans-serif"
                 android:textColor="#8b000000"
                 android:gravity="right"
                 android:layout_height="wrap_content"
                 />
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="18dp"
+                android:fontFamily="sans-serif"
+                android:gravity="right"
+                android:text="  {fa-angle-right 27dp}"
+                android:textColor="#8b000000"
+                android:textSize="14sp" />
 
         </TableRow>
         <TableRow
@@ -161,9 +170,18 @@
                 android:textColor="#de000000"
                 android:layout_height="wrap_content"
                 />
-
+            <TextView
+                android:text="Activities"
+                android:id="@+id/txt_total_time"
+                android:layout_width="wrap_content"
+                android:textSize="14sp"
+                android:gravity="right"
+                android:fontFamily="sans-serif"
+                android:textColor="#8b000000"
+                android:layout_height="wrap_content"
+                />
             <com.joanzapata.iconify.widget.IconTextView
-                android:text="Total: 55 min  {fa-angle-right 27dp}"
+                android:text="{fa-angle-right 27dp}"
                 android:layout_width="wrap_content"
                 android:layout_marginRight="18dp"
                 android:textSize="14sp"

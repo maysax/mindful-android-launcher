@@ -1,15 +1,8 @@
 package co.minium.launcher3.old;
 
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -21,13 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.minium.launcher3.BuildConfig;
-import co.minium.launcher3.MainActivity;
 import co.minium.launcher3.R;
 import co.minium.launcher3.call.CallLogActivity_;
-import co.minium.launcher3.contact.PhoneNumbersAdapter;
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.map.SiempoMapActivity_;
-import co.minium.launcher3.mm.TimePickerActivity;
+import co.minium.launcher3.mm.MMTimePickerActivity_;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.ui.TempoActivity_;
@@ -106,7 +97,7 @@ public class OldMenuFragment extends CoreFragment {
                 SiempoMapActivity_.intent(getActivity()).start(); break;
             case 12: new ActivityHelper(getActivity()).handleDefaultLauncher((CoreActivity) getActivity()); break;
             case 13:
-                startActivity(new Intent(getActivity(), TimePickerActivity.class));
+                MMTimePickerActivity_.intent(getActivity()).start();
                 // mindful morning
                 break;
             case 14: break;
