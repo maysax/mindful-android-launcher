@@ -2,6 +2,7 @@ package co.minium.launcher3;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -14,6 +15,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
@@ -23,12 +25,14 @@ import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.nfc.NfcManager;
 import co.minium.launcher3.notification.StatusBarHandler;
 import co.minium.launcher3.pause.PauseActivity_;
+import co.minium.launcher3.service.ApiClient_;
 import co.minium.launcher3.sms.SmsObserver;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenManager;
 import co.minium.launcher3.ui.TopFragment_;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
+import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -52,6 +56,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Bean
     TokenManager manager;
+
+    @SystemService
+    ConnectivityManager connectivityManager;
 
     NfcManager nfcManager;
 
@@ -116,7 +123,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         @Override
         public void onPermissionGranted() {
             loadViews();
-            //checkVersion();
+            checkVersion();
         }
 
         @Override
@@ -132,9 +139,22 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
+    void checkVersion() {
+        ApiClient_.getInstance_(this).checkAppVersion();
+    }
 
-
-
+    @Subscribe
+    public void checkVersionEvent(CheckVersionEvent event) {
+        Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+        if (event.getVersion() > BuildConfig.VERSION_CODE) {
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+                UIUtils.toast(this, "New version found! Downloading apk...");
+                ApiClient_.getInstance_(this).downloadApk();
+            } else {
+                UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
+            }
+        }
+    }
 
 
     @Subscribe
