@@ -19,6 +19,7 @@ import co.minium.launcher3.call.CallLogActivity_;
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.map.SiempoMapActivity_;
 import co.minium.launcher3.mm.MMTimePickerActivity_;
+import co.minium.launcher3.mm.MindfulMorningActivity_;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.ui.TempoActivity_;
@@ -70,7 +71,8 @@ public class OldMenuFragment extends CoreFragment {
         }
 
         items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
-        items.add(new MainListItem(14, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
+        items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
+        items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
 
         adapter = new OldMenuAdapter(getActivity(), items);
         listView.setAdapter(adapter);
@@ -100,7 +102,9 @@ public class OldMenuFragment extends CoreFragment {
                 MMTimePickerActivity_.intent(getActivity()).start();
                 // mindful morning
                 break;
-            case 14: break;
+            case 14:
+                MindfulMorningActivity_.intent(getActivity()).start();
+                break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
 
         }

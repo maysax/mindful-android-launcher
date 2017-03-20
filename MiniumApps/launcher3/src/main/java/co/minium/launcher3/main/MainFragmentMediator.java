@@ -18,6 +18,8 @@ import co.minium.launcher3.event.CreateNoteEvent;
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.map.SiempoMapActivity;
 import co.minium.launcher3.map.SiempoMapActivity_;
+import co.minium.launcher3.mm.MMTimePickerActivity_;
+import co.minium.launcher3.mm.MindfulMorningActivity_;
 import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.model.MainListItemType;
@@ -152,7 +154,7 @@ class MainFragmentMediator {
                     case 15:
                         break;
                     case 16:
-                        // mindful morning
+                        MMTimePickerActivity_.intent(fragment.getActivity()).start();
                         break;
                     case 17:
                         break;
