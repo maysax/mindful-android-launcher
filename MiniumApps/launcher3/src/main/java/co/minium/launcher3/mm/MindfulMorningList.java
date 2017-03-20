@@ -14,7 +14,12 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.List;
+
 import co.minium.launcher3.R;
+import co.minium.launcher3.mm.model.ActivitiesStorage;
+import co.minium.launcher3.mm.model.ActivitiesStorageDao;
+import co.minium.launcher3.mm.model.DBUtility;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
@@ -44,7 +49,10 @@ public class MindfulMorningList  extends CoreFragment {
 
    @AfterViews
    void afterViews(){
-       MindfulMorningListAdapter mindfulMorningListAdapter = new MindfulMorningListAdapter(getActivity(),new ActivitiesModel().getActivityModel2());
+       List<ActivitiesStorage> activitiesStorageList =  DBUtility.GetActivitySession()
+               .queryBuilder().where(ActivitiesStorageDao.Properties.Time.notEq(0)).list();
+
+       MindfulMorningListAdapter mindfulMorningListAdapter = new MindfulMorningListAdapter(getActivity(),activitiesStorageList);
        activity_list_view.setAdapter(mindfulMorningListAdapter);
 
        activity_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {

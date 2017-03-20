@@ -37,7 +37,7 @@ public class ActivitiesFragment  extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                // String [] title = {"Meditation Timer","Workout Timer","Reading Timer","Journaling Timer","Pause Timer"};
-                ((CoreActivity)getActivity()).loadChildFragment(MeditationTimeFragment_.builder().title(activitiesStorageList.get(i).getName()).build(),R.id.mainView);
+                ((CoreActivity)getActivity()).loadChildFragment(ActivitiesDetailsFragment_.builder().title(activitiesStorageList.get(i).getName()).build(),R.id.mainView);
                 //MindfulMorningActivity_.intent(getActivity()).start();
 
             }
@@ -54,13 +54,13 @@ public class ActivitiesFragment  extends Fragment {
 
     private ArrayList<ActivitiesStorage> insertDefaultValue() {
         String[] name = {"Meditation","Workout","Reading","Journaling","Pause"};
-        int[] values = {30,10,20,0,0};
+        //int[] values = {0,0,0,0,0};
         ActivitiesStorage aActivityStorage;
         ArrayList<ActivitiesStorage>activitiesStorageList = new ArrayList<>();
         for (int i=0; i<name.length;i++){
             aActivityStorage = new ActivitiesStorage();
             aActivityStorage.setName(name[i]);
-            aActivityStorage.setTime(values[i]);
+            aActivityStorage.setTime(0);
             activitiesStorageList.add(aActivityStorage);
         }
         DBUtility.GetActivitySession().insertInTx(activitiesStorageList);
