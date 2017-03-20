@@ -108,9 +108,9 @@ public class TempoFragment extends CoreFragment {
         public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
             int currVal = seekbar.getValue();
 
-            if (currVal <= 15) currVal = 15;
-            else if (currVal <= 30) currVal = 30;
-            else if (currVal <= 60) currVal = 60;
+            if (currVal <= 22) currVal = 15;
+            else if (currVal <= 45) currVal = 30;
+            else currVal = 60;
 
             seekbar.setValue(currVal);
         }

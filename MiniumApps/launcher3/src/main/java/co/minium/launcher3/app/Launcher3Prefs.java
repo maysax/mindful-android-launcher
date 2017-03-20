@@ -23,6 +23,9 @@ public interface Launcher3Prefs {
     boolean isNotificationBlockerServiceRunning();
 
     @DefaultBoolean(false)
+    boolean isTempoActive();
+
+    @DefaultBoolean(false)
     boolean isAwayChecked();
 
     @DefaultString("10:20:1")

@@ -23,6 +23,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.Locale;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.battery.BatteryChangeEvent;
 import co.minium.launcher3.event.NotificationSchedulerEvent;
 import co.minium.launcher3.event.TempoEvent;
@@ -42,6 +43,9 @@ public class TopFragment extends CoreFragment {
 
     @Pref
     DroidPrefs_ prefs;
+
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
 
     @ViewById
     ImageView imgTempo;
@@ -67,6 +71,12 @@ public class TopFragment extends CoreFragment {
     void afterViews() {
         // Default text
         //updateBatteryText(50);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onTempoEvent(new TempoEvent(launcherPrefs.isTempoActive().get()));
     }
 
     @Override
@@ -138,9 +148,13 @@ public class TopFragment extends CoreFragment {
 
     @Subscribe
     public void onTempoEvent(TempoEvent event) {
-        if (event.isStarting())
+        if (event.isStarting()) {
             imgTempo.setVisibility(View.VISIBLE);
-        else
+            launcherPrefs.isTempoActive().put(true);
+        }
+        else {
             imgTempo.setVisibility(View.GONE);
+            launcherPrefs.isTempoActive().put(false);
+        }
     }
 }
