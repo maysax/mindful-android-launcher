@@ -1,3 +1,12 @@
+package co.minium.launcher3.mm;
+
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TableRow;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -7,9 +16,11 @@ import antistatic.spinnerwheel.OnWheelScrollListener;
 import antistatic.spinnerwheel.adapters.ArrayWheelAdapter;
 import antistatic.spinnerwheel.adapters.NumericWheelAdapter;
 import co.minium.launcher3.R;
-import minium.co.core.ui.CoreActivity;
 
-public class TimePickerFragment extends Fragment {
+import minium.co.core.ui.CoreActivity;
+import minium.co.core.ui.CoreFragment;
+
+public class TimePickerFragment extends CoreFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
