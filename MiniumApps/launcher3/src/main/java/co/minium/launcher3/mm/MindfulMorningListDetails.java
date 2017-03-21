@@ -26,6 +26,9 @@ import minium.co.core.ui.CoreFragment;
 public class MindfulMorningListDetails extends CoreFragment {
     @FragmentArg
     String title;
+    @FragmentArg
+    int value;
+
     @ViewById
     HoloCircleSeekBar seekbar;
     /*@Override
@@ -52,7 +55,7 @@ public class MindfulMorningListDetails extends CoreFragment {
     @AfterViews
     public void afterViews(){
         seekbar.setOnSeekBarChangeListener(seekbarListener);
-
+        seekbar.setValue(value);
     }
     private void startPause() {
         EventBus.getDefault().post(new MindfulMorgingEventStart(seekbar.getValue() * 60 * 1000));

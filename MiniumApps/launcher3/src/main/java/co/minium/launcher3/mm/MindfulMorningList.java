@@ -35,7 +35,7 @@ public class MindfulMorningList  extends CoreFragment {
         return inflater.inflate(R.layout.mm_list, parent, false);
 
     }*/
-
+   List<ActivitiesStorage> activitiesStorageList;
    @ViewById
    ListView activity_list_view;
 
@@ -49,7 +49,7 @@ public class MindfulMorningList  extends CoreFragment {
 
    @AfterViews
    void afterViews(){
-       List<ActivitiesStorage> activitiesStorageList =  DBUtility.GetActivitySession()
+       activitiesStorageList =  DBUtility.GetActivitySession()
                .queryBuilder().where(ActivitiesStorageDao.Properties.Time.notEq(0)).list();
 
        MindfulMorningListAdapter mindfulMorningListAdapter = new MindfulMorningListAdapter(getActivity(),activitiesStorageList);
@@ -58,8 +58,8 @@ public class MindfulMorningList  extends CoreFragment {
        activity_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
            @Override
            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-               String [] title = {"Meditation","Workout","Reading"};
-               ((CoreActivity)getActivity()).loadChildFragment(MindfulMorningListDetails_.builder().title(title[i]).build(),R.id.mainView);
+              // String [] title = {"Meditation","Workout","Reading"};
+               ((CoreActivity)getActivity()).loadChildFragment(MindfulMorningListDetails_.builder().title(activitiesStorageList.get(i).getName()).value(activitiesStorageList.get(i).getTime()).build(),R.id.mainView);
 
            }
        });
