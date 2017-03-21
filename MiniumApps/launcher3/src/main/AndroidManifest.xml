@@ -64,6 +64,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="RUN_AT_BOOT" />
             </intent-filter>
+
+<!--            <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+            </intent-filter>
+            <meta-data android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />-->
+
         </activity>
 
         <receiver android:name=".battery.BatteryChangeReceiver_">
