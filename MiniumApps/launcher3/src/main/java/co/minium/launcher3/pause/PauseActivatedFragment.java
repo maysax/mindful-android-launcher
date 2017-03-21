@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.service.NotificationBlockerService_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
@@ -83,6 +84,7 @@ public class PauseActivatedFragment extends CoreFragment {
         Calendar cal = Calendar.getInstance(Locale.US);
         cal.add(Calendar.MILLISECOND, maxMillis);
         txtEndingTime.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(cal.getTime()));
+        NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
     }
 
     @Click
@@ -104,7 +106,7 @@ public class PauseActivatedFragment extends CoreFragment {
                 if (atMillis >= maxMillis) {
                     stopPause();
                 } else {
-                    Tracer.d("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
+                    Tracer.v("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
                     seekbar.setValue(atMillis / (1000 * 60.0f));
                     txtRemainingTime.setText(String.format(Locale.US, "%d minute", TimeUnit.MILLISECONDS.toMinutes(maxMillis - atMillis)));
                 }
@@ -121,6 +123,7 @@ public class PauseActivatedFragment extends CoreFragment {
         seekbar.setShowTitle(false);
         handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
+        NotificationBlockerService_.intent(getActivity()).extra("start", false).start();
         getActivity().finish();
     }
 }

@@ -35,7 +35,7 @@ public class NotificationBlockerService extends NotificationListenerService {
 
         if (start && !prefs.isNotificationBlockerServiceRunning().get()) {
             currentFilter = getCurrentInterruptionFilter();
-            Tracer.d("Starting service");
+            Tracer.i("Starting service");
 
             //Check if at least Lollipop, otherwise use old method
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -45,7 +45,7 @@ public class NotificationBlockerService extends NotificationListenerService {
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             }
         } else {
-            Tracer.d("Stopping service");
+            Tracer.i("Stopping service");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 requestInterruptionFilter(currentFilter);
             else {
