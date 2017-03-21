@@ -1,7 +1,6 @@
 package co.minium.launcher3.mm.model;
 
 import co.minium.launcher3.app.Launcher3App;
-import co.minium.launcher3.db.DaoSession;
 import minium.co.core.app.CoreApplication;
 
 /**

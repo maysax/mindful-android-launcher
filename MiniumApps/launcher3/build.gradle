@@ -70,7 +70,6 @@ dependencies {
 
     compile 'org.greenrobot:greendao:3.2.0'
 
-
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
 }
 

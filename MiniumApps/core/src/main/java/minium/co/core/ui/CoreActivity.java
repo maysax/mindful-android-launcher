@@ -5,11 +5,16 @@ import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -29,6 +34,7 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -48,7 +54,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Created by shahab on 3/17/16.
  */
 @EActivity
-public abstract class CoreActivity extends AppCompatActivity {
+public abstract class CoreActivity extends AppCompatActivity implements NFCInterface{
 
 
     int onStartCount = 0;
@@ -75,10 +81,34 @@ public abstract class CoreActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
+        filter.addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
+        filter.addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
+        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, this.techList);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
         //activityManager.moveTaskToFront(getTaskId(), 0);
+
+        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        nfcAdapter.disableForegroundDispatch(this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+
+            Tracer.i("NFC Tag detected");
+        }
     }
 
     private void onCreateAnimation(Bundle savedInstanceState) {
@@ -199,5 +229,18 @@ public abstract class CoreActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public String nfcRead(Tag t) {
+        return null;
+    }
 
+    @Override
+    public String readText(NdefRecord record) throws UnsupportedEncodingException {
+        return null;
+    }
+
+    @Override
+    public void nfcReader(Tag tag) {
+
+    }
 }
