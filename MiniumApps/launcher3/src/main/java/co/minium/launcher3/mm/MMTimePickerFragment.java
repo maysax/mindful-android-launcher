@@ -53,7 +53,7 @@ public class MMTimePickerFragment extends Fragment {
     }
     @Click
     void row2(){
-        ((CoreActivity)getActivity()).loadChildFragment(new ActivitiesFragment(),R.id.mainView);
+        ((CoreActivity)getActivity()).loadChildFragment(new ActivitiesFragment_(),R.id.mainView);
     }
     @Click
     void row3(){
