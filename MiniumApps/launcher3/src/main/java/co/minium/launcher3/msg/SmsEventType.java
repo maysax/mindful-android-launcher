@@ -5,5 +5,5 @@ package co.minium.launcher3.msg;
  */
 
 public enum SmsEventType {
-    SENT, RECEIVED, READ
+    SENT, RECEIVED, READ, CANCEL
 }

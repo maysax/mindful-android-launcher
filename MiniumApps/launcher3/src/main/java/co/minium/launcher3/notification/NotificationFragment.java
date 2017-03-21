@@ -206,14 +206,14 @@ public class NotificationFragment extends CoreFragment{
 
     private void prepareNotifications() {
 
-        Notification n = new Notification("Jaineel Shah","Haha. Sure! 7.",R.drawable.ic_person_black_24dp  ,"12:52 pm",false);
-        notificationList.add(n);
-
-        n = new Notification("Stephanie Wise","Excellent example of the",R.drawable.ic_person_black_24dp  ,"12:45 pm",false);
-        notificationList.add(n);
-
-        n = new Notification("Hilah Lucida","Good call, I'll do the same",R.drawable.ic_person_black_24dp  ,"12:31 pm",false);
-        notificationList.add(n);
+//        Notification n = new Notification("Jaineel Shah","Haha. Sure! 7.",R.drawable.ic_person_black_24dp  ,"12:52 pm",false);
+//        notificationList.add(n);
+//
+//        n = new Notification("Stephanie Wise","Excellent example of the",R.drawable.ic_person_black_24dp  ,"12:45 pm",false);
+//        notificationList.add(n);
+//
+//        n = new Notification("Hilah Lucida","Good call, I'll do the same",R.drawable.ic_person_black_24dp  ,"12:31 pm",false);
+//        notificationList.add(n);
 
   //      adapter.notifyDataSetChanged();
 /*

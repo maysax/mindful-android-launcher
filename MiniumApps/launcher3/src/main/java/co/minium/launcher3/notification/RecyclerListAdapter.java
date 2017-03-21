@@ -33,6 +33,9 @@ import co.minium.launcher3.R;
 import co.minium.launcher3.main.ItemTouchHelperAdapter;
 import co.minium.launcher3.main.ItemTouchHelperViewHolder;
 import co.minium.launcher3.main.OnStartDragListener;
+import co.minium.launcher3.msg.SmsEvent;
+import co.minium.launcher3.msg.SmsEventType;
+import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
@@ -81,6 +84,9 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     public void onItemDismiss(int position) {
         notificationList.remove(position);
         notifyItemRemoved(position);
+
+        if (notificationList.isEmpty())
+            EventBus.getDefault().post(new SmsEvent(SmsEventType.CANCEL));
     }
 
 

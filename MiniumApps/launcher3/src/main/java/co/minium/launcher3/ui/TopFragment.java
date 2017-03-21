@@ -27,6 +27,8 @@ import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.battery.BatteryChangeEvent;
 import co.minium.launcher3.event.NotificationSchedulerEvent;
 import co.minium.launcher3.event.TempoEvent;
+import co.minium.launcher3.msg.SmsEvent;
+import co.minium.launcher3.msg.SmsEventType;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.DroidPrefs_;
@@ -49,6 +51,9 @@ public class TopFragment extends CoreFragment {
 
     @ViewById
     ImageView imgTempo;
+
+    @ViewById
+            ImageView imgNotification;
 
     FontAwesomeIcons [] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
@@ -155,6 +160,15 @@ public class TopFragment extends CoreFragment {
         else {
             imgTempo.setVisibility(View.GONE);
             launcherPrefs.isTempoActive().put(false);
+        }
+    }
+
+    @Subscribe
+    public void smsEvent(SmsEvent event) {
+        if (event.getType() == SmsEventType.RECEIVED) {
+            imgNotification.setVisibility(View.VISIBLE);
+        } else {
+            imgNotification.setVisibility(View.GONE);
         }
     }
 }
