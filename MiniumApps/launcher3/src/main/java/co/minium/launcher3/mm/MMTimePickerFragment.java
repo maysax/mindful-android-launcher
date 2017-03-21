@@ -17,13 +17,12 @@ import java.util.List;
 import java.util.Locale;
 import antistatic.spinnerwheel.AbstractWheel;
 import antistatic.spinnerwheel.OnWheelChangedListener;
-import antistatic.spinnerwheel.OnWheelScrollListener;
 import antistatic.spinnerwheel.adapters.ArrayWheelAdapter;
 import antistatic.spinnerwheel.adapters.NumericWheelAdapter;
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.mm.model.ActivitiesStorage;
-import co.minium.launcher3.mm.model.DBUtility;
+import co.minium.launcher3.db.DBUtility;
 import minium.co.core.ui.CoreActivity;
 
 @EFragment(R.layout.fragment_time_picker)
@@ -134,7 +133,7 @@ public class MMTimePickerFragment extends Fragment {
         mins.setCurrentItem(Integer.parseInt(timeArray[1]));
         ampm.setCurrentItem(Integer.parseInt(timeArray[2]));
 
-        List<ActivitiesStorage> activitiesStorageList = DBUtility.GetActivitySession().loadAll();
+        List<ActivitiesStorage> activitiesStorageList = DBUtility.getActivitySession().loadAll();
         int time=0;
         for(ActivitiesStorage activitiesStorage: activitiesStorageList){
             time = time+activitiesStorage.getTime();

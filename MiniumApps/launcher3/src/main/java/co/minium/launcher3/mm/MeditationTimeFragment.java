@@ -16,7 +16,7 @@ import org.androidannotations.annotations.ViewById;
 import co.minium.launcher3.R;
 import co.minium.launcher3.mm.model.ActivitiesStorage;
 import co.minium.launcher3.mm.model.ActivitiesStorageDao;
-import co.minium.launcher3.mm.model.DBUtility;
+import co.minium.launcher3.db.DBUtility;
 import minium.co.core.ui.CoreFragment;
 
 /**
@@ -45,13 +45,13 @@ public class MeditationTimeFragment extends CoreFragment {
     @Click
     void crossActionBar() {
         activitiesStorage.setTime(seekbar.getValue());
-        DBUtility.GetActivitySession().update(activitiesStorage);
+        DBUtility.getActivitySession().update(activitiesStorage);
         getActivity().onBackPressed();
     }
 
     @AfterViews
     void afterViews() {
-        activitiesStorage = DBUtility.GetActivitySession()
+        activitiesStorage = DBUtility.getActivitySession()
                 .queryBuilder().where(ActivitiesStorageDao.Properties.Name.eq(title)).unique();
 
 

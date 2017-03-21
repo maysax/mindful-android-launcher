@@ -59,32 +59,17 @@ public class NotificationFragment extends CoreFragment{
 
     @ViewById
     RecyclerView recyclerView;
-//   private NotificationAdapter adapter;
+
     RecyclerListAdapter adapter;
     private List<Notification> notificationList;
 
 
-    private ItemTouchHelper mItemTouchHelper;
-
-    private int mSlop;
-    private float mDownX;
-    private float mDownY;
-    private boolean mSwiping;
-
     private enum mSwipeDirection{UP,DOWN,NONE};
 
-    private mSwipeDirection mSwipe = mSwipeDirection.NONE;
-
-  //  private  StatusBarHandler statusBarHandler;
-
     TableNotificationSmsDao smsDao;
-    private Query<TableNotificationSms> smsQuery;
 
     @AfterViews
     void afterViews() {
-
-        ViewConfiguration vc = ViewConfiguration.get(getActivity());
-        mSlop = vc.getScaledTouchSlop();
 
         notificationList = new ArrayList<>();
         DaoSession daoSession = ((Launcher3App)CoreApplication.getInstance()).getDaoSession();
@@ -108,7 +93,7 @@ public class NotificationFragment extends CoreFragment{
 
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter,getActivity());
-        mItemTouchHelper = new ItemTouchHelper(callback);
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
 

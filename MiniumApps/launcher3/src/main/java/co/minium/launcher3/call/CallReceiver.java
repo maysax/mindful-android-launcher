@@ -13,7 +13,11 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import co.minium.launcher3.app.Launcher3App;
+import co.minium.launcher3.db.DaoSession;
+import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.util.VibrationUtils;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 
@@ -66,6 +70,7 @@ public class CallReceiver extends PhonecallReceiver {
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
         Tracer.d("onMissedCall()");
+        saveCall(number, start);
     }
 
     private void rejectCalls(Context ctx, String number, Date start) {
@@ -83,5 +88,15 @@ public class CallReceiver extends PhonecallReceiver {
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
+    }
+
+    private void saveCall(String address, Date date) {
+        DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+        CallStorageDao callStorageDao = daoSession.getCallStorageDao();
+
+        CallStorage sms = new CallStorage();
+        sms.setTitle(address);
+        sms.set_date(date);
+        callStorageDao.insert(sms);
     }
 }

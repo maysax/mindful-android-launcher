@@ -14,7 +14,7 @@ import java.util.List;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.mm.model.ActivitiesStorage;
-import co.minium.launcher3.mm.model.DBUtility;
+import co.minium.launcher3.db.DBUtility;
 import minium.co.core.ui.CoreActivity;
 
 /**
@@ -63,7 +63,7 @@ public class ActivitiesFragment  extends Fragment {
             aActivityStorage.setTime(values[i]);
             activitiesStorageList.add(aActivityStorage);
         }
-        DBUtility.GetActivitySession().insertInTx(activitiesStorageList);
+        DBUtility.getActivitySession().insertInTx(activitiesStorageList);
         return activitiesStorageList;
     }
 
@@ -71,7 +71,7 @@ public class ActivitiesFragment  extends Fragment {
     public void onResume() {
         super.onResume();
 
-        activitiesStorageList = DBUtility.GetActivitySession().loadAll();
+        activitiesStorageList = DBUtility.getActivitySession().loadAll();
         if (activitiesStorageList.size()==0){
             activitiesStorageList = insertDefaultValue();
         }

@@ -13,6 +13,12 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.Date;
 
+import co.minium.launcher3.app.Launcher3App;
+import co.minium.launcher3.db.DaoSession;
+import co.minium.launcher3.db.TableNotificationSms;
+import co.minium.launcher3.db.TableNotificationSmsDao;
+import de.greenrobot.event.EventBus;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 
@@ -28,6 +34,8 @@ public class SmsReceiver extends BroadcastReceiver {
 
     @Pref
     DroidPrefs_ prefs;
+
+    TableNotificationSmsDao smsDao;
 
     public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
 
@@ -57,8 +65,9 @@ public class SmsReceiver extends BroadcastReceiver {
             mAddress = sms.getDisplayOriginatingAddress();
             mDate = new Date(sms.getTimestampMillis());
 
-
+            saveMessage(mAddress, mBody ,mDate);
             //new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
+            EventBus.getDefault().post(new SmsEvent(SmsEventType.RECEIVED));
 
             if (prefs.isFlowRunning().get() || (prefs.isNotificationSchedulerEnabled().get() && prefs.notificationSchedulerSupressSMS().get())) {
                 // Suppress notification
@@ -71,6 +80,17 @@ public class SmsReceiver extends BroadcastReceiver {
                 context.sendBroadcast(new Intent(context, NotificationScheduleReceiver_.class));
             }*/
         }
+    }
+
+    private void saveMessage(String address, String body, Date date) {
+        DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+        smsDao = daoSession.getTableNotificationSmsDao();
+
+        TableNotificationSms sms = new TableNotificationSms();
+        sms.set_contact_title(address);
+        sms.set_message(body);
+        sms.set_date(date);
+        smsDao.insert(sms);
     }
 
     /**
