@@ -90,7 +90,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         filter.addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
         filter.addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
         NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, this.techList);
+        if (nfcAdapter != null)
+            nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, techList);
     }
 
     @Override
@@ -100,7 +101,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         //activityManager.moveTaskToFront(getTaskId(), 0);
 
         NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        nfcAdapter.disableForegroundDispatch(this);
+        if (nfcAdapter != null)
+            nfcAdapter.disableForegroundDispatch(this);
     }
 
     @Override
