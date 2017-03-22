@@ -108,10 +108,14 @@ public class StatusBarHandler {
                    //mContext. startActivity(intent);
 //                    ((CoreActivity) mContext).loadChildFragment(NotificationFragment_.builder().build(), R.id.mainView);
 //                    ((CoreActivity) mContext).getFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_down, R.anim.slide_out_down);
-                    FragmentTransaction ft = ((CoreActivity) mContext).getFragmentManager().beginTransaction();
-                     ft.setCustomAnimations(R.animator.push_down_in_no_alpha,R.animator.push_down_out_no_alpha);
-                    ft.replace(R.id.mainView,NotificationFragment_.builder().build());
-                    ft.commitAllowingStateLoss();
+                    try {
+                        FragmentTransaction ft = ((CoreActivity) mContext).getFragmentManager().beginTransaction();
+                        ft.setCustomAnimations(R.animator.push_down_in_no_alpha,R.animator.push_down_out_no_alpha);
+                        ft.replace(R.id.mainView,NotificationFragment_.builder().build());
+                        ft.commitAllowingStateLoss();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     isNotificationTrayVisible = true;
                 }
             }
