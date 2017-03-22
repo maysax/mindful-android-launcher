@@ -94,14 +94,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         nfcCheckHandler = new Handler();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (nfcManager != null) nfcManager.onResume();
-
-
-    }
-
     private void loadViews() {
         statusBarHandler = new StatusBarHandler(this);
         statusBarHandler.requestStatusBarCustomization();
@@ -203,8 +195,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        nfcAdapter.disableForegroundDispatch(this);
         try {
             statusBarHandler.restoreStatusBarExpansion();
         } catch (Exception e) {

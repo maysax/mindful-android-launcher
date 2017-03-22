@@ -53,6 +53,8 @@
                 android:layout_marginBottom="13.5dp"
                 tools:text="Haha. Sure ! :-)"
                 android:textColor="#8b000000"
+                android:lines="1"
+                android:ellipsize="end"
                 android:textSize="14sp" />
 
             <TextView

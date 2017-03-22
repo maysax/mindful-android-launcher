@@ -51,7 +51,7 @@ public class MindfulMorningList  extends CoreFragment {
 
    @AfterViews
    void afterViews(){
-       activitiesStorageList =  DBUtility.GetActivitySession()
+       activitiesStorageList =  DBUtility.getActivitySession()
                .queryBuilder().where(ActivitiesStorageDao.Properties.Time.notEq(0)).list();
 
        MindfulMorningListAdapter mindfulMorningListAdapter = new MindfulMorningListAdapter(getActivity(),activitiesStorageList);
