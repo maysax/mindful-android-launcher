@@ -39,13 +39,14 @@
                 android:fontFamily="sans-serif-medium"
                 android:text="Mindful Morning"/>
 
-            <Button
+            <ImageView
                 android:id="@+id/settingsActionBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Start"
-                android:visibility="gone"
-                android:background="@null"
+                android:padding="4dp"
+                android:src="@drawable/icon_settings"
+                android:layout_marginEnd="18dp"
+                android:visibility="invisible"
                 android:contentDescription="@null"/>
 
         </LinearLayout>

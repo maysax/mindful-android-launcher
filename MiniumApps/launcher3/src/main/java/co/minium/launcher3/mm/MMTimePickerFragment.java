@@ -59,7 +59,7 @@ public class MMTimePickerFragment extends CoreFragment {
     TextView time;
 
     @ViewById
-    Button settingsActionBar;
+    ImageView settingsActionBar;
 
     @Click
     void row1(){
