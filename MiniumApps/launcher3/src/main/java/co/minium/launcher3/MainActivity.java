@@ -87,6 +87,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onResume() {
         super.onResume();
         if (nfcManager != null) nfcManager.onResume();
+
+
     }
 
     private void loadViews() {

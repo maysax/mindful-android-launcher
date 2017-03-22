@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -53,8 +54,8 @@
 
         <activity
             android:name=".MainActivity_"
-            android:windowSoftInputMode="stateVisible"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible">
 
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
@@ -74,19 +75,33 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".pause.PauseActivity_" android:screenOrientation="portrait" />
-        <activity android:name=".ui.TempoActivity_" android:screenOrientation="portrait" />
-        <activity android:name=".map.SiempoMapActivity_" android:screenOrientation="portrait" />
-        <activity android:name=".call.CallLogActivity_" android:screenOrientation="portrait" />
-        <activity android:name=".mm.MMTimePickerActivity_" android:screenOrientation="portrait"/>
-        <activity android:name=".mm.MindfulMorningActivity_" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".pause.PauseActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.TempoActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".map.SiempoMapActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".call.CallLogActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".mm.MMTimePickerActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".mm.MindfulMorningActivity_"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".launcher.FakeLauncherActivity"
+        <activity
+            android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.HOME"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
@@ -100,6 +115,8 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".mm.AlarmReciever"/>
 
     </application>
 

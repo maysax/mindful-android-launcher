@@ -66,7 +66,7 @@ public class TimePickerFragment extends CoreFragment {
                 ((CoreActivity)getActivity()).loadChildFragment(new RepeatFragment(),R.id.mainView);
             }
         });
-        final AbstractWheel hours = (AbstractWheel) view.findViewById(R.id.hour_horizontal);
+        final AbstractWheel hours = (AbstractWheel) view.findViewById(R.id.hours);
         NumericWheelAdapter hourAdapter = new NumericWheelAdapter(getActivity(), 1, 12, "%01d");
         hourAdapter.setItemResource(R.layout.wheel_text_centered);
         hourAdapter.setItemTextResource(R.id.text);

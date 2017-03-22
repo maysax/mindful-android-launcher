@@ -1,6 +1,7 @@
 package co.minium.launcher3.mm;
 
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 
@@ -33,15 +34,21 @@ public class AwayFragment extends CoreFragment {
     @ViewById
     ImageView crossActionBar;
 
+    @ViewById
+    EditText text_update_message;
+
     @Click
     void crossActionBar(){
+        launcherPrefs.awayMessage().put(text_update_message.getText().toString());
         getActivity().onBackPressed();
+
     }
 
     @AfterViews
     void afterViews() {
         switch_away.setOnCheckedChangeListener(checkedChangeListener);
         switch_away.setChecked(launcherPrefs.isAwayChecked().get());
+        text_update_message.setText(launcherPrefs.awayMessage().get());
     }
 
     private Switch.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener() {

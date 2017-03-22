@@ -17,9 +17,11 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.event.MindfulMorgingEventStart;
 import co.minium.launcher3.mm.model.ActivitiesStorage;
 import co.minium.launcher3.mm.model.ActivitiesStorageDao;
 import co.minium.launcher3.mm.model.DBUtility;
+import de.greenrobot.event.EventBus;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
@@ -58,8 +60,10 @@ public class MindfulMorningList  extends CoreFragment {
        activity_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
            @Override
            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-              // String [] title = {"Meditation","Workout","Reading"};
-               ((CoreActivity)getActivity()).loadChildFragment(MindfulMorningListDetails_.builder().title(activitiesStorageList.get(i).getName()).value(activitiesStorageList.get(i).getTime()).build(),R.id.mainView);
+//               ((CoreActivity)getActivity()).loadChildFragment(MindfulMorningListDetails_.builder().title(activitiesStorageList.get(i).getName()).value(activitiesStorageList.get(i).getTime()).build(),R.id.mainView);
+
+               EventBus.getDefault().post(new MindfulMorgingEventStart(activitiesStorageList.get(i).getTime() * 60 * 1000));
+
 
            }
        });

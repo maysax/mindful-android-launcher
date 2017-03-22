@@ -90,9 +90,9 @@
         android:layout_marginBottom="24dp"
         android:text="This message will be displayed to your contacts if they contact you during your Mindful Morning." />
 
-    <TextView
+    <EditText
         android:id="@+id/text_update_message"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_details"
         android:textSize="14sp"
@@ -108,5 +108,6 @@
         android:layout_below="@id/text_update_message"
         android:layout_marginLeft="21.6dp"
         android:layout_marginRight="18dp"
+        android:visibility="gone"
         android:background="#979797"/>
 </RelativeLayout>
