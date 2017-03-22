@@ -5,34 +5,28 @@
     android:id="@+id/pauseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/pause_background"
     tools:context="co.minium.launcher3.pause.PauseActivity">
 
-   <!-- <ImageView
+    <ImageView
         android:id="@+id/imgBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/pause_background"
-        android:contentDescription="@null"
-        android:visibility="visible"/>-->
-    <include
-        android:id="@+id/included"
-        layout="@layout/custom_toolbar_with_settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:contentDescription="@null"/>
 
+        <include layout="@layout/siempo_toolbar"/>
 
-    <TextView
+      <TextView
         android:id="@+id/txtRemainingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="105dp"
+        android:textSize="14sp"
         android:fontFamily="sans-serif"
-        android:text="7:00 AM  -  7:15 AM"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:layout_marginTop="105dp"
+        android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true"
+          android:textColor="@color/white"
+        tools:text="30 minute" />
 
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
@@ -40,20 +34,16 @@
         android:layout_width="285dp"
         android:layout_height="290dp"
         app:max="60"
-        app:init_position="15"
-        app:pointer_color="@color/white"
-        app:pointer_halo_color="@color/pointerHalo"
-        app:pointer_size="20dp"
-        app:title_color="@color/text.primary"
+        app:init_position="0"
+        app:title_color="@color/white"
         app:title_size="90sp"
-        app:subTitle_color="@color/text.secondary"
+        app:subTitle_color="@color/white"
         app:subTitle_size="14sp"
         app:show_title="true"
         app:text_size="24sp"
         app:text_color="@color/white"
-        app:thumb_image="@drawable/control_dial_handle"
-        app:thumb_size="32dp"
-        app:wheel_active_color="@color/pauseSeekBarActive"
+        app:show_thumb="false"
+        app:wheel_active_color="@color/white"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
 
     <LinearLayout
@@ -68,27 +58,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="70sp"
+            android:textSize="14sp"
             android:fontFamily="sans-serif"
-            android:text="..."
-            android:textStyle="bold"
+            android:text="Ending at "
             android:textColor="@color/white"/>
 
+        <TextView
+            android:id="@+id/txtEndingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            tools:text="01:00 pm" />
     </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/pause_button"
-        android:layout_width="22.5dp"
-        android:layout_height="31.5dp"
-        android:layout_alignBottom="@+id/endingLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="69dp"
-        android:layout_weight="1"
-        android:background="@null"
-        android:fontFamily="sans-serif-medium"
-        android:src="@drawable/control_pause"
-        android:textColor="#212121"
-        android:textSize="14sp" />
 
 
 </RelativeLayout>

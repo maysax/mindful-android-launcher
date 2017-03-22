@@ -30,4 +30,7 @@ public interface Launcher3Prefs {
 
     @DefaultString("10:20:1")
     String time();
+
+    @DefaultString("")
+    String awayMessage();
 }

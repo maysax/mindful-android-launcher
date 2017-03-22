@@ -1,6 +1,7 @@
 package co.minium.launcher3.mm;
 
 import android.util.Log;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +14,10 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import co.minium.launcher3.R;
 import co.minium.launcher3.mm.model.ActivitiesStorage;
 import co.minium.launcher3.mm.model.ActivitiesStorageDao;
@@ -23,7 +28,7 @@ import minium.co.core.ui.CoreFragment;
  * Created by tkb on 2017-03-10.
  */
 @EFragment(R.layout.meditation_time)
-public class MeditationTimeFragment extends CoreFragment {
+public class ActivitiesDetailsFragment extends CoreFragment {
     @FragmentArg
     String title;
     ActivitiesStorage activitiesStorage;
@@ -51,7 +56,8 @@ public class MeditationTimeFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        activitiesStorage = DBUtility.getActivitySession()
+        titleActionBar.setText(title+" Timer");
+        activitiesStorage = DBUtility.GetActivitySession()
                 .queryBuilder().where(ActivitiesStorageDao.Properties.Name.eq(title)).unique();
 
 
@@ -77,4 +83,17 @@ public class MeditationTimeFragment extends CoreFragment {
         seekbar.setValue(activitiesStorage.getTime());
     }
 
+
+    /*private void startPause() {
+        if (maxMillis < 1) return;
+        seekbar.setMax(maxMillis / (60 * 1000));
+        seekbar.setValue(0);
+        imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+        launcherPrefs.isPauseActive().put(true);
+        handler.postDelayed(pauseActiveRunnable, 1000);
+        Calendar cal = Calendar.getInstance(Locale.US);
+        cal.add(Calendar.MILLISECOND, maxMillis);
+        txtEndingTime.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(cal.getTime()));
+    }
+*/
 }

@@ -13,6 +13,7 @@ import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.event.MindfulMorgingEventStart;
 import co.minium.launcher3.event.PauseStartEvent;
 import de.greenrobot.event.EventBus;
 import minium.co.core.ui.CoreActivity;
@@ -25,6 +26,9 @@ import minium.co.core.ui.CoreFragment;
 public class MindfulMorningListDetails extends CoreFragment {
     @FragmentArg
     String title;
+    @FragmentArg
+    int value;
+
     @ViewById
     HoloCircleSeekBar seekbar;
     /*@Override
@@ -51,10 +55,10 @@ public class MindfulMorningListDetails extends CoreFragment {
     @AfterViews
     public void afterViews(){
         seekbar.setOnSeekBarChangeListener(seekbarListener);
-
+        seekbar.setValue(value);
     }
     private void startPause() {
-        EventBus.getDefault().post(new PauseStartEvent(seekbar.getValue() * 60 * 1000));
+        EventBus.getDefault().post(new MindfulMorgingEventStart(seekbar.getValue() * 60 * 1000));
     }
     private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {
 

@@ -8,18 +8,20 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.mm.model.ActivitiesStorage;
 
 /**
  * Created by tkb on 2017-03-10.
  */
 
-public class MindfulMorningListAdapter extends ArrayAdapter<ActivitiesModel> {
+public class MindfulMorningListAdapter extends ArrayAdapter<ActivitiesStorage> {
 
     private final Activity context;
-    ArrayList<ActivitiesModel>activitiesModel;
-    public MindfulMorningListAdapter(Activity context, ArrayList<ActivitiesModel>activitiesModel) {
+    List<ActivitiesStorage>activitiesModel;
+    public MindfulMorningListAdapter(Activity context, List<ActivitiesStorage> activitiesModel) {
         super(context, R.layout.mm_list_row, activitiesModel);
         this.context = context;
         this.activitiesModel = activitiesModel;
@@ -32,14 +34,14 @@ public class MindfulMorningListAdapter extends ArrayAdapter<ActivitiesModel> {
 
         TextView txt_title = (TextView) rowView.findViewById(R.id.txt_title);
 
-        txt_title.setText(activitiesModel.get(position).getTitle());
-        txt_time.setText(activitiesModel.get(position).getTimeValue());
+        txt_title.setText(activitiesModel.get(position).getName());
+        txt_time.setText(activitiesModel.get(position).getTime()+"");
         return rowView;
     }
 
-    @Override
+/*    @Override
     public int getCount() {
         return activitiesModel.size();
 
-    }
+    }*/
 }

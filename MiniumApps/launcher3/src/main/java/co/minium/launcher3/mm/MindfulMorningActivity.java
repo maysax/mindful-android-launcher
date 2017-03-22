@@ -5,6 +5,9 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.event.MindfulMorgingEventStart;
+import co.minium.launcher3.pause.PauseActivatedFragment_;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.ui.CoreActivity;
 
 /**
@@ -20,6 +23,11 @@ public class MindfulMorningActivity extends CoreActivity {
 
         loadFragment(new MindfulMorningFragment_(),R.id.mainView,"Main");
 
+    }
+
+    @Subscribe
+    public void MindfulMorgingEventStart(MindfulMorgingEventStart event) {
+        loadFragment(MinfulMorningActivated_.builder().maxMillis(event.getMaxMillis()).build(), R.id.mainView, "main");
     }
 
 }
