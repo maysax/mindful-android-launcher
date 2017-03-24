@@ -1,12 +1,10 @@
 package co.minium.launcher3.mm;
 
 import android.app.AlarmManager;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -20,11 +18,9 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import antistatic.spinnerwheel.AbstractWheel;
 import antistatic.spinnerwheel.OnWheelChangedListener;
@@ -45,7 +41,7 @@ public class MMTimePickerFragment extends CoreFragment {
     Launcher3Prefs_ launcherPrefs;
 
     @ViewById
-    TableRow row1,row2,row3,row4;
+    TableRow row1,row2,row3,row4,row5;
 
     @ViewById
     TextView txt_total_time;
@@ -70,8 +66,8 @@ public class MMTimePickerFragment extends CoreFragment {
         ((CoreActivity)getActivity()).loadChildFragment(new ActivitiesFragment_(),R.id.mainView);
     }
     @Click
-    void row3(){
-
+    void row5(){
+        scheduleAlarm();
     }
     @Click
     void row4(){
@@ -105,6 +101,7 @@ public class MMTimePickerFragment extends CoreFragment {
         Calendar calendar =  Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY,hours.getCurrentItem()+1+timeAdjustment);
         calendar.set(Calendar.MINUTE,mins.getCurrentItem());
+        calendar.set(Calendar.SECOND,0);
        // Long time2 = new GregorianCalendar().getTimeInMillis()+1*1000;
 
         if (calendar.getTime().before(Calendar.getInstance().getTime())){
@@ -122,8 +119,12 @@ public class MMTimePickerFragment extends CoreFragment {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         Log.e("TKB cal: ",calendar.getTimeInMillis()+" mili: "+(new GregorianCalendar().getTimeInMillis()+1*1000));
         //set the alarm for particular time
-        alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), PendingIntent.getBroadcast(getActivity(),1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-        Toast.makeText(getActivity(), "Alarm Scheduled for Tommrrow", Toast.LENGTH_LONG).show();
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60*1000, PendingIntent.getBroadcast(getActivity(),1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+
+       // alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), PendingIntent.getBroadcast(getActivity(),1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        Toast.makeText(getActivity(), "Alarm Set on "+ SimpleDateFormat.getDateTimeInstance().format(calendar.getTime()), Toast.LENGTH_LONG).show();
+
+
 
     }
     @ViewById

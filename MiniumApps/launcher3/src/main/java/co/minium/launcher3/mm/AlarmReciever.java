@@ -27,7 +27,7 @@ public class AlarmReciever extends BroadcastReceiver
         String message="Hi I will be there later, See You soon";// message to send
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumberReciver, null, message, null, null);*/
-        Toast.makeText(context, "Alarm Triggered and SMS Sent", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Alarm has been triggered..", Toast.LENGTH_LONG).show();
 
         //EventBus.getDefault().post(new MindfulMorgingEventStart(10 * 60 * 1000));
 
