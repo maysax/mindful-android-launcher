@@ -6,12 +6,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import java.util.GregorianCalendar;
 
+import co.minium.launcher3.db.DBUtility;
 import co.minium.launcher3.event.MindfulMorgingEventStart;
+import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
+import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarmDao;
+import co.minium.launcher3.mm.model.Utilities;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -27,13 +32,17 @@ public class AlarmReciever extends BroadcastReceiver
         String message="Hi I will be there later, See You soon";// message to send
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNumberReciver, null, message, null, null);*/
-        Toast.makeText(context, "Alarm has been triggered..", Toast.LENGTH_LONG).show();
 
         //EventBus.getDefault().post(new MindfulMorgingEventStart(10 * 60 * 1000));
+        DaysOfWeekWhichWasSetAlarm daysOfWeekWhichWasSetAlarm = DBUtility.getAlarmDaysDao().queryBuilder().where(DaysOfWeekWhichWasSetAlarmDao.Properties.DayValue.eq(Utilities.getDayValue())).unique();
 
-        MindfulMorningActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
+        if (daysOfWeekWhichWasSetAlarm!=null && daysOfWeekWhichWasSetAlarm.getIsChecked())
+        {
+            MindfulMorningActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
+        }
+        //Toast.makeText(context, "Alarm has been triggered.."+daysOfWeekWhichWasSetAlarm.getDay()+" value"+daysOfWeekWhichWasSetAlarm.getDayValue()+" DB value: "+Utilities.getDayValue(), Toast.LENGTH_LONG).show();
 
-
+        //Log.e("TKB ", "Alarm has been triggered.."+daysOfWeekWhichWasSetAlarm.getDay()+" value"+daysOfWeekWhichWasSetAlarm.getDayValue()+" DB value: "+Utilities.getDayValue());
     }
 
 

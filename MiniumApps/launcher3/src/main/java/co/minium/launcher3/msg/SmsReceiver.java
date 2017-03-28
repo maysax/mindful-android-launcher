@@ -14,7 +14,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.Date;
 
 import co.minium.launcher3.app.Launcher3App;
-import co.minium.launcher3.db.DaoSession;
+import co.minium.launcher3.call.DaoSession;
 import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.db.TableNotificationSmsDao;
 import de.greenrobot.event.EventBus;

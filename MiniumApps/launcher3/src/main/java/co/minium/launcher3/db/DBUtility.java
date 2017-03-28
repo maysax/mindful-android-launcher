@@ -2,8 +2,8 @@ package co.minium.launcher3.db;
 
 import co.minium.launcher3.app.Launcher3App;
 import co.minium.launcher3.call.CallStorageDao;
-import co.minium.launcher3.db.DaoSession;
 import co.minium.launcher3.mm.model.ActivitiesStorageDao;
+import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarmDao;
 import minium.co.core.app.CoreApplication;
 
 /**
@@ -33,4 +33,15 @@ public class DBUtility {
             return callStorageDao;
         }
     }
+    private static DaysOfWeekWhichWasSetAlarmDao weekOfDays= null;
+    public static DaysOfWeekWhichWasSetAlarmDao getAlarmDaysDao(){
+        if (weekOfDays==null){
+            weekOfDays = ((Launcher3App) CoreApplication.getInstance()).getDaoSession().getDaysOfWeekWhichWasSetAlarmDao();
+            return weekOfDays;
+        }else {
+            return weekOfDays;
+        }
+    }
+
+
 }

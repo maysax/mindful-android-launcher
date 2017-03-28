@@ -28,6 +28,7 @@ import antistatic.spinnerwheel.adapters.ArrayWheelAdapter;
 import antistatic.spinnerwheel.adapters.NumericWheelAdapter;
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.mm.controller.AlarmController;
 import co.minium.launcher3.mm.model.ActivitiesStorage;
 import co.minium.launcher3.db.DBUtility;
 import minium.co.core.ui.CoreActivity;
@@ -107,24 +108,8 @@ public class MMTimePickerFragment extends CoreFragment {
         if (calendar.getTime().before(Calendar.getInstance().getTime())){
             calendar.add(Calendar.DATE,1);
         }
-        //Log.d("Time: ", SimpleDateFormat.getDateTimeInstance().format(calendar.getTime())+" time2:"+SimpleDateFormat.getDateTimeInstance().format(new Date(time2)));
 
-        // create an Intent and set the class which will execute when Alarm triggers, here we have
-        // given AlarmReciever in the Intent, the onRecieve() method of this class will execute when
-        // alarm triggers and
-        //we will write the code to send SMS inside onRecieve() method pf Alarmreciever class
-        Intent intentAlarm = new Intent(getActivity(), AlarmReciever.class);
-
-        // create the object
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Log.e("TKB cal: ",calendar.getTimeInMillis()+" mili: "+(new GregorianCalendar().getTimeInMillis()+1*1000));
-        //set the alarm for particular time
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60*1000, PendingIntent.getBroadcast(getActivity(),1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-
-       // alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), PendingIntent.getBroadcast(getActivity(),1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-        Toast.makeText(getActivity(), "Alarm Set on "+ SimpleDateFormat.getDateTimeInstance().format(calendar.getTime()), Toast.LENGTH_LONG).show();
-
-
+        AlarmController.setAlarm(getActivity(),calendar);
 
     }
     @ViewById
