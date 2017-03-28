@@ -118,7 +118,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-            <intent-filter>
+            <intent-filter android:priority="9999">
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
@@ -140,6 +140,15 @@
         </receiver>
 
         <receiver android:name=".mm.AlarmReciever"/>
+        <receiver
+            android:name=".sms.PhoneStateReceiver_"
+            android:enabled="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="9999">
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

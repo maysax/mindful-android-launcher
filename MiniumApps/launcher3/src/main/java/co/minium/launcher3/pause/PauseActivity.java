@@ -22,6 +22,7 @@ import minium.co.core.util.UIUtils;
 public class PauseActivity extends CoreActivity {
 
     private PauseFragment pauseFragment;
+    private PauseActivatedFragment pauseActivatedFragment;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
@@ -38,13 +39,13 @@ public class PauseActivity extends CoreActivity {
 
     @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
     void volumeUpPressed() {
-        pauseFragment.volumeUpPresses();
+        pauseFragment.volumeUpPressed();
     }
 
     @Override
     public void onBackPressed() {
         if (launcherPrefs.isPauseActive().get()) {
-            showResetConfirmation();
+            onStopPause();
         } else {
             super.onBackPressed();
         }
@@ -53,22 +54,24 @@ public class PauseActivity extends CoreActivity {
     @Click
     void pauseContainer() {
         if (launcherPrefs.isPauseActive().get()) {
-            showResetConfirmation();
+            onStopPause();
         }
     }
 
-    private void showResetConfirmation() {
+    private void onStopPause() {
         UIUtils.ask(this, "Do you want to go back online?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                launcherPrefs.isPauseActive().put(false);
-                finish();
+                if (pauseActivatedFragment != null) {
+                    pauseActivatedFragment.stopPause();
+                }
             }
         });
     }
 
     @Subscribe
     public void pauseStartEvent(PauseStartEvent event) {
-        loadFragment(PauseActivatedFragment_.builder().maxMillis(event.getMaxMillis()).build(), R.id.mainView, "main");
+        pauseActivatedFragment = PauseActivatedFragment_.builder().maxMillis(event.getMaxMillis()).build();
+        loadFragment(pauseActivatedFragment, R.id.mainView, "main");
     }
 }

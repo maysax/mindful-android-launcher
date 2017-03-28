@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import co.minium.launcher3.app.Launcher3App;
+import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.db.DaoSession;
 import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.util.VibrationUtils;
@@ -28,7 +29,7 @@ public class CallReceiver extends PhonecallReceiver {
     TelephonyManager telephonyManager;
 
     @Pref
-    DroidPrefs_ prefs;
+    Launcher3Prefs_ launcherPrefs;
 
     @Bean
     VibrationUtils vibration;
@@ -37,10 +38,10 @@ public class CallReceiver extends PhonecallReceiver {
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
 
-        /*
-        if(prefs.isFlowRunning().get())
+
+        if(launcherPrefs.isPauseActive().get())
             rejectCalls(ctx, number, start);
-        else if (prefs.isNotificationSchedulerEnabled().get()) {
+        /*else if (prefs.isNotificationSchedulerEnabled().get()) {
             if (prefs.notificationSchedulerSupressCalls().get()) {
                 rejectCalls(ctx, number, start);
             } else {

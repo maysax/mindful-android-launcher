@@ -118,7 +118,7 @@ public class PauseActivatedFragment extends CoreFragment {
         }
     };
 
-    private void stopPause() {
+    public void stopPause() {
         seekbar.setValue(0);
         seekbar.setShowTitle(false);
         handler.removeCallbacks(pauseActiveRunnable);

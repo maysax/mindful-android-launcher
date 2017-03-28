@@ -2,6 +2,8 @@ package co.minium.launcher3;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -36,6 +38,8 @@ import co.minium.launcher3.main.MainSlidePagerAdapter;
 import co.minium.launcher3.notification.StatusBarHandler;
 import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.service.ApiClient_;
+import co.minium.launcher3.service.NotificationBlockerService;
+import co.minium.launcher3.service.NotificationBlockerService_;
 import co.minium.launcher3.sms.SmsObserver;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenManager;
@@ -46,6 +50,7 @@ import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
 
 import static minium.co.core.log.LogConfig.TRACE_TAG;
@@ -85,12 +90,24 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.WRITE_CONTACTS,
                         Manifest.permission.READ_CALL_LOG,
                         Manifest.permission.SEND_SMS,
+                        Manifest.permission.RECEIVE_SMS,
+                        Manifest.permission.RECEIVE_MMS,
+                        Manifest.permission.READ_PHONE_STATE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
+
+        if (!isEnabled(this)) {
+            UIUtils.confirm(this, "Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                }
+            });
+        }
         nfcCheckHandler = new Handler();
     }
 
@@ -122,6 +139,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     private void loadTopBar() {
         loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
+    }
+
+    /** @return True if {@link NotificationBlockerService} is enabled. */
+    public static boolean isEnabled(Context mContext) {
+        return ServiceUtils.isNotificationListenerServiceRunning(mContext, NotificationBlockerService_.class);
     }
 
     PermissionListener permissionlistener = new PermissionListener() {

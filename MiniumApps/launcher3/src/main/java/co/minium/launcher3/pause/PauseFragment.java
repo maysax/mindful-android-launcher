@@ -112,7 +112,7 @@ public class PauseFragment extends CoreFragment {
         }
     };
 
-    public void volumeUpPresses() {
+    public void volumeUpPressed() {
         if (!launcherPrefs.isPauseActive().get()) {
             Tracer.i("Volume up pressed in MMTimePickerFragment");
 

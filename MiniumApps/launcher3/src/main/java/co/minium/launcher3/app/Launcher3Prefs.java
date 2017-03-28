@@ -10,7 +10,7 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
 @SharedPref(SharedPref.Scope.UNIQUE)
 public interface Launcher3Prefs {
 
-    @DefaultBoolean(true)
+    @DefaultBoolean(false)
     boolean isPauseActive();
 
     @DefaultBoolean(false)

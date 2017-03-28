@@ -75,7 +75,7 @@ public class NotificationBlockerService extends NotificationListenerService {
     @TargetApi(21)
     public void onNotificationPosted(StatusBarNotification notification) {
         Tracer.d("notification posted");
-        if (Build.VERSION.SDK_INT >= 21) {
+        if (Build.VERSION.SDK_INT >= 21 && prefs.isPauseActive().get()) {
             cancelNotification(notification.getKey());
             String info = "Notification package: " + notification.getPackageName()
                     + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
