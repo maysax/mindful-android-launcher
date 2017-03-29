@@ -36,10 +36,10 @@ public class AlarmReciever extends BroadcastReceiver
         //EventBus.getDefault().post(new MindfulMorgingEventStart(10 * 60 * 1000));
         DaysOfWeekWhichWasSetAlarm daysOfWeekWhichWasSetAlarm = DBUtility.getAlarmDaysDao().queryBuilder().where(DaysOfWeekWhichWasSetAlarmDao.Properties.DayValue.eq(Utilities.getDayValue())).unique();
 
-        if (daysOfWeekWhichWasSetAlarm!=null && daysOfWeekWhichWasSetAlarm.getIsChecked())
-        {
+        //if (daysOfWeekWhichWasSetAlarm!=null && daysOfWeekWhichWasSetAlarm.getIsChecked())
+       /// {
             MindfulMorningActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
-        }
+        //}
         //Toast.makeText(context, "Alarm has been triggered.."+daysOfWeekWhichWasSetAlarm.getDay()+" value"+daysOfWeekWhichWasSetAlarm.getDayValue()+" DB value: "+Utilities.getDayValue(), Toast.LENGTH_LONG).show();
 
         //Log.e("TKB ", "Alarm has been triggered.."+daysOfWeekWhichWasSetAlarm.getDay()+" value"+daysOfWeekWhichWasSetAlarm.getDayValue()+" DB value: "+Utilities.getDayValue());
