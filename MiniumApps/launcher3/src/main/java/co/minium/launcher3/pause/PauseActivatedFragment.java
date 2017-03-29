@@ -71,7 +71,16 @@ public class PauseActivatedFragment extends CoreFragment {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         handler = new Handler();
         titleActionBar.setText(R.string.title_pause);
-        startPause();
+
+        if (maxMillis == -1) startPauseInfinite();
+        else startPause();
+    }
+
+    private void startPauseInfinite() {
+        seekbar.setVisibility(View.INVISIBLE);
+        imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+        launcherPrefs.isPauseActive().put(true);
+        NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
     }
 
     private void startPause() {

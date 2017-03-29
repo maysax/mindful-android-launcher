@@ -6,12 +6,14 @@ import android.view.KeyEvent;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.event.NFCEvent;
 import co.minium.launcher3.event.PauseStartEvent;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.ui.CoreActivity;
@@ -27,14 +29,21 @@ public class PauseActivity extends CoreActivity {
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    @Extra
+    boolean activatePause = false;
+
     @AfterViews
     void afterViews() {
         init();
     }
 
     private void init() {
-        pauseFragment = PauseFragment_.builder().build();
-        loadFragment(pauseFragment, R.id.mainView, "main");
+        if (activatePause) {
+            pauseStartEvent(new PauseStartEvent(-1));
+        } else {
+            pauseFragment = PauseFragment_.builder().build();
+            loadFragment(pauseFragment, R.id.mainView, "main");
+        }
     }
 
     @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
@@ -73,5 +82,16 @@ public class PauseActivity extends CoreActivity {
     public void pauseStartEvent(PauseStartEvent event) {
         pauseActivatedFragment = PauseActivatedFragment_.builder().maxMillis(event.getMaxMillis()).build();
         loadFragment(pauseActivatedFragment, R.id.mainView, "main");
+    }
+
+    @Subscribe
+    public void nfcEvent(NFCEvent event) {
+        if (event.isConnected()) {
+            pauseStartEvent(new PauseStartEvent(-1));
+        } else {
+            if (pauseActivatedFragment != null) {
+                pauseActivatedFragment.stopPause();
+            }
+        }
     }
 }
