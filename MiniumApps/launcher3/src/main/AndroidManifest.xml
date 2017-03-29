@@ -124,14 +124,15 @@
         </service>
         <receiver
             android:name=".msg.SmsReceiver_"
+            android:enabled="true"
             android:permission="android.permission.BROADCAST_SMS">
-            <intent-filter>
+            <intent-filter android:priority="9999">
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".call.CallReceiver_">
-            <intent-filter>
+        <receiver android:name=".call.CallReceiver_" android:enabled="true">
+            <intent-filter android:priority="9999">
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
             <intent-filter>
@@ -140,16 +141,6 @@
         </receiver>
 
         <receiver android:name=".mm.AlarmReciever"/>
-        <receiver
-            android:name=".sms.PhoneStateReceiver_"
-            android:enabled="true"
-            android:permission="android.permission.BROADCAST_SMS">
-            <intent-filter android:priority="9999">
-                <action android:name="android.intent.action.PHONE_STATE" />
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
-
     </application>
 
 </manifest>

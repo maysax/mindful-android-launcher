@@ -15,8 +15,9 @@ import org.greenrobot.greendao.database.Database;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import co.minium.launcher3.db.DaoMaster;
-import co.minium.launcher3.db.DaoSession;
+
+import co.minium.launcher3.call.DaoMaster;
+import co.minium.launcher3.call.DaoSession;
 import co.minium.launcher3.token.TokenManager;
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;

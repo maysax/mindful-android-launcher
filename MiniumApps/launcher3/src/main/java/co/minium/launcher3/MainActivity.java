@@ -1,11 +1,9 @@
 package co.minium.launcher3;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.nfc.NdefRecord;
@@ -40,7 +38,7 @@ import co.minium.launcher3.pause.PauseActivity_;
 import co.minium.launcher3.service.ApiClient_;
 import co.minium.launcher3.service.NotificationBlockerService;
 import co.minium.launcher3.service.NotificationBlockerService_;
-import co.minium.launcher3.sms.SmsObserver;
+import co.minium.launcher3.msg.SmsObserver;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenManager;
 import co.minium.launcher3.ui.TopFragment_;

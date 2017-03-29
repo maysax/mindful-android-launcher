@@ -16,7 +16,7 @@ import org.androidannotations.annotations.EBean;
 
 import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
-import co.minium.launcher3.sms.SmsObserver;
+import co.minium.launcher3.msg.SmsObserver;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
 

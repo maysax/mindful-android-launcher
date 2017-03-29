@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.telephony.SmsMessage;
 
 import org.androidannotations.annotations.EReceiver;
@@ -14,7 +15,8 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.Date;
 
 import co.minium.launcher3.app.Launcher3App;
-import co.minium.launcher3.db.DaoSession;
+import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.call.DaoSession;
 import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.db.TableNotificationSmsDao;
 import de.greenrobot.event.EventBus;
@@ -35,6 +37,9 @@ public class SmsReceiver extends BroadcastReceiver {
     @Pref
     DroidPrefs_ prefs;
 
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
+
     TableNotificationSmsDao smsDao;
 
     public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
@@ -42,43 +47,50 @@ public class SmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Tracer.d("Messages: onReceive in Launcher3");
-        abortBroadcast();
 
-        if (intent.getExtras() != null) {
-            Object[] pdus = (Object[]) intent.getExtras().get("pdus");
-            SmsMessage[] messages = new SmsMessage[pdus.length];
-            for (int i = 0; i < messages.length; i++) {
-                messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-            }
+        if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                Object messages[] = (Object[]) bundle.get("pdus");
+                SmsMessage smsMessage[] = new SmsMessage[messages.length];
 
-            SmsMessage sms = messages[0];
-            if (messages.length == 1 || sms.isReplace()) {
-                mBody = sms.getDisplayMessageBody();
-            } else {
-                StringBuilder bodyText = new StringBuilder();
-                for (SmsMessage message : messages) {
-                    bodyText.append(message.getMessageBody());
+                for (int n = 0; n < messages.length; n++) {
+                    smsMessage[n] = SmsMessage.createFromPdu((byte[]) messages[n]);
                 }
-                mBody = bodyText.toString();
+
+                SmsMessage sms = smsMessage[0];
+                if (smsMessage.length == 1 || sms.isReplace()) {
+                    mBody = sms.getDisplayMessageBody();
+                } else {
+                    StringBuilder bodyText = new StringBuilder();
+                    for (SmsMessage message : smsMessage) {
+                        bodyText.append(message.getMessageBody());
+                    }
+                    mBody = bodyText.toString();
+                }
+
+                mAddress = sms.getDisplayOriginatingAddress(); // sms..getOriginatingAddress();
+                mDate = new Date(sms.getTimestampMillis());
+
+                saveMessage(mAddress, mBody, mDate);
+                //new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
+                EventBus.getDefault().post(new SmsEvent(SmsEventType.RECEIVED));
+
+                if (launcherPrefs.isPauseActive().get()) {
+                    abortBroadcast();
+                }
+
+                if (prefs.isFlowRunning().get() || (prefs.isNotificationSchedulerEnabled().get() && prefs.notificationSchedulerSupressSMS().get())) {
+                    // Suppress notification
+                } else {
+                    //DisplayAlertActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
+                }
+                /*addMessageToInbox(context, mAddress, mBody, mDate.getTime());
+
+                if (!prefs.isFlowRunning().get() && !prefs.isNotificationSchedulerEnabled().get()) {
+                    context.sendBroadcast(new Intent(context, NotificationScheduleReceiver_.class));
+                }*/
             }
-
-            mAddress = sms.getDisplayOriginatingAddress();
-            mDate = new Date(sms.getTimestampMillis());
-
-            saveMessage(mAddress, mBody ,mDate);
-            //new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
-            EventBus.getDefault().post(new SmsEvent(SmsEventType.RECEIVED));
-
-            if (prefs.isFlowRunning().get() || (prefs.isNotificationSchedulerEnabled().get() && prefs.notificationSchedulerSupressSMS().get())) {
-                // Suppress notification
-            } else {
-                //DisplayAlertActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
-            }
-            /*addMessageToInbox(context, mAddress, mBody, mDate.getTime());
-
-            if (!prefs.isFlowRunning().get() && !prefs.isNotificationSchedulerEnabled().get()) {
-                context.sendBroadcast(new Intent(context, NotificationScheduleReceiver_.class));
-            }*/
         }
     }
 

@@ -1,4 +1,4 @@
-package co.minium.launcher3.sms;
+package co.minium.launcher3.msg;
 
 import android.content.ContentResolver;
 import android.content.Context;
