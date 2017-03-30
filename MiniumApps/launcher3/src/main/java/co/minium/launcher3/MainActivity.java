@@ -229,13 +229,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             final Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
+            EventBus.getDefault().post(new NFCEvent(true));
+
             nfcCheckHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     Ndef ndef = Ndef.get(tag);
                     try {
                         ndef.connect();
-                        EventBus.getDefault().post(new NFCEvent(true));
                         Tracer.d("Connection heart-beat for nfc tag " + tag);
                         nfcCheckHandler.postDelayed(this, 1000);
                     } catch (IOException e) {
@@ -275,7 +276,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Subscribe
     public void nfcEvent(NFCEvent event) {
         if (event.isConnected()) {
-            PauseActivity_.intent(this).start();
+            PauseActivity_.intent(this).activatePause(true).start();
         }
     }
 }

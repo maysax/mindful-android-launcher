@@ -86,9 +86,7 @@ public class PauseActivity extends CoreActivity {
 
     @Subscribe
     public void nfcEvent(NFCEvent event) {
-        if (event.isConnected()) {
-            pauseStartEvent(new PauseStartEvent(-1));
-        } else {
+        if (!event.isConnected()) {
             if (pauseActivatedFragment != null) {
                 pauseActivatedFragment.stopPause();
             }

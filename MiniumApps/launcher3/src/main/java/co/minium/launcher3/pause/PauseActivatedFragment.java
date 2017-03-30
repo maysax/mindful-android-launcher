@@ -3,6 +3,7 @@ package co.minium.launcher3.pause;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -52,6 +53,9 @@ public class PauseActivatedFragment extends CoreFragment {
     @ViewById
     TextView titleActionBar;
 
+    @ViewById
+    ViewGroup endingLayout;
+
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
@@ -78,6 +82,7 @@ public class PauseActivatedFragment extends CoreFragment {
 
     private void startPauseInfinite() {
         seekbar.setVisibility(View.INVISIBLE);
+        endingLayout.setVisibility(View.INVISIBLE);
         imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
         launcherPrefs.isPauseActive().put(true);
         NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
