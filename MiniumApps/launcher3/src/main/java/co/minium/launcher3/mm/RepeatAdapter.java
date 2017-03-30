@@ -1,44 +1,56 @@
 package co.minium.launcher3.mm;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
 
 /**
  * Created by tkb on 2017-03-10.
  */
 
-public class RepeatAdapter extends ArrayAdapter<String> {
+public class RepeatAdapter extends ArrayAdapter<DaysOfWeekWhichWasSetAlarm> {
 
-    private final Activity context;
 
-    private static final String days [] = {
-            "Mondays","Toesdays","Wednesdays","Thursdays","Fridays","Saturdays","Sundays"};
-
-    public RepeatAdapter(Activity context) {
-        super(context, R.layout.repeat_row, days);
+   // private static final String days [] = {
+     //       "Mondays","Toesdays","Wednesdays","Thursdays","Fridays","Saturdays","Sundays"};
+    List<DaysOfWeekWhichWasSetAlarm> daysOfWeekCheckedList;
+    Context context;
+    IteamAccess iteamAccess ;
+    public RepeatAdapter(Context context, IteamAccess iteamAccess, List<DaysOfWeekWhichWasSetAlarm> daysOfWeekCheckedList) {
+        super(context, R.layout.repeat_row, daysOfWeekCheckedList);
+        this.daysOfWeekCheckedList = daysOfWeekCheckedList;
+        this.iteamAccess = iteamAccess;
         this.context = context;
-
     }
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView= inflater.inflate(R.layout.repeat_row, null, false);
+    public View getView(final int position, final View view, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View rowView= inflater.inflate(R.layout.repeat_row, parent, false);
         TextView day_title = (TextView) rowView.findViewById(R.id.day_title);
 
         CheckBox check_day = (CheckBox) rowView.findViewById(R.id.check_day);
 
+        day_title.setText(daysOfWeekCheckedList.get(position).getDay().toString());
+        check_day.setChecked(daysOfWeekCheckedList.get(position).getIsChecked());
 
-        day_title.setText(days[position].toString());
-
+        check_day.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                iteamAccess.addObject(position,b);
+            }
+        });
         return rowView;
     }
 
@@ -47,4 +59,8 @@ public class RepeatAdapter extends ArrayAdapter<String> {
         return activitiesModel.size();
 
     }*/
+
+    public interface IteamAccess {
+        void addObject(int position, boolean value);
+    }
 }

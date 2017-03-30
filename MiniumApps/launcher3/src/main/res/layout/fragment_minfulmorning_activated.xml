@@ -16,18 +16,18 @@
 
         <include layout="@layout/siempo_toolbar"/>
 
-      <TextView
+
+    <TextView
         android:id="@+id/txtRemainingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif"
-        android:layout_marginTop="105dp"
         android:layout_alignParentTop="true"
-          android:layout_centerHorizontal="true"
-          android:textColor="@color/white"
-        tools:text="30 minute" />
-
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="105dp"
+        android:fontFamily="sans-serif"
+        android:text="7:00 AM  -  7:15 AM"
+        android:textColor="@color/white"
+        android:textSize="24sp" />
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
         android:id="@+id/seekbar"
@@ -45,9 +45,19 @@
         app:show_thumb="false"
         app:wheel_active_color="@color/white"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:src="@drawable/control_play"
+        android:layout_below="@id/seekbar"
+        android:background="@null"
+        android:id="@+id/pause_button"
+        android:contentDescription="@null" />
 
     <LinearLayout
-        android:id="@+id/endingLayout"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -73,6 +83,24 @@
             android:textColor="@color/white"
             tools:text="01:00 pm" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/endingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="70sp"
+            android:fontFamily="sans-serif"
+            android:text="..."
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

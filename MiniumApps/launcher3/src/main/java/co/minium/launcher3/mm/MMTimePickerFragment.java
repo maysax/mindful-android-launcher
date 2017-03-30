@@ -1,12 +1,11 @@
 package co.minium.launcher3.mm;
 
 import android.app.AlarmManager;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -19,12 +18,11 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import antistatic.spinnerwheel.AbstractWheel;
 import antistatic.spinnerwheel.OnWheelChangedListener;
@@ -32,8 +30,12 @@ import antistatic.spinnerwheel.adapters.ArrayWheelAdapter;
 import antistatic.spinnerwheel.adapters.NumericWheelAdapter;
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.mm.controller.AlarmController;
 import co.minium.launcher3.mm.model.ActivitiesStorage;
 import co.minium.launcher3.db.DBUtility;
+import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
+import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarmDao;
+import co.minium.launcher3.mm.model.Utilities;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
@@ -45,10 +47,10 @@ public class MMTimePickerFragment extends CoreFragment {
     Launcher3Prefs_ launcherPrefs;
 
     @ViewById
-    TableRow row1,row2,row3,row4;
+    TableRow row1,row2,row3,row4,row5;
 
     @ViewById
-    TextView txt_total_time;
+    TextView txt_total_time,txt_alarm_days;
 
     @ViewById
     TextView txt_away;
@@ -70,12 +72,12 @@ public class MMTimePickerFragment extends CoreFragment {
         ((CoreActivity)getActivity()).loadChildFragment(new ActivitiesFragment_(),R.id.mainView);
     }
     @Click
-    void row3(){
-
+    void row5(){
+        scheduleAlarm();
     }
     @Click
     void row4(){
-        ((CoreActivity)getActivity()).loadChildFragment(new RepeatFragment(),R.id.mainView);
+        ((CoreActivity)getActivity()).loadChildFragment(new RepeatFragment_(),R.id.mainView);
 
     }
     @Click
@@ -94,36 +96,30 @@ public class MMTimePickerFragment extends CoreFragment {
         // time at which alarm will be scheduled here alarm is scheduled at 1 day from current time,
         // we fetch  the current time in milliseconds and added 1 day time
         // i.e. 24*60*60*1000= 86,400,000   milliseconds in a day
+        /*Log.e("TKB",": item position "+ampm.getCurrentItem());
         int timeAdjustment=0;
         if (ampm.getCurrentItem()==1){
             timeAdjustment = 12;
         }
-
+*/
         //time.setText((Integer.parseInt(hours.getCurrentItem()+"")+1)+":"+wheel.getCurrentItem()+" "+AmPm[ampm.getCurrentItem()]);
 
         //Long time =Long.parseLong(((hours.getCurrentItem()+1+timeAdjustment)*mins.getCurrentItem())*1000+"");
         Calendar calendar =  Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,hours.getCurrentItem()+1+timeAdjustment);
+        calendar.set(Calendar.HOUR_OF_DAY,hours.getCurrentItem()+1);
         calendar.set(Calendar.MINUTE,mins.getCurrentItem());
+        calendar.set(Calendar.SECOND,0);
        // Long time2 = new GregorianCalendar().getTimeInMillis()+1*1000;
-
+        if (ampm.getCurrentItem()==1){
+            calendar.set(Calendar.AM_PM,Calendar.PM);
+        }else {
+            calendar.set(Calendar.AM_PM,Calendar.AM);
+        }
         if (calendar.getTime().before(Calendar.getInstance().getTime())){
             calendar.add(Calendar.DATE,1);
         }
-        //Log.d("Time: ", SimpleDateFormat.getDateTimeInstance().format(calendar.getTime())+" time2:"+SimpleDateFormat.getDateTimeInstance().format(new Date(time2)));
 
-        // create an Intent and set the class which will execute when Alarm triggers, here we have
-        // given AlarmReciever in the Intent, the onRecieve() method of this class will execute when
-        // alarm triggers and
-        //we will write the code to send SMS inside onRecieve() method pf Alarmreciever class
-        Intent intentAlarm = new Intent(getActivity(), AlarmReciever.class);
-
-        // create the object
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Log.e("TKB cal: ",calendar.getTimeInMillis()+" mili: "+(new GregorianCalendar().getTimeInMillis()+1*1000));
-        //set the alarm for particular time
-        alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), PendingIntent.getBroadcast(getActivity(),1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-        Toast.makeText(getActivity(), "Alarm Scheduled for Tommrrow", Toast.LENGTH_LONG).show();
+        AlarmController.setAlarm(getActivity(),calendar);
 
     }
     @ViewById
@@ -196,7 +192,22 @@ public class MMTimePickerFragment extends CoreFragment {
         for(ActivitiesStorage activitiesStorage: activitiesStorageList){
             time = time+activitiesStorage.getTime();
         }
+
         txt_total_time.setText("Total: "+time+" min");
+        //String nameOfTheDays="";
+        List<DaysOfWeekWhichWasSetAlarm> getAlarmActivatedDays = Utilities.getAlarmActivatedDays();
+        List<String>name = new ArrayList<>();
+        if (getAlarmActivatedDays.size()>=3){
+            txt_alarm_days.setText(Utilities.multiple);
+        }else {
+
+            for (DaysOfWeekWhichWasSetAlarm alarmDays : getAlarmActivatedDays){
+                name.add(alarmDays.getDay().substring(0,3));
+            }
+
+            txt_alarm_days.setText(TextUtils.join(",",name)+"");
+        }
+
     }
 
     @Override

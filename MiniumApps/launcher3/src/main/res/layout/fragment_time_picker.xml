@@ -120,7 +120,7 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_marginLeft="18dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:id="@+id/row1"
             android:layout_height="wrap_content">
 
@@ -157,7 +157,7 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_marginLeft="18dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:id="@+id/row2"
             android:layout_height="wrap_content">
 
@@ -195,7 +195,7 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_marginLeft="18dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:id="@+id/row3"
             android:layout_height="wrap_content">
 
@@ -224,7 +224,7 @@
         <TableRow
             android:layout_width="fill_parent"
             android:layout_marginLeft="18dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:id="@+id/row4"
             android:layout_height="wrap_content">
 
@@ -238,8 +238,47 @@
                 android:layout_height="wrap_content"
                 />
 
+            <TextView
+                android:text="Monday"
+                android:id="@+id/txt_alarm_days"
+                android:layout_width="wrap_content"
+                android:textSize="14sp"
+                android:gravity="right"
+                android:fontFamily="sans-serif"
+                android:textColor="#8b000000"
+                android:layout_height="wrap_content"
+                />
             <com.joanzapata.iconify.widget.IconTextView
-                android:text="Mondays  {fa-angle-right 27dp}"
+                android:text="{fa-angle-right 27dp}"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="18dp"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="#8b000000"
+                android:gravity="right"
+                android:layout_height="wrap_content"
+                />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="30dp"
+            android:id="@+id/row5"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Mindful Morning"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="#de000000"
+                android:layout_height="wrap_content"
+                />
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:text="Start  {fa-angle-right 27dp}"
                 android:layout_width="wrap_content"
                 android:layout_marginRight="18dp"
                 android:textSize="14sp"

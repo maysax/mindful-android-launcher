@@ -27,7 +27,7 @@ public class MindfulMorningActivity extends CoreActivity {
 
     @Subscribe
     public void MindfulMorgingEventStart(MindfulMorgingEventStart event) {
-        loadFragment(MinfulMorningActivated_.builder().maxMillis(event.getMaxMillis()).build(), R.id.mainView, "main");
+        loadFragment(MinfulMorningActivated_.builder().startPosition(event.getStartPosition()).build(), R.id.mainView, "main");
     }
 
 }

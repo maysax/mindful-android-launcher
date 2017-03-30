@@ -78,7 +78,7 @@
         android:layout_marginBottom="65dp" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/txtAlarmTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -91,18 +91,18 @@
         android:layout_centerHorizontal="true"  />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/txtAmPm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="AM"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif"
-        android:textColor="#FFFFFF"
+        android:layout_alignBaseline="@+id/txtAlarmTime"
+        android:layout_alignBottom="@+id/txtAlarmTime"
         android:layout_marginRight="20dp"
-        android:layout_alignBaseline="@+id/textView4"
-        android:layout_alignBottom="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4" />
+        android:layout_toEndOf="@+id/txtAlarmTime"
+        android:layout_weight="1"
+        android:fontFamily="sans-serif"
+        android:text="AM"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp" />
 
 
 </RelativeLayout>
