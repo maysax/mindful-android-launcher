@@ -45,6 +45,16 @@
         app:show_thumb="false"
         app:wheel_active_color="@color/white"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:src="@drawable/control_play"
+        android:layout_below="@id/seekbar"
+        android:background="@null"
+        android:id="@+id/pause_button"
+        android:contentDescription="@null" />
 
     <LinearLayout
         android:id="@+id/endingLayout"

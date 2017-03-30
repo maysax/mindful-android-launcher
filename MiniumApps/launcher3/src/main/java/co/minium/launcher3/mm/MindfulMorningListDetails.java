@@ -58,7 +58,7 @@ public class MindfulMorningListDetails extends CoreFragment {
         seekbar.setValue(value);
     }
     private void startPause() {
-        EventBus.getDefault().post(new MindfulMorgingEventStart(seekbar.getValue() * 60 * 1000));
+        EventBus.getDefault().post(new MindfulMorgingEventStart(1));
     }
     private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {
 

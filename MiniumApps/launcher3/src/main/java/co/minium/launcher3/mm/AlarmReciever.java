@@ -34,7 +34,7 @@ public class AlarmReciever extends BroadcastReceiver
         sms.sendTextMessage(phoneNumberReciver, null, message, null, null);*/
 
         //EventBus.getDefault().post(new MindfulMorgingEventStart(10 * 60 * 1000));
-        DaysOfWeekWhichWasSetAlarm daysOfWeekWhichWasSetAlarm = DBUtility.getAlarmDaysDao().queryBuilder().where(DaysOfWeekWhichWasSetAlarmDao.Properties.DayValue.eq(Utilities.getDayValue())).unique();
+       // DaysOfWeekWhichWasSetAlarm daysOfWeekWhichWasSetAlarm = DBUtility.getAlarmDaysDao().queryBuilder().where(DaysOfWeekWhichWasSetAlarmDao.Properties.DayValue.eq(Utilities.getDayValue())).unique();
 
         //if (daysOfWeekWhichWasSetAlarm!=null && daysOfWeekWhichWasSetAlarm.getIsChecked())
        /// {

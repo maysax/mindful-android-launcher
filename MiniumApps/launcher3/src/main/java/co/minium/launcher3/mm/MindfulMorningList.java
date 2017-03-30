@@ -62,7 +62,7 @@ public class MindfulMorningList  extends CoreFragment {
            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 //               ((CoreActivity)getActivity()).loadChildFragment(MindfulMorningListDetails_.builder().title(activitiesStorageList.get(i).getName()).value(activitiesStorageList.get(i).getTime()).build(),R.id.mainView);
 
-               EventBus.getDefault().post(new MindfulMorgingEventStart(activitiesStorageList.get(i).getTime() * 60 * 1000));
+               EventBus.getDefault().post(new MindfulMorgingEventStart(i));
 
 
            }

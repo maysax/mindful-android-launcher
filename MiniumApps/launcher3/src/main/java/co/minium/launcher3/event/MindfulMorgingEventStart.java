@@ -6,13 +6,13 @@ package co.minium.launcher3.event;
 
 public class MindfulMorgingEventStart {
 
-    private int maxMillis;
+    private int startPosition;
 
-    public MindfulMorgingEventStart(int maxMillis) {
-        this.maxMillis = maxMillis;
+    public MindfulMorgingEventStart(int startPosition) {
+        this.startPosition = startPosition;
     }
 
-    public int getMaxMillis() {
-        return maxMillis;
+    public int getStartPosition() {
+        return startPosition;
     }
 }

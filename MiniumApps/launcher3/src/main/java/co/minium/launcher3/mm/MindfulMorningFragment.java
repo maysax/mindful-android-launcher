@@ -24,8 +24,10 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.util.VibrationUtils;
 import co.minium.launcher3.util.VibrationUtils_;
 import minium.co.core.ui.CoreActivity;
@@ -44,6 +46,11 @@ public class MindfulMorningFragment extends CoreFragment {
     Button pause_button;
     @Bean
     VibrationUtils vibrationUtils;
+    @ViewById
+    TextView txtAlarmTime,txtAmPm;
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
+
     @Click
     void pause_button() {
 
@@ -63,6 +70,19 @@ public class MindfulMorningFragment extends CoreFragment {
 
     @AfterViews
     public void afterViews() {
+
+        String SavedTime = launcherPrefs.time().get();
+        String [] timeArray = SavedTime.split(":");
+        String totalTime="";
+
+        totalTime = timeArray[0]+":"+timeArray[1];
+        txtAlarmTime.setText(totalTime);
+
+        if (timeArray[2].equals("0")){
+            txtAmPm.setText(" AM");
+        }else{
+            txtAmPm.setText(" PM");
+        }
 
         // Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         //Vibrator v = (Vibrator) this.context.getSystemService(Context.VIBRATOR_SERVICE);

@@ -2,7 +2,10 @@ package co.minium.launcher3.mm;
 
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,11 +20,15 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.mm.model.ActivitiesStorage;
+import co.minium.launcher3.mm.model.ActivitiesStorageDao;
+import co.minium.launcher3.mm.model.DBUtility;
 import co.minium.launcher3.pause.PausePreferenceFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -54,13 +61,18 @@ public class MinfulMorningActivated extends CoreFragment {
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    @ViewById
+    ImageButton pause_button;
+
+    @FragmentArg
+    int startPosition = 0;
+
     Handler handler;
 
     private int atMillis = 0;
 
-    @FragmentArg
     int maxMillis = 0;
-
+    List<ActivitiesStorage> activitiesStorageList;
     public MinfulMorningActivated() {
         // Required empty public constructor
     }
@@ -68,8 +80,13 @@ public class MinfulMorningActivated extends CoreFragment {
     @AfterViews
     void afterViews() {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
+        pause_button.setVisibility(View.INVISIBLE);
         handler = new Handler();
         titleActionBar.setText(R.string.title_mindfulMorning);
+        activitiesStorageList =  DBUtility.getActivitySession()
+                .queryBuilder().where(ActivitiesStorageDao.Properties.Time.notEq(0)).list();
+
+        maxMillis = activitiesStorageList.get(startPosition).getTime() * 60 * 1000;
         startPause();
     }
 
@@ -116,11 +133,27 @@ public class MinfulMorningActivated extends CoreFragment {
         }
     };
 
+    @Click
+    void pause_button(){
+        pause_button.setVisibility(View.INVISIBLE);
+        atMillis = 0;
+        startPosition=0;
+        maxMillis = activitiesStorageList.get(startPosition).getTime() * 60 * 1000;
+        startPause();
+
+    }
     private void stopPause() {
-        seekbar.setValue(0);
-        seekbar.setShowTitle(false);
-        handler.removeCallbacks(pauseActiveRunnable);
-        launcherPrefs.isPauseActive().put(false);
-        getActivity().finish();
+        activitiesStorageList.remove(startPosition);
+        if (activitiesStorageList.size()==0){
+            seekbar.setValue(0);
+            seekbar.setShowTitle(false);
+            handler.removeCallbacks(pauseActiveRunnable);
+            launcherPrefs.isPauseActive().put(false);
+            getActivity().finish();
+        }else {
+            //if (pause_button.visible)
+            pause_button.setVisibility(View.VISIBLE);
+        }
+
     }
 }
