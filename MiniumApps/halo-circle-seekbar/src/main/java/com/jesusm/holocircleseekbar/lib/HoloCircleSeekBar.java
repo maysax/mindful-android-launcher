@@ -613,21 +613,21 @@ public class HoloCircleSeekBar extends View {
                         block_start = false;
                     }
 
-                    if (block_end) {
-                        arc_finish_radians = end_wheel - 1;
-                        setTextFromAngle(max);
-                        mAngle = calculateAngleFromRadians(arc_finish_radians);
-                        updatePointerPosition();
-                    } else if (block_start) {
-                        arc_finish_radians = start_arc;
-                        mAngle = calculateAngleFromRadians(arc_finish_radians);
-                        setTextFromAngle(0);
-                        updatePointerPosition();
-                    } else {
+//                    if (block_end) {
+//                        arc_finish_radians = end_wheel - 1;
+//                        setTextFromAngle(max);
+//                        mAngle = calculateAngleFromRadians(arc_finish_radians);
+//                        updatePointerPosition();
+//                    } else if (block_start) {
+//                        arc_finish_radians = start_arc;
+//                        mAngle = calculateAngleFromRadians(arc_finish_radians);
+//                        setTextFromAngle(0);
+//                        updatePointerPosition();
+//                    } else {
                         arc_finish_radians = calculateRadiansFromAngle(mAngle);
                         setTextFromAngle(calculateValueFromAngle(arc_finish_radians));
                         updatePointerPosition();
-                    }
+//                    }
                     invalidate();
                     if (mOnCircleSeekBarChangeListener != null)
                         mOnCircleSeekBarChangeListener.onProgressChanged(this,

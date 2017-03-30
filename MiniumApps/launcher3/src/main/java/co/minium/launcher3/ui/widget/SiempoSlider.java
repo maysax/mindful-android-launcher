@@ -5,6 +5,9 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.SweepGradient;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -19,27 +22,40 @@ import co.minium.launcher3.R;
 
 public class SiempoSlider extends View {
 
-    private int mThumbX;
-    private int mThumbY;
+    private static final String STATE_PARENT = "parent";
+    private static final String STATE_ANGLE = "angle";
 
-    private int mCircleCenterX;
-    private int mCircleCenterY;
-    private int mCircleRadius;
+    private OnSliderChangeListener listener;
 
-    private Drawable mThumbImage;
-    private int mPadding;
-    private int mThumbSize;
-    private int mThumbColor;
-    private int mBorderColor;
-    private int mBorderThickness;
-    private double mStartAngle;
-    private double mAngle = mStartAngle;
-    private boolean mIsThumbSelected = false;
-    private int mTitleSize, mSubTitleSize, mCenterTextSize;
-    private int mSliderActiveColor, mSliderInactiveColor, mTitleColor, mSubTitleColor, mCenterTextColor;
-    private int mInitPosition;
-    private boolean isThumbVisible;
+    /**
+     * {@code Paint} instance used to draw the color wheel.
+     */
+    private Paint mColorWheelPaint;
 
+    /**
+     * {@code Paint} instance used to draw the pointer's "halo".
+     */
+    private Paint mPointerHaloPaint;
+
+    /**
+     * {@code Paint} instance used to draw the pointer (the selected color).
+     */
+    private Paint mPointerColor;
+
+    /**
+     * The stroke width used to paint the color wheel (in pixels).
+     */
+    private int mColorWheelStrokeWidth;
+
+    /**
+     * The radius of the pointer (in pixels).
+     */
+    private float mPointerRadius;
+
+    /**
+     * The rectangle enclosing the color wheel.
+     */
+    private RectF mColorWheelRectangle = new RectF();
 
     /**
      * {@code true} if the user clicked on the pointer to start the move mode.
@@ -67,8 +83,50 @@ public class SiempoSlider extends View {
      */
     private float mTranslationOffset;
 
-    private Paint mPaint = new Paint();
-    private OnSiempoSliderChangeListener mListener;
+    /**
+     * Radius of the color wheel in pixels.
+     * <p>
+     * <p>
+     * Note: (Re)calculated in {@link #onMeasure(int, int)}.
+     * </p>
+     */
+    private float mColorWheelRadius;
+
+    /**
+     * The pointer's position expressed as angle (in rad).
+     */
+    private float mAngle;
+    private Paint titlePaint;
+    private String titleText;
+    private Paint subTitlePaint;
+    private String subTitleText = "minutes";
+    private Paint textPaint;
+    private String text = "Done";
+    private int max = 100;
+    private SweepGradient s;
+    private Paint mArcColor;
+    private int wheel_color, unactive_wheel_color, pointer_color, pointer_halo_color, title_size, title_color, subTitle_size, subTitle_color, text_size, text_color;
+    private int init_position = -1;
+    private boolean block_end = false;
+    private float lastX;
+    private int last_radians = 0;
+    private boolean block_start = false;
+
+    private int arc_finish_radians = 360;
+    private int start_arc = 270;
+
+    private float[] pointerPosition;
+    private RectF mColorCenterHaloRectangle = new RectF();
+    private int end_wheel;
+
+    private boolean showTitle = true;
+    private Rect titleBounds = new Rect();
+    private Rect subTitleBounds = new Rect();
+    private Rect textBounds = new Rect();
+
+    private Drawable mThumbImage;
+    private int mThumbSize;
+    private boolean showThumb;
 
     public SiempoSlider(Context context) {
         this(context, null);
@@ -88,165 +146,13 @@ public class SiempoSlider extends View {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.siempo_slider, defStyleAttr, defStyleRes);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.siempo_slider, defStyleAttr, defStyleRes);
 
-        mStartAngle = a.getFloat(R.styleable.siempo_slider_start_angle, (float) Math.PI / 2);
-        mAngle = a.getFloat(R.styleable.siempo_slider_angle, (float) Math.PI / 2);
-        mThumbSize = a.getDimensionPixelSize(R.styleable.siempo_slider_thumb_size, 50);
-        mThumbColor = a.getColor(R.styleable.siempo_slider_thumb_color, Color.BLUE);
-        mBorderThickness = a.getDimensionPixelSize(R.styleable.siempo_slider_border_thickness, 20);
-        mBorderColor = a.getColor(R.styleable.siempo_slider_border_color, Color.GREEN);
-        mThumbImage = a.getDrawable(R.styleable.siempo_slider_thumb_image);
-        mTitleSize = a.getDimensionPixelSize(R.styleable.siempo_slider_title_size, 25);
-        mSubTitleSize = a.getDimensionPixelSize(R.styleable.siempo_slider_subTitle_size, 15);
-        mCenterTextSize = a.getDimensionPixelSize(R.styleable.siempo_slider_center_text_size, 20);
-        mInitPosition = a.getInteger(R.styleable.siempo_slider_init_position, 0);
-        isThumbVisible = a.getBoolean(R.styleable.siempo_slider_thumb_visible, true);
-        mSliderActiveColor = a.getColor(R.styleable.siempo_slider_slider_active_color, Color.DKGRAY);
-        mSliderInactiveColor = a.getColor(R.styleable.siempo_slider_slider_inactive_color, Color.WHITE);
-        mTitleColor = a.getColor(R.styleable.siempo_slider_title_color, Color.CYAN);
-        mSubTitleColor = a.getColor(R.styleable.siempo_slider_subTitle_color, Color.MAGENTA);
-        mCenterTextColor = a.getColor(R.styleable.siempo_slider_center_text_color, Color.YELLOW);
-
-        int all = getPaddingLeft() + getPaddingRight() + getPaddingBottom() + getPaddingTop() + getPaddingEnd() + getPaddingStart();
-        mPadding = all / 6;
-
-        a.recycle();
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        // use smaller dimension for calculations (depends on parent size)
-        int smallerDim = w > h ? h : w;
-
-        // find circle's rectangle points
-        int largestCenteredSquareLeft = (w - smallerDim) / 2;
-        int largestCenteredSquareTop = (h - smallerDim) / 2;
-        int largestCenteredSquareRight = largestCenteredSquareLeft + smallerDim;
-        int largestCenteredSquareBottom = largestCenteredSquareTop + smallerDim;
-
-        // save circle coordinates and radius in fields
-        mCircleCenterX = largestCenteredSquareRight / 2 + (w - largestCenteredSquareRight) / 2;
-        mCircleCenterY = largestCenteredSquareBottom / 2 + (h - largestCenteredSquareBottom) / 2;
-        mCircleRadius = smallerDim / 2 - mBorderThickness / 2 - mPadding;
-
-        // works well for now, should we call something else here?
-        super.onSizeChanged(w, h, oldw, oldh);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        // outer circle (ring)
-        mPaint.setColor(mBorderColor);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(mBorderThickness);
-        mPaint.setAntiAlias(true);
-        canvas.drawCircle(mCircleCenterX, mCircleCenterY, mCircleRadius, mPaint);
-
-        // find thumb position
-        mThumbX = (int) (mCircleCenterX + mCircleRadius * Math.cos(mAngle));
-        mThumbY = (int) (mCircleCenterY - mCircleRadius * Math.sin(mAngle));
-
-        if (mThumbImage != null) {
-            // draw png
-            mThumbImage.setBounds(mThumbX - mThumbSize / 2, mThumbY - mThumbSize / 2, mThumbX + mThumbSize / 2, mThumbY + mThumbSize / 2);
-            mThumbImage.draw(canvas);
-        } else {
-            // draw colored circle
-            mPaint.setColor(mThumbColor);
-            mPaint.setStyle(Paint.Style.FILL);
-            canvas.drawCircle(mThumbX, mThumbY, mThumbSize, mPaint);
-        }
-    }
-
-    /**
-     * Invoked when slider starts moving or is currently moving. This method calculates and sets position and angle of the thumb.
-     *
-     * @param touchX Where is the touch identifier now on X axis
-     * @param touchY Where is the touch identifier now on Y axis
-     */
-    private void updateSliderState(int touchX, int touchY) {
-        int distanceX = touchX - mCircleCenterX;
-        int distanceY = mCircleCenterY - touchY;
-        //noinspection SuspiciousNameCombination
-        double c = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
-        mAngle = Math.acos(distanceX / c);
-        if (distanceY < 0) {
-            mAngle = -mAngle;
-        }
-
-        if (mListener != null) {
-            // notify slider moved listener of the new position which should be in [0..1] range
-            // mListener.onSliderMoved ((mAngle - mStartAngle) / (2 * Math.PI));
-        }
-    }
-
-    /**
-     * Position setter. This method should be used to manually position the slider thumb.<br>
-     * Note that counterclockwise {@link #mStartAngle} is used to determine the initial thumb position.
-     *
-     * @param pos Value between 0 and 1 used to calculate the angle. {@code Angle = StartingAngle + pos * 2 * Pi}<br>
-     *            Note that angle will not be updated if the position parameter is not in the valid range [0..1]
-     */
-    public void setPosition(double pos) {
-        if (pos >= 0 && pos <= 1) {
-            mAngle = mStartAngle + pos * 2 * Math.PI;
-        }
-    }
-
-    /**
-     * Saves a new slider moved listner. Set {@link OnSiempoSliderChangeListener} to {@code null} to remove it.
-     *
-     * @param listener Instance of the slider moved listener, or null when removing it
-     */
-    public void setOnSliderMovedListener(OnSiempoSliderChangeListener listener) {
-        mListener = listener;
-    }
-
-    @Override
-    @SuppressWarnings("NullableProblems")
-    public boolean onTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                // start moving the thumb (this is the first touch)
-                int x = (int) ev.getX();
-                int y = (int) ev.getY();
-                if (x < mThumbX + mThumbSize && x > mThumbX - mThumbSize && y < mThumbY + mThumbSize && y > mThumbY - mThumbSize) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                    mIsThumbSelected = true;
-                    updateSliderState(x, y);
-                }
-                break;
-            }
-
-            case MotionEvent.ACTION_MOVE: {
-                // still moving the thumb (this is not the first touch)
-                if (mIsThumbSelected) {
-                    int x = (int) ev.getX();
-                    int y = (int) ev.getY();
-                    updateSliderState(x, y);
-                }
-                break;
-            }
-
-            case MotionEvent.ACTION_UP: {
-                // finished moving (this is the last touch)
-                getParent().requestDisallowInterceptTouchEvent(false);
-                mIsThumbSelected = false;
-                break;
-            }
-        }
-
-        // redraw the whole component
-        invalidate();
-        return true;
-    }
-
-    public interface OnSiempoSliderChangeListener {
-        void onSliderMoved(SiempoSlider slider, int progress, boolean fromUser);
-        void onStartSliding(SiempoSlider slider);
-        void onStopSliding(SiempoSlider slider);
+    public interface OnSliderChangeListener {
+        void onSliderChanged(SiempoSlider slider, int progress, boolean fromUser);
+        void onStartSliderTouch(SiempoSlider slider);
+        void onStopSliderTouch(SiempoSlider slider);
     }
 }
