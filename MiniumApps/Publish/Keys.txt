@@ -1,4 +1,0 @@
-Key store path: MiniumApps\Publish\minium-key.jks
-Key store password: GlzDCuelnXB7
-Key alias: Minium-Apps
-Key password: 9NJeqR3Y11Li
