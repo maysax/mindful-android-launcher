@@ -52,8 +52,8 @@ public class MinfulMorningActivated extends CoreFragment {
     @ViewById
     TextView txtRemainingTime;
 
-    @ViewById
-    TextView txtEndingTime;
+    //@ViewById
+    //TextView txtEndingTime;
 
     @ViewById
     TextView titleActionBar;
@@ -97,9 +97,10 @@ public class MinfulMorningActivated extends CoreFragment {
         imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
         launcherPrefs.isPauseActive().put(true);
         handler.postDelayed(pauseActiveRunnable, 1000);
-        Calendar cal = Calendar.getInstance(Locale.US);
-        cal.add(Calendar.MILLISECOND, maxMillis);
-        txtEndingTime.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(cal.getTime()));
+        Calendar calStart = Calendar.getInstance(Locale.US);
+        Calendar calEnd = Calendar.getInstance(Locale.US);
+        calEnd.add(Calendar.MILLISECOND, maxMillis);
+        txtRemainingTime.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(calStart.getTime())+"-"+new SimpleDateFormat("hh:mm a", Locale.US).format(calEnd.getTime()));
     }
 
     @Click
@@ -123,10 +124,11 @@ public class MinfulMorningActivated extends CoreFragment {
                 } else {
                     Tracer.d("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
                     seekbar.setValue(atMillis / (1000 * 60.0f));
-                    txtRemainingTime.setText(String.format(Locale.US, "%d minute", TimeUnit.MILLISECONDS.toMinutes(maxMillis - atMillis)));
+                  // txtRemainingTime.setText(String.format(Locale.US, "%d minute", TimeUnit.MILLISECONDS.toMinutes(maxMillis - atMillis)));
+                    handler.postDelayed(this, 1000);
+
                 }
 
-                handler.postDelayed(this, 1000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -144,16 +146,17 @@ public class MinfulMorningActivated extends CoreFragment {
     }
     private void stopPause() {
         activitiesStorageList.remove(startPosition);
+
         if (activitiesStorageList.size()==0){
             seekbar.setValue(0);
             seekbar.setShowTitle(false);
-            handler.removeCallbacks(pauseActiveRunnable);
             launcherPrefs.isPauseActive().put(false);
             getActivity().finish();
         }else {
             //if (pause_button.visible)
             pause_button.setVisibility(View.VISIBLE);
         }
+        handler.removeCallbacks(pauseActiveRunnable);
 
     }
 }
