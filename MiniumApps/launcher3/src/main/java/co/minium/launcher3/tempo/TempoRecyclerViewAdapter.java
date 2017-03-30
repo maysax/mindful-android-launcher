@@ -1,4 +1,4 @@
-package co.minium.launcher3.ui;
+package co.minium.launcher3.tempo;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

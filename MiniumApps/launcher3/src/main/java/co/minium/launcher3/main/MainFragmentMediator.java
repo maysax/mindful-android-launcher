@@ -24,9 +24,9 @@ import co.minium.launcher3.model.ContactListItem;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.model.MainListItemType;
 import co.minium.launcher3.pause.PauseActivity_;
+import co.minium.launcher3.tempo.TempoActivity_;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenRouter;
-import co.minium.launcher3.ui.TempoActivity_;
 import de.greenrobot.event.EventBus;
 import minium.co.core.util.UIUtils;
 

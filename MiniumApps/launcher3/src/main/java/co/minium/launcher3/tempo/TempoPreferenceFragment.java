@@ -1,4 +1,4 @@
-package co.minium.launcher3.ui;
+package co.minium.launcher3.tempo;
 
 import android.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;

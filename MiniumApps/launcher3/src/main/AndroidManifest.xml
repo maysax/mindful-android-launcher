@@ -86,7 +86,7 @@
             android:name=".pause.PauseActivity_"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.TempoActivity_"
+            android:name=".tempo.TempoActivity_"
             android:screenOrientation="portrait" />
         <activity
             android:name=".map.SiempoMapActivity_"
@@ -141,6 +141,9 @@
         </receiver>
 
         <receiver android:name=".mm.AlarmReciever"/>
+        <receiver
+            android:name=".tempo.TempoReceiver_"
+            android:enabled="true" />
     </application>
 
 </manifest>

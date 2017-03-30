@@ -22,7 +22,7 @@ import co.minium.launcher3.mm.MMTimePickerActivity_;
 import co.minium.launcher3.mm.MindfulMorningActivity_;
 import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.pause.PauseActivity_;
-import co.minium.launcher3.ui.TempoActivity_;
+import co.minium.launcher3.tempo.TempoActivity_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;

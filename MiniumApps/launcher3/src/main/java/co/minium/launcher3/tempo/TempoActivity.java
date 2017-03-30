@@ -1,10 +1,12 @@
-package co.minium.launcher3.ui;
+package co.minium.launcher3.tempo;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.tempo.TempoFragment_;
+import co.minium.launcher3.ui.TopFragment_;
 import minium.co.core.ui.CoreActivity;
 
 @Fullscreen

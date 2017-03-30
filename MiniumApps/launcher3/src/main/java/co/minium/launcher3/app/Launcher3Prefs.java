@@ -1,6 +1,7 @@
 package co.minium.launcher3.app;
 
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
@@ -24,6 +25,15 @@ public interface Launcher3Prefs {
 
     @DefaultBoolean(false)
     boolean isTempoActive();
+
+    @DefaultLong(0)
+    long tempoNextNotificationMillis();
+
+    @DefaultBoolean(false)
+    boolean tempoAllowFavorites();
+
+    @DefaultBoolean(false)
+    boolean tempoAllowCalls();
 
     @DefaultBoolean(false)
     boolean isAwayChecked();

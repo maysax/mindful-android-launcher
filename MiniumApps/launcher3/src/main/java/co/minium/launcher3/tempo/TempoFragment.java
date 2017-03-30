@@ -1,5 +1,8 @@
-package co.minium.launcher3.ui;
+package co.minium.launcher3.tempo;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.v7.widget.Toolbar;
@@ -19,13 +22,15 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.event.TempoEvent;
+import co.minium.launcher3.tempo.TempoPreferenceFragment_;
 import de.greenrobot.event.EventBus;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.DateUtils;
 
 @EFragment(R.layout.fragment_tempo)
 public class TempoFragment extends CoreFragment {
-
 
     public TempoFragment() {
         // Required empty public constructor
@@ -40,6 +45,17 @@ public class TempoFragment extends CoreFragment {
     @ViewById
     TextView titleActionBar;
 
+    @ViewById
+    Button btnOff;
+
+    @ViewById
+    Button btnOn;
+
+    @SystemService
+    AlarmManager alarmMgr;
+
+    PendingIntent alarmIntent;
+
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
@@ -53,16 +69,20 @@ public class TempoFragment extends CoreFragment {
         titleActionBar.setText(R.string.title_tempo);
         btnOff.setActivated(true);
         btnOn.setActivated(false);
+
+        alarmIntent = PendingIntent.getBroadcast(getActivity(),
+                23,
+                new Intent(getActivity(),
+                        TempoReceiver_.class).putExtra(TempoReceiver.KEY_IS_TEMPO, true)
+                , 0);
+
     }
 
     @Click
     void imgLeft() {
         getActivity().finish();
     }
-    @ViewById
-    Button btnOff;
-    @ViewById 
-    Button btnOn;
+
 
     @ViewById
     TextView text_status;
@@ -74,7 +94,7 @@ public class TempoFragment extends CoreFragment {
         btnOn.setActivated(false);
         text_status.setText("Turn on Tempo to batch notifications at set intervals");
         EventBus.getDefault().post(new TempoEvent(false));
-
+        if (alarmMgr != null) alarmMgr.cancel(alarmIntent);
     }
     @Click
     void btnOn(){
@@ -82,8 +102,8 @@ public class TempoFragment extends CoreFragment {
         btnOff.setTextColor(Color.parseColor("#4d332d6d"));
         btnOff.setActivated(false);
         btnOn.setActivated(true);
-
-            text_status.setText("Notifications now come batched every  "+seekbar.getValue() +"  minutes, starting at the top of the hour");
+        setAlarm();
+        text_status.setText("Notifications now come batched every  "+seekbar.getValue() +"  minutes, starting at the top of the hour");
         EventBus.getDefault().post(new TempoEvent(true));
     }
     @Click
@@ -115,5 +135,25 @@ public class TempoFragment extends CoreFragment {
             seekbar.setValue(currVal);
         }
     };
+
+    private void setAlarm() {
+        if (alarmMgr != null) alarmMgr.cancel(alarmIntent);
+
+        long nextIntervalMillis = DateUtils.nextIntervalMillis(seekbar.getValue() * 60 * 1000);
+
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
+                nextIntervalMillis,
+                seekbar.getValue() * 60 * 1000, alarmIntent);
+
+        Tracer.d("NotificationScheduleAlarm set at: " + DateUtils.log() + " || Next fire: " + DateUtils.log(nextIntervalMillis));
+
+        launcherPrefs.tempoNextNotificationMillis().put(nextIntervalMillis);
+
+//        else {
+//            prefs.isNotificationSupressed().put(true);
+//            getActivity().sendBroadcast(new Intent(getActivity(), TempoReceiver_.class));
+//            Tracer.d("NotificationScheduleAlarm cancelled");
+//        }
+    }
 
 }
