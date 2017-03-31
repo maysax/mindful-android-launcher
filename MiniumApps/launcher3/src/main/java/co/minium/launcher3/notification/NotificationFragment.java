@@ -2,7 +2,15 @@ package co.minium.launcher3.notification;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +33,8 @@ import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
 import org.greenrobot.greendao.query.Query;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +50,7 @@ import co.minium.launcher3.db.TableNotificationSmsDao;
 import co.minium.launcher3.main.MainFragment_;
 import co.minium.launcher3.main.OnStartDragListener;
 import co.minium.launcher3.main.SimpleItemTouchHelperCallback;
+import co.minium.launcher3.mm.model.ActivitiesStorageDao;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.CheckActivityEvent;
@@ -79,9 +90,12 @@ public class NotificationFragment extends CoreFragment{
 //      adapter = new NotificationAdapter(this,notificationList);
         prepareNotifications();
 
+        // .queryBuilder().where(ActivitiesStorageDao.Properties.Time.notEq(0)).list();
         // query all notes, sorted a-z by their text
 //        smsQuery = smsDao.queryBuilder().orderAsc(TableNotificationSmsDao.Properties._contact_title).build();
-        List<TableNotificationSms> items = smsDao.loadAll();
+
+        List<TableNotificationSms> items = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties._date).build().list();
+        //List<TableNotificationSms> items = smsDao.loadAll();
         setUpNotifications(items);
 
         adapter = new RecyclerListAdapter(getActivity(),notificationList);
@@ -112,7 +126,7 @@ public class NotificationFragment extends CoreFragment{
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 // do it
-                Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position "+ notificationList.get(position).get_name(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position "+ notificationList.get(position).getNotificationContactModel().getImage(), Toast.LENGTH_SHORT).show();
             }
 
 
@@ -134,12 +148,113 @@ public class NotificationFragment extends CoreFragment{
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a");
             String time = sdf.format(items.get(i).get_date());
-            Notification n = new Notification(items.get(i).get_contact_title(),items.get(i).get_message(),R.drawable.ic_person_black_24dp,time,false);
+            Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()),items.get(i).get_message(),time,false);
             notificationList.add(n);
         }
     }
+    private NotificationContactModel gettingNameAndImageFromPhoneNumber(String number){
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+        Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.PHOTO_URI},null,null,null);
 
+        String contactName,imageUrl="";
+        if(cursor != null && cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+            imageUrl = cursor
+                    .getString(cursor
+                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+            cursor.close();
 
+        }else {
+            contactName = number;
+        }
+
+        NotificationContactModel notificationContactModel = new NotificationContactModel();
+        notificationContactModel.setName(contactName);
+        notificationContactModel.setImage(imageUrl);
+
+        return notificationContactModel;
+    }
+/*
+
+    private String gettingNameFromPhoneNumber(String number){
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,, Uri.encode(number));
+        Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,ContactsContract.PhoneLookup._ID},null,null,null);
+
+        String contactName,contactId;
+        Bitmap photo;
+        if(cursor != null && cursor.moveToFirst()) {
+            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+            contactId = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
+
+            try {
+                InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(),
+                        ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactId)));
+
+                if (inputStream != null) {
+                    photo = BitmapFactory.decodeStream(inputStream);
+                }else {
+                    photo = BitmapFactory.decodeResource(context.getResources(),
+                            R.drawable.ic_person_black_24dp);
+                }
+
+                assert inputStream != null;
+                inputStream.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            contactName = number;
+        }
+
+        if(cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return contactName;
+    }
+*/
+    private Bitmap retrieveContactPhoto(String number) {
+        ContentResolver contentResolver = context.getContentResolver();
+        String contactId = null;
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+
+        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID};
+
+        Cursor cursor =
+                contentResolver.query(
+                        uri,
+                        projection,
+                        null,
+                        null,
+                        null);
+
+        if(cursor != null && cursor.moveToFirst()) {
+                contactId = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
+                cursor.close();
+        }
+
+        Bitmap photo = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.ic_person_black_24dp);
+
+        try {
+            if (contactId!=null){
+                InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(),
+                        ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactId)));
+
+                if (inputStream != null) {
+                    photo = BitmapFactory.decodeStream(inputStream);
+                }
+
+                assert inputStream != null;
+                inputStream.close();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return photo;
+    }
     final GestureDetector gesture = new GestureDetector(getActivity(),
             new GestureDetector.SimpleOnGestureListener() {
 
