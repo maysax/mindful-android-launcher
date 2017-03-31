@@ -13,7 +13,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
-import co.minium.launcher3.event.NFCEvent;
+import minium.co.core.event.NFCEvent;
 import co.minium.launcher3.event.PauseStartEvent;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.ui.CoreActivity;

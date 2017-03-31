@@ -1,4 +1,4 @@
-package co.minium.launcher3.event;
+package minium.co.core.event;
 
 /**
  * Created by Shahab on 1/9/2017.

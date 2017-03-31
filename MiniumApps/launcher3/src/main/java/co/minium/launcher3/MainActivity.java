@@ -6,10 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -26,11 +22,9 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-import co.minium.launcher3.event.NFCEvent;
+import minium.co.core.event.NFCEvent;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 
 import co.minium.launcher3.notification.StatusBarHandler;
@@ -42,7 +36,6 @@ import co.minium.launcher3.msg.SmsObserver;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenManager;
 import co.minium.launcher3.ui.TopFragment_;
-import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
@@ -76,7 +69,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
 
 
-    private Handler nfcCheckHandler;
+
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -106,7 +99,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 }
             });
         }
-        nfcCheckHandler = new Handler();
     }
 
     private void loadViews() {
@@ -222,56 +214,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
 
-        if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
-            final Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-
-            EventBus.getDefault().post(new NFCEvent(true));
-
-            nfcCheckHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Ndef ndef = Ndef.get(tag);
-                    try {
-                        ndef.connect();
-                        Tracer.d("Connection heart-beat for nfc tag " + tag);
-                        nfcCheckHandler.postDelayed(this, 1000);
-                    } catch (IOException e) {
-                        // if the tag is gone we might want to end the thread:
-                        EventBus.getDefault().post(new NFCEvent(false));
-                        Tracer.e(e, e.getMessage());
-                        Tracer.d("Disconnected from nfc tag" + tag);
-                        nfcCheckHandler.removeCallbacks(this);
-                    } finally {
-                        try {
-                            ndef.close();
-                        } catch (IOException e) {
-                            Tracer.e(e, e.getMessage());
-                        }
-                    }
-                }
-            }, 1000);
-
-        }
-    }
-
-    @Override
-    public String nfcRead(Tag t) {
-        return null;
-    }
-
-    @Override
-    public String readText(NdefRecord record) throws UnsupportedEncodingException {
-        return null;
-    }
-
-    @Override
-    public void nfcReader(Tag tag) {
-
-    }
 
     @Subscribe
     public void nfcEvent(NFCEvent event) {
