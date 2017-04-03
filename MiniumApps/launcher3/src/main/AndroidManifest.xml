@@ -20,8 +20,8 @@
     <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature
         android:name="android.hardware.nfc"
@@ -57,7 +57,6 @@
             android:name=".MainActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible">
-
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
 
@@ -67,11 +66,13 @@
                 <category android:name="RUN_AT_BOOT" />
             </intent-filter>
 
-<!--            <intent-filter>
+            <!--
+                <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
             <meta-data android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />-->
+                android:resource="@xml/nfc_tech_filter" />
+            -->
 
         </activity>
 
@@ -85,6 +86,7 @@
 
         <activity
             android:name=".pause.PauseActivity_"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".tempo.TempoActivity_"
@@ -101,7 +103,6 @@
         <activity
             android:name=".mm.MindfulMorningActivity_"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">
@@ -123,6 +124,7 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
         <receiver
             android:name=".msg.SmsReceiver_"
             android:enabled="true"
@@ -132,7 +134,9 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".call.CallReceiver_" android:enabled="true">
+        <receiver
+            android:name=".call.CallReceiver_"
+            android:enabled="true">
             <intent-filter android:priority="9999">
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
@@ -140,11 +144,18 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".mm.AlarmReciever"/>
+        <receiver android:name=".mm.AlarmReciever" />
         <receiver
             android:name=".tempo.TempoReceiver_"
             android:enabled="true" />
+
+        <activity android:name=".debug.DebugActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <action android:name="android.nfc.action.TECH_DISCOVERED"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

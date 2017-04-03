@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import co.minium.launcher3.app.Launcher3App;
+import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.util.VibrationUtils;
 import minium.co.core.app.CoreApplication;

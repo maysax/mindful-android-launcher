@@ -69,11 +69,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @SystemService
     protected ActivityManager activityManager;
 
-    private Handler nfcCheckHandler;
-    private Runnable nfcRunnable;
-    private Tag connectedTag;
-    private boolean isNfcEnabled = false;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,98 +80,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         }
 
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        enableNfc(true);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        enableNfc(false);
-        //activityManager.moveTaskToFront(getTaskId(), 0);
-
-
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
-            Tracer.i("NFC Tag detected");
-
-            connectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-
-            EventBus.getDefault().post(new NFCEvent(true));
-            if (nfcCheckHandler == null) {
-                nfcCheckHandler = new Handler();
-            } else {
-                nfcCheckHandler.removeCallbacks(nfcRunnable);
-            }
-
-            nfcCheckHandler.postDelayed(buildNfcRunnable(connectedTag), 1000);
-        }
-    }
-
-    private Runnable buildNfcRunnable(final Tag tag) {
-        nfcRunnable = new Runnable() {
-            @Override
-            public void run() {
-                Ndef ndef = Ndef.get(tag);
-                try {
-                    ndef.connect();
-                    Tracer.d("Connection heart-beat for nfc tag " + tag);
-                    nfcCheckHandler.postDelayed(this, 1000);
-                } catch (Exception e) {
-                    // if the tag is gone we might want to end the thread:
-                    EventBus.getDefault().post(new NFCEvent(false));
-                    Tracer.e(e, e.getMessage());
-                    Tracer.d("Disconnected from nfc tag" + tag);
-                    nfcCheckHandler.removeCallbacks(this);
-                } finally {
-                    try {
-                        ndef.close();
-                    } catch (IOException e) {
-                        Tracer.e(e, e.getMessage());
-                    }
-                }
-            }
-        };
-
-        return nfcRunnable;
-    }
-
-
-    private void enableNfc(boolean isEnable) {
-        if (isEnable == isNfcEnabled) return;
-
-        if (isEnable) {
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
-            filter.addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
-            filter.addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
-            NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-            if (nfcAdapter != null)
-                nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, techList);
-
-            if (connectedTag != null) {
-                try {
-                    Ndef.get(connectedTag).connect();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    EventBus.getDefault().post(new NFCEvent(false));
-                }
-            }
-        } else {
-            NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-            if (nfcAdapter != null)
-                nfcAdapter.disableForegroundDispatch(this);
-        }
-
-        isNfcEnabled = isEnable;
     }
 
     private void onCreateAnimation(Bundle savedInstanceState) {

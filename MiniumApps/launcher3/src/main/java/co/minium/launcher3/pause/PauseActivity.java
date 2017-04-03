@@ -1,6 +1,10 @@
 package co.minium.launcher3.pause;
 
 import android.content.DialogInterface;
+import android.nfc.Tag;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
+import android.os.Handler;
 import android.view.KeyEvent;
 
 import org.androidannotations.annotations.AfterViews;
@@ -9,13 +13,18 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+
+import java.io.IOException;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import de.greenrobot.event.EventBus;
 import minium.co.core.event.NFCEvent;
 import co.minium.launcher3.event.PauseStartEvent;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
@@ -30,15 +39,19 @@ public class PauseActivity extends CoreActivity {
     Launcher3Prefs_ launcherPrefs;
 
     @Extra
-    boolean activatePause = false;
+    Tag tag;
+
+    private Handler nfcCheckHandler;
+    private Runnable nfcRunnable;
 
     @AfterViews
     void afterViews() {
+        Tracer.d("afterviews PauseActivity");
         init();
     }
 
     private void init() {
-        if (activatePause) {
+        if (tag != null) {
             pauseStartEvent(new PauseStartEvent(-1));
         } else {
             pauseFragment = PauseFragment_.builder().build();
@@ -60,6 +73,33 @@ public class PauseActivity extends CoreActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Tracer.d("onStart PauseActivity");
+        if (tag != null) {
+            if (nfcCheckHandler == null ) nfcCheckHandler = new Handler();
+            nfcCheckHandler.postDelayed(buildNfcRunnable(tag), 5000);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Tracer.d("onStop PauseActivity");
+        if (nfcCheckHandler != null) {
+            nfcCheckHandler.removeCallbacks(nfcRunnable);
+            Ndef  ndef = Ndef.get(tag);
+            if (ndef != null) {
+                try {
+                    ndef.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     @Click
     void pauseContainer() {
         if (launcherPrefs.isPauseActive().get()) {
@@ -71,11 +111,15 @@ public class PauseActivity extends CoreActivity {
         UIUtils.ask(this, "Do you want to go back online?", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (pauseActivatedFragment != null) {
-                    pauseActivatedFragment.stopPause();
-                }
+                stopPause();
             }
         });
+    }
+
+    private void stopPause() {
+        if (pauseActivatedFragment != null) {
+            pauseActivatedFragment.stopPause();
+        }
     }
 
     @Subscribe
@@ -84,12 +128,31 @@ public class PauseActivity extends CoreActivity {
         loadFragment(pauseActivatedFragment, R.id.mainView, "main");
     }
 
-    @Subscribe
-    public void nfcEvent(NFCEvent event) {
-        if (!event.isConnected()) {
-            if (pauseActivatedFragment != null) {
-                pauseActivatedFragment.stopPause();
+    private Runnable buildNfcRunnable(final Tag tag) {
+        if (nfcRunnable != null) return nfcRunnable;
+        return nfcRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Ndef  ndef = Ndef.get(tag);
+                Tracer.d("Ndef: " + ndef);
+                try {
+                    ndef.connect();
+                    Tracer.d("Connection heart-beat for nfc tag " + tag);
+                    nfcCheckHandler.postDelayed(this, 1000);
+                } catch (Exception e) {
+                    // if the tag is gone we might want to end the thread:
+                    stopPause();
+                    Tracer.e(e, e.getMessage());
+                    Tracer.d("Disconnected from nfc tag" + tag);
+                    nfcCheckHandler.removeCallbacks(this);
+                } finally {
+                    try {
+                        ndef.close();
+                    } catch (IOException e) {
+                        Tracer.e(e, e.getMessage());
+                    }
+                }
             }
-        }
+        };
     }
 }

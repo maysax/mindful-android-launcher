@@ -7,6 +7,7 @@ import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
 import android.nfc.tech.NfcA;
 import android.nfc.tech.NfcB;
 import android.nfc.tech.NfcF;
@@ -26,6 +27,8 @@ public interface NFCInterface {
                     NfcF.class.getName(),
                     NfcV.class.getName(),
                     IsoDep.class.getName(),
+                    Ndef.class.getName(),
+                    NdefFormatable.class.getName(),
                     MifareClassic.class.getName(),
                     MifareUltralight.class.getName(), Ndef.class.getName()
             }

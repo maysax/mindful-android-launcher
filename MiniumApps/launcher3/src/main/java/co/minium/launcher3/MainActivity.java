@@ -1,11 +1,15 @@
 package co.minium.launcher3;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
@@ -24,6 +28,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import minium.co.core.event.NFCEvent;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
 
@@ -66,10 +71,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @SystemService
     ConnectivityManager connectivityManager;
-
-
-
-
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -214,12 +215,48 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        enableNfc(true);
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        enableNfc(false);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+            Tracer.i("NFC Tag detected");
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            EventBus.getDefault().post(new NFCEvent(true, tag));
+        }
+    }
+
+    private void enableNfc(boolean isEnable) {
+        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (nfcAdapter != null) {
+            if (isEnable) {
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+                        getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+                IntentFilter filter = new IntentFilter();
+                filter.addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
+                filter.addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
+                filter.addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
+                nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, techList);
+            } else {
+                nfcAdapter.disableForegroundDispatch(this);
+            }
+        }
+    }
 
     @Subscribe
     public void nfcEvent(NFCEvent event) {
         if (event.isConnected()) {
-            PauseActivity_.intent(this).activatePause(true).start();
+            PauseActivity_.intent(this).tag(event.getTag()).start();
         }
     }
 }
