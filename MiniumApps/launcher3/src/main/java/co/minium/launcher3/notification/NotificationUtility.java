@@ -5,4 +5,7 @@ package co.minium.launcher3.notification;
  */
 
 public class NotificationUtility {
+    public static final int NOTIFICATION_TYPE_SMS= 0;
+    public static final int NOTIFICATION_TYPE_CALL= 1;
+    public static final String MISSED_CALL_TEXT = "Missed call";
 }

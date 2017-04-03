@@ -7,7 +7,6 @@ package co.minium.launcher3.notification;
 public class NotificationContactModel {
     private String name;
     private String image;
-
     public String getName() {
         return name;
     }
@@ -23,4 +22,5 @@ public class NotificationContactModel {
     public void setImage(String image) {
         this.image = image;
     }
+
 }

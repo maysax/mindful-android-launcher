@@ -38,6 +38,8 @@ import co.minium.launcher3.main.ItemTouchHelperViewHolder;
 import co.minium.launcher3.main.OnStartDragListener;
 import co.minium.launcher3.msg.SmsEvent;
 import co.minium.launcher3.msg.SmsEventType;
+import co.minium.launcher3.notification.remove_notification_strategy.DeleteIteam;
+import co.minium.launcher3.notification.remove_notification_strategy.SingleIteamDelete;
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -91,6 +93,10 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     @Override
     public void onItemDismiss(int position) {
+        //++Tarun following code will delete this item form database
+        DeleteIteam deleteIteam = new DeleteIteam(new SingleIteamDelete());
+        deleteIteam.executeDelete(notificationList.get(position));
+
         notificationList.remove(position);
         notifyItemRemoved(position);
 

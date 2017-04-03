@@ -4,7 +4,7 @@
     android:id="@+id/layout_notification"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="#FFFFFF"
     android:paddingLeft="18dp"
     android:paddingRight="18dp"
     android:layout_marginTop="27dp">
