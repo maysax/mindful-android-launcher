@@ -16,8 +16,15 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import co.minium.launcher3.app.Launcher3App;
+import co.minium.launcher3.db.DBUtility;
+import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.db.TableNotificationSms;
+
+import co.minium.launcher3.db.TableNotificationSmsDao;
+import co.minium.launcher3.mm.model.Utilities;
+import co.minium.launcher3.notification.Notification;
+import co.minium.launcher3.notification.NotificationUtility;
 import co.minium.launcher3.util.VibrationUtils;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -77,7 +84,7 @@ public class CallReceiver extends PhonecallReceiver {
 
     private void rejectCalls(Context ctx, String number, Date start) {
         try {
-            //new MissedCallItem(number, start, 0).save();
+            saveCall(number, start);
 
             Class c = Class.forName(telephonyManager.getClass().getName());
             Method m = c.getDeclaredMethod("getITelephony");
@@ -93,13 +100,15 @@ public class CallReceiver extends PhonecallReceiver {
     }
 
     private void saveCall(String address, Date date) {
-        DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-        CallStorageDao callStorageDao = daoSession.getCallStorageDao();
 
-        CallStorage sms = new CallStorage();
-        sms.setTitle(address);
+        TableNotificationSmsDao notificationSmsDao = DBUtility.getNotificationDao();
+
+        TableNotificationSms sms = new TableNotificationSms();
+        sms.set_contact_title(address);
         sms.set_date(date);
-        callStorageDao.insert(sms);
+        sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
+        sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
+        notificationSmsDao.insert(sms);
     }
 
     // Keep this method as it is

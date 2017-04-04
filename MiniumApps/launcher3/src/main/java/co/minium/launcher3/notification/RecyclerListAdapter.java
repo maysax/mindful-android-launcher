@@ -18,12 +18,15 @@ package co.minium.launcher3.notification;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,6 +38,8 @@ import co.minium.launcher3.main.ItemTouchHelperViewHolder;
 import co.minium.launcher3.main.OnStartDragListener;
 import co.minium.launcher3.msg.SmsEvent;
 import co.minium.launcher3.msg.SmsEventType;
+import co.minium.launcher3.notification.remove_notification_strategy.DeleteIteam;
+import co.minium.launcher3.notification.remove_notification_strategy.SingleIteamDelete;
 import de.greenrobot.event.EventBus;
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -74,14 +79,24 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         Notification notification  = notificationList.get(position);
-        holder._name.setText(notification.get_name());
+        holder._name.setText(notification.getNotificationContactModel().getName());
         holder._text.setText(notification.get_text());
         holder._time.setText(notification.get_time());
-        holder.thumbnail.setImageResource(notification.get_image());
+        //holder.thumbnail.setImageResource(notification.get_image());
+        Glide.with(mContext)
+                .load(Uri.parse(notification.getNotificationContactModel().getImage()))
+                .placeholder(R.drawable.ic_person_black_24dp)
+                .into(holder.thumbnail);
+  //  }
+//        Glide.with(mContext).load(notification.getNotificationContactModel().getImage()).into(holder.thumbnail);
     }
 
     @Override
     public void onItemDismiss(int position) {
+        //++Tarun following code will delete this item form database
+        DeleteIteam deleteIteam = new DeleteIteam(new SingleIteamDelete());
+        deleteIteam.executeDelete(notificationList.get(position));
+
         notificationList.remove(position);
         notifyItemRemoved(position);
 

@@ -4,7 +4,7 @@
     android:id="@+id/layout_notification"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="#FFFFFF"
     android:paddingLeft="18dp"
     android:paddingRight="18dp"
     android:layout_marginTop="27dp">
@@ -21,7 +21,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="450dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="48dp"
         android:clipToPadding="false"

@@ -19,6 +19,7 @@ public class TableNotificationSms {
     private Integer _sms_id;
     private Long _snooze_time;
     private Boolean _is_read;
+    private Integer notification_type;
 
     @Generated(hash = 920815365)
     public TableNotificationSms() {
@@ -28,8 +29,9 @@ public class TableNotificationSms {
         this.id = id;
     }
 
-    @Generated(hash = 1637118044)
-    public TableNotificationSms(Long id, String _contact_title, String _message, java.util.Date _date, Integer _contact_id, Integer _sms_id, Long _snooze_time, Boolean _is_read) {
+    @Generated(hash = 383540967)
+    public TableNotificationSms(Long id, String _contact_title, String _message, java.util.Date _date, Integer _contact_id, Integer _sms_id, Long _snooze_time, Boolean _is_read,
+            Integer notification_type) {
         this.id = id;
         this._contact_title = _contact_title;
         this._message = _message;
@@ -38,6 +40,7 @@ public class TableNotificationSms {
         this._sms_id = _sms_id;
         this._snooze_time = _snooze_time;
         this._is_read = _is_read;
+        this.notification_type = notification_type;
     }
 
     public Long getId() {
@@ -102,6 +105,14 @@ public class TableNotificationSms {
 
     public void set_is_read(Boolean _is_read) {
         this._is_read = _is_read;
+    }
+
+    public Integer getNotification_type() {
+        return this.notification_type;
+    }
+
+    public void setNotification_type(Integer notification_type) {
+        this.notification_type = notification_type;
     }
 
 }

@@ -19,6 +19,7 @@ import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.call.DaoSession;
 import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.db.TableNotificationSmsDao;
+import co.minium.launcher3.notification.NotificationUtility;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -102,6 +103,7 @@ public class SmsReceiver extends BroadcastReceiver {
         sms.set_contact_title(address);
         sms.set_message(body);
         sms.set_date(date);
+        sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);
         smsDao.insert(sms);
     }
 
