@@ -23,12 +23,14 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eyeem.chips.Utils;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.App;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
@@ -81,7 +83,8 @@ public class NotificationFragment extends CoreFragment {
 
     RecyclerListAdapter adapter;
     private List<Notification> notificationList;
-
+    @ViewById
+    LinearLayout layout_notification;
 
     private enum mSwipeDirection {UP, DOWN, NONE}
 
@@ -125,7 +128,8 @@ public class NotificationFragment extends CoreFragment {
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+
+        layout_notification.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -134,6 +138,15 @@ public class NotificationFragment extends CoreFragment {
             }
         });
 
+
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                return gesture.onTouchEvent(event);
+            }
+        });
 
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 
@@ -237,6 +250,7 @@ public class NotificationFragment extends CoreFragment {
                         }
                     } catch (Exception e) {
                         // nothing
+                        e.printStackTrace();
                     }
                     return super.onFling(e1, e2, velocityX, velocityY);
                 }
