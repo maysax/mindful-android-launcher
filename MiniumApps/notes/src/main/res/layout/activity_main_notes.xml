@@ -51,7 +51,7 @@
         android:id="@+id/noNotes"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/msg.emptyNotes"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorAccent"
         android:textStyle="bold"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
