@@ -9,6 +9,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+
 import co.minium.launcher3.R;
 import de.greenrobot.event.EventBus;
 
@@ -18,14 +21,14 @@ import de.greenrobot.event.EventBus;
 
 public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecyclerViewAdapter.ViewHolder>{
 
-    String[] SubjectValues;
+    ArrayList<TempoDataModel> SubjectValues;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
-    public PauseRecyclerViewAdapter(Context context1, String[] SubjectValues1){
+    public PauseRecyclerViewAdapter(Context context1, ArrayList<TempoDataModel> SubjectValues){
 
-        SubjectValues = SubjectValues1;
+        this.SubjectValues = SubjectValues;
         context = context1;
     }
 
@@ -55,7 +58,8 @@ public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecycler
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position){
 
-        holder.textView.setText(SubjectValues[position]);
+        holder.textView.setText(SubjectValues.get(position).getName());
+        holder.option_checkbox.setChecked(SubjectValues.get(position).getStatus());
         holder.option_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -74,6 +78,6 @@ public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecycler
     @Override
     public int getItemCount(){
 
-        return SubjectValues.length;
+        return SubjectValues.size();
     }
 }
