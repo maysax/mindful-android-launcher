@@ -11,9 +11,13 @@
 
     <co.minium.launcher3.ui.SearchLayout_
         android:id="@+id/searchLayout"
-        android:background="@color/white"
+        android:background="@drawable/intention_style"
         android:layout_width="match_parent"
         android:elevation="8dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="8dp"
         android:layout_alignParentTop="true"
         android:layout_height="wrap_content" />
 

@@ -225,7 +225,7 @@ public class MainFragment extends CoreFragment {
         ObjectAnimator animY;
 
         if (isUp) {
-            animY = ObjectAnimator.ofFloat(searchLayout, "y", 0);
+            animY = ObjectAnimator.ofFloat(searchLayout, "y", 25);
         } else {
             animY = ObjectAnimator.ofFloat(searchLayout, "y", 540);
         }
