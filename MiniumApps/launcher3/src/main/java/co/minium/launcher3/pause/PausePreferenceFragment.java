@@ -46,7 +46,7 @@ public class PausePreferenceFragment extends CoreFragment {
                 new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         pref_recyclerview.setLayoutManager(recylerViewLayoutManager);
 
-        recyclerViewAdapter = new PauseRecyclerViewAdapter(context, subjects);
+        recyclerViewAdapter = new PauseRecyclerViewAdapter(context, new TempoDataModel().getDefaultTempoDataModel());
 
         pref_recyclerview.setAdapter(recyclerViewAdapter);
     }

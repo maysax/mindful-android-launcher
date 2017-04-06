@@ -11,6 +11,7 @@ import org.androidannotations.annotations.ViewById;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.pause.PauseRecyclerViewAdapter;
+import co.minium.launcher3.pause.TempoDataModel;
 import minium.co.core.ui.CoreFragment;
 
 @EFragment(R.layout.fragment_pause_preference)
@@ -34,13 +35,13 @@ public class TempoPreferenceFragment extends CoreFragment {
     RecyclerView pref_recyclerview;
     @AfterViews
     void afterViews() {
-        String[] subjects =
-                {"Allow favorites","Allow calls"};
+        //String[] subjects =
+          //      {"Allow favorites","Allow calls"};
         recylerViewLayoutManager =
                 new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         pref_recyclerview.setLayoutManager(recylerViewLayoutManager);
 
-        recyclerViewAdapter = new PauseRecyclerViewAdapter(context, subjects);
+        recyclerViewAdapter = new PauseRecyclerViewAdapter(context, new TempoDataModel().getDefaultTempoDataModel());
 
         pref_recyclerview.setAdapter(recyclerViewAdapter);
     }
