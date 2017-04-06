@@ -46,9 +46,10 @@ public class CallReceiver extends PhonecallReceiver {
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
 
-
-        if(launcherPrefs.isPauseActive().get())
+        if((launcherPrefs.isPauseActive().get() && !launcherPrefs.isPauseAllowCallsChecked().get()) ||
+                (launcherPrefs.isTempoActive().get() && !launcherPrefs.tempoAllowCalls().get())) {
             rejectCalls(ctx, number, start);
+        }
         /*else if (prefs.isNotificationSchedulerEnabled().get()) {
             if (prefs.notificationSchedulerSupressCalls().get()) {
                 rejectCalls(ctx, number, start);
@@ -84,7 +85,6 @@ public class CallReceiver extends PhonecallReceiver {
 
     private void rejectCalls(Context ctx, String number, Date start) {
         try {
-            saveCall(number, start);
 
             Class c = Class.forName(telephonyManager.getClass().getName());
             Method m = c.getDeclaredMethod("getITelephony");

@@ -21,8 +21,13 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.call.CallStorageDao;
+import co.minium.launcher3.db.DBUtility;
+import co.minium.launcher3.db.TableNotificationSmsDao;
 import co.minium.launcher3.event.TempoEvent;
+import co.minium.launcher3.service.NotificationBlockerService_;
 import co.minium.launcher3.tempo.TempoPreferenceFragment_;
+import co.minium.launcher3.util.AudioUtils;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -62,13 +67,16 @@ public class TempoFragment extends CoreFragment {
     @SystemService
     Vibrator vibrator;
 
+    TableNotificationSmsDao smsDao;
+    CallStorageDao callStorageDao;
+
     @AfterViews
     void afterViews() {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         seekbar.setOnSeekBarChangeListener(seekbarListener);
         titleActionBar.setText(R.string.title_tempo);
-        btnOff.setActivated(true);
-        btnOn.setActivated(false);
+        btnOff.setActivated(!launcherPrefs.isTempoActive().get());
+        btnOn.setActivated(launcherPrefs.isTempoActive().get());
 
         alarmIntent = PendingIntent.getBroadcast(getActivity(),
                 23,
@@ -92,8 +100,11 @@ public class TempoFragment extends CoreFragment {
         btnOff.setTextColor(Color.parseColor("#332d6d"));
         btnOff.setActivated(true);
         btnOn.setActivated(false);
+        launcherPrefs.isTempoActive().put(false);
         text_status.setText("Turn on Tempo to batch notifications at set intervals");
         EventBus.getDefault().post(new TempoEvent(false));
+        NotificationBlockerService_.intent(getActivity()).extra("start", false).start();
+        tempoHandler();
         if (alarmMgr != null) alarmMgr.cancel(alarmIntent);
     }
     @Click
@@ -103,7 +114,9 @@ public class TempoFragment extends CoreFragment {
         btnOff.setActivated(false);
         btnOn.setActivated(true);
         setAlarm();
+        launcherPrefs.isTempoActive().put(true);
         text_status.setText("Notifications now come batched every  "+seekbar.getValue() +"  minutes, starting at the top of the hour");
+        NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
         EventBus.getDefault().post(new TempoEvent(true));
     }
     @Click
@@ -154,6 +167,18 @@ public class TempoFragment extends CoreFragment {
 //            getActivity().sendBroadcast(new Intent(getActivity(), TempoReceiver_.class));
 //            Tracer.d("NotificationScheduleAlarm cancelled");
 //        }
+    }
+
+    private void tempoHandler() {
+        smsDao = DBUtility.getNotificationDao();
+        callStorageDao = DBUtility.getCallStorageDao();
+
+        long smsCount = smsDao.queryBuilder().count();
+        long callCount = callStorageDao.queryBuilder().count();
+
+        if (smsCount + callCount > 0) {
+            AudioUtils.playnotification(context);
+        }
     }
 
 }

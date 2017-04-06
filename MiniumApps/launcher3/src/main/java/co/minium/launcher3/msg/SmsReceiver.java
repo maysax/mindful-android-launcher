@@ -77,15 +77,10 @@ public class SmsReceiver extends BroadcastReceiver {
                 //new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
                 EventBus.getDefault().post(new SmsEvent(SmsEventType.RECEIVED));
 
-                if (launcherPrefs.isPauseActive().get()) {
+                if (launcherPrefs.isPauseActive().get() || launcherPrefs.isTempoActive().get()) {
                     abortBroadcast();
                 }
 
-                if (prefs.isFlowRunning().get() || (prefs.isNotificationSchedulerEnabled().get() && prefs.notificationSchedulerSupressSMS().get())) {
-                    // Suppress notification
-                } else {
-                    //DisplayAlertActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
-                }
                 /*addMessageToInbox(context, mAddress, mBody, mDate.getTime());
 
                 if (!prefs.isFlowRunning().get() && !prefs.isNotificationSchedulerEnabled().get()) {
