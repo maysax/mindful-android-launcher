@@ -12,6 +12,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.tempo.TempoPreferenceEvent;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.ui.CoreFragment;
 
@@ -46,14 +47,19 @@ public class PausePreferenceFragment extends CoreFragment {
                 new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         pref_recyclerview.setLayoutManager(recylerViewLayoutManager);
 
-        recyclerViewAdapter = new PauseRecyclerViewAdapter(context, new TempoDataModel().getDefaultTempoDataModel());
+        recyclerViewAdapter = new PauseRecyclerViewAdapter(context, new PauseDataModel().getPauseDataModel(
+                launcherPrefs.isPauseAllowFavoriteChecked().get(), launcherPrefs.isPauseAllowCallsChecked().get()
+        ));
 
         pref_recyclerview.setAdapter(recyclerViewAdapter);
     }
 
     @Subscribe
-    void pausePreferenceEvent(PausePreferenceEvent event) {
-        launcherPrefs.isPauseAllowFavoriteChecked().put(event.isAllowFavorites());
-        launcherPrefs.isPauseAllowCallsChecked().put(event.isAllowCalls());
+    public void pausePreferenceEvent(PausePreferenceEvent event) {
+        if (event.getModel().getId() == 0) {
+            launcherPrefs.isPauseAllowFavoriteChecked().put(event.getModel().getStatus());
+        } else {
+            launcherPrefs.isPauseAllowCallsChecked().put(event.getModel().getStatus());
+        }
     }
 }

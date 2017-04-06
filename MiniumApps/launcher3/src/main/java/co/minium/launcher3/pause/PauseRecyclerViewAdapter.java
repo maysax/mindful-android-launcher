@@ -21,12 +21,12 @@ import de.greenrobot.event.EventBus;
 
 public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecyclerViewAdapter.ViewHolder>{
 
-    ArrayList<TempoDataModel> SubjectValues;
+    ArrayList<PauseDataModel> SubjectValues;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
-    public PauseRecyclerViewAdapter(Context context1, ArrayList<TempoDataModel> SubjectValues){
+    public PauseRecyclerViewAdapter(Context context1, ArrayList<PauseDataModel> SubjectValues){
 
         this.SubjectValues = SubjectValues;
         context = context1;
@@ -63,14 +63,8 @@ public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecycler
         holder.option_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                switch (position) {
-                    case 0:
-                        EventBus.getDefault().post(new PausePreferenceEvent().setAllowFavorites(b));
-                        break;
-                    case 1:
-                        EventBus.getDefault().post(new PausePreferenceEvent().setAllowCalls(b));
-                        break;
-                }
+                SubjectValues.get(position).setStatus(b);
+                EventBus.getDefault().post(new PausePreferenceEvent(SubjectValues.get(position)));
             }
         });
     }

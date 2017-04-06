@@ -8,17 +8,22 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.pause.PauseRecyclerViewAdapter;
-import co.minium.launcher3.pause.TempoDataModel;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.ui.CoreFragment;
 
 @EFragment(R.layout.fragment_pause_preference)
 public class TempoPreferenceFragment extends CoreFragment {
 
-    PauseRecyclerViewAdapter recyclerViewAdapter;
+    TempoRecyclerViewAdapter recyclerViewAdapter;
     RecyclerView.LayoutManager recylerViewLayoutManager;
+
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
 
     public TempoPreferenceFragment() {
         // Required empty public constructor
@@ -41,8 +46,19 @@ public class TempoPreferenceFragment extends CoreFragment {
                 new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         pref_recyclerview.setLayoutManager(recylerViewLayoutManager);
 
-        recyclerViewAdapter = new PauseRecyclerViewAdapter(context, new TempoDataModel().getDefaultTempoDataModel());
+        recyclerViewAdapter = new TempoRecyclerViewAdapter(context, new TempoDataModel().getTempoDataModel(
+                launcherPrefs.tempoAllowFavorites().get(), launcherPrefs.tempoAllowCalls().get()
+        ));
 
         pref_recyclerview.setAdapter(recyclerViewAdapter);
+    }
+
+    @Subscribe
+    public void tempoPreferenceEvent(TempoPreferenceEvent event) {
+        if (event.getModel().getId() == 0) {
+            launcherPrefs.tempoAllowFavorites().put(event.getModel().getStatus());
+        } else {
+            launcherPrefs.tempoAllowCalls().put(event.getModel().getStatus());
+        }
     }
 }

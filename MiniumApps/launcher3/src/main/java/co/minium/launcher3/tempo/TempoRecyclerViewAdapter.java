@@ -10,7 +10,11 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import co.minium.launcher3.R;
+import co.minium.launcher3.pause.PausePreferenceEvent;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by tkb on 2017-02-24.
@@ -18,14 +22,14 @@ import co.minium.launcher3.R;
 
 public class TempoRecyclerViewAdapter extends RecyclerView.Adapter<TempoRecyclerViewAdapter.ViewHolder>{
 
-    String[] SubjectValues;
+    ArrayList<TempoDataModel> SubjectValues;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
-    public TempoRecyclerViewAdapter(Context context1, String[] SubjectValues1){
+    public TempoRecyclerViewAdapter(Context context1, ArrayList<TempoDataModel> subjectValues){
 
-        SubjectValues = SubjectValues1;
+        this.SubjectValues = subjectValues;
         context = context1;
     }
 
@@ -55,11 +59,13 @@ public class TempoRecyclerViewAdapter extends RecyclerView.Adapter<TempoRecycler
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position){
 
-        holder.textView.setText(SubjectValues[position]);
+        holder.textView.setText(SubjectValues.get(position).getName());
+        holder.option_checkbox.setChecked(SubjectValues.get(position).getStatus());
         holder.option_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(context,""+SubjectValues[position]+" Checked: "+b,Toast.LENGTH_SHORT).show();
+                SubjectValues.get(position).setStatus(b);
+                EventBus.getDefault().post(new TempoPreferenceEvent(SubjectValues.get(position)));
             }
         });
     }
@@ -67,6 +73,6 @@ public class TempoRecyclerViewAdapter extends RecyclerView.Adapter<TempoRecycler
     @Override
     public int getItemCount(){
 
-        return SubjectValues.length;
+        return SubjectValues.size();
     }
 }

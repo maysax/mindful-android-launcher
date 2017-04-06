@@ -6,32 +6,13 @@ package co.minium.launcher3.pause;
 
 public class PausePreferenceEvent {
 
-    private boolean isAllowFavorites;
-    private boolean isAllowCalls;
+    private PauseDataModel model;
 
-    public PausePreferenceEvent() {
+    public PausePreferenceEvent(PauseDataModel pauseDataModel) {
+        this.model = pauseDataModel;
     }
 
-    public PausePreferenceEvent(boolean isAllowFavorites, boolean isAllowCalls) {
-        this.isAllowFavorites = isAllowFavorites;
-        this.isAllowCalls = isAllowCalls;
-    }
-
-    public boolean isAllowFavorites() {
-        return isAllowFavorites;
-    }
-
-    public PausePreferenceEvent setAllowFavorites(boolean allowFavorites) {
-        isAllowFavorites = allowFavorites;
-        return this;
-    }
-
-    public boolean isAllowCalls() {
-        return isAllowCalls;
-    }
-
-    public PausePreferenceEvent setAllowCalls(boolean allowCalls) {
-        isAllowCalls = allowCalls;
-        return this;
+    public PauseDataModel getModel() {
+        return model;
     }
 }

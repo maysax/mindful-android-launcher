@@ -1,4 +1,4 @@
-package co.minium.launcher3.pause;
+package co.minium.launcher3.tempo;
 
 import java.util.ArrayList;
 
@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 
 public class TempoDataModel {
+    private int id;
     private String name;
     private boolean status;
 
@@ -26,14 +27,38 @@ public class TempoDataModel {
         this.status = status;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public ArrayList<TempoDataModel> getDefaultTempoDataModel(){
         String[] subjects =
                 {"Allow favorites","Allow calls"};
         ArrayList<TempoDataModel>tempoList = new ArrayList<>();
         for (int i= 0 ; i<subjects.length; i++){
             TempoDataModel tempoDataModel = new TempoDataModel();
+            tempoDataModel.setId(i);
             tempoDataModel.setName(subjects[i]);
             tempoDataModel.setStatus(false);
+            tempoList.add(tempoDataModel);
+        }
+        return tempoList;
+    }
+
+    public ArrayList<TempoDataModel> getTempoDataModel(boolean b, boolean b1){
+        String[] subjects =
+                {"Allow favorites","Allow calls"};
+        boolean [] bools = {b, b1};
+        ArrayList<TempoDataModel>tempoList = new ArrayList<>();
+        for (int i= 0 ; i<subjects.length; i++){
+            TempoDataModel tempoDataModel = new TempoDataModel();
+            tempoDataModel.setId(i);
+            tempoDataModel.setName(subjects[i]);
+            tempoDataModel.setStatus(bools [i]);
             tempoList.add(tempoDataModel);
         }
         return tempoList;
