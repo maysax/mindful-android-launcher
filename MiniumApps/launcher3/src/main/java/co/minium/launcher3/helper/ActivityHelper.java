@@ -60,7 +60,7 @@ public class ActivityHelper {
     public boolean openNotesApp(boolean openLast) {
         try {
             Intent intent = new Intent(getContext(), MainActivity.class);
-            intent.putExtra("Open", openLast);
+            intent.putExtra(MainActivity.EXTRA_OPEN_LATEST, openLast);
             getContext().startActivity(intent);
             return true;
         } catch (Exception e) {

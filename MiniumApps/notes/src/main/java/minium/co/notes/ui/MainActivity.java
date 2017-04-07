@@ -92,6 +92,8 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
     private AlertDialog backupCheckDialog, backupOKDialog, restoreCheckDialog, restoreFailedDialog;
 
+    public static final String EXTRA_OPEN_LATEST = "open_latest";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +198,10 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
             noNotes.setVisibility(View.INVISIBLE);
 
         initDialogs(this);
+
+        if (getIntent().getBooleanExtra(EXTRA_OPEN_LATEST, false)) {
+            openEditActivity(adapter.getCount() - 1);
+        }
     }
 
     @Override
@@ -432,6 +438,10 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        openEditActivity(position);
+    }
+
+    private void openEditActivity(int position) {
         Intent intent = new Intent(this, EditActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
