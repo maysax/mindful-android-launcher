@@ -190,7 +190,7 @@ public class SearchLayout extends CardView {
                 }
 
                 if (item.getItemType() == TokenItemType.CONTACT) {
-                    formattedTxt += "@";
+                    //formattedTxt += "@";
                 }
 
                 formattedTxt += item.getTitle() + "|";
