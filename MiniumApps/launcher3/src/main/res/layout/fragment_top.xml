@@ -22,7 +22,7 @@
         android:layout_height="27dp"
         android:src="@drawable/system_tempo"
         android:padding="6dp"
-        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@id/imgNotification"
         android:visibility="gone"
         android:contentDescription="@null" />
 

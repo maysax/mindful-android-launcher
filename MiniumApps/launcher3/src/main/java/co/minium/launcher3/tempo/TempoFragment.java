@@ -75,8 +75,7 @@ public class TempoFragment extends CoreFragment {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         seekbar.setOnSeekBarChangeListener(seekbarListener);
         titleActionBar.setText(R.string.title_tempo);
-        btnOff.setActivated(!launcherPrefs.isTempoActive().get());
-        btnOn.setActivated(launcherPrefs.isTempoActive().get());
+        toggleButton(launcherPrefs.isTempoActive().get());
 
         alarmIntent = PendingIntent.getBroadcast(getActivity(),
                 23,
@@ -94,12 +93,10 @@ public class TempoFragment extends CoreFragment {
 
     @ViewById
     TextView text_status;
+
     @Click
     void btnOff(){
-        btnOn.setTextColor(Color.parseColor("#4d332d6d"));
-        btnOff.setTextColor(Color.parseColor("#332d6d"));
-        btnOff.setActivated(true);
-        btnOn.setActivated(false);
+        toggleButton(false);
         launcherPrefs.isTempoActive().put(false);
         text_status.setText("Turn on Tempo to batch notifications at set intervals");
         EventBus.getDefault().post(new TempoEvent(false));
@@ -109,10 +106,7 @@ public class TempoFragment extends CoreFragment {
     }
     @Click
     void btnOn(){
-        btnOn.setTextColor(Color.parseColor("#332d6d"));
-        btnOff.setTextColor(Color.parseColor("#4d332d6d"));
-        btnOff.setActivated(false);
-        btnOn.setActivated(true);
+        toggleButton(true);
         setAlarm();
         launcherPrefs.isTempoActive().put(true);
         text_status.setText("Notifications now come batched every  "+seekbar.getValue() +"  minutes, starting at the top of the hour");
@@ -120,8 +114,18 @@ public class TempoFragment extends CoreFragment {
         EventBus.getDefault().post(new TempoEvent(true));
     }
 
-    private void enableTempo(boolean enable) {
-
+    private void toggleButton(boolean enable) {
+        if (enable) {
+            btnOn.setTextColor(Color.parseColor("#332d6d"));
+            btnOff.setTextColor(Color.parseColor("#4d332d6d"));
+            btnOff.setActivated(false);
+            btnOn.setActivated(true);
+        } else {
+            btnOn.setTextColor(Color.parseColor("#4d332d6d"));
+            btnOff.setTextColor(Color.parseColor("#332d6d"));
+            btnOff.setActivated(true);
+            btnOn.setActivated(false);
+        }
     }
 
     @Click
