@@ -72,7 +72,7 @@ dependencies {
     compile "com.android.support:support-v13:$supportVersion"
     compile "com.android.support:palette-v7:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
-    compile 'com.android.support:multidex:1.0.1'
+    compile "com.android.support:multidex:$multidexVersion"
 
     /**
      * =================== Framework ===================
@@ -90,7 +90,7 @@ dependencies {
     // http://joanzapata.com/android-iconify/
     compile "com.joanzapata.iconify:android-iconify-fontawesome:$iconifyVersion"
 
-    compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile "de.hdodenhof:circleimageview:$circleImageViewVersion"
 
 
     /**

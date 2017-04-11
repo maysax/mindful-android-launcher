@@ -57,6 +57,8 @@ project.ext {
     tedPermissionVersion = "1.0.2"
     fastAndroidNetworkingVersion = "0.3.0"
     espressoVersion = "2.2.2"
+    multidexVersion = "1.0.1"
+    circleImageViewVersion = "2.0.0"
 
     junitVersion = "4.12"
 

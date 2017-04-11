@@ -38,7 +38,7 @@ dependencies {
 
     compile project(':core')
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
