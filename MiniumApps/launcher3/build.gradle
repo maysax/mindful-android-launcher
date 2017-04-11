@@ -44,7 +44,7 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
@@ -68,8 +68,7 @@ dependencies {
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.0.1'
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.android.support:support-v4:23.4.0'
-    compile 'org.greenrobot:greendao:3.2.0'
+    compile "org.greenrobot:greendao:$greenDaoVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
 }
