@@ -1,7 +1,5 @@
 package co.minium.launcher3.mm.model;
 
-import android.util.Log;
-
 import java.util.Calendar;
 import java.util.List;
 

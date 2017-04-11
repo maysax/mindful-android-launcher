@@ -1,7 +1,6 @@
 package co.minium.launcher3.mm;
 
 import android.util.Log;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,13 +13,9 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
 import co.minium.launcher3.R;
-import co.minium.launcher3.mm.model.ActivitiesStorage;
-import co.minium.launcher3.mm.model.ActivitiesStorageDao;
+import co.minium.launcher3.db.ActivitiesStorage;
+import co.minium.launcher3.db.ActivitiesStorageDao;
 import co.minium.launcher3.db.DBUtility;
 import minium.co.core.ui.CoreFragment;
 

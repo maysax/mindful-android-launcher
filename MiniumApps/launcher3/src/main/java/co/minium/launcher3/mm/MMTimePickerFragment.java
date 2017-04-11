@@ -1,15 +1,10 @@
 package co.minium.launcher3.mm;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -17,10 +12,8 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,10 +24,9 @@ import antistatic.spinnerwheel.adapters.NumericWheelAdapter;
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.mm.controller.AlarmController;
-import co.minium.launcher3.mm.model.ActivitiesStorage;
+import co.minium.launcher3.db.ActivitiesStorage;
 import co.minium.launcher3.db.DBUtility;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarmDao;
+import co.minium.launcher3.db.DaysOfWeekWhichWasSetAlarm;
 import co.minium.launcher3.mm.model.Utilities;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;

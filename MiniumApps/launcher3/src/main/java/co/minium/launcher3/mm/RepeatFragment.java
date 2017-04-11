@@ -1,10 +1,7 @@
 package co.minium.launcher3.mm;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,17 +9,14 @@ import android.widget.TextView;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
-import co.minium.launcher3.db.DBUtility;
 import co.minium.launcher3.mm.controller.AlarmController;
 import co.minium.launcher3.mm.controller.DatabaseController;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarmDao;
+import co.minium.launcher3.db.DaysOfWeekWhichWasSetAlarm;
 import co.minium.launcher3.mm.model.Utilities;
 import minium.co.core.ui.CoreFragment;
 

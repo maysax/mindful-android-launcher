@@ -7,11 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import co.minium.launcher3.R;
-import co.minium.launcher3.mm.model.ActivitiesStorage;
+import co.minium.launcher3.db.ActivitiesStorage;
 
 /**
  * Created by tkb on 2017-03-10.

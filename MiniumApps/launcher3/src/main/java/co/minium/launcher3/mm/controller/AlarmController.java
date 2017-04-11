@@ -7,19 +7,15 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.androidannotations.annotations.sharedpreferences.Pref;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import co.minium.launcher3.app.Launcher3Prefs_;
 import co.minium.launcher3.db.DBUtility;
+import co.minium.launcher3.db.DaysOfWeekWhichWasSetAlarmDao;
 import co.minium.launcher3.mm.AlarmReciever;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarmDao;
-import co.minium.launcher3.mm.model.Utilities;
+import co.minium.launcher3.db.DaysOfWeekWhichWasSetAlarm;
 
 /**
  * Created by tkb on 2017-03-27.

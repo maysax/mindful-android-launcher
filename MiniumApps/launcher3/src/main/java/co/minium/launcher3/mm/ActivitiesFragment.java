@@ -1,10 +1,6 @@
 package co.minium.launcher3.mm;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.minium.launcher3.R;
-import co.minium.launcher3.mm.model.ActivitiesStorage;
+import co.minium.launcher3.db.ActivitiesStorage;
 import co.minium.launcher3.db.DBUtility;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;

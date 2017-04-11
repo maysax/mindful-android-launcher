@@ -1,13 +1,10 @@
 package co.minium.launcher3.mm.controller;
 
-import android.util.Log;
-
 import java.util.Calendar;
 import java.util.List;
 
 import co.minium.launcher3.db.DBUtility;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarmDao;
+import co.minium.launcher3.db.DaysOfWeekWhichWasSetAlarm;
 import co.minium.launcher3.mm.model.Utilities;
 
 /**

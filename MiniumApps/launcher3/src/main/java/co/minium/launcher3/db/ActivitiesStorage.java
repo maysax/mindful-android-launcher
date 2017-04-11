@@ -1,4 +1,4 @@
-package co.minium.launcher3.mm.model;
+package co.minium.launcher3.db;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;

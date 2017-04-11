@@ -24,9 +24,9 @@ import java.util.Locale;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.db.ActivitiesStorageDao;
 import co.minium.launcher3.db.DBUtility;
-import co.minium.launcher3.mm.model.ActivitiesStorage;
-import co.minium.launcher3.mm.model.ActivitiesStorageDao;
+import co.minium.launcher3.db.ActivitiesStorage;
 import co.minium.launcher3.pause.PausePreferenceFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;

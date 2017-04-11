@@ -1,23 +1,8 @@
 package co.minium.launcher3.mm;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.telephony.SmsManager;
-import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
-import java.util.GregorianCalendar;
-
-import co.minium.launcher3.db.DBUtility;
-import co.minium.launcher3.event.MindfulMorgingEventStart;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarmDao;
-import co.minium.launcher3.mm.model.Utilities;
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by tkb on 2017-03-21.

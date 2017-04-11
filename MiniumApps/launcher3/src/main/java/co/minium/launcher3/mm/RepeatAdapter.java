@@ -1,6 +1,5 @@
 package co.minium.launcher3.mm;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +9,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import co.minium.launcher3.R;
-import co.minium.launcher3.mm.model.DaysOfWeekWhichWasSetAlarm;
+import co.minium.launcher3.db.DaysOfWeekWhichWasSetAlarm;
 
 /**
  * Created by tkb on 2017-03-10.

@@ -21,7 +21,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.app.Launcher3Prefs_;
-import co.minium.launcher3.call.CallStorageDao;
+import co.minium.launcher3.db.CallStorageDao;
 import co.minium.launcher3.db.DBUtility;
 import co.minium.launcher3.db.TableNotificationSmsDao;
 import co.minium.launcher3.event.TempoEvent;

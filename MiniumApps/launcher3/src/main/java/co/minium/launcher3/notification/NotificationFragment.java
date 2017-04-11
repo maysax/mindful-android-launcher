@@ -1,18 +1,9 @@
 package co.minium.launcher3.notification;
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -20,55 +11,30 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.eyeem.chips.Utils;
-
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.App;
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.Touch;
 import org.androidannotations.annotations.ViewById;
-import org.greenrobot.greendao.query.Query;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
-import co.minium.launcher3.MainActivity;
-import co.minium.launcher3.MainActivity_;
 import co.minium.launcher3.R;
-import co.minium.launcher3.app.Launcher3App;
-import co.minium.launcher3.call.CallStorage;
-import co.minium.launcher3.call.CallStorageDao;
-import co.minium.launcher3.call.DaoSession;
+import co.minium.launcher3.db.CallStorageDao;
 import co.minium.launcher3.db.DBUtility;
 import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.db.TableNotificationSmsDao;
-import co.minium.launcher3.main.MainFragment_;
-import co.minium.launcher3.main.OnStartDragListener;
 import co.minium.launcher3.main.SimpleItemTouchHelperCallback;
-import co.minium.launcher3.mm.model.ActivitiesStorageDao;
 import co.minium.launcher3.notification.remove_notification_strategy.DeleteIteam;
 import co.minium.launcher3.notification.remove_notification_strategy.MultipleIteamDelete;
-import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
-import minium.co.core.util.DateUtils;
 import minium.co.core.util.UIUtils;
 
 /**

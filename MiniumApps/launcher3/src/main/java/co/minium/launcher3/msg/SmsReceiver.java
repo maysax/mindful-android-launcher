@@ -16,7 +16,7 @@ import java.util.Date;
 
 import co.minium.launcher3.app.Launcher3App;
 import co.minium.launcher3.app.Launcher3Prefs_;
-import co.minium.launcher3.call.DaoSession;
+import co.minium.launcher3.db.DaoSession;
 import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.db.TableNotificationSmsDao;
 import co.minium.launcher3.notification.NotificationUtility;

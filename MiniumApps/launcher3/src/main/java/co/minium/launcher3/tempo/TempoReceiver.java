@@ -11,7 +11,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.greenrobot.greendao.query.CountQuery;
 
 import co.minium.launcher3.app.Launcher3Prefs_;
-import co.minium.launcher3.call.CallStorageDao;
+import co.minium.launcher3.db.CallStorageDao;
 import co.minium.launcher3.db.DBUtility;
 import co.minium.launcher3.db.TableNotificationSms;
 import co.minium.launcher3.db.TableNotificationSmsDao;
