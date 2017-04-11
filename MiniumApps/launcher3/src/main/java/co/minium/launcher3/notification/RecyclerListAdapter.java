@@ -83,10 +83,18 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         holder._text.setText(notification.get_text());
         holder._time.setText(notification.get_time());
         //holder.thumbnail.setImageResource(notification.get_image());
-        Glide.with(mContext)
-                .load(Uri.parse(notification.getNotificationContactModel().getImage()))
-                .placeholder(R.drawable.ic_person_black_24dp)
-                .into(holder.thumbnail);
+        try {
+            if (notification.getNotificationContactModel().getImage()!=null && !notification.getNotificationContactModel().getImage().equals("")){
+                Glide.with(mContext)
+                        .load(Uri.parse(notification.getNotificationContactModel().getImage()))
+                        .placeholder(R.drawable.ic_person_black_24dp)
+                        .into(holder.thumbnail);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
   //  }
 //        Glide.with(mContext).load(notification.getNotificationContactModel().getImage()).into(holder.thumbnail);
     }

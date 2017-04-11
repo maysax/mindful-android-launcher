@@ -38,6 +38,7 @@ import org.greenrobot.greendao.query.Query;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -188,8 +189,9 @@ public class NotificationFragment extends CoreFragment {
     private void setUpNotifications(List<TableNotificationSms> items) {
 
         for (int i = 0; i < items.size(); i++) {
+            //DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm a");
+            DateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(items.get(i).get_date());
             Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type());
             notificationList.add(n);
@@ -198,21 +200,27 @@ public class NotificationFragment extends CoreFragment {
     }
 
     private NotificationContactModel gettingNameAndImageFromPhoneNumber(String number) {
+
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
         Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
 
-        String contactName, imageUrl = "";
-        if (cursor != null && cursor.moveToFirst()) {
-            contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-            imageUrl = cursor
-                    .getString(cursor
-                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
-            cursor.close();
+        String contactName="", imageUrl = "";
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+                imageUrl = cursor
+                        .getString(cursor
+                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+                cursor.close();
 
-        } else {
-            contactName = number;
+            } else {
+                contactName = number;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
 
         NotificationContactModel notificationContactModel = new NotificationContactModel();
         notificationContactModel.setName(contactName);
