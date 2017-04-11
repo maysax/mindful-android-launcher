@@ -119,6 +119,11 @@ public class TempoFragment extends CoreFragment {
         NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
         EventBus.getDefault().post(new TempoEvent(true));
     }
+
+    private void enableTempo(boolean enable) {
+
+    }
+
     @Click
     void imgRight() {
 
