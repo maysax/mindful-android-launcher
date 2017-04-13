@@ -29,6 +29,17 @@ android {
         }
 
     }
+    dexOptions {
+        jumboMode true
+    }
+
+    // workaround for "duplicate files during packaging of APK" issue
+    // see https://groups.google.com/d/msg/adt-dev/bl5Rc4Szpzg/wC8cylTWuIEJ
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 repositories {
@@ -71,6 +82,7 @@ dependencies {
     compile "org.greenrobot:greendao:$greenDaoVersion"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
+    compile "com.couchbase.lite:couchbase-lite-android:$couchbaseVersion"
 }
 
 apt {

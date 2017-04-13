@@ -65,6 +65,7 @@ public class OldMenuFragment extends CoreFragment {
         items.add(new MainListItem(9, getString(R.string.title_theme), "fa-tint"));
         items.add(new MainListItem(10, getString(R.string.title_notificationScheduler), "fa-bell"));
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
+        items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
 
         if (!Build.MODEL.toLowerCase().contains("siempo")) {
             items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
@@ -105,6 +106,11 @@ public class OldMenuFragment extends CoreFragment {
             case 14:
                 MindfulMorningActivity_.intent(getActivity()).start();
                 break;
+            case 15:
+                // Version text, no action should be taken
+                break;
+            case 16:
+                new ActivityHelper(getActivity()).openEmailApp(); break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
 
         }

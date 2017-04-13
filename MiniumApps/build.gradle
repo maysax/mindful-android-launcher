@@ -59,6 +59,7 @@ project.ext {
     espressoVersion = "2.2.2"
     multidexVersion = "1.0.1"
     circleImageViewVersion = "2.0.0"
+    couchbaseVersion = "1.4.0"
 
     junitVersion = "4.12"
 

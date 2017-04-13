@@ -32,11 +32,16 @@ android {
         }
     }
 
+    // workaround for "duplicate files during packaging of APK" issue
+    // see https://groups.google.com/d/msg/adt-dev/bl5Rc4Szpzg/wC8cylTWuIEJ
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/services/javax.annotation.processing.Processor'
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 
     lintOptions {
@@ -44,6 +49,10 @@ android {
         textReport true
         textOutput 'stdout'
         fatal 'UnusedResources'
+    }
+
+    dexOptions {
+        jumboMode true
     }
 }
 

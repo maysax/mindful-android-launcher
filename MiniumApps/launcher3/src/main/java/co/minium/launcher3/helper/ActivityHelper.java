@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 
 import co.minium.launcher3.R;
 import co.minium.launcher3.launcher.FakeLauncherActivity;
@@ -141,5 +142,10 @@ public class ActivityHelper {
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(startMain);
+    }
+
+    public void openEmailApp() {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "", null));
+        context.startActivity(emailIntent);
     }
 }
