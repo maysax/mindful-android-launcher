@@ -58,11 +58,11 @@ public class OldMenuFragment extends CoreFragment {
         items.add(new MainListItem(2, getString(R.string.title_callLog), "fa-phone"));
         items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user"));
         items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
-        items.add(new MainListItem(5, getString(R.string.title_voicemail), "fa-microphone"));
+//        items.add(new MainListItem(5, getString(R.string.title_voicemail), "fa-microphone"));
         items.add(new MainListItem(6, getString(R.string.title_notes), "fa-sticky-note"));
-        items.add(new MainListItem(7, getString(R.string.title_clock), "fa-clock-o"));
+//        items.add(new MainListItem(7, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs"));
-        items.add(new MainListItem(9, getString(R.string.title_theme), "fa-tint"));
+//        items.add(new MainListItem(9, getString(R.string.title_theme), "fa-tint"));
         items.add(new MainListItem(10, getString(R.string.title_notificationScheduler), "fa-bell"));
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
