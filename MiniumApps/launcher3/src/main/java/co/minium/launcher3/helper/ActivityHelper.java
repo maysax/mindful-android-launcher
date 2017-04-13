@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.inbox.GoogleInboxActivity_;
 import co.minium.launcher3.launcher.FakeLauncherActivity;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -147,5 +148,9 @@ public class ActivityHelper {
     public void openEmailApp() {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "", null));
         context.startActivity(emailIntent);
+    }
+
+    public void openGoogleInbox() {
+        GoogleInboxActivity_.intent(context).start();
     }
 }

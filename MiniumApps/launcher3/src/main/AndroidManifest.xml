@@ -149,13 +149,16 @@
             android:name=".tempo.TempoReceiver_"
             android:enabled="true" />
 
-        <activity android:name=".debug.DebugActivity" android:exported="true">
+        <activity
+            android:name=".debug.DebugActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-                <action android:name="android.nfc.action.TECH_DISCOVERED"/>
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
         </activity>
+        <activity android:name=".inbox.GoogleInboxActivity_" />
     </application>
 
 </manifest>

@@ -65,6 +65,7 @@ public class OldMenuFragment extends CoreFragment {
 //        items.add(new MainListItem(9, getString(R.string.title_theme), "fa-tint"));
         items.add(new MainListItem(10, getString(R.string.title_notificationScheduler), "fa-bell"));
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
+        items.add(new MainListItem(17, getString(R.string.title_inbox), "fa-inbox"));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
 
         if (!Build.MODEL.toLowerCase().contains("siempo")) {
@@ -111,6 +112,8 @@ public class OldMenuFragment extends CoreFragment {
                 break;
             case 16:
                 new ActivityHelper(getActivity()).openEmailApp(); break;
+            case 17:
+                new ActivityHelper(getActivity()).openGoogleInbox(); break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
 
         }
