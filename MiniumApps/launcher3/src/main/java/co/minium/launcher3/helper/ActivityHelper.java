@@ -145,12 +145,26 @@ public class ActivityHelper {
         activity.startActivity(startMain);
     }
 
-    public void openEmailApp() {
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "", null));
-        context.startActivity(emailIntent);
+    public void openFeedback() {
+        try {
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "feedback@siempo.co", null));
+            context.startActivity(emailIntent);
+        } catch (Exception e) {
+            UIUtils.alert(context, "No email application found in your phone");
+        }
     }
 
     public void openGoogleInbox() {
         GoogleInboxActivity_.intent(context).start();
+    }
+
+    public void openEmail() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_APP_EMAIL);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            UIUtils.alert(context, "No email application found in your phone");
+        }
     }
 }

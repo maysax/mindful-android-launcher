@@ -20,6 +20,7 @@
     <string name="title.notificationScheduler">Tempo</string>
     <string name="title.map">Map</string>
     <string name="title.email">Email</string>
+    <string name="title.feedback">Feedback</string>
     <string name="title.inbox">Google Inbox</string>
     <string name="title.defaultLauncher">Default Launcher</string>
     <string name="title_tracking">Tracking</string>

@@ -67,6 +67,7 @@ public class OldMenuFragment extends CoreFragment {
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
         items.add(new MainListItem(17, getString(R.string.title_inbox), "fa-inbox"));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
+        items.add(new MainListItem(18, getString(R.string.title_feedback), "fa-question-circle"));
 
         if (!Build.MODEL.toLowerCase().contains("siempo")) {
             items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
@@ -111,9 +112,11 @@ public class OldMenuFragment extends CoreFragment {
                 // Version text, no action should be taken
                 break;
             case 16:
-                new ActivityHelper(getActivity()).openEmailApp(); break;
+                new ActivityHelper(getActivity()).openEmail(); break;
             case 17:
                 new ActivityHelper(getActivity()).openGoogleInbox(); break;
+            case 18:
+                new ActivityHelper(getActivity()).openFeedback(); break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
 
         }
