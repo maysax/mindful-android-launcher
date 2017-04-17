@@ -1,7 +1,7 @@
 //include ':launcher'
 //include ':daolib'
 include ':launcher3'
-// include ':tracking'
+include ':tracking'
 include ':settings'
 //include ':launcher2'
 include ':core'
