@@ -18,6 +18,7 @@ import java.util.Calendar;
 
 import co.minium.launcher3.db.DaoMaster;
 import co.minium.launcher3.db.DaoSession;
+import co.minium.launcher3.db.MySQLiteOpenHelper;
 import co.minium.launcher3.token.TokenManager;
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
@@ -76,10 +77,16 @@ public class Launcher3App extends CoreApplication {
         SugarContext.init(this);
 
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"noti-db");
+/*        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"noti-db");
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
+        */
+        MySQLiteOpenHelper helper2 = new MySQLiteOpenHelper(this,"noti-db",null);
+        //DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"noti-db");
 
+        Database db = helper2.getWritableDb();
+        DaoMaster daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
         //testCases();
     }
 
