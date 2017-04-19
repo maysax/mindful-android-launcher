@@ -28,6 +28,7 @@ import co.minium.launcher3.tempo.TempoActivity_;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenRouter;
 import de.greenrobot.event.EventBus;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
@@ -91,30 +92,38 @@ class MainFragmentMediator {
     }
 
     private void loadContacts() {
-        if (fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
-            return;
+        try {
+            if (fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
+                return;
+            }
+            if (contactItems == null) {
+                contactItems = new ContactsLoader().loadContacts(fragment.getActivity());
+            }
+            items.addAll(contactItems);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
         }
-        if (contactItems == null) {
-            contactItems = new ContactsLoader().loadContacts(fragment.getActivity());
-        }
-        items.addAll(contactItems);
     }
 
     private void loadDefaults() {
-        if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()){
-            items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-        }
-        else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)){
-            items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-            items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
-        } else if (fragment.getManager().hasCompleted(TokenItemType.DATA)) {
-            items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-            items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
-            items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
-        } else {
-            items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-            items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
-            items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+        try {
+            if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()){
+                items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+            }
+            else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)){
+                items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+                items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
+            } else if (fragment.getManager().hasCompleted(TokenItemType.DATA)) {
+                items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+                items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
+                items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+            } else {
+                items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+                items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
+                items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+            }
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
         }
     }
 

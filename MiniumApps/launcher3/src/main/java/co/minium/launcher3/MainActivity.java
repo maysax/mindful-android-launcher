@@ -12,6 +12,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.gun0912.tedpermission.PermissionListener;
@@ -231,7 +232,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
+        if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             EventBus.getDefault().post(new NFCEvent(true, tag));
