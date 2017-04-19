@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 
+import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
 import co.minium.launcher3.inbox.GoogleInboxActivity_;
 import co.minium.launcher3.launcher.FakeLauncherActivity;
@@ -148,6 +149,7 @@ public class ActivityHelper {
     public void openFeedback() {
         try {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "feedback@siempo.co", null));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME));
             context.startActivity(emailIntent);
         } catch (Exception e) {
             UIUtils.alert(context, "No email application found in your phone");

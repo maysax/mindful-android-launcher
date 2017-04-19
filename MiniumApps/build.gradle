@@ -67,6 +67,8 @@ project.ext {
     glideVersion = "3.7.0"
     keyboardvisibilityEventVersion = "2.0.1"
     junitVersion = "4.12"
+
+    // greendao database version
     databaseVersion = 1
 
     // get the current build SHA
@@ -79,7 +81,7 @@ project.ext {
     versionMajor = 0
     versionMinor = 0
     versionPatch = 6
-    versionBuild = 8 // bump for internal builds, public betas, etc.
+    versionBuild = 9 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {

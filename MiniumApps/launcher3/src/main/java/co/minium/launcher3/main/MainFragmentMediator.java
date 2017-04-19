@@ -70,11 +70,11 @@ class MainFragmentMediator {
         items.add(new MainListItem(5, fragment.getString(R.string.title_callLog), "fa-phone"));
         items.add(new MainListItem(6, fragment.getString(R.string.title_contacts), "fa-user"));
         items.add(new MainListItem(7, fragment.getString(R.string.title_pause), "fa-ban"));
-        items.add(new MainListItem(8, fragment.getString(R.string.title_voicemail), "fa-microphone"));
+        // items.add(new MainListItem(8, fragment.getString(R.string.title_voicemail), "fa-microphone"));
         items.add(new MainListItem(9, fragment.getString(R.string.title_notes), "fa-sticky-note"));
-        items.add(new MainListItem(10, fragment.getString(R.string.title_clock), "fa-clock-o"));
+        //items.add(new MainListItem(10, fragment.getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(11, fragment.getString(R.string.title_settings), "fa-cogs"));
-        items.add(new MainListItem(12, fragment.getString(R.string.title_theme), "fa-tint"));
+        // items.add(new MainListItem(12, fragment.getString(R.string.title_theme), "fa-tint"));
         items.add(new MainListItem(13, fragment.getString(R.string.title_notificationScheduler), "fa-bell"));
         items.add(new MainListItem(14, fragment.getString(R.string.title_map), "fa-street-view"));
 
