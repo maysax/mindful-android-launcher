@@ -25,6 +25,7 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -103,10 +104,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-    private void loadViews() {
+    @UiThread(delay = 500)
+    void loadViews() {
         statusBarHandler = new StatusBarHandler(this);
         statusBarHandler.requestStatusBarCustomization();
-        loadTopBar();
+
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
 
@@ -127,6 +129,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             @Override
             public void onPageScrollStateChanged(int state) {}
         });
+
+        loadTopBar();
     }
 
     private void loadTopBar() {
