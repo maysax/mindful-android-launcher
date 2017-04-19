@@ -35,7 +35,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://jitpack.io" }
     }
 }
 
@@ -61,8 +60,14 @@ project.ext {
     multidexVersion = "1.0.1"
     circleImageViewVersion = "2.0.0"
     couchbaseVersion = "1.4.0"
-
+    appIntroVersion = "4.1.0"
+    debugDBVersion = "0.3.0"
+    constraintLayoutVersion = "1.0.2"
+    greenDaoUpgradeHelperVersion = "v1.3.0"
+    glideVersion = "3.7.0"
+    keyboardvisibilityEventVersion = "2.0.1"
     junitVersion = "4.12"
+    databaseVersion = 1
 
     // get the current build SHA
     gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()

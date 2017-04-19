@@ -9,12 +9,12 @@ import com.github.yuweiguocn.library.greendao.MigrationHelper;
  * Created by tkb on 2017-04-12.
  */
 
-public class MySQLiteOpenHelper extends DaoMaster.OpenHelper {
-    public MySQLiteOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
+public class GreenDaoOpenHelper extends DaoMaster.OpenHelper {
+    public GreenDaoOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, name, factory);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        MigrationHelper.migrate(db,TableNotificationSmsDao.class);
+        // MigrationHelper.migrate(db,TableNotificationSmsDao.class);
     }
 }
