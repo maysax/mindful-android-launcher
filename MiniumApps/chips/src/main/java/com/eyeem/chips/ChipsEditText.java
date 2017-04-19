@@ -501,4 +501,10 @@ public class ChipsEditText extends MultilineEditText {
    public interface BubbleTextWatcher {
       public void onType(String query);
    }
+
+   @Override
+   public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+      if (keyCode == KeyEvent.KEYCODE_BACK) return true;
+      return false;
+   }
 }

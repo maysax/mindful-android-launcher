@@ -28,6 +28,7 @@ import co.minium.launcher3.tempo.TempoActivity_;
 import co.minium.launcher3.token.TokenItemType;
 import co.minium.launcher3.token.TokenRouter;
 import de.greenrobot.event.EventBus;
+import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
 import static co.minium.launcher3.R.string.title_defaultLauncher;
@@ -84,6 +85,9 @@ class MainFragmentMediator {
 
         items.add(new MainListItem(16, fragment.getString(R.string.title_mindfulMorning), "fa-coffee"));
         items.add(new MainListItem(17, fragment.getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
+        items.add(new MainListItem(18, fragment.getString(R.string.title_inbox), "fa-inbox"));
+
+        items.add(new MainListItem(19, fragment.getString(R.string.title_feedback), "fa-question-circle"));
     }
 
     private void loadContacts() {
@@ -137,27 +141,30 @@ class MainFragmentMediator {
                     case 2:
                     case 3:
                     case 4: new ActivityHelper(fragment.getActivity()).openMessagingApp(); break;
-                    case 5:
-                        CallLogActivity_.intent(fragment.getActivity()).start(); break;
-                    case 6: break;
-                    case 7:
-                        PauseActivity_.intent(fragment.getActivity()).start(); break;
+                    case 5: CallLogActivity_.intent(fragment.getActivity()).start(); break;
+                    case 6: new ActivityHelper(fragment.getActivity()).openContactsApp(); break;
+                    case 7: PauseActivity_.intent(fragment.getActivity()).start(); break;
                     case 8: break;
                     case 9: new ActivityHelper(fragment.getActivity()).openNotesApp(false); break;
                     case 10: break;
-                    case 11: break;
+                    case 11: new ActivityHelper(fragment.getActivity()).openSettingsApp(); break;
                     case 12: break;
                     case 13:
                         TempoActivity_.intent(fragment.getActivity()).start(); break;
                     case 14:
                         SiempoMapActivity_.intent(fragment.getActivity()).start(); break;
                     case 15:
+                        new ActivityHelper(fragment.getActivity()).handleDefaultLauncher((CoreActivity) fragment.getActivity());
                         break;
                     case 16:
                         MMTimePickerActivity_.intent(fragment.getActivity()).start();
                         break;
                     case 17:
                         break;
+                    case 18:
+                        new ActivityHelper(fragment.getActivity()).openGoogleInbox(); break;
+                    case 19:
+                        new ActivityHelper(fragment.getActivity()).openFeedback(); break;
                 }
                 break;
             case DEFAULT:

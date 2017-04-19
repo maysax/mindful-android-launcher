@@ -85,7 +85,7 @@ public class MainListItem {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", subTitle='" + subTitle + '\'' +
-                ", isEnabled=" + isEnabled +
+                ", isVisible=" + isEnabled +
                 ", itemType=" + itemType +
                 ", icon='" + icon + '\'' +
                 '}';

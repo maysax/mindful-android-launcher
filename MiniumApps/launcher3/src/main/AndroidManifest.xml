@@ -57,7 +57,7 @@
             android:name=".MainActivity_"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible">
-            <intent-filter android:priority="1000">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.HOME" />

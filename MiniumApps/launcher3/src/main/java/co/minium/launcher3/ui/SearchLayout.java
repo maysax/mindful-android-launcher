@@ -6,6 +6,7 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
@@ -18,6 +19,7 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.event.NotificationTrayEvent;
 import co.minium.launcher3.event.SearchLayoutEvent;
 import co.minium.launcher3.token.TokenCompleteType;
 import co.minium.launcher3.token.TokenItem;
@@ -139,6 +141,12 @@ public class SearchLayout extends CardView {
     public void tokenManagerEvent(TokenUpdateEvent event) {
         buildFormattedText();
         updateSearchField();
+    }
+
+    @Subscribe
+    public void notificationHideEvent(NotificationTrayEvent event) {
+        if (!event.isVisible())
+            askFocus();
     }
 
     private void updateSearchField() {
