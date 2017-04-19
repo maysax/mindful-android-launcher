@@ -81,10 +81,15 @@ dependencies {
     compile 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.0.1'
     compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile "org.greenrobot:greendao:$greenDaoVersion"
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.3.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
 }
-
+greendao {
+    schemaVersion 2
+    //daoPackage 'com.android.daolib.ttt'
+}
 apt {
     arguments {
         // RELEASE: comment it out
