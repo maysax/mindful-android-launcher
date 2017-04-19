@@ -20,7 +20,7 @@
         android:textSize="@dimen/text.size.medium"
         android:textColor="@color/text.primary"
         android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
-        android:hint="What's your intention?"
+        android:hint="@string/hint.intentionField"
         android:lineSpacingMultiplier="1.5"
         tools:background="@color/material.core.blue" />
 
