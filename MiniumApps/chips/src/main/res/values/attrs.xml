@@ -45,7 +45,7 @@
    ========================================================================== -->
    <!-- default bubble style -->
    <dimen name="default_bubble_text_size">16sp</dimen>
-   <dimen name="default_bubble_text_pad">8dp</dimen>
+   <dimen name="default_bubble_text_pad">2sp</dimen>
    <color name="default_bubble_text_color">#FFF</color>
    <color name="default_bubble_text_color_active">#888</color>
 

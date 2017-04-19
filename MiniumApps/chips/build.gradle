@@ -1,17 +1,43 @@
-repositories {
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+buildscript {
+    repositories {
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        mavenCentral()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.0'
+//        classpath 'com.squareup.gradle:gradle-android-test-plugin:0.9.1-SNAPSHOT'
+    }
 }
 
 apply plugin: 'com.android.library'
 
 dependencies {
+    repositories {
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        mavenCentral()
+        mavenLocal()
+    }
+
     compile 'io.reactivex:rxandroid:0.24.0'
+    //testCompile 'junit:junit:4.10'
+    //testCompile 'org.robolectric:robolectric:2.1.+'
+    //testCompile 'com.squareup:fest-android:1.0.+'
 }
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
+
+    lintOptions {
+        abortOnError false
+    }
 }
+
 
 // SONATYPE DEPLOYMENT
 // in order to deploy, run: gradle uploadArchives
@@ -19,5 +45,5 @@ android {
 apply plugin: 'maven'
 apply plugin: 'signing'
 
-version = "0.9.4-SNAPSHOT"
+version = "0.9.6-SNAPSHOT"
 group = "com.eyeem.chips"

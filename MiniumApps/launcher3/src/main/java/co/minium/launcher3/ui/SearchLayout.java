@@ -167,10 +167,10 @@ public class SearchLayout extends CardView {
             endPos += s.length();
             if (s.startsWith("^")) {
                 txtSearchBox.setCurrentBubbleStyle(BubbleStyle.build(getContext(), R.style.bubble_style_selected));
-                txtSearchBox.makeChip(startPos, endPos - 1, false);
+                txtSearchBox.makeChip(startPos, endPos - 1, false, null);
             } else if (s.startsWith("~")) {
                 txtSearchBox.setCurrentBubbleStyle(BubbleStyle.build(getContext(), R.style.bubble_style_empty));
-                txtSearchBox.makeChip(startPos, endPos - 1, false);
+                txtSearchBox.makeChip(startPos, endPos - 1, false, null);
             } else {
                 endPos++; // space
             }

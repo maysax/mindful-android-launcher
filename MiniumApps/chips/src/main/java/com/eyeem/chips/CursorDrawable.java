@@ -34,7 +34,7 @@ public class CursorDrawable {
       Point p = editText.getCursorPosition();
       canvas.save();
       canvas.translate(p.x, p.y - bubble.getHeight() + bubble.style.bubblePadding + bubble.baselineHeight());
-      if (editText.manualModeOn) {
+      if (editText._manualModeOn) {
          // calculate cursor offset
          int x_offset = 0;
          int y_offset = bubble.style.bubblePadding;
@@ -50,7 +50,7 @@ public class CursorDrawable {
          // draw cursor inside
          if (blink) {
             paint.setColor(bubble.style.textColor);
-            canvas.drawRect(0 - x_offset, y_offset, cursorWidth - x_offset, y_offset, paint);
+            canvas.drawRect(0 - x_offset, y_offset, cursorWidth - x_offset, y_offset + y_h, paint);
          }
       } else if (blink) {
          paint.setColor(color);
@@ -62,7 +62,7 @@ public class CursorDrawable {
    public Point bubble_offset() {
       int x_offset = 0;
       int y_offset = 0;
-      if (editText.manualModeOn) {
+      if (editText._manualModeOn) {
          if (editText.manualStart == editText.getSelectionStart()) { // empty bubble case
             x_offset = -bubble.getWidth() / 2;
          } else {
