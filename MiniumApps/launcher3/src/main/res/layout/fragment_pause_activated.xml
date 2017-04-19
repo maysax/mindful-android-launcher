@@ -44,6 +44,7 @@
         app:text_size="24sp"
         app:text_color="@color/white"
         app:show_thumb="false"
+        app:is_touchable="false"
         app:wheel_active_color="@color/white"
         app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
 

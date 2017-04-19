@@ -150,6 +150,7 @@ public class HoloCircleSeekBar extends View {
     private Drawable mThumbImage;
     private int mThumbSize;
     private boolean showThumb;
+    private boolean isTouchable;
 
     public HoloCircleSeekBar(Context context) {
         super(context);
@@ -277,6 +278,7 @@ public class HoloCircleSeekBar extends View {
         mThumbImage = a.getDrawable(R.styleable.HoloCircleSeekBar_thumb_image);
         mThumbSize = a.getDimensionPixelSize(R.styleable.HoloCircleSeekBar_thumb_size, 50);
         showThumb = a.getBoolean(R.styleable.HoloCircleSeekBar_show_thumb, true);
+        isTouchable = a.getBoolean(R.styleable.HoloCircleSeekBar_is_touchable, true);
 
         last_radians = end_wheel;
 
@@ -548,6 +550,7 @@ public class HoloCircleSeekBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!isTouchable) return true;
 
         // Convert coordinates to our internal coordinate system
         float x = event.getX() - mTranslationOffset;

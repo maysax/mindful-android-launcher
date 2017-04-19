@@ -22,6 +22,7 @@
         <attr name="thumb_size" format="dimension" />
         <attr name="thumb_image" format="reference" />
         <attr name="show_thumb" format="boolean"/>
+        <attr name="is_touchable" format="boolean"/>
     </declare-styleable>
 
 </resources>

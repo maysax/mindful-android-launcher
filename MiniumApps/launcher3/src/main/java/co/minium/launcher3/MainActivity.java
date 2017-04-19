@@ -259,4 +259,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             PauseActivity_.intent(this).tag(event.getTag()).start();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

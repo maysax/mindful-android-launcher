@@ -56,6 +56,9 @@ public class PauseActivatedFragment extends CoreFragment {
     @ViewById
     ViewGroup endingLayout;
 
+    @ViewById
+    ImageView imgRight;
+
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
@@ -75,7 +78,7 @@ public class PauseActivatedFragment extends CoreFragment {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         handler = new Handler();
         titleActionBar.setText(R.string.title_pause);
-
+        imgRight.setVisibility(View.INVISIBLE);
         if (maxMillis == -1) startPauseInfinite();
         else startPause();
     }
