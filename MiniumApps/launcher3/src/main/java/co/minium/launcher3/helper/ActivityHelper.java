@@ -4,7 +4,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
+
+import java.util.Locale;
 
 import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
@@ -167,6 +171,16 @@ public class ActivityHelper {
             context.startActivity(intent);
         } catch (Exception e) {
             UIUtils.alert(context, "No email application found in your phone");
+        }
+    }
+    public void openGMape() {
+        try {
+            Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.google.android.apps.maps");
+            context.startActivity(intent);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            UIUtils.alert(context, "Please turn on the GPS");
         }
     }
 }

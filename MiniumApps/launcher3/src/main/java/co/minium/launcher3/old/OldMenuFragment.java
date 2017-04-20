@@ -65,7 +65,7 @@ public class OldMenuFragment extends CoreFragment {
 //        items.add(new MainListItem(9, getString(R.string.title_theme), "fa-tint"));
         items.add(new MainListItem(10, getString(R.string.title_notificationScheduler), "fa-bell"));
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
-        items.add(new MainListItem(17, getString(R.string.title_inbox), "fa-inbox"));
+        //items.add(new MainListItem(17, getString(R.string.title_inbox), "fa-inbox"));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
         items.add(new MainListItem(18, getString(R.string.title_feedback), "fa-question-circle"));
 
@@ -99,7 +99,9 @@ public class OldMenuFragment extends CoreFragment {
             case 10:
                 TempoActivity_.intent(getActivity()).start(); break;
             case 11:
-                SiempoMapActivity_.intent(getActivity()).start(); break;
+                //SiempoMapActivity_.intent(getActivity()).start(); break;
+                new ActivityHelper(getActivity()).openGMape(); break;
+
             case 12: new ActivityHelper(getActivity()).handleDefaultLauncher((CoreActivity) getActivity()); break;
             case 13:
                 MMTimePickerActivity_.intent(getActivity()).start();
@@ -114,7 +116,7 @@ public class OldMenuFragment extends CoreFragment {
             case 16:
                 new ActivityHelper(getActivity()).openEmail(); break;
             case 17:
-                new ActivityHelper(getActivity()).openGoogleInbox(); break;
+                //new ActivityHelper(getActivity()).openGoogleInbox(); break;
             case 18:
                 new ActivityHelper(getActivity()).openFeedback(); break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;

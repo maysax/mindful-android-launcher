@@ -86,7 +86,7 @@ class MainFragmentMediator {
 
         items.add(new MainListItem(16, fragment.getString(R.string.title_mindfulMorning), "fa-coffee"));
         items.add(new MainListItem(17, fragment.getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
-        items.add(new MainListItem(18, fragment.getString(R.string.title_inbox), "fa-inbox"));
+        //items.add(new MainListItem(18, fragment.getString(R.string.title_inbox), "fa-inbox"));
 
         items.add(new MainListItem(19, fragment.getString(R.string.title_feedback), "fa-question-circle"));
     }
@@ -161,7 +161,9 @@ class MainFragmentMediator {
                     case 13:
                         TempoActivity_.intent(fragment.getActivity()).start(); break;
                     case 14:
-                        SiempoMapActivity_.intent(fragment.getActivity()).start(); break;
+                       // SiempoMapActivity_.intent(fragment.getActivity()).start(); break;
+                        new ActivityHelper(fragment.getActivity()).openGMape(); break;
+
                     case 15:
                         new ActivityHelper(fragment.getActivity()).handleDefaultLauncher((CoreActivity) fragment.getActivity());
                         break;
@@ -171,7 +173,7 @@ class MainFragmentMediator {
                     case 17:
                         break;
                     case 18:
-                        new ActivityHelper(fragment.getActivity()).openGoogleInbox(); break;
+                        //new ActivityHelper(fragment.getActivity()).openGoogleInbox(); break;
                     case 19:
                         new ActivityHelper(fragment.getActivity()).openFeedback(); break;
                 }
