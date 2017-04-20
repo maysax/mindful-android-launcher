@@ -221,11 +221,23 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         enableNfc(true);
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(0, true);
+        if(statusBarHandler!=null)
+        if(! statusBarHandler.isActive())  statusBarHandler.requestStatusBarCustomization();
     }
 
     @Override

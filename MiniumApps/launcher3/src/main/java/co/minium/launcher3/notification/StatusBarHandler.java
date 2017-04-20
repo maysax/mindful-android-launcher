@@ -13,6 +13,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import co.minium.launcher3.R;
 import minium.co.core.ui.CoreActivity;
 
@@ -25,11 +28,18 @@ public class StatusBarHandler {
 
     private String TAG = "StatusBarHandler";
 
+    private boolean isActive = false;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
 
     public static boolean isNotificationTrayVisible = false;
     private Context mContext;
     protected static customViewGroup blockingView;
     private int status_bar_height = 0;
+    private static List<customViewGroup> blockingViewCollection = new ArrayList<>();
 
     public StatusBarHandler(Context context) {
         mContext = context;
@@ -83,6 +93,8 @@ public class StatusBarHandler {
         localLayoutParams.format = PixelFormat.TRANSPARENT;
 
         manager.addView(blockingView, localLayoutParams);
+        blockingViewCollection.add(blockingView);
+        isActive = true;
     }
 
     private class customViewGroup extends ViewGroup {
@@ -139,7 +151,15 @@ public class StatusBarHandler {
             if (blockingView.getWindowToken()!=null) {
                 WindowManager manager = ((WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
                 manager.removeView(blockingView);
-                System.out.println(TAG + " restored StatusBar Expansion");
+                isActive = false;
+                System.out.println(TAG + " restored StatusBar Expansion total used blocked view == " + blockingViewCollection.size());
+                for (customViewGroup b:blockingViewCollection
+                     ) {
+                    b.destroyDrawingCache();
+                    manager.removeView(b);
+                    blockingViewCollection.remove(b);
+                }
+
             }else
             {
                 System.out.println(TAG + " restoreStatusBarExpansion got null ");
