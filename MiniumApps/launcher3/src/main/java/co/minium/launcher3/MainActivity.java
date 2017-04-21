@@ -2,6 +2,7 @@ package co.minium.launcher3;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -102,7 +103,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 }
             });
         }
-    }
+
+        // broadcast reciever for taking over volume key
+
+        final BroadcastReceiver vReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //your code here
+                System.out.println("Volume key pressed");
+            }
+        };
+
+        registerReceiver(vReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
+
+}
 
     @UiThread(delay = 500)
     void loadViews() {
@@ -178,6 +192,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         }
     }
+
 
 
     @Subscribe

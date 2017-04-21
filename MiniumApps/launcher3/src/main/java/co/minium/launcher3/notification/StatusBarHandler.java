@@ -153,16 +153,28 @@ public class StatusBarHandler {
                 manager.removeView(blockingView);
                 isActive = false;
                 System.out.println(TAG + " restored StatusBar Expansion total used blocked view == " + blockingViewCollection.size());
-                for (customViewGroup b:blockingViewCollection
-                     ) {
-                    b.destroyDrawingCache();
-                    manager.removeView(b);
-                    blockingViewCollection.remove(b);
-                }
 
             }else
             {
                 System.out.println(TAG + " restoreStatusBarExpansion got null ");
             }
+
+        for (customViewGroup b:blockingViewCollection
+                ) {
+
+            if (b.getWindowToken()!=null) {
+                WindowManager manager = ((WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
+                manager.removeView(b);
+                isActive = false;
+                System.out.println(TAG + "  StatusBar total used blocked view == " + blockingViewCollection.size());
+
+            }else
+            {
+                System.out.println(TAG + " blockingView got null ");
+            }
+
+            b.destroyDrawingCache();
+            blockingViewCollection.remove(b);
+        }
     }
 }
