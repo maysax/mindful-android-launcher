@@ -74,14 +74,21 @@ public class NotificationBlockerService extends NotificationListenerService {
 
     @TargetApi(21)
     public void onNotificationPosted(StatusBarNotification notification) {
-        Tracer.d("notification posted");
+        String info = "Notification package: " + notification.getPackageName()
+                + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
+                + " Details: " + notification.getNotification().toString();
+
+        Tracer.d("Notification posted: " + info);
+
         if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
             cancelNotification(notification.getKey());
-            String info = "Notification package: " + notification.getPackageName()
-                    + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
-                    + " Details: " + notification.getNotification().toString();
-
-            Tracer.d(info);
+        } else {
+            String packageName = notification.getPackageName();
+            if (packageName.contains("telecom") || packageName.contains("dialer") || packageName.contains("messaging")) {
+                // should pass
+            } else {
+                // cancelNotification(notification.getKey());
+            }
         }
     }
 
