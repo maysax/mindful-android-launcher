@@ -81,7 +81,7 @@ project.ext {
     versionMajor = 0
     versionMinor = 0
     versionPatch = 7
-    versionBuild = 5 // bump for internal builds, public betas, etc.
+    versionBuild = 6 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {
