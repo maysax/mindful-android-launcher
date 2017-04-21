@@ -2,6 +2,7 @@ package co.minium.launcher3;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -102,7 +103,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 }
             });
         }
-    }
+
+        // broadcast reciever for taking over volume key
+
+        final BroadcastReceiver vReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //your code here
+                System.out.println("Volume key pressed");
+            }
+        };
+
+        registerReceiver(vReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
+
+}
 
     @UiThread(delay = 500)
     void loadViews() {
@@ -180,6 +194,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
+
     @Subscribe
     public void onCheckActivityEvent(CheckActivityEvent event){
         try {
@@ -221,11 +236,23 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         enableNfc(true);
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(0, true);
+        if(statusBarHandler!=null)
+        if(! statusBarHandler.isActive())  statusBarHandler.requestStatusBarCustomization();
     }
 
     @Override
