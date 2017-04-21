@@ -15,6 +15,7 @@ import java.util.List;
 
 import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
+import co.minium.launcher3.applist.InstalledAppList_;
 import co.minium.launcher3.call.CallLogActivity_;
 import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.map.SiempoMapActivity_;
@@ -76,6 +77,7 @@ public class OldMenuFragment extends CoreFragment {
         items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
         //items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
         items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
+        items.add(new MainListItem(19, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
 
         adapter = new OldMenuAdapter(getActivity(), items);
         listView.setAdapter(adapter);
@@ -119,6 +121,8 @@ public class OldMenuFragment extends CoreFragment {
                 //new ActivityHelper(getActivity()).openGoogleInbox(); break;
             case 18:
                 new ActivityHelper(getActivity()).openFeedback(); break;
+            case 19:
+                InstalledAppList_.intent(getActivity()).start(); break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
 
         }

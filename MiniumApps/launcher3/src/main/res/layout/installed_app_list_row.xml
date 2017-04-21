@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:showDividers="none">
+    <TableRow
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="18dp"
+        android:id="@+id/row3"
+        android:gravity="center_vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imv_appicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/abc_btn_check_material" />
+        <TextView
+            android:text="Sound"
+            android:id="@+id/txt_app_name"
+            android:layout_width="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textColor="#000000"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:text="Sound"
+            android:id="@+id/txt_time"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textColor="#ffffff"
+            android:gravity="right"
+            android:paddingRight="10dp"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            />
+
+
+    </TableRow>
+</TableLayout>
