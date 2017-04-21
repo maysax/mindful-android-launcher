@@ -3,6 +3,9 @@ package minium.co.core.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
@@ -112,6 +115,14 @@ public class UIUtils {
     {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int)metrics.density;
+    }
+
+    public static boolean isSiempoLauncher(Context context) {
+        Intent intent= new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
+        return defaultLauncherStr.equals("co.minium.launcher3");
     }
 
 }

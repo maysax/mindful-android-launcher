@@ -69,7 +69,7 @@ project.ext {
     junitVersion = "4.12"
 
     // greendao database version
-    databaseVersion = 1
+    databaseVersion = 3
 
     // get the current build SHA
     gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()

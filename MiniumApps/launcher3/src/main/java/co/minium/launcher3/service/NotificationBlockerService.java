@@ -14,8 +14,17 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import co.minium.launcher3.app.Launcher3App;
 import co.minium.launcher3.app.Launcher3Prefs_;
+import co.minium.launcher3.db.DBUtility;
+import co.minium.launcher3.db.DaoSession;
+import co.minium.launcher3.db.StatusBarNotificationStorage;
+import co.minium.launcher3.db.StatusBarNotificationStorageDao;
+import co.minium.launcher3.db.TableNotificationSms;
+import co.minium.launcher3.notification.NotificationUtility;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
+import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 3/17/2017.
@@ -76,7 +85,8 @@ public class NotificationBlockerService extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         String info = "Notification package: " + notification.getPackageName()
                 + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
-                + " Details: " + notification.getNotification().toString();
+                + " Details: " + notification.getNotification().toString()
+                + " Ticker: " + notification.getNotification().tickerText;
 
         Tracer.d("Notification posted: " + info);
 
@@ -84,15 +94,29 @@ public class NotificationBlockerService extends NotificationListenerService {
             cancelNotification(notification.getKey());
         } else {
             String packageName = notification.getPackageName();
-            if (packageName.contains("telecom") || packageName.contains("dialer") || packageName.contains("messaging")) {
+            if (packageName.contains("telecom") || packageName.contains("dialer") || packageName.contains("messaging") || packageName.contains("minium")) {
                 // should pass
             } else {
-                // cancelNotification(notification.getKey());
+                if (UIUtils.isSiempoLauncher(getApplicationContext())) {
+                    cancelNotification(notification.getKey());
+                    saveNotification(notification.getPackageName(), notification.getPostTime(),
+                            notification.getNotification().tickerText);
+                }
             }
         }
     }
 
     public void onNotificationRemoved(StatusBarNotification notification) {
         Tracer.d("notification removed " + notification.getPackageName());
+    }
+
+    private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
+        StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
+
+        StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
+        storage.setContent(tickerText.toString());
+        storage.setPackageName(packageName);
+        storage.setPostTime(postTime);
+        statusStorageDao.insert(storage);
     }
 }

@@ -50,4 +50,14 @@ public class DBUtility {
         }
     }
 
+    private static StatusBarNotificationStorageDao statusStorageDao = null;
+    public static StatusBarNotificationStorageDao getStatusStorageDao(){
+        if (statusStorageDao==null){
+            statusStorageDao = ((Launcher3App) CoreApplication.getInstance()).getDaoSession().getStatusBarNotificationStorageDao();
+            return statusStorageDao;
+        }else {
+            return statusStorageDao;
+        }
+    }
+
 }

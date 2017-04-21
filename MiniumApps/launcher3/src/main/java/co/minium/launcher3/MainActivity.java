@@ -1,6 +1,7 @@
 package co.minium.launcher3;
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,6 +32,8 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import co.minium.launcher3.notification.NotificationRetreat;
+import co.minium.launcher3.notification.NotificationRetreat_;
 import de.greenrobot.event.EventBus;
 import minium.co.core.event.NFCEvent;
 import co.minium.launcher3.main.MainSlidePagerAdapter;
@@ -74,6 +77,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @SystemService
     ConnectivityManager connectivityManager;
+
+    @SystemService
+    NotificationManager notificationManager;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -238,6 +244,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStop() {
         super.onStop();
+        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
             statusBarHandler.restoreStatusBarExpansion();
         } catch (Exception e) {
