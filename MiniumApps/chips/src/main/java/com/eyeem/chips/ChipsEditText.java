@@ -381,7 +381,7 @@ public class ChipsEditText extends MultilineEditText {
       public void afterTextChanged(Editable s) {
          if (muteHashWatcher)
             return;
-         if (after.length() > before.length() && after.lastIndexOf('#') > before.lastIndexOf('#')) {
+         /*if (after.length() > before.length() && after.lastIndexOf('#') > before.lastIndexOf('#')) {
                int lastIndex = after.lastIndexOf('#');
             if (_manualModeOn || canAddMoreBubbles())
                s.delete(lastIndex, lastIndex + 1);
@@ -400,7 +400,7 @@ public class ChipsEditText extends MultilineEditText {
                // no more hash tags allowed
                onHashTyped(false);
             }
-         }
+         }*/
       }
    };
 
