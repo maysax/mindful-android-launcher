@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.provider.Settings;
 
 import java.util.Locale;
 
@@ -55,7 +56,13 @@ public class ActivityHelper {
         }
 
         try {
-            getContext().startActivity(new Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_MESSAGING));
+           // getContext().startActivity(new Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_MESSAGING));
+            String defaultApplication = Settings.Secure.getString(getContext().getContentResolver(), "sms_default_application");
+            PackageManager pm = getContext().getPackageManager();
+            Intent intent = pm.getLaunchIntentForPackage(defaultApplication );
+            if (intent != null) {
+                getContext().startActivity(intent);
+            }
             return;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

@@ -160,6 +160,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".inbox.GoogleInboxActivity_" />
+        <activity
+            android:name=".applist.InstalledAppList_"
+            android:label="@string/title_activity_installed_app_list"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
