@@ -77,7 +77,7 @@ public class OldMenuFragment extends CoreFragment {
         items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
         //items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
         items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
-        items.add(new MainListItem(19, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
+        items.add(new MainListItem(19, getString(R.string.title_apps), "fa-list"));
 
         adapter = new OldMenuAdapter(getActivity(), items);
         listView.setAdapter(adapter);

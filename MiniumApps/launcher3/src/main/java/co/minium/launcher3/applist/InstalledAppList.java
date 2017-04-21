@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -49,10 +50,15 @@ public class InstalledAppList extends CoreActivity {
     void crossActionBar(){
         this.finish();
     }
-
+    @ViewById
+    TextView titleActionBar;
+    @ViewById
+    ImageView settingsActionBar;
     @AfterViews
     void afterViews(){
 
+        settingsActionBar.setVisibility(View.INVISIBLE);
+        titleActionBar.setText(getString(R.string.title_apps));
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         //List<ResolveInfo> pkgAppsList = getPackageManager().queryIntentActivities( mainIntent, 0);

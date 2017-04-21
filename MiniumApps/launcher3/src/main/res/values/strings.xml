@@ -25,6 +25,8 @@
     <string name="title.defaultLauncher">Default Launcher</string>
     <string name="title_tracking">Tracking</string>
     <string name="title.version">Version: %1$s</string>
+    <string name="title.apps">Apps</string>
+
     <string name="title.mindfulMorning">Mindful Morning</string>
     <string name="title.mindfulMorningAlarm">Mindful Morning Alarm</string>
     <string name="title.sendAsSMS">Send as SMS</string>
