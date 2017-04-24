@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,8 +41,9 @@ import minium.co.core.ui.CoreActivity;
 @EActivity(R.layout.activity_installed_app_list)
 public class InstalledAppList extends CoreActivity {
 
+    ArrayList<ApplistDataModel> arrayList = new ArrayList<>();
     @ViewById
-    ListView activity_list_view;
+    GridView activity_grid_view;
 
     @ViewById
     ImageView crossActionBar;
@@ -64,11 +66,16 @@ public class InstalledAppList extends CoreActivity {
         //List<ResolveInfo> pkgAppsList = getPackageManager().queryIntentActivities( mainIntent, 0);
 
 
-        activity_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        activity_grid_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-
+                try {
+                    Intent intent = getPackageManager().getLaunchIntentForPackage(arrayList.get(i).getPackageName());
+                    startActivity(intent);
+                } catch (Exception e) {
+                    // returns null if application is not installed
+                }
 
             }
         });
@@ -109,14 +116,14 @@ public class InstalledAppList extends CoreActivity {
         */
 
         InstalledAppListAdapter installedAppListAdapter = new InstalledAppListAdapter(InstalledAppList.this,GetInstalledAppList());
-        activity_list_view.setAdapter(installedAppListAdapter);
+        activity_grid_view.setAdapter(installedAppListAdapter);
 
 
     }
 
     ArrayList<ApplistDataModel>  GetInstalledAppList()
     {
-        ArrayList<ApplistDataModel> arrayList = new ArrayList<>();
+
 
         ApplistDataModel applistDataModel;
         final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);

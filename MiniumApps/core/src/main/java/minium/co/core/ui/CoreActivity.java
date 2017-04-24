@@ -82,6 +82,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
     private void onCreateAnimation(Bundle savedInstanceState) {
         onStartCount = 1;
 

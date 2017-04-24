@@ -13,11 +13,12 @@
         android:src="@drawable/pause_background"
         android:visibility="visible" />-->
 
-    <ListView
-        android:id="@+id/activity_list_view"
+    <GridView
+        android:id="@+id/activity_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/included"
+        android:numColumns="@integer/grid_column"
         android:dividerHeight="1.1dp" />
 
     <include

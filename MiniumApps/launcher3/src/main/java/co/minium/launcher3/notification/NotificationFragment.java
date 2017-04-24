@@ -186,6 +186,8 @@ public class NotificationFragment extends CoreFragment {
                 contactName = number;
             }
         }catch (Exception e){
+            contactName="";
+            imageUrl = "";
             e.printStackTrace();
         }
 
