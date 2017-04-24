@@ -3,11 +3,14 @@ package minium.co.core.ui;
 import android.app.Activity;
 import android.app.Fragment;
 
+import com.squareup.leakcanary.RefWatcher;
+
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Trace;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 
@@ -49,5 +52,12 @@ public abstract class CoreFragment extends Fragment {
     @Subscribe
     public void genericEvent(Object event) {
         // DO NOT code here, it is a generic catch event method 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        RefWatcher refWatcher = CoreApplication.getRefWatcher(getActivity());
+        refWatcher.watch(this);
     }
 }

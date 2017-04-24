@@ -35,12 +35,7 @@ public class Launcher3App extends CoreApplication {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
 
-
-
     private DaoSession daoSession;
-
-
-
 
     @Pref
     DroidPrefs_ prefs;

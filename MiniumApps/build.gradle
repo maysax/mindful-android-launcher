@@ -66,6 +66,7 @@ project.ext {
     greenDaoUpgradeHelperVersion = "v1.3.0"
     glideVersion = "3.7.0"
     keyboardvisibilityEventVersion = "2.0.1"
+    leakCanaryVersion = "1.5"
     junitVersion = "4.12"
 
     // greendao database version

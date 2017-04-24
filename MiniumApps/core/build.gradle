@@ -113,6 +113,11 @@ dependencies {
     // https://github.com/orhanobut/logger
     compile "com.orhanobut:logger:$loggerVersion"
 
+    // https://github.com/square/leakcanary
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+
 
     /**
      * =================== EVENTS ===================
