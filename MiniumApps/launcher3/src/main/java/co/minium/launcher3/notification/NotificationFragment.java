@@ -252,8 +252,12 @@ public class NotificationFragment extends CoreFragment {
             @Override
             public void onAnimationEnd(Animation animation) {
                 // TODO Auto-generated method stub
-                EventBus.getDefault().post(new NotificationTrayEvent(false));
-                getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
+                try {
+                    EventBus.getDefault().post(new NotificationTrayEvent(false));
+                    getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
+                } catch (Exception e) {
+                    Tracer.e(e, e.getMessage());
+                }
             }
         });
         getView().startAnimation(trans);

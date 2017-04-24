@@ -111,12 +111,16 @@ public class NotificationBlockerService extends NotificationListenerService {
     }
 
     private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
-        StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
+        try {
+            StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
 
-        StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
-        storage.setContent(tickerText.toString());
-        storage.setPackageName(packageName);
-        storage.setPostTime(postTime);
-        statusStorageDao.insert(storage);
+            StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
+            storage.setContent(tickerText.toString());
+            storage.setPackageName(packageName);
+            storage.setPostTime(postTime);
+            statusStorageDao.insert(storage);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
     }
 }

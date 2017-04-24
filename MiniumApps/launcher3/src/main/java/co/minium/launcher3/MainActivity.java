@@ -122,7 +122,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         registerReceiver(vReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
 
-}
+    }
 
     @UiThread(delay = 500)
     void loadViews() {
@@ -134,20 +134,22 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
                 try {
-                    if(position == 1)
-                        UIUtils.hideSoftKeyboard(MainActivity.this,getCurrentFocus().getWindowToken());
+                    if (position == 1)
+                        UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
         loadTopBar();
@@ -157,7 +159,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
     }
 
-    /** @return True if {@link NotificationBlockerService} is enabled. */
+    /**
+     * @return True if {@link NotificationBlockerService} is enabled.
+     */
     public static boolean isEnabled(Context mContext) {
         return ServiceUtils.isNotificationListenerServiceRunning(mContext, NotificationBlockerService_.class);
     }
@@ -200,15 +204,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-
     @Subscribe
-    public void onCheckActivityEvent(CheckActivityEvent event){
+    public void onCheckActivityEvent(CheckActivityEvent event) {
         try {
-            if(event.isResume())
+            if (event.isResume())
                 statusBarHandler.requestStatusBarCustomization();
             else
                 statusBarHandler.restoreStatusBarExpansion();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());
         }
 
@@ -224,7 +227,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 //          defineIntent.setType("vnd.android-dir/mms-sms");
 //          defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
 
-             startActivity(defineIntent);
+            startActivity(defineIntent);
             manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
@@ -258,8 +261,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         enableNfc(true);
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(0, true);
-        if(statusBarHandler!=null)
-        if(! statusBarHandler.isActive())  statusBarHandler.requestStatusBarCustomization();
+        if (statusBarHandler != null && !statusBarHandler.isActive())
+            statusBarHandler.requestStatusBarCustomization();
     }
 
     @Override
