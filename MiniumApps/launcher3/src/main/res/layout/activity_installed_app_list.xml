@@ -19,6 +19,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/included"
         android:numColumns="@integer/grid_column"
+        android:paddingBottom="50dp"
         android:dividerHeight="1.1dp" />
 
     <include
