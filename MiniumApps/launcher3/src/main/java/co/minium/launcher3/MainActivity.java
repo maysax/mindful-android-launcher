@@ -32,6 +32,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import co.minium.launcher3.helper.ActivityHelper;
 import co.minium.launcher3.notification.NotificationRetreat;
 import co.minium.launcher3.notification.NotificationRetreat_;
 import de.greenrobot.event.EventBus;
@@ -195,8 +196,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
         if (event.getVersion() > BuildConfig.VERSION_CODE) {
             if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-                UIUtils.toast(this, "New version found! Downloading apk...");
-                ApiClient_.getInstance_(this).downloadApk();
+                // UIUtils.toast(this, "New version found! Downloading apk...");
+                UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            new ActivityHelper(MainActivity.this).openPlayStoreApp();
+                        }
+                    }
+                });
+                // ApiClient_.getInstance_(this).downloadApk();
             } else {
                 UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
             }
