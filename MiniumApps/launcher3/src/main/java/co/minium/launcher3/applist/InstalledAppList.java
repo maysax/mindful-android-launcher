@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -71,6 +72,7 @@ public class InstalledAppList extends CoreActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 try {
+                    Log.e("TKB",arrayList.get(i).getPackageName());
                     Intent intent = getPackageManager().getLaunchIntentForPackage(arrayList.get(i).getPackageName());
                     startActivity(intent);
                 } catch (Exception e) {
