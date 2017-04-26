@@ -11,6 +11,7 @@ import java.util.List;
 
 import co.minium.launcher3.BuildConfig;
 import co.minium.launcher3.R;
+import co.minium.launcher3.applist.Constants;
 import co.minium.launcher3.call.CallLogActivity_;
 import co.minium.launcher3.contact.ContactsLoader;
 import co.minium.launcher3.contact.PhoneNumbersAdapter;
@@ -89,6 +90,9 @@ class MainFragmentMediator {
         //items.add(new MainListItem(18, fragment.getString(R.string.title_inbox), "fa-inbox"));
 
         items.add(new MainListItem(19, fragment.getString(R.string.title_feedback), "fa-question-circle"));
+        items.add(new MainListItem(20, fragment.getString(R.string.title_calendar), "fa-calendar"));
+        items.add(new MainListItem(21, fragment.getString(R.string.title_clock), "fa-clock-o"));
+
     }
 
     private void loadContacts() {
@@ -162,7 +166,7 @@ class MainFragmentMediator {
                         TempoActivity_.intent(fragment.getActivity()).start(); break;
                     case 14:
                        // SiempoMapActivity_.intent(fragment.getActivity()).start(); break;
-                        new ActivityHelper(fragment.getActivity()).openGMape(); break;
+                        new ActivityHelper(fragment.getActivity()).openGMape(Constants.GOOGLE_MAP_PACKAGE); break;
 
                     case 15:
                         new ActivityHelper(fragment.getActivity()).handleDefaultLauncher((CoreActivity) fragment.getActivity());
@@ -176,6 +180,10 @@ class MainFragmentMediator {
                         //new ActivityHelper(fragment.getActivity()).openGoogleInbox(); break;
                     case 19:
                         new ActivityHelper(fragment.getActivity()).openFeedback(); break;
+                    case 20:
+                        new ActivityHelper(fragment.getActivity()).openGMape(Constants.CALENDAR_PACKAGE); break;
+                    case 21:
+                        new ActivityHelper(fragment.getActivity()).openGMape(Constants.CLOCK_PACKAGE); break;
                 }
                 break;
             case DEFAULT:

@@ -180,14 +180,14 @@ public class ActivityHelper {
             UIUtils.alert(context, "No email application found in your phone");
         }
     }
-    public void openGMape() {
+    public void openGMape(String packageName) {
         try {
-            Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.google.android.apps.maps");
+            Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
             context.startActivity(intent);
 
         } catch (Exception e) {
             e.printStackTrace();
-            UIUtils.alert(context, "Please turn on the GPS");
+            UIUtils.alert(context, "Application not found");
         }
     }
 }
