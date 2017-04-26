@@ -197,6 +197,7 @@
             android:layout_marginLeft="18dp"
             android:layout_marginTop="30dp"
             android:id="@+id/row3"
+            android:visibility="gone"
             android:layout_height="wrap_content">
 
             <TextView
