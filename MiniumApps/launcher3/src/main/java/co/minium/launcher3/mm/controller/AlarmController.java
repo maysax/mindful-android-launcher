@@ -16,6 +16,7 @@ import co.minium.launcher3.db.DBUtility;
 import co.minium.launcher3.db.DaysOfWeekWhichWasSetAlarmDao;
 import co.minium.launcher3.mm.AlarmReciever;
 import co.minium.launcher3.db.DaysOfWeekWhichWasSetAlarm;
+import co.minium.launcher3.mm.AlarmReciever_;
 
 /**
  * Created by tkb on 2017-03-27.
@@ -27,7 +28,7 @@ public class AlarmController {
     public static void setAlarm(Context context, Calendar calendar){
 
 
-        Intent intentAlarm = new Intent(context, AlarmReciever.class);
+        Intent intentAlarm = new Intent(context, AlarmReciever_.class);
 
         // create the object
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

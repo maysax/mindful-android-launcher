@@ -1,6 +1,8 @@
 package co.minium.launcher3.applist;
 
+import android.app.LoaderManager;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -40,7 +42,7 @@ import minium.co.core.ui.CoreActivity;
 
 @Fullscreen
 @EActivity(R.layout.activity_installed_app_list)
-public class InstalledAppList extends CoreActivity {
+public class InstalledAppList extends CoreActivity implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>>{
 
     ArrayList<ApplistDataModel> arrayList = new ArrayList<>();
     @ViewById
@@ -57,6 +59,7 @@ public class InstalledAppList extends CoreActivity {
     TextView titleActionBar;
     @ViewById
     ImageView settingsActionBar;
+    InstalledAppListAdapter installedAppListAdapter;
     @AfterViews
     void afterViews(){
 
@@ -117,36 +120,26 @@ public class InstalledAppList extends CoreActivity {
         }
         */
 
-        InstalledAppListAdapter installedAppListAdapter = new InstalledAppListAdapter(InstalledAppList.this,GetInstalledAppList());
+        installedAppListAdapter = new InstalledAppListAdapter(InstalledAppList.this);
         activity_grid_view.setAdapter(installedAppListAdapter);
-
+        getLoaderManager().initLoader(0, null, this);
 
     }
 
-    ArrayList<ApplistDataModel>  GetInstalledAppList()
-    {
 
+    @Override
+    public Loader<List<ApplistDataModel>> onCreateLoader(int i, Bundle bundle) {
+        return new AppListLoader(this);
+    }
 
-        ApplistDataModel applistDataModel;
-        final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        final List pkgAppsList = getPackageManager().queryIntentActivities( mainIntent, 0);
-        for (Object object : pkgAppsList)
-        {
-            applistDataModel = new ApplistDataModel();
+    @Override
+    public void onLoadFinished(Loader<List<ApplistDataModel>> loader, List<ApplistDataModel> applistDataModels) {
+        installedAppListAdapter.setAppInfo(applistDataModels);
+    }
 
-            ResolveInfo info = (ResolveInfo) object;
-            Drawable icon    = getBaseContext().getPackageManager().getApplicationIcon(info.activityInfo.applicationInfo);
-            String strAppName  	= info.activityInfo.applicationInfo.publicSourceDir.toString();
-            String strPackageName  = info.activityInfo.applicationInfo.packageName.toString();
-            final String title 	= (String)((info != null) ? getBaseContext().getPackageManager().getApplicationLabel(info.activityInfo.applicationInfo) : "???");
+    @Override
+    public void onLoaderReset(Loader<List<ApplistDataModel>> loader) {
+        installedAppListAdapter.setAppInfo(null);
 
-            applistDataModel.setName(title);
-            applistDataModel.setIcon(icon);
-            applistDataModel.setPackageName(strPackageName);
-
-            arrayList.add(applistDataModel);
-        }
-        return arrayList;
     }
 }

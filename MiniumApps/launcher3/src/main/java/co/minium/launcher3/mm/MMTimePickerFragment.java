@@ -206,9 +206,10 @@ public class MMTimePickerFragment extends CoreFragment {
     public void onPause() {
         super.onPause();
         Log.e("TKB Paused","Paused");
-
+        //This option is commented out because, the mindful morning should only triggered when the user click the
+        // start button, but this option was giving a option to user if he did't click the button .
         if (isTimeChanged){
-            launcherPrefs.time().put((Integer.parseInt(hours.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+":"+ampm.getCurrentItem());
+          //  launcherPrefs.time().put((Integer.parseInt(hours.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+":"+ampm.getCurrentItem());
         }
         isTimeChanged = false;
     }

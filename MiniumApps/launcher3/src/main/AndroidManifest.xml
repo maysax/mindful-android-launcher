@@ -145,7 +145,7 @@
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".mm.AlarmReciever" />
+        <receiver android:name=".mm.AlarmReciever_" />
         <receiver
             android:name=".tempo.TempoReceiver_"
             android:enabled="true" />
