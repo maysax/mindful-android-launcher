@@ -39,7 +39,9 @@
         android:id="@+id/afterEffectLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginTop="@dimen/margin.2"
+        android:background="@drawable/intention_style"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
         android:layout_below="@id/searchLayout">
 
     <include
