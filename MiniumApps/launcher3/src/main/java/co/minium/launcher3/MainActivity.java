@@ -15,6 +15,7 @@ import android.nfc.Tag;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.gun0912.tedpermission.PermissionListener;
@@ -269,6 +270,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onPause() {
         super.onPause();
         enableNfc(false);
+        Log.i("onPause","MainActivity");
     }
 
     @Override

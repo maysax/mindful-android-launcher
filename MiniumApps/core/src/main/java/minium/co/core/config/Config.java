@@ -7,4 +7,6 @@ public class Config {
 
     // RELEASE: false
     public static final Boolean DEBUG = false;
+    public static boolean isNotificationAlive = false;
+
 }

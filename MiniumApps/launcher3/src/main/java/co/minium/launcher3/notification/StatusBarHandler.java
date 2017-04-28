@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.applist.Constants;
+import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
@@ -128,6 +130,7 @@ public class StatusBarHandler {
 //                    ((CoreActivity) mContext).loadChildFragment(NotificationFragment_.builder().build(), R.id.mainView);
 //                    ((CoreActivity) mContext).getFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_down, R.anim.slide_out_down);
                     try {
+                        Config.isNotificationAlive = true;
                         FragmentTransaction ft = ((CoreActivity) mContext).getFragmentManager().beginTransaction();
                         ft.setCustomAnimations(R.animator.push_down_in_no_alpha,R.animator.push_down_out_no_alpha);
                         ft.replace(R.id.mainView,NotificationFragment_.builder().build());
