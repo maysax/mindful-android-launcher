@@ -16,15 +16,17 @@
     <item android:id="@+id/action_backup"
         android:title="@string/label.backup"
         android:orderInCategory="101"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"/>
 
     <item android:id="@+id/action_restore"
         android:title="@string/label.restore"
         android:orderInCategory="102"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"/>
 
     <item android:id="@+id/action_evernote"
-        android:title="Evernote"
+        android:title="Evernote sync"
         android:orderInCategory="103"
         app:showAsAction="never"/>
 

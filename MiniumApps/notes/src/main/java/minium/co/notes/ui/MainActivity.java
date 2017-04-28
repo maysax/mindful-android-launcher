@@ -521,7 +521,11 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         }
 
         if (id == R.id.action_evernote) {
-            EvernoteSession.getInstance().authenticate(this);
+            if (EvernoteSession.getInstance().isLoggedIn()) {
+                new EvernoteManager().sync();
+            } else {
+                EvernoteSession.getInstance().authenticate(this);
+            }
             return true;
         }
 

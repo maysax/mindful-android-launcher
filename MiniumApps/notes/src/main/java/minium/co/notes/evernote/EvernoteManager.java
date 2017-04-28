@@ -150,4 +150,8 @@ public class EvernoteManager {
             }
         });
     }
+
+    public void sync() {
+
+    }
 }
