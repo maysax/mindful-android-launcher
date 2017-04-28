@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.minium.launcher3.R;
+import co.minium.launcher3.applist.Constants;
 import co.minium.launcher3.db.CallStorageDao;
 import co.minium.launcher3.db.DBUtility;
 import co.minium.launcher3.db.TableNotificationSms;
@@ -35,6 +36,7 @@ import co.minium.launcher3.main.SimpleItemTouchHelperCallback;
 import co.minium.launcher3.notification.remove_notification_strategy.DeleteIteam;
 import co.minium.launcher3.notification.remove_notification_strategy.MultipleIteamDelete;
 import de.greenrobot.event.EventBus;
+import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
@@ -257,6 +259,7 @@ public class NotificationFragment extends CoreFragment {
                 try {
                     EventBus.getDefault().post(new NotificationTrayEvent(false));
                     getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
+                    Config.isNotificationAlive = false;
                 } catch (Exception e) {
                     Tracer.e(e, e.getMessage());
                 }

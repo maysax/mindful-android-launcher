@@ -43,6 +43,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.R;
 import minium.co.core.app.DroidPrefs_;
+import minium.co.core.config.Config;
 import minium.co.core.event.DownloadApkEvent;
 import minium.co.core.event.NFCEvent;
 import minium.co.core.helper.Validate;
@@ -120,7 +121,28 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onStop() {
         ActiveActivitiesTracker.activityStopped();
         EventBus.getDefault().unregister(this);
+
+        Log.i("onStop","MainActivity");
+
+        try {
+            if (Config.isNotificationAlive){
+                //EventBus.getDefault().post(new NotificationTrayEvent(false));
+                //this.getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
+                getFragmentManager().beginTransaction().
+                        remove(getFragmentManager().findFragmentById(R.id.mainView)).commit();
+                Config.isNotificationAlive = false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         super.onStop();
+    }
+    @Override
+    protected void onPause() {
+
+        Log.i("onPause","MainActivity");
+        super.onPause();
     }
 
 //    @Override
