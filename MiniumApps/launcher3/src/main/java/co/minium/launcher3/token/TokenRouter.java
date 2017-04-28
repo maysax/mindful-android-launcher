@@ -19,6 +19,7 @@ import co.minium.launcher3.model.MainListItem;
 import co.minium.launcher3.msg.SmsObserver;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
+import minium.co.notes.utils.DataUtils;
 
 /**
  * Created by shahab on 2/16/17.
@@ -51,7 +52,7 @@ public class TokenRouter {
 
     public void createNote(Context context) {
         context.sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES")
-                .putExtra("body", manager.getCurrent().getTitle()));
+                .putExtra(DataUtils.NOTE_TITLE, manager.getCurrent().getTitle()));
         manager.clear();
     }
 
