@@ -7,9 +7,9 @@
     android:paddingLeft="@dimen/margin.2"
     android:paddingRight="@dimen/margin.2"
     android:paddingTop="@dimen/margin.2"
-    tools:context="co.minium.launcher3.main.MainFragment">
+    tools:context="co.siempo.phone.main.MainFragment">
 
-    <co.minium.launcher3.ui.SearchLayout_
+    <co.siempo.phone.ui.SearchLayout_
         android:id="@+id/searchLayout"
         android:background="@drawable/intention_style"
         android:layout_width="match_parent"

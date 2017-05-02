@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="co.minium.launcher3.inbox.GoogleInboxActivity">
+    tools:context="co.siempo.phone.inbox.GoogleInboxActivity">
 
     <WebView
         android:id="@+id/webView"

@@ -5,7 +5,7 @@
     android:id="@+id/activity_pause"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.minium.launcher3.pause.PauseActivity">
+    tools:context="co.siempo.phone.pause.PauseActivity">
 
     <include layout="@layout/siempo_toolbar"/>
 
