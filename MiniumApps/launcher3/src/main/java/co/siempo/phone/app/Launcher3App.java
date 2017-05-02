@@ -3,6 +3,7 @@ package co.siempo.phone.app;
 import android.os.Build;
 
 import com.evernote.client.android.EvernoteSession;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
@@ -43,6 +44,8 @@ public class Launcher3App extends CoreApplication {
     @Bean
     TokenManager manager;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Trace(tag = TRACE_TAG)
     @Override
     public void onCreate() {
@@ -67,6 +70,7 @@ public class Launcher3App extends CoreApplication {
         configureEverNote();
         manager.init();
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
 /*        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"noti-db");
         Database db = helper.getWritableDb();
@@ -133,5 +137,9 @@ public class Launcher3App extends CoreApplication {
                 .asSingleton();
 
 //        registerActivityLifecycleCallbacks(new LoginChecker());
+    }
+
+    public FirebaseAnalytics getFirebaseAnalytics() {
+        return mFirebaseAnalytics;
     }
 }

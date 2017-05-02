@@ -12,12 +12,14 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -33,10 +35,13 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.app.Launcher3App_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.notification.NotificationRetreat;
 import co.siempo.phone.notification.NotificationRetreat_;
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.event.NFCEvent;
 import co.siempo.phone.main.MainSlidePagerAdapter;
 
@@ -125,6 +130,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         registerReceiver(vReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
 
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "5");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Hello");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
+        Launcher3App_.getInstance().getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @UiThread(delay = 500)

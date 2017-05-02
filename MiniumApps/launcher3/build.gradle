@@ -74,7 +74,7 @@ dependencies {
     }
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 
-
+    compile 'com.google.firebase:firebase-core:10.2.4'
 
     compile "org.greenrobot:greendao:$greenDaoVersion"
     compile "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:$keyboardvisibilityEventVersion"
