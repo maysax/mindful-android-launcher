@@ -38,6 +38,7 @@ import co.siempo.phone.event.MindfulMorgingEventStart;
 import co.siempo.phone.mm.MindfulMorningListAdapter;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.EventBus;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
 @Fullscreen
@@ -75,13 +76,13 @@ public class InstalledAppList extends CoreActivity implements LoaderManager.Load
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 try {
-                    Log.e("TKB",arrayList.get(i).getPackageName());
+                    Tracer.i("Opening package: " + arrayList.get(i).getPackageName());
                     Intent intent = getPackageManager().getLaunchIntentForPackage(arrayList.get(i).getPackageName());
                     startActivity(intent);
                 } catch (Exception e) {
                     // returns null if application is not installed
+                    Tracer.e(e, e.getMessage());
                 }
-
             }
         });
 
@@ -134,6 +135,8 @@ public class InstalledAppList extends CoreActivity implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<List<ApplistDataModel>> loader, List<ApplistDataModel> applistDataModels) {
+        arrayList.clear();
+        arrayList.addAll(applistDataModels);
         installedAppListAdapter.setAppInfo(applistDataModels);
     }
 
