@@ -10,6 +10,7 @@
     <string name="title.note">Note</string>
     <string name="title.messages">Messages</string>
     <string name="title.callLog">Call Log</string>
+    <string name="title.calls">Calls</string>
     <string name="title.contacts">Contacts</string>
     <string name="title.pause">Pause</string>
     <string name="title.voicemail">Voicemail</string>

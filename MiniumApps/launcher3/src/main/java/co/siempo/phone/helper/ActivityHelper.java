@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 
 import java.util.Locale;
@@ -200,5 +201,9 @@ public class ActivityHelper {
             context.startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
+
+    public void openCallApp() {
+        openGMape("com.android.dialer");
     }
 }

@@ -57,7 +57,7 @@ public class OldMenuFragment extends CoreFragment {
     private void loadData() {
         items = new ArrayList<>();
         items.add(new MainListItem(1, getString(R.string.title_messages), "fa-users"));
-        items.add(new MainListItem(2, getString(R.string.title_callLog), "fa-phone"));
+        items.add(new MainListItem(2, getString(R.string.title_calls), "fa-phone"));
         items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user"));
         items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
 //        items.add(new MainListItem(5, getString(R.string.title_voicemail), "fa-microphone"));
@@ -92,7 +92,7 @@ public class OldMenuFragment extends CoreFragment {
         switch (id) {
             case 1: new ActivityHelper(getActivity()).openMessagingApp(); break;
             case 2:
-                CallLogActivity_.intent(getActivity()).start(); break;
+                new ActivityHelper(getActivity()).openCallApp(); break;
             case 3: new ActivityHelper(getActivity()).openContactsApp(); break;
             case 4:
                 PauseActivity_.intent(getActivity()).start(); break;
