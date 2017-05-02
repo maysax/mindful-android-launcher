@@ -37,6 +37,10 @@ public class Tracer {
         writeLog(throwable, message, args);
     }
 
+    public static void e(Throwable throwable) {
+        e(throwable, throwable.getMessage());
+    }
+
 
     public static void wtf(String message, Object... args) {
         Logger.wtf(message, args);

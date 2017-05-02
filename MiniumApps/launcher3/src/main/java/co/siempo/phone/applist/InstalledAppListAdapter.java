@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.db.ActivitiesStorage;
+import minium.co.core.log.Tracer;
 
 import static android.media.CamcorderProfile.get;
 
@@ -28,33 +30,35 @@ import static android.media.CamcorderProfile.get;
 public class InstalledAppListAdapter extends ArrayAdapter<ApplistDataModel> {
 
     private final Activity context;
-    public InstalledAppListAdapter(Activity context) {
+
+    InstalledAppListAdapter(Activity context) {
         super(context, R.layout.installed_app_list_row);
         this.context = context;
     }
 
-    public void setAppInfo(List<ApplistDataModel> appInfo) {
-        if (appInfo!=null){
+    void setAppInfo(List<ApplistDataModel> appInfo) {
+        if (appInfo != null) {
             addAll(appInfo);
-        }else {
+        } else {
             clear();
         }
     }
 
 
+    @NonNull
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView= inflater.inflate(R.layout.installed_app_list_row, null, false);
+        View rowView = inflater.inflate(R.layout.installed_app_list_row, null, false);
         TextView txt_app_name = (TextView) rowView.findViewById(R.id.txt_app_name);
-        ImageView imv_appicon = (ImageView)rowView.findViewById(R.id.imv_appicon);
+        ImageView imv_appicon = (ImageView) rowView.findViewById(R.id.imv_appicon);
         try {
             txt_app_name.setText(getItem(position).getName());
             //Glide.with(context).load(appInfo.get(position).getIcon()).into(imv_appicon);
 
             imv_appicon.setImageDrawable(getItem(position).getIcon());
-        }catch (Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            Tracer.e(e);
         }
 
         return rowView;
