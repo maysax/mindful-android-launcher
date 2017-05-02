@@ -34,6 +34,8 @@ import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.DateUtils;
 
+import static co.siempo.phone.app.Constants.DEFAULT_TEMPO_MINUTE;
+
 @EFragment(R.layout.fragment_tempo)
 public class TempoFragment extends CoreFragment {
 
@@ -73,16 +75,22 @@ public class TempoFragment extends CoreFragment {
     @AfterViews
     void afterViews() {
         ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
-        seekbar.setOnSeekBarChangeListener(seekbarListener);
         titleActionBar.setText(R.string.title_tempo);
-        toggleButton(launcherPrefs.isTempoActive().get());
+
+        updateUI(launcherPrefs.isTempoActive().get());
+
+        seekbar.setOnSeekBarChangeListener(seekbarListener);
 
         alarmIntent = PendingIntent.getBroadcast(getActivity(),
                 23,
-                new Intent(getActivity(),
-                        TempoReceiver_.class).putExtra(TempoReceiver.KEY_IS_TEMPO, true)
+                new Intent(getActivity(), TempoReceiver_.class).putExtra(TempoReceiver.KEY_IS_TEMPO, true)
                 , 0);
+    }
 
+    private void updateUI(Boolean isTempoActive) {
+        toggleButton(isTempoActive);
+        seekbar.setValue(isTempoActive ? launcherPrefs.tempoIntervalMinutes().get() : DEFAULT_TEMPO_MINUTE);
+        setStatus();
     }
 
     @Click
@@ -98,7 +106,7 @@ public class TempoFragment extends CoreFragment {
     void btnOff(){
         toggleButton(false);
         launcherPrefs.isTempoActive().put(false);
-        text_status.setText("Turn on Tempo to batch notifications at set intervals");
+        setStatus();
         EventBus.getDefault().post(new TempoEvent(false));
         NotificationBlockerService_.intent(getActivity()).extra("start", false).start();
         tempoHandler();
@@ -109,7 +117,7 @@ public class TempoFragment extends CoreFragment {
         toggleButton(true);
         setAlarm();
         launcherPrefs.isTempoActive().put(true);
-        text_status.setText("Notifications now come batched every  "+seekbar.getValue() +"  minutes, starting at the top of the hour");
+        setStatus();
         NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
         EventBus.getDefault().post(new TempoEvent(true));
     }
@@ -130,7 +138,6 @@ public class TempoFragment extends CoreFragment {
 
     @Click
     void imgRight() {
-
         ((CoreActivity)getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(),R.id.mainView);
     }
 
@@ -138,9 +145,8 @@ public class TempoFragment extends CoreFragment {
 
         @Override
         public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
-            if (btnOn.isActivated()){
-                text_status.setText("Notifications now come batched every  "+progress +"  minutes, starting at the top of the hour");
-            }
+            setStatus();
+            setValue();
         }
 
         @Override
@@ -155,8 +161,22 @@ public class TempoFragment extends CoreFragment {
             else currVal = 60;
 
             seekbar.setValue(currVal);
+            setStatus();
+            setValue();
         }
     };
+
+    private void setValue() {
+        launcherPrefs.tempoIntervalMinutes().put(seekbar.getValue());
+    }
+
+    private void setStatus() {
+        if (btnOn.isActivated()){
+            text_status.setText(getString(R.string.msg_tempo_active, seekbar.getValue()));
+        } else {
+            text_status.setText(R.string.msg_tempo_inactive);
+        }
+    }
 
     private void setAlarm() {
         if (alarmMgr != null) alarmMgr.cancel(alarmIntent);

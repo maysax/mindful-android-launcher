@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.applist.Constants;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;

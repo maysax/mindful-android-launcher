@@ -1,26 +1,18 @@
 package co.siempo.phone.main;
 
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
-import android.provider.ContactsContract;
-import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import co.siempo.phone.applist.Constants;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.call.CallLogActivity_;
 import co.siempo.phone.contact.ContactsLoader;
-import co.siempo.phone.contact.PhoneNumbersAdapter;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.helper.ActivityHelper;
-import co.siempo.phone.map.SiempoMapActivity;
-import co.siempo.phone.map.SiempoMapActivity_;
 import co.siempo.phone.mm.MMTimePickerActivity_;
-import co.siempo.phone.mm.MindfulMorningActivity_;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;

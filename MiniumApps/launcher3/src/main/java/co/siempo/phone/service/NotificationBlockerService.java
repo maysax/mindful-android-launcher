@@ -1,19 +1,24 @@
 package co.siempo.phone.service;
 
 import android.annotation.TargetApi;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
+import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
@@ -24,7 +29,10 @@ import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.notification.NotificationUtility;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
+import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
+
+import static android.media.AudioManager.RINGER_MODE_SILENT;
 
 /**
  * Created by Shahab on 3/17/2017.
@@ -32,35 +40,71 @@ import minium.co.core.util.UIUtils;
 @EService
 public class NotificationBlockerService extends NotificationListenerService {
 
+    private static final int NOTIFICATION_ID = 4432;
     private int currentFilter = INTERRUPTION_FILTER_ALL;
+    private int currentRingerMode = AudioManager.RINGER_MODE_NORMAL;
 
     @Pref
     Launcher3Prefs_ prefs;
+
+    @SystemService
+    AudioManager audioManager;
+
+    @SystemService
+    NotificationManager notificationManager;
+
+    private Notification.Builder builder;
+
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        builder = new Notification.Builder(this);
+    }
 
     //In the Service I use this to enable and disable silent mode(or priority...)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean start = intent != null && intent.getBooleanExtra("start", false);
 
-        if (start && !prefs.isNotificationBlockerServiceRunning().get()) {
-            currentFilter = getCurrentInterruptionFilter();
-            Tracer.i("Starting service");
+        if (start) {
+            if (!prefs.isNotificationBlockerServiceRunning().get()) {
+                currentFilter = getCurrentInterruptionFilter();
+                currentRingerMode = audioManager.getRingerMode();
+                Tracer.i("NotificationBlockerService stating ...");
 
-            //Check if at least Lollipop, otherwise use old method
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                requestInterruptionFilter(INTERRUPTION_FILTER_NONE);
-            else {
-                AudioManager am = (AudioManager) getBaseContext().getSystemService(AUDIO_SERVICE);
-                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                //Check if at least Lollipop, otherwise use old method
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    requestInterruptionFilter(INTERRUPTION_FILTER_NONE);
+                    audioManager.setRingerMode(RINGER_MODE_SILENT);
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                }
+            } else {
+                Tracer.i("NotificationBlockerService already running ...");
             }
+            showNotification();
         } else {
-            Tracer.i("Stopping service");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            Tracer.i("NotificationBlockerService stopping ...");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 requestInterruptionFilter(currentFilter);
-            else {
-                AudioManager am = (AudioManager) getBaseContext().getSystemService(AUDIO_SERVICE);
-                am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                audioManager.setRingerMode(currentRingerMode);
             }
+            else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            }
+
+            stopForeground(true);
         }
 
         prefs.isNotificationBlockerServiceRunning().put(start);
@@ -123,4 +167,19 @@ public class NotificationBlockerService extends NotificationListenerService {
             Tracer.e(e, e.getMessage());
         }
     }
+
+    private void showNotification() {
+        Intent i = new Intent(this, CoreActivity.class);
+
+        Notification notification = builder.setContentIntent(null)
+                .setContentTitle(getString(R.string.msg_siempo_active_title))
+                .setContentText(getString(R.string.msg_siempo_active_text))
+                .setSmallIcon(R.drawable.ic_siempo_notification)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setWhen(System.currentTimeMillis())
+                .build();
+
+        startForeground(NOTIFICATION_ID, notification);
+    }
+
 }

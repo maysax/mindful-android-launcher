@@ -3,8 +3,6 @@ package co.siempo.phone.notification;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
@@ -18,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.applist.Constants;
 import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;

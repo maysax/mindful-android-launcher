@@ -1,9 +1,12 @@
 package co.siempo.phone.app;
 
 import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
+import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
 import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
+
+import static co.siempo.phone.app.Constants.DEFAULT_TEMPO_MINUTE;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -23,6 +26,8 @@ public interface Launcher3Prefs {
     @DefaultBoolean(false)
     boolean isNotificationBlockerServiceRunning();
 
+    // Tempo related settings
+
     @DefaultBoolean(false)
     boolean isTempoActive();
 
@@ -34,6 +39,9 @@ public interface Launcher3Prefs {
 
     @DefaultBoolean(false)
     boolean tempoAllowCalls();
+
+    @DefaultInt(DEFAULT_TEMPO_MINUTE)
+    int tempoIntervalMinutes();
 
     @DefaultBoolean(false)
     boolean isAwayChecked();

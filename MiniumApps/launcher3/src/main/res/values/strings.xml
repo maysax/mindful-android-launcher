@@ -48,4 +48,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_installed_app_list">Installed App List</string>
+    <string name="msg_tempo_inactive">Turn on Tempo to batch notifications at set intervals</string>
+    <string name="msg_tempo_active">"Notifications now come batched every %1$d minutes, starting at the top of the hour"</string>
+    <string name="msg_siempo_active_title">Siempo</string>
+    <string name="msg_siempo_active_text">Siempo is running</string>
 </resources>

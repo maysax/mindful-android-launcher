@@ -15,11 +15,9 @@ import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import co.siempo.phone.applist.Constants;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.InstalledAppList_;
-import co.siempo.phone.call.CallLogActivity_;
 import co.siempo.phone.helper.ActivityHelper;
-import co.siempo.phone.map.SiempoMapActivity_;
 import co.siempo.phone.mm.MMTimePickerActivity_;
 import co.siempo.phone.mm.MindfulMorningActivity_;
 import co.siempo.phone.model.MainListItem;
