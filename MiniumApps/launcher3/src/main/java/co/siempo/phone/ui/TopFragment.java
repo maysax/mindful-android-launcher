@@ -3,6 +3,7 @@ package co.siempo.phone.ui;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.media.Image;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -25,10 +26,12 @@ import java.util.Locale;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.battery.BatteryChangeEvent;
+import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NotificationSchedulerEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.msg.SmsEvent;
 import co.siempo.phone.msg.SmsEventType;
+import co.siempo.phone.network.NetworkUtil;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.DroidPrefs_;
@@ -53,7 +56,16 @@ public class TopFragment extends CoreFragment {
     ImageView imgTempo;
 
     @ViewById
-            ImageView imgNotification;
+    ImageView imgNotification;
+
+    @ViewById
+    ImageView imgBattery;
+
+    @ViewById
+    ImageView imgSignal;
+
+    @ViewById
+    ImageView imgWifi;
 
     FontAwesomeIcons [] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
@@ -76,6 +88,13 @@ public class TopFragment extends CoreFragment {
     void afterViews() {
         // Default text
         //updateBatteryText(50);
+        updateUI();
+    }
+
+    private void updateUI() {
+        imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
+        imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
+        imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -169,6 +188,16 @@ public class TopFragment extends CoreFragment {
             imgNotification.setVisibility(View.VISIBLE);
         } else {
             imgNotification.setVisibility(View.GONE);
+        }
+    }
+
+    @Subscribe
+    public void onConnectivityEvent(ConnectivityEvent event) {
+        if (event.getState() == ConnectivityEvent.AIRPLANE) {
+            imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
+            imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
+        } else if (event.getState() == ConnectivityEvent.WIFI) {
+            imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE :  View.GONE);
         }
     }
 }
