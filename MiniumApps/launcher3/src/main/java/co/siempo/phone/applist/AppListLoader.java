@@ -7,6 +7,8 @@ import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -143,6 +145,13 @@ public class AppListLoader extends AsyncTaskLoader<List<ApplistDataModel>> {
 
             arrayList.add(applistDataModel);
         }
+
+        Collections.sort(arrayList, new Comparator<ApplistDataModel>() {
+            @Override
+            public int compare(ApplistDataModel lhs, ApplistDataModel rhs) {
+                return String.CASE_INSENSITIVE_ORDER.compare(lhs.getName(), rhs.getName());
+            }
+        });
         return arrayList;
     }
 }

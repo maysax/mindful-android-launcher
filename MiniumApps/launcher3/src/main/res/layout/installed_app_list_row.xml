@@ -9,8 +9,8 @@
 
         <ImageView
             android:id="@+id/imv_appicon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/abc_btn_check_material" />
 
         <TextView
