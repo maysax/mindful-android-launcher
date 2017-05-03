@@ -70,7 +70,7 @@ class MainFragmentMediator {
         //items.add(new MainListItem(10, fragment.getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(11, fragment.getString(R.string.title_settings), "fa-cogs"));
         // items.add(new MainListItem(12, fragment.getString(R.string.title_theme), "fa-tint"));
-        items.add(new MainListItem(13, fragment.getString(R.string.title_notificationScheduler), "fa-bell"));
+        items.add(new MainListItem(13, fragment.getString(R.string.title_tempo), "fa-bell"));
         items.add(new MainListItem(14, fragment.getString(R.string.title_map), "fa-street-view"));
 
         if (!Build.MODEL.toLowerCase().contains("siempo")) {

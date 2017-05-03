@@ -204,6 +204,6 @@ public class ActivityHelper {
     }
 
     public void openCallApp() {
-        openGMape("com.android.dialer");
+        openGMape("com.google.android.dialer");
     }
 }
