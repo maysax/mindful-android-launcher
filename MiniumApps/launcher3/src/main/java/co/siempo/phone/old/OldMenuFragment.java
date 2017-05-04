@@ -29,6 +29,7 @@ import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 
 import static co.siempo.phone.R.string.title_defaultLauncher;
+import static co.siempo.phone.app.Constants.GOOGLE_PHOTOS;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,6 +61,10 @@ public class OldMenuFragment extends CoreFragment {
         items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user"));
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
         items.add(new MainListItem(6, getString(R.string.title_notes), "fa-sticky-note"));
+
+        if (new ActivityHelper(getActivity()).isAppInstalled(GOOGLE_PHOTOS))
+            items.add(new MainListItem(22, getString(R.string.title_photos), "fa-camera"));
+
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs"));
         items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
@@ -112,6 +117,7 @@ public class OldMenuFragment extends CoreFragment {
             case 19: InstalledAppList_.intent(getActivity()).start(); break;
             case 20: new ActivityHelper(getActivity()).openGMape(Constants.CALENDAR_PACKAGE); break;
             case 21: new ActivityHelper(getActivity()).openGMape(Constants.CLOCK_PACKAGE); break;
+            case 22: new ActivityHelper(getActivity()).openGMape(GOOGLE_PHOTOS); break;
             default: UIUtils.alert(getActivity(), getString(R.string.msg_not_yet_implemented)); break;
         }
 

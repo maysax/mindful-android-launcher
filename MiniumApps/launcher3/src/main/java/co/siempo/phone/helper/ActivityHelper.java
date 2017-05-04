@@ -40,7 +40,7 @@ public class ActivityHelper {
 
     public boolean openContactsApp() {
         try {
-            getContext().startActivity(new Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CONTACTS));
+            getContext().startActivity(new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI));
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
@@ -205,5 +205,17 @@ public class ActivityHelper {
 
     public void openCallApp() {
         openGMape("com.google.android.dialer");
+    }
+
+    public boolean isAppInstalled(String packageName) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            Tracer.e(e);
+        }
+
+        return false;
     }
 }
