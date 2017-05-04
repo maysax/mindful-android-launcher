@@ -200,6 +200,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
 
     void checkVersion() {
+        Tracer.d("Checking if new version is available ... ");
         ApiClient_.getInstance_(this).checkAppVersion();
     }
 

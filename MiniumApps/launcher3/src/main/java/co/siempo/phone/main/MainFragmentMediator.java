@@ -61,30 +61,7 @@ class MainFragmentMediator {
     }
 
     private void loadActions() {
-        items.add(new MainListItem(4, fragment.getString(R.string.title_messages), "fa-users"));
-        items.add(new MainListItem(5, fragment.getString(R.string.title_callLog), "fa-phone"));
-        items.add(new MainListItem(6, fragment.getString(R.string.title_contacts), "fa-user"));
-        items.add(new MainListItem(7, fragment.getString(R.string.title_pause), "fa-ban"));
-        // items.add(new MainListItem(8, fragment.getString(R.string.title_voicemail), "fa-microphone"));
-        items.add(new MainListItem(9, fragment.getString(R.string.title_notes), "fa-sticky-note"));
-        //items.add(new MainListItem(10, fragment.getString(R.string.title_clock), "fa-clock-o"));
-        items.add(new MainListItem(11, fragment.getString(R.string.title_settings), "fa-cogs"));
-        // items.add(new MainListItem(12, fragment.getString(R.string.title_theme), "fa-tint"));
-        items.add(new MainListItem(13, fragment.getString(R.string.title_tempo), "fa-bell"));
-        items.add(new MainListItem(14, fragment.getString(R.string.title_map), "fa-street-view"));
-
-        if (!Build.MODEL.toLowerCase().contains("siempo")) {
-            items.add(new MainListItem(15, fragment.getString(title_defaultLauncher), "fa-street-view"));
-        }
-
-        items.add(new MainListItem(16, fragment.getString(R.string.title_mindfulMorning), "fa-coffee"));
-        items.add(new MainListItem(17, fragment.getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
-        //items.add(new MainListItem(18, fragment.getString(R.string.title_inbox), "fa-inbox"));
-
-        items.add(new MainListItem(19, fragment.getString(R.string.title_feedback), "fa-question-circle"));
-        items.add(new MainListItem(20, fragment.getString(R.string.title_calendar), "fa-calendar"));
-        items.add(new MainListItem(21, fragment.getString(R.string.title_clock), "fa-clock-o"));
-
+        new MainListItemLoader(fragment.getActivity()).loadItems(items);
     }
 
     private void loadContacts() {
@@ -141,42 +118,7 @@ class MainFragmentMediator {
                 break;
             case ACTION:
                 position = getAdapter().getItem(position).getId();
-                switch (position) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4: new ActivityHelper(fragment.getActivity()).openMessagingApp(); break;
-                    case 5: CallLogActivity_.intent(fragment.getActivity()).start(); break;
-                    case 6: new ActivityHelper(fragment.getActivity()).openContactsApp(); break;
-                    case 7: PauseActivity_.intent(fragment.getActivity()).start(); break;
-                    case 8: break;
-                    case 9: new ActivityHelper(fragment.getActivity()).openNotesApp(false); break;
-                    case 10: break;
-                    case 11: new ActivityHelper(fragment.getActivity()).openSettingsApp(); break;
-                    case 12: break;
-                    case 13:
-                        TempoActivity_.intent(fragment.getActivity()).start(); break;
-                    case 14:
-                       // SiempoMapActivity_.intent(fragment.getActivity()).start(); break;
-                        new ActivityHelper(fragment.getActivity()).openGMape(Constants.GOOGLE_MAP_PACKAGE); break;
-
-                    case 15:
-                        new ActivityHelper(fragment.getActivity()).handleDefaultLauncher((CoreActivity) fragment.getActivity());
-                        break;
-                    case 16:
-                        MMTimePickerActivity_.intent(fragment.getActivity()).start();
-                        break;
-                    case 17:
-                        break;
-                    case 18:
-                        //new ActivityHelper(fragment.getActivity()).openGoogleInbox(); break;
-                    case 19:
-                        new ActivityHelper(fragment.getActivity()).openFeedback(); break;
-                    case 20:
-                        new ActivityHelper(fragment.getActivity()).openGMape(Constants.CALENDAR_PACKAGE); break;
-                    case 21:
-                        new ActivityHelper(fragment.getActivity()).openGMape(Constants.CLOCK_PACKAGE); break;
-                }
+                new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                 break;
             case DEFAULT:
                 position = getAdapter().getItem(position).getId();

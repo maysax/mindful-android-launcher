@@ -16,6 +16,7 @@ import co.siempo.phone.mm.MMTimePickerActivity_;
 import co.siempo.phone.mm.MindfulMorningActivity_;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.pause.PauseActivity_;
+import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.tempo.TempoActivity_;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -89,7 +90,7 @@ public class MainListItemLoader {
             case 12: new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context); break;
             case 13: MMTimePickerActivity_.intent(context).start(); break;
             case 14: MindfulMorningActivity_.intent(context).start(); break;
-            case 15: break; // Version text, no action should be taken
+            case 15: ApiClient_.getInstance_(context).checkAppVersion(); break;
             case 16: new ActivityHelper(context).openEmail(); break;
             case 17: //new ActivityHelper(context).openGoogleInbox(); break;
             case 18: new ActivityHelper(context).openFeedback(); break;
