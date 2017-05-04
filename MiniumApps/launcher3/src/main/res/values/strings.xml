@@ -52,4 +52,5 @@
     <string name="msg_siempo_active_title">Siempo</string>
     <string name="msg_siempo_active_text">Siempo is running</string>
     <string name="title_photos">Photos</string>
+    <string name="msg.notificationEmpty">Nothing new. Feel free to take a breath and look at your surroundings.</string>
 </resources>

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
@@ -50,6 +51,9 @@ public class NotificationFragment extends CoreFragment {
 
     @ViewById
     RecyclerView recyclerView;
+
+    @ViewById
+    TextView emptyView;
 
     RecyclerListAdapter adapter;
     private List<Notification> notificationList;
@@ -123,7 +127,7 @@ public class NotificationFragment extends CoreFragment {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 // do it
-                Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position " + notificationList.get(position).getNotificationContactModel().getImage(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position " + notificationList.get(position).getNotificationContactModel().getImage(), Toast.LENGTH_SHORT).show();
                 if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
 
                    /* Uri uri = Uri.parse("smsto:"+notificationList.get(position).getNotificationContactModel().getNumber());
@@ -138,7 +142,7 @@ public class NotificationFragment extends CoreFragment {
                 //++Tarun , Following code will delete all notification of same user and same types.
                 DeleteIteam deleteIteam = new DeleteIteam(new MultipleIteamDelete());
                 deleteIteam.executeDelete(notificationList.get(position));
-                getActivity().finish();
+                // getActivity().finish();
 
             }
 
@@ -164,6 +168,15 @@ public class NotificationFragment extends CoreFragment {
             String time = sdf.format(items.get(i).get_date());
             Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type());
             notificationList.add(n);
+        }
+
+        if (items.size() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
         }
 
     }

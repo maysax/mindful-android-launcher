@@ -3,10 +3,6 @@ package co.siempo.phone.network;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.provider.Settings;
-
-import com.amitshekhar.utils.NetworkUtils;
 
 import org.androidannotations.annotations.EReceiver;
 
