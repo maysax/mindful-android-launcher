@@ -142,7 +142,6 @@ public class NotificationFragment extends CoreFragment {
                 //++Tarun , Following code will delete all notification of same user and same types.
                 DeleteIteam deleteIteam = new DeleteIteam(new MultipleIteamDelete());
                 deleteIteam.executeDelete(notificationList.get(position));
-                // getActivity().finish();
 
             }
 
