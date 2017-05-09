@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3App_;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.notification.NotificationRetreat;
 import co.siempo.phone.notification.NotificationRetreat_;
 import de.greenrobot.event.EventBus;
@@ -130,11 +131,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         registerReceiver(vReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
 
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "5");
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Hello");
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "image");
-        Launcher3App_.getInstance().getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        FirebaseHelper firebaseHelper = new FirebaseHelper(this);
+        firebaseHelper.testEvent1();
+        firebaseHelper.testEvent2();
     }
 
     @UiThread(delay = 500)

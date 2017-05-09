@@ -29,6 +29,8 @@ buildscript {
         //greeendao
         classpath "org.greenrobot:greendao-gradle-plugin:3.2.0"
 
+        classpath 'com.google.gms:google-services:3.0.0'
+
     }
 }
 
@@ -82,7 +84,7 @@ project.ext {
     versionMajor = 0
     versionMinor = 0
     versionPatch = 8
-    versionBuild = 3 // bump for internal builds, public betas, etc.
+    versionBuild = 4 // bump for internal builds, public betas, etc.
 }
 
 task clean(type: Delete) {

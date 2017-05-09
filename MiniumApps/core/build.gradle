@@ -131,6 +131,12 @@ dependencies {
     // https://github.com/ParkSangGwon/TedPermission
     compile "gun0912.ted:tedpermission:$tedPermissionVersion"
 
+    /**
+     * =================== UTIL ===================
+     */
+    // https://github.com/Blankj/AndroidUtilCode
+    compile 'com.blankj:utilcode:1.5.0'
+
     apt "org.androidannotations:androidannotations:$annotationsVersion"
 
     compile "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"

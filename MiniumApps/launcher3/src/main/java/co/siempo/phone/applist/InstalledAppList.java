@@ -130,7 +130,7 @@ public class InstalledAppList extends CoreActivity implements LoaderManager.Load
 
     @Override
     public Loader<List<ApplistDataModel>> onCreateLoader(int i, Bundle bundle) {
-        return new AppListLoader(this);
+        return AppListLoader_.getInstance_(this);
     }
 
     @Override

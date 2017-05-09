@@ -1,20 +1,32 @@
 package co.siempo.phone.applist;
 
+import android.Manifest;
 import android.content.AsyncTaskLoader;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
+
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.Trace;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import minium.co.core.log.LogConfig;
+import minium.co.core.log.Tracer;
+
 /**
  * Created by tkb on 2017-04-27.
  */
-
+@EBean
 public class AppListLoader extends AsyncTaskLoader<List<ApplistDataModel>> {
 
     List<ApplistDataModel> mModels;
@@ -120,6 +132,7 @@ public class AppListLoader extends AsyncTaskLoader<List<ApplistDataModel>> {
     protected void onReleaseResources(List<ApplistDataModel> apps) {}
 
 
+    @Trace(tag = LogConfig.LOG_TAG)
     ArrayList<ApplistDataModel> getInstalledAppList(Context context)
     {
 
@@ -128,16 +141,16 @@ public class AppListLoader extends AsyncTaskLoader<List<ApplistDataModel>> {
         ApplistDataModel applistDataModel;
         final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        final List pkgAppsList = context.getPackageManager().queryIntentActivities( mainIntent, 0);
+        PackageManager pkgManager = context.getPackageManager();
+        final List pkgAppsList = pkgManager.queryIntentActivities( mainIntent, 0);
         for (Object object : pkgAppsList)
         {
             applistDataModel = new ApplistDataModel();
 
             ResolveInfo info = (ResolveInfo) object;
-            Drawable icon    = context.getPackageManager().getApplicationIcon(info.activityInfo.applicationInfo);
-            String strAppName  	= info.activityInfo.applicationInfo.publicSourceDir.toString();
-            String strPackageName  = info.activityInfo.applicationInfo.packageName.toString();
-            final String title 	= (String)((info != null) ? context.getPackageManager().getApplicationLabel(info.activityInfo.applicationInfo) : "???");
+            Drawable icon    = pkgManager.getApplicationIcon(info.activityInfo.applicationInfo);
+            String strPackageName  = info.activityInfo.applicationInfo.packageName;
+            final String title 	= (String) pkgManager.getApplicationLabel(info.activityInfo.applicationInfo);
 
             applistDataModel.setName(title);
             applistDataModel.setIcon(icon);
