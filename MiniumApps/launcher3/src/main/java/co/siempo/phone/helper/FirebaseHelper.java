@@ -23,6 +23,11 @@ public class FirebaseHelper {
         return mFirebaseAnalytics;
     }
 
+    public void appOpenEvent() {
+        Bundle bundle = new Bundle();
+        getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
+    }
+
     public void testEvent1() {
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "5");
