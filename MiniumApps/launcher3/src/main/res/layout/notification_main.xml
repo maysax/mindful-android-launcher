@@ -12,8 +12,8 @@
     <TextView
         android:id="@+id/textView_notification_title"
         android:text="@string/string_notification_title"
-        android:layout_width="180dp"
-        android:layout_height="33dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:textSize="28sp"
         android:fontFamily="sans-serif"
         android:textColor="#de000000"/>
