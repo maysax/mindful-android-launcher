@@ -122,7 +122,7 @@ public class UIUtils {
         intent.addCategory(Intent.CATEGORY_HOME);
         ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
         String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-        return defaultLauncherStr.equals("co.minium.launcher3");
+        return defaultLauncherStr.equals(context.getPackageName());
     }
 
 }
