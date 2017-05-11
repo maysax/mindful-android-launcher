@@ -3,22 +3,15 @@ package co.siempo.phone.applist;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import com.blankj.utilcode.util.AppUtils;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -30,20 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.call.CallLogFragment_;
-import co.siempo.phone.db.ActivitiesStorage;
-import co.siempo.phone.db.ActivitiesStorageDao;
 import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.event.MindfulMorgingEventStart;
-import co.siempo.phone.mm.MindfulMorningListAdapter;
-import co.siempo.phone.ui.TopFragment_;
+import co.siempo.phone.db.TableNotificationSms;
+import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.TopBarUpdateEvent;
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
 @Fullscreen
 @EActivity(R.layout.activity_installed_app_list)
-public class InstalledAppList extends CoreActivity implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>>{
+public class AppDrawerActivity extends CoreActivity implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>>{
 
     ArrayList<ApplistDataModel> arrayList = new ArrayList<>();
     @ViewById
@@ -79,6 +70,7 @@ public class InstalledAppList extends CoreActivity implements LoaderManager.Load
                     Tracer.i("Opening package: " + arrayList.get(i).getPackageName());
                     Intent intent = getPackageManager().getLaunchIntentForPackage(arrayList.get(i).getPackageName());
                     startActivity(intent);
+                    EventBus.getDefault().post(new AppOpenEvent(arrayList.get(i).getPackageName()));
                 } catch (Exception e) {
                     // returns null if application is not installed
                     Tracer.e(e, e.getMessage());
@@ -121,7 +113,7 @@ public class InstalledAppList extends CoreActivity implements LoaderManager.Load
         }
         */
 
-        installedAppListAdapter = new InstalledAppListAdapter(InstalledAppList.this);
+        installedAppListAdapter = new InstalledAppListAdapter(AppDrawerActivity.this);
         activity_grid_view.setAdapter(installedAppListAdapter);
         getLoaderManager().initLoader(0, null, this);
 
@@ -143,6 +135,10 @@ public class InstalledAppList extends CoreActivity implements LoaderManager.Load
     @Override
     public void onLoaderReset(Loader<List<ApplistDataModel>> loader) {
         installedAppListAdapter.setAppInfo(null);
+    }
 
+    @Subscribe
+    public void appOpenEvent(AppOpenEvent event) {
+        new AppOpenHandler().handle(this, event);
     }
 }

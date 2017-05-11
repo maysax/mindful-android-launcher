@@ -22,10 +22,12 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.TableNotificationSms;
 
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.mm.model.Utilities;
 import co.siempo.phone.notification.Notification;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.VibrationUtils;
+import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
@@ -109,6 +111,8 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
         sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
         sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
         notificationSmsDao.insert(sms);
+
+        EventBus.getDefault().post(new TopBarUpdateEvent());
     }
 
     // Keep this method as it is

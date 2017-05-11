@@ -162,7 +162,7 @@
         </activity>
         <activity android:name=".inbox.GoogleInboxActivity_" />
         <activity
-            android:name=".applist.InstalledAppList_"
+            android:name=".applist.AppDrawerActivity_"
             android:label="@string/title_activity_installed_app_list"
             android:screenOrientation="portrait"/>
 

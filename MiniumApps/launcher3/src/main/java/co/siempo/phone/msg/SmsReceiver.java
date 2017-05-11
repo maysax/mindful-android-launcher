@@ -19,6 +19,7 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.notification.NotificationUtility;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
@@ -75,7 +76,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 saveMessage(mAddress, mBody, mDate);
                 //new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
-                EventBus.getDefault().post(new SmsEvent(SmsEventType.RECEIVED));
+                EventBus.getDefault().post(new TopBarUpdateEvent());
 
                 if (launcherPrefs.isPauseActive().get() || launcherPrefs.isTempoActive().get()) {
                     abortBroadcast();

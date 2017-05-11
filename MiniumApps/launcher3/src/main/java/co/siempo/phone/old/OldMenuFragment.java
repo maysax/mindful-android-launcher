@@ -1,7 +1,6 @@
 package co.siempo.phone.old;
 
 
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.widget.ListView;
 
@@ -13,24 +12,12 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
-import co.siempo.phone.applist.InstalledAppList_;
-import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.main.MainListItemLoader;
-import co.siempo.phone.mm.MMTimePickerActivity_;
-import co.siempo.phone.mm.MindfulMorningActivity_;
 import co.siempo.phone.model.MainListItem;
-import co.siempo.phone.pause.PauseActivity_;
-import co.siempo.phone.tempo.TempoActivity_;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
-
-import static co.siempo.phone.R.string.title_defaultLauncher;
-import static co.siempo.phone.app.Constants.GOOGLE_PHOTOS;
 
 /**
  * A simple {@link Fragment} subclass.

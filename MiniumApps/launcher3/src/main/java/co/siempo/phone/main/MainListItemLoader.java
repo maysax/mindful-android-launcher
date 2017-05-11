@@ -4,13 +4,12 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.StringRes;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.applist.InstalledAppList_;
+import co.siempo.phone.applist.AppDrawerActivity_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.mm.MMTimePickerActivity_;
 import co.siempo.phone.mm.MindfulMorningActivity_;
@@ -76,7 +75,8 @@ public class MainListItemLoader {
 
     public void listItemClicked(int id) {
         switch (id) {
-            case 1: new ActivityHelper(context).openMessagingApp(); break;
+            case 1: new ActivityHelper(context).openMessagingApp();
+                break;
             case 2: new ActivityHelper(context).openCallApp(); break;
             case 3: new ActivityHelper(context).openContactsApp(); break;
             case 4: PauseActivity_.intent(context).start(); break;
@@ -94,7 +94,7 @@ public class MainListItemLoader {
             case 16: new ActivityHelper(context).openEmail(); break;
             case 17: //new ActivityHelper(context).openGoogleInbox(); break;
             case 18: new ActivityHelper(context).openFeedback(); break;
-            case 19: InstalledAppList_.intent(context).start(); break;
+            case 19: AppDrawerActivity_.intent(context).start(); break;
             case 20: new ActivityHelper(context).openGMape(Constants.CALENDAR_PACKAGE); break;
             case 21: new ActivityHelper(context).openGMape(Constants.CLOCK_PACKAGE); break;
             case 22: new ActivityHelper(context).openGMape(GOOGLE_PHOTOS); break;

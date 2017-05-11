@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.main.ItemTouchHelperAdapter;
 import co.siempo.phone.main.ItemTouchHelperViewHolder;
 import co.siempo.phone.main.OnStartDragListener;
@@ -109,7 +110,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         notifyItemRemoved(position);
 
         if (notificationList.isEmpty())
-            EventBus.getDefault().post(new SmsEvent(SmsEventType.CANCEL));
+            EventBus.getDefault().post(new TopBarUpdateEvent());
     }
 
 

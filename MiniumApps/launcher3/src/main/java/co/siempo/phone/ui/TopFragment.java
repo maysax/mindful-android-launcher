@@ -26,9 +26,11 @@ import java.util.Locale;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.battery.BatteryChangeEvent;
+import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NotificationSchedulerEvent;
 import co.siempo.phone.event.TempoEvent;
+import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.msg.SmsEvent;
 import co.siempo.phone.msg.SmsEventType;
 import co.siempo.phone.network.NetworkUtil;
@@ -95,6 +97,9 @@ public class TopFragment extends CoreFragment {
         imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
         imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
         imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
+
+        long notifCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
+        imgNotification.setVisibility(notifCount == 0 ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -183,12 +188,8 @@ public class TopFragment extends CoreFragment {
     }
 
     @Subscribe
-    public void smsEvent(SmsEvent event) {
-        if (event.getType() == SmsEventType.RECEIVED) {
-            imgNotification.setVisibility(View.VISIBLE);
-        } else {
-            imgNotification.setVisibility(View.GONE);
-        }
+    public void updateTopBar(TopBarUpdateEvent event) {
+        updateUI();
     }
 
     @Subscribe

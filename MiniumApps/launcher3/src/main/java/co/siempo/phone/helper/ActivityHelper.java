@@ -9,11 +9,15 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.provider.Telephony;
 
 import java.util.Locale;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
+import co.siempo.phone.applist.AppOpenEvent;
+import co.siempo.phone.applist.AppOpenHandler;
 import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
 import minium.co.core.log.Tracer;
@@ -57,13 +61,14 @@ public class ActivityHelper {
         }
 
         try {
-           // getContext().startActivity(new Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_MESSAGING));
-            String defaultApplication = Settings.Secure.getString(getContext().getContentResolver(), "sms_default_application");
             PackageManager pm = getContext().getPackageManager();
-            Intent intent = pm.getLaunchIntentForPackage(defaultApplication );
+            Intent intent = pm.getLaunchIntentForPackage(Telephony.Sms.getDefaultSmsPackage(context));
             if (intent != null) {
                 getContext().startActivity(intent);
             }
+
+            new AppOpenHandler().handle(context, new AppOpenEvent(Telephony.Sms.getDefaultSmsPackage(context)));
+
             return;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
@@ -204,7 +209,8 @@ public class ActivityHelper {
     }
 
     public void openCallApp() {
-        openGMape("com.google.android.dialer");
+        openGMape(Constants.CALL_APP_PACKAGE);
+        new AppOpenHandler().handle(context, new AppOpenEvent(Constants.CALL_APP_PACKAGE));
     }
 
     public boolean isAppInstalled(String packageName) {

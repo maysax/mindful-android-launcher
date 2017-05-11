@@ -32,6 +32,7 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NotificationTrayEvent;
+import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
@@ -57,12 +58,11 @@ public class NotificationFragment extends CoreFragment {
 
     RecyclerListAdapter adapter;
     private List<Notification> notificationList;
+
     @ViewById
     LinearLayout layout_notification;
 
-    private enum mSwipeDirection {UP, DOWN, NONE}
-
-    ;
+    private enum mSwipeDirection {UP, DOWN, NONE};
 
     TableNotificationSmsDao smsDao;
     CallStorageDao callStorageDao;
@@ -83,11 +83,7 @@ public class NotificationFragment extends CoreFragment {
         // query all notes, sorted a-z by their text
 //        smsQuery = smsDao.queryBuilder().orderAsc(TableNotificationSmsDao.Properties._contact_title).build();
 
-        List<TableNotificationSms> SMSItems = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties._date).build().list();
-        //List<CallStorage> callItems = callStorageDao.queryBuilder().orderDesc(CallStorageDao.Properties._date).build().list();
-
-        //List<TableNotificationSms> items = smsDao.loadAll();
-        setUpNotifications(SMSItems);
+        loadData();
 
         adapter = new RecyclerListAdapter(getActivity(), notificationList);
 
@@ -142,20 +138,29 @@ public class NotificationFragment extends CoreFragment {
                 //++Tarun , Following code will delete all notification of same user and same types.
                 DeleteIteam deleteIteam = new DeleteIteam(new MultipleIteamDelete());
                 deleteIteam.executeDelete(notificationList.get(position));
-
+                loadData();
             }
 
 
         });
 
-        ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
-                Toast.makeText(getActivity().getApplicationContext(), "Item long clicked at position " + position, Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
+//        ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+//                Toast.makeText(getActivity().getApplicationContext(), "Item long clicked at position " + position, Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
 
+    }
+
+    private void loadData() {
+        List<TableNotificationSms> SMSItems = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties._date).build().list();
+        //List<CallStorage> callItems = callStorageDao.queryBuilder().orderDesc(CallStorageDao.Properties._date).build().list();
+
+        //List<TableNotificationSms> items = smsDao.loadAll();
+        setUpNotifications(SMSItems);
+        EventBus.getDefault().post(new TopBarUpdateEvent());
     }
 
     private void setUpNotifications(List<TableNotificationSms> items) {
