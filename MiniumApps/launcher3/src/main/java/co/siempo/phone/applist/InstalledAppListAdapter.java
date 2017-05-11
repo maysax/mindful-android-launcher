@@ -1,8 +1,7 @@
 package co.siempo.phone.applist;
 
 import android.app.Activity;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.ResolveInfo;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -12,16 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.db.ActivitiesStorage;
+import co.siempo.phone.app.Launcher3App_;
 import minium.co.core.log.Tracer;
-
-import static android.media.CamcorderProfile.get;
 
 /**
  * Created by tkb on 2017-04-21.
@@ -56,7 +50,7 @@ public class InstalledAppListAdapter extends ArrayAdapter<ApplistDataModel> {
             txt_app_name.setText(getItem(position).getName());
             //Glide.with(context).load(appInfo.get(position).getIcon()).into(imv_appicon);
 
-            imv_appicon.setImageDrawable(getItem(position).getIcon());
+            imv_appicon.setImageDrawable(getDrawable(getItem(position)));
         } catch (Exception e) {
             Tracer.e(e);
         }
@@ -64,5 +58,10 @@ public class InstalledAppListAdapter extends ArrayAdapter<ApplistDataModel> {
         return rowView;
     }
 
-
+    private Drawable getDrawable(ApplistDataModel model) {
+        if (model.getIcon() == null) {
+            model.setIcon(Launcher3App_.getIconsHandler(context).getDrawableIconForPackage(model.getPackageName()));
+        }
+        return model.getIcon();
+    }
 }

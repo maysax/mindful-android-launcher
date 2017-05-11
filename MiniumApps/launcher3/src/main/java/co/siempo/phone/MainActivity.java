@@ -276,7 +276,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onResume() {
         super.onResume();
-        enableNfc(true);
+        try {
+            enableNfc(true);
+        } catch (Exception e) {
+            Tracer.e(e);
+        }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(0, true);
         if (statusBarHandler != null && !statusBarHandler.isActive())

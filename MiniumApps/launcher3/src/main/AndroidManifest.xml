@@ -163,7 +163,8 @@
         <activity android:name=".inbox.GoogleInboxActivity_" />
         <activity
             android:name=".applist.InstalledAppList_"
-            android:label="@string/title_activity_installed_app_list" />
+            android:label="@string/title_activity_installed_app_list"
+            android:screenOrientation="portrait"/>
 
         <receiver android:name=".network.NetworkChangeReceiver_">
             <intent-filter>

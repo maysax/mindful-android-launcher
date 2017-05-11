@@ -1,5 +1,6 @@
 package co.siempo.phone.app;
 
+import android.content.Context;
 import android.os.Build;
 
 import com.evernote.client.android.EvernoteSession;
@@ -18,6 +19,7 @@ import java.util.Calendar;
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.GreenDaoOpenHelper;
+import co.siempo.phone.kiss.IconsHandler;
 import co.siempo.phone.token.TokenManager;
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
@@ -45,6 +47,7 @@ public class Launcher3App extends CoreApplication {
     TokenManager manager;
 
     private FirebaseAnalytics mFirebaseAnalytics;
+    private static IconsHandler iconsPackHandler;
 
     @Trace(tag = TRACE_TAG)
     @Override
@@ -141,5 +144,13 @@ public class Launcher3App extends CoreApplication {
 
     public FirebaseAnalytics getFirebaseAnalytics() {
         return mFirebaseAnalytics;
+    }
+
+    public static IconsHandler getIconsHandler(Context ctx) {
+        if (iconsPackHandler == null) {
+            iconsPackHandler = new IconsHandler(ctx);
+        }
+
+        return iconsPackHandler;
     }
 }
