@@ -97,15 +97,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Manifest.permission.READ_CONTACTS,
                         Manifest.permission.WRITE_CONTACTS,
-                        Manifest.permission.READ_CALL_LOG,
                         Manifest.permission.SEND_SMS,
                         Manifest.permission.RECEIVE_SMS,
                         Manifest.permission.RECEIVE_MMS,
                         Manifest.permission.READ_PHONE_STATE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_NETWORK_STATE,
                         Manifest.permission.SYSTEM_ALERT_WINDOW)
                 .check();
