@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.notification.NotificationRetreat_;
+import co.siempo.phone.service.SiempoNotificationListener;
+import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.event.NFCEvent;
 import co.siempo.phone.main.MainSlidePagerAdapter;
@@ -41,8 +44,6 @@ import co.siempo.phone.main.MainSlidePagerAdapter;
 import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
-import co.siempo.phone.service.NotificationBlockerService;
-import co.siempo.phone.service.NotificationBlockerService_;
 import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
@@ -163,10 +164,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
     /**
-     * @return True if {@link NotificationBlockerService} is enabled.
+     * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
      */
     public static boolean isEnabled(Context mContext) {
-        return ServiceUtils.isNotificationListenerServiceRunning(mContext, NotificationBlockerService_.class);
+        return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
     }
 
     PermissionListener permissionlistener = new PermissionListener() {

@@ -25,7 +25,7 @@ public class DndStartStopReceiver extends BroadcastReceiver {
     @SystemService
     AudioManager audioManager;
 
-    private boolean shouldStart = false;
+    private boolean shouldStart;
 
     @Override
     public void onReceive(Context context, Intent intent) {

@@ -25,8 +25,6 @@ import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.TempoEvent;
-import co.siempo.phone.service.NotificationBlockerService_;
-import co.siempo.phone.tempo.TempoPreferenceFragment_;
 import co.siempo.phone.util.AudioUtils;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;

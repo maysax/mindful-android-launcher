@@ -37,7 +37,7 @@ import minium.co.core.util.DateUtils;
 public class Launcher3App extends CoreApplication {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
-    public static final String DND_START_STOP_ACTION = "iempo.intent.action.DND_START_STOP";
+    public static final String DND_START_STOP_ACTION = "siempo.intent.action.DND_START_STOP";
 
     private DaoSession daoSession;
 

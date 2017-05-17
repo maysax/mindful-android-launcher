@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.service.NotificationBlockerService_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;

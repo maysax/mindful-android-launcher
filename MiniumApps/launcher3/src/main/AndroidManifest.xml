@@ -117,16 +117,6 @@
         </activity>
 
         <service
-            android:name=".service.NotificationBlockerService_"
-            android:enabled="true"
-            android:label="@string/app_name"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-            <intent-filter android:priority="999">
-                <action android:name="android.service.notification.NotificationListenerService" />
-            </intent-filter>
-        </service>
-
-        <service
             android:name=".service.SiempoNotificationListener_"
             android:label="Siempo Notification"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
