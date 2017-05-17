@@ -24,7 +24,7 @@ public interface Launcher3Prefs {
     boolean isPauseAllowCallsChecked();
 
     @DefaultBoolean(false)
-    boolean isNotificationBlockerServiceRunning();
+    boolean isNotificationBlockerRunning();
 
     // Tempo related settings
 

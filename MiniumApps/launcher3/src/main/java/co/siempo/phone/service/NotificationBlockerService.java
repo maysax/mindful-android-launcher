@@ -27,6 +27,7 @@ import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.notification.NotificationUtility;
+import co.siempo.phone.util.PackageUtil;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -78,7 +79,7 @@ public class NotificationBlockerService extends NotificationListenerService {
         boolean start = intent != null && intent.getBooleanExtra("start", false);
 
         if (start) {
-            if (!prefs.isNotificationBlockerServiceRunning().get()) {
+            if (!prefs.isNotificationBlockerRunning().get()) {
                 currentFilter = getCurrentInterruptionFilter();
                 currentRingerMode = audioManager.getRingerMode();
                 Tracer.i("NotificationBlockerService stating ...");
@@ -107,7 +108,7 @@ public class NotificationBlockerService extends NotificationListenerService {
             stopForeground(true);
         }
 
-        prefs.isNotificationBlockerServiceRunning().put(start);
+        prefs.isNotificationBlockerRunning().put(start);
 
         return super.onStartCommand(intent, flags, startId);
 
@@ -125,48 +126,6 @@ public class NotificationBlockerService extends NotificationListenerService {
         Tracer.d("onInterruptionFilterChanged(" + interruptionFilter + ')');
     }
 
-    @TargetApi(21)
-    public void onNotificationPosted(StatusBarNotification notification) {
-        String info = "Notification package: " + notification.getPackageName()
-                + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
-                + " Details: " + notification.getNotification().toString()
-                + " Ticker: " + notification.getNotification().tickerText;
-
-        Tracer.d("Notification posted: " + info);
-
-        if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
-            cancelNotification(notification.getKey());
-        } else {
-            String packageName = notification.getPackageName();
-            if (packageName.contains("telecom") || packageName.contains("dialer") || packageName.contains("messaging") || packageName.contains("minium")) {
-                // should pass
-            } else {
-                if (UIUtils.isSiempoLauncher(getApplicationContext())) {
-                    cancelNotification(notification.getKey());
-                    saveNotification(notification.getPackageName(), notification.getPostTime(),
-                            notification.getNotification().tickerText);
-                }
-            }
-        }
-    }
-
-    public void onNotificationRemoved(StatusBarNotification notification) {
-        Tracer.d("notification removed " + notification.getPackageName());
-    }
-
-    private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
-        try {
-            StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
-
-            StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
-            storage.setContent(tickerText.toString());
-            storage.setPackageName(packageName);
-            storage.setPostTime(postTime);
-            statusStorageDao.insert(storage);
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-        }
-    }
 
     private void showNotification() {
         Intent i = new Intent(this, CoreActivity.class);

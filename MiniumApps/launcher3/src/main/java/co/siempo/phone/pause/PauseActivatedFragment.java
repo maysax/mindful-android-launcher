@@ -1,5 +1,6 @@
 package co.siempo.phone.pause;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -28,6 +29,8 @@ import co.siempo.phone.service.NotificationBlockerService_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
+
+import static co.siempo.phone.app.Launcher3App.DND_START_STOP_ACTION;
 
 /**
  * Created by Shahab on 3/16/2017.
@@ -88,7 +91,7 @@ public class PauseActivatedFragment extends CoreFragment {
         endingLayout.setVisibility(View.INVISIBLE);
         imgBackground.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
         launcherPrefs.isPauseActive().put(true);
-        NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
+        getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
     }
 
     private void startPause() {
@@ -101,7 +104,7 @@ public class PauseActivatedFragment extends CoreFragment {
         Calendar cal = Calendar.getInstance(Locale.US);
         cal.add(Calendar.MILLISECOND, maxMillis);
         txtEndingTime.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(cal.getTime()));
-        NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
+        getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
     }
 
     @Click
@@ -140,7 +143,7 @@ public class PauseActivatedFragment extends CoreFragment {
         seekbar.setShowTitle(false);
         handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
-        NotificationBlockerService_.intent(getActivity()).extra("start", false).start();
+        getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
         getActivity().finish();
     }
 }

@@ -35,6 +35,7 @@ import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.DateUtils;
 
 import static co.siempo.phone.app.Constants.DEFAULT_TEMPO_MINUTE;
+import static co.siempo.phone.app.Launcher3App.DND_START_STOP_ACTION;
 
 @EFragment(R.layout.fragment_tempo)
 public class TempoFragment extends CoreFragment {
@@ -108,7 +109,7 @@ public class TempoFragment extends CoreFragment {
         launcherPrefs.isTempoActive().put(false);
         setStatus();
         EventBus.getDefault().post(new TempoEvent(false));
-        NotificationBlockerService_.intent(getActivity()).extra("start", false).start();
+        getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
         tempoHandler();
         if (alarmMgr != null) alarmMgr.cancel(alarmIntent);
     }
@@ -118,7 +119,7 @@ public class TempoFragment extends CoreFragment {
         setAlarm();
         launcherPrefs.isTempoActive().put(true);
         setStatus();
-        NotificationBlockerService_.intent(getActivity()).extra("start", true).start();
+        getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
         EventBus.getDefault().post(new TempoEvent(true));
     }
 

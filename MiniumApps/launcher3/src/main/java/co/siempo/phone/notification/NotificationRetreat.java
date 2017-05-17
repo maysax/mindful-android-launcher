@@ -19,6 +19,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
+import co.siempo.phone.util.PackageUtil;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.UIUtils;
 
@@ -39,7 +40,7 @@ public class NotificationRetreat {
     }
 
     public void retreat() {
-        if (!UIUtils.isSiempoLauncher(context)) {
+        if (!PackageUtil.isSiempoLauncher(context)) {
             Tracer.d("Default launcher is not siempo");
             StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
             List<StatusBarNotificationStorage> list = statusStorageDao.queryBuilder()

@@ -120,7 +120,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         registerReceiver(vReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
 
-        NotificationBlockerService_.intent(this).extra("start", true).start();
+        // NotificationBlockerService_.intent(this).extra("start", true).start();
 
         FirebaseHelper firebaseHelper = new FirebaseHelper(this);
         firebaseHelper.testEvent1();

@@ -121,10 +121,27 @@
             android:enabled="true"
             android:label="@string/app_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter android:priority="999">
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".service.SiempoNotificationListener_"
+            android:label="Siempo Notification"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".receiver.DndStartStopReceiver_">
+            <intent-filter>
+                <action android:name="siempo.intent.action.DND_START_STOP"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.SiempoDndService_"/>
 
         <receiver
             android:name=".msg.SmsReceiver_"

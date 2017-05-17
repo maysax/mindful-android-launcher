@@ -117,12 +117,4 @@ public class UIUtils {
         return (int)metrics.density;
     }
 
-    public static boolean isSiempoLauncher(Context context) {
-        Intent intent= new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-        return defaultLauncherStr.equals(context.getPackageName());
-    }
-
 }
