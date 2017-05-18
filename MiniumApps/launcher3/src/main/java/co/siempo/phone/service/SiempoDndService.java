@@ -18,7 +18,7 @@ import minium.co.core.ui.CoreActivity;
 @EService
 public class SiempoDndService extends Service {
 
-    private static final int NOTIFICATION_ID = 4432;
+    public static final int NOTIFICATION_ID = 4432;
     public static final String KEY_START = "start";
 
     @SystemService

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.service.notification.StatusBarNotification;
+
+import co.siempo.phone.service.SiempoDndService;
 
 /**
  * Created by Shahab on 5/17/2017.
@@ -29,6 +32,10 @@ public class PackageUtil {
 
     public static boolean isSiempo(String pkg) {
         return pkg.contains("siempo");
+    }
+
+    public static boolean isSiempoBlocker(int notifId) {
+        return notifId == SiempoDndService.NOTIFICATION_ID;
     }
 
     public static int getIdByPackage(String pkg) {

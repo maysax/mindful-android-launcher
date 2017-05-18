@@ -12,9 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
+import co.siempo.phone.notification.NotificationUtility;
+import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
+import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import co.siempo.phone.util.PackageUtil;
 import minium.co.core.log.Tracer;
 
@@ -37,7 +41,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         super.onNotificationPosted(notification);
         Tracer.d("Notification posted: " + getNotificationToString(notification));
 
-        if (PackageUtil.isSiempo(notification.getPackageName())) {
+        if (PackageUtil.isSiempoBlocker(notification.getId())) {
             requestInterruptionFilter(INTERRUPTION_FILTER_NONE);
             prefs.isNotificationBlockerRunning().put(true);
         } else if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
@@ -75,8 +79,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
         super.onNotificationRemoved(notification);
         Tracer.d("Notification removed: " + getNotificationToString(notification));
 
-        if (PackageUtil.isSiempo(notification.getPackageName())) {
+        if (PackageUtil.isSiempoBlocker(notification.getId())) {
             prefs.isNotificationBlockerRunning().put(false);
+        } else if (PackageUtil.isMsgPackage(notification.getPackageName())) {
+            new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
         }
     }
 
