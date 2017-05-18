@@ -30,4 +30,12 @@ public class PackageUtil {
     public static boolean isSiempo(String pkg) {
         return pkg.contains("siempo");
     }
+
+    public static int getIdByPackage(String pkg) {
+        int ret = 0;
+        for (int i = 0; i < pkg.length(); i++) {
+            ret += ((i + 1) * pkg.charAt(i));
+        }
+        return ret;
+    }
 }

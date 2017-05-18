@@ -1,7 +1,6 @@
 package co.siempo.phone.notification;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
+import android.app.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -72,8 +71,7 @@ public class NotificationRetreat {
     private void notificationBuilder(StatusBarNotificationStorage storage) {
 
         try {
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(context)
+            android.app.Notification.Builder mBuilder = new android.app.Notification.Builder(context)
                             .setSmallIcon(R.drawable.ic_siempo_notification)
                             .setContentTitle(getAppName(storage.getPackageName()))
                             .setContentText(storage.getContent())
@@ -96,8 +94,14 @@ public class NotificationRetreat {
                             PendingIntent.FLAG_UPDATE_CURRENT
                     );
             mBuilder.setContentIntent(resultPendingIntent);
+
+            android.app.Notification.InboxStyle inboxStyle = new android.app.Notification.InboxStyle();
+            inboxStyle.setBigContentTitle(getAppName(storage.getPackageName()));
+            inboxStyle.addLine(storage.getContent());
+            mBuilder.setStyle(inboxStyle);
+
             // mId allows you to update the notification later on.
-            notificationManager.notify(storage.getId().intValue(), mBuilder.build());
+            notificationManager.notify(PackageUtil.getIdByPackage(storage.getPackageName()), mBuilder.build());
         } catch (Exception e) {
             Tracer.e(e,e.getMessage());
         }
