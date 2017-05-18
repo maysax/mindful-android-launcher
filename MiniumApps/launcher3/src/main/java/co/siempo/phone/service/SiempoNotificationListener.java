@@ -76,7 +76,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Tracer.d("Notification removed: " + getNotificationToString(notification));
 
         if (PackageUtil.isSiempo(notification.getPackageName())) {
-            requestInterruptionFilter(INTERRUPTION_FILTER_ALL);
             prefs.isNotificationBlockerRunning().put(false);
         }
     }

@@ -11,6 +11,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.service.SiempoDndService_;
+import minium.co.core.log.Tracer;
 
 import static android.media.AudioManager.RINGER_MODE_SILENT;
 
@@ -42,9 +43,11 @@ public class DndStartStopReceiver extends BroadcastReceiver {
 
     private void startBlocker(Context context, boolean start) {
         if (start) {
+            Tracer.d("Starting Dnd mode");
             SiempoDndService_.intent(context).extra(SiempoDndService_.KEY_START, "start").start();
             audioManager.setRingerMode(RINGER_MODE_SILENT);
         } else {
+            Tracer.d("Stopping Dnd mode");
             SiempoDndService_.intent(context).start();
             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         }
