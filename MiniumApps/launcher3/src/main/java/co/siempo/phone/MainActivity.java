@@ -28,9 +28,11 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.notification.NotificationRetreat_;
@@ -82,6 +84,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @SystemService
     NotificationManager notificationManager;
 
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
@@ -126,6 +131,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         FirebaseHelper firebaseHelper = new FirebaseHelper(this);
         firebaseHelper.testEvent1();
         firebaseHelper.testEvent2();
+
+        launcherPrefs.updatePrompt().put(true);
     }
 
     @UiThread(delay = 500)
@@ -174,7 +181,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         @Override
         public void onPermissionGranted() {
             loadViews();
-            checkVersion();
         }
 
         @Override
@@ -205,7 +211,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == DialogInterface.BUTTON_POSITIVE) {
-                            new ActivityHelper(MainActivity.this).openPlayStoreApp();
+                            launcherPrefs.updatePrompt().put(false);
+                            new ActivityHelper(MainActivity.this).openBecomeATester();
                         }
                     }
                 });
@@ -258,6 +265,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (launcherPrefs.updatePrompt().get())
+            checkVersion();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
@@ -280,6 +294,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (pager != null) pager.setCurrentItem(0, true);
         if (statusBarHandler != null && !statusBarHandler.isActive())
             statusBarHandler.requestStatusBarCustomization();
+
     }
 
     @Override

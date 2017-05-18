@@ -51,4 +51,7 @@ public interface Launcher3Prefs {
 
     @DefaultString("")
     String awayMessage();
+
+    @DefaultBoolean(true)
+    boolean updatePrompt();
 }

@@ -20,6 +20,7 @@ import co.siempo.phone.applist.AppOpenEvent;
 import co.siempo.phone.applist.AppOpenHandler;
 import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
+import co.siempo.phone.ui.UpdateActivity_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -208,6 +209,10 @@ public class ActivityHelper {
             context.startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         }
+    }
+
+    public void openBecomeATester() {
+        UpdateActivity_.intent(context).start();
     }
 
     public void openCallApp() {
