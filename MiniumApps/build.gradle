@@ -70,6 +70,8 @@ project.ext {
     keyboardvisibilityEventVersion = "2.0.1"
     leakCanaryVersion = "1.5"
     junitVersion = "4.12"
+    steppersVersion = "0.3.3-SNAPSHOT"
+    signalStrengthVersion = "0.0.4"
 
     // greendao database version
     databaseVersion = 3
