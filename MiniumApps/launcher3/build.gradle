@@ -45,6 +45,7 @@ android {
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 dependencies {
@@ -65,6 +66,7 @@ dependencies {
     compile project(':notes')
     compile project(':halo-circle-seekbar')
     compile project(':horizontal-timepicker')
+    compile project(':status')
 
     //compile "com.github.satyan:sugar:$sugarOrmVersion"
     compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
