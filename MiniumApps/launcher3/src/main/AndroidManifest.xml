@@ -179,7 +179,6 @@
                 <action android:name="android.intent.action.AIRPLANE_MODE" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.WifiDataReceiver" />
 
         <activity android:name=".ui.UpdateActivity_"></activity>
     </application>
