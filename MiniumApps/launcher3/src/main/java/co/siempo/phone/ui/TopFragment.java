@@ -239,7 +239,7 @@ public class TopFragment extends CoreFragment {
                 com.james.status.R.drawable.ic_battery_retro_full
         };
 
-        return icons [level];
+        return icons [level + 1];
     }
 
     private int getWifiIcon(int level) {
@@ -252,7 +252,7 @@ public class TopFragment extends CoreFragment {
                 com.james.status.R.drawable.ic_wifi_triangle_4
         };
 
-        return icons [level];
+        return icons [level + 1];
     }
 
     private int getNetworkIcon(int level) {
@@ -265,6 +265,6 @@ public class TopFragment extends CoreFragment {
                 com.james.status.R.drawable.ic_signal_4
         };
 
-        return icons [level];
+        return icons [level + 1];
     }
 }
