@@ -40,6 +40,7 @@ import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
 import co.siempo.phone.receiver.NetworkDataReceiver;
+import co.siempo.phone.receiver.WifiDataReceiver;
 import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.util.PackageUtil;
@@ -76,7 +77,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     MainSlidePagerAdapter sliderAdapter;
 
-
     StatusBarHandler statusBarHandler;
 
     @Bean
@@ -94,6 +94,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     IDynamicStatus airplaneModeDataReceiver;
     IDynamicStatus batteryDataReceiver;
     IDynamicStatus networkDataReceiver;
+    IDynamicStatus wifiDataReceiver;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -280,6 +281,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
         airplaneModeDataReceiver.register(this);
+
+        wifiDataReceiver = new WifiDataReceiver();
+        wifiDataReceiver.register(this);
         batteryDataReceiver = new BatteryDataReceiver();
         batteryDataReceiver.register(this);
         networkDataReceiver = new NetworkDataReceiver(this);
@@ -299,6 +303,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         airplaneModeDataReceiver.unregister(this);
         batteryDataReceiver.unregister(this);
         networkDataReceiver.unregister(this);
+        wifiDataReceiver.unregister(this);
+
     }
 
     @Override
