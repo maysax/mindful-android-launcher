@@ -10,6 +10,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
+import co.siempo.phone.event.ConnectivityEvent;
+import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.UIUtils;
 
@@ -20,24 +22,7 @@ import minium.co.core.util.UIUtils;
 public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatus{
     @Override
     public void onReceive(Context context, Intent intent) {
-        NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-        if (networkInfo == null){
-           // networkInfo = icon.connectivityManager.getActiveNetworkInfo();
-        }
-
-        if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI && networkInfo.isConnected()){
-           // icon.onDrawableUpdate(WifiManager.calculateSignalLevel(icon.wifiManager.getConnectionInfo().getRssi(), 5));
-        }
-        else {
-            //icon.onDrawableUpdate(-1);
-        }
-        //UIUtils.toast(context,"network changed");
-
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        int numberOfLevels = 5;
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
-        Tracer.d("WifiDataReceiver, label: "+level);
+        handleIntent( context,  intent);
     }
 
     @Override
@@ -47,7 +32,7 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
 
     @Override
     public void register(Context context) {
-        context.registerReceiver(this, getIntentFilter());
+        handleIntent(context,  context.registerReceiver(this, getIntentFilter()));
     }
 
     @Override
@@ -57,6 +42,27 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
 
     @Override
     public void handleIntent(Context context, Intent intent) {
+        NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+       /* if (networkInfo == null){
+            // networkInfo = icon.connectivityManager.getActiveNetworkInfo();
+        }
+
+        if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI && networkInfo.isConnected()){
+            // icon.onDrawableUpdate(WifiManager.calculateSignalLevel(icon.wifiManager.getConnectionInfo().getRssi(), 5));
+        }
+        else {
+            //icon.onDrawableUpdate(-1);
+        }*/
+        //UIUtils.toast(context,"network changed");
+        if (networkInfo != null){
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            int numberOfLevels = 5;
+            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
+            Tracer.d("WifiDataReceiver, label: "+level);
+            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
+
+        }
 
     }
 }
