@@ -222,21 +222,21 @@ public class TopFragment extends CoreFragment {
     private int getBatteryIcon2(int level) {
         int icons [] = {
                 IconStyleData.TYPE_VECTOR,
-                com.james.status.R.drawable.ic_battery_retro_alert,
-                com.james.status.R.drawable.ic_battery_retro_20,
-                com.james.status.R.drawable.ic_battery_retro_30,
-                com.james.status.R.drawable.ic_battery_retro_50,
-                com.james.status.R.drawable.ic_battery_retro_60,
-                com.james.status.R.drawable.ic_battery_retro_80,
-                com.james.status.R.drawable.ic_battery_retro_90,
-                com.james.status.R.drawable.ic_battery_retro_full,
-                com.james.status.R.drawable.ic_battery_retro_20,
-                com.james.status.R.drawable.ic_battery_retro_30,
-                com.james.status.R.drawable.ic_battery_retro_50,
-                com.james.status.R.drawable.ic_battery_retro_60,
-                com.james.status.R.drawable.ic_battery_retro_80,
-                com.james.status.R.drawable.ic_battery_retro_90,
-                com.james.status.R.drawable.ic_battery_retro_full
+                com.james.status.R.drawable.ic_battery_alert,
+                com.james.status.R.drawable.ic_battery_20,
+                com.james.status.R.drawable.ic_battery_30,
+                com.james.status.R.drawable.ic_battery_50,
+                com.james.status.R.drawable.ic_battery_60,
+                com.james.status.R.drawable.ic_battery_80,
+                com.james.status.R.drawable.ic_battery_90,
+                com.james.status.R.drawable.ic_battery_full,
+                com.james.status.R.drawable.ic_battery_charging_20,
+                com.james.status.R.drawable.ic_battery_charging_30,
+                com.james.status.R.drawable.ic_battery_charging_50,
+                com.james.status.R.drawable.ic_battery_charging_60,
+                com.james.status.R.drawable.ic_battery_charging_80,
+                com.james.status.R.drawable.ic_battery_charging_90,
+                com.james.status.R.drawable.ic_battery_charging_full
         };
 
         return icons [level + 1];
