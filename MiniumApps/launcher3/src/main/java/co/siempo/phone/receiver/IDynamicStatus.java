@@ -1,6 +1,7 @@
 package co.siempo.phone.receiver;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 
 /**
@@ -11,5 +12,6 @@ public interface IDynamicStatus {
     public IntentFilter getIntentFilter();
     public void register(Context context);
     public void unregister(Context context);
+    public void handleIntent(Context context, Intent intent);
 
 }

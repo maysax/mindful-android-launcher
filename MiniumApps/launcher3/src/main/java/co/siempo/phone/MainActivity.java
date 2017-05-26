@@ -37,6 +37,7 @@ import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
+import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
 import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.service.SiempoNotificationListener_;
@@ -90,6 +91,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     Launcher3Prefs_ launcherPrefs;
 
     IDynamicStatus airplaneModeDataReceiver;
+    IDynamicStatus batteryDataReceiver;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -276,6 +278,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
         airplaneModeDataReceiver.register(this);
+        batteryDataReceiver = new BatteryDataReceiver();
+        batteryDataReceiver.register(this);
     }
 
     @Override
@@ -289,6 +293,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
 
         airplaneModeDataReceiver.unregister(this);
+        batteryDataReceiver.unregister(this);
     }
 
     @Override
