@@ -69,6 +69,9 @@ public class TopFragment extends CoreFragment {
     @ViewById
     ImageView imgWifi;
 
+    @ViewById
+    ImageView imgAirplane;
+
     FontAwesomeIcons [] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
             FontAwesomeIcons.fa_battery_1,
@@ -97,6 +100,7 @@ public class TopFragment extends CoreFragment {
         imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
         imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
         imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
+        imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
 
         long notifCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
         imgNotification.setVisibility(notifCount == 0 ? View.GONE : View.VISIBLE);
@@ -197,8 +201,33 @@ public class TopFragment extends CoreFragment {
         if (event.getState() == ConnectivityEvent.AIRPLANE) {
             imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
             imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
+            imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
         } else if (event.getState() == ConnectivityEvent.WIFI) {
             imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE :  View.GONE);
+        } else if (event.getState() == ConnectivityEvent.BATTERY) {
+            imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
         }
+    }
+
+    private int getBatteryIcon2(int level) {
+        int icons [] = {
+                com.james.status.R.drawable.ic_battery_retro_alert,
+                com.james.status.R.drawable.ic_battery_retro_20,
+                com.james.status.R.drawable.ic_battery_retro_30,
+                com.james.status.R.drawable.ic_battery_retro_50,
+                com.james.status.R.drawable.ic_battery_retro_60,
+                com.james.status.R.drawable.ic_battery_retro_80,
+                com.james.status.R.drawable.ic_battery_retro_90,
+                com.james.status.R.drawable.ic_battery_retro_full,
+                com.james.status.R.drawable.ic_battery_retro_20,
+                com.james.status.R.drawable.ic_battery_retro_30,
+                com.james.status.R.drawable.ic_battery_retro_50,
+                com.james.status.R.drawable.ic_battery_retro_60,
+                com.james.status.R.drawable.ic_battery_retro_80,
+                com.james.status.R.drawable.ic_battery_retro_90,
+                com.james.status.R.drawable.ic_battery_retro_full
+        };
+
+        return icons [level];
     }
 }

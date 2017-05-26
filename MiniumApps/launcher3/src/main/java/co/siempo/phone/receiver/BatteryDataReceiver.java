@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 
+import co.siempo.phone.event.ConnectivityEvent;
+import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
 
 /**
@@ -48,5 +50,6 @@ public class BatteryDataReceiver extends BroadcastReceiver implements IDynamicSt
             iconLevel += 7;
 
         Tracer.d("BatteryDataReceiver level: " + iconLevel);
+        EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BATTERY, iconLevel));
     }
 }

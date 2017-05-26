@@ -23,10 +23,10 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE") ||
                 intent.getAction().equals("android.net.wifi.WIFI_STATE_CHANGED")) {
             Tracer.i(NetworkUtil.getConnectivityStatusString(context));
-            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI));
+            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, 0));
         } else if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {
             Tracer.i("Airplane mode: " + isAirplaneModeOn(context));
-            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.AIRPLANE));
+            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.AIRPLANE, 0));
         }
     }
 }
