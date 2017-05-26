@@ -4,6 +4,7 @@ package co.siempo.phone.ui;
 import android.app.Fragment;
 import android.content.Context;
 import android.media.Image;
+import android.net.wifi.WifiManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -11,12 +12,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -72,6 +75,9 @@ public class TopFragment extends CoreFragment {
     @ViewById
     ImageView imgAirplane;
 
+    @SystemService
+            WifiManager wifiManager;
+
     FontAwesomeIcons [] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
             FontAwesomeIcons.fa_battery_1,
@@ -101,6 +107,7 @@ public class TopFragment extends CoreFragment {
         imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
         imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
         imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
+        imgWifi.setImageResource(getWifiIcon(WifiManager.calculateSignalLevel(wifiManager.getConnectionInfo().getRssi(), 5)));
 
         long notifCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
         imgNotification.setVisibility(notifCount == 0 ? View.GONE : View.VISIBLE);
@@ -204,13 +211,17 @@ public class TopFragment extends CoreFragment {
             imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
         } else if (event.getState() == ConnectivityEvent.WIFI) {
             imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE :  View.GONE);
+            imgWifi.setImageResource(getWifiIcon(event.getValue()));
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
             imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
+        } else if (event.getState() == ConnectivityEvent.NETWORK) {
+            imgSignal.setImageResource(getNetworkIcon(event.getValue()));
         }
     }
 
     private int getBatteryIcon2(int level) {
         int icons [] = {
+                IconStyleData.TYPE_VECTOR,
                 com.james.status.R.drawable.ic_battery_retro_alert,
                 com.james.status.R.drawable.ic_battery_retro_20,
                 com.james.status.R.drawable.ic_battery_retro_30,
@@ -226,6 +237,32 @@ public class TopFragment extends CoreFragment {
                 com.james.status.R.drawable.ic_battery_retro_80,
                 com.james.status.R.drawable.ic_battery_retro_90,
                 com.james.status.R.drawable.ic_battery_retro_full
+        };
+
+        return icons [level];
+    }
+
+    private int getWifiIcon(int level) {
+        int icons [] = {
+                IconStyleData.TYPE_VECTOR,
+                com.james.status.R.drawable.ic_wifi_triangle_0,
+                com.james.status.R.drawable.ic_wifi_triangle_1,
+                com.james.status.R.drawable.ic_wifi_triangle_2,
+                com.james.status.R.drawable.ic_wifi_triangle_3,
+                com.james.status.R.drawable.ic_wifi_triangle_4
+        };
+
+        return icons [level];
+    }
+
+    private int getNetworkIcon(int level) {
+        int icons [] = {
+                IconStyleData.TYPE_VECTOR,
+                com.james.status.R.drawable.ic_signal_0,
+                com.james.status.R.drawable.ic_signal_1,
+                com.james.status.R.drawable.ic_signal_2,
+                com.james.status.R.drawable.ic_signal_3,
+                com.james.status.R.drawable.ic_signal_4
         };
 
         return icons [level];

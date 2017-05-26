@@ -10,6 +10,8 @@ import android.telephony.TelephonyManager;
 
 import com.james.status.data.icon.NetworkIconData;
 
+import co.siempo.phone.event.ConnectivityEvent;
+import de.greenrobot.event.EventBus;
 import james.signalstrengthslib.SignalStrengths;
 import minium.co.core.log.Tracer;
 
@@ -31,8 +33,11 @@ public class NetworkDataReceiver extends PhoneStateListener implements IDynamicS
     @Override
     public void onSignalStrengthsChanged(SignalStrength signalStrength) {
         super.onSignalStrengthsChanged(signalStrength);
-        if (isRegistered)
-            Tracer.d("NetworkDataReceiver " + (int) Math.round(SignalStrengths.getFirstValid(signalStrength)));
+        if (isRegistered) {
+            int round = (int) Math.round(SignalStrengths.getFirstValid(signalStrength));
+            Tracer.d("NetworkDataReceiver " + round);
+            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.NETWORK, round));
+        }
     }
 
     @Override
