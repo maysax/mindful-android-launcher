@@ -224,6 +224,13 @@ public class AppListLoader extends AsyncTaskLoader<List<ApplistDataModel>> {
 
             }
         }
+
+        Collections.sort(apps, new Comparator<ApplistDataModel>() {
+            @Override
+            public int compare(ApplistDataModel lhs, ApplistDataModel rhs) {
+                return String.CASE_INSENSITIVE_ORDER.compare(lhs.getName(), rhs.getName());
+            }
+        });
         return apps;
     }
 }

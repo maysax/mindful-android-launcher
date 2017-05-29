@@ -42,7 +42,8 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
 
     @Override
     public void handleIntent(Context context, Intent intent) {
-        NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+        try {
+            NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
        /* if (networkInfo == null){
             // networkInfo = icon.connectivityManager.getActiveNetworkInfo();
         }
@@ -53,15 +54,18 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
         else {
             //icon.onDrawableUpdate(-1);
         }*/
-        //UIUtils.toast(context,"network changed");
-        if (networkInfo != null){
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            int numberOfLevels = 5;
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
-            Tracer.d("WifiDataReceiver, label: "+level);
-            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
+            //UIUtils.toast(context,"network changed");
+            if (networkInfo != null){
+                WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                int numberOfLevels = 5;
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
+                Tracer.d("WifiDataReceiver, label: "+level);
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
 
+            }
+        } catch (Exception e) {
+            Tracer.e(e);
         }
 
     }

@@ -84,6 +84,7 @@ dependencies {
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
     compile 'com.google.firebase:firebase-core:10.2.4'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.github.javiersantos:AppUpdater:2.6.1'
 }
 greendao {
     schemaVersion "${databaseVersion}".toInteger()

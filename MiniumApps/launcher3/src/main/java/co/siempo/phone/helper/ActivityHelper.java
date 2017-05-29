@@ -212,7 +212,14 @@ public class ActivityHelper {
     }
 
     public void openBecomeATester() {
-        UpdateActivity_.intent(context).start();
+        final String appPackageName = context.getPackageName(); // getPackageName() from Context or Activity object
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException anfe) {
+
+        }
+//        UpdateActivity_.intent(context).start();
     }
 
     public void openCallApp() {

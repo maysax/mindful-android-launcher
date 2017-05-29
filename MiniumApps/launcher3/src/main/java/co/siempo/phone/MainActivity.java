@@ -16,6 +16,9 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -90,11 +93,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
-
-    IDynamicStatus airplaneModeDataReceiver;
-    IDynamicStatus batteryDataReceiver;
-    IDynamicStatus networkDataReceiver;
-    IDynamicStatus wifiDataReceiver;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -279,15 +277,19 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (launcherPrefs.updatePrompt().get())
             checkVersion();
 
-        airplaneModeDataReceiver = new AirplaneModeDataReceiver();
-        airplaneModeDataReceiver.register(this);
-
-        wifiDataReceiver = new WifiDataReceiver();
-        wifiDataReceiver.register(this);
-        batteryDataReceiver = new BatteryDataReceiver();
-        batteryDataReceiver.register(this);
-        networkDataReceiver = new NetworkDataReceiver(this);
-        networkDataReceiver.register(this);
+//        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+//            new AppUpdater(this)
+//                    .setDisplay(Display.DIALOG)
+//                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+//                    .showEvery(5)
+//                    .setTitleOnUpdateAvailable("Update available")
+//                    .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
+//                    .setTitleOnUpdateNotAvailable("Update not available")
+//                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
+//                    .setButtonUpdate("Update")
+//                    .setButtonDismiss("Maybe later")
+//                    .start();
+//        }
     }
 
     @Override
@@ -299,11 +301,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        airplaneModeDataReceiver.unregister(this);
-        batteryDataReceiver.unregister(this);
-        networkDataReceiver.unregister(this);
-        wifiDataReceiver.unregister(this);
 
     }
 

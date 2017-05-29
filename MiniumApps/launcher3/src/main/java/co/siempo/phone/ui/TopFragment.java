@@ -37,6 +37,11 @@ import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.msg.SmsEvent;
 import co.siempo.phone.msg.SmsEventType;
 import co.siempo.phone.network.NetworkUtil;
+import co.siempo.phone.receiver.AirplaneModeDataReceiver;
+import co.siempo.phone.receiver.BatteryDataReceiver;
+import co.siempo.phone.receiver.IDynamicStatus;
+import co.siempo.phone.receiver.NetworkDataReceiver;
+import co.siempo.phone.receiver.WifiDataReceiver;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.DroidPrefs_;
@@ -90,6 +95,10 @@ public class TopFragment extends CoreFragment {
     SignalStrengthListener listener;
     private int currentBatteryLevel;
 
+    IDynamicStatus airplaneModeDataReceiver;
+    IDynamicStatus batteryDataReceiver;
+    IDynamicStatus networkDataReceiver;
+    IDynamicStatus wifiDataReceiver;
 
     public TopFragment() {
         // Required empty public constructor
@@ -129,6 +138,30 @@ public class TopFragment extends CoreFragment {
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        airplaneModeDataReceiver = new AirplaneModeDataReceiver();
+        airplaneModeDataReceiver.register(context);
+
+        wifiDataReceiver = new WifiDataReceiver();
+        wifiDataReceiver.register(context);
+        batteryDataReceiver = new BatteryDataReceiver();
+        batteryDataReceiver.register(context);
+        networkDataReceiver = new NetworkDataReceiver(context);
+        networkDataReceiver.register(context);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        airplaneModeDataReceiver.unregister(context);
+        batteryDataReceiver.unregister(context);
+        networkDataReceiver.unregister(context);
+        wifiDataReceiver.unregister(context);
     }
 
     @Override
