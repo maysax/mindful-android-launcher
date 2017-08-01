@@ -502,9 +502,20 @@ public class ChipsEditText extends MultilineEditText {
       public void onType(String query);
    }
 
-   @Override
-   public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-      if (keyCode == KeyEvent.KEYCODE_BACK) return true;
-      return false;
-   }
+    @Override
+    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) return !isNotificationVisible;
+        return false;
+    }
+
+
+    public boolean isNotificationVisible() {
+        return isNotificationVisible;
+    }
+
+    public void setNotificationVisible(boolean notificationVisible) {
+        isNotificationVisible = notificationVisible;
+    }
+
+    boolean isNotificationVisible = false;
 }

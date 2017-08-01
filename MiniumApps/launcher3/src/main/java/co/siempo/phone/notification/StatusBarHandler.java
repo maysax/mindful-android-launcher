@@ -3,9 +3,11 @@ package co.siempo.phone.notification;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -42,22 +44,22 @@ public class StatusBarHandler {
     private int status_bar_height = 0;
     private static List<customViewGroup> blockingViewCollection = new ArrayList<>();
 
+    //MainActivity.OnVisibilityListener onVisibilityListener;
     public StatusBarHandler(Context context) {
         mContext = context;
         blockingView = new customViewGroup(context);
+        //this.onVisibilityListener = mCallback;
     }
 
-    public  void requestStatusBarCustomization(){
+    public void requestStatusBarCustomization() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(mContext)) {
-                Toast.makeText(mContext, TAG +  " User can access system settings without this permission!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, TAG + " User can access system settings without this permission!", Toast.LENGTH_SHORT).show();
+                preventStatusBarExpansion();
+            } else {
                 preventStatusBarExpansion();
             }
-            else
-            {
-                preventStatusBarExpansion();
-            }
-        }else
+        } else
             preventStatusBarExpansion();
     }
 
@@ -70,11 +72,11 @@ public class StatusBarHandler {
             WindowManager manager = ((WindowManager) mContext.getApplicationContext()
                     .getSystemService(Context.WINDOW_SERVICE));
 
-            Activity activity = (Activity)mContext;
+            Activity activity = (Activity) mContext;
             WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams();
             localLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
             localLayoutParams.gravity = Gravity.TOP;
-            localLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
+            localLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
 
                     // this is to enable the notification to recieve touch events
                     WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
@@ -99,7 +101,7 @@ public class StatusBarHandler {
             blockingViewCollection.add(blockingView);
             isActive = true;
         } catch (Exception e) {
-            Tracer.e(e,e.getMessage());
+            Tracer.e(e, e.getMessage());
         }
     }
 
@@ -118,20 +120,20 @@ public class StatusBarHandler {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
 
-            if(event.getY() > status_bar_height){
-                if(!isNotificationTrayVisible)
-                {
-                    System.out.println(TAG + " y position on Touch on notification tray "+ event.getY() + "status_bar_height " + status_bar_height);
+            if (event.getY() > status_bar_height) {
+                if (!isNotificationTrayVisible) {
+                    System.out.println(TAG + " y position on Touch on notification tray " + event.getY() + "status_bar_height " + status_bar_height);
                     //Intent intent = new Intent(mContext, NotificationFragment.class);
-                   //mContext. startActivity(intent);
+                    //mContext. startActivity(intent);
 //                    ((CoreActivity) mContext).loadChildFragment(NotificationFragment_.builder().build(), R.id.mainView);
 //                    ((CoreActivity) mContext).getFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_down, R.anim.slide_out_down);
                     try {
                         Config.isNotificationAlive = true;
                         FragmentTransaction ft = ((CoreActivity) mContext).getFragmentManager().beginTransaction();
-                        ft.setCustomAnimations(R.animator.push_down_in_no_alpha,R.animator.push_down_out_no_alpha);
-                        ft.replace(R.id.mainView,NotificationFragment_.builder().build());
+                        ft.setCustomAnimations(R.animator.push_down_in_no_alpha, R.animator.push_down_out_no_alpha);
+                        ft.replace(R.id.mainView, NotificationFragment_.builder().build());
                         ft.commitAllowingStateLoss();
+                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", true));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -150,33 +152,31 @@ public class StatusBarHandler {
      */
 
 
-    public void restoreStatusBarExpansion(){
+    public void restoreStatusBarExpansion() {
         System.out.println(TAG + " restoreStatusBarExpansion");
-        if(blockingView!=null)
+        if (blockingView != null)
             System.out.println(TAG + " restoreStatusBarExpansion  token == " + blockingView.getWindowToken());
-        if(blockingView!=null)
-            if (blockingView.getWindowToken()!=null) {
+        if (blockingView != null)
+            if (blockingView.getWindowToken() != null) {
                 WindowManager manager = ((WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
                 manager.removeView(blockingView);
                 isActive = false;
                 System.out.println(TAG + " restored StatusBar Expansion total used blocked view == " + blockingViewCollection.size());
 
-            }else
-            {
+            } else {
                 System.out.println(TAG + " restoreStatusBarExpansion got null ");
             }
 
-        for (customViewGroup b:blockingViewCollection
+        for (customViewGroup b : blockingViewCollection
                 ) {
 
-            if (b.getWindowToken()!=null) {
+            if (b.getWindowToken() != null) {
                 WindowManager manager = ((WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
                 manager.removeView(b);
                 isActive = false;
                 System.out.println(TAG + "  StatusBar total used blocked view == " + blockingViewCollection.size());
 
-            }else
-            {
+            } else {
                 System.out.println(TAG + " blockingView got null ");
             }
 

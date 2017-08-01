@@ -38,8 +38,12 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 @EViewGroup(R.layout.search_layout)
 public class SearchLayout extends CardView {
 
+    public ChipsEditText getTxtSearchBox() {
+        return txtSearchBox;
+    }
+
     @ViewById
-    protected ChipsEditText txtSearchBox;
+    ChipsEditText txtSearchBox;
 
     @ViewById
     protected ImageView btnClear;

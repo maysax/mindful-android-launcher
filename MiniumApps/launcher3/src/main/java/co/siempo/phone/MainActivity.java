@@ -1,6 +1,7 @@
 package co.siempo.phone;
 
 import android.Manifest;
+import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -12,13 +13,11 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -38,29 +37,22 @@ import java.util.ArrayList;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.receiver.AirplaneModeDataReceiver;
-import co.siempo.phone.receiver.BatteryDataReceiver;
-import co.siempo.phone.receiver.IDynamicStatus;
-import co.siempo.phone.receiver.NetworkDataReceiver;
-import co.siempo.phone.receiver.WifiDataReceiver;
-import co.siempo.phone.service.SiempoNotificationListener;
-import co.siempo.phone.service.SiempoNotificationListener_;
-import co.siempo.phone.util.PackageUtil;
-import de.greenrobot.event.EventBus;
-import minium.co.core.event.NFCEvent;
 import co.siempo.phone.main.MainSlidePagerAdapter;
-
+import co.siempo.phone.msg.SmsObserver;
+import co.siempo.phone.notification.NotificationFragment;
+import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
-import co.siempo.phone.msg.SmsObserver;
+import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.ui.TopFragment_;
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
+import minium.co.core.event.NFCEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
@@ -72,6 +64,7 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
+
     private static final String TAG = "MainActivity";
 
     public static int currentItem = 0;
@@ -80,7 +73,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     MainSlidePagerAdapter sliderAdapter;
 
-    StatusBarHandler statusBarHandler;
+    public StatusBarHandler statusBarHandler;
 
     @Bean
     TokenManager manager;
@@ -367,7 +360,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     public void onBackPressed() {
-        if (pager.getCurrentItem() == 1) {
+        if (statusBarHandler.isNotificationTrayVisible) {
+            Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+            if (f instanceof NotificationFragment) ;
+            {
+                ((NotificationFragment) f).animateOut();
+                LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
+            }
+        } else if (pager.getCurrentItem() == 1) {
             pager.setCurrentItem(0);
         }
     }

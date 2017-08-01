@@ -5,8 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,6 +31,7 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.contact.PhoneNumbersAdapter;
 import co.siempo.phone.event.CreateNoteEvent;
@@ -54,6 +61,7 @@ public class MainFragment extends CoreFragment {
     ListView listView;
 
     @ViewById
+    public
     SearchLayout searchLayout;
 
     @ViewById
@@ -106,12 +114,37 @@ public class MainFragment extends CoreFragment {
         moveSearchBar(false, null);
     }
 
+
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            searchLayout.getTxtSearchBox().setNotificationVisible(intent.getBooleanExtra("IsNotificationVisible", false));
+            String message = intent.getStringExtra("message");
+            Log.d("receiver", "Got message: " + message);
+        }
+    };
+
     @Override
     public void onResume() {
         super.onResume();
-        searchLayout.askFocus();
+        if (((MainActivity) getActivity()).statusBarHandler.isNotificationTrayVisible) {
+            searchLayout.clearFocus();
+            UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+        } else {
+            searchLayout.askFocus();
+        }
         if (adapter != null) adapter.getFilter().filter("");
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
+                new IntentFilter("IsNotificationVisible"));
 
+    }
+    @Override
+    public void onDestroy() {
+        // Unregister since the activity is about to be closed.
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
 
     void updateListViewLayout() {
