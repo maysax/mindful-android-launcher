@@ -74,7 +74,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     private static final String TAG = "MainActivity";
 
-
+    public static int currentItem = 0;
     @ViewById
     ViewPager pager;
 
@@ -157,6 +157,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
             @Override
             public void onPageSelected(int position) {
+                currentItem = position;
                 try {
                     if (position == 1)
                         UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
@@ -202,6 +203,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         PauseActivity_.intent(this).start();
     }
 
+    @Override
+    protected void onUserLeaveHint() {
+        UIUtils.hideSoftKeyboard(MainActivity.this, getWindow().getDecorView().getWindowToken());
+        super.onUserLeaveHint();
+    }
 
     void checkVersion() {
         Tracer.d("Checking if new version is available ... ");
@@ -313,7 +319,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             Tracer.e(e);
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
-        if (pager != null) pager.setCurrentItem(0, true);
+        if (pager != null) pager.setCurrentItem(currentItem, true);
         if (statusBarHandler != null && !statusBarHandler.isActive())
             statusBarHandler.requestStatusBarCustomization();
 
@@ -361,6 +367,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     public void onBackPressed() {
-
+        if (pager.getCurrentItem() == 1) {
+            pager.setCurrentItem(0);
+        }
     }
 }
