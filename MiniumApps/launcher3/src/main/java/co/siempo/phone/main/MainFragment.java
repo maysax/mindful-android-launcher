@@ -258,9 +258,9 @@ public class MainFragment extends CoreFragment {
         ObjectAnimator animY;
 
         if (isUp) {
-            animY = ObjectAnimator.ofFloat(searchLayout, "y", 25);
+            animY = ObjectAnimator.ofFloat(searchLayout, "y",40);
         } else {
-            animY = ObjectAnimator.ofFloat(searchLayout, "y", 540);
+            animY = ObjectAnimator.ofFloat(searchLayout, "y", UIUtils.getScreenHeight(getActivity())/3);
         }
 
         if (adapter != null) {
