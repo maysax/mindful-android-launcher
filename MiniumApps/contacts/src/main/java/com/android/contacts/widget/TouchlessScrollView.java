@@ -8,7 +8,7 @@ import android.widget.ScrollView;
 
 /**
  * A {@link ScrollView} that doesn't respond or intercept touch events.
- *
+ * <p>
  * This is used in combination with {@link com.android.contacts.widget.MultiShrinkScroller} so
  * that MultiShrinkScroller can handle all scrolling & saving.
  */

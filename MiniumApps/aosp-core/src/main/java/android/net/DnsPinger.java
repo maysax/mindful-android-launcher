@@ -56,10 +56,14 @@ public final class DnsPinger extends Handler {
     private static final int RECEIVE_POLL_INTERVAL_MS = 200;
     private static final int DNS_PORT = 53;
 
-    /** Short socket timeout so we don't block one any 'receive' call */
+    /**
+     * Short socket timeout so we don't block one any 'receive' call
+     */
     private static final int SOCKET_TIMEOUT_MS = 1;
 
-    /** Used to generate IDs */
+    /**
+     * Used to generate IDs
+     */
     private static final Random sRandom = new Random();
     private static final AtomicInteger sCounter = new AtomicInteger();
 
@@ -81,9 +85,13 @@ public final class DnsPinger extends Handler {
      * arg2 is the delay, or is negative on error.
      */
     public static final int DNS_PING_RESULT = BASE;
-    /** An error code for a {@link #DNS_PING_RESULT} packet */
+    /**
+     * An error code for a {@link #DNS_PING_RESULT} packet
+     */
     public static final int TIMEOUT = -1;
-    /** An error code for a {@link #DNS_PING_RESULT} packet */
+    /**
+     * An error code for a {@link #DNS_PING_RESULT} packet
+     */
     public static final int SOCKET_EXCEPTION = -2;
 
     /**
@@ -117,7 +125,7 @@ public final class DnsPinger extends Handler {
     }
 
     public DnsPinger(Context context, String TAG, Looper looper,
-            Handler target, int connectionType) {
+                     Handler target, int connectionType) {
         super(looper);
         this.TAG = TAG;
         mContext = context;
@@ -211,17 +219,17 @@ public final class DnsPinger extends Handler {
                 }
                 Iterator<ActivePing> iter = mActivePings.iterator();
                 while (iter.hasNext()) {
-                   ActivePing curPing = iter.next();
-                   if (curPing.result != null) {
-                       sendResponse(curPing.internalId, curPing.packetId, curPing.result);
-                       curPing.socket.close();
-                       iter.remove();
-                   } else if (SystemClock.elapsedRealtime() >
-                                  curPing.start + curPing.timeout) {
-                       sendResponse(curPing.internalId, curPing.packetId, TIMEOUT);
-                       curPing.socket.close();
-                       iter.remove();
-                   }
+                    ActivePing curPing = iter.next();
+                    if (curPing.result != null) {
+                        sendResponse(curPing.internalId, curPing.packetId, curPing.result);
+                        curPing.socket.close();
+                        iter.remove();
+                    } else if (SystemClock.elapsedRealtime() >
+                            curPing.start + curPing.timeout) {
+                        sendResponse(curPing.internalId, curPing.packetId, TIMEOUT);
+                        curPing.socket.close();
+                        iter.remove();
+                    }
                 }
                 if (!mActivePings.isEmpty()) {
                     sendMessageDelayed(obtainMessage(ACTION_LISTEN_FOR_RESPONSE, mEventCounter, 0),
@@ -239,6 +247,7 @@ public final class DnsPinger extends Handler {
     /**
      * Returns a list of DNS addresses, coming from either the link properties of the
      * specified connection or the default system DNS if the link properties has no dnses.
+     *
      * @return a non-empty non-null list
      */
     public List<InetAddress> getDnsList() {
@@ -260,7 +269,8 @@ public final class DnsPinger extends Handler {
     /**
      * Send a ping.  The response will come via a {@link #DNS_PING_RESULT} to the handler
      * specified at creation.
-     * @param dns address of dns server to ping
+     *
+     * @param dns     address of dns server to ping
      * @param timeout timeout for ping
      * @return an ID field, which will also be included in the {@link #DNS_PING_RESULT} message.
      */
@@ -277,7 +287,7 @@ public final class DnsPinger extends Handler {
     }
 
     private void sendResponse(int internalId, int externalId, int responseVal) {
-        if(DBG) {
+        if (DBG) {
             log("Responding to packet " + internalId +
                     " externalId " + externalId +
                     " and val " + responseVal);
@@ -309,19 +319,19 @@ public final class DnsPinger extends Handler {
         }
     }
 
-    private static final byte[] mDnsQuery = new byte[] {
-        0, 0, // [0-1] is for ID (will set each time)
-        1, 0, // [2-3] are flags.  Set byte[2] = 1 for recursion desired (RD) on.  Currently on.
-        0, 1, // [4-5] bytes are for number of queries (QCOUNT)
-        0, 0, // [6-7] unused count field for dns response packets
-        0, 0, // [8-9] unused count field for dns response packets
-        0, 0, // [10-11] unused count field for dns response packets
-        3, 'w', 'w', 'w',
-        6, 'g', 'o', 'o', 'g', 'l', 'e',
-        3, 'c', 'o', 'm',
-        0,    // null terminator of address (also called empty TLD)
-        0, 1, // QTYPE, set to 1 = A (host address)
-        0, 1  // QCLASS, set to 1 = IN (internet)
+    private static final byte[] mDnsQuery = new byte[]{
+            0, 0, // [0-1] is for ID (will set each time)
+            1, 0, // [2-3] are flags.  Set byte[2] = 1 for recursion desired (RD) on.  Currently on.
+            0, 1, // [4-5] bytes are for number of queries (QCOUNT)
+            0, 0, // [6-7] unused count field for dns response packets
+            0, 0, // [8-9] unused count field for dns response packets
+            0, 0, // [10-11] unused count field for dns response packets
+            3, 'w', 'w', 'w',
+            6, 'g', 'o', 'o', 'g', 'l', 'e',
+            3, 'c', 'o', 'm',
+            0,    // null terminator of address (also called empty TLD)
+            0, 1, // QTYPE, set to 1 = A (host address)
+            0, 1  // QCLASS, set to 1 = IN (internet)
     };
 
     private void log(String s) {

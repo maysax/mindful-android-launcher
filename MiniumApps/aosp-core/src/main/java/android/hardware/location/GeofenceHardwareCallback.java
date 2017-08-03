@@ -30,27 +30,27 @@ public abstract class GeofenceHardwareCallback {
      * The callback called when there is a transition to report for the specific
      * geofence.
      *
-     * @param geofenceId The geofence ID of the geofence
-     * @param transition One of {@link GeofenceHardware#GEOFENCE_ENTERED},
-     *        {@link GeofenceHardware#GEOFENCE_EXITED}, {@link GeofenceHardware#GEOFENCE_UNCERTAIN}
-     * @param location The last known location according to the monitoring system.
-     * @param timestamp The timestamp (elapsed real time in milliseconds) when the transition was
-     *        detected
+     * @param geofenceId     The geofence ID of the geofence
+     * @param transition     One of {@link GeofenceHardware#GEOFENCE_ENTERED},
+     *                       {@link GeofenceHardware#GEOFENCE_EXITED}, {@link GeofenceHardware#GEOFENCE_UNCERTAIN}
+     * @param location       The last known location according to the monitoring system.
+     * @param timestamp      The timestamp (elapsed real time in milliseconds) when the transition was
+     *                       detected
      * @param monitoringType Type of the monitoring system.
      */
     public void onGeofenceTransition(int geofenceId, int transition, Location location,
-            long timestamp, int monitoringType) {
+                                     long timestamp, int monitoringType) {
     }
 
     /**
      * The callback called to notify the success or failure of the add call.
      *
      * @param geofenceId The ID of the geofence.
-     * @param status One of {@link GeofenceHardware#GEOFENCE_SUCCESS},
-     *        {@link GeofenceHardware#GEOFENCE_ERROR_ID_EXISTS},
-     *        {@link GeofenceHardware#GEOFENCE_ERROR_INVALID_TRANSITION},
-     *        {@link GeofenceHardware#GEOFENCE_ERROR_TOO_MANY_GEOFENCES},
-     *        {@link GeofenceHardware#GEOFENCE_FAILURE}
+     * @param status     One of {@link GeofenceHardware#GEOFENCE_SUCCESS},
+     *                   {@link GeofenceHardware#GEOFENCE_ERROR_ID_EXISTS},
+     *                   {@link GeofenceHardware#GEOFENCE_ERROR_INVALID_TRANSITION},
+     *                   {@link GeofenceHardware#GEOFENCE_ERROR_TOO_MANY_GEOFENCES},
+     *                   {@link GeofenceHardware#GEOFENCE_FAILURE}
      */
     public void onGeofenceAdd(int geofenceId, int status) {
     }
@@ -59,9 +59,9 @@ public abstract class GeofenceHardwareCallback {
      * The callback called to notify the success or failure of the remove call.
      *
      * @param geofenceId The ID of the geofence.
-     * @param status  One of {@link GeofenceHardware#GEOFENCE_SUCCESS},
-     *        {@link GeofenceHardware#GEOFENCE_ERROR_ID_UNKNOWN},
-     *        {@link GeofenceHardware#GEOFENCE_FAILURE}
+     * @param status     One of {@link GeofenceHardware#GEOFENCE_SUCCESS},
+     *                   {@link GeofenceHardware#GEOFENCE_ERROR_ID_UNKNOWN},
+     *                   {@link GeofenceHardware#GEOFENCE_FAILURE}
      */
     public void onGeofenceRemove(int geofenceId, int status) {
     }
@@ -70,9 +70,9 @@ public abstract class GeofenceHardwareCallback {
      * The callback called to notify the success or failure of the pause call.
      *
      * @param geofenceId The ID of the geofence.
-     * @param status One of {@link GeofenceHardware#GEOFENCE_SUCCESS},
-     *        {@link GeofenceHardware#GEOFENCE_ERROR_ID_UNKNOWN},
-     *        {@link GeofenceHardware#GEOFENCE_FAILURE}
+     * @param status     One of {@link GeofenceHardware#GEOFENCE_SUCCESS},
+     *                   {@link GeofenceHardware#GEOFENCE_ERROR_ID_UNKNOWN},
+     *                   {@link GeofenceHardware#GEOFENCE_FAILURE}
      */
     public void onGeofencePause(int geofenceId, int status) {
     }
@@ -81,10 +81,10 @@ public abstract class GeofenceHardwareCallback {
      * The callback called to notify the success or failure of the resume call.
      *
      * @param geofenceId The ID of the geofence.
-     * @param status One of {@link GeofenceHardware#GEOFENCE_SUCCESS},
-     *        {@link GeofenceHardware#GEOFENCE_ERROR_ID_UNKNOWN},
-     *        {@link GeofenceHardware#GEOFENCE_ERROR_INVALID_TRANSITION},
-     *        {@link GeofenceHardware#GEOFENCE_FAILURE}
+     * @param status     One of {@link GeofenceHardware#GEOFENCE_SUCCESS},
+     *                   {@link GeofenceHardware#GEOFENCE_ERROR_ID_UNKNOWN},
+     *                   {@link GeofenceHardware#GEOFENCE_ERROR_INVALID_TRANSITION},
+     *                   {@link GeofenceHardware#GEOFENCE_FAILURE}
      */
     public void onGeofenceResume(int geofenceId, int status) {
     }

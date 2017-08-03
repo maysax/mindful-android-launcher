@@ -18,9 +18,11 @@ package android.net.http;
 
 import android.content.Context;
 import android.util.Log;
+
 import com.android.org.conscrypt.FileClientSessionCache;
 import com.android.org.conscrypt.OpenSSLContextImpl;
 import com.android.org.conscrypt.SSLClientSessionCache;
+
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
@@ -33,17 +35,18 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.cert.X509Certificate;
 import java.util.Locale;
+
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * A Connection connecting to a secure http server or tunneling through
@@ -66,9 +69,8 @@ public class HttpsConnection extends Connection {
     }
 
     /**
-     * @hide
-     *
      * @param sessionDir directory to cache SSL sessions
+     * @hide
      */
     public static void initializeEngine(File sessionDir) {
         try {
@@ -82,20 +84,20 @@ public class HttpsConnection extends Connection {
             OpenSSLContextImpl sslContext = new OpenSSLContextImpl();
 
             // here, trust managers is a single trust-all manager
-            TrustManager[] trustManagers = new TrustManager[] {
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
+            TrustManager[] trustManagers = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
 
-                    public void checkClientTrusted(
-                        X509Certificate[] certs, String authType) {
-                    }
+                        public void checkClientTrusted(
+                                X509Certificate[] certs, String authType) {
+                        }
 
-                    public void checkServerTrusted(
-                        X509Certificate[] certs, String authType) {
+                        public void checkServerTrusted(
+                                X509Certificate[] certs, String authType) {
+                        }
                     }
-                }
             };
 
             sslContext.engineInit(null, trustManagers, null);
@@ -147,6 +149,7 @@ public class HttpsConnection extends Connection {
     /**
      * Sets the server SSL certificate associated with this
      * connection.
+     *
      * @param certificate The SSL certificate
      */
     /* package */ void setCertificate(SslCertificate certificate) {
@@ -175,7 +178,7 @@ public class HttpsConnection extends Connection {
             Socket proxySock = null;
             try {
                 proxySock = new Socket
-                    (mProxyHost.getHostName(), mProxyHost.getPort());
+                        (mProxyHost.getHostName(), mProxyHost.getPort());
 
                 proxySock.setSoTimeout(60 * 1000);
 
@@ -184,7 +187,7 @@ public class HttpsConnection extends Connection {
                 HttpConnectionParams.setSocketBufferSize(params, 8192);
 
                 proxyConnection.bind(proxySock, params);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 if (proxyConnection != null) {
                     proxyConnection.close();
                 }
@@ -192,7 +195,7 @@ public class HttpsConnection extends Connection {
                 String errorMessage = e.getMessage();
                 if (errorMessage == null) {
                     errorMessage =
-                        "failed to establish a connection to the proxy";
+                            "failed to establish a connection to the proxy";
                 }
 
                 throw new IOException(errorMessage);
@@ -203,7 +206,7 @@ public class HttpsConnection extends Connection {
             Headers headers = new Headers();
             try {
                 BasicHttpRequest proxyReq = new BasicHttpRequest
-                    ("CONNECT", mHost.toHostString());
+                        ("CONNECT", mHost.toHostString());
 
                 // add all 'proxy' headers from the original request, we also need
                 // to add 'host' header unless we want proxy to answer us with a
@@ -231,7 +234,7 @@ public class HttpsConnection extends Connection {
                 String errorMessage = e.getMessage();
                 if (errorMessage == null) {
                     errorMessage =
-                        "failed to send a CONNECT request";
+                            "failed to send a CONNECT request";
                 }
 
                 throw new IOException(errorMessage);
@@ -239,7 +242,7 @@ public class HttpsConnection extends Connection {
                 String errorMessage = e.getMessage();
                 if (errorMessage == null) {
                     errorMessage =
-                        "failed to send a CONNECT request";
+                            "failed to send a CONNECT request";
                 }
 
                 throw new IOException(errorMessage);
@@ -247,7 +250,7 @@ public class HttpsConnection extends Connection {
                 String errorMessage = e.getMessage();
                 if (errorMessage == null) {
                     errorMessage =
-                        "failed to send a CONNECT request";
+                            "failed to send a CONNECT request";
                 }
 
                 throw new IOException(errorMessage);
@@ -257,7 +260,7 @@ public class HttpsConnection extends Connection {
                 try {
                     sslSock = (SSLSocket) getSocketFactory().createSocket(
                             proxySock, mHost.getHostName(), mHost.getPort(), true);
-                } catch(IOException e) {
+                } catch (IOException e) {
                     if (sslSock != null) {
                         sslSock.close();
                     }
@@ -265,7 +268,7 @@ public class HttpsConnection extends Connection {
                     String errorMessage = e.getMessage();
                     if (errorMessage == null) {
                         errorMessage =
-                            "failed to create an SSL socket";
+                                "failed to create an SSL socket";
                     }
                     throw new IOException(errorMessage);
                 }
@@ -274,9 +277,9 @@ public class HttpsConnection extends Connection {
                 ProtocolVersion version = statusLine.getProtocolVersion();
 
                 req.mEventHandler.status(version.getMajor(),
-                                         version.getMinor(),
-                                         statusCode,
-                                         statusLine.getReasonPhrase());
+                        version.getMinor(),
+                        statusCode,
+                        statusLine.getReasonPhrase());
                 req.mEventHandler.headers(headers);
                 req.mEventHandler.endData();
 
@@ -292,7 +295,7 @@ public class HttpsConnection extends Connection {
                 sslSock = (SSLSocket) getSocketFactory().createSocket(
                         mHost.getHostName(), mHost.getPort());
                 sslSock.setSoTimeout(SOCKET_TIMEOUT);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 if (sslSock != null) {
                     sslSock.close();
                 }
@@ -308,7 +311,7 @@ public class HttpsConnection extends Connection {
 
         // do handshake and validate server certificates
         SslError error = CertificateChainValidator.getInstance().
-            doHandshakeAndValidateServerCertificates(this, sslSock, mHost.getHostName());
+                doHandshakeAndValidateServerCertificates(this, sslSock, mHost.getHostName());
 
         // Inform the user if there is a problem
         if (error != null) {
@@ -322,8 +325,8 @@ public class HttpsConnection extends Connection {
             }
             // don't hold the lock while calling out to the event handler
             boolean canHandle = req.getEventHandler().handleSslErrorRequest(error);
-            if(!canHandle) {
-                throw new IOException("failed to handle "+ error);
+            if (!canHandle) {
+                throw new IOException("failed to handle " + error);
             }
             synchronized (mSuspendLock) {
                 if (mSuspended) {
@@ -343,7 +346,7 @@ public class HttpsConnection extends Connection {
                             mAborted = true;
                             if (HttpLog.LOGV) {
                                 HttpLog.v("HttpsConnection.openConnection():" +
-                                          " SSL timeout expired and request was cancelled!!!");
+                                        " SSL timeout expired and request was cancelled!!!");
                             }
                         }
                     } catch (InterruptedException e) {
@@ -370,11 +373,10 @@ public class HttpsConnection extends Connection {
 
     /**
      * Closes the low level connection.
-     *
+     * <p>
      * If an exception is thrown then it is assumed that the connection will
      * have been closed (to the extent possible) anyway and the caller does not
      * need to take any further action.
-     *
      */
     @Override
     void closeConnection() {
@@ -391,7 +393,7 @@ public class HttpsConnection extends Connection {
         } catch (IOException e) {
             if (HttpLog.LOGV)
                 HttpLog.v("HttpsConnection.closeConnection():" +
-                          " failed closing connection " + mHost);
+                        " failed closing connection " + mHost);
             e.printStackTrace();
         }
     }
@@ -402,7 +404,7 @@ public class HttpsConnection extends Connection {
     void restartConnection(boolean proceed) {
         if (HttpLog.LOGV) {
             HttpLog.v("HttpsConnection.restartConnection():" +
-                      " proceed: " + proceed);
+                    " proceed: " + proceed);
         }
 
         synchronized (mSuspendLock) {
@@ -422,7 +424,7 @@ public class HttpsConnection extends Connection {
 
 /**
  * Simple exception we throw if the SSL connection is closed by the user.
- *
+ * <p>
  * {@hide}
  */
 class SSLConnectionClosedByUserException extends SSLException {

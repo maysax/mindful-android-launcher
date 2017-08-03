@@ -16,9 +16,6 @@
 
 package android.net;
 
-import static android.system.OsConstants.AF_INET;
-import static android.system.OsConstants.AF_INET6;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -45,6 +42,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.system.OsConstants.AF_INET;
+import static android.system.OsConstants.AF_INET6;
+
 /**
  * VpnService is a base class for applications to extend and build their
  * own VPN solutions. In general, it creates a virtual network interface,
@@ -56,25 +56,25 @@ import java.util.List;
  * always started with IP headers. The application then completes a VPN
  * connection by processing and exchanging packets with the remote server
  * over a tunnel.
- *
+ * <p>
  * <p>Letting applications intercept packets raises huge security concerns.
  * A VPN application can easily break the network. Besides, two of them may
  * conflict with each other. The system takes several actions to address
  * these issues. Here are some key points:
  * <ul>
- *   <li>User action is required the first time an application creates a VPN
- *       connection.</li>
- *   <li>There can be only one VPN connection running at the same time. The
- *       existing interface is deactivated when a new one is created.</li>
- *   <li>A system-managed notification is shown during the lifetime of a
- *       VPN connection.</li>
- *   <li>A system-managed dialog gives the information of the current VPN
- *       connection. It also provides a button to disconnect.</li>
- *   <li>The network is restored automatically when the file descriptor is
- *       closed. It also covers the cases when a VPN application is crashed
- *       or killed by the system.</li>
+ * <li>User action is required the first time an application creates a VPN
+ * connection.</li>
+ * <li>There can be only one VPN connection running at the same time. The
+ * existing interface is deactivated when a new one is created.</li>
+ * <li>A system-managed notification is shown during the lifetime of a
+ * VPN connection.</li>
+ * <li>A system-managed dialog gives the information of the current VPN
+ * connection. It also provides a button to disconnect.</li>
+ * <li>The network is restored automatically when the file descriptor is
+ * closed. It also covers the cases when a VPN application is crashed
+ * or killed by the system.</li>
  * </ul>
- *
+ * <p>
  * <p>There are two primary methods in this class: {@link #prepare} and
  * {@link Builder#establish}. The former deals with user action and stops
  * the VPN connection created by another application. The latter creates
@@ -83,19 +83,19 @@ import java.util.List;
  * other methods in this class, and the right can be revoked at any time.
  * Here are the general steps to create a VPN connection:
  * <ol>
- *   <li>When the user presses the button to connect, call {@link #prepare}
- *       and launch the returned intent, if non-null.</li>
- *   <li>When the application becomes prepared, start the service.</li>
- *   <li>Create a tunnel to the remote server and negotiate the network
- *       parameters for the VPN connection.</li>
- *   <li>Supply those parameters to a {@link Builder} and create a VPN
- *       interface by calling {@link Builder#establish}.</li>
- *   <li>Process and exchange packets between the tunnel and the returned
- *       file descriptor.</li>
- *   <li>When {@link #onRevoke} is invoked, close the file descriptor and
- *       shut down the tunnel gracefully.</li>
+ * <li>When the user presses the button to connect, call {@link #prepare}
+ * and launch the returned intent, if non-null.</li>
+ * <li>When the application becomes prepared, start the service.</li>
+ * <li>Create a tunnel to the remote server and negotiate the network
+ * parameters for the VPN connection.</li>
+ * <li>Supply those parameters to a {@link Builder} and create a VPN
+ * interface by calling {@link Builder#establish}.</li>
+ * <li>Process and exchange packets between the tunnel and the returned
+ * file descriptor.</li>
+ * <li>When {@link #onRevoke} is invoked, close the file descriptor and
+ * shut down the tunnel gracefully.</li>
  * </ol>
- *
+ * <p>
  * <p>Services extended this class need to be declared with appropriate
  * permission and intent filter. Their access must be secured by
  * {@link android.Manifest.permission#BIND_VPN_SERVICE} permission, and
@@ -139,13 +139,13 @@ public class VpnService extends Service {
      * the result will come back via its {@link Activity#onActivityResult}.
      * If the result is {@link Activity#RESULT_OK}, the application becomes
      * prepared and is granted to use other methods in this class.
-     *
+     * <p>
      * <p>Only one application can be granted at the same time. The right
      * is revoked when another application is granted. The application
      * losing the right will be notified via its {@link #onRevoke}. Unless
      * it becomes prepared again, subsequent calls to other methods in this
      * class will fail.
-     *
+     * <p>
      * <p>The user may disable the VPN at any time while it is activated, in
      * which case this method will return an intent the next time it is
      * executed to obtain the user's consent again.
@@ -172,7 +172,7 @@ public class VpnService extends Service {
      * destination is covered by VPN routes. Otherwise its outgoing packets
      * will be sent back to the VPN interface and cause an infinite loop. This
      * method will fail if the application is not prepared or is revoked.
-     *
+     * <p>
      * <p class="note">The socket is NOT closed by this method.
      *
      * @return {@code true} on success.
@@ -204,22 +204,19 @@ public class VpnService extends Service {
 
     /**
      * Adds a network address to the VPN interface.
-     *
+     * <p>
      * Both IPv4 and IPv6 addresses are supported. The VPN must already be established. Fails if the
      * address is already in use or cannot be assigned to the interface for any other reason.
-     *
+     * <p>
      * Adding an address implicitly allows traffic from that address family (i.e., IPv4 or IPv6) to
      * be routed over the VPN. @see Builder#allowFamily
      *
-     * @throws {@link IllegalArgumentException} if the address is invalid.
-     *
-     * @param address The IP address (IPv4 or IPv6) to assign to the VPN interface.
+     * @param address      The IP address (IPv4 or IPv6) to assign to the VPN interface.
      * @param prefixLength The prefix length of the address.
-     *
      * @return {@code true} on success.
-     * @see Builder#addAddress
-     *
+     * @throws {@link IllegalArgumentException} if the address is invalid.
      * @hide
+     * @see Builder#addAddress
      */
     public boolean addAddress(InetAddress address, int prefixLength) {
         check(address, prefixLength);
@@ -232,23 +229,20 @@ public class VpnService extends Service {
 
     /**
      * Removes a network address from the VPN interface.
-     *
+     * <p>
      * Both IPv4 and IPv6 addresses are supported. The VPN must already be established. Fails if the
      * address is not assigned to the VPN interface, or if it is the only address assigned (thus
      * cannot be removed), or if the address cannot be removed for any other reason.
-     *
+     * <p>
      * After removing an address, if there are no addresses, routes or DNS servers of a particular
      * address family (i.e., IPv4 or IPv6) configured on the VPN, that <b>DOES NOT</b> block that
      * family from being routed. In other words, once an address family has been allowed, it stays
      * allowed for the rest of the VPN's session. @see Builder#allowFamily
      *
-     * @throws {@link IllegalArgumentException} if the address is invalid.
-     *
-     * @param address The IP address (IPv4 or IPv6) to assign to the VPN interface.
+     * @param address      The IP address (IPv4 or IPv6) to assign to the VPN interface.
      * @param prefixLength The prefix length of the address.
-     *
      * @return {@code true} on success.
-     *
+     * @throws {@link IllegalArgumentException} if the address is invalid.
      * @hide
      */
     public boolean removeAddress(InetAddress address, int prefixLength) {
@@ -281,7 +275,7 @@ public class VpnService extends Service {
      * interface is already deactivated by the system. The application should
      * close the file descriptor and shut down gracefully. The default
      * implementation of this method is calling {@link Service#stopSelf()}.
-     *
+     * <p>
      * <p class="note">Calls to this method may not happen on the main thread
      * of the process.
      *
@@ -380,7 +374,7 @@ public class VpnService extends Service {
          * Add a network address to the VPN interface. Both IPv4 and IPv6
          * addresses are supported. At least one address must be set before
          * calling {@link #establish}.
-         *
+         * <p>
          * Adding an address implicitly allows traffic from that address family
          * (i.e., IPv4 or IPv6) to be routed over the VPN. @see #allowFamily
          *
@@ -401,7 +395,7 @@ public class VpnService extends Service {
          * Convenience method to add a network address to the VPN interface
          * using a numeric address string. See {@link InetAddress} for the
          * definitions of numeric address formats.
-         *
+         * <p>
          * Adding an address implicitly allows traffic from that address family
          * (i.e., IPv4 or IPv6) to be routed over the VPN. @see #allowFamily
          *
@@ -415,7 +409,7 @@ public class VpnService extends Service {
         /**
          * Add a network route to the VPN interface. Both IPv4 and IPv6
          * routes are supported.
-         *
+         * <p>
          * Adding a route implicitly allows traffic from that address family
          * (i.e., IPv4 or IPv6) to be routed over the VPN. @see #allowFamily
          *
@@ -442,7 +436,7 @@ public class VpnService extends Service {
          * Convenience method to add a network route to the VPN interface
          * using a numeric address string. See {@link InetAddress} for the
          * definitions of numeric address formats.
-         *
+         * <p>
          * Adding a route implicitly allows traffic from that address family
          * (i.e., IPv4 or IPv6) to be routed over the VPN. @see #allowFamily
          *
@@ -457,7 +451,7 @@ public class VpnService extends Service {
          * Add a DNS server to the VPN connection. Both IPv4 and IPv6
          * addresses are supported. If none is set, the DNS servers of
          * the default network will be used.
-         *
+         * <p>
          * Adding a server implicitly allows traffic from that address family
          * (i.e., IPv4 or IPv6) to be routed over the VPN. @see #allowFamily
          *
@@ -478,7 +472,7 @@ public class VpnService extends Service {
          * Convenience method to add a DNS server to the VPN connection
          * using a numeric address string. See {@link InetAddress} for the
          * definitions of numeric address formats.
-         *
+         * <p>
          * Adding a server implicitly allows traffic from that address family
          * (i.e., IPv4 or IPv6) to be routed over the VPN. @see #allowFamily
          *
@@ -502,20 +496,19 @@ public class VpnService extends Service {
 
         /**
          * Allows traffic from the specified address family.
-         *
+         * <p>
          * By default, if no address, route or DNS server of a specific family (IPv4 or IPv6) is
          * added to this VPN, then all outgoing traffic of that family is blocked. If any address,
          * route or DNS server is added, that family is allowed.
-         *
+         * <p>
          * This method allows an address family to be unblocked even without adding an address,
          * route or DNS server of that family. Traffic of that family will then typically
          * fall-through to the underlying network if it's supported.
-         *
+         * <p>
          * {@code family} must be either {@code AF_INET} (for IPv4) or {@code AF_INET6} (for IPv6).
          * {@link IllegalArgumentException} is thrown if it's neither.
          *
          * @param family The address family ({@code AF_INET} or {@code AF_INET6}) to allow.
-         *
          * @return this {@link Builder} object to facilitate chaining of method calls.
          */
         public Builder allowFamily(int family) {
@@ -542,24 +535,22 @@ public class VpnService extends Service {
 
         /**
          * Adds an application that's allowed to access the VPN connection.
-         *
+         * <p>
          * If this method is called at least once, only applications added through this method (and
          * no others) are allowed access. Else (if this method is never called), all applications
          * are allowed by default.  If some applications are added, other, un-added applications
          * will use networking as if the VPN wasn't running.
-         *
+         * <p>
          * A {@link Builder} may have only a set of allowed applications OR a set of disallowed
          * ones, but not both. Calling this method after {@link #addDisallowedApplication} has
          * already been called, or vice versa, will throw an {@link UnsupportedOperationException}.
-         *
+         * <p>
          * {@code packageName} must be the canonical name of a currently installed application.
          * {@link PackageManager.NameNotFoundException} is thrown if there's no such application.
          *
-         * @throws {@link PackageManager.NameNotFoundException} If the application isn't installed.
-         *
          * @param packageName The full name (e.g.: "com.google.apps.contacts") of an application.
-         *
          * @return this {@link Builder} object to facilitate chaining method calls.
+         * @throws {@link PackageManager.NameNotFoundException} If the application isn't installed.
          */
         public Builder addAllowedApplication(String packageName)
                 throws PackageManager.NameNotFoundException {
@@ -576,22 +567,20 @@ public class VpnService extends Service {
 
         /**
          * Adds an application that's denied access to the VPN connection.
-         *
+         * <p>
          * By default, all applications are allowed access, except for those denied through this
          * method.  Denied applications will use networking as if the VPN wasn't running.
-         *
+         * <p>
          * A {@link Builder} may have only a set of allowed applications OR a set of disallowed
          * ones, but not both. Calling this method after {@link #addAllowedApplication} has already
          * been called, or vice versa, will throw an {@link UnsupportedOperationException}.
-         *
+         * <p>
          * {@code packageName} must be the canonical name of a currently installed application.
          * {@link PackageManager.NameNotFoundException} is thrown if there's no such application.
          *
-         * @throws {@link PackageManager.NameNotFoundException} If the application isn't installed.
-         *
          * @param packageName The full name (e.g.: "com.google.apps.contacts") of an application.
-         *
          * @return this {@link Builder} object to facilitate chaining method calls.
+         * @throws {@link PackageManager.NameNotFoundException} If the application isn't installed.
          */
         public Builder addDisallowedApplication(String packageName)
                 throws PackageManager.NameNotFoundException {
@@ -608,7 +597,7 @@ public class VpnService extends Service {
 
         /**
          * Allows all apps to bypass this VPN connection.
-         *
+         * <p>
          * By default, all traffic from apps is forwarded through the VPN interface and it is not
          * possible for apps to side-step the VPN. If this method is called, apps may use methods
          * such as {@link ConnectivityManager#setProcessDefaultNetwork} to instead send/receive
@@ -623,11 +612,10 @@ public class VpnService extends Service {
 
         /**
          * Sets the VPN interface's file descriptor to be in blocking/non-blocking mode.
-         *
+         * <p>
          * By default, the file descriptor returned by {@link #establish} is non-blocking.
          *
          * @param blocking True to put the descriptor into blocking mode; false for non-blocking.
-         *
          * @return this {@link Builder} object to facilitate chaining method calls.
          */
         public Builder setBlocking(boolean blocking) {
@@ -648,7 +636,7 @@ public class VpnService extends Service {
          * close the file descriptor when the VPN connection is terminated.
          * The VPN interface will be removed and the network will be
          * restored by the system automatically.
-         *
+         * <p>
          * <p>To avoid conflicts, there can be only one active VPN interface
          * at the same time. Usually network parameters are never changed
          * during the lifetime of a VPN connection. It is also common for an
@@ -662,20 +650,20 @@ public class VpnService extends Service {
          * and start using the new file descriptor. If the new interface
          * cannot be created, the existing interface and its file descriptor
          * remain untouched.
-         *
+         * <p>
          * <p>An exception will be thrown if the interface cannot be created
          * for any reason. However, this method returns {@code null} if the
          * application is not prepared or is revoked. This helps solve
          * possible race conditions between other VPN applications.
          *
          * @return {@link ParcelFileDescriptor} of the VPN interface, or
-         *         {@code null} if the application is not prepared.
+         * {@code null} if the application is not prepared.
          * @throws IllegalArgumentException if a parameter is not accepted
-         *         by the operating system.
-         * @throws IllegalStateException if a parameter cannot be applied
-         *         by the operating system.
-         * @throws SecurityException if the service is not properly declared
-         *         in {@code AndroidManifest.xml}.
+         *                                  by the operating system.
+         * @throws IllegalStateException    if a parameter cannot be applied
+         *                                  by the operating system.
+         * @throws SecurityException        if the service is not properly declared
+         *                                  in {@code AndroidManifest.xml}.
          * @see VpnService
          */
         public ParcelFileDescriptor establish() {

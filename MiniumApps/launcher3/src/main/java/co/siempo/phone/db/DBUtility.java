@@ -12,6 +12,7 @@ public class DBUtility {
     }
 
     private static ActivitiesStorageDao daoSession = null;
+
     // Mindful morning activities
     public static ActivitiesStorageDao getActivitySession() {
         if (daoSession == null) {
@@ -22,8 +23,8 @@ public class DBUtility {
     }
 
 
-
     private static CallStorageDao callStorageDao = null;
+
     //
     public static CallStorageDao getCallStorageDao() {
         if (callStorageDao == null) {
@@ -34,6 +35,7 @@ public class DBUtility {
     }
 
     private static DaysOfWeekWhichWasSetAlarmDao weekOfDays = null;
+
     // Mindful morning weekly
     public static DaysOfWeekWhichWasSetAlarmDao getAlarmDaysDao() {
         if (weekOfDays == null) {

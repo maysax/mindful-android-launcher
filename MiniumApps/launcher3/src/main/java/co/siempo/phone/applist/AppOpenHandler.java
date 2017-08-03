@@ -2,13 +2,8 @@ package co.siempo.phone.applist;
 
 import android.content.Context;
 
-import java.util.List;
-
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.db.DBClient;
-import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.db.TableNotificationSms;
-import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.notification.NotificationUtility;
 import de.greenrobot.event.EventBus;

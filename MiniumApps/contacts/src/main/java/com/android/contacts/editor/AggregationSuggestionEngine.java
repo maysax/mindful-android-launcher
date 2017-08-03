@@ -83,8 +83,8 @@ public class AggregationSuggestionEngine extends HandlerThread {
         @Override
         public String toString() {
             return "ID: " + contactId + " rawContacts: " + rawContacts + " name: " + name
-            + " phone: " + phoneNumber + " email: " + emailAddress + " nickname: "
-            + nickname + (photo != null ? " [has photo]" : "");
+                    + " phone: " + phoneNumber + " email: " + emailAddress + " nickname: "
+                    + nickname + (photo != null ? " [has photo]" : "");
         }
     }
 
@@ -262,27 +262,27 @@ public class AggregationSuggestionEngine extends HandlerThread {
 
         public static final String SELECTION_PREFIX =
                 Data.MIMETYPE + " IN ('"
-                    + Phone.CONTENT_ITEM_TYPE + "','"
-                    + Email.CONTENT_ITEM_TYPE + "','"
-                    + StructuredName.CONTENT_ITEM_TYPE + "','"
-                    + Nickname.CONTENT_ITEM_TYPE + "','"
-                    + Photo.CONTENT_ITEM_TYPE + "')"
-                + " AND " + Data.CONTACT_ID + " IN (";
+                        + Phone.CONTENT_ITEM_TYPE + "','"
+                        + Email.CONTENT_ITEM_TYPE + "','"
+                        + StructuredName.CONTENT_ITEM_TYPE + "','"
+                        + Nickname.CONTENT_ITEM_TYPE + "','"
+                        + Photo.CONTENT_ITEM_TYPE + "')"
+                        + " AND " + Data.CONTACT_ID + " IN (";
 
         public static final String[] COLUMNS = {
-            Data._ID,
-            Data.CONTACT_ID,
-            Data.LOOKUP_KEY,
-            Data.PHOTO_ID,
-            Data.DISPLAY_NAME,
-            Data.RAW_CONTACT_ID,
-            Data.MIMETYPE,
-            Data.DATA1,
-            Data.IS_SUPER_PRIMARY,
-            Photo.PHOTO,
-            RawContacts.ACCOUNT_TYPE,
-            RawContacts.ACCOUNT_NAME,
-            RawContacts.DATA_SET
+                Data._ID,
+                Data.CONTACT_ID,
+                Data.LOOKUP_KEY,
+                Data.PHOTO_ID,
+                Data.DISPLAY_NAME,
+                Data.RAW_CONTACT_ID,
+                Data.MIMETYPE,
+                Data.DATA1,
+                Data.IS_SUPER_PRIMARY,
+                Photo.PHOTO,
+                RawContacts.ACCOUNT_TYPE,
+                RawContacts.ACCOUNT_NAME,
+                RawContacts.DATA_SET
         };
 
         public static final int ID = 0;

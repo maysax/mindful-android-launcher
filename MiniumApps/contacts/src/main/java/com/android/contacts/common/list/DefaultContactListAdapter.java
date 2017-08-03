@@ -75,7 +75,7 @@ public class DefaultContactListAdapter extends ContactListAdapter {
                     builder.appendQueryParameter(ContactsContract.LIMIT_PARAM_KEY,
                             String.valueOf(getDirectoryResultLimit(getDirectoryById(directoryId))));
                 }
-                builder.appendQueryParameter(SearchSnippets.DEFERRED_SNIPPETING_KEY,"1");
+                builder.appendQueryParameter(SearchSnippets.DEFERRED_SNIPPETING_KEY, "1");
                 loader.setUri(builder.build());
                 loader.setProjection(getProjection(true));
             }
@@ -177,7 +177,7 @@ public class DefaultContactListAdapter extends ContactListAdapter {
     @Override
     protected void bindView(View itemView, int partition, Cursor cursor, int position) {
         super.bindView(itemView, partition, cursor, position);
-        final ContactListItemView view = (ContactListItemView)itemView;
+        final ContactListItemView view = (ContactListItemView) itemView;
 
         view.setHighlightedPrefix(isSearchMode() ? getUpperCaseQueryString() : null);
 

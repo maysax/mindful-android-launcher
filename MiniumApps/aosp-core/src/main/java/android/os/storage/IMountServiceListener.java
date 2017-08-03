@@ -24,16 +24,20 @@ import android.os.RemoteException;
 
 /**
  * Callback class for receiving events from MountService.
- * 
+ *
  * @hide - Applications should use IStorageEventListener for storage event
- *       callbacks.
+ * callbacks.
  */
 public interface IMountServiceListener extends IInterface {
-    /** Local-side IPC implementation stub class. */
+    /**
+     * Local-side IPC implementation stub class.
+     */
     public static abstract class Stub extends Binder implements IMountServiceListener {
         private static final String DESCRIPTOR = "IMountServiceListener";
 
-        /** Construct the stub at attach it to the interface. */
+        /**
+         * Construct the stub at attach it to the interface.
+         */
         public Stub() {
             this.attachInterface(this, DESCRIPTOR);
         }
@@ -106,7 +110,7 @@ public interface IMountServiceListener extends IInterface {
 
             /**
              * Detection state of USB Mass Storage has changed
-             * 
+             *
              * @param available true if a UMS host is connected.
              */
             public void onUsbMassStorageConnectionChanged(boolean connected) throws RemoteException {
@@ -126,12 +130,12 @@ public interface IMountServiceListener extends IInterface {
 
             /**
              * Storage state has changed.
-             * 
-             * @param path The volume mount path.
+             *
+             * @param path     The volume mount path.
              * @param oldState The old state of the volume.
              * @param newState The new state of the volume. Note: State is one
-             *            of the values returned by
-             *            Environment.getExternalStorageState()
+             *                 of the values returned by
+             *                 Environment.getExternalStorageState()
              */
             public void onStorageStateChanged(String path, String oldState, String newState)
                     throws RemoteException {
@@ -158,18 +162,18 @@ public interface IMountServiceListener extends IInterface {
 
     /**
      * Detection state of USB Mass Storage has changed
-     * 
+     *
      * @param available true if a UMS host is connected.
      */
     public void onUsbMassStorageConnectionChanged(boolean connected) throws RemoteException;
 
     /**
      * Storage state has changed.
-     * 
-     * @param path The volume mount path.
+     *
+     * @param path     The volume mount path.
      * @param oldState The old state of the volume.
      * @param newState The new state of the volume. Note: State is one of the
-     *            values returned by Environment.getExternalStorageState()
+     *                 values returned by Environment.getExternalStorageState()
      */
     public void onStorageStateChanged(String path, String oldState, String newState)
             throws RemoteException;

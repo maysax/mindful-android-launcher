@@ -16,14 +16,10 @@
 
 package com.android.contacts.common.format;
 
-import android.graphics.Typeface;
 import android.text.SpannableString;
 import android.text.style.CharacterStyle;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.widget.TextView;
-
-import com.google.common.base.Preconditions;
 
 /**
  * Highlights the text in a text field.
@@ -44,8 +40,8 @@ public class TextHighlighter {
     /**
      * Sets the text on the given text view, highlighting the word that matches the given prefix.
      *
-     * @param view the view on which to set the text
-     * @param text the string to use as the text
+     * @param view   the view on which to set the text
+     * @param text   the string to use as the text
      * @param prefix the prefix to look for
      */
     public void setPrefixText(TextView view, String text, String prefix) {
@@ -58,9 +54,10 @@ public class TextHighlighter {
 
     /**
      * Applies highlight span to the text.
-     * @param text Text sequence to be highlighted.
+     *
+     * @param text  Text sequence to be highlighted.
      * @param start Start position of the highlight sequence.
-     * @param end End position of the highlight sequence.
+     * @param end   End position of the highlight sequence.
      */
     public void applyMaskingHighlight(SpannableString text, int start, int end) {
         /** Sets text color of the masked locations to be highlighted. */
@@ -70,7 +67,7 @@ public class TextHighlighter {
     /**
      * Returns a CharSequence which highlights the given prefix if found in the given text.
      *
-     * @param text the text to which to apply the highlight
+     * @param text   the text to which to apply the highlight
      * @param prefix the prefix to look for
      */
     public CharSequence applyPrefixHighlight(CharSequence text, String prefix) {

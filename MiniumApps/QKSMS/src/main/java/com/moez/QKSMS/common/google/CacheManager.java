@@ -38,7 +38,7 @@ public class CacheManager {
     // there is no SD card found.
     // This can only be called from data thread.
     public static BlobCache getCache(Context context, String filename,
-            int maxEntries, int maxBytes, int version) {
+                                     int maxEntries, int maxBytes, int version) {
         synchronized (sCacheMap) {
             if (!sOldCheckDone) {
                 removeOldFilesIfNecessary(context);

@@ -25,7 +25,7 @@ import java.util.HashMap;
  */
 public class ActionMultiMap extends HashMap<String, ArrayList<Action>> {
     public void put(String mimeType, Action info) {
-       put(mimeType, info, false);
+        put(mimeType, info, false);
     }
 
     /**

@@ -102,7 +102,7 @@ public class MainAdapter extends ArrayAdapter<ActionListItem> implements Filtera
 
             String filterableStr;
 
-            for ( int i = 0; i < count; i++ ) {
+            for (int i = 0; i < count; i++) {
 
                 if (searchString.isEmpty()) {
                     buildData.add(currData.get(i));
@@ -111,7 +111,7 @@ public class MainAdapter extends ArrayAdapter<ActionListItem> implements Filtera
                     filterableStr = currData.get(i).getText();
                     String[] splits = filterableStr.split(" ");
 
-                    for ( String split : splits) {
+                    for (String split : splits) {
                         if (split.toLowerCase().startsWith(searchString)) {
                             buildData.add(currData.get(i));
                             break;

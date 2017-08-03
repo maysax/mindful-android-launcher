@@ -21,41 +21,41 @@ package org.w3c.dom.smil;
 import org.w3c.dom.DOMException;
 
 /**
- *  Controls the position, size and scaling of media object elements. See the
+ * Controls the position, size and scaling of media object elements. See the
  * region element definition .
  */
 public interface SMILRegionElement extends SMILElement, ElementLayout {
     /**
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public String getFit();
+
     public void setFit(String fit)
-                                      throws DOMException;
+            throws DOMException;
 
     /**
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public int getLeft();
+
     public void setLeft(int top)
-                                      throws DOMException;
+            throws DOMException;
 
     /**
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public int getTop();
+
     public void setTop(int top)
-                                      throws DOMException;
+            throws DOMException;
 
     /**
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public int getZIndex();
+
     public void setZIndex(int zIndex)
-                                      throws DOMException;
+            throws DOMException;
 
 }
 

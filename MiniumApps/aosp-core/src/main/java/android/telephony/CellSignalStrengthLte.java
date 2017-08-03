@@ -50,7 +50,7 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
      * @hide
      */
     public CellSignalStrengthLte(int signalStrength, int rsrp, int rsrq, int rssnr, int cqi,
-            int timingAdvance) {
+                                 int timingAdvance) {
         initialize(signalStrength, rsrp, rsrq, rssnr, cqi, timingAdvance);
     }
 
@@ -58,7 +58,6 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
      * Copy constructors
      *
      * @param s Source SignalStrength
-     *
      * @hide
      */
     public CellSignalStrengthLte(CellSignalStrengthLte s) {
@@ -73,11 +72,10 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
      * @param rsrq
      * @param rssnr
      * @param cqi
-     *
      * @hide
      */
     public void initialize(int lteSignalStrength, int rsrp, int rsrq, int rssnr, int cqi,
-            int timingAdvance) {
+                           int timingAdvance) {
         mSignalStrength = lteSignalStrength;
         mRsrp = rsrp;
         mRsrq = rsrq;
@@ -90,7 +88,6 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
      * Initialize from the SignalStrength structure.
      *
      * @param ss
-     *
      * @hide
      */
     public void initialize(SignalStrength ss, int timingAdvance) {
@@ -122,7 +119,9 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         return new CellSignalStrengthLte(this);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @Override
     public void setDefaultValues() {
         mSignalStrength = Integer.MAX_VALUE;
@@ -186,7 +185,7 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         if (lteDbm <= -140) lteAsuLevel = 0;
         else if (lteDbm >= -43) lteAsuLevel = 97;
         else lteAsuLevel = lteDbm + 140;
-        if (DBG) log("Lte Asu level: "+lteAsuLevel);
+        if (DBG) log("Lte Asu level: " + lteAsuLevel);
         return lteAsuLevel;
     }
 
@@ -207,7 +206,7 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
     }
 
     @Override
-    public boolean equals (Object o) {
+    public boolean equals(Object o) {
         CellSignalStrengthLte s;
 
         try {
@@ -242,7 +241,9 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
                 + " ta=" + mTimingAdvance;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (DBG) log("writeToParcel(Parcel, int): " + toString());
@@ -272,26 +273,30 @@ public final class CellSignalStrengthLte extends CellSignalStrength implements P
         if (DBG) log("CellSignalStrengthLte(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @SuppressWarnings("hiding")
     public static final Parcelable.Creator<CellSignalStrengthLte> CREATOR =
             new Parcelable.Creator<CellSignalStrengthLte>() {
-        @Override
-        public CellSignalStrengthLte createFromParcel(Parcel in) {
-            return new CellSignalStrengthLte(in);
-        }
+                @Override
+                public CellSignalStrengthLte createFromParcel(Parcel in) {
+                    return new CellSignalStrengthLte(in);
+                }
 
-        @Override
-        public CellSignalStrengthLte[] newArray(int size) {
-            return new CellSignalStrengthLte[size];
-        }
-    };
+                @Override
+                public CellSignalStrengthLte[] newArray(int size) {
+                    return new CellSignalStrengthLte[size];
+                }
+            };
 
     /**
      * log

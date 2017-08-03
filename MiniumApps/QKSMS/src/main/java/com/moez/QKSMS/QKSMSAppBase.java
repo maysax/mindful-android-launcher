@@ -167,7 +167,6 @@ public class QKSMSAppBase extends CoreApplication {
     }
 
 
-
     public DrmManagerClient getDrmManagerClient() {
         if (mDrmManagerClient == null) {
             mDrmManagerClient = new DrmManagerClient(getApplicationContext());

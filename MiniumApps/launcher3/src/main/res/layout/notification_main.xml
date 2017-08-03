@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textSize="28sp"
         android:fontFamily="sans-serif"
-        android:textColor="#de000000"/>
+        android:textColor="#de000000" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -26,7 +26,7 @@
         android:layout_marginBottom="48dp"
         android:clipToPadding="false"
         android:layout_gravity="center_horizontal"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/emptyView"

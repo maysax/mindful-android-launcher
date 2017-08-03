@@ -77,7 +77,7 @@ public abstract class BaseAccountType extends AccountType {
             | EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE;
     protected static final int FLAGS_SIP_ADDRESS = EditorInfo.TYPE_CLASS_TEXT
             | EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;  // since SIP addresses have the same
-                                                             // basic format as email addresses
+    // basic format as email addresses
     protected static final int FLAGS_RELATION = EditorInfo.TYPE_CLASS_TEXT
             | EditorInfo.TYPE_TEXT_FLAG_CAP_WORDS | EditorInfo.TYPE_TEXT_VARIATION_PERSON_NAME;
 
@@ -240,7 +240,7 @@ public abstract class BaseAccountType extends AccountType {
 
     protected DataKind addDataKindNickname(Context context) throws DefinitionException {
         DataKind kind = addKind(new DataKind(Nickname.CONTENT_ITEM_TYPE,
-                    R.string.nicknameLabelsGroup, 115, true));
+                R.string.nicknameLabelsGroup, 115, true));
         kind.typeOverallMax = 1;
         kind.actionHeader = new SimpleInflater(R.string.nicknameLabelsGroup);
         kind.actionBody = new SimpleInflater(Nickname.NAME);
@@ -369,7 +369,7 @@ public abstract class BaseAccountType extends AccountType {
 
     protected DataKind addDataKindOrganization(Context context) throws DefinitionException {
         DataKind kind = addKind(new DataKind(Organization.CONTENT_ITEM_TYPE,
-                    R.string.organizationLabelsGroup, 5, true));
+                R.string.organizationLabelsGroup, 5, true));
         kind.actionHeader = new SimpleInflater(R.string.organizationLabelsGroup);
         kind.actionBody = ORGANIZATION_BODY_INFLATER;
         kind.typeOverallMax = 1;
@@ -421,14 +421,14 @@ public abstract class BaseAccountType extends AccountType {
 
     protected DataKind addDataKindSipAddress(Context context) throws DefinitionException {
         DataKind kind = addKind(new DataKind(SipAddress.CONTENT_ITEM_TYPE,
-                    R.string.label_sip_address, 130, true));
+                R.string.label_sip_address, 130, true));
 
         kind.typeOverallMax = 1;
         kind.actionHeader = new SimpleInflater(R.string.label_sip_address);
         kind.actionBody = new SimpleInflater(SipAddress.SIP_ADDRESS);
         kind.fieldList = Lists.newArrayList();
         kind.fieldList.add(new EditField(SipAddress.SIP_ADDRESS,
-                                         R.string.label_sip_address, FLAGS_SIP_ADDRESS));
+                R.string.label_sip_address, FLAGS_SIP_ADDRESS));
 
         return kind;
     }
@@ -567,11 +567,16 @@ public abstract class BaseAccountType extends AccountType {
         protected int getTypeLabelResource(Integer type) {
             if (type == null) return R.string.email;
             switch (type) {
-                case Email.TYPE_HOME: return R.string.email_home;
-                case Email.TYPE_WORK: return R.string.email_work;
-                case Email.TYPE_OTHER: return R.string.email_other;
-                case Email.TYPE_MOBILE: return R.string.email_mobile;
-                default: return R.string.email_custom;
+                case Email.TYPE_HOME:
+                    return R.string.email_home;
+                case Email.TYPE_WORK:
+                    return R.string.email_work;
+                case Email.TYPE_OTHER:
+                    return R.string.email_other;
+                case Email.TYPE_MOBILE:
+                    return R.string.email_mobile;
+                default:
+                    return R.string.email_custom;
             }
         }
     }
@@ -595,10 +600,14 @@ public abstract class BaseAccountType extends AccountType {
         protected int getTypeLabelResource(Integer type) {
             if (type == null) return R.string.map_other;
             switch (type) {
-                case StructuredPostal.TYPE_HOME: return R.string.map_home;
-                case StructuredPostal.TYPE_WORK: return R.string.map_work;
-                case StructuredPostal.TYPE_OTHER: return R.string.map_other;
-                default: return R.string.map_custom;
+                case StructuredPostal.TYPE_HOME:
+                    return R.string.map_home;
+                case StructuredPostal.TYPE_WORK:
+                    return R.string.map_work;
+                case StructuredPostal.TYPE_OTHER:
+                    return R.string.map_other;
+                default:
+                    return R.string.map_custom;
             }
         }
     }
@@ -618,16 +627,26 @@ public abstract class BaseAccountType extends AccountType {
         protected int getTypeLabelResource(Integer type) {
             if (type == null) return R.string.chat;
             switch (type) {
-                case Im.PROTOCOL_AIM: return R.string.chat_aim;
-                case Im.PROTOCOL_MSN: return R.string.chat_msn;
-                case Im.PROTOCOL_YAHOO: return R.string.chat_yahoo;
-                case Im.PROTOCOL_SKYPE: return R.string.chat_skype;
-                case Im.PROTOCOL_QQ: return R.string.chat_qq;
-                case Im.PROTOCOL_GOOGLE_TALK: return R.string.chat_gtalk;
-                case Im.PROTOCOL_ICQ: return R.string.chat_icq;
-                case Im.PROTOCOL_JABBER: return R.string.chat_jabber;
-                case Im.PROTOCOL_NETMEETING: return R.string.chat;
-                default: return R.string.chat;
+                case Im.PROTOCOL_AIM:
+                    return R.string.chat_aim;
+                case Im.PROTOCOL_MSN:
+                    return R.string.chat_msn;
+                case Im.PROTOCOL_YAHOO:
+                    return R.string.chat_yahoo;
+                case Im.PROTOCOL_SKYPE:
+                    return R.string.chat_skype;
+                case Im.PROTOCOL_QQ:
+                    return R.string.chat_qq;
+                case Im.PROTOCOL_GOOGLE_TALK:
+                    return R.string.chat_gtalk;
+                case Im.PROTOCOL_ICQ:
+                    return R.string.chat_icq;
+                case Im.PROTOCOL_JABBER:
+                    return R.string.chat_jabber;
+                case Im.PROTOCOL_NETMEETING:
+                    return R.string.chat;
+                default:
+                    return R.string.chat;
             }
         }
     }
@@ -641,7 +660,7 @@ public abstract class BaseAccountType extends AccountType {
                     values.getAsString(Organization.TITLE) : null;
 
             if (companyValue != null && titleValue != null) {
-                return companyValue +  ": " + titleValue;
+                return companyValue + ": " + titleValue;
             } else if (companyValue == null) {
                 return titleValue;
             } else {
@@ -725,12 +744,12 @@ public abstract class BaseAccountType extends AccountType {
         /**
          * Takes a {@link XmlPullParser} at the start of a DataKind tag, parses it and returns
          * {@link DataKind}s.  (Usually just one, but there are three for the "name" kind.)
-         *
+         * <p>
          * This method returns a list, because we need to add 3 kinds for the name data kind.
          * (structured, display and phonetic)
          */
         public List<DataKind> parseDataKindTag(Context context, XmlPullParser parser,
-                AttributeSet attrs)
+                                               AttributeSet attrs)
                 throws DefinitionException, XmlPullParserException, IOException {
             final String kind = getAttr(attrs, Attr.KIND);
             final KindBuilder builder = mBuilders.get(kind);
@@ -750,15 +769,15 @@ public abstract class BaseAccountType extends AccountType {
          * DataKind tag parser specific to each kind.  Subclasses must implement it.
          */
         public abstract List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException, IOException;
+                                                     AttributeSet attrs) throws DefinitionException, XmlPullParserException, IOException;
 
         /**
          * Creates a new {@link DataKind}, and also parses the child Type tags in the DataKind
          * tag.
          */
         protected final DataKind newDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs, boolean isPseudo, String mimeType, String typeColumn,
-                int titleRes, int weight, StringInflater actionHeader, StringInflater actionBody)
+                                             AttributeSet attrs, boolean isPseudo, String mimeType, String typeColumn,
+                                             int titleRes, int weight, StringInflater actionHeader, StringInflater actionBody)
                 throws DefinitionException, XmlPullParserException, IOException {
 
             if (Log.isLoggable(TAG, Log.DEBUG)) {
@@ -802,7 +821,7 @@ public abstract class BaseAccountType extends AccountType {
          * so throws {@link DefinitionException}.
          */
         private void parseTypes(Context context, XmlPullParser parser, AttributeSet attrs,
-                DataKind kind, boolean canHaveTypes)
+                                DataKind kind, boolean canHaveTypes)
                 throws DefinitionException, XmlPullParserException, IOException {
             final int outerDepth = parser.getDepth();
             int type;
@@ -882,7 +901,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
 
             // Build 3 data kinds:
@@ -1014,7 +1033,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Nickname.CONTENT_ITEM_TYPE, null, R.string.nicknameLabelsGroup, Weight.NICKNAME,
@@ -1040,7 +1059,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Phone.CONTENT_ITEM_TYPE, Phone.TYPE, R.string.phoneLabelsGroup, Weight.PHONE,
@@ -1055,7 +1074,9 @@ public abstract class BaseAccountType extends AccountType {
             return Lists.newArrayList(kind);
         }
 
-        /** Just to avoid line-wrapping... */
+        /**
+         * Just to avoid line-wrapping...
+         */
         protected static EditType build(int type, boolean secondary) {
             return new EditType(type, Phone.getTypeLabelResource(type)).setSecondary(secondary);
         }
@@ -1099,7 +1120,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Email.CONTENT_ITEM_TYPE, Email.TYPE, R.string.emailLabelsGroup, Weight.EMAIL,
@@ -1132,7 +1153,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     StructuredPostal.CONTENT_ITEM_TYPE, StructuredPostal.TYPE,
@@ -1150,7 +1171,7 @@ public abstract class BaseAccountType extends AccountType {
                     kind.fieldList.add(new EditField(StructuredPostal.REGION,
                             R.string.postal_region, FLAGS_POSTAL));
                     kind.fieldList.add(new EditField(StructuredPostal.CITY,
-                            R.string.postal_city,FLAGS_POSTAL));
+                            R.string.postal_city, FLAGS_POSTAL));
                     kind.fieldList.add(new EditField(StructuredPostal.STREET,
                             R.string.postal_street, FLAGS_POSTAL));
                 } else {
@@ -1158,7 +1179,7 @@ public abstract class BaseAccountType extends AccountType {
                     kind.fieldList.add(new EditField(StructuredPostal.STREET,
                             R.string.postal_street, FLAGS_POSTAL));
                     kind.fieldList.add(new EditField(StructuredPostal.CITY,
-                            R.string.postal_city,FLAGS_POSTAL));
+                            R.string.postal_city, FLAGS_POSTAL));
                     kind.fieldList.add(new EditField(StructuredPostal.REGION,
                             R.string.postal_region, FLAGS_POSTAL));
                     kind.fieldList.add(new EditField(StructuredPostal.POSTCODE,
@@ -1167,7 +1188,7 @@ public abstract class BaseAccountType extends AccountType {
                             R.string.postal_country, FLAGS_POSTAL).setOptional(true));
                 }
             } else {
-                kind.maxLinesForDisplay= MAX_LINES_FOR_POSTAL_ADDRESS;
+                kind.maxLinesForDisplay = MAX_LINES_FOR_POSTAL_ADDRESS;
                 kind.fieldList.add(
                         new EditField(StructuredPostal.FORMATTED_ADDRESS, R.string.postal_address,
                                 FLAGS_POSTAL));
@@ -1198,7 +1219,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
 
             // IM is special:
@@ -1208,7 +1229,7 @@ public abstract class BaseAccountType extends AccountType {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Im.CONTENT_ITEM_TYPE, Im.PROTOCOL, R.string.imLabelsGroup, Weight.IM,
                     new ImActionInflater(), new SimpleInflater(Im.DATA) // header / action
-                    );
+            );
             kind.fieldList.add(new EditField(Im.DATA, R.string.imLabelsGroup, FLAGS_EMAIL));
 
             kind.defaultValues = new ContentValues();
@@ -1243,7 +1264,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Organization.CONTENT_ITEM_TYPE, null, R.string.organizationLabelsGroup,
@@ -1270,12 +1291,12 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Photo.CONTENT_ITEM_TYPE, null /* no type */, Weight.NONE, -1,
                     null, null // no header, no body
-                    );
+            );
 
             kind.fieldList.add(new EditField(Photo.PHOTO, -1, -1));
 
@@ -1293,7 +1314,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Note.CONTENT_ITEM_TYPE, null, R.string.label_notes, Weight.NOTE,
@@ -1316,7 +1337,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Website.CONTENT_ITEM_TYPE, null, R.string.websiteLabelsGroup, Weight.WEBSITE,
@@ -1341,7 +1362,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     SipAddress.CONTENT_ITEM_TYPE, null, R.string.label_sip_address,
@@ -1366,7 +1387,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     GroupMembership.CONTENT_ITEM_TYPE, null,
@@ -1383,7 +1404,7 @@ public abstract class BaseAccountType extends AccountType {
 
     /**
      * Event DataKind parser.
-     *
+     * <p>
      * Event DataKind is used only for Google/Exchange types, so this parser is not used for now.
      */
     private static class EventKindBuilder extends KindBuilder {
@@ -1394,7 +1415,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Event.CONTENT_ITEM_TYPE, Event.TYPE, R.string.eventLabelsGroup, Weight.EVENT,
@@ -1432,7 +1453,7 @@ public abstract class BaseAccountType extends AccountType {
 
     /**
      * Relationship DataKind parser.
-     *
+     * <p>
      * Relationship DataKind is used only for Google/Exchange types, so this parser is not used for
      * now.
      */
@@ -1444,7 +1465,7 @@ public abstract class BaseAccountType extends AccountType {
 
         @Override
         public List<DataKind> parseDataKind(Context context, XmlPullParser parser,
-                AttributeSet attrs) throws DefinitionException, XmlPullParserException,
+                                            AttributeSet attrs) throws DefinitionException, XmlPullParserException,
                 IOException {
             final DataKind kind = newDataKind(context, parser, attrs, false,
                     Relation.CONTENT_ITEM_TYPE, Relation.TYPE,
@@ -1467,7 +1488,7 @@ public abstract class BaseAccountType extends AccountType {
             if ("brother".equals(type)) return buildRelationType(Relation.TYPE_BROTHER);
             if ("child".equals(type)) return buildRelationType(Relation.TYPE_CHILD);
             if ("domestic_partner".equals(type)) {
-                    return buildRelationType(Relation.TYPE_DOMESTIC_PARTNER);
+                return buildRelationType(Relation.TYPE_DOMESTIC_PARTNER);
             }
             if ("father".equals(type)) return buildRelationType(Relation.TYPE_FATHER);
             if ("friend".equals(type)) return buildRelationType(Relation.TYPE_FRIEND);

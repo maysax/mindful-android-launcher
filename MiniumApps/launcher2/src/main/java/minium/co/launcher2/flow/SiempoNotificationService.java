@@ -4,10 +4,8 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
-import android.provider.ContactsContract;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.util.Log;
 
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -17,8 +15,6 @@ import java.util.Date;
 
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
-
-import static de.greenrobot.event.EventBus.TAG;
 
 /**
  * Created by Shahab on 5/16/2016.
@@ -63,10 +59,13 @@ public class SiempoNotificationService extends NotificationListenerService {
 
     }
 
-    @Override public void onListenerConnected() {
+    @Override
+    public void onListenerConnected() {
         Tracer.d("onListenerConnected()");
     }
-    @Override public void onListenerHintsChanged(int hints) {
+
+    @Override
+    public void onListenerHintsChanged(int hints) {
         Tracer.d("onListenerHintsChanged(" + hints + ')');
     }
 

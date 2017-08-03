@@ -84,9 +84,9 @@ public class CountryDetector {
 
     /**
      * @hide - hide this constructor because it has a parameter of type
-     *       ICountryDetector, which is a system private class. The right way to
-     *       create an instance of this class is using the factory
-     *       Context.getSystemService.
+     * ICountryDetector, which is a system private class. The right way to
+     * create an instance of this class is using the factory
+     * Context.getSystemService.
      */
     public CountryDetector(ICountryDetector service) {
         mService = service;
@@ -97,7 +97,7 @@ public class CountryDetector {
      * Start detecting the country that the user is in.
      *
      * @return the country if it is available immediately, otherwise null will
-     *         be returned.
+     * be returned.
      */
     public Country detectCountry() {
         return mService.detectCountry();
@@ -108,9 +108,9 @@ public class CountryDetector {
      * or changed.
      *
      * @param listener will be called when the country is detected or changed.
-     * @param looper a Looper object whose message queue will be used to
-     *        implement the callback mechanism. If looper is null then the
-     *        callbacks will be called on the main thread.
+     * @param looper   a Looper object whose message queue will be used to
+     *                 implement the callback mechanism. If looper is null then the
+     *                 callbacks will be called on the main thread.
      */
     public void addCountryListener(CountryListener listener, Looper looper) {
         synchronized (mListeners) {

@@ -36,10 +36,10 @@ import com.android.mms.R;
 /**
  * This activity provides the function to edit the duration of given slide.
  */
-public class EditSlideDurationActivity  extends Activity {
+public class EditSlideDurationActivity extends Activity {
     public static final String SLIDE_INDEX = "slide_index";
     public static final String SLIDE_TOTAL = "slide_total";
-    public static final String SLIDE_DUR   = "dur";
+    public static final String SLIDE_DUR = "dur";
 
     private TextView mLabel;
     private Button mDone;

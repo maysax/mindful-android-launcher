@@ -26,16 +26,16 @@ import android.provider.ContactsContract.Groups;
  */
 public final class GroupMetaDataLoader extends CursorLoader {
 
-    private final static String[] COLUMNS = new String[] {
-        Groups.ACCOUNT_NAME,
-        Groups.ACCOUNT_TYPE,
-        Groups.DATA_SET,
-        Groups._ID,
-        Groups.TITLE,
-        Groups.AUTO_ADD,
-        Groups.FAVORITES,
-        Groups.GROUP_IS_READ_ONLY,
-        Groups.DELETED,
+    private final static String[] COLUMNS = new String[]{
+            Groups.ACCOUNT_NAME,
+            Groups.ACCOUNT_TYPE,
+            Groups.DATA_SET,
+            Groups._ID,
+            Groups.TITLE,
+            Groups.AUTO_ADD,
+            Groups.FAVORITES,
+            Groups.GROUP_IS_READ_ONLY,
+            Groups.DELETED,
     };
 
     public final static int ACCOUNT_NAME = 0;

@@ -20,7 +20,6 @@ import android.content.Context;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 
-
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,13 +43,13 @@ public class DateUtils {
     // Variations of ISO 8601 date format.  Do not change the order - it does affect the
     // result in ambiguous cases.
     private static final SimpleDateFormat[] DATE_FORMATS = {
-        CommonDateUtils.FULL_DATE_FORMAT,
-        CommonDateUtils.DATE_AND_TIME_FORMAT,
-        new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.US),
-        new SimpleDateFormat("yyyyMMdd", Locale.US),
-        new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS'Z'", Locale.US),
-        new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.US),
-        new SimpleDateFormat("yyyyMMdd'T'HHmm'Z'", Locale.US),
+            CommonDateUtils.FULL_DATE_FORMAT,
+            CommonDateUtils.DATE_AND_TIME_FORMAT,
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'", Locale.US),
+            new SimpleDateFormat("yyyyMMdd", Locale.US),
+            new SimpleDateFormat("yyyyMMdd'T'HHmmssSSS'Z'", Locale.US),
+            new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'", Locale.US),
+            new SimpleDateFormat("yyyyMMdd'T'HHmm'Z'", Locale.US),
     };
 
     static {
@@ -64,9 +63,9 @@ public class DateUtils {
     /**
      * Parses the supplied string to see if it looks like a date.
      *
-     * @param string The string representation of the provided date
+     * @param string          The string representation of the provided date
      * @param mustContainYear If true, the string is parsed as a date containing a year. If false,
-     * the string is parsed into a valid date even if the year field is missing.
+     *                        the string is parsed into a valid date even if the year field is missing.
      * @return A Calendar object corresponding to the date if the string is successfully parsed.
      * If not, null is returned.
      */
@@ -132,7 +131,7 @@ public class DateUtils {
      * longForm set to {@code true} by default.
      *
      * @param context Valid context
-     * @param string String representation of a date to parse
+     * @param string  String representation of a date to parse
      * @return Returns the same date in a cleaned up format. If the supplied string does not look
      * like a date, return it unchanged.
      */
@@ -144,10 +143,10 @@ public class DateUtils {
     /**
      * Parses the supplied string to see if it looks like a date.
      *
-     * @param context Valid context
-     * @param string String representation of a date to parse
+     * @param context  Valid context
+     * @param string   String representation of a date to parse
      * @param longForm If true, return the date formatted into its long string representation.
-     * If false, return the date formatted using its short form representation (i.e. 12/11/2012)
+     *                 If false, return the date formatted using its short form representation (i.e. 12/11/2012)
      * @return Returns the same date in a cleaned up format. If the supplied string does not look
      * like a date, return it unchanged.
      */
@@ -174,7 +173,7 @@ public class DateUtils {
         } else {
             outFormat =
                     longForm ? DateFormat.getLongDateFormat(context) :
-                    DateFormat.getDateFormat(context);
+                            DateFormat.getDateFormat(context);
         }
         synchronized (outFormat) {
             outFormat.setTimeZone(UTC_TIMEZONE);
@@ -210,7 +209,7 @@ public class DateUtils {
         final String yearPattern = pattern.contains(
                 "de") ? "[^Mm]*[Yy]+[^Mm]*" : "[^DdMm]*[Yy]+[^DdMm]*";
         try {
-         // Eliminate the substring in pattern that matches the format for that of year
+            // Eliminate the substring in pattern that matches the format for that of year
             return new SimpleDateFormat(pattern.replaceAll(yearPattern, ""));
         } catch (IllegalArgumentException e) {
             return new SimpleDateFormat(
@@ -262,7 +261,7 @@ public class DateUtils {
                 // Otherwise, keep going until we find the next leap year (this is not guaranteed
                 // to be in 4 years time).
                 do {
-                    anniversaryYear +=1;
+                    anniversaryYear += 1;
                 } while (isFeb29 && !anniversary.isLeapYear(anniversaryYear));
                 anniversary.set(anniversaryYear, targetMonth, targetDay);
             }
@@ -274,7 +273,7 @@ public class DateUtils {
      * Determine the difference, in days between two dates.  Uses similar logic as the
      * {@link android.text.format.DateUtils.getRelativeTimeSpanString} method.
      *
-     * @param time Instance of time object to use for calculations.
+     * @param time  Instance of time object to use for calculations.
      * @param date1 First date to check.
      * @param date2 Second date to check.
      * @return The absolute difference in days between the two dates.

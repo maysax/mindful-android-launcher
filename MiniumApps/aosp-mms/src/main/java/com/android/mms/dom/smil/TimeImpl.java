@@ -23,14 +23,14 @@ import org.w3c.dom.smil.Time;
 
 public class TimeImpl implements Time {
     static final int ALLOW_INDEFINITE_VALUE = (1 << 0);
-    static final int ALLOW_OFFSET_VALUE     = (1 << 1);
-    static final int ALLOW_SYNCBASE_VALUE   = (1 << 2);
+    static final int ALLOW_OFFSET_VALUE = (1 << 1);
+    static final int ALLOW_SYNCBASE_VALUE = (1 << 2);
     static final int ALLOW_SYNCTOPREV_VALUE = (1 << 3);
-    static final int ALLOW_EVENT_VALUE      = (1 << 4);
-    static final int ALLOW_MARKER_VALUE     = (1 << 5);
-    static final int ALLOW_WALLCLOCK_VALUE  = (1 << 6);
-    static final int ALLOW_NEGATIVE_VALUE   = (1 << 7);
-    static final int ALLOW_ALL              = 0xFF;
+    static final int ALLOW_EVENT_VALUE = (1 << 4);
+    static final int ALLOW_MARKER_VALUE = (1 << 5);
+    static final int ALLOW_WALLCLOCK_VALUE = (1 << 6);
+    static final int ALLOW_NEGATIVE_VALUE = (1 << 7);
+    static final int ALLOW_ALL = 0xFF;
 
     short mTimeType;
     boolean mResolved;
@@ -59,13 +59,13 @@ public class TimeImpl implements Time {
      * Wallclock-sync-value ::= "wallclock(" wallclock-value ")"
      * </pre>
      *
-     * @param timeValue A String in the representation specified above
+     * @param timeValue   A String in the representation specified above
      * @param constraints Any combination of the #ALLOW_* flags
-     * @return  A TimeImpl instance representing
-     * @exception java.lang.IllegalArgumentException if the timeValue input
-     *          parameter does not comply with the defined syntax
-     * @exception java.lang.NullPointerException if the timekValue string is
-     *          <code>null</code>
+     * @return A TimeImpl instance representing
+     * @throws java.lang.IllegalArgumentException if the timeValue input
+     *                                            parameter does not comply with the defined syntax
+     * @throws java.lang.NullPointerException     if the timekValue string is
+     *                                            <code>null</code>
      */
     TimeImpl(String timeValue, int constraints) {
         /*
@@ -79,7 +79,7 @@ public class TimeImpl implements Time {
          */
         // Will throw NullPointerException if timeValue is null
         if (timeValue.equals("indefinite")
-                && ((constraints & ALLOW_INDEFINITE_VALUE) != 0) ) {
+                && ((constraints & ALLOW_INDEFINITE_VALUE) != 0)) {
             mTimeType = SMIL_TIME_INDEFINITE;
         } else if ((constraints & ALLOW_OFFSET_VALUE) != 0) {
             int sign = 1;
@@ -89,7 +89,7 @@ public class TimeImpl implements Time {
                 timeValue = timeValue.substring(1);
                 sign = -1;
             }
-            mResolvedOffset = sign*parseClockValue(timeValue)/1000.0;
+            mResolvedOffset = sign * parseClockValue(timeValue) / 1000.0;
             mResolved = true;
             mTimeType = SMIL_TIME_OFFSET;
         } else {
@@ -120,12 +120,12 @@ public class TimeImpl implements Time {
      * </pre>
      *
      * @param clockValue A String in the representation specified above
-     * @return  A float value in milliseconds that matches the string
-     *          representation given as the parameter
-     * @exception java.lang.IllegalArgumentException if the clockValue input
-     *          parameter does not comply with the defined syntax
-     * @exception java.lang.NullPointerException if the clockValue string is
-     *          <code>null</code>
+     * @return A float value in milliseconds that matches the string
+     * representation given as the parameter
+     * @throws java.lang.IllegalArgumentException if the clockValue input
+     *                                            parameter does not comply with the defined syntax
+     * @throws java.lang.NullPointerException     if the clockValue string is
+     *                                            <code>null</code>
      */
     public static float parseClockValue(String clockValue) {
         try {
@@ -138,11 +138,11 @@ public class TimeImpl implements Time {
             if (clockValue.endsWith("ms")) {
                 result = parseFloat(clockValue, 2, true);
             } else if (clockValue.endsWith("s")) {
-                result = 1000*parseFloat(clockValue, 1, true);
+                result = 1000 * parseFloat(clockValue, 1, true);
             } else if (clockValue.endsWith("min")) {
-                result = 60000*parseFloat(clockValue, 3, true);
+                result = 60000 * parseFloat(clockValue, 3, true);
             } else if (clockValue.endsWith("h")) {
-                result = 3600000*parseFloat(clockValue, 1, true);
+                result = 3600000 * parseFloat(clockValue, 1, true);
             } else {
                 // Handle Timecount-val without metric
                 try {
@@ -159,16 +159,16 @@ public class TimeImpl implements Time {
                 if (timeValues.length == 2) {
                     indexOfMinutes = 0;
                 } else if (timeValues.length == 3) {
-                    result = 3600000*(int)parseFloat(timeValues[0], 0, false);
+                    result = 3600000 * (int) parseFloat(timeValues[0], 0, false);
                     indexOfMinutes = 1;
                 } else {
                     throw new IllegalArgumentException();
                 }
 
                 // Read Minutes
-                int minutes = (int)parseFloat(timeValues[indexOfMinutes], 0, false);
+                int minutes = (int) parseFloat(timeValues[indexOfMinutes], 0, false);
                 if ((minutes >= 00) && (minutes <= 59)) {
-                    result += 60000*minutes;
+                    result += 60000 * minutes;
                 } else {
                     throw new IllegalArgumentException();
                 }
@@ -176,7 +176,7 @@ public class TimeImpl implements Time {
                 // Read Seconds
                 float seconds = parseFloat(timeValues[indexOfMinutes + 1], 0, true);
                 if ((seconds >= 00) && (seconds < 60)) {
-                    result += 60000*seconds;
+                    result += 60000 * seconds;
                 } else {
                     throw new IllegalArgumentException();
                 }
@@ -198,8 +198,9 @@ public class TimeImpl implements Time {
      * Text     ::= CHAR*;   any sequence of chars
      * DIGIT    ::= [0-9]
      * </pre>
-     * @param value The Value to parse
-     * @param ignoreLast The size of Text to ignore
+     *
+     * @param value        The Value to parse
+     * @param ignoreLast   The size of Text to ignore
      * @param parseDecimal Whether Decimal is expected
      * @return The float value without Text, rounded to 3 digits after '.'
      * @throws IllegalArgumentException if Decimal was not expected but encountered
@@ -219,7 +220,7 @@ public class TimeImpl implements Time {
             // Read value up to 3 decimals and cut the rest
             result = Float.parseFloat(value.substring(0, indexOfComma));
             result += Float.parseFloat(
-                    value.substring(indexOfComma + 1, indexOfComma + 4))/1000;
+                    value.substring(indexOfComma + 1, indexOfComma + 4)) / 1000;
         } else {
             result = Integer.parseInt(value);
         }

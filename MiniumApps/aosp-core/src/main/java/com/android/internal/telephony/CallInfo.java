@@ -20,7 +20,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- *  A parcelable holder class of Call information data.
+ * A parcelable holder class of Call information data.
  */
 public class CallInfo implements Parcelable {
 
@@ -46,7 +46,7 @@ public class CallInfo implements Parcelable {
      * Responsible for creating CallInfo objects for deserialized Parcels.
      */
     public static final Parcelable.Creator<CallInfo> CREATOR
-            = new Parcelable.Creator<CallInfo> () {
+            = new Parcelable.Creator<CallInfo>() {
 
         @Override
         public CallInfo createFromParcel(Parcel source) {

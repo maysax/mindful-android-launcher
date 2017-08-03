@@ -39,7 +39,7 @@
     </style>
 
     <!-- BASE THEMES -->
-    
+
     <style name="AppBaseThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="actionBarPopupTheme">@style/PopupTheme</item>
         <item name="android:windowNoTitle">true</item>

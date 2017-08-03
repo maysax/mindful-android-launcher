@@ -2,8 +2,6 @@ package minium.co.contacts.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.provider.Contacts;
 
 import com.android.contacts.activities.PeopleActivity;
 

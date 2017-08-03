@@ -1,11 +1,5 @@
 package com.android.mms.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import android.app.Activity;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
@@ -36,8 +30,13 @@ import com.android.mms.ui.ComposeMessageActivity;
 import com.android.mms.ui.MessageUtils;
 import com.android.mms.util.AddressUtils;
 import com.android.mms.util.DraftCache;
-
 import com.google.android.mms.pdu.PduHeaders;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * An interface for finding information about conversations and/or creating new ones.
@@ -48,33 +47,33 @@ public class Conversation {
     private static final boolean DELETEDEBUG = false;
 
     public static final Uri sAllThreadsUri =
-        Threads.CONTENT_URI.buildUpon().appendQueryParameter("simple", "true").build();
+            Threads.CONTENT_URI.buildUpon().appendQueryParameter("simple", "true").build();
 
     public static final String[] ALL_THREADS_PROJECTION = {
-        Threads._ID, Threads.DATE, Threads.MESSAGE_COUNT, Threads.RECIPIENT_IDS,
-        Threads.SNIPPET, Threads.SNIPPET_CHARSET, Threads.READ, Threads.ERROR,
-        Threads.HAS_ATTACHMENT
+            Threads._ID, Threads.DATE, Threads.MESSAGE_COUNT, Threads.RECIPIENT_IDS,
+            Threads.SNIPPET, Threads.SNIPPET_CHARSET, Threads.READ, Threads.ERROR,
+            Threads.HAS_ATTACHMENT
     };
 
     public static final String[] UNREAD_PROJECTION = {
-        Threads._ID,
-        Threads.READ
+            Threads._ID,
+            Threads.READ
     };
 
     private static final String UNREAD_SELECTION = "(read=0 OR seen=0)";
 
-    private static final String[] SEEN_PROJECTION = new String[] {
-        "seen"
+    private static final String[] SEEN_PROJECTION = new String[]{
+            "seen"
     };
 
-    private static final int ID             = 0;
-    private static final int DATE           = 1;
-    private static final int MESSAGE_COUNT  = 2;
-    private static final int RECIPIENT_IDS  = 3;
-    private static final int SNIPPET        = 4;
-    private static final int SNIPPET_CS     = 5;
-    private static final int READ           = 6;
-    private static final int ERROR          = 7;
+    private static final int ID = 0;
+    private static final int DATE = 1;
+    private static final int MESSAGE_COUNT = 2;
+    private static final int RECIPIENT_IDS = 3;
+    private static final int SNIPPET = 4;
+    private static final int SNIPPET_CS = 5;
+    private static final int READ = 6;
+    private static final int ERROR = 7;
     private static final int HAS_ATTACHMENT = 8;
 
 
@@ -93,7 +92,7 @@ public class Conversation {
     private boolean mHasAttachment;     // True if any message has an attachment.
     private boolean mHasError;          // True if any message is in an error state.
     private boolean mIsChecked;         // True if user has selected the conversation for a
-                                        // multi-operation such as delete.
+    // multi-operation such as delete.
 
     private static ContentValues sReadContentValues;
     private static boolean sLoadingThreads;
@@ -303,19 +302,19 @@ public class Conversation {
     }
 
     private void sendReadReport(final Context context,
-            final long threadId,
-            final int status) {
+                                final long threadId,
+                                final int status) {
         String selection = Mms.MESSAGE_TYPE + " = " + PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF
-            + " AND " + Mms.READ + " = 0"
-            + " AND " + Mms.READ_REPORT + " = " + PduHeaders.VALUE_YES;
+                + " AND " + Mms.READ + " = 0"
+                + " AND " + Mms.READ_REPORT + " = " + PduHeaders.VALUE_YES;
 
         if (threadId != -1) {
             selection = selection + " AND " + Mms.THREAD_ID + " = " + threadId;
         }
 
         final Cursor c = SqliteWrapper.query(context, context.getContentResolver(),
-                        Mms.Inbox.CONTENT_URI, new String[] {Mms._ID, Mms.MESSAGE_ID},
-                        selection, null, null);
+                Mms.Inbox.CONTENT_URI, new String[]{Mms._ID, Mms.MESSAGE_ID},
+                selection, null, null);
 
         try {
             if (c == null || c.getCount() == 0) {
@@ -328,7 +327,7 @@ public class Conversation {
                     LogTag.debug("sendReadReport: uri = " + uri);
                 }
                 MmsMessageSender.sendReadRec(context, AddressUtils.getFrom(context, uri),
-                                             c.getString(1), status);
+                        c.getString(1), status);
             }
         } finally {
             if (c != null) {
@@ -441,6 +440,7 @@ public class Conversation {
 
     /**
      * Return the Uri for all messages in the given thread ID.
+     *
      * @deprecated
      */
     public static Uri getUri(long threadId) {
@@ -549,6 +549,7 @@ public class Conversation {
     public synchronized int getMessageCount() {
         return mMessageCount;
     }
+
     /**
      * Set the number of messages in this conversation, excluding the draft
      * (if it exists).
@@ -615,7 +616,7 @@ public class Conversation {
                 recipients.add(c.getNumber());
             }
         }
-        synchronized(sDeletingThreadsLock) {
+        synchronized (sDeletingThreadsLock) {
             if (DELETEDEBUG) {
                 ComposeMessageActivity.log("Conversation getOrCreateThreadId for: " +
                         list.formatNamesAndNumbers(",") + " sDeletingThreads: " + sDeletingThreads);
@@ -645,7 +646,7 @@ public class Conversation {
     }
 
     public static long getOrCreateThreadId(Context context, String address) {
-        synchronized(sDeletingThreadsLock) {
+        synchronized (sDeletingThreadsLock) {
             if (DELETEDEBUG) {
                 ComposeMessageActivity.log("Conversation getOrCreateThreadId for: " +
                         address + " sDeletingThreads: " + sDeletingThreads);
@@ -682,7 +683,7 @@ public class Conversation {
     @Override
     public synchronized boolean equals(Object obj) {
         try {
-            Conversation other = (Conversation)obj;
+            Conversation other = (Conversation) obj;
             return (mRecipients.equals(other.mRecipients));
         } catch (ClassCastException e) {
             return false;
@@ -730,10 +731,10 @@ public class Conversation {
      * Start a query for in the database on the specified AsyncQueryHandler with the specified
      * "where" clause.
      *
-     * @param handler An AsyncQueryHandler that will receive onQueryComplete
-     *                upon completion of the query
-     * @param token   The token that will be passed to onQueryComplete
-     * @param selection   A where clause (can be null) to select particular conv items.
+     * @param handler   An AsyncQueryHandler that will receive onQueryComplete
+     *                  upon completion of the query
+     * @param token     The token that will be passed to onQueryComplete
+     * @param selection A where clause (can be null) to select particular conv items.
      */
     public static void startQuery(AsyncQueryHandler handler, int token, String selection) {
         handler.cancelOperation(token);
@@ -750,15 +751,15 @@ public class Conversation {
     /**
      * Start a delete of the conversation with the specified thread ID.
      *
-     * @param handler An AsyncQueryHandler that will receive onDeleteComplete
-     *                upon completion of the conversation being deleted
-     * @param token   The token that will be passed to onDeleteComplete
+     * @param handler   An AsyncQueryHandler that will receive onDeleteComplete
+     *                  upon completion of the conversation being deleted
+     * @param token     The token that will be passed to onDeleteComplete
      * @param deleteAll Delete the whole thread including locked messages
      * @param threadIds Collection of thread IDs of the conversations to be deleted
      */
     public static void startDelete(ConversationQueryHandler handler, int token, boolean deleteAll,
-            Collection<Long> threadIds) {
-        synchronized(sDeletingThreadsLock) {
+                                   Collection<Long> threadIds) {
+        synchronized (sDeletingThreadsLock) {
             if (DELETEDEBUG) {
                 Log.v(TAG, "Conversation startDelete sDeletingThreads: " +
                         sDeletingThreads);
@@ -783,17 +784,18 @@ public class Conversation {
 
     /**
      * Start deleting all conversations in the database.
-     * @param handler An AsyncQueryHandler that will receive onDeleteComplete
-     *                upon completion of all conversations being deleted
-     * @param token   The token that will be passed to onDeleteComplete
+     *
+     * @param handler   An AsyncQueryHandler that will receive onDeleteComplete
+     *                  upon completion of all conversations being deleted
+     * @param token     The token that will be passed to onDeleteComplete
      * @param deleteAll Delete the whole thread including locked messages
      */
     public static void startDeleteAll(ConversationQueryHandler handler, int token,
-            boolean deleteAll) {
-        synchronized(sDeletingThreadsLock) {
+                                      boolean deleteAll) {
+        synchronized (sDeletingThreadsLock) {
             if (DELETEDEBUG) {
                 Log.v(TAG, "Conversation startDeleteAll sDeletingThreads: " +
-                                sDeletingThreads);
+                        sDeletingThreads);
             }
             if (sDeletingThreads) {
                 Log.e(TAG, "startDeleteAll already in the middle of a delete", new Exception());
@@ -834,11 +836,11 @@ public class Conversation {
 //                }
 
                 // release lock
-                synchronized(sDeletingThreadsLock) {
+                synchronized (sDeletingThreadsLock) {
                     sDeletingThreads = false;
                     if (DELETEDEBUG) {
                         Log.v(TAG, "Conversation onDeleteComplete sDeletingThreads: " +
-                                        sDeletingThreads);
+                                sDeletingThreads);
                     }
                     sDeletingThreadsLock.notifyAll();
                 }
@@ -848,14 +850,15 @@ public class Conversation {
 
     /**
      * Check for locked messages in all threads or a specified thread.
-     * @param handler An AsyncQueryHandler that will receive onQueryComplete
-     *                upon completion of looking for locked messages
-     * @param threadIds   A list of threads to search. null means all threads
-     * @param token   The token that will be passed to onQueryComplete
+     *
+     * @param handler   An AsyncQueryHandler that will receive onQueryComplete
+     *                  upon completion of looking for locked messages
+     * @param threadIds A list of threads to search. null means all threads
+     * @param token     The token that will be passed to onQueryComplete
      */
     public static void startQueryHaveLockedMessages(AsyncQueryHandler handler,
-            Collection<Long> threadIds,
-            int token) {
+                                                    Collection<Long> threadIds,
+                                                    int token) {
         handler.cancelOperation(token);
         Uri uri = MmsSms.CONTENT_LOCKED_URI;
 
@@ -880,14 +883,15 @@ public class Conversation {
 
     /**
      * Check for locked messages in all threads or a specified thread.
-     * @param handler An AsyncQueryHandler that will receive onQueryComplete
-     *                upon completion of looking for locked messages
-     * @param threadId   The threadId of the thread to search. -1 means all threads
-     * @param token   The token that will be passed to onQueryComplete
+     *
+     * @param handler  An AsyncQueryHandler that will receive onQueryComplete
+     *                 upon completion of looking for locked messages
+     * @param threadId The threadId of the thread to search. -1 means all threads
+     * @param token    The token that will be passed to onQueryComplete
      */
     public static void startQueryHaveLockedMessages(AsyncQueryHandler handler,
-            long threadId,
-            int token) {
+                                                    long threadId,
+                                                    int token) {
         ArrayList<Long> threadIds = null;
         if (threadId != -1) {
             threadIds = new ArrayList<Long>();
@@ -939,8 +943,13 @@ public class Conversation {
      */
     private static class Cache {
         private static Cache sInstance = new Cache();
-        static Cache getInstance() { return sInstance; }
+
+        static Cache getInstance() {
+            return sInstance;
+        }
+
         private final HashSet<Conversation> mCache;
+
         private Cache() {
             mCache = new HashSet<Conversation>(10);
         }
@@ -1092,11 +1101,11 @@ public class Conversation {
      */
     public static void init(final Context context) {
         Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    cacheAllThreads(context);
-                }
-            }, "Conversation.init");
+            @Override
+            public void run() {
+                cacheAllThreads(context);
+            }
+        }, "Conversation.init");
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
@@ -1211,7 +1220,7 @@ public class Conversation {
         synchronized (Cache.getInstance()) {
             if (sLoadingThreads) {
                 return;
-                }
+            }
             sLoadingThreads = true;
         }
 
@@ -1330,32 +1339,32 @@ public class Conversation {
         }
     }
 
-    static final String[] SMS_PROJECTION = new String[] {
-        BaseColumns._ID,
-        // For SMS
-        Sms.THREAD_ID,
-        Sms.ADDRESS,
-        Sms.BODY,
-        Sms.DATE,
-        Sms.READ,
-        Sms.TYPE,
-        Sms.STATUS,
-        Sms.LOCKED,
-        Sms.ERROR_CODE,
+    static final String[] SMS_PROJECTION = new String[]{
+            BaseColumns._ID,
+            // For SMS
+            Sms.THREAD_ID,
+            Sms.ADDRESS,
+            Sms.BODY,
+            Sms.DATE,
+            Sms.READ,
+            Sms.TYPE,
+            Sms.STATUS,
+            Sms.LOCKED,
+            Sms.ERROR_CODE,
     };
 
     // The indexes of the default columns which must be consistent
     // with above PROJECTION.
-    static final int COLUMN_ID                  = 0;
-    static final int COLUMN_THREAD_ID           = 1;
-    static final int COLUMN_SMS_ADDRESS         = 2;
-    static final int COLUMN_SMS_BODY            = 3;
-    static final int COLUMN_SMS_DATE            = 4;
-    static final int COLUMN_SMS_READ            = 5;
-    static final int COLUMN_SMS_TYPE            = 6;
-    static final int COLUMN_SMS_STATUS          = 7;
-    static final int COLUMN_SMS_LOCKED          = 8;
-    static final int COLUMN_SMS_ERROR_CODE      = 9;
+    static final int COLUMN_ID = 0;
+    static final int COLUMN_THREAD_ID = 1;
+    static final int COLUMN_SMS_ADDRESS = 2;
+    static final int COLUMN_SMS_BODY = 3;
+    static final int COLUMN_SMS_DATE = 4;
+    static final int COLUMN_SMS_READ = 5;
+    static final int COLUMN_SMS_TYPE = 6;
+    static final int COLUMN_SMS_STATUS = 7;
+    static final int COLUMN_SMS_LOCKED = 8;
+    static final int COLUMN_SMS_ERROR_CODE = 9;
 
     public static void dumpSmsTable(Context context) {
         LogTag.debug("**** Dump of sms table ****");
@@ -1385,13 +1394,14 @@ public class Conversation {
      * recipient ids. These ids are keys in the canonical_addresses table. The recipient is
      * compared against what's stored in the mmssms.db, but only if the recipient id list has
      * a single address.
-     * @param context is used for getting a ContentResolver
-     * @param threadId of the thread we're sending to
+     *
+     * @param context      is used for getting a ContentResolver
+     * @param threadId     of the thread we're sending to
      * @param recipientStr is a phone number or email address
      * @return the verified number or email of the recipient
      */
     public static String verifySingleRecipient(final Context context,
-            final long threadId, final String recipientStr) {
+                                               final long threadId, final String recipientStr) {
         if (threadId <= 0) {
             LogTag.error("verifySingleRecipient threadId is ZERO, recipient: " + recipientStr);
             LogTag.dumpInternalTables(context);
@@ -1450,7 +1460,7 @@ public class Conversation {
         if (context instanceof Activity) {
             LogTag.warnPossibleRecipientMismatch("verifySingleRecipient for threadId: " +
                     threadId + " original recipient: " + recipientStr +
-                    " recipient from DB: " + address, (Activity)context);
+                    " recipient from DB: " + address, (Activity) context);
         }
         LogTag.dumpInternalTables(context);
         if (Log.isLoggable(LogTag.THREAD_CACHE, Log.VERBOSE)) {

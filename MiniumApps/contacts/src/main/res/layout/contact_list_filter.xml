@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2011 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,29 +14,19 @@
   limitations under the License.
   -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fillViewport="true">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:fillViewport="true">
 
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
+    <ListView android:id="@android:id/list" android:layout_width="match_parent"
+        android:layout_height="0dip" android:layout_weight="1"
         android:layout_marginLeft="@dimen/contact_filter_left_margin"
         android:layout_marginRight="@dimen/contact_filter_right_margin"
         android:layout_marginStart="@dimen/contact_filter_left_margin"
         android:layout_marginEnd="@dimen/contact_filter_right_margin" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:layout_marginLeft="16dip"
-        android:layout_marginRight="16dip"
-        android:layout_marginStart="16dip"
-        android:layout_marginEnd="16dip"
+    <View android:layout_width="match_parent" android:layout_height="1dip"
+        android:layout_marginLeft="16dip" android:layout_marginRight="16dip"
+        android:layout_marginStart="16dip" android:layout_marginEnd="16dip"
         android:background="?android:attr/dividerHorizontal" />
 </LinearLayout>

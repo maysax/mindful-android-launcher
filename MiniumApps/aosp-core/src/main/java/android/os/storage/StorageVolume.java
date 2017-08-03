@@ -44,9 +44,13 @@ public class StorageVolume implements Parcelable {
     private final boolean mEmulated;
     private final int mMtpReserveSpace;
     private final boolean mAllowMassStorage;
-    /** Maximum file size for the storage, or zero for no limit */
+    /**
+     * Maximum file size for the storage, or zero for no limit
+     */
     private final long mMaxFileSize;
-    /** When set, indicates exclusive ownership of this volume */
+    /**
+     * When set, indicates exclusive ownership of this volume
+     */
     private final UserHandle mOwner;
 
     private String mUuid;
@@ -59,8 +63,8 @@ public class StorageVolume implements Parcelable {
     public static final String EXTRA_STORAGE_VOLUME = "storage_volume";
 
     public StorageVolume(File path, int descriptionId, boolean primary, boolean removable,
-            boolean emulated, int mtpReserveSpace, boolean allowMassStorage, long maxFileSize,
-            UserHandle owner) {
+                         boolean emulated, int mtpReserveSpace, boolean allowMassStorage, long maxFileSize,
+                         UserHandle owner) {
         mPath = path;
         mDescriptionId = descriptionId;
         mPrimary = primary;
@@ -216,7 +220,7 @@ public class StorageVolume implements Parcelable {
             return -1;
         }
         try {
-            return (int)Long.parseLong(mUuid.replace("-", ""), 16);
+            return (int) Long.parseLong(mUuid.replace("-", ""), 16);
         } catch (NumberFormatException e) {
             return -1;
         }
@@ -241,7 +245,7 @@ public class StorageVolume implements Parcelable {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof StorageVolume && mPath != null) {
-            StorageVolume volume = (StorageVolume)obj;
+            StorageVolume volume = (StorageVolume) obj;
             return (mPath.equals(volume.mPath));
         }
         return false;

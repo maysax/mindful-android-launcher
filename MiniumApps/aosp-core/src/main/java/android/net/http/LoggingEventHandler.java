@@ -37,9 +37,9 @@ public class LoggingEventHandler implements EventHandler {
                        String reason_phrase) {
         if (HttpLog.LOGV) {
             HttpLog.v("LoggingEventHandler:status() major: " + major_version +
-                  " minor: " + minor_version +
-                  " code: " + code +
-                  " reason: " + reason_phrase);
+                    " minor: " + minor_version +
+                    " code: " + code +
+                    " reason: " + reason_phrase);
         }
     }
 
@@ -53,7 +53,7 @@ public class LoggingEventHandler implements EventHandler {
     public void locationChanged(String newLocation, boolean permanent) {
         if (HttpLog.LOGV) {
             HttpLog.v("LoggingEventHandler: locationChanged() " + newLocation +
-                      " permanent " + permanent);
+                    " permanent " + permanent);
         }
     }
 
@@ -63,6 +63,7 @@ public class LoggingEventHandler implements EventHandler {
         }
         // HttpLog.v(new String(data, 0, len));
     }
+
     public void endData() {
         if (HttpLog.LOGV) {
             HttpLog.v("LoggingEventHandler: endData() called");
@@ -70,15 +71,15 @@ public class LoggingEventHandler implements EventHandler {
     }
 
     public void certificate(SslCertificate certificate) {
-         if (HttpLog.LOGV) {
-             HttpLog.v("LoggingEventHandler: certificate(): " + certificate);
-         }
+        if (HttpLog.LOGV) {
+            HttpLog.v("LoggingEventHandler: certificate(): " + certificate);
+        }
     }
 
     public void error(int id, String description) {
         if (HttpLog.LOGV) {
             HttpLog.v("LoggingEventHandler: error() called Id:" + id +
-                      " description " + description);
+                    " description " + description);
         }
     }
 

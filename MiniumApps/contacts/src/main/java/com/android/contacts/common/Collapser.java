@@ -32,7 +32,8 @@ public final class Collapser {
     /*
      * This utility class cannot be instantiated.
      */
-    private Collapser() {}
+    private Collapser() {
+    }
 
     /*
      * The Collapser uses an n^2 algorithm so we don't want it to run on
@@ -46,6 +47,7 @@ public final class Collapser {
      */
     public interface Collapsible<T> {
         public void collapseWith(T t);
+
         public boolean shouldCollapseWith(T t, Context context);
 
     }

@@ -27,18 +27,19 @@ import minium.co.contacts.R;
 public class ClipboardUtils {
     private static final String TAG = "ClipboardUtils";
 
-    private ClipboardUtils() { }
+    private ClipboardUtils() {
+    }
 
     /**
      * Copy a text to clipboard.
      *
-     * @param context Context
-     * @param label Label to show to the user describing this clip.
-     * @param text Text to copy.
+     * @param context   Context
+     * @param label     Label to show to the user describing this clip.
+     * @param text      Text to copy.
      * @param showToast If {@code true}, a toast is shown to the user.
      */
     public static void copyText(Context context, CharSequence label, CharSequence text,
-            boolean showToast) {
+                                boolean showToast) {
         if (TextUtils.isEmpty(text)) return;
 
         ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(

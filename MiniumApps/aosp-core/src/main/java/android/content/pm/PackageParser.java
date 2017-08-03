@@ -16,15 +16,6 @@
 
 package android.content.pm;
 
-import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_BAD_MANIFEST;
-import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_BAD_PACKAGE_NAME;
-import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_CERTIFICATE_ENCODING;
-import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES;
-import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
-import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_NOT_APK;
-import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_NO_CERTIFICATES;
-import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_UNEXPECTED_EXCEPTION;
-
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -51,8 +42,6 @@ import android.util.TypedValue;
 
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.XmlUtils;
-
-import libcore.io.IoUtils;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -82,6 +71,17 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.StrictJarFile;
 import java.util.zip.ZipEntry;
 
+import libcore.io.IoUtils;
+
+import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_BAD_MANIFEST;
+import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_BAD_PACKAGE_NAME;
+import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_CERTIFICATE_ENCODING;
+import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES;
+import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
+import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_NOT_APK;
+import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_NO_CERTIFICATES;
+import static android.content.pm.PackageManager.INSTALL_PARSE_FAILED_UNEXPECTED_EXCEPTION;
+
 /**
  * Parser for package files (APKs) on disk. This supports apps packaged either
  * as a single "monolithic" APK, or apps packaged as a "cluster" of multiple
@@ -108,15 +108,19 @@ public class PackageParser {
     // TODO: switch outError users to PackageParserException
     // TODO: refactor "codePath" to "apkPath"
 
-    /** File name in an APK for the Android manifest. */
+    /**
+     * File name in an APK for the Android manifest.
+     */
     private static final String ANDROID_MANIFEST_FILENAME = "AndroidManifest.xml";
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static class NewPermissionInfo {
         public final String name;
         public final int sdkVersion;
         public final int fileVersion;
-        
+
         public NewPermissionInfo(String name, int sdkVersion, int fileVersion) {
             this.name = name;
             this.sdkVersion = sdkVersion;
@@ -124,7 +128,9 @@ public class PackageParser {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static class SplitPermissionInfo {
         public final String rootPerm;
         public final String[] newPerms;
@@ -144,37 +150,39 @@ public class PackageParser {
      * If sdkVersion is 0, then this is not a permission that we want to
      * automatically add to older apps, but we do want to allow it to be
      * granted during a platform update.
+     *
      * @hide
      */
     public static final PackageParser.NewPermissionInfo NEW_PERMISSIONS[] =
-        new PackageParser.NewPermissionInfo[] {
-            new PackageParser.NewPermissionInfo(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    android.os.Build.VERSION_CODES.DONUT, 0),
-            new PackageParser.NewPermissionInfo(android.Manifest.permission.READ_PHONE_STATE,
-                    android.os.Build.VERSION_CODES.DONUT, 0)
-    };
+            new PackageParser.NewPermissionInfo[]{
+                    new PackageParser.NewPermissionInfo(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            android.os.Build.VERSION_CODES.DONUT, 0),
+                    new PackageParser.NewPermissionInfo(android.Manifest.permission.READ_PHONE_STATE,
+                            android.os.Build.VERSION_CODES.DONUT, 0)
+            };
 
     /**
      * List of permissions that have been split into more granular or dependent
      * permissions.
+     *
      * @hide
      */
     public static final PackageParser.SplitPermissionInfo SPLIT_PERMISSIONS[] =
-        new PackageParser.SplitPermissionInfo[] {
-            // READ_EXTERNAL_STORAGE is always required when an app requests
-            // WRITE_EXTERNAL_STORAGE, because we can't have an app that has
-            // write access without read access.  The hack here with the target
-            // target SDK version ensures that this grant is always done.
-            new PackageParser.SplitPermissionInfo(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    new String[] { android.Manifest.permission.READ_EXTERNAL_STORAGE },
-                    android.os.Build.VERSION_CODES.CUR_DEVELOPMENT+1),
-            new PackageParser.SplitPermissionInfo(android.Manifest.permission.READ_CONTACTS,
-                    new String[] { android.Manifest.permission.READ_CALL_LOG },
-                    android.os.Build.VERSION_CODES.JELLY_BEAN),
-            new PackageParser.SplitPermissionInfo(android.Manifest.permission.WRITE_CONTACTS,
-                    new String[] { android.Manifest.permission.WRITE_CALL_LOG },
-                    android.os.Build.VERSION_CODES.JELLY_BEAN)
-    };
+            new PackageParser.SplitPermissionInfo[]{
+                    // READ_EXTERNAL_STORAGE is always required when an app requests
+                    // WRITE_EXTERNAL_STORAGE, because we can't have an app that has
+                    // write access without read access.  The hack here with the target
+                    // target SDK version ensures that this grant is always done.
+                    new PackageParser.SplitPermissionInfo(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                            android.os.Build.VERSION_CODES.CUR_DEVELOPMENT + 1),
+                    new PackageParser.SplitPermissionInfo(android.Manifest.permission.READ_CONTACTS,
+                            new String[]{android.Manifest.permission.READ_CALL_LOG},
+                            android.os.Build.VERSION_CODES.JELLY_BEAN),
+                    new PackageParser.SplitPermissionInfo(android.Manifest.permission.WRITE_CONTACTS,
+                            new String[]{android.Manifest.permission.WRITE_CALL_LOG},
+                            android.os.Build.VERSION_CODES.JELLY_BEAN)
+            };
 
     /**
      * @deprecated callers should move to explicitly passing around source path.
@@ -203,12 +211,12 @@ public class PackageParser {
         final int iconRes;
         final int logoRes;
         final int bannerRes;
-        
+
         String tag;
         TypedArray sa;
-        
+
         ParsePackageItemArgs(Package _owner, String[] _outError,
-                int _nameRes, int _labelRes, int _iconRes, int _logoRes, int _bannerRes) {
+                             int _nameRes, int _labelRes, int _iconRes, int _logoRes, int _bannerRes) {
             owner = _owner;
             outError = _outError;
             nameRes = _nameRes;
@@ -218,18 +226,18 @@ public class PackageParser {
             bannerRes = _bannerRes;
         }
     }
-    
+
     static class ParseComponentArgs extends ParsePackageItemArgs {
         final String[] sepProcesses;
         final int processRes;
         final int descriptionRes;
         final int enabledRes;
         int flags;
-        
+
         ParseComponentArgs(Package _owner, String[] _outError,
-                int _nameRes, int _labelRes, int _iconRes, int _logoRes, int _bannerRes,
-                String[] _sepProcesses, int _processRes,
-                int _descriptionRes, int _enabledRes) {
+                           int _nameRes, int _labelRes, int _iconRes, int _logoRes, int _bannerRes,
+                           String[] _sepProcesses, int _processRes,
+                           int _descriptionRes, int _enabledRes) {
             super(_owner, _outError, _nameRes, _labelRes, _iconRes, _logoRes, _bannerRes);
             sepProcesses = _sepProcesses;
             processRes = _processRes;
@@ -247,7 +255,9 @@ public class PackageParser {
         public final int installLocation;
         public final VerifierInfo[] verifiers;
 
-        /** Names of any split APKs, ordered by parsed splitName */
+        /**
+         * Names of any split APKs, ordered by parsed splitName
+         */
         public final String[] splitNames;
 
         /**
@@ -257,16 +267,20 @@ public class PackageParser {
          */
         public final String codePath;
 
-        /** Path of base APK */
+        /**
+         * Path of base APK
+         */
         public final String baseCodePath;
-        /** Paths of any split APKs, ordered by parsed splitName */
+        /**
+         * Paths of any split APKs, ordered by parsed splitName
+         */
         public final String[] splitCodePaths;
 
         public final boolean coreApp;
         public final boolean multiArch;
 
         public PackageLite(String codePath, ApkLite baseApk, String[] splitNames,
-                String[] splitCodePaths) {
+                           String[] splitCodePaths) {
             this.packageName = baseApk.packageName;
             this.versionCode = baseApk.versionCode;
             this.installLocation = baseApk.installLocation;
@@ -304,8 +318,8 @@ public class PackageParser {
         public final boolean multiArch;
 
         public ApkLite(String codePath, String packageName, String splitName, int versionCode,
-                int installLocation, List<VerifierInfo> verifiers, Signature[] signatures,
-                boolean coreApp, boolean multiArch) {
+                       int installLocation, List<VerifierInfo> verifiers, Signature[] signatures,
+                       boolean coreApp, boolean multiArch) {
             this.codePath = codePath;
             this.packageName = packageName;
             this.splitName = splitName;
@@ -323,11 +337,13 @@ public class PackageParser {
     private ParseComponentArgs mParseActivityAliasArgs;
     private ParseComponentArgs mParseServiceArgs;
     private ParseComponentArgs mParseProviderArgs;
-    
-    /** If set to true, we will only allow package files that exactly match
-     *  the DTD.  Otherwise, we try to get as much from the package as we
-     *  can without failing.  This should normally be set to false, to
-     *  support extensions to the DTD in future versions. */
+
+    /**
+     * If set to true, we will only allow package files that exactly match
+     * the DTD.  Otherwise, we try to get as much from the package as we
+     * can without failing.  This should normally be set to false, to
+     * support extensions to the DTD in future versions.
+     */
     private static final boolean RIGID_PARSER = false;
 
     private static final String TAG = "PackageParser";
@@ -375,12 +391,12 @@ public class PackageParser {
     /**
      * Generate and return the {@link PackageInfo} for a parsed package.
      *
-     * @param p the parsed package.
+     * @param p     the parsed package.
      * @param flags indicating which optional information is included.
      */
     public static PackageInfo generatePackageInfo(PackageParser.Package p,
-            int gids[], int flags, long firstInstallTime, long lastUpdateTime,
-            HashSet<String> grantedPermissions, PackageUserState state) {
+                                                  int gids[], int flags, long firstInstallTime, long lastUpdateTime,
+                                                  HashSet<String> grantedPermissions, PackageUserState state) {
 
         return generatePackageInfo(p, gids, flags, firstInstallTime, lastUpdateTime,
                 grantedPermissions, state, UserHandle.getCallingUserId());
@@ -400,8 +416,8 @@ public class PackageParser {
     }
 
     public static PackageInfo generatePackageInfo(PackageParser.Package p,
-            int gids[], int flags, long firstInstallTime, long lastUpdateTime,
-            HashSet<String> grantedPermissions, PackageUserState state, int userId) {
+                                                  int gids[], int flags, long firstInstallTime, long lastUpdateTime,
+                                                  HashSet<String> grantedPermissions, PackageUserState state, int userId) {
 
         if (!checkUseInstalledOrHidden(flags, state)) {
             return null;
@@ -416,8 +432,8 @@ public class PackageParser {
         pi.applicationInfo = generateApplicationInfo(p, flags, state, userId);
         pi.installLocation = p.installLocation;
         pi.coreApp = p.coreApp;
-        if ((pi.applicationInfo.flags&ApplicationInfo.FLAG_SYSTEM) != 0
-                || (pi.applicationInfo.flags&ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+        if ((pi.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0
+                || (pi.applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
             pi.requiredForAllUsers = p.mRequiredForAllUsers;
         }
         pi.restrictedAccountType = p.mRestrictedAccountType;
@@ -425,10 +441,10 @@ public class PackageParser {
         pi.overlayTarget = p.mOverlayTarget;
         pi.firstInstallTime = firstInstallTime;
         pi.lastUpdateTime = lastUpdateTime;
-        if ((flags&PackageManager.GET_GIDS) != 0) {
+        if ((flags & PackageManager.GET_GIDS) != 0) {
             pi.gids = gids;
         }
-        if ((flags&PackageManager.GET_CONFIGURATIONS) != 0) {
+        if ((flags & PackageManager.GET_CONFIGURATIONS) != 0) {
             int N = p.configPreferences != null ? p.configPreferences.size() : 0;
             if (N > 0) {
                 pi.configPreferences = new ConfigurationInfo[N];
@@ -445,109 +461,109 @@ public class PackageParser {
                 p.featureGroups.toArray(pi.featureGroups);
             }
         }
-        if ((flags&PackageManager.GET_ACTIVITIES) != 0) {
+        if ((flags & PackageManager.GET_ACTIVITIES) != 0) {
             int N = p.activities.size();
             if (N > 0) {
-                if ((flags&PackageManager.GET_DISABLED_COMPONENTS) != 0) {
+                if ((flags & PackageManager.GET_DISABLED_COMPONENTS) != 0) {
                     pi.activities = new ActivityInfo[N];
                 } else {
                     int num = 0;
-                    for (int i=0; i<N; i++) {
+                    for (int i = 0; i < N; i++) {
                         if (p.activities.get(i).info.enabled) num++;
                     }
                     pi.activities = new ActivityInfo[num];
                 }
-                for (int i=0, j=0; i<N; i++) {
+                for (int i = 0, j = 0; i < N; i++) {
                     final Activity activity = p.activities.get(i);
                     if (activity.info.enabled
-                        || (flags&PackageManager.GET_DISABLED_COMPONENTS) != 0) {
+                            || (flags & PackageManager.GET_DISABLED_COMPONENTS) != 0) {
                         pi.activities[j++] = generateActivityInfo(p.activities.get(i), flags,
                                 state, userId);
                     }
                 }
             }
         }
-        if ((flags&PackageManager.GET_RECEIVERS) != 0) {
+        if ((flags & PackageManager.GET_RECEIVERS) != 0) {
             int N = p.receivers.size();
             if (N > 0) {
-                if ((flags&PackageManager.GET_DISABLED_COMPONENTS) != 0) {
+                if ((flags & PackageManager.GET_DISABLED_COMPONENTS) != 0) {
                     pi.receivers = new ActivityInfo[N];
                 } else {
                     int num = 0;
-                    for (int i=0; i<N; i++) {
+                    for (int i = 0; i < N; i++) {
                         if (p.receivers.get(i).info.enabled) num++;
                     }
                     pi.receivers = new ActivityInfo[num];
                 }
-                for (int i=0, j=0; i<N; i++) {
+                for (int i = 0, j = 0; i < N; i++) {
                     final Activity activity = p.receivers.get(i);
                     if (activity.info.enabled
-                        || (flags&PackageManager.GET_DISABLED_COMPONENTS) != 0) {
+                            || (flags & PackageManager.GET_DISABLED_COMPONENTS) != 0) {
                         pi.receivers[j++] = generateActivityInfo(p.receivers.get(i), flags,
                                 state, userId);
                     }
                 }
             }
         }
-        if ((flags&PackageManager.GET_SERVICES) != 0) {
+        if ((flags & PackageManager.GET_SERVICES) != 0) {
             int N = p.services.size();
             if (N > 0) {
-                if ((flags&PackageManager.GET_DISABLED_COMPONENTS) != 0) {
+                if ((flags & PackageManager.GET_DISABLED_COMPONENTS) != 0) {
                     pi.services = new ServiceInfo[N];
                 } else {
                     int num = 0;
-                    for (int i=0; i<N; i++) {
+                    for (int i = 0; i < N; i++) {
                         if (p.services.get(i).info.enabled) num++;
                     }
                     pi.services = new ServiceInfo[num];
                 }
-                for (int i=0, j=0; i<N; i++) {
+                for (int i = 0, j = 0; i < N; i++) {
                     final Service service = p.services.get(i);
                     if (service.info.enabled
-                        || (flags&PackageManager.GET_DISABLED_COMPONENTS) != 0) {
+                            || (flags & PackageManager.GET_DISABLED_COMPONENTS) != 0) {
                         pi.services[j++] = generateServiceInfo(p.services.get(i), flags,
                                 state, userId);
                     }
                 }
             }
         }
-        if ((flags&PackageManager.GET_PROVIDERS) != 0) {
+        if ((flags & PackageManager.GET_PROVIDERS) != 0) {
             int N = p.providers.size();
             if (N > 0) {
-                if ((flags&PackageManager.GET_DISABLED_COMPONENTS) != 0) {
+                if ((flags & PackageManager.GET_DISABLED_COMPONENTS) != 0) {
                     pi.providers = new ProviderInfo[N];
                 } else {
                     int num = 0;
-                    for (int i=0; i<N; i++) {
+                    for (int i = 0; i < N; i++) {
                         if (p.providers.get(i).info.enabled) num++;
                     }
                     pi.providers = new ProviderInfo[num];
                 }
-                for (int i=0, j=0; i<N; i++) {
+                for (int i = 0, j = 0; i < N; i++) {
                     final Provider provider = p.providers.get(i);
                     if (provider.info.enabled
-                        || (flags&PackageManager.GET_DISABLED_COMPONENTS) != 0) {
+                            || (flags & PackageManager.GET_DISABLED_COMPONENTS) != 0) {
                         pi.providers[j++] = generateProviderInfo(p.providers.get(i), flags,
                                 state, userId);
                     }
                 }
             }
         }
-        if ((flags&PackageManager.GET_INSTRUMENTATION) != 0) {
+        if ((flags & PackageManager.GET_INSTRUMENTATION) != 0) {
             int N = p.instrumentation.size();
             if (N > 0) {
                 pi.instrumentation = new InstrumentationInfo[N];
-                for (int i=0; i<N; i++) {
+                for (int i = 0; i < N; i++) {
                     pi.instrumentation[i] = generateInstrumentationInfo(
                             p.instrumentation.get(i), flags);
                 }
             }
         }
-        if ((flags&PackageManager.GET_PERMISSIONS) != 0) {
+        if ((flags & PackageManager.GET_PERMISSIONS) != 0) {
             int N = p.permissions.size();
             if (N > 0) {
                 pi.permissions = new PermissionInfo[N];
-                for (int i=0; i<N; i++) {
+                for (int i = 0; i < N; i++) {
                     pi.permissions[i] = generatePermissionInfo(p.permissions.get(i), flags);
                 }
             }
@@ -555,7 +571,7 @@ public class PackageParser {
             if (N > 0) {
                 pi.requestedPermissions = new String[N];
                 pi.requestedPermissionsFlags = new int[N];
-                for (int i=0; i<N; i++) {
+                for (int i = 0; i < N; i++) {
                     final String perm = p.requestedPermissions.get(i);
                     pi.requestedPermissions[i] = perm;
                     if (p.requestedPermissionsRequired.get(i)) {
@@ -567,9 +583,9 @@ public class PackageParser {
                 }
             }
         }
-        if ((flags&PackageManager.GET_SIGNATURES) != 0) {
-           int N = (p.mSignatures != null) ? p.mSignatures.length : 0;
-           if (N > 0) {
+        if ((flags & PackageManager.GET_SIGNATURES) != 0) {
+            int N = (p.mSignatures != null) ? p.mSignatures.length : 0;
+            if (N > 0) {
                 pi.signatures = new Signature[N];
                 System.arraycopy(p.mSignatures, 0, pi.signatures, 0, N);
             }
@@ -594,16 +610,16 @@ public class PackageParser {
         }
     }
 
-    public final static int PARSE_IS_SYSTEM = 1<<0;
-    public final static int PARSE_CHATTY = 1<<1;
-    public final static int PARSE_MUST_BE_APK = 1<<2;
-    public final static int PARSE_IGNORE_PROCESSES = 1<<3;
-    public final static int PARSE_FORWARD_LOCK = 1<<4;
-    public final static int PARSE_ON_SDCARD = 1<<5;
-    public final static int PARSE_IS_SYSTEM_DIR = 1<<6;
-    public final static int PARSE_IS_PRIVILEGED = 1<<7;
-    public final static int PARSE_COLLECT_CERTIFICATES = 1<<8;
-    public final static int PARSE_TRUSTED_OVERLAY = 1<<9;
+    public final static int PARSE_IS_SYSTEM = 1 << 0;
+    public final static int PARSE_CHATTY = 1 << 1;
+    public final static int PARSE_MUST_BE_APK = 1 << 2;
+    public final static int PARSE_IGNORE_PROCESSES = 1 << 3;
+    public final static int PARSE_FORWARD_LOCK = 1 << 4;
+    public final static int PARSE_ON_SDCARD = 1 << 5;
+    public final static int PARSE_IS_SYSTEM_DIR = 1 << 6;
+    public final static int PARSE_IS_PRIVILEGED = 1 << 7;
+    public final static int PARSE_COLLECT_CERTIFICATES = 1 << 8;
+    public final static int PARSE_TRUSTED_OVERLAY = 1 << 9;
 
     private static final Comparator<String> sSplitNameComparator = new SplitNameComparator();
 
@@ -676,12 +692,12 @@ public class PackageParser {
                     if (!packageName.equals(lite.packageName)) {
                         throw new PackageParserException(INSTALL_PARSE_FAILED_BAD_MANIFEST,
                                 "Inconsistent package " + lite.packageName + " in " + file
-                                + "; expected " + packageName);
+                                        + "; expected " + packageName);
                     }
                     if (versionCode != lite.versionCode) {
                         throw new PackageParserException(INSTALL_PARSE_FAILED_BAD_MANIFEST,
                                 "Inconsistent version " + lite.versionCode + " in " + file
-                                + "; expected " + versionCode);
+                                        + "; expected " + versionCode);
                     }
                 }
 
@@ -689,7 +705,7 @@ public class PackageParser {
                 if (apks.put(lite.splitName, lite) != null) {
                     throw new PackageParserException(INSTALL_PARSE_FAILED_BAD_MANIFEST,
                             "Split name " + lite.splitName
-                            + " defined more than once; most recent was " + file);
+                                    + " defined more than once; most recent was " + file);
                 }
             }
         }
@@ -804,8 +820,8 @@ public class PackageParser {
      * must be done separately in {@link #collectCertificates(Package, int)}.
      *
      * @deprecated external callers should move to
-     *             {@link #parsePackage(File, int)}. Eventually this method will
-     *             be marked private.
+     * {@link #parsePackage(File, int)}. Eventually this method will
+     * be marked private.
      */
     @Deprecated
     public Package parseMonolithicPackage(File apkFile, int flags) throws PackageParserException {
@@ -931,7 +947,7 @@ public class PackageParser {
      * omitted here.
      */
     private Package parseSplitApk(Package pkg, Resources res, XmlResourceParser parser, int flags,
-            int splitIndex, String[] outError) throws XmlPullParserException, IOException,
+                                  int splitIndex, String[] outError) throws XmlPullParserException, IOException,
             PackageParserException {
         AttributeSet attrs = parser;
 
@@ -975,7 +991,7 @@ public class PackageParser {
 
             } else if (RIGID_PARSER) {
                 outError[0] = "Bad element under <manifest>: "
-                    + parser.getName();
+                        + parser.getName();
                 mParseError = PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
                 return null;
 
@@ -1080,7 +1096,7 @@ public class PackageParser {
                 if (ArrayUtils.isEmpty(entryCerts)) {
                     throw new PackageParserException(INSTALL_PARSE_FAILED_NO_CERTIFICATES,
                             "Package " + apkPath + " has no certificates at entry "
-                            + entry.getName());
+                                    + entry.getName());
                 }
                 final Signature[] entrySignatures = convertToSignatures(entryCerts);
 
@@ -1088,15 +1104,15 @@ public class PackageParser {
                     pkg.mCertificates = entryCerts;
                     pkg.mSignatures = entrySignatures;
                     pkg.mSigningKeys = new ArraySet<PublicKey>();
-                    for (int i=0; i < entryCerts.length; i++) {
+                    for (int i = 0; i < entryCerts.length; i++) {
                         pkg.mSigningKeys.add(entryCerts[i][0].getPublicKey());
                     }
                 } else {
                     if (!Signature.areExactMatch(pkg.mSignatures, entrySignatures)) {
                         throw new PackageParserException(
                                 INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES, "Package " + apkPath
-                                        + " has mismatched certificates at entry "
-                                        + entry.getName());
+                                + " has mismatched certificates at entry "
+                                + entry.getName());
                     }
                 }
             }
@@ -1125,8 +1141,8 @@ public class PackageParser {
      * file, including package name, split name, and install location.
      *
      * @param apkFile path to a single APK
-     * @param flags optional parse flags, such as
-     *            {@link #PARSE_COLLECT_CERTIFICATES}
+     * @param flags   optional parse flags, such as
+     *                {@link #PARSE_COLLECT_CERTIFICATES}
      */
     public static ApkLite parseApkLite(File apkFile, int flags)
             throws PackageParserException {
@@ -1177,7 +1193,7 @@ public class PackageParser {
         final int N = name.length();
         boolean hasSep = false;
         boolean front = true;
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             final char c = name.charAt(i);
             if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
                 front = false;
@@ -1200,7 +1216,7 @@ public class PackageParser {
     }
 
     private static Pair<String, String> parsePackageSplitNames(XmlPullParser parser,
-            AttributeSet attrs, int flags) throws IOException, XmlPullParserException,
+                                                               AttributeSet attrs, int flags) throws IOException, XmlPullParserException,
             PackageParserException {
 
         int type;
@@ -1244,7 +1260,7 @@ public class PackageParser {
     }
 
     private static ApkLite parseApkLite(String codePath, Resources res, XmlPullParser parser,
-            AttributeSet attrs, int flags, Signature[] signatures) throws IOException,
+                                        AttributeSet attrs, int flags, Signature[] signatures) throws IOException,
             XmlPullParserException, PackageParserException {
         final Pair<String, String> packageSplit = parsePackageSplitNames(parser, attrs, flags);
 
@@ -1311,8 +1327,8 @@ public class PackageParser {
     static public Signature stringToSignature(String str) {
         final int N = str.length();
         byte[] sig = new byte[N];
-        for (int i=0; i<N; i++) {
-            sig[i] = (byte)str.charAt(i);
+        for (int i = 0; i < N; i++) {
+            sig[i] = (byte) str.charAt(i);
         }
         return new Signature(sig);
     }
@@ -1324,7 +1340,7 @@ public class PackageParser {
      * supported by split APKs.
      */
     private Package parseBaseApk(Resources res, XmlResourceParser parser, int flags,
-            String[] outError) throws XmlPullParserException, IOException {
+                                 String[] outError) throws XmlPullParserException, IOException {
         final boolean trustedOverlay = (flags & PARSE_TRUSTED_OVERLAY) != 0;
 
         AttributeSet attrs = parser;
@@ -1371,7 +1387,7 @@ public class PackageParser {
             String nameError = validateName(str, true);
             if (nameError != null && !"android".equals(pkgName)) {
                 outError[0] = "<manifest> specifies bad sharedUserId name \""
-                    + str + "\": " + nameError;
+                        + str + "\": " + nameError;
                 mParseError = PackageManager.INSTALL_PARSE_FAILED_BAD_SHARED_USER_ID;
                 return null;
             }
@@ -1406,7 +1422,7 @@ public class PackageParser {
         int supportsXLargeScreens = 1;
         int resizeable = 1;
         int anyDensity = 1;
-        
+
         int outerDepth = parser.getDepth();
         while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
                 && (type != XmlPullParser.END_TAG || parser.getDepth() > outerDepth)) {
@@ -1452,7 +1468,7 @@ public class PackageParser {
                 if (pkg.mOverlayPriority < 0 || pkg.mOverlayPriority > 9999) {
                     outError[0] = "<overlay> priority must be between 0 and 9999";
                     mParseError =
-                        PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
+                            PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
                     return null;
                 }
                 XmlUtils.skipCurrentTag(parser);
@@ -1557,7 +1573,7 @@ public class PackageParser {
                     String minCode = null;
                     int targetVers = 0;
                     String targetCode = null;
-                    
+
                     TypedValue val = sa.peekValue(
                             com.android.internal.R.styleable.AndroidManifestUsesSdk_minSdkVersion);
                     if (val != null) {
@@ -1568,7 +1584,7 @@ public class PackageParser {
                             targetVers = minVers = val.data;
                         }
                     }
-                    
+
                     val = sa.peekValue(
                             com.android.internal.R.styleable.AndroidManifestUsesSdk_targetSdkVersion);
                     if (val != null) {
@@ -1579,7 +1595,7 @@ public class PackageParser {
                             targetVers = val.data;
                         }
                     }
-                    
+
                     sa.recycle();
 
                     if (minCode != null) {
@@ -1608,7 +1624,7 @@ public class PackageParser {
                         mParseError = PackageManager.INSTALL_FAILED_OLDER_SDK;
                         return null;
                     }
-                    
+
                     if (targetCode != null) {
                         boolean allowedCodename = false;
                         for (String codename : SDK_CODENAMES) {
@@ -1675,9 +1691,9 @@ public class PackageParser {
                         anyDensity);
 
                 sa.recycle();
-                
+
                 XmlUtils.skipCurrentTag(parser);
-                
+
             } else if (tagName.equals("protected-broadcast")) {
                 sa = res.obtainAttributes(attrs,
                         com.android.internal.R.styleable.AndroidManifestProtectedBroadcast);
@@ -1689,7 +1705,7 @@ public class PackageParser {
 
                 sa.recycle();
 
-                if (name != null && (flags&PARSE_IS_SYSTEM) != 0) {
+                if (name != null && (flags & PARSE_IS_SYSTEM) != 0) {
                     if (pkg.protectedBroadcasts == null) {
                         pkg.protectedBroadcasts = new ArrayList<String>();
                     }
@@ -1699,17 +1715,17 @@ public class PackageParser {
                 }
 
                 XmlUtils.skipCurrentTag(parser);
-                
+
             } else if (tagName.equals("instrumentation")) {
                 if (parseInstrumentation(pkg, res, parser, attrs, outError) == null) {
                     return null;
                 }
-                
+
             } else if (tagName.equals("original-package")) {
                 sa = res.obtainAttributes(attrs,
                         com.android.internal.R.styleable.AndroidManifestOriginalPackage);
 
-                String orig =sa.getNonConfigurationString(
+                String orig = sa.getNonConfigurationString(
                         com.android.internal.R.styleable.AndroidManifestOriginalPackage_name, 0);
                 if (!pkg.packageName.equals(orig)) {
                     if (pkg.mOriginalPackages == null) {
@@ -1722,7 +1738,7 @@ public class PackageParser {
                 sa.recycle();
 
                 XmlUtils.skipCurrentTag(parser);
-                
+
             } else if (tagName.equals("adopt-permissions")) {
                 sa = res.obtainAttributes(attrs,
                         com.android.internal.R.styleable.AndroidManifestOriginalPackage);
@@ -1740,12 +1756,12 @@ public class PackageParser {
                 }
 
                 XmlUtils.skipCurrentTag(parser);
-                
+
             } else if (tagName.equals("uses-gl-texture")) {
                 // Just skip this tag
                 XmlUtils.skipCurrentTag(parser);
                 continue;
-                
+
             } else if (tagName.equals("compatible-screens")) {
                 // Just skip this tag
                 XmlUtils.skipCurrentTag(parser);
@@ -1753,15 +1769,15 @@ public class PackageParser {
             } else if (tagName.equals("supports-input")) {
                 XmlUtils.skipCurrentTag(parser);
                 continue;
-                
+
             } else if (tagName.equals("eat-comment")) {
                 // Just skip this tag
                 XmlUtils.skipCurrentTag(parser);
                 continue;
-                
+
             } else if (RIGID_PARSER) {
                 outError[0] = "Bad element under <manifest>: "
-                    + parser.getName();
+                        + parser.getName();
                 mParseError = PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
                 return null;
 
@@ -1781,7 +1797,7 @@ public class PackageParser {
 
         final int NP = PackageParser.NEW_PERMISSIONS.length;
         StringBuilder implicitPerms = null;
-        for (int ip=0; ip<NP; ip++) {
+        for (int ip = 0; ip < NP; ip++) {
             final PackageParser.NewPermissionInfo npi
                     = PackageParser.NEW_PERMISSIONS[ip];
             if (pkg.applicationInfo.targetSdkVersion >= npi.sdkVersion) {
@@ -1805,14 +1821,14 @@ public class PackageParser {
         }
 
         final int NS = PackageParser.SPLIT_PERMISSIONS.length;
-        for (int is=0; is<NS; is++) {
+        for (int is = 0; is < NS; is++) {
             final PackageParser.SplitPermissionInfo spi
                     = PackageParser.SPLIT_PERMISSIONS[is];
             if (pkg.applicationInfo.targetSdkVersion >= spi.targetSdk
                     || !pkg.requestedPermissions.contains(spi.rootPerm)) {
                 continue;
             }
-            for (int in=0; in<spi.newPerms.length; in++) {
+            for (int in = 0; in < spi.newPerms.length; in++) {
                 final String perm = spi.newPerms[in];
                 if (!pkg.requestedPermissions.contains(perm)) {
                     pkg.requestedPermissions.add(perm);
@@ -1823,7 +1839,7 @@ public class PackageParser {
 
         if (supportsSmallScreens < 0 || (supportsSmallScreens > 0
                 && pkg.applicationInfo.targetSdkVersion
-                        >= android.os.Build.VERSION_CODES.DONUT)) {
+                >= android.os.Build.VERSION_CODES.DONUT)) {
             pkg.applicationInfo.flags |= ApplicationInfo.FLAG_SUPPORTS_SMALL_SCREENS;
         }
         if (supportsNormalScreens != 0) {
@@ -1831,22 +1847,22 @@ public class PackageParser {
         }
         if (supportsLargeScreens < 0 || (supportsLargeScreens > 0
                 && pkg.applicationInfo.targetSdkVersion
-                        >= android.os.Build.VERSION_CODES.DONUT)) {
+                >= android.os.Build.VERSION_CODES.DONUT)) {
             pkg.applicationInfo.flags |= ApplicationInfo.FLAG_SUPPORTS_LARGE_SCREENS;
         }
         if (supportsXLargeScreens < 0 || (supportsXLargeScreens > 0
                 && pkg.applicationInfo.targetSdkVersion
-                        >= android.os.Build.VERSION_CODES.GINGERBREAD)) {
+                >= android.os.Build.VERSION_CODES.GINGERBREAD)) {
             pkg.applicationInfo.flags |= ApplicationInfo.FLAG_SUPPORTS_XLARGE_SCREENS;
         }
         if (resizeable < 0 || (resizeable > 0
                 && pkg.applicationInfo.targetSdkVersion
-                        >= android.os.Build.VERSION_CODES.DONUT)) {
+                >= android.os.Build.VERSION_CODES.DONUT)) {
             pkg.applicationInfo.flags |= ApplicationInfo.FLAG_RESIZEABLE_FOR_SCREENS;
         }
         if (anyDensity < 0 || (anyDensity > 0
                 && pkg.applicationInfo.targetSdkVersion
-                        >= android.os.Build.VERSION_CODES.DONUT)) {
+                >= android.os.Build.VERSION_CODES.DONUT)) {
             pkg.applicationInfo.flags |= ApplicationInfo.FLAG_SUPPORTS_SCREEN_DENSITIES;
         }
 
@@ -1875,8 +1891,8 @@ public class PackageParser {
                 com.android.internal.R.styleable.AndroidManifestUsesFeature_name);
         if (fi.name == null) {
             fi.reqGlEsVersion = sa.getInt(
-                        com.android.internal.R.styleable.AndroidManifestUsesFeature_glEsVersion,
-                        FeatureInfo.GL_ES_VERSION_UNDEFINED);
+                    com.android.internal.R.styleable.AndroidManifestUsesFeature_glEsVersion,
+                    FeatureInfo.GL_ES_VERSION_UNDEFINED);
         }
         if (sa.getBoolean(
                 com.android.internal.R.styleable.AndroidManifestUsesFeature_required, true)) {
@@ -1934,7 +1950,7 @@ public class PackageParser {
     }
 
     private static String buildClassName(String pkg, CharSequence clsSeq,
-            String[] outError) {
+                                         String[] outError) {
         if (clsSeq == null || clsSeq.length() <= 0) {
             outError[0] = "Empty class name in package " + pkg;
             return null;
@@ -1958,7 +1974,7 @@ public class PackageParser {
     }
 
     private static String buildCompoundName(String pkg,
-            CharSequence procSeq, String type, String[] outError) {
+                                            CharSequence procSeq, String type, String[] outError) {
         String proc = procSeq.toString();
         char c = proc.charAt(0);
         if (pkg != null && c == ':') {
@@ -1984,15 +2000,15 @@ public class PackageParser {
         }
         return proc.intern();
     }
-    
+
     private static String buildProcessName(String pkg, String defProc,
-            CharSequence procSeq, int flags, String[] separateProcesses,
-            String[] outError) {
-        if ((flags&PARSE_IGNORE_PROCESSES) != 0 && !"system".equals(procSeq)) {
+                                           CharSequence procSeq, int flags, String[] separateProcesses,
+                                           String[] outError) {
+        if ((flags & PARSE_IGNORE_PROCESSES) != 0 && !"system".equals(procSeq)) {
             return defProc != null ? defProc : pkg;
         }
         if (separateProcesses != null) {
-            for (int i=separateProcesses.length-1; i>=0; i--) {
+            for (int i = separateProcesses.length - 1; i >= 0; i--) {
                 String sp = separateProcesses[i];
                 if (sp.equals(pkg) || sp.equals(defProc) || sp.equals(procSeq)) {
                     return pkg;
@@ -2006,7 +2022,7 @@ public class PackageParser {
     }
 
     private static String buildTaskAffinityName(String pkg, String defProc,
-            CharSequence procSeq, String[] outError) {
+                                                CharSequence procSeq, String[] outError) {
         if (procSeq == null) {
             return defProc;
         }
@@ -2017,7 +2033,7 @@ public class PackageParser {
     }
 
     private boolean parseKeySets(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, String[] outError)
+                                 XmlPullParser parser, AttributeSet attrs, String[] outError)
             throws XmlPullParserException, IOException {
         // we've encountered the 'key-sets' tag
         // all the keys and keysets that we want must be defined here
@@ -2049,7 +2065,7 @@ public class PackageParser {
                 final TypedArray sa = res.obtainAttributes(attrs,
                         com.android.internal.R.styleable.AndroidManifestKeySet);
                 final String keysetName = sa.getNonResourceString(
-                    com.android.internal.R.styleable.AndroidManifestKeySet_name);
+                        com.android.internal.R.styleable.AndroidManifestKeySet_name);
                 definedKeySets.put(keysetName, new ArraySet<String>());
                 currentKeySet = keysetName;
                 currentKeySetDepth = parser.getDepth();
@@ -2065,7 +2081,7 @@ public class PackageParser {
                 final String publicKeyName = sa.getNonResourceString(
                         com.android.internal.R.styleable.AndroidManifestPublicKey_name);
                 final String encodedKey = sa.getNonResourceString(
-                            com.android.internal.R.styleable.AndroidManifestPublicKey_value);
+                        com.android.internal.R.styleable.AndroidManifestPublicKey_value);
                 if (encodedKey == null && publicKeys.get(publicKeyName) == null) {
                     Slog.w(TAG, "'public-key' " + publicKeyName + " must define a public-key value"
                             + " on first use at " + parser.getPositionDescription());
@@ -2089,8 +2105,8 @@ public class PackageParser {
                         publicKeys.put(publicKeyName, currentKey);
                     } else {
                         Slog.w(TAG, "Value of 'public-key' " + publicKeyName
-                               + " conflicts with previously defined value at "
-                               + parser.getPositionDescription());
+                                + " conflicts with previously defined value at "
+                                + parser.getPositionDescription());
                         sa.recycle();
                         return false;
                     }
@@ -2122,11 +2138,11 @@ public class PackageParser {
         Set<String> publicKeyNames = publicKeys.keySet();
         if (publicKeyNames.removeAll(definedKeySets.keySet())) {
             Slog.w(TAG, "Package" + owner.packageName + " AndroidManifext.xml "
-                   + "'key-set' and 'public-key' names must be distinct.");
+                    + "'key-set' and 'public-key' names must be distinct.");
             return false;
         }
         owner.mKeySetMapping = new ArrayMap<String, ArraySet<PublicKey>>();
-        for (ArrayMap.Entry<String, ArraySet<String>> e: definedKeySets.entrySet()) {
+        for (ArrayMap.Entry<String, ArraySet<String>> e : definedKeySets.entrySet()) {
             final String keySetName = e.getKey();
             if (e.getValue().size() == 0) {
                 Slog.w(TAG, "Package" + owner.packageName + " AndroidManifext.xml "
@@ -2148,15 +2164,15 @@ public class PackageParser {
             owner.mUpgradeKeySets = upgradeKeySets;
         } else {
             Slog.w(TAG, "Package" + owner.packageName + " AndroidManifext.xml "
-                   + "does not define all 'upgrade-key-set's .");
+                    + "does not define all 'upgrade-key-set's .");
             return false;
         }
         return true;
     }
 
     private PermissionGroup parsePermissionGroup(Package owner, int flags, Resources res,
-            XmlPullParser parser, AttributeSet attrs, String[] outError)
-        throws XmlPullParserException, IOException {
+                                                 XmlPullParser parser, AttributeSet attrs, String[] outError)
+            throws XmlPullParserException, IOException {
         PermissionGroup perm = new PermissionGroup(owner);
 
         TypedArray sa = res.obtainAttributes(attrs,
@@ -2181,12 +2197,12 @@ public class PackageParser {
                 com.android.internal.R.styleable.AndroidManifestPermissionGroup_permissionGroupFlags, 0);
         perm.info.priority = sa.getInt(
                 com.android.internal.R.styleable.AndroidManifestPermissionGroup_priority, 0);
-        if (perm.info.priority > 0 && (flags&PARSE_IS_SYSTEM) == 0) {
+        if (perm.info.priority > 0 && (flags & PARSE_IS_SYSTEM) == 0) {
             perm.info.priority = 0;
         }
 
         sa.recycle();
-        
+
         if (!parseAllMetaData(res, parser, attrs, "<permission-group>", perm,
                 outError)) {
             mParseError = PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
@@ -2199,8 +2215,8 @@ public class PackageParser {
     }
 
     private Permission parsePermission(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, String[] outError)
-        throws XmlPullParserException, IOException {
+                                       XmlPullParser parser, AttributeSet attrs, String[] outError)
+            throws XmlPullParserException, IOException {
         Permission perm = new Permission(owner);
 
         TypedArray sa = res.obtainAttributes(attrs,
@@ -2225,7 +2241,7 @@ public class PackageParser {
         if (perm.info.group != null) {
             perm.info.group = perm.info.group.intern();
         }
-        
+
         perm.info.descriptionRes = sa.getResourceId(
                 com.android.internal.R.styleable.AndroidManifestPermission_description,
                 0);
@@ -2247,8 +2263,8 @@ public class PackageParser {
 
         perm.info.protectionLevel = PermissionInfo.fixProtectionLevel(perm.info.protectionLevel);
 
-        if ((perm.info.protectionLevel&PermissionInfo.PROTECTION_MASK_FLAGS) != 0) {
-            if ((perm.info.protectionLevel&PermissionInfo.PROTECTION_MASK_BASE) !=
+        if ((perm.info.protectionLevel & PermissionInfo.PROTECTION_MASK_FLAGS) != 0) {
+            if ((perm.info.protectionLevel & PermissionInfo.PROTECTION_MASK_BASE) !=
                     PermissionInfo.PROTECTION_SIGNATURE) {
                 outError[0] = "<permission>  protectionLevel specifies a flag but is "
                         + "not based on signature type";
@@ -2256,7 +2272,7 @@ public class PackageParser {
                 return null;
             }
         }
-        
+
         if (!parseAllMetaData(res, parser, attrs, "<permission>", perm,
                 outError)) {
             mParseError = PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
@@ -2269,8 +2285,8 @@ public class PackageParser {
     }
 
     private Permission parsePermissionTree(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, String[] outError)
-        throws XmlPullParserException, IOException {
+                                           XmlPullParser parser, AttributeSet attrs, String[] outError)
+            throws XmlPullParserException, IOException {
         Permission perm = new Permission(owner);
 
         TypedArray sa = res.obtainAttributes(attrs,
@@ -2289,14 +2305,14 @@ public class PackageParser {
         }
 
         sa.recycle();
-        
+
         int index = perm.info.name.indexOf('.');
         if (index > 0) {
-            index = perm.info.name.indexOf('.', index+1);
+            index = perm.info.name.indexOf('.', index + 1);
         }
         if (index < 0) {
             outError[0] = "<permission-tree> name has less than three segments: "
-                + perm.info.name;
+                    + perm.info.name;
             mParseError = PackageManager.INSTALL_PARSE_FAILED_MANIFEST_MALFORMED;
             return null;
         }
@@ -2317,8 +2333,8 @@ public class PackageParser {
     }
 
     private Instrumentation parseInstrumentation(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, String[] outError)
-        throws XmlPullParserException, IOException {
+                                                 XmlPullParser parser, AttributeSet attrs, String[] outError)
+            throws XmlPullParserException, IOException {
         TypedArray sa = res.obtainAttributes(attrs,
                 com.android.internal.R.styleable.AndroidManifestInstrumentation);
 
@@ -2331,9 +2347,9 @@ public class PackageParser {
                     com.android.internal.R.styleable.AndroidManifestInstrumentation_banner);
             mParseInstrumentationArgs.tag = "<instrumentation>";
         }
-        
+
         mParseInstrumentationArgs.sa = sa;
-        
+
         Instrumentation a = new Instrumentation(mParseInstrumentationArgs,
                 new InstrumentationInfo());
         if (outError[0] != null) {
@@ -2384,8 +2400,8 @@ public class PackageParser {
      * supported by split APKs.
      */
     private boolean parseBaseApplication(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, int flags, String[] outError)
-        throws XmlPullParserException, IOException {
+                                         XmlPullParser parser, AttributeSet attrs, int flags, String[] outError)
+            throws XmlPullParserException, IOException {
         final ApplicationInfo ai = owner.applicationInfo;
         final String pkgName = owner.applicationInfo.packageName;
 
@@ -2448,7 +2464,7 @@ public class PackageParser {
 
         TypedValue v = sa.peekValue(
                 com.android.internal.R.styleable.AndroidManifestApplication_label);
-        if (v != null && (ai.labelRes=v.resourceId) == 0) {
+        if (v != null && (ai.labelRes = v.resourceId) == 0) {
             ai.nonLocalizedLabel = v.coerceToString();
         }
 
@@ -2463,7 +2479,7 @@ public class PackageParser {
         ai.descriptionRes = sa.getResourceId(
                 com.android.internal.R.styleable.AndroidManifestApplication_description, 0);
 
-        if ((flags&PARSE_IS_SYSTEM) != 0) {
+        if ((flags & PARSE_IS_SYSTEM) != 0) {
             if (sa.getBoolean(
                     com.android.internal.R.styleable.AndroidManifestApplication_persistent,
                     false)) {
@@ -2581,10 +2597,10 @@ public class PackageParser {
             }
             ai.processName = buildProcessName(ai.packageName, null, pname,
                     flags, mSeparateProcesses, outError);
-    
+
             ai.enabled = sa.getBoolean(
                     com.android.internal.R.styleable.AndroidManifestApplication_enabled, true);
-            
+
             if (sa.getBoolean(
                     com.android.internal.R.styleable.AndroidManifestApplication_isGame, false)) {
                 ai.flags |= ApplicationInfo.FLAG_IS_GAME;
@@ -2758,7 +2774,7 @@ public class PackageParser {
      * omitted here.
      */
     private boolean parseSplitApplication(Package owner, Resources res, XmlPullParser parser,
-            AttributeSet attrs, int flags, int splitIndex, String[] outError)
+                                          AttributeSet attrs, int flags, int splitIndex, String[] outError)
             throws XmlPullParserException, IOException {
         TypedArray sa = res.obtainAttributes(attrs,
                 com.android.internal.R.styleable.AndroidManifestApplication);
@@ -2889,8 +2905,8 @@ public class PackageParser {
     }
 
     private boolean parsePackageItemInfo(Package owner, PackageItemInfo outInfo,
-            String[] outError, String tag, TypedArray sa,
-            int nameRes, int labelRes, int iconRes, int logoRes, int bannerRes) {
+                                         String[] outError, String tag, TypedArray sa,
+                                         int nameRes, int labelRes, int iconRes, int logoRes, int bannerRes) {
         String name = sa.getNonConfigurationString(nameRes, 0);
         if (name == null) {
             outError[0] = tag + " does not specify android:name";
@@ -2898,7 +2914,7 @@ public class PackageParser {
         }
 
         outInfo.name
-            = buildClassName(owner.applicationInfo.packageName, name, outError);
+                = buildClassName(owner.applicationInfo.packageName, name, outError);
         if (outInfo.name == null) {
             return false;
         }
@@ -2908,7 +2924,7 @@ public class PackageParser {
             outInfo.icon = iconVal;
             outInfo.nonLocalizedLabel = null;
         }
-        
+
         int logoVal = sa.getResourceId(logoRes, 0);
         if (logoVal != 0) {
             outInfo.logo = logoVal;
@@ -2920,7 +2936,7 @@ public class PackageParser {
         }
 
         TypedValue v = sa.peekValue(labelRes);
-        if (v != null && (outInfo.labelRes=v.resourceId) == 0) {
+        if (v != null && (outInfo.labelRes = v.resourceId) == 0) {
             outInfo.nonLocalizedLabel = v.coerceToString();
         }
 
@@ -2930,8 +2946,8 @@ public class PackageParser {
     }
 
     private Activity parseActivity(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, int flags, String[] outError,
-            boolean receiver, boolean hardwareAccelerated)
+                                   XmlPullParser parser, AttributeSet attrs, int flags, String[] outError,
+                                   boolean receiver, boolean hardwareAccelerated)
             throws XmlPullParserException, IOException {
         TypedArray sa = res.obtainAttributes(attrs,
                 com.android.internal.R.styleable.AndroidManifestActivity);
@@ -2948,11 +2964,11 @@ public class PackageParser {
                     com.android.internal.R.styleable.AndroidManifestActivity_description,
                     com.android.internal.R.styleable.AndroidManifestActivity_enabled);
         }
-        
+
         mParseActivityArgs.tag = receiver ? "<receiver>" : "<activity>";
         mParseActivityArgs.sa = sa;
         mParseActivityArgs.flags = flags;
-        
+
         Activity a = new Activity(mParseActivityArgs, new ActivityInfo());
         if (outError[0] != null) {
             sa.recycle();
@@ -3047,7 +3063,7 @@ public class PackageParser {
 
         if (sa.getBoolean(
                 com.android.internal.R.styleable.AndroidManifestActivity_allowTaskReparenting,
-                (owner.applicationInfo.flags&ApplicationInfo.FLAG_ALLOW_TASK_REPARENTING) != 0)) {
+                (owner.applicationInfo.flags & ApplicationInfo.FLAG_ALLOW_TASK_REPARENTING) != 0)) {
             a.info.flags |= ActivityInfo.FLAG_ALLOW_TASK_REPARENTING;
         }
 
@@ -3149,23 +3165,23 @@ public class PackageParser {
 
         sa.recycle();
 
-        if (receiver && (owner.applicationInfo.flags&ApplicationInfo.FLAG_CANT_SAVE_STATE) != 0) {
+        if (receiver && (owner.applicationInfo.flags & ApplicationInfo.FLAG_CANT_SAVE_STATE) != 0) {
             // A heavy-weight application can not have receives in its main process
             // We can do direct compare because we intern all strings.
             if (a.info.processName == owner.packageName) {
                 outError[0] = "Heavy-weight applications can not have receivers in main process";
             }
         }
-        
+
         if (outError[0] != null) {
             return null;
         }
 
         int outerDepth = parser.getDepth();
         int type;
-        while ((type=parser.next()) != XmlPullParser.END_DOCUMENT
-               && (type != XmlPullParser.END_TAG
-                       || parser.getDepth() > outerDepth)) {
+        while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
+                && (type != XmlPullParser.END_TAG
+                || parser.getDepth() > outerDepth)) {
             if (type == XmlPullParser.END_TAG || type == XmlPullParser.TEXT) {
                 continue;
             }
@@ -3198,7 +3214,7 @@ public class PackageParser {
                     owner.preferredActivityFilters.add(intent);
                 }
             } else if (parser.getName().equals("meta-data")) {
-                if ((a.metaData=parseMetaData(res, parser, attrs, a.metaData,
+                if ((a.metaData = parseMetaData(res, parser, attrs, a.metaData,
                         outError)) == null) {
                     return null;
                 }
@@ -3235,7 +3251,7 @@ public class PackageParser {
     }
 
     private Activity parseActivityAlias(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, int flags, String[] outError)
+                                        XmlPullParser parser, AttributeSet attrs, int flags, String[] outError)
             throws XmlPullParserException, IOException {
         TypedArray sa = res.obtainAttributes(attrs,
                 com.android.internal.R.styleable.AndroidManifestActivityAlias);
@@ -3269,14 +3285,14 @@ public class PackageParser {
                     com.android.internal.R.styleable.AndroidManifestActivityAlias_enabled);
             mParseActivityAliasArgs.tag = "<activity-alias>";
         }
-        
+
         mParseActivityAliasArgs.sa = sa;
         mParseActivityAliasArgs.flags = flags;
-        
+
         Activity target = null;
 
         final int NA = owner.activities.size();
-        for (int i=0; i<NA; i++) {
+        for (int i = 0; i < NA; i++) {
             Activity t = owner.activities.get(i);
             if (targetActivity.equals(t.info.name)) {
                 target = t;
@@ -3355,9 +3371,9 @@ public class PackageParser {
 
         int outerDepth = parser.getDepth();
         int type;
-        while ((type=parser.next()) != XmlPullParser.END_DOCUMENT
-               && (type != XmlPullParser.END_TAG
-                       || parser.getDepth() > outerDepth)) {
+        while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
+                && (type != XmlPullParser.END_TAG
+                || parser.getDepth() > outerDepth)) {
             if (type == XmlPullParser.END_TAG || type == XmlPullParser.TEXT) {
                 continue;
             }
@@ -3375,7 +3391,7 @@ public class PackageParser {
                     a.intents.add(intent);
                 }
             } else if (parser.getName().equals("meta-data")) {
-                if ((a.metaData=parseMetaData(res, parser, attrs, a.metaData,
+                if ((a.metaData = parseMetaData(res, parser, attrs, a.metaData,
                         outError)) == null) {
                     return null;
                 }
@@ -3401,7 +3417,7 @@ public class PackageParser {
     }
 
     private Provider parseProvider(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, int flags, String[] outError)
+                                   XmlPullParser parser, AttributeSet attrs, int flags, String[] outError)
             throws XmlPullParserException, IOException {
         TypedArray sa = res.obtainAttributes(attrs,
                 com.android.internal.R.styleable.AndroidManifestProvider);
@@ -3419,10 +3435,10 @@ public class PackageParser {
                     com.android.internal.R.styleable.AndroidManifestProvider_enabled);
             mParseProviderArgs.tag = "<provider>";
         }
-        
+
         mParseProviderArgs.sa = sa;
         mParseProviderArgs.flags = flags;
-        
+
         Provider p = new Provider(mParseProviderArgs, new ProviderInfo());
         if (outError[0] != null) {
             sa.recycle();
@@ -3460,7 +3476,7 @@ public class PackageParser {
             p.info.readPermission = owner.applicationInfo.permission;
         } else {
             p.info.readPermission =
-                str.length() > 0 ? str.toString().intern() : null;
+                    str.length() > 0 ? str.toString().intern() : null;
         }
         str = sa.getNonConfigurationString(
                 com.android.internal.R.styleable.AndroidManifestProvider_writePermission, 0);
@@ -3471,7 +3487,7 @@ public class PackageParser {
             p.info.writePermission = owner.applicationInfo.permission;
         } else {
             p.info.writePermission =
-                str.length() > 0 ? str.toString().intern() : null;
+                    str.length() > 0 ? str.toString().intern() : null;
         }
 
         p.info.grantUriPermissions = sa.getBoolean(
@@ -3502,7 +3518,7 @@ public class PackageParser {
 
         sa.recycle();
 
-        if ((owner.applicationInfo.flags&ApplicationInfo.FLAG_CANT_SAVE_STATE) != 0) {
+        if ((owner.applicationInfo.flags & ApplicationInfo.FLAG_CANT_SAVE_STATE) != 0) {
             // A heavy-weight application can not have providers in its main process
             // We can do direct compare because we intern all strings.
             if (p.info.processName == owner.packageName) {
@@ -3510,7 +3526,7 @@ public class PackageParser {
                 return null;
             }
         }
-        
+
         if (cpname == null) {
             outError[0] = "<provider> does not include authorities attribute";
             return null;
@@ -3525,14 +3541,14 @@ public class PackageParser {
     }
 
     private boolean parseProviderTags(Resources res,
-            XmlPullParser parser, AttributeSet attrs,
-            Provider outInfo, String[] outError)
+                                      XmlPullParser parser, AttributeSet attrs,
+                                      Provider outInfo, String[] outError)
             throws XmlPullParserException, IOException {
         int outerDepth = parser.getDepth();
         int type;
-        while ((type=parser.next()) != XmlPullParser.END_DOCUMENT
-               && (type != XmlPullParser.END_TAG
-                       || parser.getDepth() > outerDepth)) {
+        while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
+                && (type != XmlPullParser.END_TAG
+                || parser.getDepth() > outerDepth)) {
             if (type == XmlPullParser.END_TAG || type == XmlPullParser.TEXT) {
                 continue;
             }
@@ -3545,11 +3561,11 @@ public class PackageParser {
                 outInfo.intents.add(intent);
 
             } else if (parser.getName().equals("meta-data")) {
-                if ((outInfo.metaData=parseMetaData(res, parser, attrs,
+                if ((outInfo.metaData = parseMetaData(res, parser, attrs,
                         outInfo.metaData, outError)) == null) {
                     return false;
                 }
-                
+
             } else if (parser.getName().equals("grant-uri-permission")) {
                 TypedArray sa = res.obtainAttributes(attrs,
                         com.android.internal.R.styleable.AndroidManifestGrantUriPermission);
@@ -3573,7 +3589,7 @@ public class PackageParser {
                 if (str != null) {
                     pa = new PatternMatcher(str, PatternMatcher.PATTERN_SIMPLE_GLOB);
                 }
-                
+
                 sa.recycle();
 
                 if (pa != null) {
@@ -3582,7 +3598,7 @@ public class PackageParser {
                         outInfo.info.uriPermissionPatterns[0] = pa;
                     } else {
                         final int N = outInfo.info.uriPermissionPatterns.length;
-                        PatternMatcher[] newp = new PatternMatcher[N+1];
+                        PatternMatcher[] newp = new PatternMatcher[N + 1];
                         System.arraycopy(outInfo.info.uriPermissionPatterns, 0, newp, 0, N);
                         newp[N] = pa;
                         outInfo.info.uriPermissionPatterns = newp;
@@ -3620,7 +3636,7 @@ public class PackageParser {
                 if (writePermission == null) {
                     writePermission = permission;
                 }
-                
+
                 boolean havePerm = false;
                 if (readPermission != null) {
                     readPermission = readPermission.intern();
@@ -3643,7 +3659,7 @@ public class PackageParser {
                         return false;
                     }
                 }
-                
+
                 String path = sa.getNonConfigurationString(
                         com.android.internal.R.styleable.AndroidManifestPathPermission_path, 0);
                 if (path != null) {
@@ -3673,7 +3689,7 @@ public class PackageParser {
                         outInfo.info.pathPermissions[0] = pa;
                     } else {
                         final int N = outInfo.info.pathPermissions.length;
-                        PathPermission[] newp = new PathPermission[N+1];
+                        PathPermission[] newp = new PathPermission[N + 1];
                         System.arraycopy(outInfo.info.pathPermissions, 0, newp, 0, N);
                         newp[N] = pa;
                         outInfo.info.pathPermissions = newp;
@@ -3708,7 +3724,7 @@ public class PackageParser {
     }
 
     private Service parseService(Package owner, Resources res,
-            XmlPullParser parser, AttributeSet attrs, int flags, String[] outError)
+                                 XmlPullParser parser, AttributeSet attrs, int flags, String[] outError)
             throws XmlPullParserException, IOException {
         TypedArray sa = res.obtainAttributes(attrs,
                 com.android.internal.R.styleable.AndroidManifestService);
@@ -3726,10 +3742,10 @@ public class PackageParser {
                     com.android.internal.R.styleable.AndroidManifestService_enabled);
             mParseServiceArgs.tag = "<service>";
         }
-        
+
         mParseServiceArgs.sa = sa;
         mParseServiceArgs.flags = flags;
-        
+
         Service s = new Service(mParseServiceArgs, new ServiceInfo());
         if (outError[0] != null) {
             sa.recycle();
@@ -3777,7 +3793,7 @@ public class PackageParser {
 
         sa.recycle();
 
-        if ((owner.applicationInfo.flags&ApplicationInfo.FLAG_CANT_SAVE_STATE) != 0) {
+        if ((owner.applicationInfo.flags & ApplicationInfo.FLAG_CANT_SAVE_STATE) != 0) {
             // A heavy-weight application can not have services in its main process
             // We can do direct compare because we intern all strings.
             if (s.info.processName == owner.packageName) {
@@ -3785,12 +3801,12 @@ public class PackageParser {
                 return null;
             }
         }
-        
+
         int outerDepth = parser.getDepth();
         int type;
-        while ((type=parser.next()) != XmlPullParser.END_DOCUMENT
-               && (type != XmlPullParser.END_TAG
-                       || parser.getDepth() > outerDepth)) {
+        while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
+                && (type != XmlPullParser.END_TAG
+                || parser.getDepth() > outerDepth)) {
             if (type == XmlPullParser.END_TAG || type == XmlPullParser.TEXT) {
                 continue;
             }
@@ -3803,7 +3819,7 @@ public class PackageParser {
 
                 s.intents.add(intent);
             } else if (parser.getName().equals("meta-data")) {
-                if ((s.metaData=parseMetaData(res, parser, attrs, s.metaData,
+                if ((s.metaData = parseMetaData(res, parser, attrs, s.metaData,
                         outError)) == null) {
                     return null;
                 }
@@ -3829,20 +3845,20 @@ public class PackageParser {
     }
 
     private boolean parseAllMetaData(Resources res,
-            XmlPullParser parser, AttributeSet attrs, String tag,
-            Component outInfo, String[] outError)
+                                     XmlPullParser parser, AttributeSet attrs, String tag,
+                                     Component outInfo, String[] outError)
             throws XmlPullParserException, IOException {
         int outerDepth = parser.getDepth();
         int type;
-        while ((type=parser.next()) != XmlPullParser.END_DOCUMENT
-               && (type != XmlPullParser.END_TAG
-                       || parser.getDepth() > outerDepth)) {
+        while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
+                && (type != XmlPullParser.END_TAG
+                || parser.getDepth() > outerDepth)) {
             if (type == XmlPullParser.END_TAG || type == XmlPullParser.TEXT) {
                 continue;
             }
 
             if (parser.getName().equals("meta-data")) {
-                if ((outInfo.metaData=parseMetaData(res, parser, attrs,
+                if ((outInfo.metaData = parseMetaData(res, parser, attrs,
                         outInfo.metaData, outError)) == null) {
                     return false;
                 }
@@ -3863,8 +3879,8 @@ public class PackageParser {
     }
 
     private Bundle parseMetaData(Resources res,
-            XmlPullParser parser, AttributeSet attrs,
-            Bundle data, String[] outError)
+                                 XmlPullParser parser, AttributeSet attrs,
+                                 Bundle data, String[] outError)
             throws XmlPullParserException, IOException {
 
         TypedArray sa = res.obtainAttributes(attrs,
@@ -3883,7 +3899,7 @@ public class PackageParser {
         }
 
         name = name.intern();
-        
+
         TypedValue v = sa.peekValue(
                 com.android.internal.R.styleable.AndroidManifestMetaData_resource);
         if (v != null && v.resourceId != 0) {
@@ -3928,7 +3944,7 @@ public class PackageParser {
     }
 
     private static VerifierInfo parseVerifier(Resources res, XmlPullParser parser,
-            AttributeSet attrs, int flags) {
+                                              AttributeSet attrs, int flags) {
         final TypedArray sa = res.obtainAttributes(attrs,
                 com.android.internal.R.styleable.AndroidManifestPackageVerifier);
 
@@ -3998,7 +4014,7 @@ public class PackageParser {
             = "http://schemas.android.com/apk/res/android";
 
     private boolean parseIntent(Resources res, XmlPullParser parser, AttributeSet attrs,
-            boolean allowGlobs, IntentInfo outInfo, String[] outError)
+                                boolean allowGlobs, IntentInfo outInfo, String[] outError)
             throws XmlPullParserException, IOException {
 
         TypedArray sa = res.obtainAttributes(attrs,
@@ -4010,13 +4026,13 @@ public class PackageParser {
 
         TypedValue v = sa.peekValue(
                 com.android.internal.R.styleable.AndroidManifestIntentFilter_label);
-        if (v != null && (outInfo.labelRes=v.resourceId) == 0) {
+        if (v != null && (outInfo.labelRes = v.resourceId) == 0) {
             outInfo.nonLocalizedLabel = v.coerceToString();
         }
 
         outInfo.icon = sa.getResourceId(
                 com.android.internal.R.styleable.AndroidManifestIntentFilter_icon, 0);
-        
+
         outInfo.logo = sa.getResourceId(
                 com.android.internal.R.styleable.AndroidManifestIntentFilter_logo, 0);
 
@@ -4169,7 +4185,9 @@ public class PackageParser {
     public final static class Package {
 
         public String packageName;
-        /** Names of any split APKs, ordered by parsed splitName */
+        /**
+         * Names of any split APKs, ordered by parsed splitName
+         */
         public String[] splitNames;
 
         // TODO: work towards making these paths invariant
@@ -4181,12 +4199,18 @@ public class PackageParser {
          */
         public String codePath;
 
-        /** Path of base APK */
+        /**
+         * Path of base APK
+         */
         public String baseCodePath;
-        /** Paths of any split APKs, ordered by parsed splitName */
+        /**
+         * Paths of any split APKs, ordered by parsed splitName
+         */
         public String[] splitCodePaths;
 
-        /** Flags of any split APKs; ordered by parsed splitName */
+        /**
+         * Flags of any split APKs; ordered by parsed splitName
+         */
         public int[] splitFlags;
 
         public boolean baseHardwareAccelerated;
@@ -4217,16 +4241,16 @@ public class PackageParser {
         public ArrayList<String> mOriginalPackages = null;
         public String mRealPackage = null;
         public ArrayList<String> mAdoptPermissions = null;
-        
+
         // We store the application meta-data independently to avoid multiple unwanted references
         public Bundle mAppMetaData = null;
 
         // The version code declared for this package.
         public int mVersionCode;
-        
+
         // The version name declared for this package.
         public String mVersionName;
-        
+
         // The shared user id that this package wants to use.
         public String mSharedUserId;
 
@@ -4300,7 +4324,7 @@ public class PackageParser {
 
         /**
          * The install time abi override for this package, if any.
-         *
+         * <p>
          * TODO: This seems like a horrible place to put the abiOverride because
          * this isn't something the packageParser parsers. However, this fits in with
          * the rest of the PackageManager where package scanning randomly pushes
@@ -4345,51 +4369,51 @@ public class PackageParser {
         public void setPackageName(String newName) {
             packageName = newName;
             applicationInfo.packageName = newName;
-            for (int i=permissions.size()-1; i>=0; i--) {
+            for (int i = permissions.size() - 1; i >= 0; i--) {
                 permissions.get(i).setPackageName(newName);
             }
-            for (int i=permissionGroups.size()-1; i>=0; i--) {
+            for (int i = permissionGroups.size() - 1; i >= 0; i--) {
                 permissionGroups.get(i).setPackageName(newName);
             }
-            for (int i=activities.size()-1; i>=0; i--) {
+            for (int i = activities.size() - 1; i >= 0; i--) {
                 activities.get(i).setPackageName(newName);
             }
-            for (int i=receivers.size()-1; i>=0; i--) {
+            for (int i = receivers.size() - 1; i >= 0; i--) {
                 receivers.get(i).setPackageName(newName);
             }
-            for (int i=providers.size()-1; i>=0; i--) {
+            for (int i = providers.size() - 1; i >= 0; i--) {
                 providers.get(i).setPackageName(newName);
             }
-            for (int i=services.size()-1; i>=0; i--) {
+            for (int i = services.size() - 1; i >= 0; i--) {
                 services.get(i).setPackageName(newName);
             }
-            for (int i=instrumentation.size()-1; i>=0; i--) {
+            for (int i = instrumentation.size() - 1; i >= 0; i--) {
                 instrumentation.get(i).setPackageName(newName);
             }
         }
 
         public boolean hasComponentClassName(String name) {
-            for (int i=activities.size()-1; i>=0; i--) {
+            for (int i = activities.size() - 1; i >= 0; i--) {
                 if (name.equals(activities.get(i).className)) {
                     return true;
                 }
             }
-            for (int i=receivers.size()-1; i>=0; i--) {
+            for (int i = receivers.size() - 1; i >= 0; i--) {
                 if (name.equals(receivers.get(i).className)) {
                     return true;
                 }
             }
-            for (int i=providers.size()-1; i>=0; i--) {
+            for (int i = providers.size() - 1; i >= 0; i--) {
                 if (name.equals(providers.get(i).className)) {
                     return true;
                 }
             }
-            for (int i=services.size()-1; i>=0; i--) {
+            for (int i = services.size() - 1; i >= 0; i--) {
                 if (name.equals(services.get(i).className)) {
                     return true;
                 }
             }
-            for (int i=instrumentation.size()-1; i>=0; i--) {
+            for (int i = instrumentation.size() - 1; i >= 0; i--) {
                 if (name.equals(instrumentation.get(i).className)) {
                     return true;
                 }
@@ -4399,8 +4423,8 @@ public class PackageParser {
 
         public String toString() {
             return "Package{"
-                + Integer.toHexString(System.identityHashCode(this))
-                + " " + packageName + "}";
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + " " + packageName + "}";
         }
     }
 
@@ -4412,7 +4436,7 @@ public class PackageParser {
 
         ComponentName componentName;
         String componentShortName;
-        
+
         public Component(Package _owner) {
             owner = _owner;
             intents = null;
@@ -4430,7 +4454,7 @@ public class PackageParser {
             }
 
             outInfo.name
-                = buildClassName(owner.applicationInfo.packageName, name, args.outError);
+                    = buildClassName(owner.applicationInfo.packageName, name, args.outError);
             if (outInfo.name == null) {
                 className = null;
                 args.outError[0] = args.tag + " does not have valid android:name";
@@ -4444,7 +4468,7 @@ public class PackageParser {
                 outInfo.icon = iconVal;
                 outInfo.nonLocalizedLabel = null;
             }
-            
+
             int logoVal = args.sa.getResourceId(args.logoRes, 0);
             if (logoVal != 0) {
                 outInfo.logo = logoVal;
@@ -4456,7 +4480,7 @@ public class PackageParser {
             }
 
             TypedValue v = args.sa.peekValue(args.labelRes);
-            if (v != null && (outInfo.labelRes=v.resourceId) == 0) {
+            if (v != null && (outInfo.labelRes = v.resourceId) == 0) {
                 outInfo.nonLocalizedLabel = v.coerceToString();
             }
 
@@ -4464,7 +4488,7 @@ public class PackageParser {
         }
 
         public Component(final ParseComponentArgs args, final ComponentInfo outInfo) {
-            this(args, (PackageItemInfo)outInfo);
+            this(args, (PackageItemInfo) outInfo);
             if (args.outError[0] != null) {
                 return;
             }
@@ -4484,11 +4508,11 @@ public class PackageParser {
                         owner.applicationInfo.processName, pname,
                         args.flags, args.sepProcesses, args.outError);
             }
-            
+
             if (args.descriptionRes != 0) {
                 outInfo.descriptionRes = args.sa.getResourceId(args.descriptionRes, 0);
             }
-            
+
             outInfo.enabled = args.sa.getBoolean(args.enabledRes, true);
         }
 
@@ -4499,7 +4523,7 @@ public class PackageParser {
             componentName = clone.componentName;
             componentShortName = clone.componentShortName;
         }
-        
+
         public ComponentName getComponentName() {
             if (componentName != null) {
                 return componentName;
@@ -4524,7 +4548,7 @@ public class PackageParser {
             componentShortName = null;
         }
     }
-    
+
     public final static class Permission extends Component<IntentInfo> {
         public final PermissionInfo info;
         public boolean tree;
@@ -4539,7 +4563,7 @@ public class PackageParser {
             super(_owner);
             info = _info;
         }
-        
+
         public void setPackageName(String packageName) {
             super.setPackageName(packageName);
             info.packageName = packageName;
@@ -4547,8 +4571,8 @@ public class PackageParser {
 
         public String toString() {
             return "Permission{"
-                + Integer.toHexString(System.identityHashCode(this))
-                + " " + info.name + "}";
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + " " + info.name + "}";
         }
     }
 
@@ -4572,13 +4596,13 @@ public class PackageParser {
 
         public String toString() {
             return "PermissionGroup{"
-                + Integer.toHexString(System.identityHashCode(this))
-                + " " + info.name + "}";
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + " " + info.name + "}";
         }
     }
 
     private static boolean copyNeeded(int flags, Package p,
-            PackageUserState state, Bundle metaData, int userId) {
+                                      PackageUserState state, Bundle metaData, int userId) {
         if (userId != 0) {
             // We always need to copy for other users, since we need
             // to fix up the uid.
@@ -4608,12 +4632,12 @@ public class PackageParser {
     }
 
     public static ApplicationInfo generateApplicationInfo(Package p, int flags,
-            PackageUserState state) {
+                                                          PackageUserState state) {
         return generateApplicationInfo(p, flags, state, UserHandle.getCallingUserId());
     }
 
     private static void updateApplicationInfo(ApplicationInfo ai, int flags,
-            PackageUserState state) {
+                                              PackageUserState state) {
         // CompatibilityMode is global state.
         if (!sCompatibilityModeEnabled) {
             ai.disableCompatibilityMode();
@@ -4631,7 +4655,7 @@ public class PackageParser {
         if (state.enabled == PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
             ai.enabled = true;
         } else if (state.enabled == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
-            ai.enabled = (flags&PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS) != 0;
+            ai.enabled = (flags & PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS) != 0;
         } else if (state.enabled == PackageManager.COMPONENT_ENABLED_STATE_DISABLED
                 || state.enabled == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER) {
             ai.enabled = false;
@@ -4640,14 +4664,14 @@ public class PackageParser {
     }
 
     public static ApplicationInfo generateApplicationInfo(Package p, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         if (p == null) return null;
         if (!checkUseInstalledOrHidden(flags, state)) {
             return null;
         }
         if (!copyNeeded(flags, p, state, null, userId)
-                && ((flags&PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS) == 0
-                        || state.enabled != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED)) {
+                && ((flags & PackageManager.GET_DISABLED_UNTIL_USED_COMPONENTS) == 0
+                || state.enabled != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED)) {
             // In this case it is safe to directly modify the internal ApplicationInfo state:
             // - CompatibilityMode is global state, so will be the same for every call.
             // - We only come in to here if the app should reported as installed; this is the
@@ -4681,7 +4705,7 @@ public class PackageParser {
     }
 
     public static ApplicationInfo generateApplicationInfo(ApplicationInfo ai, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         if (ai == null) return null;
         if (!checkUseInstalledOrHidden(flags, state)) {
             return null;
@@ -4705,7 +4729,7 @@ public class PackageParser {
     public static final PermissionInfo generatePermissionInfo(
             Permission p, int flags) {
         if (p == null) return null;
-        if ((flags&PackageManager.GET_META_DATA) == 0) {
+        if ((flags & PackageManager.GET_META_DATA) == 0) {
             return p.info;
         }
         PermissionInfo pi = new PermissionInfo(p.info);
@@ -4716,7 +4740,7 @@ public class PackageParser {
     public static final PermissionGroupInfo generatePermissionGroupInfo(
             PermissionGroup pg, int flags) {
         if (pg == null) return null;
-        if ((flags&PackageManager.GET_META_DATA) == 0) {
+        if ((flags & PackageManager.GET_META_DATA) == 0) {
             return pg.info;
         }
         PermissionGroupInfo pgi = new PermissionGroupInfo(pg.info);
@@ -4732,7 +4756,7 @@ public class PackageParser {
             info = _info;
             info.applicationInfo = args.owner.applicationInfo;
         }
-        
+
         public void setPackageName(String packageName) {
             super.setPackageName(packageName);
             info.packageName = packageName;
@@ -4750,7 +4774,7 @@ public class PackageParser {
     }
 
     public static final ActivityInfo generateActivityInfo(Activity a, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         if (a == null) return null;
         if (!checkUseInstalledOrHidden(flags, state)) {
             return null;
@@ -4766,7 +4790,7 @@ public class PackageParser {
     }
 
     public static final ActivityInfo generateActivityInfo(ActivityInfo ai, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         if (ai == null) return null;
         if (!checkUseInstalledOrHidden(flags, state)) {
             return null;
@@ -4786,7 +4810,7 @@ public class PackageParser {
             info = _info;
             info.applicationInfo = args.owner.applicationInfo;
         }
-        
+
         public void setPackageName(String packageName) {
             super.setPackageName(packageName);
             info.packageName = packageName;
@@ -4804,7 +4828,7 @@ public class PackageParser {
     }
 
     public static final ServiceInfo generateServiceInfo(Service s, int flags,
-            PackageUserState state, int userId) {
+                                                        PackageUserState state, int userId) {
         if (s == null) return null;
         if (!checkUseInstalledOrHidden(flags, state)) {
             return null;
@@ -4829,7 +4853,7 @@ public class PackageParser {
             info.applicationInfo = args.owner.applicationInfo;
             syncable = false;
         }
-        
+
         public Provider(Provider existingProvider) {
             super(existingProvider);
             this.info = existingProvider.info;
@@ -4853,14 +4877,14 @@ public class PackageParser {
     }
 
     public static final ProviderInfo generateProviderInfo(Provider p, int flags,
-            PackageUserState state, int userId) {
+                                                          PackageUserState state, int userId) {
         if (p == null) return null;
         if (!checkUseInstalledOrHidden(flags, state)) {
             return null;
         }
         if (!copyNeeded(flags, p.owner, state, p.metaData, userId)
                 && ((flags & PackageManager.GET_URI_PERMISSION_PATTERNS) != 0
-                        || p.info.uriPermissionPatterns == null)) {
+                || p.info.uriPermissionPatterns == null)) {
             return p.info;
         }
         // Make shallow copies so we can store the metadata safely
@@ -4880,7 +4904,7 @@ public class PackageParser {
             super(args, _info);
             info = _info;
         }
-        
+
         public void setPackageName(String packageName) {
             super.setPackageName(packageName);
             info.packageName = packageName;
@@ -4900,7 +4924,7 @@ public class PackageParser {
     public static final InstrumentationInfo generateInstrumentationInfo(
             Instrumentation i, int flags) {
         if (i == null) return null;
-        if ((flags&PackageManager.GET_META_DATA) == 0) {
+        if ((flags & PackageManager.GET_META_DATA) == 0) {
             return i.info;
         }
         InstrumentationInfo ii = new InstrumentationInfo(i.info);

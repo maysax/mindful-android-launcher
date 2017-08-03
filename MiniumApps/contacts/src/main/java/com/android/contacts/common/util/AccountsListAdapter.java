@@ -58,10 +58,10 @@ public final class AccountsListAdapter extends BaseAdapter {
 
     /**
      * @param currentAccount the Account currently selected by the user, which should come
-     * first in the list. Can be null.
+     *                       first in the list. Can be null.
      */
     public AccountsListAdapter(Context context, AccountListFilter accountListFilter,
-            AccountWithDataSet currentAccount) {
+                               AccountWithDataSet currentAccount) {
         mContext = context;
         mAccountTypes = AccountTypeManager.getInstance(context);
         mAccounts = getAccounts(accountListFilter);

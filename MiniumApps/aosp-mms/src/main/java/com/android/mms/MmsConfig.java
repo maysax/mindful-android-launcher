@@ -16,23 +16,20 @@
 
 package com.android.mms;
 
-import java.io.IOException;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
 import android.provider.Telephony;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.internal.telephony.TelephonyProperties;
-import com.android.mms.ui.MessageUtils;
-import com.android.mms.ui.MessagingPreferenceActivity;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 
 public class MmsConfig {
     private static final String TAG = LogTag.TAG;
@@ -69,7 +66,7 @@ public class MmsConfig {
     private static int mDefaultMMSMessagesPerThread = 1000;     // default value
     private static int mMinMessageCountPerThread = 2;           // default value
     private static int mMaxMessageCountPerThread = 5000;        // default value
-    private static int mHttpSocketTimeout = 60*1000;            // default to 1 min
+    private static int mHttpSocketTimeout = 60 * 1000;            // default to 1 min
     private static int mMinimumSlideElementDuration = 7;        // default to 7 sec
     private static boolean mNotifyWapMMSC = false;
     private static boolean mAllowAttachAudio = true;
@@ -104,7 +101,7 @@ public class MmsConfig {
     private static int mAliasRuleMaxChars = 48;
 
     private static int mMaxSubjectLength = 40;  // maximum number of characters allowed for mms
-                                                // subject
+    // subject
 
     // If mEnableGroupMms is true, a message with multiple recipients, regardless of contents,
     // will be sent as a single MMS message with multiple "TO" fields set for each recipient.
@@ -162,7 +159,7 @@ public class MmsConfig {
         if (LOCAL_LOGV) {
             Log.v(TAG, "MmsConfig.getMaxMessageSize(): " + mMaxMessageSize);
         }
-       return mMaxMessageSize;
+        return mMaxMessageSize;
     }
 
     /**
@@ -290,11 +287,10 @@ public class MmsConfig {
         return mEnableGroupMms;
     }
 
-    public static final void beginDocument(XmlPullParser parser, String firstElementName) throws XmlPullParserException, IOException
-    {
+    public static final void beginDocument(XmlPullParser parser, String firstElementName) throws XmlPullParserException, IOException {
         int type;
-        while ((type=parser.next()) != XmlPullParser.START_TAG
-                   && type != XmlPullParser.END_DOCUMENT) {
+        while ((type = parser.next()) != XmlPullParser.START_TAG
+                && type != XmlPullParser.END_DOCUMENT) {
             ;
         }
 
@@ -308,11 +304,10 @@ public class MmsConfig {
         }
     }
 
-    public static final void nextElement(XmlPullParser parser) throws XmlPullParserException, IOException
-    {
+    public static final void nextElement(XmlPullParser parser) throws XmlPullParserException, IOException {
         int type;
-        while ((type=parser.next()) != XmlPullParser.START_TAG
-                   && type != XmlPullParser.END_DOCUMENT) {
+        while ((type = parser.next()) != XmlPullParser.START_TAG
+                && type != XmlPullParser.END_DOCUMENT) {
             ;
         }
     }
@@ -440,8 +435,8 @@ public class MmsConfig {
 
         if (errorStr != null) {
             String err =
-                String.format("MmsConfig.loadMmsSettings mms_config.xml missing %s setting",
-                        errorStr);
+                    String.format("MmsConfig.loadMmsSettings mms_config.xml missing %s setting",
+                            errorStr);
             Log.e(TAG, err);
         }
     }

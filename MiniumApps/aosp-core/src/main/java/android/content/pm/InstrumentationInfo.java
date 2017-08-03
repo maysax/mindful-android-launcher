@@ -64,7 +64,7 @@ public class InstrumentationInfo extends PackageItemInfo implements Parcelable {
 
     /**
      * Full path to the directory where the native JNI libraries are stored.
-     * 
+     * <p>
      * {@hide}
      */
     public String nativeLibraryDir;
@@ -73,8 +73,10 @@ public class InstrumentationInfo extends PackageItemInfo implements Parcelable {
      * Specifies whether or not this instrumentation will handle profiling.
      */
     public boolean handleProfiling;
-    
-    /** Specifies whether or not to run this instrumentation as a functional test */
+
+    /**
+     * Specifies whether or not to run this instrumentation as a functional test
+     */
     public boolean functionalTest;
 
     public InstrumentationInfo() {
@@ -93,8 +95,8 @@ public class InstrumentationInfo extends PackageItemInfo implements Parcelable {
 
     public String toString() {
         return "InstrumentationInfo{"
-            + Integer.toHexString(System.identityHashCode(this))
-            + " " + packageName + "}";
+                + Integer.toHexString(System.identityHashCode(this))
+                + " " + packageName + "}";
     }
 
     public int describeContents() {
@@ -117,6 +119,7 @@ public class InstrumentationInfo extends PackageItemInfo implements Parcelable {
         public InstrumentationInfo createFromParcel(Parcel source) {
             return new InstrumentationInfo(source);
         }
+
         public InstrumentationInfo[] newArray(int size) {
             return new InstrumentationInfo[size];
         }

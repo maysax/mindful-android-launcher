@@ -55,6 +55,7 @@ public class SearchLayout extends LinearLayout {
      * "@Text|@Al d. zo|Hello world
      * text|@Alfred d. zone|Hello World;
      * text|@Alfred d. zone|Hello world|;
+     *
      * @Alfred d.zone|@Text|Hello world;
      * Text|Alfred d. zone|Hello World;
      */
@@ -118,7 +119,6 @@ public class SearchLayout extends LinearLayout {
         txtSearchBox.setText(newText);
 
 
-
         int startPos = 0;
         int endPos = 0;
         for (String s : splits) {
@@ -144,10 +144,12 @@ public class SearchLayout extends LinearLayout {
     void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -205,7 +207,7 @@ public class SearchLayout extends LinearLayout {
     private int getCurrentAvailablePos() {
         List<ActionItem> items = manager.getItems();
         int ret = 0;
-        for ( ActionItem item : items ) {
+        for (ActionItem item : items) {
             if (item.isCompleted() && item.getType() != ActionItem.ActionItemType.CONTACT_NUMBER) {
                 ret += item.getActionText().length() + 1;
             }

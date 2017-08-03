@@ -33,7 +33,7 @@ public interface VCardEntryHandler {
     /**
      * The method called when one vCard entry is created. Children come before their parent in
      * nested vCard files.
-     *
+     * <p>
      * e.g.
      * In the following vCard, the entry for "entry2" comes before one for "entry1".
      * <code>

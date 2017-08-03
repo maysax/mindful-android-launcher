@@ -16,8 +16,8 @@
 
 package android.net.dhcp;
 
-import java.net.InetAddress;
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 /**
@@ -33,7 +33,7 @@ class DhcpAckPacket extends DhcpPacket {
     DhcpAckPacket(int transId, boolean broadcast, InetAddress serverAddress,
                   InetAddress clientIp, byte[] clientMac) {
         super(transId, Inet4Address.ANY, clientIp, serverAddress,
-            Inet4Address.ANY, clientMac, broadcast);
+                Inet4Address.ANY, clientMac, broadcast);
         mBroadcast = broadcast;
         mSrcIp = serverAddress;
     }
@@ -42,7 +42,7 @@ class DhcpAckPacket extends DhcpPacket {
         String s = super.toString();
         String dnsServers = " DNS servers: ";
 
-        for (InetAddress dnsServer: mDnsServers) {
+        for (InetAddress dnsServer : mDnsServers) {
             dnsServers += dnsServer.toString() + " ";
         }
 
@@ -61,7 +61,7 @@ class DhcpAckPacket extends DhcpPacket {
         InetAddress srcIp = mBroadcast ? Inet4Address.ANY : mSrcIp;
 
         fillInPacket(encap, destIp, srcIp, destUdp, srcUdp, result,
-            DHCP_BOOTREPLY, mBroadcast);
+                DHCP_BOOTREPLY, mBroadcast);
         result.flip();
         return result;
     }
@@ -77,7 +77,7 @@ class DhcpAckPacket extends DhcpPacket {
         // the client should renew at 1/2 the lease-expiry interval
         if (mLeaseTime != null) {
             addTlv(buffer, DHCP_RENEWAL_TIME,
-                Integer.valueOf(mLeaseTime.intValue() / 2));
+                    Integer.valueOf(mLeaseTime.intValue() / 2));
         }
 
         addTlv(buffer, DHCP_SUBNET_MASK, mSubnetMask);
@@ -104,6 +104,6 @@ class DhcpAckPacket extends DhcpPacket {
      */
     public void doNextOp(DhcpStateMachine machine) {
         machine.onAckReceived(mYourIp, mSubnetMask, mGateway, mDnsServers,
-            mServerIdentifier, getInt(mLeaseTime));
+                mServerIdentifier, getInt(mLeaseTime));
     }
 }

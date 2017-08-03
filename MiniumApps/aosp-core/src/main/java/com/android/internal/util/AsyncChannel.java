@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010 The Android Open Source Project
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -152,6 +152,7 @@ public class AsyncChannel {
 
     private static final int CMD_TO_STRING_COUNT = CMD_CHANNEL_DISCONNECTED - BASE + 1;
     private static String[] sCmdToString = new String[CMD_TO_STRING_COUNT];
+
     static {
         sCmdToString[CMD_CHANNEL_HALF_CONNECTED - BASE] = "CMD_CHANNEL_HALF_CONNECTED";
         sCmdToString[CMD_CHANNEL_FULL_CONNECTION - BASE] = "CMD_CHANNEL_FULL_CONNECTION";
@@ -159,6 +160,7 @@ public class AsyncChannel {
         sCmdToString[CMD_CHANNEL_DISCONNECT - BASE] = "CMD_CHANNEL_DISCONNECT";
         sCmdToString[CMD_CHANNEL_DISCONNECTED - BASE] = "CMD_CHANNEL_DISCONNECTED";
     }
+
     protected static String cmdToString(int cmd) {
         cmd -= BASE;
         if ((cmd >= 0) && (cmd < sCmdToString.length)) {
@@ -313,7 +315,7 @@ public class AsyncChannel {
      *            package name)
      */
     public void connect(Context srcContext, Handler srcHandler, String dstPackageName,
-            String dstClassName) {
+                        String dstClassName) {
         if (DBG) log("connect srcHandler to dst Package & class E");
 
         final class ConnectAsync implements Runnable {
@@ -323,7 +325,7 @@ public class AsyncChannel {
             String mDstClassName;
 
             ConnectAsync(Context srcContext, Handler srcHandler, String dstPackageName,
-                    String dstClassName) {
+                         String dstClassName) {
                 mSrcCtx = srcContext;
                 mSrcHdlr = srcHandler;
                 mDstPackageName = dstPackageName;
@@ -459,7 +461,7 @@ public class AsyncChannel {
             msg.what = CMD_CHANNEL_DISCONNECTED;
             msg.replyTo = mSrcMessenger;
             mDstMessenger.send(msg);
-        } catch(Exception e) {
+        } catch (Exception e) {
         }
         // Tell source we're disconnected.
         if (mSrcHandler != null) {
@@ -467,7 +469,7 @@ public class AsyncChannel {
             mSrcHandler = null;
         }
         // Unlink only when bindService isn't used
-        if (mConnection == null && mDstMessenger != null && mDeathMonitor!= null) {
+        if (mConnection == null && mDstMessenger != null && mDeathMonitor != null) {
             mDstMessenger.getBinder().unlinkToDeath(mDeathMonitor, 0);
             mDeathMonitor = null;
         }
@@ -772,7 +774,7 @@ public class AsyncChannel {
             public void handleMessage(Message msg) {
                 mResultMsg = Message.obtain();
                 mResultMsg.copyFrom(msg);
-                synchronized(mLockObject) {
+                synchronized (mLockObject) {
                     mLockObject.notify();
                 }
             }

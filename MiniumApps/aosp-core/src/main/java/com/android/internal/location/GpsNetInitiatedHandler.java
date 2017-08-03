@@ -16,8 +16,6 @@
 
 package com.android.internal.location;
 
-import java.io.UnsupportedEncodingException;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -25,25 +23,26 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.LocationManager;
 import android.location.INetInitiatedListener;
-import android.telephony.TelephonyManager;
-import android.telephony.PhoneNumberUtils;
-import android.telephony.PhoneStateListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.os.UserHandle;
 import android.os.SystemProperties;
-import android.provider.Settings;
+import android.os.UserHandle;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.android.internal.R;
 import com.android.internal.telephony.GsmAlphabet;
 import com.android.internal.telephony.TelephonyProperties;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * A GPS Network-initiated Handler class used by LocationManager.
- *
+ * <p>
  * {@hide}
  */
 public class GpsNetInitiatedHandler {
@@ -119,8 +118,7 @@ public class GpsNetInitiatedHandler {
     // Set to true if string from HAL is encoded as Hex, e.g., "3F0039"
     static private boolean mIsHexInput = true;
 
-    public static class GpsNiNotification
-    {
+    public static class GpsNiNotification {
         public int notificationId;
         public int niType;
         public boolean needNotify;
@@ -133,18 +131,23 @@ public class GpsNetInitiatedHandler {
         public int requestorIdEncoding;
         public int textEncoding;
         public Bundle extras;
-    };
+    }
+
+    ;
 
     public static class GpsNiResponse {
         /* User response, one of the values in GpsUserResponseType */
         int userResponse;
         /* Optional extra data to pass with the user response */
         Bundle extras;
-    };
+    }
+
+    ;
 
     private final BroadcastReceiver mBroadcastReciever = new BroadcastReceiver() {
 
-        @Override public void onReceive(Context context, Intent intent) {
+        @Override
+        public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
                 String phoneNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
@@ -187,15 +190,15 @@ public class GpsNetInitiatedHandler {
         }
 
         setSuplEsEnabled(isSuplEsEnabled);
-        mLocationManager = (LocationManager)context.getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         updateLocationMode();
         mTelephonyManager =
-            (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+                (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 
         mPhoneStateListener = new PhoneStateListener() {
             @Override
             public void onCallStateChanged(int state, String incomingNumber) {
-                if (DEBUG) Log.d(TAG, "onCallStateChanged(): state is "+ state);
+                if (DEBUG) Log.d(TAG, "onCallStateChanged(): state is " + state);
                 // listening for emergency call ends
                 if (state == TelephonyManager.CALL_STATE_IDLE) {
                     setInEmergency(false);
@@ -255,11 +258,11 @@ public class GpsNetInitiatedHandler {
     // Handles NI events from HAL
     public void handleNiNotification(GpsNiNotification notif) {
         if (DEBUG) Log.d(TAG, "in handleNiNotification () :"
-                        + " notificationId: " + notif.notificationId
-                        + " requestorId: " + notif.requestorId
-                        + " text: " + notif.text
-                        + " mIsSuplEsEnabled" + getSuplEsEnabled()
-                        + " mIsLocationEnabled" + getLocationEnabled());
+                + " notificationId: " + notif.notificationId
+                + " requestorId: " + notif.requestorId
+                + " text: " + notif.text
+                + " mIsSuplEsEnabled" + getSuplEsEnabled()
+                + " mIsLocationEnabled" + getLocationEnabled());
 
         if (getSuplEsEnabled()) {
             handleNiInEs(notif);
@@ -283,24 +286,24 @@ public class GpsNetInitiatedHandler {
     // handle NI form HAL when SUPL_ES is disabled.
     private void handleNi(GpsNiNotification notif) {
         if (DEBUG) Log.d(TAG, "in handleNi () :"
-                        + " needNotify: " + notif.needNotify
-                        + " needVerify: " + notif.needVerify
-                        + " privacyOverride: " + notif.privacyOverride
-                        + " mPopupImmediately: " + mPopupImmediately
-                        + " mInEmergency: " + getInEmergency());
+                + " needNotify: " + notif.needNotify
+                + " needVerify: " + notif.needVerify
+                + " privacyOverride: " + notif.privacyOverride
+                + " mPopupImmediately: " + mPopupImmediately
+                + " mInEmergency: " + getInEmergency());
 
         if (!getLocationEnabled() && !getInEmergency()) {
             // Location is currently disabled, ignore all NI requests.
             try {
                 mNetInitiatedListener.sendNiResponse(notif.notificationId,
-                                                     GPS_NI_RESPONSE_IGNORE);
+                        GPS_NI_RESPONSE_IGNORE);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException in sendNiResponse");
             }
         }
         if (notif.needNotify) {
-        // If NI does not need verify or the dialog is not requested
-        // to pop up immediately, the dialog box will not pop up.
+            // If NI does not need verify or the dialog is not requested
+            // to pop up immediately, the dialog box will not pop up.
             if (notif.needVerify && mPopupImmediately) {
                 // Popup the dialog box now
                 openNiDialog(notif);
@@ -314,7 +317,7 @@ public class GpsNetInitiatedHandler {
         if (!notif.needVerify || notif.privacyOverride) {
             try {
                 mNetInitiatedListener.sendNiResponse(notif.notificationId,
-                                                     GPS_NI_RESPONSE_ACCEPT);
+                        GPS_NI_RESPONSE_ACCEPT);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException in sendNiResponse");
             }
@@ -325,8 +328,8 @@ public class GpsNetInitiatedHandler {
     private void handleNiInEs(GpsNiNotification notif) {
 
         if (DEBUG) Log.d(TAG, "in handleNiInEs () :"
-                    + " niType: " + notif.niType
-                    + " notificationId: " + notif.notificationId);
+                + " niType: " + notif.niType
+                + " notificationId: " + notif.notificationId);
 
         // UE is in emergency mode when in emergency call mode or in emergency call back mode
         /*
@@ -343,7 +346,7 @@ public class GpsNetInitiatedHandler {
         if (isNiTypeES != getInEmergency()) {
             try {
                 mNetInitiatedListener.sendNiResponse(notif.notificationId,
-                                                     GPS_NI_RESPONSE_IGNORE);
+                        GPS_NI_RESPONSE_IGNORE);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException in sendNiResponse");
             }
@@ -395,8 +398,7 @@ public class GpsNetInitiatedHandler {
     }
 
     // Opens the notification dialog and waits for user input
-    private void openNiDialog(GpsNiNotification notif)
-    {
+    private void openNiDialog(GpsNiNotification notif) {
         Intent intent = getDlgIntent(notif);
 
         if (DEBUG) Log.d(TAG, "openNiDialog, notifyId: " + notif.notificationId +
@@ -408,8 +410,7 @@ public class GpsNetInitiatedHandler {
 
     // Construct the intent for bringing up the dialog activity, which shows the
     // notification and takes user input
-    private Intent getDlgIntent(GpsNiNotification notif)
-    {
+    private Intent getDlgIntent(GpsNiNotification notif) {
         Intent intent = new Intent();
         String title = getDialogTitle(notif, mContext);
         String message = getDialogMessage(notif, mContext);
@@ -432,22 +433,17 @@ public class GpsNetInitiatedHandler {
     }
 
     // Converts a string (or Hex string) to a char array
-    static byte[] stringToByteArray(String original, boolean isHex)
-    {
+    static byte[] stringToByteArray(String original, boolean isHex) {
         int length = isHex ? original.length() / 2 : original.length();
         byte[] output = new byte[length];
         int i;
 
-        if (isHex)
-        {
-            for (i = 0; i < length; i++)
-            {
-                output[i] = (byte) Integer.parseInt(original.substring(i*2, i*2+2), 16);
+        if (isHex) {
+            for (i = 0; i < length; i++) {
+                output[i] = (byte) Integer.parseInt(original.substring(i * 2, i * 2 + 2), 16);
             }
-        }
-        else {
-            for (i = 0; i < length; i++)
-            {
+        } else {
+            for (i = 0; i < length; i++) {
                 output[i] = (byte) original.charAt(i);
             }
         }
@@ -461,8 +457,7 @@ public class GpsNetInitiatedHandler {
      * @param input a 7-bit packed char array
      * @return the unpacked String
      */
-    static String decodeGSMPackedString(byte[] input)
-    {
+    static String decodeGSMPackedString(byte[] input) {
         final char PADDING_CHAR = 0x00;
         int lengthBytes = input.length;
         int lengthSeptets = (lengthBytes * 8) / 7;
@@ -491,80 +486,73 @@ public class GpsNetInitiatedHandler {
         return decoded;
     }
 
-    static String decodeUTF8String(byte[] input)
-    {
+    static String decodeUTF8String(byte[] input) {
         String decoded = "";
         try {
             decoded = new String(input, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             throw new AssertionError();
         }
         return decoded;
     }
 
-    static String decodeUCS2String(byte[] input)
-    {
+    static String decodeUCS2String(byte[] input) {
         String decoded = "";
         try {
             decoded = new String(input, "UTF-16");
-        }
-        catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             throw new AssertionError();
         }
         return decoded;
     }
 
-    /** Decode NI string
+    /**
+     * Decode NI string
      *
-     * @param original   The text string to be decoded
-     * @param isHex      Specifies whether the content of the string has been encoded as a Hex string. Encoding
-     *                   a string as Hex can allow zeros inside the coded text.
-     * @param coding     Specifies the coding scheme of the string, such as GSM, UTF8, UCS2, etc. This coding scheme
-     *                      needs to match those used passed to HAL from the native GPS driver. Decoding is done according
-     *                   to the <code> coding </code>, after a Hex string is decoded. Generally, if the
-     *                   notification strings don't need further decoding, <code> coding </code> encoding can be
-     *                   set to -1, and <code> isHex </code> can be false.
+     * @param original The text string to be decoded
+     * @param isHex    Specifies whether the content of the string has been encoded as a Hex string. Encoding
+     *                 a string as Hex can allow zeros inside the coded text.
+     * @param coding   Specifies the coding scheme of the string, such as GSM, UTF8, UCS2, etc. This coding scheme
+     *                 needs to match those used passed to HAL from the native GPS driver. Decoding is done according
+     *                 to the <code> coding </code>, after a Hex string is decoded. Generally, if the
+     *                 notification strings don't need further decoding, <code> coding </code> encoding can be
+     *                 set to -1, and <code> isHex </code> can be false.
      * @return the decoded string
      */
-    static private String decodeString(String original, boolean isHex, int coding)
-    {
+    static private String decodeString(String original, boolean isHex, int coding) {
         String decoded = original;
         byte[] input = stringToByteArray(original, isHex);
 
         switch (coding) {
-        case GPS_ENC_NONE:
-            decoded = original;
-            break;
+            case GPS_ENC_NONE:
+                decoded = original;
+                break;
 
-        case GPS_ENC_SUPL_GSM_DEFAULT:
-            decoded = decodeGSMPackedString(input);
-            break;
+            case GPS_ENC_SUPL_GSM_DEFAULT:
+                decoded = decodeGSMPackedString(input);
+                break;
 
-        case GPS_ENC_SUPL_UTF8:
-            decoded = decodeUTF8String(input);
-            break;
+            case GPS_ENC_SUPL_UTF8:
+                decoded = decodeUTF8String(input);
+                break;
 
-        case GPS_ENC_SUPL_UCS2:
-            decoded = decodeUCS2String(input);
-            break;
+            case GPS_ENC_SUPL_UCS2:
+                decoded = decodeUCS2String(input);
+                break;
 
-        case GPS_ENC_UNKNOWN:
-            decoded = original;
-            break;
+            case GPS_ENC_UNKNOWN:
+                decoded = original;
+                break;
 
-        default:
-            Log.e(TAG, "Unknown encoding " + coding + " for NI text " + original);
-            break;
+            default:
+                Log.e(TAG, "Unknown encoding " + coding + " for NI text " + original);
+                break;
         }
         return decoded;
     }
 
     // change this to configure notification display
-    static private String getNotifTicker(GpsNiNotification notif, Context context)
-    {
+    static private String getNotifTicker(GpsNiNotification notif, Context context) {
         String ticker = String.format(context.getString(R.string.gpsNotifTicker),
                 decodeString(notif.requestorId, mIsHexInput, notif.requestorIdEncoding),
                 decodeString(notif.text, mIsHexInput, notif.textEncoding));
@@ -572,15 +560,13 @@ public class GpsNetInitiatedHandler {
     }
 
     // change this to configure notification display
-    static private String getNotifTitle(GpsNiNotification notif, Context context)
-    {
+    static private String getNotifTitle(GpsNiNotification notif, Context context) {
         String title = String.format(context.getString(R.string.gpsNotifTitle));
         return title;
     }
 
     // change this to configure notification display
-    static private String getNotifMessage(GpsNiNotification notif, Context context)
-    {
+    static private String getNotifMessage(GpsNiNotification notif, Context context) {
         String message = String.format(context.getString(R.string.gpsNotifMessage),
                 decodeString(notif.requestorId, mIsHexInput, notif.requestorIdEncoding),
                 decodeString(notif.text, mIsHexInput, notif.textEncoding));
@@ -588,14 +574,12 @@ public class GpsNetInitiatedHandler {
     }
 
     // change this to configure dialog display (for verification)
-    static public String getDialogTitle(GpsNiNotification notif, Context context)
-    {
+    static public String getDialogTitle(GpsNiNotification notif, Context context) {
         return getNotifTitle(notif, context);
     }
 
     // change this to configure dialog display (for verification)
-    static private String getDialogMessage(GpsNiNotification notif, Context context)
-    {
+    static private String getDialogMessage(GpsNiNotification notif, Context context) {
         return getNotifMessage(notif, context);
     }
 

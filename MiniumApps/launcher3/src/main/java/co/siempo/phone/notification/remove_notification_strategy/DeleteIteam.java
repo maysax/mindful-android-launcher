@@ -8,11 +8,12 @@ import co.siempo.phone.notification.Notification;
 
 public class DeleteIteam {
     private DeleteStrategy deleteStrategy;
-    public DeleteIteam(DeleteStrategy deleteStrategy){
+
+    public DeleteIteam(DeleteStrategy deleteStrategy) {
         this.deleteStrategy = deleteStrategy;
     }
 
-    public void executeDelete(Notification notification){
+    public void executeDelete(Notification notification) {
         deleteStrategy.delete(notification);
     }
 }

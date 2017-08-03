@@ -4,7 +4,7 @@ import android.graphics.Point;
 
 /**
  * Singleton class to keep track of where the user last touched the screen.
- *
+ * <p>
  * Used to pass on to the InCallUI for animation.
  */
 public class TouchPointManager {

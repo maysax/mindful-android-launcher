@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -19,31 +18,18 @@
   that the group came from (on a group detail page).
 -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/group_source"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:background="?android:attr/selectableItemBackground"
-    android:padding="10dip" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/group_source" android:layout_width="wrap_content"
+    android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+    android:background="?android:attr/selectableItemBackground" android:padding="10dip">
 
-    <TextView
-        android:id="@android:id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:duplicateParentState="true"
-        android:textSize="14sp"
-        style="@android:style/Widget.Holo.ActionBar.TabText"/>
+    <TextView android:id="@android:id/title" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+        android:duplicateParentState="true" android:textSize="14sp"
+        style="@android:style/Widget.Holo.ActionBar.TabText" />
 
-    <ImageView
-        android:id="@android:id/icon"
-        android:duplicateParentState="true"
-        android:layout_width="30dip"
-        android:layout_height="30dip"
-        android:layout_marginLeft="7dip"
-        android:layout_marginStart="7dip"
-        android:layout_gravity="center_vertical"/>
+    <ImageView android:id="@android:id/icon" android:duplicateParentState="true"
+        android:layout_width="30dip" android:layout_height="30dip" android:layout_marginLeft="7dip"
+        android:layout_marginStart="7dip" android:layout_gravity="center_vertical" />
 
 </LinearLayout>

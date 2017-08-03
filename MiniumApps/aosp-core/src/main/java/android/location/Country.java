@@ -68,15 +68,15 @@ public class Country implements Parcelable {
 
     /**
      * @param countryIso the ISO 3166-1 two letters country code.
-     * @param source where the countryIso came from, could be one of below
-     *        values
-     *        <p>
-     *        <ul>
-     *        <li>{@link #COUNTRY_SOURCE_NETWORK}</li>
-     *        <li>{@link #COUNTRY_SOURCE_LOCATION}</li>
-     *        <li>{@link #COUNTRY_SOURCE_SIM}</li>
-     *        <li>{@link #COUNTRY_SOURCE_LOCALE}</li>
-     *        </ul>
+     * @param source     where the countryIso came from, could be one of below
+     *                   values
+     *                   <p>
+     *                   <ul>
+     *                   <li>{@link #COUNTRY_SOURCE_NETWORK}</li>
+     *                   <li>{@link #COUNTRY_SOURCE_LOCATION}</li>
+     *                   <li>{@link #COUNTRY_SOURCE_SIM}</li>
+     *                   <li>{@link #COUNTRY_SOURCE_LOCALE}</li>
+     *                   </ul>
      */
     public Country(final String countryIso, final int source) {
         if (countryIso == null || source < COUNTRY_SOURCE_NETWORK
@@ -113,13 +113,13 @@ public class Country implements Parcelable {
 
     /**
      * @return where the country code came from, could be one of below values
-     *         <p>
-     *         <ul>
-     *         <li>{@link #COUNTRY_SOURCE_NETWORK}</li>
-     *         <li>{@link #COUNTRY_SOURCE_LOCATION}</li>
-     *         <li>{@link #COUNTRY_SOURCE_SIM}</li>
-     *         <li>{@link #COUNTRY_SOURCE_LOCALE}</li>
-     *         </ul>
+     * <p>
+     * <ul>
+     * <li>{@link #COUNTRY_SOURCE_NETWORK}</li>
+     * <li>{@link #COUNTRY_SOURCE_LOCATION}</li>
+     * <li>{@link #COUNTRY_SOURCE_SIM}</li>
+     * <li>{@link #COUNTRY_SOURCE_LOCALE}</li>
+     * </ul>
      */
     public final int getSource() {
         return mSource;
@@ -189,7 +189,7 @@ public class Country implements Parcelable {
      *
      * @param country the country to compare
      * @return true if the specified country's countryIso field is equal to this
-     *         country's, false otherwise.
+     * country's, false otherwise.
      */
     public boolean equalsIgnoreSource(Country country) {
         return country != null && mCountryIso.equals(country.getCountryIso());

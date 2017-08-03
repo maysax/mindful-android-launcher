@@ -17,10 +17,10 @@
 
 package com.android.mms.layout;
 
-import com.android.mms.LogTag;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.android.mms.LogTag;
 
 public class HVGALayoutParameters implements LayoutParameters {
     private static final String TAG = LogTag.TAG;
@@ -50,7 +50,7 @@ public class HVGALayoutParameters implements LayoutParameters {
         float scale = context.getResources().getDisplayMetrics().density;
         mMaxWidth = (int) (context.getResources().getConfiguration().screenWidthDp * scale + 0.5f);
         mMaxHeight =
-            (int) (context.getResources().getConfiguration().screenHeightDp * scale + 0.5f);
+                (int) (context.getResources().getConfiguration().screenHeightDp * scale + 0.5f);
 
         mImageHeightLandscape = (int) (mMaxHeight * .90f);
         mTextHeightLandscape = (int) (mMaxHeight * .10f);
@@ -70,22 +70,22 @@ public class HVGALayoutParameters implements LayoutParameters {
 
     public int getWidth() {
         return mType == HVGA_LANDSCAPE ? mMaxWidth
-                                       : mMaxHeight;
+                : mMaxHeight;
     }
 
     public int getHeight() {
         return mType == HVGA_LANDSCAPE ? mMaxHeight
-                                       : mMaxWidth;
+                : mMaxWidth;
     }
 
     public int getImageHeight() {
         return mType == HVGA_LANDSCAPE ? mImageHeightLandscape
-                                       : mImageHeightPortrait;
+                : mImageHeightPortrait;
     }
 
     public int getTextHeight() {
         return mType == HVGA_LANDSCAPE ? mTextHeightLandscape
-                                       : mTextHeightPortrait;
+                : mTextHeightPortrait;
     }
 
     public int getType() {

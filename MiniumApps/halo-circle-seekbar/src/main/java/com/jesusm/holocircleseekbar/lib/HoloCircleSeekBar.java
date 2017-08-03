@@ -627,9 +627,9 @@ public class HoloCircleSeekBar extends View {
 //                        setTextFromAngle(0);
 //                        updatePointerPosition();
 //                    } else {
-                        arc_finish_radians = calculateRadiansFromAngle(mAngle);
-                        setTextFromAngle(calculateValueFromAngle(arc_finish_radians));
-                        updatePointerPosition();
+                    arc_finish_radians = calculateRadiansFromAngle(mAngle);
+                    setTextFromAngle(calculateValueFromAngle(arc_finish_radians));
+                    updatePointerPosition();
 //                    }
                     invalidate();
                     if (mOnCircleSeekBarChangeListener != null)

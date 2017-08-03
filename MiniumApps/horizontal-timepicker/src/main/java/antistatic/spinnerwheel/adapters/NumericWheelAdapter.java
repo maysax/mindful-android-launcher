@@ -36,10 +36,14 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
         R apply(int i);
     }
 
-    /** The default min value */
+    /**
+     * The default min value
+     */
     public static final int DEFAULT_MAX_VALUE = 9;
 
-    /** The default max value */
+    /**
+     * The default max value
+     */
     private static final int DEFAULT_MIN_VALUE = 0;
 
     // Values
@@ -53,6 +57,7 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
 
     /**
      * Constructor
+     *
      * @param context the current context
      */
     public NumericWheelAdapter(Context context) {
@@ -61,7 +66,8 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
 
     /**
      * Constructor
-     * @param context the current context
+     *
+     * @param context  the current context
      * @param minValue the spinnerwheel min value
      * @param maxValue the spinnerwheel max value
      */
@@ -71,14 +77,16 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
 
     /**
      * Constructor
-     * @param context the current context
+     *
+     * @param context  the current context
      * @param minValue the spinnerwheel min value
      * @param maxValue the spinnerwheel max value
-     * @param format the format string
+     * @param format   the format string
      */
     public NumericWheelAdapter(Context context, int minValue, int maxValue, final String format) {
         this(context, minValue, maxValue, new IntParamFunction<String>() {
-            @Override public String apply(int i) {
+            @Override
+            public String apply(int i) {
                 if (format == null) {
                     return Integer.toString(i);
                 }
@@ -95,7 +103,8 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
         this.formatFunction = formatFunction;
 
         registerDataSetObserver(new DataSetObserver() {
-            @Override public void onInvalidated() {
+            @Override
+            public void onInvalidated() {
                 super.onInvalidated();
                 mItemCountTemp = -1;
             }
@@ -112,7 +121,8 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
         notifyDataInvalidatedEvent();
     }
 
-    @Override public CharSequence getItemText(int index) {
+    @Override
+    public CharSequence getItemText(int index) {
         if (index >= 0 && index < getItemsCount()) {
             int value = minValue + index;
             return formatFunction != null ? formatFunction.apply(value) : Integer.toString(value);
@@ -120,7 +130,8 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
         return null;
     }
 
-    @Override public int getItemsCount() {
+    @Override
+    public int getItemsCount() {
         if (mItemCountTemp > 0) {
             return mItemCountTemp;
         }
@@ -130,7 +141,7 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
 
     /**
      * Copied from java.lang.Math.class in JDK 8.
-     *
+     * <p>
      * Returns the sum of its arguments,
      * throwing an exception if the result overflows an {@code int}.
      *

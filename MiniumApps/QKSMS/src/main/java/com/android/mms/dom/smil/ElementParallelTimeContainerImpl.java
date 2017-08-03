@@ -35,8 +35,8 @@ public abstract class ElementParallelTimeContainerImpl extends ElementTimeContai
         implements ElementParallelTimeContainer {
     private final static String ENDSYNC_ATTRIBUTE_NAME = "endsync";
     private final static String ENDSYNC_FIRST = "first";
-    private final static String ENDSYNC_LAST  = "last";
-    private final static String ENDSYNC_ALL   = "all";
+    private final static String ENDSYNC_LAST = "last";
+    private final static String ENDSYNC_ALL = "all";
     private final static String ENDSYNC_MEDIA = "media";
 
     /*
@@ -97,7 +97,7 @@ public abstract class ElementParallelTimeContainerImpl extends ElementTimeContai
                         return -1.0F;
                     }
                     if (endTime.getResolved()) {
-                        float end = (float)endTime.getResolvedOffset();
+                        float end = (float) endTime.getResolvedOffset();
                         dur = (end > dur) ? end : dur;
                     }
                 }

@@ -10,9 +10,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.AppUtils;
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -23,10 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.db.TableNotificationSms;
-import co.siempo.phone.db.TableNotificationSmsDao;
-import co.siempo.phone.event.TopBarUpdateEvent;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
@@ -34,7 +27,7 @@ import minium.co.core.ui.CoreActivity;
 
 @Fullscreen
 @EActivity(R.layout.activity_installed_app_list)
-public class AppDrawerActivity extends CoreActivity implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>>{
+public class AppDrawerActivity extends CoreActivity implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>> {
 
     ArrayList<ApplistDataModel> arrayList = new ArrayList<>();
     @ViewById
@@ -44,16 +37,18 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
     ImageView crossActionBar;
 
     @Click
-    void crossActionBar(){
+    void crossActionBar() {
         this.finish();
     }
+
     @ViewById
     TextView titleActionBar;
     @ViewById
     ImageView settingsActionBar;
     InstalledAppListAdapter installedAppListAdapter;
+
     @AfterViews
-    void afterViews(){
+    void afterViews() {
 
         settingsActionBar.setVisibility(View.INVISIBLE);
         titleActionBar.setText(getString(R.string.title_apps));

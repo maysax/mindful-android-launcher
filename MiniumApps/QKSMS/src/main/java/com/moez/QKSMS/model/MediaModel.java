@@ -22,10 +22,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+
 import com.google.android.mms.MmsException;
 import com.google.android.mms.smil.SmilHelper;
 import com.moez.QKSMS.LogTag;
 import com.moez.QKSMS.MmsConfig;
+
 import org.w3c.dom.events.EventListener;
 
 import java.io.FileInputStream;
@@ -54,6 +56,7 @@ public abstract class MediaModel extends Model implements EventListener {
     protected boolean mMediaResizeable;
 
     private final ArrayList<MediaAction> mMediaActions;
+
     public static enum MediaAction {
         NO_ACTIVE_ACTION,
         START,
@@ -63,7 +66,7 @@ public abstract class MediaModel extends Model implements EventListener {
     }
 
     public MediaModel(Context context, String tag, String contentType,
-            String src, Uri uri) throws MmsException {
+                      String src, Uri uri) throws MmsException {
         mContext = context;
         mTag = tag;
         mContentType = contentType;
@@ -74,7 +77,7 @@ public abstract class MediaModel extends Model implements EventListener {
     }
 
     public MediaModel(Context context, String tag, String contentType,
-            String src, byte[] data) {
+                      String src, byte[] data) {
         if (data == null) {
             throw new IllegalArgumentException("data may not be null.");
         }
@@ -305,6 +308,7 @@ public abstract class MediaModel extends Model implements EventListener {
     /**
      * If the attached media is resizeable, resize it to fit within the byteLimit. Save the
      * new part in the pdu.
+     *
      * @param byteLimit the max size of the media attachment
      * @throws com.google.android.mms.MmsException
      */

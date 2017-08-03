@@ -166,6 +166,7 @@ public class VCardSourceDetector implements VCardInterpreter {
      * Returns charset String guessed from the source's properties.
      * This method must be called after parsing target file(s).
      * </p>
+     *
      * @return Charset String. Null is returned if guessing the source fails.
      */
     public String getEstimatedCharset() {

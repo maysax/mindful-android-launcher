@@ -17,11 +17,11 @@
 
 package com.android.mms.layout;
 
-import com.android.mms.LogTag;
-
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.Log;
+
+import com.android.mms.LogTag;
 
 /**
  * MMS presentation layout management.
@@ -44,8 +44,8 @@ public class LayoutManager {
     private void initLayoutParameters(Configuration configuration) {
         mLayoutParams = getLayoutParameters(
                 configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-                ? LayoutParameters.HVGA_PORTRAIT
-                : LayoutParameters.HVGA_LANDSCAPE);
+                        ? LayoutParameters.HVGA_PORTRAIT
+                        : LayoutParameters.HVGA_LANDSCAPE);
 
         if (LOCAL_LOGV) {
             Log.v(TAG, "LayoutParameters: " + mLayoutParams.getTypeDescription()

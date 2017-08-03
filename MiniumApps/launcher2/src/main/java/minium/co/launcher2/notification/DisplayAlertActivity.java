@@ -1,22 +1,15 @@
 package minium.co.launcher2.notification;
 
-import android.app.Activity;
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemChildClickListener;
 import com.orm.query.Condition;
 import com.orm.query.Select;
 
@@ -157,7 +150,7 @@ public class DisplayAlertActivity extends CoreActivity implements RecyclerViewIt
     private void showCallAlert(final String number, Date date) {
         notificationCounter++;
 
-        UIUtils.notification(this, "Missed call " +  SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date), "Got a missed call from " + number, R.string.label_callBack, R.string.label_dismiss, R.drawable.ic_phone_missed_black_24dp, new DialogInterface.OnClickListener() {
+        UIUtils.notification(this, "Missed call " + SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date), "Got a missed call from " + number, R.string.label_callBack, R.string.label_dismiss, R.drawable.ic_phone_missed_black_24dp, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
@@ -174,7 +167,7 @@ public class DisplayAlertActivity extends CoreActivity implements RecyclerViewIt
     private void showSMSAlert(String number, String body, Date date) {
         notificationCounter++;
 
-        UIUtils.notification(this, "Messages " +  SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date), "From: " + number + "\n" + body, R.string.label_view, R.string.label_dismiss,  R.drawable.ic_sms_black_24dp,  new DialogInterface.OnClickListener() {
+        UIUtils.notification(this, "Messages " + SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(date), "From: " + number + "\n" + body, R.string.label_view, R.string.label_dismiss, R.drawable.ic_sms_black_24dp, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
@@ -182,7 +175,7 @@ public class DisplayAlertActivity extends CoreActivity implements RecyclerViewIt
 //                    intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
                     String defaultApplication = Settings.Secure.getString(getContentResolver(), "sms_default_application");
                     PackageManager pm = getPackageManager();
-                    Intent intent = pm.getLaunchIntentForPackage(defaultApplication );
+                    Intent intent = pm.getLaunchIntentForPackage(defaultApplication);
                     if (intent != null) {
                         startActivity(intent);
                     }

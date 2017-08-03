@@ -42,7 +42,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ParseException;
 import android.net.Uri;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Trace;
@@ -63,9 +62,9 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.DataUsageFeedback;
 import android.provider.ContactsContract.Directory;
 import android.provider.ContactsContract.DisplayNameSources;
-import android.provider.ContactsContract.DataUsageFeedback;
 import android.provider.ContactsContract.Intents;
 import android.provider.ContactsContract.QuickContact;
 import android.provider.ContactsContract.RawContacts;
@@ -184,7 +183,9 @@ public class QuickContactActivity extends ContactsActivity {
     private static final int REQUEST_CODE_CONTACT_SELECTION_ACTIVITY = 2;
     private static final String MIMETYPE_SMS = "vnd.android-dir/mms-sms";
 
-    /** This is the Intent action to install a shortcut in the launcher. */
+    /**
+     * This is the Intent action to install a shortcut in the launcher.
+     */
     private static final String ACTION_INSTALL_SHORTCUT =
             "com.android.launcher.action.INSTALL_SHORTCUT";
 
@@ -226,10 +227,10 @@ public class QuickContactActivity extends ContactsActivity {
      */
     private Cp2DataCardModel mCachedCp2DataCardModel;
     /**
-     *  This scrim's opacity is controlled in two different ways. 1) Before the initial entrance
-     *  animation finishes, the opacity is animated by a value animator. This is designed to
-     *  distract the user from the length of the initial loading time. 2) After the initial
-     *  entrance animation, the opacity is directly related to scroll position.
+     * This scrim's opacity is controlled in two different ways. 1) Before the initial entrance
+     * animation finishes, the opacity is animated by a value animator. This is designed to
+     * distract the user from the length of the initial loading time. 2) After the initial
+     * entrance animation, the opacity is directly related to scroll position.
      */
     private ColorDrawable mWindowScrim;
     private boolean mIsEntranceAnimationFinished;
@@ -251,7 +252,7 @@ public class QuickContactActivity extends ContactsActivity {
 
     /**
      * {@link #LEADING_MIMETYPES} is used to sort MIME-types.
-     *
+     * <p>
      * <p>The MIME-types in {@link #LEADING_MIMETYPES} appear in the front of the dialog,
      * in the order specified here.</p>
      */
@@ -274,17 +275,23 @@ public class QuickContactActivity extends ContactsActivity {
 
     private static final BidiFormatter sBidiFormatter = BidiFormatter.getInstance();
 
-    /** Id for the background contact loader */
+    /**
+     * Id for the background contact loader
+     */
     private static final int LOADER_CONTACT_ID = 0;
 
     private static final String KEY_LOADER_EXTRA_PHONES =
             QuickContactActivity.class.getCanonicalName() + ".KEY_LOADER_EXTRA_PHONES";
 
-    /** Id for the background Sms Loader */
+    /**
+     * Id for the background Sms Loader
+     */
     private static final int LOADER_SMS_ID = 1;
     private static final int MAX_SMS_RETRIEVE = 3;
 
-    /** Id for the back Calendar Loader */
+    /**
+     * Id for the back Calendar Loader
+     */
     private static final int LOADER_CALENDAR_ID = 2;
     private static final String KEY_LOADER_EXTRA_EMAILS =
             QuickContactActivity.class.getCanonicalName() + ".KEY_LOADER_EXTRA_EMAILS";
@@ -295,7 +302,9 @@ public class QuickContactActivity extends ContactsActivity {
     private static final long FUTURE_MILLISECOND_TO_SEARCH_LOCAL_CALENDAR =
             7L * 24L * 60L * 60L * 1000L /* 7 days */;
 
-    /** Id for the background Call Log Loader */
+    /**
+     * Id for the background Call Log Loader
+     */
     private static final int LOADER_CALL_LOG_ID = 3;
     private static final int MAX_CALL_LOG_RETRIEVE = 3;
     private static final int MIN_NUM_CONTACT_ENTRIES_SHOWN = 3;
@@ -304,9 +313,9 @@ public class QuickContactActivity extends ContactsActivity {
 
 
     private static final int[] mRecentLoaderIds = new int[]{
-        LOADER_SMS_ID,
-        LOADER_CALENDAR_ID,
-        LOADER_CALL_LOG_ID};
+            LOADER_SMS_ID,
+            LOADER_CALENDAR_ID,
+            LOADER_CALL_LOG_ID};
     private Map<Integer, List<ContactInteraction>> mRecentLoaderResults = new HashMap<>();
 
     private static final String FRAGMENT_TAG_SELECT_ACCOUNT = "select_account_fragment";
@@ -400,43 +409,43 @@ public class QuickContactActivity extends ContactsActivity {
 
     private final OnCreateContextMenuListener mEntryContextMenuListener =
             new OnCreateContextMenuListener() {
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-            if (menuInfo == null) {
-                return;
-            }
-            final EntryContextMenuInfo info = (EntryContextMenuInfo) menuInfo;
-            menu.setHeaderTitle(info.getCopyText());
-            menu.add(ContextMenu.NONE, ContextMenuIds.COPY_TEXT,
-                    ContextMenu.NONE, getString(R.string.copy_text));
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+                    if (menuInfo == null) {
+                        return;
+                    }
+                    final EntryContextMenuInfo info = (EntryContextMenuInfo) menuInfo;
+                    menu.setHeaderTitle(info.getCopyText());
+                    menu.add(ContextMenu.NONE, ContextMenuIds.COPY_TEXT,
+                            ContextMenu.NONE, getString(R.string.copy_text));
 
-            // Don't allow setting or clearing of defaults for non-editable contacts
-            if (!isContactEditable()) {
-                return;
-            }
+                    // Don't allow setting or clearing of defaults for non-editable contacts
+                    if (!isContactEditable()) {
+                        return;
+                    }
 
-            final String selectedMimeType = info.getMimeType();
+                    final String selectedMimeType = info.getMimeType();
 
-            // Defaults to true will only enable the detail to be copied to the clipboard.
-            boolean onlyOneOfMimeType = true;
+                    // Defaults to true will only enable the detail to be copied to the clipboard.
+                    boolean onlyOneOfMimeType = true;
 
-            // Only allow primary support for Phone and Email content types
-            if (Phone.CONTENT_ITEM_TYPE.equals(selectedMimeType)) {
-                onlyOneOfMimeType = mOnlyOnePhoneNumber;
-            } else if (Email.CONTENT_ITEM_TYPE.equals(selectedMimeType)) {
-                onlyOneOfMimeType = mOnlyOneEmail;
-            }
+                    // Only allow primary support for Phone and Email content types
+                    if (Phone.CONTENT_ITEM_TYPE.equals(selectedMimeType)) {
+                        onlyOneOfMimeType = mOnlyOnePhoneNumber;
+                    } else if (Email.CONTENT_ITEM_TYPE.equals(selectedMimeType)) {
+                        onlyOneOfMimeType = mOnlyOneEmail;
+                    }
 
-            // Checking for previously set default
-            if (info.isSuperPrimary()) {
-                menu.add(ContextMenu.NONE, ContextMenuIds.CLEAR_DEFAULT,
-                        ContextMenu.NONE, getString(R.string.clear_default));
-            } else if (!onlyOneOfMimeType) {
-                menu.add(ContextMenu.NONE, ContextMenuIds.SET_DEFAULT,
-                        ContextMenu.NONE, getString(R.string.set_default));
-            }
-        }
-    };
+                    // Checking for previously set default
+                    if (info.isSuperPrimary()) {
+                        menu.add(ContextMenu.NONE, ContextMenuIds.CLEAR_DEFAULT,
+                                ContextMenu.NONE, getString(R.string.clear_default));
+                    } else if (!onlyOneOfMimeType) {
+                        menu.add(ContextMenu.NONE, ContextMenuIds.SET_DEFAULT,
+                                ContextMenu.NONE, getString(R.string.set_default));
+                    }
+                }
+            };
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -477,7 +486,8 @@ public class QuickContactActivity extends ContactsActivity {
 
         private QuickContactActivity mQuickContactActivity;
 
-        public SelectAccountDialogFragmentListener() {}
+        public SelectAccountDialogFragmentListener() {
+        }
 
         @Override
         public void onAccountChosen(AccountWithDataSet account, Bundle extraArgs) {
@@ -486,7 +496,8 @@ public class QuickContactActivity extends ContactsActivity {
         }
 
         @Override
-        public void onAccountSelectorCancelled() {}
+        public void onAccountSelectorCancelled() {
+        }
 
         /**
          * Set the parent activity. Since rotation can cause this fragment to be used across
@@ -542,32 +553,32 @@ public class QuickContactActivity extends ContactsActivity {
      */
     private final Comparator<DataItem> mWithinMimeTypeDataItemComparator =
             new Comparator<DataItem>() {
-        @Override
-        public int compare(DataItem lhs, DataItem rhs) {
-            if (!lhs.getMimeType().equals(rhs.getMimeType())) {
-                Log.wtf(TAG, "Comparing DataItems with different mimetypes lhs.getMimeType(): " +
-                        lhs.getMimeType() + " rhs.getMimeType(): " + rhs.getMimeType());
-                return 0;
-            }
+                @Override
+                public int compare(DataItem lhs, DataItem rhs) {
+                    if (!lhs.getMimeType().equals(rhs.getMimeType())) {
+                        Log.wtf(TAG, "Comparing DataItems with different mimetypes lhs.getMimeType(): " +
+                                lhs.getMimeType() + " rhs.getMimeType(): " + rhs.getMimeType());
+                        return 0;
+                    }
 
-            if (lhs.isSuperPrimary()) {
-                return -1;
-            } else if (rhs.isSuperPrimary()) {
-                return 1;
-            } else if (lhs.isPrimary() && !rhs.isPrimary()) {
-                return -1;
-            } else if (!lhs.isPrimary() && rhs.isPrimary()) {
-                return 1;
-            } else {
-                final int lhsTimesUsed =
-                        lhs.getTimesUsed() == null ? 0 : lhs.getTimesUsed();
-                final int rhsTimesUsed =
-                        rhs.getTimesUsed() == null ? 0 : rhs.getTimesUsed();
+                    if (lhs.isSuperPrimary()) {
+                        return -1;
+                    } else if (rhs.isSuperPrimary()) {
+                        return 1;
+                    } else if (lhs.isPrimary() && !rhs.isPrimary()) {
+                        return -1;
+                    } else if (!lhs.isPrimary() && rhs.isPrimary()) {
+                        return 1;
+                    } else {
+                        final int lhsTimesUsed =
+                                lhs.getTimesUsed() == null ? 0 : lhs.getTimesUsed();
+                        final int rhsTimesUsed =
+                                rhs.getTimesUsed() == null ? 0 : rhs.getTimesUsed();
 
-                return rhsTimesUsed - lhsTimesUsed;
-            }
-        }
-    };
+                        return rhsTimesUsed - lhsTimesUsed;
+                    }
+                }
+            };
 
     /**
      * Sorts among different mimetypes based off:
@@ -576,42 +587,42 @@ public class QuickContactActivity extends ContactsActivity {
      * 3. Statically defined
      */
     private final Comparator<List<DataItem>> mAmongstMimeTypeDataItemComparator =
-            new Comparator<List<DataItem>> () {
-        @Override
-        public int compare(List<DataItem> lhsList, List<DataItem> rhsList) {
-            DataItem lhs = lhsList.get(0);
-            DataItem rhs = rhsList.get(0);
-            final int lhsTimesUsed = lhs.getTimesUsed() == null ? 0 : lhs.getTimesUsed();
-            final int rhsTimesUsed = rhs.getTimesUsed() == null ? 0 : rhs.getTimesUsed();
-            final int timesUsedDifference = rhsTimesUsed - lhsTimesUsed;
-            if (timesUsedDifference != 0) {
-                return timesUsedDifference;
-            }
+            new Comparator<List<DataItem>>() {
+                @Override
+                public int compare(List<DataItem> lhsList, List<DataItem> rhsList) {
+                    DataItem lhs = lhsList.get(0);
+                    DataItem rhs = rhsList.get(0);
+                    final int lhsTimesUsed = lhs.getTimesUsed() == null ? 0 : lhs.getTimesUsed();
+                    final int rhsTimesUsed = rhs.getTimesUsed() == null ? 0 : rhs.getTimesUsed();
+                    final int timesUsedDifference = rhsTimesUsed - lhsTimesUsed;
+                    if (timesUsedDifference != 0) {
+                        return timesUsedDifference;
+                    }
 
-            final long lhsLastTimeUsed =
-                    lhs.getLastTimeUsed() == null ? 0 : lhs.getLastTimeUsed();
-            final long rhsLastTimeUsed =
-                    rhs.getLastTimeUsed() == null ? 0 : rhs.getLastTimeUsed();
-            final long lastTimeUsedDifference = rhsLastTimeUsed - lhsLastTimeUsed;
-            if (lastTimeUsedDifference > 0) {
-                return 1;
-            } else if (lastTimeUsedDifference < 0) {
-                return -1;
-            }
+                    final long lhsLastTimeUsed =
+                            lhs.getLastTimeUsed() == null ? 0 : lhs.getLastTimeUsed();
+                    final long rhsLastTimeUsed =
+                            rhs.getLastTimeUsed() == null ? 0 : rhs.getLastTimeUsed();
+                    final long lastTimeUsedDifference = rhsLastTimeUsed - lhsLastTimeUsed;
+                    if (lastTimeUsedDifference > 0) {
+                        return 1;
+                    } else if (lastTimeUsedDifference < 0) {
+                        return -1;
+                    }
 
-            // Times used and last time used are the same. Resort to statically defined.
-            final String lhsMimeType = lhs.getMimeType();
-            final String rhsMimeType = rhs.getMimeType();
-            for (String mimeType : LEADING_MIMETYPES) {
-                if (lhsMimeType.equals(mimeType)) {
-                    return -1;
-                } else if (rhsMimeType.equals(mimeType)) {
-                    return 1;
+                    // Times used and last time used are the same. Resort to statically defined.
+                    final String lhsMimeType = lhs.getMimeType();
+                    final String rhsMimeType = rhs.getMimeType();
+                    for (String mimeType : LEADING_MIMETYPES) {
+                        if (lhsMimeType.equals(mimeType)) {
+                            return -1;
+                        } else if (rhsMimeType.equals(mimeType)) {
+                            return 1;
+                        }
+                    }
+                    return 0;
                 }
-            }
-            return 0;
-        }
-    };
+            };
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -648,7 +659,7 @@ public class QuickContactActivity extends ContactsActivity {
         mNoContactDetailsCard.setOnClickListener(mEntryClickHandler);
         mContactCard.setOnClickListener(mEntryClickHandler);
         mContactCard.setExpandButtonText(
-        getResources().getString(R.string.expanding_entry_card_view_see_all));
+                getResources().getString(R.string.expanding_entry_card_view_see_all));
         mContactCard.setOnCreateContextMenuListener(mEntryContextMenuListener);
 
         mRecentCard.setOnClickListener(mEntryClickHandler);
@@ -691,7 +702,7 @@ public class QuickContactActivity extends ContactsActivity {
 
         setHeaderNameText(R.string.missing_name);
 
-        mSelectAccountFragmentListener= (SelectAccountDialogFragmentListener) getFragmentManager()
+        mSelectAccountFragmentListener = (SelectAccountDialogFragmentListener) getFragmentManager()
                 .findFragmentByTag(FRAGMENT_TAG_SELECT_ACCOUNT);
         if (mSelectAccountFragmentListener == null) {
             mSelectAccountFragmentListener = new SelectAccountDialogFragmentListener();
@@ -819,14 +830,18 @@ public class QuickContactActivity extends ContactsActivity {
         mScroller.scrollUpForEntranceAnimation(mExtraMode != MODE_FULLY_EXPANDED);
     }
 
-    /** Assign this string to the view if it is not empty. */
+    /**
+     * Assign this string to the view if it is not empty.
+     */
     private void setHeaderNameText(int resId) {
         if (mScroller != null) {
             mScroller.setTitle(getText(resId) == null ? null : getText(resId).toString());
         }
     }
 
-    /** Assign this string to the view if it is not empty. */
+    /**
+     * Assign this string to the view if it is not empty.
+     */
     private void setHeaderNameText(String value) {
         if (!TextUtils.isEmpty(value)) {
             if (mScroller != null) {
@@ -1030,7 +1045,7 @@ public class QuickContactActivity extends ContactsActivity {
                     /* shouldApplyColor = */ false,
                     /* isEditable = */ false,
                     /* EntryContextMenuInfo = */ new EntryContextMenuInfo(phoneticName,
-                            getResources().getString(R.string.name_phonetic),
+                    getResources().getString(R.string.name_phonetic),
                             /* mimeType = */ null, /* id = */ -1, /* isPrimary = */ false),
                     /* thirdIcon = */ null,
                     /* thirdIntent = */ null,
@@ -1121,10 +1136,11 @@ public class QuickContactActivity extends ContactsActivity {
 
     /**
      * Builds the {@link DataItem}s Map out of the Contact.
+     *
      * @param data The contact to build the data from.
      * @return A pair containing a list of data items sorted within mimetype and sorted
-     *  amongst mimetype. The map goes from mimetype string to the sorted list of data items within
-     *  mimetype
+     * amongst mimetype. The map goes from mimetype string to the sorted list of data items within
+     * mimetype
      */
     private Cp2DataCardModel generateDataModelFromContact(
             Contact data) {
@@ -1238,7 +1254,7 @@ public class QuickContactActivity extends ContactsActivity {
     /**
      * Converts a {@link DataItem} into an {@link ExpandingEntryCardView.Entry} for display.
      * If the {@link ExpandingEntryCardView.Entry} has no visual elements, null is returned.
-     *
+     * <p>
      * This runs on a background thread. This is set as static to avoid accidentally adding
      * additional dependencies on unsafe things (like the Activity).
      *
@@ -1246,8 +1262,8 @@ public class QuickContactActivity extends ContactsActivity {
      * @return The {@link ExpandingEntryCardView.Entry}, or null if no visual elements are present.
      */
     private static Entry dataItemToEntry(DataItem dataItem,
-            Context context, Contact contactData,
-            final MutableString aboutCardName) {
+                                         Context context, Contact contactData,
+                                         final MutableString aboutCardName) {
         Drawable icon = null;
         String header = null;
         String subHeader = null;
@@ -1306,11 +1322,11 @@ public class QuickContactActivity extends ContactsActivity {
             final NicknameDataItem nickname = (NicknameDataItem) dataItem;
             // Build nickname entries
             final boolean isNameRawContact =
-                (contactData.getNameRawContactId() == dataItem.getRawContactId());
+                    (contactData.getNameRawContactId() == dataItem.getRawContactId());
 
             final boolean duplicatesTitle =
-                isNameRawContact
-                && contactData.getDisplayNameSource() == DisplayNameSources.NICKNAME;
+                    isNameRawContact
+                            && contactData.getDisplayNameSource() == DisplayNameSources.NICKNAME;
 
             if (!duplicatesTitle) {
                 header = res.getString(R.string.header_nickname_entry);
@@ -1567,7 +1583,7 @@ public class QuickContactActivity extends ContactsActivity {
     }
 
     private List<Entry> dataItemsToEntries(List<DataItem> dataItems,
-            MutableString aboutCardTitleOut) {
+                                           MutableString aboutCardTitleOut) {
         final List<Entry> entries = new ArrayList<>();
         for (DataItem dataItem : dataItems) {
             final Entry entry = dataItemToEntry(dataItem, this, mContactData, aboutCardTitleOut);
@@ -1754,51 +1770,51 @@ public class QuickContactActivity extends ContactsActivity {
 
     private final LoaderCallbacks<Contact> mLoaderContactCallbacks =
             new LoaderCallbacks<Contact>() {
-        @Override
-        public void onLoaderReset(Loader<Contact> loader) {
-            mContactData = null;
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Contact> loader, Contact data) {
-            Trace.beginSection("onLoadFinished()");
-
-            if (isFinishing()) {
-                return;
-            }
-            if (data.isError()) {
-                // This shouldn't ever happen, so throw an exception. The {@link ContactLoader}
-                // should log the actual exception.
-                throw new IllegalStateException("Failed to load contact", data.getException());
-            }
-            if (data.isNotFound()) {
-                if (mHasAlreadyBeenOpened) {
-                    finish();
-                } else {
-                    Log.i(TAG, "No contact found: " + ((ContactLoader)loader).getLookupUri());
-                    Toast.makeText(QuickContactActivity.this, R.string.invalidContactMessage,
-                            Toast.LENGTH_LONG).show();
+                @Override
+                public void onLoaderReset(Loader<Contact> loader) {
+                    mContactData = null;
                 }
-                return;
-            }
 
-            bindContactData(data);
+                @Override
+                public void onLoadFinished(Loader<Contact> loader, Contact data) {
+                    Trace.beginSection("onLoadFinished()");
 
-            Trace.endSection();
-        }
+                    if (isFinishing()) {
+                        return;
+                    }
+                    if (data.isError()) {
+                        // This shouldn't ever happen, so throw an exception. The {@link ContactLoader}
+                        // should log the actual exception.
+                        throw new IllegalStateException("Failed to load contact", data.getException());
+                    }
+                    if (data.isNotFound()) {
+                        if (mHasAlreadyBeenOpened) {
+                            finish();
+                        } else {
+                            Log.i(TAG, "No contact found: " + ((ContactLoader) loader).getLookupUri());
+                            Toast.makeText(QuickContactActivity.this, R.string.invalidContactMessage,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        return;
+                    }
 
-        @Override
-        public Loader<Contact> onCreateLoader(int id, Bundle args) {
-            if (mLookupUri == null) {
-                Log.wtf(TAG, "Lookup uri wasn't initialized. Loader was started too early");
-            }
-            // Load all contact data. We need loadGroupMetaData=true to determine whether the
-            // contact is invisible. If it is, we need to display an "Add to Contacts" MenuItem.
-            return new ContactLoader(getApplicationContext(), mLookupUri,
-                    true /*loadGroupMetaData*/, false /*loadInvitableAccountTypes*/,
-                    true /*postViewNotification*/, true /*computeFormattedPhoneNumber*/);
-        }
-    };
+                    bindContactData(data);
+
+                    Trace.endSection();
+                }
+
+                @Override
+                public Loader<Contact> onCreateLoader(int id, Bundle args) {
+                    if (mLookupUri == null) {
+                        Log.wtf(TAG, "Lookup uri wasn't initialized. Loader was started too early");
+                    }
+                    // Load all contact data. We need loadGroupMetaData=true to determine whether the
+                    // contact is invisible. If it is, we need to display an "Add to Contacts" MenuItem.
+                    return new ContactLoader(getApplicationContext(), mLookupUri,
+                            true /*loadGroupMetaData*/, false /*loadInvitableAccountTypes*/,
+                            true /*postViewNotification*/, true /*computeFormattedPhoneNumber*/);
+                }
+            };
 
     @Override
     public void onBackPressed() {
@@ -1822,58 +1838,58 @@ public class QuickContactActivity extends ContactsActivity {
     private final LoaderCallbacks<List<ContactInteraction>> mLoaderInteractionsCallbacks =
             new LoaderCallbacks<List<ContactInteraction>>() {
 
-        @Override
-        public Loader<List<ContactInteraction>> onCreateLoader(int id, Bundle args) {
-            Log.v(TAG, "onCreateLoader");
-            Loader<List<ContactInteraction>> loader = null;
-            switch (id) {
-                case LOADER_SMS_ID:
-                    Log.v(TAG, "LOADER_SMS_ID");
-                    loader = new SmsInteractionsLoader(
-                            QuickContactActivity.this,
-                            args.getStringArray(KEY_LOADER_EXTRA_PHONES),
-                            MAX_SMS_RETRIEVE);
-                    break;
-                case LOADER_CALENDAR_ID:
-                    Log.v(TAG, "LOADER_CALENDAR_ID");
-                    final String[] emailsArray = args.getStringArray(KEY_LOADER_EXTRA_EMAILS);
-                    List<String> emailsList = null;
-                    if (emailsArray != null) {
-                        emailsList = Arrays.asList(args.getStringArray(KEY_LOADER_EXTRA_EMAILS));
+                @Override
+                public Loader<List<ContactInteraction>> onCreateLoader(int id, Bundle args) {
+                    Log.v(TAG, "onCreateLoader");
+                    Loader<List<ContactInteraction>> loader = null;
+                    switch (id) {
+                        case LOADER_SMS_ID:
+                            Log.v(TAG, "LOADER_SMS_ID");
+                            loader = new SmsInteractionsLoader(
+                                    QuickContactActivity.this,
+                                    args.getStringArray(KEY_LOADER_EXTRA_PHONES),
+                                    MAX_SMS_RETRIEVE);
+                            break;
+                        case LOADER_CALENDAR_ID:
+                            Log.v(TAG, "LOADER_CALENDAR_ID");
+                            final String[] emailsArray = args.getStringArray(KEY_LOADER_EXTRA_EMAILS);
+                            List<String> emailsList = null;
+                            if (emailsArray != null) {
+                                emailsList = Arrays.asList(args.getStringArray(KEY_LOADER_EXTRA_EMAILS));
+                            }
+                            loader = new CalendarInteractionsLoader(
+                                    QuickContactActivity.this,
+                                    emailsList,
+                                    MAX_FUTURE_CALENDAR_RETRIEVE,
+                                    MAX_PAST_CALENDAR_RETRIEVE,
+                                    FUTURE_MILLISECOND_TO_SEARCH_LOCAL_CALENDAR,
+                                    PAST_MILLISECOND_TO_SEARCH_LOCAL_CALENDAR);
+                            break;
+                        case LOADER_CALL_LOG_ID:
+                            Log.v(TAG, "LOADER_CALL_LOG_ID");
+                            loader = new CallLogInteractionsLoader(
+                                    QuickContactActivity.this,
+                                    args.getStringArray(KEY_LOADER_EXTRA_PHONES),
+                                    MAX_CALL_LOG_RETRIEVE);
                     }
-                    loader = new CalendarInteractionsLoader(
-                            QuickContactActivity.this,
-                            emailsList,
-                            MAX_FUTURE_CALENDAR_RETRIEVE,
-                            MAX_PAST_CALENDAR_RETRIEVE,
-                            FUTURE_MILLISECOND_TO_SEARCH_LOCAL_CALENDAR,
-                            PAST_MILLISECOND_TO_SEARCH_LOCAL_CALENDAR);
-                    break;
-                case LOADER_CALL_LOG_ID:
-                    Log.v(TAG, "LOADER_CALL_LOG_ID");
-                    loader = new CallLogInteractionsLoader(
-                            QuickContactActivity.this,
-                            args.getStringArray(KEY_LOADER_EXTRA_PHONES),
-                            MAX_CALL_LOG_RETRIEVE);
-            }
-            return loader;
-        }
+                    return loader;
+                }
 
-        @Override
-        public void onLoadFinished(Loader<List<ContactInteraction>> loader,
-                List<ContactInteraction> data) {
-            mRecentLoaderResults.put(loader.getId(), data);
+                @Override
+                public void onLoadFinished(Loader<List<ContactInteraction>> loader,
+                                           List<ContactInteraction> data) {
+                    mRecentLoaderResults.put(loader.getId(), data);
 
-            if (isAllRecentDataLoaded()) {
-                bindRecentData();
-            }
-        }
+                    if (isAllRecentDataLoaded()) {
+                        bindRecentData();
+                    }
+                }
 
-        @Override
-        public void onLoaderReset(Loader<List<ContactInteraction>> loader) {
-            mRecentLoaderResults.remove(loader.getId());
-        }
-    };
+                @Override
+                public void onLoaderReset(Loader<List<ContactInteraction>> loader) {
+                    mRecentLoaderResults.remove(loader.getId());
+                }
+            };
 
     private boolean isAllRecentDataLoaded() {
         return mRecentLoaderResults.size() == mRecentLoaderIds.length;

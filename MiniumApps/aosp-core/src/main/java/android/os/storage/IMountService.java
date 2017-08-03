@@ -28,10 +28,12 @@ import android.os.RemoteException;
  * _TRANSACTION enum in IMountService.cpp
  *
  * @hide - Applications should use android.os.storage.StorageManager to access
- *       storage functions.
+ * storage functions.
  */
 public interface IMountService extends IInterface {
-    /** Local-side IPC implementation stub class. */
+    /**
+     * Local-side IPC implementation stub class.
+     */
     public static abstract class Stub extends Binder implements IMountService {
         private static class Proxy implements IMountService {
             private final IBinder mRemote;
@@ -250,7 +252,7 @@ public interface IMountService extends IInterface {
              * an int consistent with MountServiceResultCode
              */
             public int createSecureContainer(String id, int sizeMb, String fstype, String key,
-                    int ownerUid, boolean external) throws RemoteException {
+                                             int ownerUid, boolean external) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 int _result;
@@ -489,7 +491,7 @@ public interface IMountService extends IInterface {
              * call.
              */
             public void mountObb(String rawPath, String canonicalPath, String key,
-                    IObbActionListener token, int nonce) throws RemoteException {
+                                 IObbActionListener token, int nonce) throws RemoteException {
                 Parcel _data = Parcel.obtain();
                 Parcel _reply = Parcel.obtain();
                 try {
@@ -957,7 +959,9 @@ public interface IMountService extends IInterface {
             return new IMountService.Stub.Proxy(obj);
         }
 
-        /** Construct the stub at attach it to the interface. */
+        /**
+         * Construct the stub at attach it to the interface.
+         */
         public Stub() {
             attachInterface(this, DESCRIPTOR);
         }
@@ -968,7 +972,7 @@ public interface IMountService extends IInterface {
 
         @Override
         public boolean onTransact(int code, Parcel data, Parcel reply,
-                int flags) throws RemoteException {
+                                  int flags) throws RemoteException {
             switch (code) {
                 case INTERFACE_TRANSACTION: {
                     reply.writeString(DESCRIPTOR);
@@ -1357,7 +1361,7 @@ public interface IMountService extends IInterface {
      * consistent with MountServiceResultCode
      */
     public int createSecureContainer(String id, int sizeMb, String fstype, String key,
-            int ownerUid, boolean external) throws RemoteException;
+                                     int ownerUid, boolean external) throws RemoteException;
 
     /*
      * Destroy a secure container, and free up all resources associated with it.
@@ -1438,7 +1442,7 @@ public interface IMountService extends IInterface {
      * it of the terminal state of the call.
      */
     public void mountObb(String rawPath, String canonicalPath, String key,
-            IObbActionListener token, int nonce) throws RemoteException;
+                         IObbActionListener token, int nonce) throws RemoteException;
 
     /*
      * Mount a secure container with the specified key and owner UID. Returns an
@@ -1495,11 +1499,12 @@ public interface IMountService extends IInterface {
      * Safely unmount external storage at given mount point. The unmount is an
      * asynchronous operation. Applications should register StorageEventListener
      * for storage related status changes.
-     * @param mountPoint the mount point
-     * @param force whether or not to forcefully unmount it (e.g. even if programs are using this
-     *     data currently)
+     *
+     * @param mountPoint       the mount point
+     * @param force            whether or not to forcefully unmount it (e.g. even if programs are using this
+     *                         data currently)
      * @param removeEncryption whether or not encryption mapping should be removed from the volume.
-     *     This value implies {@code force}.
+     *                         This value implies {@code force}.
      */
     public void unmountVolume(String mountPoint, boolean force, boolean removeEncryption)
             throws RemoteException;
@@ -1514,21 +1519,34 @@ public interface IMountService extends IInterface {
      */
     public boolean isExternalStorageEmulated() throws RemoteException;
 
-    /** The volume is not encrypted. */
+    /**
+     * The volume is not encrypted.
+     */
     static final int ENCRYPTION_STATE_NONE = 1;
-    /** The volume has been encrypted succesfully. */
+    /**
+     * The volume has been encrypted succesfully.
+     */
     static final int ENCRYPTION_STATE_OK = 0;
-    /** The volume is in a bad state.*/
+    /**
+     * The volume is in a bad state.
+     */
     static final int ENCRYPTION_STATE_ERROR_UNKNOWN = -1;
-    /** Encryption is incomplete */
+    /**
+     * Encryption is incomplete
+     */
     static final int ENCRYPTION_STATE_ERROR_INCOMPLETE = -2;
-    /** Encryption is incomplete and irrecoverable */
+    /**
+     * Encryption is incomplete and irrecoverable
+     */
     static final int ENCRYPTION_STATE_ERROR_INCONSISTENT = -3;
-    /** Underlying data is corrupt */
+    /**
+     * Underlying data is corrupt
+     */
     static final int ENCRYPTION_STATE_ERROR_CORRUPT = -4;
 
     /**
      * Determines the encryption state of the volume.
+     *
      * @return a numerical value. See {@code ENCRYPTION_STATE_*} for possible values.
      */
     public int getEncryptionState() throws RemoteException;
@@ -1547,7 +1565,7 @@ public interface IMountService extends IInterface {
      * Changes the encryption password.
      */
     public int changeEncryptionPassword(int type, String password)
-        throws RemoteException;
+            throws RemoteException;
 
     /**
      * Verify the encryption password against the stored volume.  This method
@@ -1562,7 +1580,7 @@ public interface IMountService extends IInterface {
 
     /**
      * Gets the path on the filesystem for the ASEC container itself.
-     * 
+     *
      * @param cid ASEC container ID
      * @return path to filesystem or {@code null} if it's not found
      * @throws RemoteException
@@ -1587,12 +1605,14 @@ public interface IMountService extends IInterface {
 
     /**
      * Determines the type of the encryption password
+     *
      * @return PasswordType
      */
     public int getPasswordType() throws RemoteException;
 
     /**
      * Get password from vold
+     *
      * @return password or empty string
      */
     public String getPassword() throws RemoteException;
@@ -1604,13 +1624,15 @@ public interface IMountService extends IInterface {
 
     /**
      * Set a field in the crypto header.
-     * @param field field to set
+     *
+     * @param field    field to set
      * @param contents contents to set in field
      */
     public void setField(String field, String contents) throws RemoteException;
 
     /**
      * Gets a field from the crypto header.
+     *
      * @param field field to get
      * @return contents of field
      */

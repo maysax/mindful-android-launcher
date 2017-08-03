@@ -25,77 +25,121 @@ import android.os.Parcelable;
  * {@link android.provider.Telephony.Sms.Intents#SMS_SERVICE_CATEGORY_PROGRAM_DATA_RECEIVED_ACTION}
  * containing an array of these objects to update its list of cell broadcast service categories
  * to display.
- *
+ * <p>
  * {@hide}
  */
 public class CdmaSmsCbProgramData implements Parcelable {
 
-    /** Delete the specified service category from the list of enabled categories. */
-    public static final int OPERATION_DELETE_CATEGORY   = 0;
+    /**
+     * Delete the specified service category from the list of enabled categories.
+     */
+    public static final int OPERATION_DELETE_CATEGORY = 0;
 
-    /** Add the specified service category to the list of enabled categories. */
-    public static final int OPERATION_ADD_CATEGORY      = 1;
+    /**
+     * Add the specified service category to the list of enabled categories.
+     */
+    public static final int OPERATION_ADD_CATEGORY = 1;
 
-    /** Clear all service categories from the list of enabled categories. */
-    public static final int OPERATION_CLEAR_CATEGORIES  = 2;
+    /**
+     * Clear all service categories from the list of enabled categories.
+     */
+    public static final int OPERATION_CLEAR_CATEGORIES = 2;
 
-    /** Alert option: no alert. */
-    public static final int ALERT_OPTION_NO_ALERT               = 0;
+    /**
+     * Alert option: no alert.
+     */
+    public static final int ALERT_OPTION_NO_ALERT = 0;
 
-    /** Alert option: default alert. */
-    public static final int ALERT_OPTION_DEFAULT_ALERT          = 1;
+    /**
+     * Alert option: default alert.
+     */
+    public static final int ALERT_OPTION_DEFAULT_ALERT = 1;
 
-    /** Alert option: vibrate alert once. */
-    public static final int ALERT_OPTION_VIBRATE_ONCE           = 2;
+    /**
+     * Alert option: vibrate alert once.
+     */
+    public static final int ALERT_OPTION_VIBRATE_ONCE = 2;
 
-    /** Alert option: vibrate alert - repeat. */
-    public static final int ALERT_OPTION_VIBRATE_REPEAT         = 3;
+    /**
+     * Alert option: vibrate alert - repeat.
+     */
+    public static final int ALERT_OPTION_VIBRATE_REPEAT = 3;
 
-    /** Alert option: visual alert once. */
-    public static final int ALERT_OPTION_VISUAL_ONCE            = 4;
+    /**
+     * Alert option: visual alert once.
+     */
+    public static final int ALERT_OPTION_VISUAL_ONCE = 4;
 
-    /** Alert option: visual alert - repeat. */
-    public static final int ALERT_OPTION_VISUAL_REPEAT          = 5;
+    /**
+     * Alert option: visual alert - repeat.
+     */
+    public static final int ALERT_OPTION_VISUAL_REPEAT = 5;
 
-    /** Alert option: low-priority alert once. */
-    public static final int ALERT_OPTION_LOW_PRIORITY_ONCE      = 6;
+    /**
+     * Alert option: low-priority alert once.
+     */
+    public static final int ALERT_OPTION_LOW_PRIORITY_ONCE = 6;
 
-    /** Alert option: low-priority alert - repeat. */
-    public static final int ALERT_OPTION_LOW_PRIORITY_REPEAT    = 7;
+    /**
+     * Alert option: low-priority alert - repeat.
+     */
+    public static final int ALERT_OPTION_LOW_PRIORITY_REPEAT = 7;
 
-    /** Alert option: medium-priority alert once. */
-    public static final int ALERT_OPTION_MED_PRIORITY_ONCE      = 8;
+    /**
+     * Alert option: medium-priority alert once.
+     */
+    public static final int ALERT_OPTION_MED_PRIORITY_ONCE = 8;
 
-    /** Alert option: medium-priority alert - repeat. */
-    public static final int ALERT_OPTION_MED_PRIORITY_REPEAT    = 9;
+    /**
+     * Alert option: medium-priority alert - repeat.
+     */
+    public static final int ALERT_OPTION_MED_PRIORITY_REPEAT = 9;
 
-    /** Alert option: high-priority alert once. */
-    public static final int ALERT_OPTION_HIGH_PRIORITY_ONCE     = 10;
+    /**
+     * Alert option: high-priority alert once.
+     */
+    public static final int ALERT_OPTION_HIGH_PRIORITY_ONCE = 10;
 
-    /** Alert option: high-priority alert - repeat. */
-    public static final int ALERT_OPTION_HIGH_PRIORITY_REPEAT   = 11;
+    /**
+     * Alert option: high-priority alert - repeat.
+     */
+    public static final int ALERT_OPTION_HIGH_PRIORITY_REPEAT = 11;
 
-    /** Service category operation (add/delete/clear). */
+    /**
+     * Service category operation (add/delete/clear).
+     */
     private final int mOperation;
 
-    /** Service category to modify. */
+    /**
+     * Service category to modify.
+     */
     private final int mCategory;
 
-    /** Language used for service category name (defined in BearerData.LANGUAGE_*). */
+    /**
+     * Language used for service category name (defined in BearerData.LANGUAGE_*).
+     */
     private final int mLanguage;
 
-    /** Maximum number of messages to store for this service category. */
+    /**
+     * Maximum number of messages to store for this service category.
+     */
     private final int mMaxMessages;
 
-    /** Service category alert option. */
+    /**
+     * Service category alert option.
+     */
     private final int mAlertOption;
 
-    /** Name of service category. */
+    /**
+     * Name of service category.
+     */
     private final String mCategoryName;
 
-    /** Create a new CdmaSmsCbProgramData object with the specified values. */
+    /**
+     * Create a new CdmaSmsCbProgramData object with the specified values.
+     */
     public CdmaSmsCbProgramData(int operation, int category, int language, int maxMessages,
-            int alertOption, String categoryName) {
+                                int alertOption, String categoryName) {
         mOperation = operation;
         mCategory = category;
         mLanguage = language;
@@ -104,7 +148,9 @@ public class CdmaSmsCbProgramData implements Parcelable {
         mCategoryName = categoryName;
     }
 
-    /** Create a new CdmaSmsCbProgramData object from a Parcel. */
+    /**
+     * Create a new CdmaSmsCbProgramData object from a Parcel.
+     */
     CdmaSmsCbProgramData(Parcel in) {
         mOperation = in.readInt();
         mCategory = in.readInt();
@@ -132,6 +178,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
 
     /**
      * Returns the service category operation, e.g. {@link #OPERATION_ADD_CATEGORY}.
+     *
      * @return one of the {@code OPERATION_*} values
      */
     public int getOperation() {
@@ -140,6 +187,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
 
     /**
      * Returns the CDMA service category to modify.
+     *
      * @return a 16-bit CDMA service category value
      */
     public int getCategory() {
@@ -148,6 +196,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
 
     /**
      * Returns the CDMA language code for this service category.
+     *
      * @return one of the language values defined in BearerData.LANGUAGE_*
      */
     public int getLanguage() {
@@ -156,6 +205,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
 
     /**
      * Returns the maximum number of messages to store for this service category.
+     *
      * @return the maximum number of messages to store for this service category
      */
     public int getMaxMessages() {
@@ -164,6 +214,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
 
     /**
      * Returns the service category alert option, e.g. {@link #ALERT_OPTION_DEFAULT_ALERT}.
+     *
      * @return one of the {@code ALERT_OPTION_*} values
      */
     public int getAlertOption() {
@@ -172,6 +223,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
 
     /**
      * Returns the service category name, in the language specified by {@link #getLanguage()}.
+     *
      * @return an optional service category name
      */
     public String getCategoryName() {
@@ -187,6 +239,7 @@ public class CdmaSmsCbProgramData implements Parcelable {
 
     /**
      * Describe the kinds of special objects contained in the marshalled representation.
+     *
      * @return a bitmask indicating this Parcelable contains no special objects
      */
     @Override
@@ -194,7 +247,9 @@ public class CdmaSmsCbProgramData implements Parcelable {
         return 0;
     }
 
-    /** Creator for unparcelling objects. */
+    /**
+     * Creator for unparcelling objects.
+     */
     public static final Parcelable.Creator<CdmaSmsCbProgramData>
             CREATOR = new Parcelable.Creator<CdmaSmsCbProgramData>() {
         @Override

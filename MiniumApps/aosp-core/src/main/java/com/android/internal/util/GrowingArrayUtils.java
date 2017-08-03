@@ -19,7 +19,7 @@ package com.android.internal.util;
 /**
  * A helper class that aims to provide comparable growth performance to ArrayList, but on primitive
  * arrays. Common array operations are implemented for efficient use in dynamic containers.
- *
+ * <p>
  * All methods in this class assume that the length of an array is equivalent to its capacity and
  * NOT the number of elements in the array. The current size of the array is always passed in as a
  * parameter.
@@ -30,12 +30,13 @@ public final class GrowingArrayUtils {
 
     /**
      * Appends an element to the end of the array, growing the array if there is no more room.
-     * @param array The array to which to append the element. This must NOT be null.
+     *
+     * @param array       The array to which to append the element. This must NOT be null.
      * @param currentSize The number of elements in the array. Must be less than or equal to
      *                    array.length.
-     * @param element The element to append.
+     * @param element     The element to append.
      * @return the array to which the element was appended. This may be different than the given
-     *         array.
+     * array.
      */
     public static <T> T[] append(T[] array, int currentSize, T element) {
         assert currentSize <= array.length;
@@ -100,12 +101,12 @@ public final class GrowingArrayUtils {
      * Inserts an element into the array at the specified index, growing the array if there is no
      * more room.
      *
-     * @param array The array to which to append the element. Must NOT be null.
+     * @param array       The array to which to append the element. Must NOT be null.
      * @param currentSize The number of elements in the array. Must be less than or equal to
      *                    array.length.
-     * @param element The element to insert.
+     * @param element     The element to insert.
      * @return the array to which the element was appended. This may be different than the given
-     *         array.
+     * array.
      */
     public static <T> T[] insert(T[] array, int currentSize, int index, T element) {
         assert currentSize <= array.length;
@@ -117,7 +118,7 @@ public final class GrowingArrayUtils {
         }
 
         @SuppressWarnings("unchecked")
-        T[] newArray = ArrayUtils.newUnpaddedArray((Class<T>)array.getClass().getComponentType(),
+        T[] newArray = ArrayUtils.newUnpaddedArray((Class<T>) array.getClass().getComponentType(),
                 growSize(currentSize));
         System.arraycopy(array, 0, newArray, 0, index);
         newArray[index] = element;
@@ -192,5 +193,6 @@ public final class GrowingArrayUtils {
     }
 
     // Uninstantiable
-    private GrowingArrayUtils() {}
+    private GrowingArrayUtils() {
+    }
 }

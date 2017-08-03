@@ -75,30 +75,73 @@ public class MainListItemLoader {
 
     public void listItemClicked(int id) {
         switch (id) {
-            case 1: new ActivityHelper(context).openMessagingApp();
+            case 1:
+                new ActivityHelper(context).openMessagingApp();
                 break;
-            case 2: new ActivityHelper(context).openCallApp(); break;
-            case 3: new ActivityHelper(context).openContactsApp(); break;
-            case 4: PauseActivity_.intent(context).start(); break;
-            case 5: UIUtils.alert(context, getString(R.string.msg_not_yet_implemented)); break;
-            case 6: new ActivityHelper(context).openNotesApp(false); break;
-            case 7: UIUtils.alert(context, getString(R.string.msg_not_yet_implemented)); break;
-            case 8: new ActivityHelper(context).openSettingsApp(); break;
-            case 9: UIUtils.alert(context, getString(R.string.msg_not_yet_implemented)); break;
-            case 10: TempoActivity_.intent(context).start(); break;
-            case 11: new ActivityHelper(context).openGMape(Constants.GOOGLE_MAP_PACKAGE); break;
-            case 12: new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context); break;
-            case 13: MMTimePickerActivity_.intent(context).start(); break;
-            case 14: MindfulMorningActivity_.intent(context).start(); break;
-            case 15: ApiClient_.getInstance_(context).checkAppVersion(); break;
-            case 16: new ActivityHelper(context).openEmail(); break;
+            case 2:
+                new ActivityHelper(context).openCallApp();
+                break;
+            case 3:
+                new ActivityHelper(context).openContactsApp();
+                break;
+            case 4:
+                PauseActivity_.intent(context).start();
+                break;
+            case 5:
+                UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
+                break;
+            case 6:
+                new ActivityHelper(context).openNotesApp(false);
+                break;
+            case 7:
+                UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
+                break;
+            case 8:
+                new ActivityHelper(context).openSettingsApp();
+                break;
+            case 9:
+                UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
+                break;
+            case 10:
+                TempoActivity_.intent(context).start();
+                break;
+            case 11:
+                new ActivityHelper(context).openGMape(Constants.GOOGLE_MAP_PACKAGE);
+                break;
+            case 12:
+                new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
+                break;
+            case 13:
+                MMTimePickerActivity_.intent(context).start();
+                break;
+            case 14:
+                MindfulMorningActivity_.intent(context).start();
+                break;
+            case 15:
+                ApiClient_.getInstance_(context).checkAppVersion();
+                break;
+            case 16:
+                new ActivityHelper(context).openEmail();
+                break;
             case 17: //new ActivityHelper(context).openGoogleInbox(); break;
-            case 18: new ActivityHelper(context).openFeedback(); break;
-            case 19: AppDrawerActivity_.intent(context).start(); break;
-            case 20: new ActivityHelper(context).openGMape(Constants.CALENDAR_PACKAGE); break;
-            case 21: new ActivityHelper(context).openGMape(Constants.CLOCK_PACKAGE); break;
-            case 22: new ActivityHelper(context).openGMape(GOOGLE_PHOTOS); break;
-            default: UIUtils.alert(context, getString(R.string.msg_not_yet_implemented)); break;
+            case 18:
+                new ActivityHelper(context).openFeedback();
+                break;
+            case 19:
+                AppDrawerActivity_.intent(context).start();
+                break;
+            case 20:
+                new ActivityHelper(context).openGMape(Constants.CALENDAR_PACKAGE);
+                break;
+            case 21:
+                new ActivityHelper(context).openGMape(Constants.CLOCK_PACKAGE);
+                break;
+            case 22:
+                new ActivityHelper(context).openGMape(GOOGLE_PHOTOS);
+                break;
+            default:
+                UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
+                break;
         }
     }
 }

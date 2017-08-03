@@ -76,8 +76,7 @@ import minium.co.contacts.R;
  */
 public class CustomContactListFilterActivity extends Activity
         implements View.OnClickListener, ExpandableListView.OnChildClickListener,
-        LoaderCallbacks<CustomContactListFilterActivity.AccountSet>
-{
+        LoaderCallbacks<CustomContactListFilterActivity.AccountSet> {
     private static final String TAG = "CustomContactListFilterActivity";
 
     private static final int ACCOUNT_SET_LOADER_ID = 1;
@@ -147,7 +146,7 @@ public class CustomContactListFilterActivity extends Activity
                 }
                 android.content.EntityIterator iterator =
                         ContactsContract.Groups.newEntityIterator(resolver.query(
-                        groupsUri.build(), null, null, null, null));
+                                groupsUri.build(), null, null, null, null));
                 try {
                     boolean hasGroups = false;
 
@@ -160,8 +159,8 @@ public class CustomContactListFilterActivity extends Activity
                     }
                     // Create single entry handling ungrouped status
                     accountDisplay.mUngrouped =
-                        GroupDelta.fromSettings(resolver, account.name, account.type,
-                                account.dataSet, hasGroups);
+                            GroupDelta.fromSettings(resolver, account.name, account.type,
+                                    account.dataSet, hasGroups);
                     accountDisplay.addGroup(accountDisplay.mUngrouped);
                 } finally {
                     iterator.close();
@@ -251,14 +250,14 @@ public class CustomContactListFilterActivity extends Activity
          * {@link Settings#DATA_SET}.
          */
         public static GroupDelta fromSettings(ContentResolver resolver, String accountName,
-                String accountType, String dataSet, boolean accountHasGroups) {
+                                              String accountType, String dataSet, boolean accountHasGroups) {
             final Uri.Builder settingsUri = Settings.CONTENT_URI.buildUpon()
                     .appendQueryParameter(Settings.ACCOUNT_NAME, accountName)
                     .appendQueryParameter(Settings.ACCOUNT_TYPE, accountType);
             if (dataSet != null) {
                 settingsUri.appendQueryParameter(Settings.DATA_SET, dataSet);
             }
-            final Cursor cursor = resolver.query(settingsUri.build(), new String[] {
+            final Cursor cursor = resolver.query(settingsUri.build(), new String[]{
                     Settings.SHOULD_SYNC, Settings.UNGROUPED_VISIBLE
             }, null, null, null);
 
@@ -367,8 +366,7 @@ public class CustomContactListFilterActivity extends Activity
                     return ContentProviderOperation.newInsert(Settings.CONTENT_URI)
                             .withValues(mAfter)
                             .build();
-                }
-                else {
+                } else {
                     throw new IllegalStateException("Unexpected diff");
                 }
             } else if (isUpdate()) {
@@ -381,10 +379,10 @@ public class CustomContactListFilterActivity extends Activity
                     String[] selectionArgs;
                     if (dataSet == null) {
                         selection.append(" AND " + Settings.DATA_SET + " IS NULL");
-                        selectionArgs = new String[] {accountName, accountType};
+                        selectionArgs = new String[]{accountName, accountType};
                     } else {
                         selection.append(" AND " + Settings.DATA_SET + "=?");
-                        selectionArgs = new String[] {accountName, accountType, dataSet};
+                        selectionArgs = new String[]{accountName, accountType, dataSet};
                     }
                     return ContentProviderOperation.newUpdate(Settings.CONTENT_URI)
                             .withSelection(selection.toString(), selectionArgs)
@@ -392,7 +390,7 @@ public class CustomContactListFilterActivity extends Activity
                             .build();
                 } else {
                     return ContentProviderOperation.newUpdate(
-                                    addCallerIsSyncAdapterParameter(Groups.CONTENT_URI))
+                            addCallerIsSyncAdapterParameter(Groups.CONTENT_URI))
                             .withSelection(Groups._ID + "=" + this.getId(), null)
                             .withValues(mAfter)
                             .build();
@@ -405,8 +403,8 @@ public class CustomContactListFilterActivity extends Activity
 
     private static Uri addCallerIsSyncAdapterParameter(Uri uri) {
         return uri.buildUpon()
-            .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
-            .build();
+                .appendQueryParameter(ContactsContract.CALLER_IS_SYNCADAPTER, "true")
+                .build();
     }
 
     /**
@@ -463,7 +461,7 @@ public class CustomContactListFilterActivity extends Activity
          * given {@link AccountWithDataSet}.
          */
         public AccountDisplay(ContentResolver resolver, String accountName, String accountType,
-                String dataSet) {
+                              String dataSet) {
             mName = accountName;
             mType = accountType;
             mDataSet = dataSet;
@@ -550,7 +548,7 @@ public class CustomContactListFilterActivity extends Activity
 
         public DisplayAdapter(Context context) {
             mContext = context;
-            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             mAccountTypes = AccountTypeManager.getInstance(context);
         }
 
@@ -569,16 +567,16 @@ public class CustomContactListFilterActivity extends Activity
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView,
-                ViewGroup parent) {
+                                 ViewGroup parent) {
             if (convertView == null) {
                 convertView = mInflater.inflate(
                         R.layout.custom_contact_list_filter_account, parent, false);
             }
 
-            final TextView text1 = (TextView)convertView.findViewById(android.R.id.text1);
-            final TextView text2 = (TextView)convertView.findViewById(android.R.id.text2);
+            final TextView text1 = (TextView) convertView.findViewById(android.R.id.text1);
+            final TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
 
-            final AccountDisplay account = (AccountDisplay)this.getGroup(groupPosition);
+            final AccountDisplay account = (AccountDisplay) this.getGroup(groupPosition);
 
             final AccountType accountType = mAccountTypes.getAccountType(
                     account.mType, account.mDataSet);
@@ -592,18 +590,18 @@ public class CustomContactListFilterActivity extends Activity
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
-                View convertView, ViewGroup parent) {
+                                 View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = mInflater.inflate(
                         R.layout.custom_contact_list_filter_group, parent, false);
             }
 
-            final TextView text1 = (TextView)convertView.findViewById(android.R.id.text1);
-            final TextView text2 = (TextView)convertView.findViewById(android.R.id.text2);
-            final CheckBox checkbox = (CheckBox)convertView.findViewById(android.R.id.checkbox);
+            final TextView text1 = (TextView) convertView.findViewById(android.R.id.text1);
+            final TextView text2 = (TextView) convertView.findViewById(android.R.id.text2);
+            final CheckBox checkbox = (CheckBox) convertView.findViewById(android.R.id.checkbox);
 
             final AccountDisplay account = mAccounts.get(groupPosition);
-            final GroupDelta child = (GroupDelta)this.getChild(groupPosition, childPosition);
+            final GroupDelta child = (GroupDelta) this.getChild(groupPosition, childPosition);
             if (child != null) {
                 // Handle normal group, with title and checkbox
                 final boolean groupVisible = child.getVisible();
@@ -637,7 +635,7 @@ public class CustomContactListFilterActivity extends Activity
 
         @Override
         public long getChildId(int groupPosition, int childPosition) {
-            final GroupDelta child = (GroupDelta)getChild(groupPosition, childPosition);
+            final GroupDelta child = (GroupDelta) getChild(groupPosition, childPosition);
             if (child != null) {
                 final Long childId = child.getId();
                 return childId != null ? childId : Long.MIN_VALUE;
@@ -683,7 +681,9 @@ public class CustomContactListFilterActivity extends Activity
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_done: {
@@ -703,11 +703,11 @@ public class CustomContactListFilterActivity extends Activity
      */
     @Override
     public boolean onChildClick(ExpandableListView parent, View view, int groupPosition,
-            int childPosition, long id) {
-        final CheckBox checkbox = (CheckBox)view.findViewById(android.R.id.checkbox);
+                                int childPosition, long id) {
+        final CheckBox checkbox = (CheckBox) view.findViewById(android.R.id.checkbox);
 
-        final AccountDisplay account = (AccountDisplay)mAdapter.getGroup(groupPosition);
-        final GroupDelta child = (GroupDelta)mAdapter.getChild(groupPosition, childPosition);
+        final AccountDisplay account = (AccountDisplay) mAdapter.getGroup(groupPosition);
+        final GroupDelta child = (GroupDelta) mAdapter.getChild(groupPosition, childPosition);
         if (child != null) {
             checkbox.toggle();
             child.putVisible(checkbox.isChecked());
@@ -735,7 +735,7 @@ public class CustomContactListFilterActivity extends Activity
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view,
-            ContextMenu.ContextMenuInfo menuInfo) {
+                                    ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
 
         // Bail if not working with expandable long-press, or if not child
@@ -748,8 +748,8 @@ public class CustomContactListFilterActivity extends Activity
         // Skip long-press on expandable parents
         if (childPosition == -1) return;
 
-        final AccountDisplay account = (AccountDisplay)mAdapter.getGroup(groupPosition);
-        final GroupDelta child = (GroupDelta)mAdapter.getChild(groupPosition, childPosition);
+        final AccountDisplay account = (AccountDisplay) mAdapter.getGroup(groupPosition);
+        final GroupDelta child = (GroupDelta) mAdapter.getChild(groupPosition, childPosition);
 
         // Ignore when selective syncing unsupported
         final int syncMode = getSyncMode(account);
@@ -763,7 +763,7 @@ public class CustomContactListFilterActivity extends Activity
     }
 
     protected void showRemoveSync(ContextMenu menu, final AccountDisplay account,
-            final GroupDelta child, final int syncMode) {
+                                  final GroupDelta child, final int syncMode) {
         final CharSequence title = child.getTitle(this);
 
         menu.setHeaderTitle(title);
@@ -777,7 +777,7 @@ public class CustomContactListFilterActivity extends Activity
     }
 
     protected void handleRemoveSync(final AccountDisplay account, final GroupDelta child,
-            final int syncMode, CharSequence title) {
+                                    final int syncMode, CharSequence title) {
         final boolean shouldSyncUngrouped = account.mUngrouped.getShouldSync();
         if (syncMode == SYNC_MODE_EVERYTHING && shouldSyncUngrouped
                 && !child.equals(account.mUngrouped)) {
@@ -857,7 +857,9 @@ public class CustomContactListFilterActivity extends Activity
             super(target);
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected void onPreExecute(Activity target) {
             final Context context = target;
@@ -870,7 +872,9 @@ public class CustomContactListFilterActivity extends Activity
             context.startService(new Intent(context, EmptyService.class));
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected Void doInBackground(
                 Activity target, ArrayList<ContentProviderOperation>... params) {
@@ -890,7 +894,9 @@ public class CustomContactListFilterActivity extends Activity
             return null;
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected void onPostExecute(Activity target, Void result) {
             final Context context = target;

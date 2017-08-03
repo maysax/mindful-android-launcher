@@ -52,7 +52,7 @@ public class IccCardConstants {
     /**
      * This is combination of IccCardStatus.CardState and IccCardApplicationStatus.AppState
      * for external apps (like PhoneApp) to use
-     *
+     * <p>
      * UNKNOWN is a transient state, for example, after user inputs ICC pin under
      * PIN_REQUIRED state, the query for ICC status returns UNKNOWN before it
      * turns to READY

@@ -17,6 +17,7 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
+
 import com.moez.QKSMS.common.TypefaceManager;
 import com.moez.QKSMS.common.utils.Units;
 import com.moez.QKSMS.ui.ThemeManager;
@@ -190,7 +191,7 @@ public class ContactHelper {
         }
         return bitmap;
     }
-    
+
     public static Bitmap blankContact(Context context, String name) {
         String text = name == null || PhoneNumberUtils.isWellFormedSmsAddress(PhoneNumberUtils.stripSeparators(name)) || name.length() == 0 ? "#" : "" + name.toUpperCase().charAt(0);
 

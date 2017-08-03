@@ -88,6 +88,7 @@ public class GsmCellLocation extends CellLocation {
 
     /**
      * Set the primary scrambling code.
+     *
      * @hide
      */
     public void setPsc(int psc) {
@@ -104,7 +105,7 @@ public class GsmCellLocation extends CellLocation {
         GsmCellLocation s;
 
         try {
-            s = (GsmCellLocation)o;
+            s = (GsmCellLocation) o;
         } catch (ClassCastException ex) {
             return false;
         }
@@ -114,12 +115,12 @@ public class GsmCellLocation extends CellLocation {
         }
 
         return equalsHandlesNulls(mLac, s.mLac) && equalsHandlesNulls(mCid, s.mCid)
-            && equalsHandlesNulls(mPsc, s.mPsc);
+                && equalsHandlesNulls(mPsc, s.mPsc);
     }
 
     @Override
     public String toString() {
-        return "["+ mLac + "," + mCid + "," + mPsc + "]";
+        return "[" + mLac + "," + mCid + "," + mPsc + "]";
     }
 
     /**
@@ -130,7 +131,7 @@ public class GsmCellLocation extends CellLocation {
      * @return true if two objects equal or both are null
      */
     private static boolean equalsHandlesNulls(Object a, Object b) {
-        return (a == null) ? (b == null) : a.equals (b);
+        return (a == null) ? (b == null) : a.equals(b);
     }
 
     /**

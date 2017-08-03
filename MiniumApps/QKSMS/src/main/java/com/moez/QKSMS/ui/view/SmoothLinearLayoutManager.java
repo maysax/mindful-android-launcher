@@ -5,7 +5,6 @@ import android.graphics.PointF;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 
 public class SmoothLinearLayoutManager extends LinearLayoutManager {

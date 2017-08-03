@@ -146,7 +146,7 @@ public class ColorPickerPalette extends TableLayout {
      * will arrange them for accessibility purposes.
      */
     private void setSwatchDescription(int rowNumber, int index, int rowElements, boolean selected,
-            View swatch, String[] contentDescriptions) {
+                                      View swatch, String[] contentDescriptions) {
         String description;
         if (contentDescriptions != null && contentDescriptions.length > index) {
             description = contentDescriptions[index];

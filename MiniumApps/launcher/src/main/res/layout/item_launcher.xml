@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.joanzapata.iconify.widget.IconButton
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.joanzapata.iconify.widget.IconButton xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    style="?android:attr/borderlessButtonStyle"
-    android:textColor="@color/black"
-    tools:text="Focus" />
+    xmlns:tools="http://schemas.android.com/tools" style="?android:attr/borderlessButtonStyle"
+    android:textColor="@color/black" tools:text="Focus" />
 

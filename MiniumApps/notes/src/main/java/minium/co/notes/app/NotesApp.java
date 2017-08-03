@@ -1,7 +1,5 @@
 package minium.co.notes.app;
 
-import com.evernote.client.android.EvernoteSession;
-
 import org.androidannotations.annotations.EApplication;
 import org.androidannotations.annotations.Trace;
 
@@ -13,7 +11,7 @@ import minium.co.core.log.Tracer;
 /**
  * Concrete implementation of {@link CoreApplication}
  * This class will implement specific behaviors that differs with core library
- *
+ * <p>
  * Created by shahab on 3/17/16.
  */
 @EApplication

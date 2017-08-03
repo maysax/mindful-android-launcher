@@ -57,17 +57,23 @@ public class SystemService {
         });
     }
 
-    /** Request that the init daemon start a named service. */
+    /**
+     * Request that the init daemon start a named service.
+     */
     public static void start(String name) {
         SystemProperties.set("ctl.start", name);
     }
 
-    /** Request that the init daemon stop a named service. */
+    /**
+     * Request that the init daemon stop a named service.
+     */
     public static void stop(String name) {
         SystemProperties.set("ctl.stop", name);
     }
 
-    /** Request that the init daemon restart a named service. */
+    /**
+     * Request that the init daemon restart a named service.
+     */
     public static void restart(String name) {
         SystemProperties.set("ctl.restart", name);
     }
@@ -128,7 +134,7 @@ public class SystemService {
     /**
      * Wait until any of given services enters {@link State#STOPPED}.
      */
-    public static void waitForAnyStopped(String... services)  {
+    public static void waitForAnyStopped(String... services) {
         while (true) {
             synchronized (sPropertyLock) {
                 for (String service : services) {

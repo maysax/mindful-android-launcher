@@ -42,13 +42,13 @@ import com.android.contacts.common.GeoUtil;
 import com.android.contacts.common.GroupMetaData;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountTypeWithDataSet;
+import com.android.contacts.common.model.dataitem.DataItem;
+import com.android.contacts.common.model.dataitem.PhoneDataItem;
+import com.android.contacts.common.model.dataitem.PhotoDataItem;
 import com.android.contacts.common.util.Constants;
 import com.android.contacts.common.util.ContactLoaderUtils;
 import com.android.contacts.common.util.DataStatus;
 import com.android.contacts.common.util.UriUtils;
-import com.android.contacts.common.model.dataitem.DataItem;
-import com.android.contacts.common.model.dataitem.PhoneDataItem;
-import com.android.contacts.common.model.dataitem.PhotoDataItem;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -77,7 +77,9 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
 
     private static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
 
-    /** A short-lived cache that can be set by {@link #cacheResult()} */
+    /**
+     * A short-lived cache that can be set by {@link #cacheResult()}
+     */
     private static Contact sCachedResult = null;
 
     private final Uri mRequestedUri;
@@ -95,8 +97,8 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
     }
 
     public ContactLoader(Context context, Uri lookupUri, boolean loadGroupMetaData,
-            boolean loadInvitableAccountTypes,
-            boolean postViewNotification, boolean computeFormattedPhoneNumber) {
+                         boolean loadInvitableAccountTypes,
+                         boolean postViewNotification, boolean computeFormattedPhoneNumber) {
         super(context);
         mLookupUri = lookupUri;
         mRequestedUri = lookupUri;
@@ -111,7 +113,7 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
      * social stream items).
      */
     private static class ContactQuery {
-        static final String[] COLUMNS = new String[] {
+        static final String[] COLUMNS = new String[]{
                 Contacts.NAME_RAW_CONTACT_ID,
                 Contacts.DISPLAY_NAME_SOURCE,
                 Contacts.LOOKUP_KEY,
@@ -260,13 +262,13 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
      * Projection used for the query that loads all data for the entire contact.
      */
     private static class DirectoryQuery {
-        static final String[] COLUMNS = new String[] {
-            Directory.DISPLAY_NAME,
-            Directory.PACKAGE_NAME,
-            Directory.TYPE_RESOURCE_ID,
-            Directory.ACCOUNT_TYPE,
-            Directory.ACCOUNT_NAME,
-            Directory.EXPORT_SUPPORT,
+        static final String[] COLUMNS = new String[]{
+                Directory.DISPLAY_NAME,
+                Directory.PACKAGE_NAME,
+                Directory.TYPE_RESOURCE_ID,
+                Directory.ACCOUNT_TYPE,
+                Directory.ACCOUNT_NAME,
+                Directory.EXPORT_SUPPORT,
         };
 
         public static final int DISPLAY_NAME = 0;
@@ -278,14 +280,14 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
     }
 
     private static class GroupQuery {
-        static final String[] COLUMNS = new String[] {
-            Groups.ACCOUNT_NAME,
-            Groups.ACCOUNT_TYPE,
-            Groups.DATA_SET,
-            Groups._ID,
-            Groups.TITLE,
-            Groups.AUTO_ADD,
-            Groups.FAVORITES,
+        static final String[] COLUMNS = new String[]{
+                Groups.ACCOUNT_NAME,
+                Groups.ACCOUNT_TYPE,
+                Groups.DATA_SET,
+                Groups._ID,
+                Groups.TITLE,
+                Groups.AUTO_ADD,
+                Groups.FAVORITES,
         };
 
         public static final int ACCOUNT_NAME = 0;
@@ -626,7 +628,7 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
         Uri lookupUri;
         if (directoryId == Directory.DEFAULT || directoryId == Directory.LOCAL_INVISIBLE) {
             lookupUri = ContentUris.withAppendedId(
-                Uri.withAppendedPath(Contacts.CONTENT_LOOKUP_URI, lookupKey), contactId);
+                    Uri.withAppendedPath(Contacts.CONTENT_LOOKUP_URI, lookupKey), contactId);
         } else {
             lookupUri = contactUri;
         }
@@ -808,8 +810,8 @@ public class ContactLoader extends AsyncTaskLoader<Contact> {
                             : cursor.getInt(GroupQuery.FAVORITES) != 0;
 
                     groupListBuilder.add(new GroupMetaData(
-                                    accountName, accountType, dataSet, groupId, title, defaultGroup,
-                                    favorites));
+                            accountName, accountType, dataSet, groupId, title, defaultGroup,
+                            favorites));
                 }
             } finally {
                 cursor.close();

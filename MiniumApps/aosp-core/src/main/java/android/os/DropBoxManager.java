@@ -30,11 +30,11 @@ import java.util.zip.GZIPInputStream;
  * log records, etc.).  The queue is size bounded and will drop old data if the
  * enqueued data exceeds the maximum size.  You can think of this as a
  * persistent, system-wide, blob-oriented "logcat".
- *
+ * <p>
  * <p>You can obtain an instance of this class by calling
  * {@link android.content.Context#getSystemService}
  * with {@link android.content.Context#DROPBOX_SERVICE}.
- *
+ * <p>
  * <p>DropBoxManager entries are not sent anywhere directly, but other system
  * services and debugging tools may scan and upload entries for processing.
  */
@@ -42,28 +42,36 @@ public class DropBoxManager {
     private static final String TAG = "DropBoxManager";
     private final IDropBoxManagerService mService;
 
-    /** Flag value: Entry's content was deleted to save space. */
+    /**
+     * Flag value: Entry's content was deleted to save space.
+     */
     public static final int IS_EMPTY = 1;
 
-    /** Flag value: Content is human-readable UTF-8 text (can be combined with IS_GZIPPED). */
+    /**
+     * Flag value: Content is human-readable UTF-8 text (can be combined with IS_GZIPPED).
+     */
     public static final int IS_TEXT = 2;
 
-    /** Flag value: Content can be decompressed with {@link java.util.zip.GZIPOutputStream}. */
+    /**
+     * Flag value: Content can be decompressed with {@link java.util.zip.GZIPOutputStream}.
+     */
     public static final int IS_GZIPPED = 4;
 
-    /** Flag value for serialization only: Value is a byte array, not a file descriptor */
+    /**
+     * Flag value for serialization only: Value is a byte array, not a file descriptor
+     */
     private static final int HAS_BYTE_ARRAY = 8;
 
     /**
      * Broadcast Action: This is broadcast when a new entry is added in the dropbox.
      * You must hold the {@link android.Manifest.permission#READ_LOGS} permission
      * in order to receive this broadcast.
-     *
+     * <p>
      * <p class="note">This is a protected intent that can only be sent
      * by the system.
      */
     public static final String ACTION_DROPBOX_ENTRY_ADDED =
-        "android.intent.action.DROPBOX_ENTRY_ADDED";
+            "android.intent.action.DROPBOX_ENTRY_ADDED";
 
     /**
      * Extra for {@link android.os.DropBoxManager#ACTION_DROPBOX_ENTRY_ADDED}:
@@ -91,7 +99,9 @@ public class DropBoxManager {
         private final ParcelFileDescriptor mFileDescriptor;
         private final int mFlags;
 
-        /** Create a new empty Entry with no contents. */
+        /**
+         * Create a new empty Entry with no contents.
+         */
         public Entry(String tag, long millis) {
             if (tag == null) throw new NullPointerException("tag == null");
 
@@ -102,7 +112,9 @@ public class DropBoxManager {
             mFlags = IS_EMPTY;
         }
 
-        /** Create a new Entry with plain text contents. */
+        /**
+         * Create a new Entry with plain text contents.
+         */
         public Entry(String tag, long millis, String text) {
             if (tag == null) throw new NullPointerException("tag == null");
             if (text == null) throw new NullPointerException("text == null");
@@ -163,19 +175,36 @@ public class DropBoxManager {
             mFlags = flags;
         }
 
-        /** Close the input stream associated with this entry. */
+        /**
+         * Close the input stream associated with this entry.
+         */
         public void close() {
-            try { if (mFileDescriptor != null) mFileDescriptor.close(); } catch (IOException e) { }
+            try {
+                if (mFileDescriptor != null) mFileDescriptor.close();
+            } catch (IOException e) {
+            }
         }
 
-        /** @return the tag originally attached to the entry. */
-        public String getTag() { return mTag; }
+        /**
+         * @return the tag originally attached to the entry.
+         */
+        public String getTag() {
+            return mTag;
+        }
 
-        /** @return time when the entry was originally created. */
-        public long getTimeMillis() { return mTimeMillis; }
+        /**
+         * @return time when the entry was originally created.
+         */
+        public long getTimeMillis() {
+            return mTimeMillis;
+        }
 
-        /** @return flags describing the content returned by {@link #getInputStream()}. */
-        public int getFlags() { return mFlags & ~IS_GZIPPED; }  // getInputStream() decompresses.
+        /**
+         * @return flags describing the content returned by {@link #getInputStream()}.
+         */
+        public int getFlags() {
+            return mFlags & ~IS_GZIPPED;
+        }  // getInputStream() decompresses.
 
         /**
          * @param maxBytes of string to return (will truncate at this length).
@@ -199,11 +228,16 @@ public class DropBoxManager {
             } catch (IOException e) {
                 return null;
             } finally {
-                try { if (is != null) is.close(); } catch (IOException e) {}
+                try {
+                    if (is != null) is.close();
+                } catch (IOException e) {
+                }
             }
         }
 
-        /** @return the uncompressed contents of the entry, or null if the contents were lost */
+        /**
+         * @return the uncompressed contents of the entry, or null if the contents were lost
+         */
         public InputStream getInputStream() throws IOException {
             InputStream is;
             if (mData != null) {
@@ -217,7 +251,10 @@ public class DropBoxManager {
         }
 
         public static final Parcelable.Creator<Entry> CREATOR = new Parcelable.Creator() {
-            public Entry[] newArray(int size) { return new Entry[size]; }
+            public Entry[] newArray(int size) {
+                return new Entry[size];
+            }
+
             public Entry createFromParcel(Parcel in) {
                 String tag = in.readString();
                 long millis = in.readLong();
@@ -247,46 +284,58 @@ public class DropBoxManager {
         }
     }
 
-    /** {@hide} */
-    public DropBoxManager(IDropBoxManagerService service) { mService = service; }
+    /**
+     * {@hide}
+     */
+    public DropBoxManager(IDropBoxManagerService service) {
+        mService = service;
+    }
 
     /**
      * Create a dummy instance for testing.  All methods will fail unless
      * overridden with an appropriate mock implementation.  To obtain a
      * functional instance, use {@link android.content.Context#getSystemService}.
      */
-    protected DropBoxManager() { mService = null; }
+    protected DropBoxManager() {
+        mService = null;
+    }
 
     /**
      * Stores human-readable text.  The data may be discarded eventually (or even
      * immediately) if space is limited, or ignored entirely if the tag has been
      * blocked (see {@link #isTagEnabled}).
      *
-     * @param tag describing the type of entry being stored
+     * @param tag  describing the type of entry being stored
      * @param data value to store
      */
     public void addText(String tag, String data) {
-        try { mService.add(new Entry(tag, 0, data)); } catch (RemoteException e) {}
+        try {
+            mService.add(new Entry(tag, 0, data));
+        } catch (RemoteException e) {
+        }
     }
 
     /**
      * Stores binary data, which may be ignored or discarded as with {@link #addText}.
      *
-     * @param tag describing the type of entry being stored
-     * @param data value to store
+     * @param tag   describing the type of entry being stored
+     * @param data  value to store
      * @param flags describing the data
      */
     public void addData(String tag, byte[] data, int flags) {
         if (data == null) throw new NullPointerException("data == null");
-        try { mService.add(new Entry(tag, 0, data, flags)); } catch (RemoteException e) {}
+        try {
+            mService.add(new Entry(tag, 0, data, flags));
+        } catch (RemoteException e) {
+        }
     }
 
     /**
      * Stores the contents of a file, which may be ignored or discarded as with
      * {@link #addText}.
      *
-     * @param tag describing the type of entry being stored
-     * @param file to read from
+     * @param tag   describing the type of entry being stored
+     * @param file  to read from
      * @param flags describing the data
      * @throws IOException if the file can't be opened
      */
@@ -311,7 +360,11 @@ public class DropBoxManager {
      * @return whether events with that tag would be accepted
      */
     public boolean isTagEnabled(String tag) {
-        try { return mService.isTagEnabled(tag); } catch (RemoteException e) { return false; }
+        try {
+            return mService.isTagEnabled(tag);
+        } catch (RemoteException e) {
+            return false;
+        }
     }
 
     /**
@@ -319,12 +372,16 @@ public class DropBoxManager {
      * Requires <code>android.permission.READ_LOGS</code>.  You must always call
      * {@link Entry#close()} on the return value!
      *
-     * @param tag of entry to look for, null for all tags
+     * @param tag  of entry to look for, null for all tags
      * @param msec time of the last entry seen
      * @return the next entry, or null if there are no more entries
      */
     public Entry getNextEntry(String tag, long msec) {
-        try { return mService.getNextEntry(tag, msec); } catch (RemoteException e) { return null; }
+        try {
+            return mService.getNextEntry(tag, msec);
+        } catch (RemoteException e) {
+            return null;
+        }
     }
 
     // TODO: It may be useful to have some sort of notification mechanism

@@ -16,15 +16,14 @@
 
 package com.android.contacts.common.util;
 
-import static android.provider.ContactsContract.CommonDataKinds.Phone;
-
 import android.content.Context;
 import android.util.Log;
-
 
 import com.google.common.base.Preconditions;
 
 import minium.co.contacts.R;
+
+import static android.provider.ContactsContract.CommonDataKinds.Phone;
 
 /**
  * Methods for handling various contact data labels.
@@ -49,16 +48,16 @@ public class ContactDisplayUtils {
     /**
      * Gets a display label for a given phone type.
      *
-     * @param type The type of number.
-     * @param customLabel A custom label to use if the phone is determined to be of custom type
-     * determined by {@link #isCustomPhoneType(Integer))}
+     * @param type            The type of number.
+     * @param customLabel     A custom label to use if the phone is determined to be of custom type
+     *                        determined by {@link #isCustomPhoneType(Integer))}
      * @param interactionType whether this is a call or sms.  Either {@link #INTERACTION_CALL} or
-     * {@link #INTERACTION_SMS}.
-     * @param context The application context.
+     *                        {@link #INTERACTION_SMS}.
+     * @param context         The application context.
      * @return An appropriate string label
      */
     public static CharSequence getLabelForCallOrSms(Integer type, CharSequence customLabel,
-            int interactionType, Context context) {
+                                                    int interactionType, Context context) {
         Preconditions.checkNotNull(context);
 
         if (isCustomPhoneType(type)) {

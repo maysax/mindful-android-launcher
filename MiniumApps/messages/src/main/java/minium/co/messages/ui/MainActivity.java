@@ -1,6 +1,7 @@
 package minium.co.messages.ui;
 
 import org.androidannotations.annotations.EActivity;
+
 import minium.co.core.ui.CoreActivity;
 import minium.co.messages.R;
 

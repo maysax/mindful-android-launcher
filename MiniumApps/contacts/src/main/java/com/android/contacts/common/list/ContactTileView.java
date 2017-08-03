@@ -196,7 +196,7 @@ public abstract class ContactTileView extends FrameLayout {
      * or not the contact has a user-defined photo.
      *
      * @param isDefaultImage True if the contact does not have a user-defined contact photo
-     * (which means a default contact image will be applied by the {@link ContactPhotoManager}
+     *                       (which means a default contact image will be applied by the {@link ContactPhotoManager}
      */
     protected void configureViewForImage(boolean isDefaultImage) {
         // No-op by default.
@@ -207,7 +207,7 @@ public abstract class ContactTileView extends FrameLayout {
      * various image parameters defined to match their own layouts.
      *
      * @param displayName The display name of the contact
-     * @param lookupKey The lookup key of the contact
+     * @param lookupKey   The lookup key of the contact
      * @return A {@link DefaultImageRequest} object with each field configured by the subclass
      * as desired, or {@code null}.
      */
@@ -228,13 +228,15 @@ public abstract class ContactTileView extends FrameLayout {
          * Notification that the contact was selected; no specific action is dictated.
          */
         void onContactSelected(Uri contactLookupUri, Rect viewRect);
+
         /**
          * Notification that the specified number is to be called.
          */
         void onCallNumberDirectly(String phoneNumber);
+
         /**
          * @return The width of each tile. This doesn't have to be a precise number (e.g. paddings
-         *         can be ignored), but is used to load the correct picture size from the database
+         * can be ignored), but is used to load the correct picture size from the database
          */
         int getApproximateTileWidth();
     }

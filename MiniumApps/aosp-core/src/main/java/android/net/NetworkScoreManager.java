@@ -30,23 +30,23 @@ import android.os.UserHandle;
 
 /**
  * Class that manages communication between network subsystems and a network scorer.
- *
+ * <p>
  * <p>You can get an instance of this class by calling
  * {@link android.content.Context#getSystemService(String)}:
- *
+ * <p>
  * <pre>NetworkScoreManager manager =
  *     (NetworkScoreManager) getSystemService(Context.NETWORK_SCORE_SERVICE)</pre>
- *
+ * <p>
  * <p>A network scorer is any application which:
  * <ul>
  * <li>Declares the {@link android.Manifest.permission#SCORE_NETWORKS} permission.
  * <li>Includes a receiver for {@link #ACTION_SCORE_NETWORKS} guarded by the
- *     {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission which scores networks
- *     and (eventually) calls {@link #updateScores} with the results. If this receiver specifies an
- *     android:label attribute, this label will be used when referring to the application throughout
- *     system settings; otherwise, the application label will be used.
+ * {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission which scores networks
+ * and (eventually) calls {@link #updateScores} with the results. If this receiver specifies an
+ * android:label attribute, this label will be used when referring to the application throughout
+ * system settings; otherwise, the application label will be used.
  * </ul>
- *
+ * <p>
  * <p>The system keeps track of an active scorer application; at any time, only this application
  * will receive {@link #ACTION_SCORE_NETWORKS} broadcasts and will be permitted to call
  * {@link #updateScores}. Applications may determine the current active scorer with
@@ -78,7 +78,7 @@ public class NetworkScoreManager {
      * calling {@link #updateScores} when complete. The networks to score are specified in
      * {@link #EXTRA_NETWORKS_TO_SCORE}, and will generally consist of all networks which have been
      * configured by the user as well as any open networks.
-     *
+     * <p>
      * <p class="note">This is a protected intent that can only be sent by the system.
      */
     @SdkConstant(SdkConstantType.BROADCAST_INTENT_ACTION)
@@ -95,7 +95,7 @@ public class NetworkScoreManager {
      * Activity action: launch a custom activity for configuring a scorer before enabling it.
      * Scorer applications may choose to specify an activity for this action, in which case the
      * framework will launch that activity which should return RESULT_OK if scoring was enabled.
-     *
+     * <p>
      * <p>If no activity is included in a scorer which implements this action, the system dialog for
      * selecting a scorer will be shown instead.
      */
@@ -107,9 +107,9 @@ public class NetworkScoreManager {
      * perform initialization once selected as the active scorer, or clean up unneeded resources
      * if another scorer has been selected. Note that it is unnecessary to clear existing scores as
      * this is handled by the system.
-     *
+     * <p>
      * <p>The new scorer will be specified in {@link #EXTRA_NEW_SCORER}.
-     *
+     * <p>
      * <p class="note">This is a protected intent that can only be sent by the system.
      */
     @SdkConstant(SdkConstantType.BROADCAST_INTENT_ACTION)
@@ -125,7 +125,9 @@ public class NetworkScoreManager {
     private final Context mContext;
     private final INetworkScoreService mService;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public NetworkScoreManager(Context context) {
         mContext = context;
         IBinder iBinder = ServiceManager.getService(Context.NETWORK_SCORE_SERVICE);
@@ -134,13 +136,14 @@ public class NetworkScoreManager {
 
     /**
      * Obtain the package name of the current active network scorer.
-     *
+     * <p>
      * <p>At any time, only one scorer application will receive {@link #ACTION_SCORE_NETWORKS}
      * broadcasts and be allowed to call {@link #updateScores}. Applications may use this method to
      * determine the current scorer and offer the user the ability to select a different scorer via
      * the {@link #ACTION_CHANGE_ACTIVE} intent.
+     *
      * @return the full package name of the current active scorer, or null if there is no active
-     *         scorer.
+     * scorer.
      */
     public String getActiveScorerPackage() {
         NetworkScorerAppData app = NetworkScorerAppManager.getActiveScorer(mContext);
@@ -152,7 +155,7 @@ public class NetworkScoreManager {
 
     /**
      * Update network scores.
-     *
+     * <p>
      * <p>This may be called at any time to re-score active networks. Scores will generally be
      * updated quickly, but if this method is called too frequently, the scores may be held and
      * applied at a later time.
@@ -171,10 +174,10 @@ public class NetworkScoreManager {
 
     /**
      * Clear network scores.
-     *
+     * <p>
      * <p>Should be called when all scores need to be invalidated, i.e. because the scoring
      * algorithm has changed and old scores can no longer be compared to future scores.
-     *
+     * <p>
      * <p>Note that scores will be cleared automatically when the active scorer changes, as scores
      * from one scorer cannot be compared to those from another scorer.
      *
@@ -194,8 +197,8 @@ public class NetworkScoreManager {
      *
      * @return true if the operation succeeded, or false if the new package is not a valid scorer.
      * @throws SecurityException if the caller does not hold the
-     *         {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission indicating
-     *         that it can manage scorer applications.
+     *                           {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission indicating
+     *                           that it can manage scorer applications.
      * @hide
      */
     public boolean setActiveScorer(String packageName) throws SecurityException {
@@ -208,7 +211,7 @@ public class NetworkScoreManager {
 
     /**
      * Turn off network scoring.
-     *
+     * <p>
      * <p>May only be called by the current scorer app, or the system.
      *
      * @throws SecurityException if the caller is neither the active scorer nor the system.
@@ -222,13 +225,13 @@ public class NetworkScoreManager {
 
     /**
      * Request scoring for networks.
-     *
+     * <p>
      * <p>Note that this is just a helper method to assemble the broadcast, and will run in the
      * calling process.
      *
      * @return true if the broadcast was sent, or false if there is no active scorer.
      * @throws SecurityException if the caller does not hold the
-     *         {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission.
+     *                           {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission.
      * @hide
      */
     public boolean requestScores(NetworkKey[] networks) throws SecurityException {
@@ -250,9 +253,9 @@ public class NetworkScoreManager {
      * Register a network score cache.
      *
      * @param networkType the type of network this cache can handle. See {@link NetworkKey#type}.
-     * @param scoreCache implementation of {@link INetworkScoreCache} to store the scores.
-     * @throws SecurityException if the caller does not hold the
-     *         {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission.
+     * @param scoreCache  implementation of {@link INetworkScoreCache} to store the scores.
+     * @throws SecurityException        if the caller does not hold the
+     *                                  {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission.
      * @throws IllegalArgumentException if a score cache is already registered for this type.
      * @hide
      */

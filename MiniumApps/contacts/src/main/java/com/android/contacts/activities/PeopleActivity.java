@@ -30,7 +30,6 @@ import android.preference.PreferenceActivity;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.ProviderStatus;
-import android.provider.ContactsContract.QuickContact;
 import android.provider.Settings;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -52,30 +51,30 @@ import com.android.contacts.ContactsActivity;
 import com.android.contacts.activities.ActionBarAdapter.TabState;
 import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.common.dialog.ClearFrequentsDialog;
-import com.android.contacts.interactions.ContactDeletionInteraction;
 import com.android.contacts.common.interactions.ImportExportDialogFragment;
 import com.android.contacts.common.list.ContactEntryListFragment;
 import com.android.contacts.common.list.ContactListFilter;
 import com.android.contacts.common.list.ContactListFilterController;
 import com.android.contacts.common.list.ContactTileAdapter.DisplayType;
+import com.android.contacts.common.list.DirectoryListLoader;
+import com.android.contacts.common.list.ViewPagerTabs;
+import com.android.contacts.common.preference.DisplayOptionsPreferenceFragment;
+import com.android.contacts.common.util.AccountFilterUtil;
+import com.android.contacts.common.util.Constants;
+import com.android.contacts.common.util.ViewUtil;
+import com.android.contacts.interactions.ContactDeletionInteraction;
 import com.android.contacts.list.ContactTileListFragment;
 import com.android.contacts.list.ContactsIntentResolver;
 import com.android.contacts.list.ContactsRequest;
 import com.android.contacts.list.ContactsUnavailableFragment;
 import com.android.contacts.list.DefaultContactBrowseListFragment;
-import com.android.contacts.common.list.DirectoryListLoader;
-import com.android.contacts.common.preference.DisplayOptionsPreferenceFragment;
 import com.android.contacts.list.OnContactBrowserActionListener;
 import com.android.contacts.list.OnContactsUnavailableActionListener;
 import com.android.contacts.list.ProviderStatusWatcher;
 import com.android.contacts.list.ProviderStatusWatcher.ProviderStatusListener;
-import com.android.contacts.common.list.ViewPagerTabs;
 import com.android.contacts.preference.ContactsPreferenceActivity;
-import com.android.contacts.common.util.AccountFilterUtil;
-import com.android.contacts.common.util.ViewUtil;
 import com.android.contacts.quickcontact.QuickContactActivity;
 import com.android.contacts.util.AccountPromptUtils;
-import com.android.contacts.common.util.Constants;
 import com.android.contacts.util.DialogManager;
 import com.android.contacts.util.HelpUtils;
 
@@ -127,7 +126,9 @@ public class PeopleActivity extends ContactsActivity implements
     private DefaultContactBrowseListFragment mAllFragment;
     private ContactTileListFragment mFavoritesFragment;
 
-    /** ViewPager for swipe */
+    /**
+     * ViewPager for swipe
+     */
     private ViewPager mTabPager;
     private ViewPagerTabs mViewPagerTabs;
     private TabPagerAdapter mTabPagerAdapter;
@@ -155,7 +156,9 @@ public class PeopleActivity extends ContactsActivity implements
      */
     private boolean mDisableOptionItemSelected;
 
-    /** Sequential ID assigned to each instance; used for logging */
+    /**
+     * Sequential ID assigned to each instance; used for logging
+     */
     private final int mInstanceId;
     private static final AtomicInteger sNextInstanceId = new AtomicInteger();
 
@@ -186,19 +189,19 @@ public class PeopleActivity extends ContactsActivity implements
 
     /**
      * Initialize fragments that are (or may not be) in the layout.
-     *
+     * <p>
      * For the fragments that are in the layout, we initialize them in
      * {@link #createViewsAndFragments(Bundle)} after inflating the layout.
-     *
+     * <p>
      * However, the {@link ContactsUnavailableFragment} is a special fragment which may not
      * be in the layout, so we have to do the initialization here.
-     *
+     * <p>
      * The ContactsUnavailableFragment is always created at runtime.
      */
     @Override
     public void onAttachFragment(Fragment fragment) {
         if (fragment instanceof ContactsUnavailableFragment) {
-            mContactsUnavailableFragment = (ContactsUnavailableFragment)fragment;
+            mContactsUnavailableFragment = (ContactsUnavailableFragment) fragment;
             mContactsUnavailableFragment.setOnContactsUnavailableActionListener(
                     new ContactsUnavailableFragmentListener());
         }
@@ -252,8 +255,8 @@ public class PeopleActivity extends ContactsActivity implements
      *
      * @param forNewIntent set true if it's called from {@link #onNewIntent(Intent)}.
      * @return {@code true} if {@link PeopleActivity} should continue running.  {@code false}
-     *         if it shouldn't, in which case the caller should finish() itself and shouldn't do
-     *         farther initialization.
+     * if it shouldn't, in which case the caller should finish() itself and shouldn't do
+     * farther initialization.
      */
     private boolean processIntent(boolean forNewIntent) {
         // Extract relevant information from the intent
@@ -310,7 +313,7 @@ public class PeopleActivity extends ContactsActivity implements
         final ViewPagerTabs portraitViewPagerTabs
                 = (ViewPagerTabs) findViewById(R.id.lists_pager_header);
         ViewPagerTabs landscapeViewPagerTabs = null;
-        if (portraitViewPagerTabs ==  null) {
+        if (portraitViewPagerTabs == null) {
             landscapeViewPagerTabs = (ViewPagerTabs) getLayoutInflater().inflate(
                     R.layout.people_activity_tabs_lands, toolbar, /* attachToRoot = */ false);
             mViewPagerTabs = landscapeViewPagerTabs;
@@ -605,7 +608,8 @@ public class PeopleActivity extends ContactsActivity implements
         // correctly catch this and throw warnings and error out the build on user/userdebug builds.
         //
         // All private inner classes below also need this fix.
-        TabPagerListener() {}
+        TabPagerListener() {
+        }
 
         @Override
         public void onPageScrollStateChanged(int state) {
@@ -637,10 +641,10 @@ public class PeopleActivity extends ContactsActivity implements
      * Adapter for the {@link ViewPager}.  Unlike {@link FragmentPagerAdapter},
      * {@link #instantiateItem} returns existing fragments, and {@link #instantiateItem}/
      * {@link #destroyItem} show/hide fragments instead of attaching/detaching.
-     *
+     * <p>
      * In search mode, we always show the "all" fragment, and disable the swipe.  We change the
      * number of items to 1 to disable the swipe.
-     *
+     * <p>
      * TODO figure out a more straight way to disable swipe.
      */
     private class TabPagerAdapter extends PagerAdapter {
@@ -672,7 +676,9 @@ public class PeopleActivity extends ContactsActivity implements
             return mTabPagerAdapterSearchMode ? 1 : TabState.COUNT;
         }
 
-        /** Gets called when the number of items changes. */
+        /**
+         * Gets called when the number of items changes.
+         */
         @Override
         public int getItemPosition(Object object) {
             if (mTabPagerAdapterSearchMode) {
@@ -846,7 +852,8 @@ public class PeopleActivity extends ContactsActivity implements
             //
             // Also check for ability to modify accounts.  In limited user mode, you can't modify
             // accounts so there is no point sending users to account setup activity.
-            final UserManager userManager = (UserManager) getSystemService(Context.USER_SERVICE);;
+            final UserManager userManager = (UserManager) getSystemService(Context.USER_SERVICE);
+            ;
             final boolean disallowModifyAccounts = userManager.getUserRestrictions().getBoolean(
                     UserManager.DISALLOW_MODIFY_ACCOUNTS);
             if (!disallowModifyAccounts && !areContactWritableAccountsAvailable() &&
@@ -885,7 +892,8 @@ public class PeopleActivity extends ContactsActivity implements
     }
 
     private final class ContactBrowserActionListener implements OnContactBrowserActionListener {
-        ContactBrowserActionListener() {}
+        ContactBrowserActionListener() {
+        }
 
         @Override
         public void onSelectionChange() {
@@ -929,7 +937,8 @@ public class PeopleActivity extends ContactsActivity implements
 
     private class ContactsUnavailableFragmentListener
             implements OnContactsUnavailableActionListener {
-        ContactsUnavailableFragmentListener() {}
+        ContactsUnavailableFragmentListener() {
+        }
 
         @Override
         public void onCreateNewContactAction() {
@@ -941,7 +950,7 @@ public class PeopleActivity extends ContactsActivity implements
             Intent intent = new Intent(Settings.ACTION_ADD_ACCOUNT);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
             intent.putExtra(Settings.EXTRA_AUTHORITIES,
-                    new String[] { ContactsContract.AUTHORITY });
+                    new String[]{ContactsContract.AUTHORITY});
             startActivity(intent);
         }
 
@@ -959,7 +968,8 @@ public class PeopleActivity extends ContactsActivity implements
 
     private final class StrequentContactListFragmentListener
             implements ContactTileListFragment.Listener {
-        StrequentContactListFragmentListener() {}
+        StrequentContactListFragmentListener() {
+        }
 
         @Override
         public void onContactSelected(Uri contactUri, Rect targetRect) {
@@ -1052,6 +1062,7 @@ public class PeopleActivity extends ContactsActivity implements
 
     /**
      * Returns whether there are any frequently contacted people being displayed
+     *
      * @return
      */
     private boolean hasFrequents() {
@@ -1059,7 +1070,7 @@ public class PeopleActivity extends ContactsActivity implements
     }
 
     private void makeMenuItemVisible(Menu menu, int itemId, boolean visible) {
-        MenuItem item =menu.findItem(itemId);
+        MenuItem item = menu.findItem(itemId);
         if (item != null) {
             item.setVisible(visible);
         }
@@ -1116,8 +1127,8 @@ public class PeopleActivity extends ContactsActivity implements
             }
             case R.id.menu_accounts: {
                 final Intent intent = new Intent(Settings.ACTION_SYNC_SETTINGS);
-                intent.putExtra(Settings.EXTRA_AUTHORITIES, new String[] {
-                    ContactsContract.AUTHORITY
+                intent.putExtra(Settings.EXTRA_AUTHORITIES, new String[]{
+                        ContactsContract.AUTHORITY
                 });
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                 startActivity(intent);
@@ -1189,7 +1200,7 @@ public class PeopleActivity extends ContactsActivity implements
                         // If COMBINING_ACCENT is set, it's not a unicode character.
                         && ((unicodeChar & KeyCharacterMap.COMBINING_ACCENT) == 0)
                         && !Character.isWhitespace(unicodeChar)) {
-                    String query = new String(new int[]{ unicodeChar }, 0, 1);
+                    String query = new String(new int[]{unicodeChar}, 0, 1);
                     if (!mActionBarAdapter.isSearchMode()) {
                         mActionBarAdapter.setQueryString(query);
                         mActionBarAdapter.setSearchMode(true);
@@ -1268,8 +1279,8 @@ public class PeopleActivity extends ContactsActivity implements
                 }
                 startActivity(intent);
                 break;
-        default:
-            Log.wtf(TAG, "Unexpected onClick event from " + view);
+            default:
+                Log.wtf(TAG, "Unexpected onClick event from " + view);
         }
     }
 

@@ -6,7 +6,6 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
@@ -99,10 +98,12 @@ public class SearchLayout extends CardView {
     void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -121,6 +122,7 @@ public class SearchLayout extends CardView {
         @Override
         public void run() {
             UIUtils.showKeyboard(txtSearchBox);
+
         }
     };
 

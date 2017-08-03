@@ -18,10 +18,10 @@ package com.android.internal.util;
 
 /**
  * An object that provides bitwise incremental read access to a byte array.
- *
+ * <p>
  * This is useful, for example, when accessing a series of fields that
  * may not be aligned on byte boundaries.
- *
+ * <p>
  * NOTE -- This class is not threadsafe.
  */
 public class BitwiseInputStream {
@@ -64,7 +64,7 @@ public class BitwiseInputStream {
 
     /**
      * Read some data and increment the current position.
-     *
+     * <p>
      * The 8-bit limit on access to bitwise streams is intentional to
      * avoid endianness issues.
      *
@@ -76,7 +76,7 @@ public class BitwiseInputStream {
         int offset = 16 - (mPos & 0x07) - bits;  // &7==%8
         if ((bits < 0) || (bits > 8) || ((mPos + bits) > mEnd)) {
             throw new AccessException("illegal read " +
-                "(pos " + mPos + ", end " + mEnd + ", bits " + bits + ")");
+                    "(pos " + mPos + ", end " + mEnd + ", bits " + bits + ")");
         }
         int data = (mBuf[index] & 0xFF) << 8;
         if (offset < 8) data |= mBuf[index + 1] & 0xFF;
@@ -97,7 +97,7 @@ public class BitwiseInputStream {
         byte[] arr = new byte[bytes];
         for (int i = 0; i < bytes; i++) {
             int increment = Math.min(8, bits - (i << 3));
-            arr[i] = (byte)(read(increment) << (8 - increment));
+            arr[i] = (byte) (read(increment) << (8 - increment));
         }
         return arr;
     }
@@ -110,7 +110,7 @@ public class BitwiseInputStream {
     public void skip(int bits) throws AccessException {
         if ((mPos + bits) > mEnd) {
             throw new AccessException("illegal skip " +
-                "(pos " + mPos + ", end " + mEnd + ", bits " + bits + ")");
+                    "(pos " + mPos + ", end " + mEnd + ", bits " + bits + ")");
         }
         mPos += bits;
     }

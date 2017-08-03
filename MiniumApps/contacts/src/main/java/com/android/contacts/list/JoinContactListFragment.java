@@ -58,7 +58,7 @@ public class JoinContactListFragment extends ContactEntryListFragment<JoinContac
                     // Loader for the display name of the target contact
                     return new CursorLoader(getActivity(),
                             ContentUris.withAppendedId(Contacts.CONTENT_URI, mTargetContactId),
-                            new String[] { Contacts.DISPLAY_NAME }, null, null, null);
+                            new String[]{Contacts.DISPLAY_NAME}, null, null, null);
                 }
                 case JoinContactListAdapter.PARTITION_ALL_CONTACTS: {
                     JoinContactLoader loader = new JoinContactLoader(getActivity());

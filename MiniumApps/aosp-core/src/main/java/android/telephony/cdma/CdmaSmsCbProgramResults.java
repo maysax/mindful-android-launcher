@@ -21,55 +21,83 @@ import android.os.Parcelable;
 
 /**
  * CDMA Service Category Program Results from SCPT teleservice SMS.
- *
+ * <p>
  * {@hide}
  */
 public class CdmaSmsCbProgramResults implements Parcelable {
 
-    /** Program result: success. */
-    public static final int RESULT_SUCCESS                  = 0;
+    /**
+     * Program result: success.
+     */
+    public static final int RESULT_SUCCESS = 0;
 
-    /** Program result: memory limit exceeded. */
-    public static final int RESULT_MEMORY_LIMIT_EXCEEDED    = 1;
+    /**
+     * Program result: memory limit exceeded.
+     */
+    public static final int RESULT_MEMORY_LIMIT_EXCEEDED = 1;
 
-    /** Program result: limit exceeded. */
-    public static final int RESULT_CATEGORY_LIMIT_EXCEEDED  = 2;
+    /**
+     * Program result: limit exceeded.
+     */
+    public static final int RESULT_CATEGORY_LIMIT_EXCEEDED = 2;
 
-    /** Program result: category already opted in. */
-    public static final int RESULT_CATEGORY_ALREADY_ADDED   = 3;
+    /**
+     * Program result: category already opted in.
+     */
+    public static final int RESULT_CATEGORY_ALREADY_ADDED = 3;
 
-    /** Program result: category already opted in. */
+    /**
+     * Program result: category already opted in.
+     */
     public static final int RESULT_CATEGORY_ALREADY_DELETED = 4;
 
-    /** Program result: invalid MAX_MESSAGES. */
-    public static final int RESULT_INVALID_MAX_MESSAGES     = 5;
+    /**
+     * Program result: invalid MAX_MESSAGES.
+     */
+    public static final int RESULT_INVALID_MAX_MESSAGES = 5;
 
-    /** Program result: invalid ALERT_OPTION. */
-    public static final int RESULT_INVALID_ALERT_OPTION     = 6;
+    /**
+     * Program result: invalid ALERT_OPTION.
+     */
+    public static final int RESULT_INVALID_ALERT_OPTION = 6;
 
-    /** Program result: invalid service category name. */
-    public static final int RESULT_INVALID_CATEGORY_NAME    = 7;
+    /**
+     * Program result: invalid service category name.
+     */
+    public static final int RESULT_INVALID_CATEGORY_NAME = 7;
 
-    /** Program result: unspecified programming failure. */
-    public static final int RESULT_UNSPECIFIED_FAILURE      = 8;
+    /**
+     * Program result: unspecified programming failure.
+     */
+    public static final int RESULT_UNSPECIFIED_FAILURE = 8;
 
-    /** Service category to modify. */
+    /**
+     * Service category to modify.
+     */
     private final int mCategory;
 
-    /** Language used for service category name (defined in BearerData.LANGUAGE_*). */
+    /**
+     * Language used for service category name (defined in BearerData.LANGUAGE_*).
+     */
     private final int mLanguage;
 
-    /** Result of service category programming for this category. */
+    /**
+     * Result of service category programming for this category.
+     */
     private final int mCategoryResult;
 
-    /** Create a new CdmaSmsCbProgramResults object with the specified values. */
+    /**
+     * Create a new CdmaSmsCbProgramResults object with the specified values.
+     */
     public CdmaSmsCbProgramResults(int category, int language, int categoryResult) {
         mCategory = category;
         mLanguage = language;
         mCategoryResult = categoryResult;
     }
 
-    /** Create a new CdmaSmsCbProgramResults object from a Parcel. */
+    /**
+     * Create a new CdmaSmsCbProgramResults object from a Parcel.
+     */
     CdmaSmsCbProgramResults(Parcel in) {
         mCategory = in.readInt();
         mLanguage = in.readInt();
@@ -91,6 +119,7 @@ public class CdmaSmsCbProgramResults implements Parcelable {
 
     /**
      * Returns the CDMA service category to modify.
+     *
      * @return a 16-bit CDMA service category value
      */
     public int getCategory() {
@@ -99,6 +128,7 @@ public class CdmaSmsCbProgramResults implements Parcelable {
 
     /**
      * Returns the CDMA language code for this service category.
+     *
      * @return one of the language values defined in BearerData.LANGUAGE_*
      */
     public int getLanguage() {
@@ -107,6 +137,7 @@ public class CdmaSmsCbProgramResults implements Parcelable {
 
     /**
      * Returns the result of service programming for this category
+     *
      * @return the result of service programming for this category
      */
     public int getCategoryResult() {
@@ -121,6 +152,7 @@ public class CdmaSmsCbProgramResults implements Parcelable {
 
     /**
      * Describe the kinds of special objects contained in the marshalled representation.
+     *
      * @return a bitmask indicating this Parcelable contains no special objects
      */
     @Override
@@ -128,7 +160,9 @@ public class CdmaSmsCbProgramResults implements Parcelable {
         return 0;
     }
 
-    /** Creator for unparcelling objects. */
+    /**
+     * Creator for unparcelling objects.
+     */
     public static final Parcelable.Creator<CdmaSmsCbProgramResults>
             CREATOR = new Parcelable.Creator<CdmaSmsCbProgramResults>() {
         @Override

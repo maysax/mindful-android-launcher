@@ -5,18 +5,12 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
 import com.androidnetworking.AndroidNetworking;
-import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-import org.androidannotations.annotations.EApplication;
-import org.androidannotations.annotations.Trace;
-
-import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
-import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
@@ -27,7 +21,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * Each application should contain an {@link Application} class instance
  * All applications of this project should extend their own application from this class
  * This will be first class where we can initialize all necessary first time configurations
- *
+ * <p>
  * Created by shahab on 3/17/16.
  */
 public abstract class CoreApplication extends MultiDexApplication {

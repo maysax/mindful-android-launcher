@@ -23,7 +23,7 @@ package android.net.http;
  * then multiple data() then endData().  handleSslErrorRequest(), if
  * there is an SSL certificate error. error() can occur anywhere
  * in the transaction.
- * 
+ * <p>
  * {@hide}
  */
 
@@ -35,46 +35,79 @@ public interface EventHandler {
      * codes are connection/parsing failures, etc.
      */
 
-    /** Success */
+    /**
+     * Success
+     */
     public static final int OK = 0;
-    /** Generic error */
+    /**
+     * Generic error
+     */
     public static final int ERROR = -1;
-    /** Server or proxy hostname lookup failed */
+    /**
+     * Server or proxy hostname lookup failed
+     */
     public static final int ERROR_LOOKUP = -2;
-    /** Unsupported authentication scheme (ie, not basic or digest) */
+    /**
+     * Unsupported authentication scheme (ie, not basic or digest)
+     */
     public static final int ERROR_UNSUPPORTED_AUTH_SCHEME = -3;
-    /** User authentication failed on server */
+    /**
+     * User authentication failed on server
+     */
     public static final int ERROR_AUTH = -4;
-    /** User authentication failed on proxy */
+    /**
+     * User authentication failed on proxy
+     */
     public static final int ERROR_PROXYAUTH = -5;
-    /** Could not connect to server */
+    /**
+     * Could not connect to server
+     */
     public static final int ERROR_CONNECT = -6;
-    /** Failed to write to or read from server */
+    /**
+     * Failed to write to or read from server
+     */
     public static final int ERROR_IO = -7;
-    /** Connection timed out */
+    /**
+     * Connection timed out
+     */
     public static final int ERROR_TIMEOUT = -8;
-    /** Too many redirects */
+    /**
+     * Too many redirects
+     */
     public static final int ERROR_REDIRECT_LOOP = -9;
-    /** Unsupported URI scheme (ie, not http, https, etc) */
+    /**
+     * Unsupported URI scheme (ie, not http, https, etc)
+     */
     public static final int ERROR_UNSUPPORTED_SCHEME = -10;
-    /** Failed to perform SSL handshake */
+    /**
+     * Failed to perform SSL handshake
+     */
     public static final int ERROR_FAILED_SSL_HANDSHAKE = -11;
-    /** Bad URL */
+    /**
+     * Bad URL
+     */
     public static final int ERROR_BAD_URL = -12;
-    /** Generic file error for file:/// loads */
+    /**
+     * Generic file error for file:/// loads
+     */
     public static final int FILE_ERROR = -13;
-    /** File not found error for file:/// loads */
+    /**
+     * File not found error for file:/// loads
+     */
     public static final int FILE_NOT_FOUND_ERROR = -14;
-    /** Too many requests queued */
+    /**
+     * Too many requests queued
+     */
     public static final int TOO_MANY_REQUESTS_ERROR = -15;
 
     /**
      * Called after status line has been sucessfully processed.
+     *
      * @param major_version HTTP version advertised by server.  major
-     * is the part before the "."
+     *                      is the part before the "."
      * @param minor_version HTTP version advertised by server.  minor
-     * is the part after the "."
-     * @param code HTTP Status code.  See RFC 2616.
+     *                      is the part after the "."
+     * @param code          HTTP Status code.  See RFC 2616.
      * @param reason_phrase Textual explanation sent by server
      */
     public void status(int major_version,
@@ -90,12 +123,13 @@ public interface EventHandler {
     /**
      * An array containing all or part of the http body as read from
      * the server.
-     * @param data A byte array containing the content
-     * @param len The length of valid content in data
      *
-     * Note: chunked and compressed encodings are handled within
-     * android.net.http.  Decoded data is passed through this
-     * interface.
+     * @param data A byte array containing the content
+     * @param len  The length of valid content in data
+     *             <p>
+     *             Note: chunked and compressed encodings are handled within
+     *             android.net.http.  Decoded data is passed through this
+     *             interface.
      */
     public void data(byte[] data, int len);
 
@@ -113,7 +147,8 @@ public interface EventHandler {
 
     /**
      * There was trouble.
-     * @param id One of the error codes defined below
+     *
+     * @param id          One of the error codes defined below
      * @param description of error
      */
     public void error(int id, String description);
@@ -122,9 +157,10 @@ public interface EventHandler {
      * SSL certificate error callback. Handles SSL error(s) on the way
      * up to the user. The callback has to make sure that restartConnection() is called,
      * otherwise the connection will be suspended indefinitely.
+     *
      * @return True if the callback can handle the error, which means it will
-     *              call restartConnection() to unblock the thread later,
-     *              otherwise return false.
+     * call restartConnection() to unblock the thread later,
+     * otherwise return false.
      */
     public boolean handleSslErrorRequest(SslError error);
 

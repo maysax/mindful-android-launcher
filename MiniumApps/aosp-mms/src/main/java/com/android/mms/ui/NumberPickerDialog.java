@@ -49,32 +49,32 @@ public class NumberPickerDialog extends AlertDialog implements OnClickListener {
     private final OnNumberSetListener mCallback;
 
     /**
-     * @param context Parent.
+     * @param context  Parent.
      * @param callBack How parent is notified.
-     * @param number The initial number.
+     * @param number   The initial number.
      */
     public NumberPickerDialog(Context context,
-            OnNumberSetListener callBack,
-            int number,
-            int rangeMin,
-            int rangeMax,
-            int title) {
+                              OnNumberSetListener callBack,
+                              int number,
+                              int rangeMin,
+                              int rangeMax,
+                              int title) {
         this(context, AlertDialog.THEME_HOLO_LIGHT, callBack, number, rangeMin, rangeMax, title);
     }
 
     /**
-     * @param context Parent.
-     * @param theme the theme to apply to this dialog
+     * @param context  Parent.
+     * @param theme    the theme to apply to this dialog
      * @param callBack How parent is notified.
-     * @param number The initial number.
+     * @param number   The initial number.
      */
     public NumberPickerDialog(Context context,
-            int theme,
-            OnNumberSetListener callBack,
-            int number,
-            int rangeMin,
-            int rangeMax,
-            int title) {
+                              int theme,
+                              OnNumberSetListener callBack,
+                              int number,
+                              int rangeMin,
+                              int rangeMax,
+                              int title) {
         super(context, theme);
         mCallback = callBack;
 
@@ -95,7 +95,7 @@ public class NumberPickerDialog extends AlertDialog implements OnClickListener {
         mNumberPicker.setMaxValue(rangeMax);
         mNumberPicker.setValue(number);
         mNumberPicker.setOnLongPressUpdateInterval(100); // make the repeat rate three times as fast
-                                                         // as normal since the range is so large.
+        // as normal since the range is so large.
         mNumberPicker.setWrapSelectorWheel(false);       // don't wrap from min->max
     }
 

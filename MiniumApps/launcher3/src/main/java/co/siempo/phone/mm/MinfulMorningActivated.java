@@ -24,9 +24,9 @@ import java.util.Locale;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.db.ActivitiesStorage;
 import co.siempo.phone.db.ActivitiesStorageDao;
 import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.db.ActivitiesStorage;
 import co.siempo.phone.pause.PausePreferenceFragment_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -71,17 +71,18 @@ public class MinfulMorningActivated extends CoreFragment {
 
     int maxMillis = 0;
     List<ActivitiesStorage> activitiesStorageList;
+
     public MinfulMorningActivated() {
         // Required empty public constructor
     }
 
     @AfterViews
     void afterViews() {
-        ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
+        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
         pause_button.setVisibility(View.INVISIBLE);
         handler = new Handler();
         titleActionBar.setText(R.string.title_mindfulMorning);
-        activitiesStorageList =  DBUtility.getActivitySession()
+        activitiesStorageList = DBUtility.getActivitySession()
                 .queryBuilder().where(ActivitiesStorageDao.Properties.Time.notEq(0)).list();
 
         maxMillis = activitiesStorageList.get(startPosition).getTime() * 60 * 1000;
@@ -98,7 +99,7 @@ public class MinfulMorningActivated extends CoreFragment {
         Calendar calStart = Calendar.getInstance(Locale.US);
         Calendar calEnd = Calendar.getInstance(Locale.US);
         calEnd.add(Calendar.MILLISECOND, maxMillis);
-        txtRemainingTime.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(calStart.getTime())+"-"+new SimpleDateFormat("hh:mm a", Locale.US).format(calEnd.getTime()));
+        txtRemainingTime.setText(new SimpleDateFormat("hh:mm a", Locale.US).format(calStart.getTime()) + "-" + new SimpleDateFormat("hh:mm a", Locale.US).format(calEnd.getTime()));
     }
 
     @Click
@@ -108,7 +109,7 @@ public class MinfulMorningActivated extends CoreFragment {
 
     @Click
     void imgRight() {
-        ((CoreActivity)getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(),R.id.mainView);
+        ((CoreActivity) getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(), R.id.mainView);
     }
 
     private Runnable pauseActiveRunnable = new Runnable() {
@@ -122,7 +123,7 @@ public class MinfulMorningActivated extends CoreFragment {
                 } else {
                     Tracer.d("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
                     seekbar.setValue(atMillis / (1000 * 60.0f));
-                  // txtRemainingTime.setText(String.format(Locale.US, "%d minute", TimeUnit.MILLISECONDS.toMinutes(maxMillis - atMillis)));
+                    // txtRemainingTime.setText(String.format(Locale.US, "%d minute", TimeUnit.MILLISECONDS.toMinutes(maxMillis - atMillis)));
                     handler.postDelayed(this, 1000);
 
                 }
@@ -134,23 +135,24 @@ public class MinfulMorningActivated extends CoreFragment {
     };
 
     @Click
-    void pause_button(){
+    void pause_button() {
         pause_button.setVisibility(View.INVISIBLE);
         atMillis = 0;
-        startPosition=0;
+        startPosition = 0;
         maxMillis = activitiesStorageList.get(startPosition).getTime() * 60 * 1000;
         startPause();
 
     }
+
     private void stopPause() {
         activitiesStorageList.remove(startPosition);
 
-        if (activitiesStorageList.size()==0){
+        if (activitiesStorageList.size() == 0) {
             seekbar.setValue(0);
             seekbar.setShowTitle(false);
             launcherPrefs.isPauseActive().put(false);
             getActivity().finish();
-        }else {
+        } else {
             //if (pause_button.visible)
             pause_button.setVisibility(View.VISIBLE);
         }

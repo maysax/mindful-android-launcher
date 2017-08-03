@@ -25,7 +25,7 @@ public class PhoneConstants {
      * <ul>
      * <li>IDLE = no phone activity</li>
      * <li>RINGING = a phone call is ringing or call waiting.
-     *  In the latter case, another call is active as well</li>
+     * In the latter case, another call is active as well</li>
      * <li>OFFHOOK = The phone is off hook. At least one call
      * exists that is dialing, active or holding and no calls are
      * ringing or waiting.</li>
@@ -33,22 +33,26 @@ public class PhoneConstants {
      */
     public enum State {
         IDLE, RINGING, OFFHOOK;
-    };
+    }
 
-   /**
+    ;
+
+    /**
      * The state of a data connection.
      * <ul>
      * <li>CONNECTED = IP traffic should be available</li>
      * <li>CONNECTING = Currently setting up data connection</li>
      * <li>DISCONNECTED = IP not available</li>
      * <li>SUSPENDED = connection is created but IP traffic is
-     *                 temperately not available. i.e. voice call is in place
-     *                 in 2G network</li>
+     * temperately not available. i.e. voice call is in place
+     * in 2G network</li>
      * </ul>
      */
     public enum DataState {
         CONNECTED, CONNECTING, DISCONNECTED, SUSPENDED;
-    };
+    }
+
+    ;
 
     public static final String STATE_KEY = "state";
 
@@ -100,11 +104,11 @@ public class PhoneConstants {
     /**
      * Return codes for <code>enableApnType()</code>
      */
-    public static final int APN_ALREADY_ACTIVE     = 0;
-    public static final int APN_REQUEST_STARTED    = 1;
+    public static final int APN_ALREADY_ACTIVE = 0;
+    public static final int APN_REQUEST_STARTED = 1;
     public static final int APN_TYPE_NOT_AVAILABLE = 2;
-    public static final int APN_REQUEST_FAILED     = 3;
-    public static final int APN_ALREADY_INACTIVE   = 4;
+    public static final int APN_REQUEST_FAILED = 3;
+    public static final int APN_ALREADY_INACTIVE = 4;
 
     /**
      * APN types for data connections.  These are usage categories for an APN
@@ -115,30 +119,50 @@ public class PhoneConstants {
      * service all data connections.
      */
     public static final String APN_TYPE_ALL = "*";
-    /** APN type for default data traffic */
+    /**
+     * APN type for default data traffic
+     */
     public static final String APN_TYPE_DEFAULT = "default";
-    /** APN type for MMS traffic */
+    /**
+     * APN type for MMS traffic
+     */
     public static final String APN_TYPE_MMS = "mms";
-    /** APN type for SUPL assisted GPS */
+    /**
+     * APN type for SUPL assisted GPS
+     */
     public static final String APN_TYPE_SUPL = "supl";
-    /** APN type for DUN traffic */
+    /**
+     * APN type for DUN traffic
+     */
     public static final String APN_TYPE_DUN = "dun";
-    /** APN type for HiPri traffic */
+    /**
+     * APN type for HiPri traffic
+     */
     public static final String APN_TYPE_HIPRI = "hipri";
-    /** APN type for FOTA */
+    /**
+     * APN type for FOTA
+     */
     public static final String APN_TYPE_FOTA = "fota";
-    /** APN type for IMS */
+    /**
+     * APN type for IMS
+     */
     public static final String APN_TYPE_IMS = "ims";
-    /** APN type for CBS */
+    /**
+     * APN type for CBS
+     */
     public static final String APN_TYPE_CBS = "cbs";
-    /** APN type for IA Initial Attach APN */
+    /**
+     * APN type for IA Initial Attach APN
+     */
     public static final String APN_TYPE_IA = "ia";
-    /** APN type for IA Emergency PDN */
+    /**
+     * APN type for IA Emergency PDN
+     */
     public static final String APN_TYPE_EMERGENCY = "emergency";
 
-    public static final int RIL_CARD_MAX_APPS    = 8;
+    public static final int RIL_CARD_MAX_APPS = 8;
 
-    public static final int DEFAULT_CARD_INDEX   = 0;
+    public static final int DEFAULT_CARD_INDEX = 0;
 
     public static final int MAX_PHONE_COUNT_SINGLE_SIM = 1;
 
@@ -148,19 +172,19 @@ public class PhoneConstants {
 
     public static final String PHONE_KEY = "phone";
 
-    public static final String SLOT_KEY  = "slot";
+    public static final String SLOT_KEY = "slot";
 
     // FIXME: This is used to pass a subId via intents, we need to look at its usage, which is
     // FIXME: extensive, and see if this should be an array of all active subId's or ...?
-    public static final String SUBSCRIPTION_KEY  = "subscription";
+    public static final String SUBSCRIPTION_KEY = "subscription";
 
-    public static final String SUB_SETTING  = "subSettings";
+    public static final String SUB_SETTING = "subSettings";
 
     public static final int SUB1 = 0;
     public static final int SUB2 = 1;
     public static final int SUB3 = 2;
 
-    public static final int EVENT_SUBSCRIPTION_ACTIVATED   = 500;
+    public static final int EVENT_SUBSCRIPTION_ACTIVATED = 500;
     public static final int EVENT_SUBSCRIPTION_DEACTIVATED = 501;
 
     // TODO: Remove these constants and use an int instead.
@@ -182,7 +206,9 @@ public class PhoneConstants {
         REASON_CARD_REMOVED,
         REASON_RADIO_UNAVAILABLE,
         REASON_SIM_REFRESH_RESET
-    };
+    }
+
+    ;
 
     // Initial MTU value.
     public static final int UNSET_MTU = 0;

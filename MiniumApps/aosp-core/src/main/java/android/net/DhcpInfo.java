@@ -16,8 +16,8 @@
 
 package android.net;
 
-import android.os.Parcelable;
 import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * A simple object for retrieving the results of a DHCP request.
@@ -36,7 +36,9 @@ public class DhcpInfo implements Parcelable {
         super();
     }
 
-    /** copy constructor {@hide} */
+    /**
+     * copy constructor {@hide}
+     */
     public DhcpInfo(DhcpInfo source) {
         if (source != null) {
             ipAddress = source.ipAddress;
@@ -52,12 +54,18 @@ public class DhcpInfo implements Parcelable {
     public String toString() {
         StringBuffer str = new StringBuffer();
 
-        str.append("ipaddr "); putAddress(str, ipAddress);
-        str.append(" gateway "); putAddress(str, gateway);
-        str.append(" netmask "); putAddress(str, netmask);
-        str.append(" dns1 "); putAddress(str, dns1);
-        str.append(" dns2 "); putAddress(str, dns2);
-        str.append(" DHCP server "); putAddress(str, serverAddress);
+        str.append("ipaddr ");
+        putAddress(str, ipAddress);
+        str.append(" gateway ");
+        putAddress(str, gateway);
+        str.append(" netmask ");
+        putAddress(str, netmask);
+        str.append(" dns1 ");
+        putAddress(str, dns1);
+        str.append(" dns2 ");
+        putAddress(str, dns2);
+        str.append(" DHCP server ");
+        putAddress(str, serverAddress);
         str.append(" lease ").append(leaseDuration).append(" seconds");
 
         return str.toString();
@@ -67,12 +75,16 @@ public class DhcpInfo implements Parcelable {
         buf.append(NetworkUtils.intToInetAddress(addr).getHostAddress());
     }
 
-    /** Implement the Parcelable interface {@hide} */
+    /**
+     * Implement the Parcelable interface {@hide}
+     */
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface {@hide} */
+    /**
+     * Implement the Parcelable interface {@hide}
+     */
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(ipAddress);
         dest.writeInt(gateway);
@@ -83,23 +95,25 @@ public class DhcpInfo implements Parcelable {
         dest.writeInt(leaseDuration);
     }
 
-    /** Implement the Parcelable interface {@hide} */
+    /**
+     * Implement the Parcelable interface {@hide}
+     */
     public static final Creator<DhcpInfo> CREATOR =
-        new Creator<DhcpInfo>() {
-            public DhcpInfo createFromParcel(Parcel in) {
-                DhcpInfo info = new DhcpInfo();
-                info.ipAddress = in.readInt();
-                info.gateway = in.readInt();
-                info.netmask = in.readInt();
-                info.dns1 = in.readInt();
-                info.dns2 = in.readInt();
-                info.serverAddress = in.readInt();
-                info.leaseDuration = in.readInt();
-                return info;
-            }
+            new Creator<DhcpInfo>() {
+                public DhcpInfo createFromParcel(Parcel in) {
+                    DhcpInfo info = new DhcpInfo();
+                    info.ipAddress = in.readInt();
+                    info.gateway = in.readInt();
+                    info.netmask = in.readInt();
+                    info.dns1 = in.readInt();
+                    info.dns2 = in.readInt();
+                    info.serverAddress = in.readInt();
+                    info.leaseDuration = in.readInt();
+                    return info;
+                }
 
-            public DhcpInfo[] newArray(int size) {
-                return new DhcpInfo[size];
-            }
-        };
+                public DhcpInfo[] newArray(int size) {
+                    return new DhcpInfo[size];
+                }
+            };
 }

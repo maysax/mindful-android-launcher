@@ -31,7 +31,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
 
-
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -43,7 +42,7 @@ import minium.co.contacts.R;
  * Retrieves localized names per account type. This allows customizing texts like
  * "All Contacts" for certain account types, but e.g. "All Friends" or "All Connections" for others.
  */
-public class LocalizedNameResolver  {
+public class LocalizedNameResolver {
     private static final String TAG = "LocalizedNameResolver";
 
     /**
@@ -61,7 +60,7 @@ public class LocalizedNameResolver  {
         if (accountType == null) return null;
 
         return resolveAllContactsName(context, accountType);
-     }
+    }
 
     /**
      * Finds "All Contacts"-Name for the specified account type.
@@ -102,7 +101,7 @@ public class LocalizedNameResolver  {
     }
 
     private static String loadAllContactsNameFromXml(Context context, XmlPullParser parser,
-            String packageName) {
+                                                     String packageName) {
         try {
             final AttributeSet attrs = Xml.asAttributeSet(parser);
             int type;

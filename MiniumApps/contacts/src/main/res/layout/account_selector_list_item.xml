@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2010 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2010 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,38 +15,26 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:orientation="horizontal">
-    <ImageView android:id="@android:id/icon"
-        android:layout_width="@dimen/detail_network_icon_size"
-        android:layout_height="@dimen/detail_network_icon_size"
-        android:layout_margin="8dip"
+    android:layout_height="?android:attr/listPreferredItemHeight" android:orientation="horizontal">
+    <ImageView android:id="@android:id/icon" android:layout_width="@dimen/detail_network_icon_size"
+        android:layout_height="@dimen/detail_network_icon_size" android:layout_margin="8dip"
         android:layout_gravity="center_vertical" />
 
-    <LinearLayout
-        android:layout_width="0dip"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
+    <LinearLayout android:layout_width="0dip" android:layout_height="wrap_content"
+        android:layout_weight="1" android:orientation="vertical"
         android:layout_gravity="center_vertical">
 
-        <TextView android:id="@android:id/text1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
+        <TextView android:id="@android:id/text1" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_marginRight="8dip"
             android:layout_marginEnd="8dip"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:singleLine="true"
-            android:ellipsize="end"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" android:singleLine="true"
+            android:ellipsize="end" />
 
-        <TextView android:id="@android:id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
+        <TextView android:id="@android:id/text2" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_marginRight="8dip"
             android:layout_marginEnd="8dip"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="?android:attr/textColorSecondary"
-            android:singleLine="true"
-            android:ellipsize="end"/>
+            android:textColor="?android:attr/textColorSecondary" android:singleLine="true"
+            android:ellipsize="end" />
     </LinearLayout>
 </LinearLayout>

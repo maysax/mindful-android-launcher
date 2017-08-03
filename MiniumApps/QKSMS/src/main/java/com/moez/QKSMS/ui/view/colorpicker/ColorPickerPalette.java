@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+
 import com.moez.QKSMS.R;
 
 public class ColorPickerPalette extends TableLayout {

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -21,30 +20,21 @@
 -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent" android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/add_organization_button"
-        android:layout_width="match_parent"
+    <TextView android:id="@+id/add_organization_button" android:layout_width="match_parent"
         android:layout_height="48dip"
         android:paddingLeft="@dimen/editor_add_field_label_left_padding"
         android:paddingRight="16dip"
-        android:paddingStart="@dimen/editor_add_field_label_left_padding"
-        android:paddingEnd="16dip"
+        android:paddingStart="@dimen/editor_add_field_label_left_padding" android:paddingEnd="16dip"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="?android:attr/textColorSecondary"
         android:background="?android:attr/selectableItemBackground"
-        android:text="@string/add_organization"
-        android:focusable="true"
-        android:clickable="true"/>
+        android:text="@string/add_organization" android:focusable="true" android:clickable="true" />
 
     <!-- This is later populated with the actual editable text fields for "organization" -->
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
+    <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:visibility="gone" />
 
 </FrameLayout>

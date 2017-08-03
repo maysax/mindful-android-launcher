@@ -45,7 +45,7 @@ public class AccountFilterUtil {
      * showing or hiding this entire view.
      */
     public static boolean updateAccountFilterTitleForPeople(View filterContainer,
-            ContactListFilter filter, boolean showTitleForAllAccounts) {
+                                                            ContactListFilter filter, boolean showTitleForAllAccounts) {
         return updateAccountFilterTitle(filterContainer, filter, showTitleForAllAccounts, false);
     }
 
@@ -54,14 +54,14 @@ public class AccountFilterUtil {
      * boolean)}, but for Phone UI.
      */
     public static boolean updateAccountFilterTitleForPhone(View filterContainer,
-            ContactListFilter filter, boolean showTitleForAllAccounts) {
+                                                           ContactListFilter filter, boolean showTitleForAllAccounts) {
         return updateAccountFilterTitle(
                 filterContainer, filter, showTitleForAllAccounts, true);
     }
 
     private static boolean updateAccountFilterTitle(View filterContainer,
-            ContactListFilter filter, boolean showTitleForAllAccounts,
-            boolean forPhone) {
+                                                    ContactListFilter filter, boolean showTitleForAllAccounts,
+                                                    boolean forPhone) {
         final Context context = filterContainer.getContext();
         final TextView headerTextView = (TextView)
                 filterContainer.findViewById(R.id.account_filter_header);
@@ -115,7 +115,7 @@ public class AccountFilterUtil {
      * {@link Activity#startActivityForResult(Intent, int)}.
      *
      * @param activity
-     * @param requestCode requestCode for {@link Activity#startActivityForResult(Intent, int)}
+     * @param requestCode   requestCode for {@link Activity#startActivityForResult(Intent, int)}
      * @param currentFilter currently-selected filter, so that it can be displayed as activated.
      */
     public static void startAccountFilterActivityForResult(
@@ -146,7 +146,7 @@ public class AccountFilterUtil {
      * Useful method to handle onActivityResult() for
      * {@link #startAccountFilterActivityForResult(Activity, int)} or
      * {@link #startAccountFilterActivityForResult(Fragment, int)}.
-     *
+     * <p>
      * This will update filter via a given ContactListFilterController.
      */
     public static void handleAccountFilterResult(

@@ -1,6 +1,5 @@
 package co.siempo.phone.main;
 
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -19,16 +18,16 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-      //  Log.i(TAG,e1.toString()+"\n"+e2.toString());
-      //  Log.d(TAG,"distanceX = "+distanceX+",distanceY = "+distanceY);
+        //  Log.i(TAG,e1.toString()+"\n"+e2.toString());
+        //  Log.d(TAG,"distanceX = "+distanceX+",distanceY = "+distanceY);
         if (mListener == null)
             return true;
 
-        if (distanceX == 0 && Math.abs(distanceY) > 1){
+        if (distanceX == 0 && Math.abs(distanceY) > 1) {
             mListener.onScrollVertical(distanceY);
         }
 
-        if (distanceY == 0 && Math.abs(distanceX) > 1){
+        if (distanceY == 0 && Math.abs(distanceX) > 1) {
             mListener.onScrollHorizontal(distanceX);
         }
         return true;
@@ -39,10 +38,11 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
         this.mListener = mListener;
     }
 
-    public interface Listener{
+    public interface Listener {
         /**
          * left scroll dx >0
          * right scroll dx <0
+         *
          * @param dx
          */
         void onScrollHorizontal(float dx);
@@ -50,6 +50,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
         /**
          * upward scroll dy > 0
          * downward scroll dy < 0
+         *
          * @param dy
          */
         void onScrollVertical(float dy);

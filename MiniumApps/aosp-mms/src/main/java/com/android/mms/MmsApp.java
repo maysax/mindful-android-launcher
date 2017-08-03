@@ -150,7 +150,7 @@ public class MmsApp extends Application {
      */
     public TelephonyManager getTelephonyManager() {
         if (mTelephonyManager == null) {
-            mTelephonyManager = (TelephonyManager)getApplicationContext()
+            mTelephonyManager = (TelephonyManager) getApplicationContext()
                     .getSystemService(Context.TELEPHONY_SERVICE);
         }
         return mTelephonyManager;
@@ -158,6 +158,7 @@ public class MmsApp extends Application {
 
     /**
      * Returns the content provider wrapper that allows access to recent searches.
+     *
      * @return Returns the content provider wrapper that allows access to recent searches.
      */
     public SearchRecentSuggestions getRecentSuggestions() {

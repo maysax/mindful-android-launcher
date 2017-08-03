@@ -81,15 +81,15 @@ public class Criteria implements Parcelable {
      */
     public static final int ACCURACY_HIGH = 3;
 
-    private int mHorizontalAccuracy    = NO_REQUIREMENT;
-    private int mVerticalAccuracy      = NO_REQUIREMENT;
-    private int mSpeedAccuracy         = NO_REQUIREMENT;
-    private int mBearingAccuracy       = NO_REQUIREMENT;
-    private int mPowerRequirement      = NO_REQUIREMENT;
-    private boolean mAltitudeRequired  = false;
-    private boolean mBearingRequired   = false;
-    private boolean mSpeedRequired     = false;
-    private boolean mCostAllowed       = false;
+    private int mHorizontalAccuracy = NO_REQUIREMENT;
+    private int mVerticalAccuracy = NO_REQUIREMENT;
+    private int mSpeedAccuracy = NO_REQUIREMENT;
+    private int mBearingAccuracy = NO_REQUIREMENT;
+    private int mPowerRequirement = NO_REQUIREMENT;
+    private boolean mAltitudeRequired = false;
+    private boolean mBearingRequired = false;
+    private boolean mSpeedRequired = false;
+    private boolean mCostAllowed = false;
 
     /**
      * Constructs a new Criteria object.  The new object will have no
@@ -97,7 +97,8 @@ public class Criteria implements Parcelable {
      * require altitude, speed, or bearing; and will not allow monetary
      * cost.
      */
-    public Criteria() {}
+    public Criteria() {
+    }
 
     /**
      * Constructs a new Criteria object that is a copy of the given criteria.
@@ -325,27 +326,27 @@ public class Criteria implements Parcelable {
     }
 
     public static final Parcelable.Creator<Criteria> CREATOR =
-        new Parcelable.Creator<Criteria>() {
-        @Override
-        public Criteria createFromParcel(Parcel in) {
-            Criteria c = new Criteria();
-            c.mHorizontalAccuracy = in.readInt();
-            c.mVerticalAccuracy = in.readInt();
-            c.mSpeedAccuracy = in.readInt();
-            c.mBearingAccuracy = in.readInt();
-            c.mPowerRequirement = in.readInt();
-            c.mAltitudeRequired = in.readInt() != 0;
-            c.mBearingRequired = in.readInt() != 0;
-            c.mSpeedRequired = in.readInt() != 0;
-            c.mCostAllowed = in.readInt() != 0;
-            return c;
-        }
+            new Parcelable.Creator<Criteria>() {
+                @Override
+                public Criteria createFromParcel(Parcel in) {
+                    Criteria c = new Criteria();
+                    c.mHorizontalAccuracy = in.readInt();
+                    c.mVerticalAccuracy = in.readInt();
+                    c.mSpeedAccuracy = in.readInt();
+                    c.mBearingAccuracy = in.readInt();
+                    c.mPowerRequirement = in.readInt();
+                    c.mAltitudeRequired = in.readInt() != 0;
+                    c.mBearingRequired = in.readInt() != 0;
+                    c.mSpeedRequired = in.readInt() != 0;
+                    c.mCostAllowed = in.readInt() != 0;
+                    return c;
+                }
 
-        @Override
-        public Criteria[] newArray(int size) {
-            return new Criteria[size];
-        }
-    };
+                @Override
+                public Criteria[] newArray(int size) {
+                    return new Criteria[size];
+                }
+            };
 
     @Override
     public int describeContents() {

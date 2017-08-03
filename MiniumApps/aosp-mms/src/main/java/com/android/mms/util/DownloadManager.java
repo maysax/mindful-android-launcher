@@ -50,16 +50,16 @@ public class DownloadManager {
     private static final boolean DEBUG = false;
     private static final boolean LOCAL_LOGV = false;
 
-    public static final int DEFERRED_MASK           = 0x04;
+    public static final int DEFERRED_MASK = 0x04;
 
-    public static final int STATE_UNKNOWN           = 0x00;
-    public static final int STATE_UNSTARTED         = 0x80;
-    public static final int STATE_DOWNLOADING       = 0x81;
+    public static final int STATE_UNKNOWN = 0x00;
+    public static final int STATE_UNSTARTED = 0x80;
+    public static final int STATE_DOWNLOADING = 0x81;
     public static final int STATE_TRANSIENT_FAILURE = 0x82;
     public static final int STATE_PERMANENT_FAILURE = 0x87;
-    public static final int STATE_PRE_DOWNLOADING   = 0x88;
+    public static final int STATE_PRE_DOWNLOADING = 0x88;
     // TransactionService will skip downloading Mms if auto-download is off
-    public static final int STATE_SKIP_RETRYING     = 0x89;
+    public static final int STATE_SKIP_RETRYING = 0x89;
 
     private final Context mContext;
     private final Handler mHandler;
@@ -67,47 +67,47 @@ public class DownloadManager {
     private boolean mAutoDownload;
 
     private final OnSharedPreferenceChangeListener mPreferencesChangeListener =
-        new OnSharedPreferenceChangeListener() {
-        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            if (MessagingPreferenceActivity.AUTO_RETRIEVAL.equals(key)
-                    || MessagingPreferenceActivity.RETRIEVAL_DURING_ROAMING.equals(key)) {
-                if (LOCAL_LOGV) {
-                    Log.v(TAG, "Preferences updated.");
-                }
+            new OnSharedPreferenceChangeListener() {
+                public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                    if (MessagingPreferenceActivity.AUTO_RETRIEVAL.equals(key)
+                            || MessagingPreferenceActivity.RETRIEVAL_DURING_ROAMING.equals(key)) {
+                        if (LOCAL_LOGV) {
+                            Log.v(TAG, "Preferences updated.");
+                        }
 
-                synchronized (sInstance) {
-                    mAutoDownload = getAutoDownloadState(prefs);
-                    if (LOCAL_LOGV) {
-                        Log.v(TAG, "mAutoDownload ------> " + mAutoDownload);
+                        synchronized (sInstance) {
+                            mAutoDownload = getAutoDownloadState(prefs);
+                            if (LOCAL_LOGV) {
+                                Log.v(TAG, "mAutoDownload ------> " + mAutoDownload);
+                            }
+                        }
                     }
                 }
-            }
-        }
-    };
+            };
 
     private final BroadcastReceiver mRoamingStateListener =
-        new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (TelephonyIntents.ACTION_SERVICE_STATE_CHANGED.equals(intent.getAction())) {
-                if (LOCAL_LOGV) {
-                    Log.v(TAG, "Service state changed: " + intent.getExtras());
-                }
+            new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (TelephonyIntents.ACTION_SERVICE_STATE_CHANGED.equals(intent.getAction())) {
+                        if (LOCAL_LOGV) {
+                            Log.v(TAG, "Service state changed: " + intent.getExtras());
+                        }
 
-                ServiceState state = ServiceState.newFromBundle(intent.getExtras());
-                boolean isRoaming = state.getRoaming();
-                if (LOCAL_LOGV) {
-                    Log.v(TAG, "roaming ------> " + isRoaming);
-                }
-                synchronized (sInstance) {
-                    mAutoDownload = getAutoDownloadState(mPreferences, isRoaming);
-                    if (LOCAL_LOGV) {
-                        Log.v(TAG, "mAutoDownload ------> " + mAutoDownload);
+                        ServiceState state = ServiceState.newFromBundle(intent.getExtras());
+                        boolean isRoaming = state.getRoaming();
+                        if (LOCAL_LOGV) {
+                            Log.v(TAG, "roaming ------> " + isRoaming);
+                        }
+                        synchronized (sInstance) {
+                            mAutoDownload = getAutoDownloadState(mPreferences, isRoaming);
+                            if (LOCAL_LOGV) {
+                                Log.v(TAG, "mAutoDownload ------> " + mAutoDownload);
+                            }
+                        }
                     }
                 }
-            }
-        }
-    };
+            };
 
     private static DownloadManager sInstance;
 
@@ -202,7 +202,7 @@ public class DownloadManager {
                 SqliteWrapper.delete(mContext, mContext.getContentResolver(), uri, null, null);
                 return;
             }
-        } catch(MmsException e) {
+        } catch (MmsException e) {
             Log.e(TAG, e.getMessage(), e);
             return;
         }
@@ -228,7 +228,7 @@ public class DownloadManager {
         ContentValues values = new ContentValues(1);
         values.put(Mms.STATUS, state);
         SqliteWrapper.update(mContext, mContext.getContentResolver(),
-                    uri, values, null, null);
+                uri, values, null, null);
     }
 
     public void showErrorCodeToast(int errorStr) {
@@ -238,7 +238,7 @@ public class DownloadManager {
                 try {
                     Toast.makeText(mContext, errStr, Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
-                    Log.e(TAG,"Caught an exception in showErrorCodeToast");
+                    Log.e(TAG, "Caught an exception in showErrorCodeToast");
                 }
             }
         });
@@ -262,7 +262,7 @@ public class DownloadManager {
 
     public int getState(Uri uri) {
         Cursor cursor = SqliteWrapper.query(mContext, mContext.getContentResolver(),
-                            uri, new String[] {Mms.STATUS}, null, null, null);
+                uri, new String[]{Mms.STATUS}, null, null, null);
 
         if (cursor != null) {
             try {

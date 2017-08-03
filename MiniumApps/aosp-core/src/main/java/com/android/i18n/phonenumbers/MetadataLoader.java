@@ -22,13 +22,13 @@ import java.io.InputStream;
  * Interface for caller to specify a customized phone metadata loader.
  */
 public interface MetadataLoader {
-  /**
-   * Returns an input stream corresponding to the metadata to load.
-   *
-   * @param metadataFileName File name (including path) of metadata to load. File path is an
-   *     absolute class path like /com/android/i18n/phonenumbers/data/PhoneNumberMetadataProto.
-   * @return The input stream for the metadata file. The library will close this stream
-   *     after it is done. Return null in case the metadata file could not be found.
-   */
-  public InputStream loadMetadata(String metadataFileName);
+    /**
+     * Returns an input stream corresponding to the metadata to load.
+     *
+     * @param metadataFileName File name (including path) of metadata to load. File path is an
+     *                         absolute class path like /com/android/i18n/phonenumbers/data/PhoneNumberMetadataProto.
+     * @return The input stream for the metadata file. The library will close this stream
+     * after it is done. Return null in case the metadata file could not be found.
+     */
+    public InputStream loadMetadata(String metadataFileName);
 }

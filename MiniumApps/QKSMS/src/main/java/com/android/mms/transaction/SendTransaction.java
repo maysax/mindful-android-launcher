@@ -17,8 +17,6 @@
 
 package com.android.mms.transaction;
 
-import java.util.Arrays;
-
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -40,10 +38,12 @@ import com.google.android.mms.pdu_alt.SendConf;
 import com.google.android.mms.pdu_alt.SendReq;
 import com.moez.QKSMS.mmssms.Utils;
 
+import java.util.Arrays;
+
 /**
  * The SendTransaction is responsible for sending multimedia messages
  * (M-Send.req) to the MMSC server.  It:
- *
+ * <p>
  * <ul>
  * <li>Loads the multimedia message from storage (Outbox).
  * <li>Packs M-Send.req and sends it.
@@ -61,7 +61,7 @@ public class SendTransaction extends Transaction implements Runnable {
     public final Uri mSendReqURI;
 
     public SendTransaction(Context context,
-            int transId, TransactionSettings connectionSettings, String uri) {
+                           int transId, TransactionSettings connectionSettings, String uri) {
         super(context, transId, connectionSettings);
         mSendReqURI = Uri.parse(uri);
         mId = uri;
@@ -101,7 +101,7 @@ public class SendTransaction extends Transaction implements Runnable {
             ContentValues values = new ContentValues(1);
             values.put(Mms.DATE, date);
             SqliteWrapper.update(mContext, mContext.getContentResolver(),
-                                 mSendReqURI, values, null, null);
+                    mSendReqURI, values, null, null);
 
             // fix bug 2100169: insert the 'from' address per spec
             String lineNumber = Utils.getMyPhoneNumber(mContext);
@@ -112,7 +112,7 @@ public class SendTransaction extends Transaction implements Runnable {
             // Pack M-Send.req, send it, retrieve confirmation data, and parse it
             long tokenKey = ContentUris.parseId(mSendReqURI);
             byte[] response = sendPdu(SendingProgressTokenManager.get(tokenKey),
-                                      new PduComposer(mContext, sendReq).make());
+                    new PduComposer(mContext, sendReq).make());
             SendingProgressTokenManager.remove(tokenKey);
 
             if (LOCAL_LOGV) {
@@ -144,7 +144,7 @@ public class SendTransaction extends Transaction implements Runnable {
 
             if (respStatus != PduHeaders.RESPONSE_STATUS_OK) {
                 SqliteWrapper.update(mContext, mContext.getContentResolver(),
-                                     mSendReqURI, values, null, null);
+                        mSendReqURI, values, null, null);
                 Log.e(TAG, "Server returned an error code: " + respStatus);
                 return;
             }
@@ -152,7 +152,7 @@ public class SendTransaction extends Transaction implements Runnable {
             String messageId = PduPersister.toIsoString(conf.getMessageId());
             values.put(Mms.MESSAGE_ID, messageId);
             SqliteWrapper.update(mContext, mContext.getContentResolver(),
-                                 mSendReqURI, values, null, null);
+                    mSendReqURI, values, null, null);
 
             // Move M-Send.req from Outbox into Sent.
             Uri uri = persister.move(mSendReqURI, Sent.CONTENT_URI);

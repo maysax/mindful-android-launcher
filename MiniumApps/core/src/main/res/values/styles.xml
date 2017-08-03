@@ -64,14 +64,14 @@
         <item name="colorAccent">@color/colorAccentLightBlue</item>
         <item name="colorControlHighlight">@color/colorControlHighlightLightBlue</item>
     </style>
-    
+
     <style name="CoreTheme.Cyan">
         <item name="colorPrimary">@color/colorPrimaryCyan</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkCyan</item>
         <item name="colorAccent">@color/colorAccentCyan</item>
         <item name="colorControlHighlight">@color/colorControlHighlightCyan</item>
     </style>
-    
+
     <style name="CoreTheme.Teal">
         <item name="colorPrimary">@color/colorPrimaryTeal</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkTeal</item>

@@ -13,7 +13,6 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -322,7 +321,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onPause() {
         super.onPause();
         enableNfc(false);
-        Log.i("onPause","MainActivity");
+        Log.i("onPause", "MainActivity");
     }
 
     @Override
@@ -365,7 +364,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             if (f instanceof NotificationFragment) ;
             {
                 ((NotificationFragment) f).animateOut();
-                LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
+
             }
         } else if (pager.getCurrentItem() == 1) {
             pager.setCurrentItem(0);

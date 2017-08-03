@@ -115,31 +115,36 @@ public class MainFragment extends CoreFragment {
     }
 
 
-
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            searchLayout.getTxtSearchBox().setNotificationVisible(intent.getBooleanExtra("IsNotificationVisible", false));
-            String message = intent.getStringExtra("message");
-            Log.d("receiver", "Got message: " + message);
+            boolean isVisible = intent.getBooleanExtra("IsNotificationVisible", false);
+            searchLayout.getTxtSearchBox().setNotificationVisible(isVisible);
+            if (isVisible) {
+                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+            }
         }
     };
 
     @Override
     public void onResume() {
         super.onResume();
-        if (((MainActivity) getActivity()).statusBarHandler.isNotificationTrayVisible) {
-            searchLayout.clearFocus();
-            UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
-        } else {
-            searchLayout.askFocus();
-        }
-        if (adapter != null) adapter.getFilter().filter("");
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
                 new IntentFilter("IsNotificationVisible"));
+        if (adapter != null) adapter.getFilter().filter("");
+        if (((MainActivity) getActivity()).statusBarHandler.isNotificationTrayVisible) {
+            searchLayout.clearFocus();
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", true));
+        } else {
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
+            searchLayout.askFocus();
+        }
+        Log.d("Raja", " " + searchLayout.getTxtSearchBox().isNotificationVisible());
+
 
     }
+
     @Override
     public void onDestroy() {
         // Unregister since the activity is about to be closed.
@@ -258,9 +263,9 @@ public class MainFragment extends CoreFragment {
         ObjectAnimator animY;
 
         if (isUp) {
-            animY = ObjectAnimator.ofFloat(searchLayout, "y",40);
+            animY = ObjectAnimator.ofFloat(searchLayout, "y", 40);
         } else {
-            animY = ObjectAnimator.ofFloat(searchLayout, "y", UIUtils.getScreenHeight(getActivity())/3);
+            animY = ObjectAnimator.ofFloat(searchLayout, "y", UIUtils.getScreenHeight(getActivity()) / 3);
         }
 
         if (adapter != null) {
@@ -301,12 +306,12 @@ public class MainFragment extends CoreFragment {
 
     }
 
+
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
-        if(menuVisible)
-        {
-            if(searchLayout!=null)
+        if (menuVisible) {
+            if (searchLayout != null)
                 searchLayout.askFocus();
         }
     }

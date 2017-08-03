@@ -3,9 +3,6 @@ package minium.co.core.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
@@ -81,7 +78,7 @@ public class UIUtils {
                 .show();
     }
 
-    public static void notification (Context context, String title, String msg, @StringRes int resOk, @StringRes int resCancel, @DrawableRes int resIcon, DialogInterface.OnClickListener listener) {
+    public static void notification(Context context, String title, String msg, @StringRes int resOk, @StringRes int resCancel, @DrawableRes int resIcon, DialogInterface.OnClickListener listener) {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
@@ -111,10 +108,9 @@ public class UIUtils {
         inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
     }
 
-    public static int getDensity(Context context)
-    {
+    public static int getDensity(Context context) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return (int)metrics.density;
+        return (int) metrics.density;
     }
 
 }

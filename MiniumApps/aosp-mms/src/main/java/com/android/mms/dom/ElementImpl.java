@@ -56,7 +56,7 @@ public class ElementImpl extends NodeImpl implements Element {
     }
 
     public Attr getAttributeNode(String name) {
-        return (Attr)mAttributes.getNamedItem(name);
+        return (Attr) mAttributes.getNamedItem(name);
     }
 
     public Attr getAttributeNodeNS(String namespaceURI, String localName) {
@@ -112,7 +112,7 @@ public class ElementImpl extends NodeImpl implements Element {
     }
 
     public void setAttributeNS(String namespaceURI, String qualifiedName,
-            String value) throws DOMException {
+                               String value) throws DOMException {
         // TODO Auto-generated method stub
 
     }
@@ -161,7 +161,7 @@ public class ElementImpl extends NodeImpl implements Element {
     }
 
     public void setIdAttributeNS(String namespaceURI, String localName,
-            boolean isId) throws DOMException {
+                                 boolean isId) throws DOMException {
         throw new DOMException(DOMException.NOT_SUPPORTED_ERR, null);
     }
 

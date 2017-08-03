@@ -7,9 +7,9 @@
     android:layout_height="match_parent"
     tools:context="co.siempo.phone.pause.PauseActivity">
 
-    <include layout="@layout/siempo_toolbar"/>
+    <include layout="@layout/siempo_toolbar" />
 
-      <TextView
+    <TextView
         android:id="@+id/txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
         app:thumb_image="@drawable/control_dial_handle"
         app:thumb_size="32dp"
         app:wheel_active_color="@color/pauseSeekBarActive"
-        app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
+        app:wheel_unactive_color="@color/pauseSeekBarInactive" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -71,8 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
-       >
+        android:layout_marginBottom="20dp">
 
 
         <Button

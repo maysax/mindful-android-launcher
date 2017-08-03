@@ -103,7 +103,7 @@ public class PhoneticNameEditorView extends TextFieldsEditorView {
 
     @Override
     public void setValues(DataKind kind, ValuesDelta entry, RawContactDelta state, boolean readOnly,
-            ViewIdGenerator vig) {
+                          ViewIdGenerator vig) {
         if (!(entry instanceof PhoneticValuesDelta)) {
             entry = new PhoneticValuesDelta(entry);
         }

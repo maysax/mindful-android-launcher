@@ -32,14 +32,12 @@ public class EventTargetImpl implements EventTarget {
     private ArrayList<EventListenerEntry> mListenerEntries;
     private EventTarget mNodeTarget;
 
-    static class EventListenerEntry
-    {
+    static class EventListenerEntry {
         final String mType;
         final EventListener mListener;
         final boolean mUseCapture;
 
-        EventListenerEntry(String type, EventListener listener, boolean useCapture)
-        {
+        EventListenerEntry(String type, EventListener listener, boolean useCapture) {
             mType = type;
             mListener = listener;
             mUseCapture = useCapture;
@@ -66,7 +64,7 @@ public class EventTargetImpl implements EventTarget {
 
     public boolean dispatchEvent(Event evt) throws EventException {
         // We need to use the internal APIs to modify and access the event status
-        EventImpl eventImpl = (EventImpl)evt;
+        EventImpl eventImpl = (EventImpl) evt;
 
         if (!eventImpl.isInitialized()) {
             throw new EventException(EventException.UNSPECIFIED_EVENT_TYPE_ERR,
@@ -96,8 +94,7 @@ public class EventTargetImpl implements EventTarget {
                         && listenerEntry.mType.equals(eventImpl.getType())) {
                     try {
                         listenerEntry.mListener.handleEvent(eventImpl);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         // Any exceptions thrown inside an EventListener will
                         // not stop propagation of the event
                         Log.w(TAG, "Catched EventListener exception", e);
@@ -114,11 +111,11 @@ public class EventTargetImpl implements EventTarget {
     }
 
     public void removeEventListener(String type, EventListener listener,
-            boolean useCapture) {
+                                    boolean useCapture) {
         if (null == mListenerEntries) {
             return;
         }
-        for (int i = 0; i < mListenerEntries.size(); i ++) {
+        for (int i = 0; i < mListenerEntries.size(); i++) {
             EventListenerEntry listenerEntry = mListenerEntries.get(i);
             if ((listenerEntry.mUseCapture == useCapture)
                     && (listenerEntry.mListener == listener)

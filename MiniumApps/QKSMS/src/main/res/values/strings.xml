@@ -56,9 +56,13 @@
     <!--Prompts user to try QK Reply-->
     <string name="welcome_quickreply_hint">Try it!</string>
     <!--QK Reply demo message-->
-    <string name="welcome_quickreply_message_1">Wow! Now wasn\'t that awesome? You can view your entire conversation at a glance. Tap outside the popup or press the checkmark to dismiss it.</string>
+    <string name="welcome_quickreply_message_1">Wow! Now wasn\'t that awesome? You can view your
+        entire conversation at a glance. Tap outside the popup or press the checkmark to dismiss it.
+    </string>
     <!--QK Reply demo message-->
-    <string name="welcome_quickreply_message_2">This is QK Reply. Now you can reply to messages from anywhere. Tap the expand button to see what happens next :)</string>
+    <string name="welcome_quickreply_message_2">This is QK Reply. Now you can reply to messages from
+        anywhere. Tap the expand button to see what happens next :)
+    </string>
 
     <!--Settings option in menu-->
     <string name="menu_settings">Settings</string>
@@ -107,14 +111,16 @@
     <string name="rate_action">Rate</string>
 
     <string name="pref_category_appearance">Appearance</string>
-    <string name="pref_category_summary_appearance">Themes, fonts, colors, avatars, and more</string>
+    <string name="pref_category_summary_appearance">Themes, fonts, colors, avatars, and more
+    </string>
     <string name="pref_category_general">General</string>
     <string name="pref_category_summary_general">Delivery, message sending, formatting</string>
     <string name="pref_category_blocking">Message blocking</string>
     <string name="pref_category_notifications">Notifications</string>
     <string name="pref_category_summary_notifications">Sounds, LED, privacy</string>
     <string name="pref_category_mms">MMS</string>
-    <string name="pref_category_summary_mms">Configure MMS (APNs), max size, group messaging</string>
+    <string name="pref_category_summary_mms">Configure MMS (APNs), max size, group messaging
+    </string>
     <string name="pref_category_quickreply">QK Reply</string>
     <string name="pref_category_summary_quickreply">QK Reply, popup options</string>
     <string name="pref_category_quickcompose">QK Compose</string>
@@ -135,46 +141,67 @@
     <string name="pref_night">Night mode</string>
     <string name="pref_night_summary">Save battery and reduce eye strain</string>
     <string name="pref_night_amoled">Pure black background</string>
-    <string name="pref_night_amoled_summary">Save extra battery on devices with AMOLED displays</string>
+    <string name="pref_night_amoled_summary">Save extra battery on devices with AMOLED displays
+    </string>
     <string name="pref_bubble_style_new">Use new bubble style</string>
     <string name="pref_color_sent">Color sent messages</string>
-    <string name="pref_color_sent_summary">Color the background bubbles for outgoing messages</string>
+    <string name="pref_color_sent_summary">Color the background bubbles for outgoing messages
+    </string>
     <string name="pref_color_received">Color received messages</string>
-    <string name="pref_color_received_summary">Color the background bubbles for incoming messages</string>
+    <string name="pref_color_received_summary">Color the background bubbles for incoming messages
+    </string>
     <string name="pref_hide_avatar_conversations">Hide conversation avatars</string>
-    <string name="pref_hide_avatar_conversations_summary">Hide avatars for contacts in conversation list</string>
+    <string name="pref_hide_avatar_conversations_summary">Hide avatars for contacts in conversation
+        list
+    </string>
     <string name="pref_hide_avatar_sent">Hide sent message avatars</string>
     <string name="pref_hide_avatar_sent_summary">Hide your avatar for outgoing messages</string>
     <string name="pref_hide_avatar_received">Hide received message avatars</string>
-    <string name="pref_hide_avatar_received_summary">Hide contact avatar for incoming messages</string>
+    <string name="pref_hide_avatar_received_summary">Hide contact avatar for incoming messages
+    </string>
     <string name="pref_font_family">Font family</string>
     <string name="pref_font_size">Font size</string>
     <string name="pref_font_weight">Font weight</string>
     <string name="pref_message_count">Message count</string>
-    <string name="pref_message_count_summary">Show the number of messages for each conversation</string>
+    <string name="pref_message_count_summary">Show the number of messages for each conversation
+    </string>
     <string name="pref_sliding_tab">Sliding panel tab</string>
-    <string name="pref_sliding_tab_summary">Sliding tab that allows you to quickly view your last conversation</string>
+    <string name="pref_sliding_tab_summary">Sliding tab that allows you to quickly view your last
+        conversation
+    </string>
 
     <string name="pref_sent_timestamps">Sent timestamps</string>
-    <string name="pref_sent_timestamps_summary">Show the timestamp for when a message was sent, not received</string>
+    <string name="pref_sent_timestamps_summary">Show the timestamp for when a message was sent, not
+        received
+    </string>
     <string name="pref_compose_favorites">Starred contacts</string>
-    <string name="pref_compose_summary_favorites">Show your starred contacts in the QK Compose window, making them only a tap away</string>
+    <string name="pref_compose_summary_favorites">Show your starred contacts in the QK Compose
+        window, making them only a tap away
+    </string>
     <string name="pref_prox_sensor_call">Proximity sensor</string>
-    <string name="pref_prox_sensor_call_summary">While in a conversation, bring your phone to your ear to start a call</string>
+    <string name="pref_prox_sensor_call_summary">While in a conversation, bring your phone to your
+        ear to start a call
+    </string>
     <string name="pref_delivery">Delivery confirmations</string>
     <string name="pref_delivery_summary">Confirm that messages were sent successfully</string>
     <string name="pref_delivery_toast">Show toast</string>
-    <string name="pref_delivery_toast_summary">Show a short toast to indicate a message being delivered</string>
+    <string name="pref_delivery_toast_summary">Show a short toast to indicate a message being
+        delivered
+    </string>
     <string name="pref_delivery_vibrate">Vibrate</string>
     <string name="pref_delivery_vibrate_summary">Vibrate on message delivery</string>
     <string name="pref_yappy">Yappy integration</string>
     <string name="pref_endlessjabber_summary">Enable full support for Yappy</string>
     <string name="pref_blocked_conversations">Blocked conversations</string>
-    <string name="pref_blocked_conversations_summary">Long-press on a conversation and block to move to blocked inbox and stop notifications</string>
+    <string name="pref_blocked_conversations_summary">Long-press on a conversation and block to move
+        to blocked inbox and stop notifications
+    </string>
     <string name="pref_block_future">Block future messages</string>
     <string name="pref_block_future_summary">Add additional phone numbers to block</string>
     <string name="pref_should_i_answer">Should I Answer? Integration</string>
-    <string name="pref_should_i_answer_summary">Automatically delete incoming messages from numbers which are blocked through Should I Answer?</string>
+    <string name="pref_should_i_answer_summary">Automatically delete incoming messages from numbers
+        which are blocked through Should I Answer?
+    </string>
     <string name="pref_mobile_only">Mobile numbers</string>
     <string name="pref_mobile_only_summary">Only show mobile numbers in contact suggestions</string>
     <string name="pref_auto_emoji">Automatic emoji</string>
@@ -182,19 +209,28 @@
     <string name="pref_enter_button">Enter button</string>
     <string name="pref_enter_button_summary">Tap to change keyboard enter button behavior</string>
     <string name="pref_compose_group">Group messaging</string>
-    <string name="pref_compose_group_summary">When composing message to multiple people, send a group message instead of individual messages</string>
+    <string name="pref_compose_group_summary">When composing message to multiple people, send a
+        group message instead of individual messages
+    </string>
     <string name="pref_auto_download">Auto download MMS</string>
-    <string name="pref_auto_download_summary">Automatically download MMS messages when they become available</string>
+    <string name="pref_auto_download_summary">Automatically download MMS messages when they become
+        available
+    </string>
     <string name="pref_auto_data">Automatic data</string>
-    <string name="pref_auto_data_summary">Turn on data automatically when sending or receiving MMS</string>
+    <string name="pref_auto_data_summary">Turn on data automatically when sending or receiving MMS
+    </string>
     <string name="pref_split">Split SMS</string>
     <string name="pref_split_summary">Split long messages into separate messages</string>
     <string name="pref_split_counter">Split counter</string>
-    <string name="pref_split_counter_summary">Adds a counter to the front of each split message</string>
+    <string name="pref_split_counter_summary">Adds a counter to the front of each split message
+    </string>
     <string name="pref_long_as_mms">Send long as MMS</string>
-    <string name="pref_long_as_mms_summary">Send long messages as MMS instead of splitting them</string>
+    <string name="pref_long_as_mms_summary">Send long messages as MMS instead of splitting them
+    </string>
     <string name="pref_long_as_mms_after">Send long as MMS after</string>
-    <string name="pref_long_as_mms_after_summary">Send long messages as MMS when they exceed the length of a number of messages</string>
+    <string name="pref_long_as_mms_after_summary">Send long messages as MMS when they exceed the
+        length of a number of messages
+    </string>
     <string name="pref_24h">24h time</string>
     <string name="pref_24h_summary">Display timestamps in 24-hour format</string>
     <string name="pref_return">Show return button</string>
@@ -207,7 +243,9 @@
     <string name="pref_wake">Wake phone</string>
     <string name="pref_wake_summary">Turn your screen on when you receive a new message</string>
     <string name="pref_notifications_private">Private notifications</string>
-    <string name="pref_notifications_private_summary">Tap to change what should be hidden in notfication</string>
+    <string name="pref_notifications_private_summary">Tap to change what should be hidden in
+        notfication
+    </string>
     <string name="pref_ringtone">Notification sound</string>
     <string name="pref_ringtone_summary">Select a notification sound</string>
     <string name="pref_ticker">Show ticker</string>
@@ -215,28 +253,40 @@
     <string name="pref_vibration">Vibration</string>
     <string name="pref_vibration_summary">Vibrate when new messages are received</string>
     <string name="pref_notification_call">Call button</string>
-    <string name="pref_notification_call_summary">Call the sender of a message right from the notification</string>
+    <string name="pref_notification_call_summary">Call the sender of a message right from the
+        notification
+    </string>
     <string name="pref_dimiss_read">Mark as read</string>
-    <string name="pref_dismiss_read_summary">Mark message as read when notification is cleared</string>
+    <string name="pref_dismiss_read_summary">Mark message as read when notification is cleared
+    </string>
 
     <string name="pref_delayed">Delayed messaging</string>
-    <string name="pref_delayed_summary">Wait before sending your messages, so you have a chance to review them</string>
+    <string name="pref_delayed_summary">Wait before sending your messages, so you have a chance to
+        review them
+    </string>
     <string name="pref_delayed_duration">Delay length (seconds)</string>
     <string name="pref_delayed_duration_summary">Time to wait before sending your message</string>
     <string name="pref_night_auto">Automatic night mode</string>
-    <string name="pref_night_auto_summary">Enable night mode automatically based on the time</string>
+    <string name="pref_night_auto_summary">Enable night mode automatically based on the time
+    </string>
     <string name="pref_day_start">Day time begins</string>
     <string name="pref_night_start">Night time begins</string>
     <string name="pref_qk_responses">QK Responses</string>
-    <string name="pref_qk_responses_summary">Modify your preset responses to be used from your Android Wear device</string>
+    <string name="pref_qk_responses_summary">Modify your preset responses to be used from your
+        Android Wear device
+    </string>
 
     <string name="pref_quickreply_enabled">QK Reply enabled</string>
-    <string name="pref_quickreply_enabled_summary">Show QK Reply window whenever a new message is received</string>
+    <string name="pref_quickreply_enabled_summary">Show QK Reply window whenever a new message is
+        received
+    </string>
     <string name="pref_tap_to_quit">Tap to dismiss</string>
     <string name="pref_tap_to_quit_summary">Tap anywhere outside of the window to close it</string>
 
     <string name="pref_quickcompose">QK Compose enabled</string>
-    <string name="pref_quickcompose_summary">Display a notification that allows you to click on to compose a new message</string>
+    <string name="pref_quickcompose_summary">Display a notification that allows you to click on to
+        compose a new message
+    </string>
 
     <string name="pref_mms_enabled">MMS enabled</string>
     <string name="pref_mms_enabled_summary">Enable sending and receiving of MMS messages</string>
@@ -245,13 +295,21 @@
     <string name="pref_mms_port">MMS port</string>
     <string name="pref_apn_chooser">Load default APNs</string>
     <string name="pref_strip_unicode">Strip unicode</string>
-    <string name="pref_strip_unicode_summary">Swap characters that are not supported in full-length messages for GSM compatible characters</string>
+    <string name="pref_strip_unicode_summary">Swap characters that are not supported in full-length
+        messages for GSM compatible characters
+    </string>
     <string name="pref_system_bar_flat">Flat system bars</string>
-    <string name="pref_system_bar_flat_summary">Get rid of the gradient shown on the system UI bars on most KitKat devices</string>
+    <string name="pref_system_bar_flat_summary">Get rid of the gradient shown on the system UI bars
+        on most KitKat devices
+    </string>
     <string name="pref_status_compat">Status bar fix</string>
-    <string name="pref_status_compat_summary">Fixes issues caused by immersive mode, Tinted Status Bar (Xposed), or custom DPI settings</string>
+    <string name="pref_status_compat_summary">Fixes issues caused by immersive mode, Tinted Status
+        Bar (Xposed), or custom DPI settings
+    </string>
     <string name="pref_navigation_compat">Navigation bar fix</string>
-    <string name="pref_navigation_compat_summary">Fixes issues caused by immersive mode, Tinted Status Bar (Xposed), or custom DPI settings</string>
+    <string name="pref_navigation_compat_summary">Fixes issues caused by immersive mode, Tinted
+        Status Bar (Xposed), or custom DPI settings
+    </string>
 
     <string name="pref_about_version_title">QKSMS version</string>
     <string name="pref_about_authors_title">Authors</string>
@@ -262,9 +320,12 @@
     <string name="pref_donate_title">Donate</string>
     <string name="pref_donate_summary">QKSMS is free. Help support us by donating!</string>
     <string name="pref_about_gplus_title">Google+</string>
-    <string name="pref_about_gplus_summary">Join the QKSMS Beta Testing community on Google+</string>
+    <string name="pref_about_gplus_summary">Join the QKSMS Beta Testing community on Google+
+    </string>
     <string name="pref_about_github_title">GitHub</string>
-    <string name="pref_about_github_summary">QKSMS is open source. Contribute and report issues on GitHub</string>
+    <string name="pref_about_github_summary">QKSMS is open source. Contribute and report issues on
+        GitHub
+    </string>
     <string name="pref_about_crowdin_title">Crowdin</string>
     <string name="pref_about_crowdin_summary">Join the QKSMS translation project on Crowdin</string>
 
@@ -317,7 +378,9 @@
     <!-- Menu shown in the context menu when long pressing on a message when the message contains
          one or more phone numbers and/or email addresses and the number or email is new to
          contacts. [CHAR LIMIT=50] -->
-    <string name="menu_add_address_to_contacts">Add <xliff:g id="contactEmailOrNumber">%s</xliff:g> to People</string>
+    <string name="menu_add_address_to_contacts">Add <xliff:g id="contactEmailOrNumber">%s</xliff:g> to
+        People
+    </string>
 
     <!-- Context menu item on an individual message for viewing an attached slideshow -->
     <string name="view_slideshow">View slideshow</string>
@@ -340,26 +403,36 @@
     <string name="delivery_header_title">Report</string>
 
     <!--Text for app restart confirmation dialog-->
-    <string name="restart_message">These changes will take effect the next time QKSMS is opened</string>
+    <string name="restart_message">These changes will take effect the next time QKSMS is opened
+    </string>
     <!--Dialog title for asking if a user wants to delete a conversation-->
     <string name="delete_conversation">Delete conversations</string>
     <!--Dialog title for asking if a user wants to delete all failed messages-->
     <string name="delete_all_failed">Delete failed messages</string>
     <!--CDialog title for asking if a user wants to delete a conversation-->
-    <string name="delete_confirmation">Are you sure you would like to delete (%s) conversations?</string>
+    <string name="delete_confirmation">Are you sure you would like to delete (%s) conversations?
+    </string>
     <!--CDialog title for asking if a user wants to delete all failed messages-->
-    <string name="delete_all_failed_confirmation">Are you sure you would like to delete failed messages from (%s) conversations?</string>
+    <string name="delete_all_failed_confirmation">Are you sure you would like to delete failed
+        messages from (%s) conversations?
+    </string>
     <!--(Unused) Dialog title shown if APNs have not been set-->
     <string name="apns_not_set">APNs not set</string>
     <!--(Unused) Dialog description shown if APNs have not been set-->
-    <string name="apns_not_set_description">It appears that your APNs have not been set. This means that MMS will not work properly. Please press okay to have QKSMS find them for you :)</string>
+    <string name="apns_not_set_description">It appears that your APNs have not been set. This means
+        that MMS will not work properly. Please press okay to have QKSMS find them for you :)
+    </string>
     <!--Dialog title show if MMS hasn't been configured-->
     <string name="set_up_mms_title">Set up MMS?</string>
     <!--Dialog description shown if MMS hasn't yet been configured-->
-    <string name="set_up_mms_description">It appears that MMS hasn\'t been configured in QKSMS yet. Press okay automatically configure MMS.</string>
+    <string name="set_up_mms_description">It appears that MMS hasn\'t been configured in QKSMS yet.
+        Press okay automatically configure MMS.
+    </string>
 
     <!-- Dialog message text explaining that a draft message will not be saved due to invalid recipients -->
-    <string name="discard_message_reason">Your message will be discarded because it has no valid recipients.</string>
+    <string name="discard_message_reason">Your message will be discarded because it has no valid
+        recipients.
+    </string>
 
     <string name="invalid_code">Invalid code</string>
 
@@ -404,9 +477,11 @@
     <!-- Subject to display in the conversation list if there is no subject -->
     <string name="no_subject_view">(No subject)</string>
     <!-- Time and date a message is due to expire -->
-    <string name="expire_on">"Expires: <xliff:g id="date">%s</xliff:g>"</string>
+    <string name="expire_on">"Expires: <xliff:g id="date">%s</xliff:g>"
+    </string>
     <!-- Formatting for subject displayed inline, prepended to MMS message text -->
-    <string name="inline_subject">"&lt;Subject: <xliff:g id="subject">%s</xliff:g>&gt;"</string>
+    <string name="inline_subject">"&lt;Subject: <xliff:g id="subject">%s</xliff:g>&gt;"
+    </string>
     <!-- Text of a button appearing for MMS messages that have not yet been downloaded, causing the message to be downloaded (imperative verb) -->
     <string name="download">Download</string>
     <!-- Message displayed in place of the "download message" button once it has been pressed, indicating that the download is in progress -->
@@ -474,19 +549,26 @@
     <!-- In conversation list items, this is the separator between a contact's name and the draft stamp [CHAR LIMIT=5] -->
     <string name="draft_separator">,\u0020</string>
     <!-- In conversation list items, this comes after the receipient's name and contains the number of messages in the thread [CHAR LIMIT=5] -->
-    <string name="message_count_format">\u00a0<xliff:g id="number" example="1">%1$s</xliff:g></string>
+    <string name="message_count_format">\u00a0
+        <xliff:g id="number" example="1">%1$s</xliff:g>
+    </string>
 
     <!-- For debugging: Dialog box title indicating there's a situation where data has unexpectedly changed -->
     <string name="error_state">Inconsistent state</string>
     <!-- For debugging: Dialog box text indicating there's a situation where data has unexpectedly changed -->
-    <string name="error_state_text">The state of threads and recipients is inconsistent. Please capture a bug report and report it via http://go/droidanizer </string>
+    <string name="error_state_text">The state of threads and recipients is inconsistent. Please
+        capture a bug report and report it via http://go/droidanizer
+    </string>
     <!-- This is the dialog title for the "Select link" dialog, shown when the user clicks on a
     chat in the chat history view if there are links in the chat message. The dialog displays the
     links if there are any -->
     <string name="select_link_title">Choose action</string>
 
     <!-- In message list items, this string builds the timestamp line when the message is in a group [CHAR LIMIT=NONE] -->
-    <string name="message_timestamp_format"><xliff:g id="string" example="Fred Flinstone">%1$s</xliff:g>\u0020-\u0020<xliff:g id="string" example="9:39AM">%2$s</xliff:g></string>
+    <string name="message_timestamp_format"><xliff:g id="string" example="Fred Flinstone">
+        %1$s</xliff:g>\u0020-\u0020
+        <xliff:g id="string" example="9:39AM">%2$s</xliff:g>
+    </string>
 
     <!--Message sending status: sending-->
     <string name="status_sending">Sending…</string>
@@ -528,7 +610,10 @@
         <!-- Case of 1 result. -->
         <item quantity="one">One conversation will be deleted.</item>
         <!-- Case of 0 or 2 or more results. -->
-        <item quantity="other"><xliff:g id="number" example="15">%1$s</xliff:g> conversations will be deleted.</item>
+        <item quantity="other">
+            <xliff:g id="number" example="15">%1$s</xliff:g>
+            conversations will be deleted.
+        </item>
     </plurals>
     <string name="confirm_delete_conversation">The entire thread will be deleted.</string>
     <!-- Delete all threads confirmation dialog message -->
@@ -538,7 +623,8 @@
     <!-- Delete message confirmation dialog message for a locked message -->
     <string name="confirm_delete_locked_message">Delete this locked message?</string>
     <!-- Delete all the messages on the SIM dialog message -->
-    <string name="confirm_delete_all_SIM_messages">All messages on the SIM card will be deleted.</string>
+    <string name="confirm_delete_all_SIM_messages">All messages on the SIM card will be deleted.
+    </string>
     <!-- Delete the selected message on the SIM dialog message -->
     <string name="confirm_delete_SIM_message">This message on the SIM card will be deleted.</string>
     <!-- Delete unlocked checkbox title -->
@@ -562,14 +648,18 @@
     <!-- Tells the user they need to set QKSMS as the default messaging app in order to mark messages as read -->
     <string name="not_default_mark_read">QKSMS must be your SMS app to mark messages read</string>
     <!-- Tells the user they need to set QKSMS as the default messaging app in order to mark messages as unread -->
-    <string name="not_default_mark_unread">QKSMS must be your SMS app to mark messages unread</string>
+    <string name="not_default_mark_unread">QKSMS must be your SMS app to mark messages unread
+    </string>
     <!-- Tells the user they need to set QKSMS as the default messaging app in order to send messages -->
     <string name="not_default_delete">QKSMS must be your SMS app to delete messages</string>
     <!-- Tells the user they need to set QKSMS as the default messaging app in order to delete messages -->
     <string name="not_default_send">QKSMS must be your SMS app to send messages</string>
     <!-- Tells the user they should set QKSMS as the default messaging app -->
-    <string name="not_default_first">Some things won\'t work until QKSMS is the default SMS app</string>
-    <string name="delayed_messaging_info">Delayed messaging allows you to cancel messages before they send. Change the default behavior and more in Settings</string>
+    <string name="not_default_first">Some things won\'t work until QKSMS is the default SMS app
+    </string>
+    <string name="delayed_messaging_info">Delayed messaging allows you to cancel messages before
+        they send. Change the default behavior and more in Settings
+    </string>
     <string name="delayed_duration_bounds_error">Duration must be between 1 and 30 seconds</string>
 
     <!-- Dialog title for the Read Report dialog. -->
@@ -580,14 +670,18 @@
     <!-- Dialog title for updating app icon color -->
     <string name="update_icon_title">Update icon color</string>
     <!-- Dialog message for updating app icon color -->
-    <string name="update_icon_message">QKSMS must be restarted when changing the icon color. Restart now?</string>
+    <string name="update_icon_message">QKSMS must be restarted when changing the icon color. Restart
+        now?
+    </string>
 
     <string name="dialog_conversation_details_title">Conversation details</string>
     <string name="dialog_conversation_details_last_message_date">Last message date</string>
     <string name="dialog_conversation_details_message_count">Message count</string>
     <string name="dialog_conversation_details_recipients">Recipients (%s)</string>
     <string name="dialog_should_i_answer_title">Should I Answer? not installed</string>
-    <string name="dialog_should_i_answer_message">Would you like to download the app from Google Play now?</string>
+    <string name="dialog_should_i_answer_message">Would you like to download the app from Google
+        Play now?
+    </string>
 
     <!-- Title for audio file picker -->
     <string name="select_audio">Choose audio</string>
@@ -612,9 +706,12 @@
     <!--Toast shown when a conversation is deleted-->
     <string name="toast_conversation_deleted">Conversation deleted</string>
     <!--Toast shown when device is low on storage-->
-    <string name="toast_low_memory">"Phone storage is full. Delete some files to free space."</string>
+    <string name="toast_low_memory">"Phone storage is full. Delete some files to free space."
+    </string>
     <!--Toast shown to tell user that forwarding messages doesn't work yet-->
-    <string name="toast_forward">This feature has not yet been implemented. For now please use the Copy text option and paste that in the conversation you would like to send it</string>
+    <string name="toast_forward">This feature has not yet been implemented. For now please use the
+        Copy text option and paste that in the conversation you would like to send it
+    </string>
     <!--Toast shown for unimplemented features-->
     <string name="toast_unimplemented">This feature has not yet been implemented</string>
     <!--Toast shown when a message fails to send-->
@@ -628,17 +725,24 @@
     <!--Toast shown when text is copied to the clipboard-->
     <string name="toast_copy_text">Copied text to clipboard</string>
     <!--Toast shown when Google Play Services is not available for purchasing a product-->
-    <string name="toast_billing_not_available">Purchase requires Google Play Store (billing) on your Android</string>
+    <string name="toast_billing_not_available">Purchase requires Google Play Store (billing) on your
+        Android
+    </string>
     <!--Toast shown when Google Play Services is not available for purchasing a product-->
-    <string name="toast_endlessjabber_not_installed">EndlessJabber is not installed, opening Google Play</string>
-    <string name="toast_changelog_error">Couldn\'t load the changelog. Please try again later</string>
+    <string name="toast_endlessjabber_not_installed">EndlessJabber is not installed, opening Google
+        Play
+    </string>
+    <string name="toast_changelog_error">Couldn\'t load the changelog. Please try again later
+    </string>
 
     <!--Toast shown to thank user for donating-->
     <string name="thanks_1">Thank you for donating! You\'re my new best friend.</string>
     <!--Toast shown to thank user for donating-->
     <string name="thanks_2">Thanks for the donation! I love you.</string>
     <!--Toast shown to thank user for donating-->
-    <string name="thanks_3">Thanks for donating! You\'re helping QKSMS become the best texting app ever made.</string>
+    <string name="thanks_3">Thanks for donating! You\'re helping QKSMS become the best texting app
+        ever made.
+    </string>
     <!--Toast shown to thank user for donating-->
     <string name="thanks_4">Thanks for the donation! You\'re awesome.</string>
 
@@ -663,41 +767,68 @@
     <string name="menu_done">Done</string>
     <string name="failed_message_title">Failed message options</string>
     <!--Toast shown to tell the user that they don't have a photo attachments app, and suggests that they download one-->
-    <string name="attachment_app_not_found">Attachments app not found. Try installing a photo gallery app!</string>
+    <string name="attachment_app_not_found">Attachments app not found. Try installing a photo
+        gallery app!
+    </string>
     <string name="attachment_camera_error">The camera could not be opened</string>
     <string name="pref_max_mms_attachment_size">Maximum MMS attachment size</string>
     <string name="error_no_recipients">Select some contacts to send this message to!</string>
-    <string name="error_file_not_found">QKSMS can\'t access the file you\'re trying to share!</string>
-    <string name="sending_blocked_welcome_screen_message">Hold up! You\'ll get to send real messages in a minute!</string>
-    <string name="notification_colored_icon_ready">Touch to add to your launcher from home screen.</string>
+    <string name="error_file_not_found">QKSMS can\'t access the file you\'re trying to share!
+    </string>
+    <string name="sending_blocked_welcome_screen_message">Hold up! You\'ll get to send real messages
+        in a minute!
+    </string>
+    <string name="notification_colored_icon_ready">Touch to add to your launcher from home screen.
+    </string>
     <string name="notification_title_colored_icon_ready">QKSMS colored icon is ready</string>
     <string name="icon_ready">Your new icon is ready!</string>
-    <string name="icon_ready_message">You can now add it to your home screen again with the updated color.</string>
+    <string name="icon_ready_message">You can now add it to your home screen again with the updated
+        color.
+    </string>
     <string name="dont_ask_again">Don\'t ask again</string>
     <string name="warning">Stagefright warning</string>
-    <string name="stagefright_warning">Video messages may contain a harmful exploit that can leave your phone vulnerable to attacks. Would you like to continue?</string>
+    <string name="stagefright_warning">Video messages may contain a harmful exploit that can leave
+        your phone vulnerable to attacks. Would you like to continue?
+    </string>
 
     <!-- MMS DIALOG SETUP STRINGS -->
     <string name="mms_setup_set_up_mms_title">Set up MMS?</string>
-    <string name="mms_setup_set_up_mms_body">It appears that MMS isn\'t set up in QKSMS. Press okay to automatically configure MMS.</string>
+    <string name="mms_setup_set_up_mms_body">It appears that MMS isn\'t set up in QKSMS. Press okay
+        to automatically configure MMS.
+    </string>
 
     <string name="mms_setup_setting_up_later_title">Setting up MMS later</string>
-    <string name="mms_setup_setting_up_later_body">Visit the MMS section of Settings to try automatic configuration, contact support, or enter your own configuration.</string>
+    <string name="mms_setup_setting_up_later_body">Visit the MMS section of Settings to try
+        automatic configuration, contact support, or enter your own configuration.
+    </string>
 
     <string name="mms_setup_no_configurations_found_title">No configurations found</string>
-    <string name="mms_setup_no_configurations_found_body">We couldn\'t find an MMS configuration for your carrier automatically. Press okay to contact support. We\'ll help you get set up! </string>
+    <string name="mms_setup_no_configurations_found_body">We couldn\'t find an MMS configuration for
+        your carrier automatically. Press okay to contact support. We\'ll help you get set up!
+    </string>
 
     <string name="mms_setup_one_configuration_found_title">One configuration found</string>
-    <string name="mms_setup_one_configuration_found_body">We have found an MMS configuration for the %s carrier. Does that sound right?</string>
+    <string name="mms_setup_one_configuration_found_body">We have found an MMS configuration for the
+        %s carrier. Does that sound right?
+    </string>
 
-    <string name="mms_setup_multiple_configurations_found_title">Multiple configuration found</string>
-    <string name="mms_setup_multiple_configurations_found_body">We have found multiple MMS configurations. Choose your carrier from the list, or press N/A if your carrier isn\'t on the list.</string>
+    <string name="mms_setup_multiple_configurations_found_title">Multiple configuration found
+    </string>
+    <string name="mms_setup_multiple_configurations_found_body">We have found multiple MMS
+        configurations. Choose your carrier from the list, or press N/A if your carrier isn\'t on
+        the list.
+    </string>
 
     <string name="mms_setup_next_steps_title">Next steps</string>
-    <string name="mms_setup_next_steps_body">Visit the MMS section of Settings to try automatic configuration again, contact support, or enter your own configuration.</string>
+    <string name="mms_setup_next_steps_body">Visit the MMS section of Settings to try automatic
+        configuration again, contact support, or enter your own configuration.
+    </string>
 
     <string name="mms_setup_success_title">Success!</string>
-    <string name="mms_setup_success_body">If you encounter any issues, visit the MMS section of Settings to try automatic configuration again, contact support, or enter your own configuration.</string>
+    <string name="mms_setup_success_body">If you encounter any issues, visit the MMS section of
+        Settings to try automatic configuration again, contact support, or enter your own
+        configuration.
+    </string>
 
     <string name="na">N/A</string>
     <string name="no">No</string>
@@ -705,9 +836,12 @@
     <string name="pref_mms_contact_support">Contact Support</string>
     <string name="pref_category_sending_mms">Sending MMS</string>
     <string name="pref_category_mms_configuration">MMS Configuration</string>
-    <string name="pref_mms_contact_support_summary">Contact the QKSMS team for help setting up MMS</string>
+    <string name="pref_mms_contact_support_summary">Contact the QKSMS team for help setting up MMS
+    </string>
     <string name="pref_markdown_enabled">Text formatting</string>
-    <string name="pref_markdown_enabled_summary">Use markdown syntax to get bold, underline, and italics in your messages</string>
+    <string name="pref_markdown_enabled_summary">Use markdown syntax to get bold, underline, and
+        italics in your messages
+    </string>
     <string name="want_read_indicators">Want read indicators?</string>
 
     <string name="color_swatch_description">Color %1$d</string>
@@ -721,18 +855,27 @@
     <string name="service_not_activated">Service not activated on network.</string>
     <string name="service_message_not_found">Message expired or not available.</string>
     <string name="service_network_problem">Couldn\'t send due to network problem.</string>
-    <string name="message_queued">Currently can\'t send your message. It will be sent when the service becomes available.</string>
+    <string name="message_queued">Currently can\'t send your message. It will be sent when the
+        service becomes available.
+    </string>
     <string name="download_later">Can\'t download right now. Try again later.</string>
     <string name="no_apn">No APN specified for the app, you need to set it up in settings!</string>
     <string name="no_subject">(No subject)</string>
     <string name="unknown_sender">Unknown sender</string>
-    <string name="dl_failure_notification">Couldn\'t download message <xliff:g id="subject">%1$s</xliff:g> from <xliff:g id="from">%2$s</xliff:g>.</string>
+    <string name="dl_failure_notification">Couldn\'t download message <xliff:g id="subject">%1$s
+    </xliff:g> from <xliff:g id="from">%2$s</xliff:g>.
+    </string>
 
-    <string name="auto_select_multiple_apns">Multiple different configurations have been found. Try one now. If it doesn\'t work, you can try a new one by going to Settings > Advanced > Load default APNs.</string>
+    <string name="auto_select_multiple_apns">Multiple different configurations have been found. Try
+        one now. If it doesn\'t work, you can try a new one by going to Settings > Advanced > Load
+        default APNs.
+    </string>
     <string name="auto_select_apn">Automatically Select APNs</string>
 
     <string name="auto_select_failed_title">Automatic configuration failed</string>
-    <string name="auto_select_failed">Try searching for your carrier\'s APN settings (MMSC, Port, and Proxy) and entering them in Settings > Advanced.</string>
+    <string name="auto_select_failed">Try searching for your carrier\'s APN settings (MMSC, Port,
+        and Proxy) and entering them in Settings > Advanced.
+    </string>
     <string name="date_yesterday">Yesterday</string>
     <string name="date_just_now">Just now</string>
     <string name="compose_loading_attachment">Loading attachment</string>

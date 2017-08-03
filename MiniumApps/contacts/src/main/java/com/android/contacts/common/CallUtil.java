@@ -140,10 +140,10 @@ public class CallUtil {
      */
     public static Uri getCallUri(String number) {
         if (PhoneNumberHelper.isUriNumber(number)) {
-             return Uri.fromParts(PhoneAccount.SCHEME_SIP, number, null);
+            return Uri.fromParts(PhoneAccount.SCHEME_SIP, number, null);
         }
         return Uri.fromParts(PhoneAccount.SCHEME_TEL, number, null);
-     }
+    }
 
     public static boolean isVideoEnabled(Context context) {
         TelecomManager telecommMgr = (TelecomManager)

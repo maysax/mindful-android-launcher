@@ -24,7 +24,7 @@ import java.util.Map;
  */
 /* package */ class JapaneseUtils {
     static private final Map<Character, String> sHalfWidthMap =
-        new HashMap<Character, String>();
+            new HashMap<Character, String>();
 
     static {
         sHalfWidthMap.put('\u3001', "\uFF64");
@@ -366,6 +366,7 @@ import java.util.Map;
 
     /**
      * Returns half-width version of that character if possible. Returns null if not possible
+     *
      * @param ch input character
      * @return CharSequence object if the mapping for ch exists. Return null otherwise.
      */

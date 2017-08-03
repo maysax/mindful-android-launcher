@@ -1,7 +1,5 @@
 package co.siempo.phone.inbox;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -12,7 +10,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
-import co.siempo.phone.map.SiempoMapActivity;
 import minium.co.core.ui.CoreActivity;
 
 import static android.view.View.GONE;

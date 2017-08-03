@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2011 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,36 +17,21 @@
 <!-- Editor for a single event entry in the contact editor -->
 
 <com.android.contacts.editor.EventFieldEditorView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/editor_min_line_item_height"
-    android:orientation="vertical">
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="@dimen/editor_min_line_item_height" android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal"
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_weight="1" android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <include
-            android:id="@+id/date_view"
-            layout="@layout/edit_date_picker" />
+        <include android:id="@+id/date_view" layout="@layout/edit_date_picker" />
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="@dimen/editor_type_label_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="bottom"
-            android:paddingLeft="0dip"
-            android:paddingRight="10dip"
-            android:paddingStart="0dip"
-            android:paddingEnd="10dip"
-            android:visibility="gone"/>
+        <Spinner android:id="@+id/spinner" android:layout_width="@dimen/editor_type_label_width"
+            android:layout_height="match_parent" android:layout_gravity="bottom"
+            android:paddingLeft="0dip" android:paddingRight="10dip" android:paddingStart="0dip"
+            android:paddingEnd="10dip" android:visibility="gone" />
 
-        <include
-            android:id="@+id/delete_button_container"
-            layout="@layout/edit_delete_button"
+        <include android:id="@+id/delete_button_container" layout="@layout/edit_delete_button"
             android:visibility="gone" />
 
     </LinearLayout>

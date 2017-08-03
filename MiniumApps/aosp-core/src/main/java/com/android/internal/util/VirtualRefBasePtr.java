@@ -49,5 +49,6 @@ public final class VirtualRefBasePtr {
     }
 
     private static native void nIncStrong(long ptr);
+
     private static native void nDecStrong(long ptr);
 }

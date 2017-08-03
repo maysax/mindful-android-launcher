@@ -16,12 +16,6 @@
 
 package android.telephony;
 
-import com.android.i18n.phonenumbers.NumberParseException;
-import com.android.i18n.phonenumbers.PhoneNumberUtil;
-import com.android.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-import com.android.i18n.phonenumbers.Phonenumber.PhoneNumber;
-import com.android.i18n.phonenumbers.ShortNumberUtil;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,26 +24,30 @@ import android.net.Uri;
 import android.os.SystemProperties;
 import android.provider.Contacts;
 import android.provider.ContactsContract;
+import android.telephony.Rlog;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.telephony.Rlog;
 import android.util.SparseIntArray;
 
-import static com.android.internal.telephony.PhoneConstants.SUBSCRIPTION_KEY;
-import static com.android.internal.telephony.TelephonyProperties.PROPERTY_ICC_OPERATOR_ISO_COUNTRY;
-import static com.android.internal.telephony.TelephonyProperties.PROPERTY_OPERATOR_ISO_COUNTRY;
-import static com.android.internal.telephony.TelephonyProperties.PROPERTY_OPERATOR_IDP_STRING;
+import com.android.i18n.phonenumbers.NumberParseException;
+import com.android.i18n.phonenumbers.PhoneNumberUtil;
+import com.android.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
+import com.android.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import com.android.i18n.phonenumbers.ShortNumberUtil;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.android.internal.telephony.TelephonyProperties.PROPERTY_ICC_OPERATOR_ISO_COUNTRY;
+import static com.android.internal.telephony.TelephonyProperties.PROPERTY_OPERATOR_IDP_STRING;
+import static com.android.internal.telephony.TelephonyProperties.PROPERTY_OPERATOR_ISO_COUNTRY;
+
 /**
  * Various utilities for dealing with phone number strings.
  */
-public class PhoneNumberUtils
-{
+public class PhoneNumberUtils {
     /*
      * Special characters
      *
@@ -86,68 +84,81 @@ public class PhoneNumberUtils
     private static final Pattern GLOBAL_PHONE_NUMBER_PATTERN =
             Pattern.compile("[\\+]?[0-9.-]+");
 
-    /** True if c is ISO-LATIN characters 0-9 */
+    /**
+     * True if c is ISO-LATIN characters 0-9
+     */
     public static boolean
-    isISODigit (char c) {
+    isISODigit(char c) {
         return c >= '0' && c <= '9';
     }
 
-    /** True if c is ISO-LATIN characters 0-9, *, # */
+    /**
+     * True if c is ISO-LATIN characters 0-9, *, #
+     */
     public final static boolean
     is12Key(char c) {
         return (c >= '0' && c <= '9') || c == '*' || c == '#';
     }
 
-    /** True if c is ISO-LATIN characters 0-9, *, # , +, WILD  */
+    /**
+     * True if c is ISO-LATIN characters 0-9, *, # , +, WILD
+     */
     public final static boolean
     isDialable(char c) {
         return (c >= '0' && c <= '9') || c == '*' || c == '#' || c == '+' || c == WILD;
     }
 
-    /** True if c is ISO-LATIN characters 0-9, *, # , + (no WILD)  */
+    /**
+     * True if c is ISO-LATIN characters 0-9, *, # , + (no WILD)
+     */
     public final static boolean
     isReallyDialable(char c) {
         return (c >= '0' && c <= '9') || c == '*' || c == '#' || c == '+';
     }
 
-    /** True if c is ISO-LATIN characters 0-9, *, # , +, WILD, WAIT, PAUSE   */
+    /**
+     * True if c is ISO-LATIN characters 0-9, *, # , +, WILD, WAIT, PAUSE
+     */
     public final static boolean
     isNonSeparator(char c) {
         return (c >= '0' && c <= '9') || c == '*' || c == '#' || c == '+'
                 || c == WILD || c == WAIT || c == PAUSE;
     }
 
-    /** This any anything to the right of this char is part of the
-     *  post-dial string (eg this is PAUSE or WAIT)
+    /**
+     * This any anything to the right of this char is part of the
+     * post-dial string (eg this is PAUSE or WAIT)
      */
     public final static boolean
-    isStartsPostDial (char c) {
+    isStartsPostDial(char c) {
         return c == PAUSE || c == WAIT;
     }
 
     private static boolean
-    isPause (char c){
-        return c == 'p'||c == 'P';
+    isPause(char c) {
+        return c == 'p' || c == 'P';
     }
 
     private static boolean
-    isToneWait (char c){
-        return c == 'w'||c == 'W';
+    isToneWait(char c) {
+        return c == 'w' || c == 'W';
     }
 
 
-    /** Returns true if ch is not dialable or alpha char */
+    /**
+     * Returns true if ch is not dialable or alpha char
+     */
     private static boolean isSeparator(char ch) {
         return !isDialable(ch) && !(('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'));
     }
 
-    /** Extracts the phone number from an Intent.
+    /**
+     * Extracts the phone number from an Intent.
      *
-     * @param intent the intent to get the number of
+     * @param intent  the intent to get the number of
      * @param context a context to use for database access
-     *
      * @return the phone number that would be called by the intent, or
-     *         <code>null</code> if the number cannot be found.
+     * <code>null</code> if the number cannot be found.
      */
     public static String getNumberFromIntent(Intent intent, Context context) {
         String number = null;
@@ -179,8 +190,8 @@ public class PhoneNumberUtils
             phoneColumn = ContactsContract.CommonDataKinds.Phone.NUMBER;
         }
 
-        final Cursor c = context.getContentResolver().query(uri, new String[] {
-            phoneColumn
+        final Cursor c = context.getContentResolver().query(uri, new String[]{
+                phoneColumn
         }, null, null, null);
         if (c != null) {
             try {
@@ -195,15 +206,16 @@ public class PhoneNumberUtils
         return number;
     }
 
-    /** Extracts the network address portion and canonicalizes
-     *  (filters out separators.)
-     *  Network address portion is everything up to DTMF control digit
-     *  separators (pause or wait), but without non-dialable characters.
-     *
-     *  Please note that the GSM wild character is allowed in the result.
-     *  This must be resolved before dialing.
-     *
-     *  Returns null if phoneNumber == null
+    /**
+     * Extracts the network address portion and canonicalizes
+     * (filters out separators.)
+     * Network address portion is everything up to DTMF control digit
+     * separators (pause or wait), but without non-dialable characters.
+     * <p>
+     * Please note that the GSM wild character is allowed in the result.
+     * This must be resolved before dialing.
+     * <p>
+     * Returns null if phoneNumber == null
      */
     public static String
     extractNetworkPortion(String phoneNumber) {
@@ -228,7 +240,7 @@ public class PhoneNumberUtils
                 }
             } else if (isDialable(c)) {
                 ret.append(c);
-            } else if (isStartsPostDial (c)) {
+            } else if (isStartsPostDial(c)) {
                 break;
             }
         }
@@ -238,7 +250,7 @@ public class PhoneNumberUtils
 
     /**
      * Extracts the network address portion and canonicalize.
-     *
+     * <p>
      * This function is equivalent to extractNetworkPortion(), except
      * for allowing the PLUS character to occur at arbitrary positions
      * in the address portion, not just the first position.
@@ -264,7 +276,7 @@ public class PhoneNumberUtils
             }
             if (isDialable(c)) {
                 ret.append(c);
-            } else if (isStartsPostDial (c)) {
+            } else if (isStartsPostDial(c)) {
                 break;
             }
         }
@@ -274,6 +286,7 @@ public class PhoneNumberUtils
 
     /**
      * Strips separators from a phone number string.
+     *
      * @param phoneNumber phone number to strip.
      * @return phone string stripped of separators.
      */
@@ -303,10 +316,9 @@ public class PhoneNumberUtils
      * become 1-800-4664-411), and then strips all separators (e.g. 1-800-4664-411 will become
      * 18004664411).
      *
+     * @hide
      * @see #convertKeypadLettersToDigits(String)
      * @see #stripSeparators(String)
-     *
-     * @hide
      */
     public static String convertAndStrip(String phoneNumber) {
         return stripSeparators(convertKeypadLettersToDigits(phoneNumber));
@@ -316,6 +328,7 @@ public class PhoneNumberUtils
      * Converts pause and tonewait pause characters
      * to Android representation.
      * RFC 3601 says pause is 'p' and tonewait is 'w'.
+     *
      * @hide
      */
     public static String convertPreDial(String phoneNumber) {
@@ -338,9 +351,11 @@ public class PhoneNumberUtils
         return ret.toString();
     }
 
-    /** or -1 if both are negative */
+    /**
+     * or -1 if both are negative
+     */
     static private int
-    minPositive (int a, int b) {
+    minPositive(int a, int b) {
         if (a >= 0 && b >= 0) {
             return (a < b) ? a : b;
         } else if (a >= 0) { /* && b < 0 */
@@ -355,8 +370,10 @@ public class PhoneNumberUtils
     private static void log(String msg) {
         Rlog.d(LOG_TAG, msg);
     }
-    /** index of the last character of the network portion
-     *  (eg anything after is a post-dial string)
+
+    /**
+     * index of the last character of the network portion
+     * (eg anything after is a post-dial string)
      */
     static private int
     indexOfLastNetworkChar(String a) {
@@ -382,7 +399,7 @@ public class PhoneNumberUtils
      * Extracts the post-dial sequence of DTMF control digits, pauses, and
      * waits. Strips separators. This string may be empty, but will not be null
      * unless phoneNumber == null.
-     *
+     * <p>
      * Returns null if phoneNumber == null
      */
 
@@ -393,11 +410,11 @@ public class PhoneNumberUtils
         int trimIndex;
         StringBuilder ret = new StringBuilder();
 
-        trimIndex = indexOfLastNetworkChar (phoneNumber);
+        trimIndex = indexOfLastNetworkChar(phoneNumber);
 
         for (int i = trimIndex + 1, s = phoneNumber.length()
-                ; i < s; i++
-        ) {
+             ; i < s; i++
+                ) {
             char c = phoneNumber.charAt(i);
             if (isNonSeparator(c)) {
                 ret.append(c);
@@ -423,7 +440,7 @@ public class PhoneNumberUtils
      */
     public static boolean compare(Context context, String a, String b) {
         boolean useStrict = context.getResources().getBoolean(
-               com.android.internal.R.bool.config_use_strict_phone_number_comparation);
+                com.android.internal.R.bool.config_use_strict_phone_number_comparation);
         return compare(a, b, useStrict);
     }
 
@@ -437,12 +454,12 @@ public class PhoneNumberUtils
     /**
      * Compare phone numbers a and b, return true if they're identical
      * enough for caller ID purposes.
-     *
+     * <p>
      * - Compares from right to left
      * - requires MIN_MATCH (7) characters to match
      * - handles common trunk prefixes and international prefixes
-     *   (basically, everything except the Russian trunk prefix)
-     *
+     * (basically, everything except the Russian trunk prefix)
+     * <p>
      * Note that this method does not return false even when the two phone numbers
      * are not exactly same; rather; we can call this method "similar()", not "equals()".
      *
@@ -461,11 +478,11 @@ public class PhoneNumberUtils
             return false;
         }
 
-        ia = indexOfLastNetworkChar (a);
-        ib = indexOfLastNetworkChar (b);
+        ia = indexOfLastNetworkChar(a);
+        ib = indexOfLastNetworkChar(b);
         matched = 0;
 
-        while (ia >= 0 && ib >=0) {
+        while (ia >= 0 && ib >= 0) {
             char ca, cb;
             boolean skipCmp = false;
 
@@ -489,7 +506,9 @@ public class PhoneNumberUtils
                 if (cb != ca && ca != WILD && cb != WILD) {
                     break;
                 }
-                ia--; ib--; matched++;
+                ia--;
+                ib--;
+                matched++;
             }
         }
 
@@ -522,20 +541,20 @@ public class PhoneNumberUtils
          */
 
         if (matchIntlPrefix(a, ia + 1)
-            && matchIntlPrefix (b, ib +1)
-        ) {
+                && matchIntlPrefix(b, ib + 1)
+                ) {
             return true;
         }
 
         if (matchTrunkPrefix(a, ia + 1)
-            && matchIntlPrefixAndCC(b, ib +1)
-        ) {
+                && matchIntlPrefixAndCC(b, ib + 1)
+                ) {
             return true;
         }
 
         if (matchTrunkPrefix(b, ib + 1)
-            && matchIntlPrefixAndCC(a, ia +1)
-        ) {
+                && matchIntlPrefixAndCC(a, ia + 1)
+                ) {
             return true;
         }
 
@@ -565,9 +584,9 @@ public class PhoneNumberUtils
         int forwardIndexB = 0;
 
         CountryCallingCodeAndNewIndex cccA =
-            tryGetCountryCallingCodeAndNewIndex(a, acceptInvalidCCCPrefix);
+                tryGetCountryCallingCodeAndNewIndex(a, acceptInvalidCCCPrefix);
         CountryCallingCodeAndNewIndex cccB =
-            tryGetCountryCallingCodeAndNewIndex(b, acceptInvalidCCCPrefix);
+                tryGetCountryCallingCodeAndNewIndex(b, acceptInvalidCCCPrefix);
         boolean bothHasCountryCallingCode = false;
         boolean okToIgnorePrefix = true;
         boolean trunkPrefixIsOmittedA = false;
@@ -634,7 +653,7 @@ public class PhoneNumberUtils
 
         if (okToIgnorePrefix) {
             if ((trunkPrefixIsOmittedA && forwardIndexA <= backwardIndexA) ||
-                !checkPrefixIsIgnorable(a, forwardIndexA, backwardIndexA)) {
+                    !checkPrefixIsIgnorable(a, forwardIndexA, backwardIndexA)) {
                 if (acceptInvalidCCCPrefix) {
                     // Maybe the code handling the special case for Thailand makes the
                     // result garbled, so disable the code and try again.
@@ -651,7 +670,7 @@ public class PhoneNumberUtils
                 }
             }
             if ((trunkPrefixIsOmittedB && forwardIndexB <= backwardIndexB) ||
-                !checkPrefixIsIgnorable(b, forwardIndexA, backwardIndexB)) {
+                    !checkPrefixIsIgnorable(b, forwardIndexA, backwardIndexB)) {
                 if (acceptInvalidCCCPrefix) {
                     return compare(a, b, false);
                 } else {
@@ -699,10 +718,10 @@ public class PhoneNumberUtils
     /**
      * Returns the rightmost MIN_MATCH (5) characters in the network portion
      * in *reversed* order
-     *
+     * <p>
      * This can be used to do a database lookup against the column
      * that stores getStrippedReversed()
-     *
+     * <p>
      * Returns null if phoneNumber == null
      */
     public static String
@@ -715,7 +734,7 @@ public class PhoneNumberUtils
      * Returns the network portion reversed.
      * This string is intended to go into an index column for a
      * database lookup.
-     *
+     * <p>
      * Returns null if phoneNumber == null
      */
     public static String
@@ -739,8 +758,8 @@ public class PhoneNumberUtils
         int length = np.length();
 
         for (int i = length - 1, s = length
-            ; i >= 0 && (s - i) <= numDigits ; i--
-        ) {
+             ; i >= 0 && (s - i) <= numDigits; i--
+                ) {
             char c = np.charAt(i);
 
             ret.append(c);
@@ -752,7 +771,7 @@ public class PhoneNumberUtils
     /**
      * Basically: makes sure there's a + in front of a
      * TOA_International number
-     *
+     * <p>
      * Returns null if s == null
      */
     public static String
@@ -781,24 +800,23 @@ public class PhoneNumberUtils
     }
 
     /**
-     *  3GPP TS 24.008 10.5.4.7
-     *  Called Party BCD Number
+     * 3GPP TS 24.008 10.5.4.7
+     * Called Party BCD Number
+     * <p>
+     * See Also TS 51.011 10.5.1 "dialing number/ssc string"
+     * and TS 11.11 "10.3.1 EF adn (Abbreviated dialing numbers)"
      *
-     *  See Also TS 51.011 10.5.1 "dialing number/ssc string"
-     *  and TS 11.11 "10.3.1 EF adn (Abbreviated dialing numbers)"
-     *
-     * @param bytes the data buffer
+     * @param bytes  the data buffer
      * @param offset should point to the TOA (aka. TON/NPI) octet after the length byte
      * @param length is the number of bytes including TOA byte
-     *                and must be at least 2
-     *
+     *               and must be at least 2
      * @return partial string on invalid decode
-     *
+     * <p>
      * FIXME(mkf) support alphanumeric address type
-     *  currently implemented in SMSMessage.getAddress()
+     * currently implemented in SMSMessage.getAddress()
      */
     public static String
-    calledPartyBCDToString (byte[] bytes, int offset, int length) {
+    calledPartyBCDToString(byte[] bytes, int offset, int length) {
         boolean prependPlus = false;
         StringBuilder ret = new StringBuilder(1 + length * 2);
 
@@ -899,12 +917,12 @@ public class PhoneNumberUtils
 
     private static void
     internalCalledPartyBCDFragmentToString(
-        StringBuilder sb, byte [] bytes, int offset, int length) {
-        for (int i = offset ; i < length + offset ; i++) {
+            StringBuilder sb, byte[] bytes, int offset, int length) {
+        for (int i = offset; i < length + offset; i++) {
             byte b;
             char c;
 
-            c = bcdToChar((byte)(bytes[i] & 0xf));
+            c = bcdToChar((byte) (bytes[i] & 0xf));
 
             if (c == 0) {
                 return;
@@ -918,7 +936,7 @@ public class PhoneNumberUtils
             // semi-octet shall be ignored"
             // How does this jive with 24.008 10.5.4.7
 
-            b = (byte)((bytes[i] >> 4) & 0xf);
+            b = (byte) ((bytes[i] >> 4) & 0xf);
 
             if (b == 0xf && i + 1 == length + offset) {
                 //ignore final 0xf
@@ -941,7 +959,7 @@ public class PhoneNumberUtils
      */
 
     public static String
-    calledPartyBCDFragmentToString(byte [] bytes, int offset, int length) {
+    calledPartyBCDFragmentToString(byte[] bytes, int offset, int length) {
         StringBuilder ret = new StringBuilder(length * 2);
 
         internalCalledPartyBCDFragmentToString(ret, bytes, offset, length);
@@ -949,18 +967,25 @@ public class PhoneNumberUtils
         return ret.toString();
     }
 
-    /** returns 0 on invalid value */
+    /**
+     * returns 0 on invalid value
+     */
     private static char
     bcdToChar(byte b) {
         if (b < 0xa) {
-            return (char)('0' + b);
+            return (char) ('0' + b);
         } else switch (b) {
-            case 0xa: return '*';
-            case 0xb: return '#';
-            case 0xc: return PAUSE;
-            case 0xd: return WILD;
+            case 0xa:
+                return '*';
+            case 0xb:
+                return '#';
+            case 0xc:
+                return PAUSE;
+            case 0xd:
+                return WILD;
 
-            default: return 0;
+            default:
+                return 0;
         }
     }
 
@@ -977,7 +1002,7 @@ public class PhoneNumberUtils
         } else if (c == WILD) {
             return 0xd;
         } else {
-            throw new RuntimeException ("invalid char for BCD " + c);
+            throw new RuntimeException("invalid char for BCD " + c);
         }
     }
 
@@ -991,8 +1016,8 @@ public class PhoneNumberUtils
                 PhoneNumberUtils.extractNetworkPortion(address);
 
         return (!(networkPortion.equals("+")
-                  || TextUtils.isEmpty(networkPortion)))
-               && isDialable(networkPortion);
+                || TextUtils.isEmpty(networkPortion)))
+                && isDialable(networkPortion);
     }
 
     public static boolean isGlobalPhoneNumber(String phoneNumber) {
@@ -1021,10 +1046,11 @@ public class PhoneNumberUtils
         }
         return true;
     }
+
     /**
      * Note: calls extractNetworkPortion(), so do not use for
      * SIM EF[ADN] style records
-     *
+     * <p>
      * Returns null if network portion is empty.
      */
     public static byte[]
@@ -1047,7 +1073,7 @@ public class PhoneNumberUtils
      * Convert a dialing number to BCD byte array
      *
      * @param number dialing number string
-     *        if the dialing number starts with '+', set to international TOA
+     *               if the dialing number starts with '+', set to international TOA
      * @return BCD byte array
      */
     public static byte[]
@@ -1080,7 +1106,7 @@ public class PhoneNumberUtils
             char c = number.charAt(i);
             if (c == '+') continue;
             int shift = ((digitCount & 0x01) == 1) ? 4 : 0;
-            result[extraBytes + (digitCount >> 1)] |= (byte)((charToBCD(c) & 0x0F) << shift);
+            result[extraBytes + (digitCount >> 1)] |= (byte) ((charToBCD(c) & 0x0F) << shift);
             digitCount++;
         }
 
@@ -1088,47 +1114,55 @@ public class PhoneNumberUtils
         if ((digitCount & 0x01) == 1) result[extraBytes + (digitCount >> 1)] |= 0xF0;
 
         int offset = 0;
-        if (includeLength) result[offset++] = (byte)(resultLen - 1);
-        result[offset] = (byte)(hasPlus ? TOA_International : TOA_Unknown);
+        if (includeLength) result[offset++] = (byte) (resultLen - 1);
+        result[offset] = (byte) (hasPlus ? TOA_International : TOA_Unknown);
 
         return result;
     }
 
     //================ Number formatting =========================
 
-    /** The current locale is unknown, look for a country code or don't format */
+    /**
+     * The current locale is unknown, look for a country code or don't format
+     */
     public static final int FORMAT_UNKNOWN = 0;
-    /** NANP formatting */
+    /**
+     * NANP formatting
+     */
     public static final int FORMAT_NANP = 1;
-    /** Japanese formatting */
+    /**
+     * Japanese formatting
+     */
     public static final int FORMAT_JAPAN = 2;
 
-    /** List of country codes for countries that use the NANP */
-    private static final String[] NANP_COUNTRIES = new String[] {
-        "US", // United States
-        "CA", // Canada
-        "AS", // American Samoa
-        "AI", // Anguilla
-        "AG", // Antigua and Barbuda
-        "BS", // Bahamas
-        "BB", // Barbados
-        "BM", // Bermuda
-        "VG", // British Virgin Islands
-        "KY", // Cayman Islands
-        "DM", // Dominica
-        "DO", // Dominican Republic
-        "GD", // Grenada
-        "GU", // Guam
-        "JM", // Jamaica
-        "PR", // Puerto Rico
-        "MS", // Montserrat
-        "MP", // Northern Mariana Islands
-        "KN", // Saint Kitts and Nevis
-        "LC", // Saint Lucia
-        "VC", // Saint Vincent and the Grenadines
-        "TT", // Trinidad and Tobago
-        "TC", // Turks and Caicos Islands
-        "VI", // U.S. Virgin Islands
+    /**
+     * List of country codes for countries that use the NANP
+     */
+    private static final String[] NANP_COUNTRIES = new String[]{
+            "US", // United States
+            "CA", // Canada
+            "AS", // American Samoa
+            "AI", // Anguilla
+            "AG", // Antigua and Barbuda
+            "BS", // Bahamas
+            "BB", // Barbados
+            "BM", // Bermuda
+            "VG", // British Virgin Islands
+            "KY", // Cayman Islands
+            "DM", // Dominica
+            "DO", // Dominican Republic
+            "GD", // Grenada
+            "GU", // Guam
+            "JM", // Jamaica
+            "PR", // Puerto Rico
+            "MS", // Montserrat
+            "MP", // Northern Mariana Islands
+            "KN", // Saint Kitts and Nevis
+            "LC", // Saint Lucia
+            "VC", // Saint Vincent and the Grenadines
+            "TT", // Trinidad and Tobago
+            "TC", // Turks and Caicos Islands
+            "VI", // U.S. Virgin Islands
     };
 
     /**
@@ -1137,8 +1171,7 @@ public class PhoneNumberUtils
      *
      * @param source The phone number to format
      * @return A locally acceptable formatting of the input, or the raw input if
-     *  formatting rules aren't known for the number
-     *
+     * formatting rules aren't known for the number
      * @deprecated Use link #formatNumber(String phoneNumber, String defaultCountryIso) instead
      */
     public static String formatNumber(String source) {
@@ -1151,11 +1184,10 @@ public class PhoneNumberUtils
      * Formats the given number with the given formatting type. Currently
      * {@link #FORMAT_NANP} and {@link #FORMAT_JAPAN} are supported as a formating type.
      *
-     * @param source the phone number to format
+     * @param source                the phone number to format
      * @param defaultFormattingType The default formatting rules to apply if the number does
-     * not begin with +[country_code]
+     *                              not begin with +[country_code]
      * @return The phone number formatted with the given formatting type.
-     *
      * @hide
      * @deprecated Use link #formatNumber(String phoneNumber, String defaultCountryIso) instead
      */
@@ -1171,7 +1203,6 @@ public class PhoneNumberUtils
      * @param locale The locale of interest, usually {@link Locale#getDefault()}
      * @return The formatting type for the given locale, or FORMAT_UNKNOWN if the formatting
      * rules are not known for the given locale
-     *
      * @deprecated Use link #formatNumber(String phoneNumber, String defaultCountryIso) instead
      */
     public static int getFormatTypeForLocale(Locale locale) {
@@ -1184,10 +1215,9 @@ public class PhoneNumberUtils
      * Formats a phone number in-place. Currently {@link #FORMAT_JAPAN} and {@link #FORMAT_NANP}
      * is supported as a second argument.
      *
-     * @param text The number to be formatted, will be modified with the formatting
+     * @param text                  The number to be formatted, will be modified with the formatting
      * @param defaultFormattingType The default formatting rules to apply if the number does
-     * not begin with +[country_code]
-     *
+     *                              not begin with +[country_code]
      * @deprecated Use link #formatNumber(String phoneNumber, String defaultCountryIso) instead
      */
     public static void formatNumber(Editable text, int defaultFormattingType) {
@@ -1197,7 +1227,7 @@ public class PhoneNumberUtils
             if (text.charAt(1) == '1') {
                 formatType = FORMAT_NANP;
             } else if (text.length() >= 3 && text.charAt(1) == '8'
-                && text.charAt(2) == '1') {
+                    && text.charAt(2) == '1') {
                 formatType = FORMAT_JAPAN;
             } else {
                 formatType = FORMAT_UNKNOWN;
@@ -1225,7 +1255,7 @@ public class PhoneNumberUtils
     /**
      * Formats a phone number in-place using the NANP formatting rules. Numbers will be formatted
      * as:
-     *
+     * <p>
      * <p><code>
      * xxxxx
      * xxx-xxxx
@@ -1235,7 +1265,6 @@ public class PhoneNumberUtils
      * </code></p>
      *
      * @param text the number to be formatted, will be modified with the formatting
-     *
      * @deprecated Use link #formatNumber(String phoneNumber, String defaultCountryIso) instead
      */
     public static void formatNanpNumber(Editable text) {
@@ -1339,7 +1368,7 @@ public class PhoneNumberUtils
     /**
      * Formats a phone number in-place using the Japanese formatting rules.
      * Numbers will be formatted as:
-     *
+     * <p>
      * <p><code>
      * 03-xxxx-xxxx
      * 090-xxxx-xxxx
@@ -1349,8 +1378,7 @@ public class PhoneNumberUtils
      * </code></p>
      *
      * @param text the number to be formatted, will be modified with
-     * the formatting
-     *
+     *             the formatting
      * @deprecated Use link #formatNumber(String phoneNumber, String defaultCountryIso) instead
      */
     public static void formatJapaneseNumber(Editable text) {
@@ -1367,9 +1395,9 @@ public class PhoneNumberUtils
         while (p < text.length()) {
             if (text.charAt(p) == '-') {
                 text.delete(p, p + 1);
-           } else {
+            } else {
                 p++;
-           }
+            }
         }
     }
 
@@ -1382,12 +1410,10 @@ public class PhoneNumberUtils
      * The defaultCountryIso is used to validate the given number and generate
      * the E.164 phone number if the given number doesn't have a country code.
      *
-     * @param phoneNumber
-     *            the phone number to format
-     * @param defaultCountryIso
-     *            the ISO 3166-1 two letters country code
+     * @param phoneNumber       the phone number to format
+     * @param defaultCountryIso the ISO 3166-1 two letters country code
      * @return the E.164 representation, or null if the given phone number is
-     *         not valid.
+     * not valid.
      */
     public static String formatNumberToE164(String phoneNumber, String defaultCountryIso) {
         PhoneNumberUtil util = PhoneNumberUtil.getInstance();
@@ -1408,11 +1434,9 @@ public class PhoneNumberUtils
      * If the given number doesn't have the country code, the phone will be
      * formatted to the default country's convention.
      *
-     * @param phoneNumber
-     *            the number to be formatted.
-     * @param defaultCountryIso
-     *            the ISO 3166-1 two letters country code whose convention will
-     *            be used if the given number doesn't have the country code.
+     * @param phoneNumber       the number to be formatted.
+     * @param defaultCountryIso the ISO 3166-1 two letters country code whose convention will
+     *                          be used if the given number doesn't have the country code.
      * @return the formatted number, or null if the given number is not valid.
      */
     public static String formatNumber(String phoneNumber, String defaultCountryIso) {
@@ -1437,17 +1461,14 @@ public class PhoneNumberUtils
      * The number which has only dailable character is treated as not being
      * formatted.
      *
-     * @param phoneNumber
-     *            the number to be formatted.
-     * @param phoneNumberE164
-     *            the E164 format number whose country code is used if the given
-     *            phoneNumber doesn't have the country code.
-     * @param defaultCountryIso
-     *            the ISO 3166-1 two letters country code whose convention will
-     *            be used if the phoneNumberE164 is null or invalid, or if phoneNumber
-     *            contains IDD.
+     * @param phoneNumber       the number to be formatted.
+     * @param phoneNumberE164   the E164 format number whose country code is used if the given
+     *                          phoneNumber doesn't have the country code.
+     * @param defaultCountryIso the ISO 3166-1 two letters country code whose convention will
+     *                          be used if the phoneNumberE164 is null or invalid, or if phoneNumber
+     *                          contains IDD.
      * @return the formatted number if the given number has been formatted,
-     *            otherwise, return the given number.
+     * otherwise, return the given number.
      */
     public static String formatNumber(
             String phoneNumber, String phoneNumberE164, String defaultCountryIso) {
@@ -1467,8 +1488,8 @@ public class PhoneNumberUtils
                 PhoneNumber pn = util.parse(phoneNumberE164, "ZZ");
                 String regionCode = util.getRegionCodeForNumber(pn);
                 if (!TextUtils.isEmpty(regionCode) &&
-                    // This makes sure phoneNumber doesn't contain an IDD
-                    normalizeNumber(phoneNumber).indexOf(phoneNumberE164.substring(1)) <= 0) {
+                        // This makes sure phoneNumber doesn't contain an IDD
+                        normalizeNumber(phoneNumber).indexOf(phoneNumberE164.substring(1)) <= 0) {
                     defaultCountryIso = regionCode;
                 }
             } catch (NumberParseException e) {
@@ -1552,7 +1573,7 @@ public class PhoneNumberUtils
      *
      * @param number the number to look up.
      * @return true if the number is in the list of emergency numbers
-     *         listed in the RIL / SIM, otherwise return false.
+     * listed in the RIL / SIM, otherwise return false.
      */
     public static boolean isEmergencyNumber(String number) {
         return isEmergencyNumber(getDefaultVoiceSubId(), number);
@@ -1562,10 +1583,10 @@ public class PhoneNumberUtils
      * Checks a given number against the list of
      * emergency numbers provided by the RIL and SIM card.
      *
-     * @param subId the subscription id of the SIM.
+     * @param subId  the subscription id of the SIM.
      * @param number the number to look up.
      * @return true if the number is in the list of emergency numbers
-     *         listed in the RIL / SIM, otherwise return false.
+     * listed in the RIL / SIM, otherwise return false.
      * @hide
      */
     public static boolean isEmergencyNumber(long subId, String number) {
@@ -1577,21 +1598,20 @@ public class PhoneNumberUtils
     /**
      * Checks if given number might *potentially* result in
      * a call to an emergency service on the current network.
-     *
+     * <p>
      * Specifically, this method will return true if the specified number
      * is an emergency number according to the list managed by the RIL or
      * SIM, *or* if the specified number simply starts with the same
      * digits as any of the emergency numbers listed in the RIL / SIM.
-     *
+     * <p>
      * This method is intended for internal use by the phone app when
      * deciding whether to allow ACTION_CALL intents from 3rd party apps
      * (where we're required to *not* allow emergency calls to be placed.)
      *
      * @param number the number to look up.
      * @return true if the number is in the list of emergency numbers
-     *         listed in the RIL / SIM, *or* if the number starts with the
-     *         same digits as any of those emergency numbers.
-     *
+     * listed in the RIL / SIM, *or* if the number starts with the
+     * same digits as any of those emergency numbers.
      * @hide
      */
     public static boolean isPotentialEmergencyNumber(String number) {
@@ -1601,21 +1621,21 @@ public class PhoneNumberUtils
     /**
      * Checks if given number might *potentially* result in
      * a call to an emergency service on the current network.
-     *
+     * <p>
      * Specifically, this method will return true if the specified number
      * is an emergency number according to the list managed by the RIL or
      * SIM, *or* if the specified number simply starts with the same
      * digits as any of the emergency numbers listed in the RIL / SIM.
-     *
+     * <p>
      * This method is intended for internal use by the phone app when
      * deciding whether to allow ACTION_CALL intents from 3rd party apps
      * (where we're required to *not* allow emergency calls to be placed.)
      *
-     * @param subId the subscription id of the SIM.
+     * @param subId  the subscription id of the SIM.
      * @param number the number to look up.
      * @return true if the number is in the list of emergency numbers
-     *         listed in the RIL / SIM, *or* if the number starts with the
-     *         same digits as any of those emergency numbers.
+     * listed in the RIL / SIM, *or* if the number starts with the
+     * same digits as any of those emergency numbers.
      * @hide
      */
     public static boolean isPotentialEmergencyNumber(long subId, String number) {
@@ -1628,20 +1648,18 @@ public class PhoneNumberUtils
      * Helper function for isEmergencyNumber(String) and
      * isPotentialEmergencyNumber(String).
      *
-     * @param number the number to look up.
-     *
+     * @param number        the number to look up.
      * @param useExactMatch if true, consider a number to be an emergency
-     *           number only if it *exactly* matches a number listed in
-     *           the RIL / SIM.  If false, a number is considered to be an
-     *           emergency number if it simply starts with the same digits
-     *           as any of the emergency numbers listed in the RIL / SIM.
-     *           (Setting useExactMatch to false allows you to identify
-     *           number that could *potentially* result in emergency calls
-     *           since many networks will actually ignore trailing digits
-     *           after a valid emergency number.)
-     *
+     *                      number only if it *exactly* matches a number listed in
+     *                      the RIL / SIM.  If false, a number is considered to be an
+     *                      emergency number if it simply starts with the same digits
+     *                      as any of the emergency numbers listed in the RIL / SIM.
+     *                      (Setting useExactMatch to false allows you to identify
+     *                      number that could *potentially* result in emergency calls
+     *                      since many networks will actually ignore trailing digits
+     *                      after a valid emergency number.)
      * @return true if the number is in the list of emergency numbers
-     *         listed in the RIL / sim, otherwise return false.
+     * listed in the RIL / sim, otherwise return false.
      */
     private static boolean isEmergencyNumberInternal(String number, boolean useExactMatch) {
         return isEmergencyNumberInternal(getDefaultVoiceSubId(), number, useExactMatch);
@@ -1651,46 +1669,43 @@ public class PhoneNumberUtils
      * Helper function for isEmergencyNumber(String) and
      * isPotentialEmergencyNumber(String).
      *
-     * @param subId the subscription id of the SIM.
-     * @param number the number to look up.
-     *
+     * @param subId         the subscription id of the SIM.
+     * @param number        the number to look up.
      * @param useExactMatch if true, consider a number to be an emergency
-     *           number only if it *exactly* matches a number listed in
-     *           the RIL / SIM.  If false, a number is considered to be an
-     *           emergency number if it simply starts with the same digits
-     *           as any of the emergency numbers listed in the RIL / SIM.
-     *           (Setting useExactMatch to false allows you to identify
-     *           number that could *potentially* result in emergency calls
-     *           since many networks will actually ignore trailing digits
-     *           after a valid emergency number.)
-     *
+     *                      number only if it *exactly* matches a number listed in
+     *                      the RIL / SIM.  If false, a number is considered to be an
+     *                      emergency number if it simply starts with the same digits
+     *                      as any of the emergency numbers listed in the RIL / SIM.
+     *                      (Setting useExactMatch to false allows you to identify
+     *                      number that could *potentially* result in emergency calls
+     *                      since many networks will actually ignore trailing digits
+     *                      after a valid emergency number.)
      * @return true if the number is in the list of emergency numbers
-     *         listed in the RIL / sim, otherwise return false.
+     * listed in the RIL / sim, otherwise return false.
      */
     private static boolean isEmergencyNumberInternal(long subId, String number,
-            boolean useExactMatch) {
+                                                     boolean useExactMatch) {
         return isEmergencyNumberInternal(subId, number, null, useExactMatch);
     }
 
     /**
      * Checks if a given number is an emergency number for a specific country.
      *
-     * @param number the number to look up.
+     * @param number            the number to look up.
      * @param defaultCountryIso the specific country which the number should be checked against
      * @return if the number is an emergency number for the specific country, then return true,
      * otherwise false
-     *
      * @hide
      */
     public static boolean isEmergencyNumber(String number, String defaultCountryIso) {
-            return isEmergencyNumber(getDefaultVoiceSubId(), number, defaultCountryIso);
+        return isEmergencyNumber(getDefaultVoiceSubId(), number, defaultCountryIso);
     }
 
     /**
      * Checks if a given number is an emergency number for a specific country.
      *
-     * @param subId the subscription id of the SIM.
-     * @param number the number to look up.
+     * @param subId             the subscription id of the SIM.
+     * @param number            the number to look up.
      * @param defaultCountryIso the specific country which the number should be checked against
      * @return if the number is an emergency number for the specific country, then return true,
      * otherwise false
@@ -1698,29 +1713,28 @@ public class PhoneNumberUtils
      */
     public static boolean isEmergencyNumber(long subId, String number, String defaultCountryIso) {
         return isEmergencyNumberInternal(subId, number,
-                                         defaultCountryIso,
-                                         true /* useExactMatch */);
+                defaultCountryIso,
+                true /* useExactMatch */);
     }
 
     /**
      * Checks if a given number might *potentially* result in a call to an
      * emergency service, for a specific country.
-     *
+     * <p>
      * Specifically, this method will return true if the specified number
      * is an emergency number in the specified country, *or* if the number
      * simply starts with the same digits as any emergency number for that
      * country.
-     *
+     * <p>
      * This method is intended for internal use by the phone app when
      * deciding whether to allow ACTION_CALL intents from 3rd party apps
      * (where we're required to *not* allow emergency calls to be placed.)
      *
-     * @param number the number to look up.
+     * @param number            the number to look up.
      * @param defaultCountryIso the specific country which the number should be checked against
      * @return true if the number is an emergency number for the specific
-     *         country, *or* if the number starts with the same digits as
-     *         any of those emergency numbers.
-     *
+     * country, *or* if the number starts with the same digits as
+     * any of those emergency numbers.
      * @hide
      */
     public static boolean isPotentialEmergencyNumber(String number, String defaultCountryIso) {
@@ -1730,43 +1744,42 @@ public class PhoneNumberUtils
     /**
      * Checks if a given number might *potentially* result in a call to an
      * emergency service, for a specific country.
-     *
+     * <p>
      * Specifically, this method will return true if the specified number
      * is an emergency number in the specified country, *or* if the number
      * simply starts with the same digits as any emergency number for that
      * country.
-     *
+     * <p>
      * This method is intended for internal use by the phone app when
      * deciding whether to allow ACTION_CALL intents from 3rd party apps
      * (where we're required to *not* allow emergency calls to be placed.)
      *
-     * @param subId the subscription id of the SIM.
-     * @param number the number to look up.
+     * @param subId             the subscription id of the SIM.
+     * @param number            the number to look up.
      * @param defaultCountryIso the specific country which the number should be checked against
      * @return true if the number is an emergency number for the specific
-     *         country, *or* if the number starts with the same digits as
-     *         any of those emergency numbers.
+     * country, *or* if the number starts with the same digits as
+     * any of those emergency numbers.
      * @hide
      */
     public static boolean isPotentialEmergencyNumber(long subId, String number,
-            String defaultCountryIso) {
+                                                     String defaultCountryIso) {
         return isEmergencyNumberInternal(subId, number,
-                                         defaultCountryIso,
-                                         false /* useExactMatch */);
+                defaultCountryIso,
+                false /* useExactMatch */);
     }
 
     /**
      * Helper function for isEmergencyNumber(String, String) and
      * isPotentialEmergencyNumber(String, String).
      *
-     * @param number the number to look up.
+     * @param number            the number to look up.
      * @param defaultCountryIso the specific country which the number should be checked against
-     * @param useExactMatch if true, consider a number to be an emergency
-     *           number only if it *exactly* matches a number listed in
-     *           the RIL / SIM.  If false, a number is considered to be an
-     *           emergency number if it simply starts with the same digits
-     *           as any of the emergency numbers listed in the RIL / SIM.
-     *
+     * @param useExactMatch     if true, consider a number to be an emergency
+     *                          number only if it *exactly* matches a number listed in
+     *                          the RIL / SIM.  If false, a number is considered to be an
+     *                          emergency number if it simply starts with the same digits
+     *                          as any of the emergency numbers listed in the RIL / SIM.
      * @return true if the number is an emergency number for the specified country.
      */
     private static boolean isEmergencyNumberInternal(String number,
@@ -1780,15 +1793,14 @@ public class PhoneNumberUtils
      * Helper function for isEmergencyNumber(String, String) and
      * isPotentialEmergencyNumber(String, String).
      *
-     * @param subId the subscription id of the SIM.
-     * @param number the number to look up.
+     * @param subId             the subscription id of the SIM.
+     * @param number            the number to look up.
      * @param defaultCountryIso the specific country which the number should be checked against
-     * @param useExactMatch if true, consider a number to be an emergency
-     *           number only if it *exactly* matches a number listed in
-     *           the RIL / SIM.  If false, a number is considered to be an
-     *           emergency number if it simply starts with the same digits
-     *           as any of the emergency numbers listed in the RIL / SIM.
-     *
+     * @param useExactMatch     if true, consider a number to be an emergency
+     *                          number only if it *exactly* matches a number listed in
+     *                          the RIL / SIM.  If false, a number is considered to be an
+     *                          emergency number if it simply starts with the same digits
+     *                          as any of the emergency numbers listed in the RIL / SIM.
      * @return true if the number is an emergency number for the specified country.
      * @hide
      */
@@ -1869,7 +1881,7 @@ public class PhoneNumberUtils
     /**
      * Checks if a given number is an emergency number for the country that the user is in.
      *
-     * @param number the number to look up.
+     * @param number  the number to look up.
      * @param context the specific context which the number should be checked against
      * @return true if the specified number is an emergency number for the country the user
      * is currently in.
@@ -1881,8 +1893,8 @@ public class PhoneNumberUtils
     /**
      * Checks if a given number is an emergency number for the country that the user is in.
      *
-     * @param subId the subscription id of the SIM.
-     * @param number the number to look up.
+     * @param subId   the subscription id of the SIM.
+     * @param number  the number to look up.
      * @param context the specific context which the number should be checked against
      * @return true if the specified number is an emergency number for the country the user
      * is currently in.
@@ -1890,31 +1902,30 @@ public class PhoneNumberUtils
      */
     public static boolean isLocalEmergencyNumber(Context context, long subId, String number) {
         return isLocalEmergencyNumberInternal(subId, number,
-                                              context,
-                                              true /* useExactMatch */);
+                context,
+                true /* useExactMatch */);
     }
 
     /**
      * Checks if a given number might *potentially* result in a call to an
      * emergency service, for the country that the user is in. The current
      * country is determined using the CountryDetector.
-     *
+     * <p>
      * Specifically, this method will return true if the specified number
      * is an emergency number in the current country, *or* if the number
      * simply starts with the same digits as any emergency number for the
      * current country.
-     *
+     * <p>
      * This method is intended for internal use by the phone app when
      * deciding whether to allow ACTION_CALL intents from 3rd party apps
      * (where we're required to *not* allow emergency calls to be placed.)
      *
-     * @param number the number to look up.
+     * @param number  the number to look up.
      * @param context the specific context which the number should be checked against
      * @return true if the specified number is an emergency number for a local country, based on the
-     *              CountryDetector.
-     *
-     * @see android.location.CountryDetector
+     * CountryDetector.
      * @hide
+     * @see android.location.CountryDetector
      */
     public static boolean isPotentialLocalEmergencyNumber(Context context, String number) {
         return isPotentialLocalEmergencyNumber(context, getDefaultVoiceSubId(), number);
@@ -1924,48 +1935,45 @@ public class PhoneNumberUtils
      * Checks if a given number might *potentially* result in a call to an
      * emergency service, for the country that the user is in. The current
      * country is determined using the CountryDetector.
-     *
+     * <p>
      * Specifically, this method will return true if the specified number
      * is an emergency number in the current country, *or* if the number
      * simply starts with the same digits as any emergency number for the
      * current country.
-     *
+     * <p>
      * This method is intended for internal use by the phone app when
      * deciding whether to allow ACTION_CALL intents from 3rd party apps
      * (where we're required to *not* allow emergency calls to be placed.)
      *
-     * @param subId the subscription id of the SIM.
-     * @param number the number to look up.
+     * @param subId   the subscription id of the SIM.
+     * @param number  the number to look up.
      * @param context the specific context which the number should be checked against
      * @return true if the specified number is an emergency number for a local country, based on the
-     *              CountryDetector.
-     *
+     * CountryDetector.
      * @hide
      */
     public static boolean isPotentialLocalEmergencyNumber(Context context, long subId,
-            String number) {
+                                                          String number) {
         return isLocalEmergencyNumberInternal(subId, number,
-                                              context,
-                                              false /* useExactMatch */);
+                context,
+                false /* useExactMatch */);
     }
 
     /**
      * Helper function for isLocalEmergencyNumber() and
      * isPotentialLocalEmergencyNumber().
      *
-     * @param number the number to look up.
-     * @param context the specific context which the number should be checked against
+     * @param number        the number to look up.
+     * @param context       the specific context which the number should be checked against
      * @param useExactMatch if true, consider a number to be an emergency
-     *           number only if it *exactly* matches a number listed in
-     *           the RIL / SIM.  If false, a number is considered to be an
-     *           emergency number if it simply starts with the same digits
-     *           as any of the emergency numbers listed in the RIL / SIM.
-     *
+     *                      number only if it *exactly* matches a number listed in
+     *                      the RIL / SIM.  If false, a number is considered to be an
+     *                      emergency number if it simply starts with the same digits
+     *                      as any of the emergency numbers listed in the RIL / SIM.
      * @return true if the specified number is an emergency number for a
-     *              local country, based on the CountryDetector.
-     *
-     * @see android.location.CountryDetector
+     * local country, based on the CountryDetector.
      * @hide
+     * @see android.location.CountryDetector
      */
     private static boolean isLocalEmergencyNumberInternal(String number,
                                                           Context context,
@@ -1978,17 +1986,16 @@ public class PhoneNumberUtils
      * Helper function for isLocalEmergencyNumber() and
      * isPotentialLocalEmergencyNumber().
      *
-     * @param subId the subscription id of the SIM.
-     * @param number the number to look up.
-     * @param context the specific context which the number should be checked against
+     * @param subId         the subscription id of the SIM.
+     * @param number        the number to look up.
+     * @param context       the specific context which the number should be checked against
      * @param useExactMatch if true, consider a number to be an emergency
-     *           number only if it *exactly* matches a number listed in
-     *           the RIL / SIM.  If false, a number is considered to be an
-     *           emergency number if it simply starts with the same digits
-     *           as any of the emergency numbers listed in the RIL / SIM.
-     *
+     *                      number only if it *exactly* matches a number listed in
+     *                      the RIL / SIM.  If false, a number is considered to be an
+     *                      emergency number if it simply starts with the same digits
+     *                      as any of the emergency numbers listed in the RIL / SIM.
      * @return true if the specified number is an emergency number for a
-     *              local country, based on the CountryDetector.
+     * local country, based on the CountryDetector.
      * @hide
      */
     private static boolean isLocalEmergencyNumberInternal(long subId, String number,
@@ -2010,8 +2017,8 @@ public class PhoneNumberUtils
 
     /**
      * isVoiceMailNumber: checks a given number against the voicemail
-     *   number provided by the RIL and SIM card. The caller must have
-     *   the READ_PHONE_STATE credential.
+     * number provided by the RIL and SIM card. The caller must have
+     * the READ_PHONE_STATE credential.
      *
      * @param number the number to look up.
      * @return true if the number is in the list of voicemail. False
@@ -2024,10 +2031,10 @@ public class PhoneNumberUtils
 
     /**
      * isVoiceMailNumber: checks a given number against the voicemail
-     *   number provided by the RIL and SIM card. The caller must have
-     *   the READ_PHONE_STATE credential.
+     * number provided by the RIL and SIM card. The caller must have
+     * the READ_PHONE_STATE credential.
      *
-     * @param subId the subscription id of the SIM.
+     * @param subId  the subscription id of the SIM.
      * @param number the number to look up.
      * @return true if the number is in the list of voicemail. False
      * otherwise, including if the caller does not have the permission
@@ -2059,8 +2066,8 @@ public class PhoneNumberUtils
      * ITU E.161 and ISO/IEC 9995-8.
      *
      * @return the input string, with alpha letters converted to numeric
-     *         digits using the phone keypad letter mapping.  For example,
-     *         an input of "1-800-GOOG-411" will return "1-800-4664-411".
+     * digits using the phone keypad letter mapping.  For example,
+     * an input of "1-800-GOOG-411" will return "1-800-4664-411".
      */
     public static String convertKeypadLettersToDigits(String input) {
         if (input == null) {
@@ -2087,30 +2094,67 @@ public class PhoneNumberUtils
      * TODO: This should come from a resource.
      */
     private static final SparseIntArray KEYPAD_MAP = new SparseIntArray();
+
     static {
-        KEYPAD_MAP.put('a', '2'); KEYPAD_MAP.put('b', '2'); KEYPAD_MAP.put('c', '2');
-        KEYPAD_MAP.put('A', '2'); KEYPAD_MAP.put('B', '2'); KEYPAD_MAP.put('C', '2');
+        KEYPAD_MAP.put('a', '2');
+        KEYPAD_MAP.put('b', '2');
+        KEYPAD_MAP.put('c', '2');
+        KEYPAD_MAP.put('A', '2');
+        KEYPAD_MAP.put('B', '2');
+        KEYPAD_MAP.put('C', '2');
 
-        KEYPAD_MAP.put('d', '3'); KEYPAD_MAP.put('e', '3'); KEYPAD_MAP.put('f', '3');
-        KEYPAD_MAP.put('D', '3'); KEYPAD_MAP.put('E', '3'); KEYPAD_MAP.put('F', '3');
+        KEYPAD_MAP.put('d', '3');
+        KEYPAD_MAP.put('e', '3');
+        KEYPAD_MAP.put('f', '3');
+        KEYPAD_MAP.put('D', '3');
+        KEYPAD_MAP.put('E', '3');
+        KEYPAD_MAP.put('F', '3');
 
-        KEYPAD_MAP.put('g', '4'); KEYPAD_MAP.put('h', '4'); KEYPAD_MAP.put('i', '4');
-        KEYPAD_MAP.put('G', '4'); KEYPAD_MAP.put('H', '4'); KEYPAD_MAP.put('I', '4');
+        KEYPAD_MAP.put('g', '4');
+        KEYPAD_MAP.put('h', '4');
+        KEYPAD_MAP.put('i', '4');
+        KEYPAD_MAP.put('G', '4');
+        KEYPAD_MAP.put('H', '4');
+        KEYPAD_MAP.put('I', '4');
 
-        KEYPAD_MAP.put('j', '5'); KEYPAD_MAP.put('k', '5'); KEYPAD_MAP.put('l', '5');
-        KEYPAD_MAP.put('J', '5'); KEYPAD_MAP.put('K', '5'); KEYPAD_MAP.put('L', '5');
+        KEYPAD_MAP.put('j', '5');
+        KEYPAD_MAP.put('k', '5');
+        KEYPAD_MAP.put('l', '5');
+        KEYPAD_MAP.put('J', '5');
+        KEYPAD_MAP.put('K', '5');
+        KEYPAD_MAP.put('L', '5');
 
-        KEYPAD_MAP.put('m', '6'); KEYPAD_MAP.put('n', '6'); KEYPAD_MAP.put('o', '6');
-        KEYPAD_MAP.put('M', '6'); KEYPAD_MAP.put('N', '6'); KEYPAD_MAP.put('O', '6');
+        KEYPAD_MAP.put('m', '6');
+        KEYPAD_MAP.put('n', '6');
+        KEYPAD_MAP.put('o', '6');
+        KEYPAD_MAP.put('M', '6');
+        KEYPAD_MAP.put('N', '6');
+        KEYPAD_MAP.put('O', '6');
 
-        KEYPAD_MAP.put('p', '7'); KEYPAD_MAP.put('q', '7'); KEYPAD_MAP.put('r', '7'); KEYPAD_MAP.put('s', '7');
-        KEYPAD_MAP.put('P', '7'); KEYPAD_MAP.put('Q', '7'); KEYPAD_MAP.put('R', '7'); KEYPAD_MAP.put('S', '7');
+        KEYPAD_MAP.put('p', '7');
+        KEYPAD_MAP.put('q', '7');
+        KEYPAD_MAP.put('r', '7');
+        KEYPAD_MAP.put('s', '7');
+        KEYPAD_MAP.put('P', '7');
+        KEYPAD_MAP.put('Q', '7');
+        KEYPAD_MAP.put('R', '7');
+        KEYPAD_MAP.put('S', '7');
 
-        KEYPAD_MAP.put('t', '8'); KEYPAD_MAP.put('u', '8'); KEYPAD_MAP.put('v', '8');
-        KEYPAD_MAP.put('T', '8'); KEYPAD_MAP.put('U', '8'); KEYPAD_MAP.put('V', '8');
+        KEYPAD_MAP.put('t', '8');
+        KEYPAD_MAP.put('u', '8');
+        KEYPAD_MAP.put('v', '8');
+        KEYPAD_MAP.put('T', '8');
+        KEYPAD_MAP.put('U', '8');
+        KEYPAD_MAP.put('V', '8');
 
-        KEYPAD_MAP.put('w', '9'); KEYPAD_MAP.put('x', '9'); KEYPAD_MAP.put('y', '9'); KEYPAD_MAP.put('z', '9');
-        KEYPAD_MAP.put('W', '9'); KEYPAD_MAP.put('X', '9'); KEYPAD_MAP.put('Y', '9'); KEYPAD_MAP.put('Z', '9');
+        KEYPAD_MAP.put('w', '9');
+        KEYPAD_MAP.put('x', '9');
+        KEYPAD_MAP.put('y', '9');
+        KEYPAD_MAP.put('z', '9');
+        KEYPAD_MAP.put('W', '9');
+        KEYPAD_MAP.put('X', '9');
+        KEYPAD_MAP.put('Y', '9');
+        KEYPAD_MAP.put('Z', '9');
     }
 
     //================ Plus Code formatting =========================
@@ -2126,31 +2170,30 @@ public class PhoneNumberUtils
      * telephone numbering plan of the system that the phone is camped on.
      * Currently, we only support the case that the default and current telephone
      * numbering plans are North American Numbering Plan(NANP).
-     *
+     * <p>
      * The passed-in dialStr should only contain the valid format as described below,
      * 1) the 1st character in the dialStr should be one of the really dialable
-     *    characters listed below
-     *    ISO-LATIN characters 0-9, *, # , +
+     * characters listed below
+     * ISO-LATIN characters 0-9, *, # , +
      * 2) the dialStr should already strip out the separator characters,
-     *    every character in the dialStr should be one of the non separator characters
-     *    listed below
-     *    ISO-LATIN characters 0-9, *, # , +, WILD, WAIT, PAUSE
-     *
+     * every character in the dialStr should be one of the non separator characters
+     * listed below
+     * ISO-LATIN characters 0-9, *, # , +, WILD, WAIT, PAUSE
+     * <p>
      * Otherwise, this function returns the dial string passed in
      *
      * @param dialStr the original dial string
      * @return the converted dial string if the current/default countries belong to NANP,
      * and if there is the "+" in the original dial string. Otherwise, the original dial
      * string returns.
-     *
+     * <p>
      * This API is for CDMA only
-     *
      * @hide TODO: pending API Council approval
      */
     public static String cdmaCheckAndProcessPlusCode(String dialStr) {
         if (!TextUtils.isEmpty(dialStr)) {
             if (isReallyDialable(dialStr.charAt(0)) &&
-                isNonSeparator(dialStr)) {
+                    isNonSeparator(dialStr)) {
                 String currIso = SystemProperties.get(PROPERTY_OPERATOR_ISO_COUNTRY, "");
                 String defaultIso = SystemProperties.get(PROPERTY_ICC_OPERATOR_ISO_COUNTRY, "");
                 if (!TextUtils.isEmpty(currIso) && !TextUtils.isEmpty(defaultIso)) {
@@ -2187,39 +2230,37 @@ public class PhoneNumberUtils
     /**
      * This function should be called from checkAndProcessPlusCode only
      * And it is used for test purpose also.
-     *
+     * <p>
      * It checks the dial string by looping through the network portion,
      * post dial portion 1, post dial porting 2, etc. If there is any
      * plus sign, then process the plus sign.
      * Currently, this function supports the plus sign conversion within NANP only.
      * Specifically, it handles the plus sign in the following ways:
      * 1)+1NANP,remove +, e.g.
-     *   +18475797000 is converted to 18475797000,
+     * +18475797000 is converted to 18475797000,
      * 2)+NANP or +non-NANP Numbers,replace + with the current NANP IDP, e.g,
-     *   +8475797000 is converted to 0118475797000,
-     *   +11875767800 is converted to 01111875767800
+     * +8475797000 is converted to 0118475797000,
+     * +11875767800 is converted to 01111875767800
      * 3)+1NANP in post dial string(s), e.g.
-     *   8475797000;+18475231753 is converted to 8475797000;18475231753
+     * 8475797000;+18475231753 is converted to 8475797000;18475231753
      *
-     *
-     * @param dialStr the original dial string
-     * @param currFormat the numbering system of the current country that the phone is camped on
+     * @param dialStr       the original dial string
+     * @param currFormat    the numbering system of the current country that the phone is camped on
      * @param defaultFormat the numbering system of the country that the phone is activated on
      * @return the converted dial string if the current/default countries belong to NANP,
      * and if there is the "+" in the original dial string. Otherwise, the original dial
      * string returns.
-     *
      * @hide
      */
     public static String
-    cdmaCheckAndProcessPlusCodeByNumberFormat(String dialStr,int currFormat,int defaultFormat) {
+    cdmaCheckAndProcessPlusCodeByNumberFormat(String dialStr, int currFormat, int defaultFormat) {
         String retStr = dialStr;
 
         boolean useNanp = (currFormat == defaultFormat) && (currFormat == FORMAT_NANP);
 
         // Checks if the plus sign character is in the passed-in dial string
         if (dialStr != null &&
-            dialStr.lastIndexOf(PLUS_SIGN_STRING) != -1) {
+                dialStr.lastIndexOf(PLUS_SIGN_STRING) != -1) {
 
             // Handle case where default and current telephone numbering plans are NANP.
             String postDialStr = null;
@@ -2237,7 +2278,7 @@ public class PhoneNumberUtils
                 // and the current country the phone is camped
                 if (useNanp) {
                     networkDialStr = extractNetworkPortion(tempDialStr);
-                } else  {
+                } else {
                     networkDialStr = extractNetworkPortionAlt(tempDialStr);
 
                 }
@@ -2265,7 +2306,7 @@ public class PhoneNumberUtils
                     // dialableIndex should always be greater than 0
                     if (dialableIndex >= 1) {
                         retStr = appendPwCharBackToOrigDialStr(dialableIndex,
-                                 retStr,postDialStr);
+                                retStr, postDialStr);
                         // Skips the P/W character, extracts the dialable portion
                         tempDialStr = postDialStr.substring(dialableIndex);
                     } else {
@@ -2291,7 +2332,7 @@ public class PhoneNumberUtils
         return ps;
     }
 
-    private static boolean isTwoToNine (char c) {
+    private static boolean isTwoToNine(char c) {
         if (c >= '2' && c <= '9') {
             return true;
         } else {
@@ -2299,7 +2340,7 @@ public class PhoneNumberUtils
         }
     }
 
-    private static int getFormatTypeFromCountryCode (String country) {
+    private static int getFormatTypeFromCountryCode(String country) {
         // Check for the NANP countries
         int length = NANP_COUNTRIES.length;
         for (int i = 0; i < length; i++) {
@@ -2316,17 +2357,18 @@ public class PhoneNumberUtils
     /**
      * This function checks if the passed in string conforms to the NANP format
      * i.e. NXX-NXX-XXXX, N is any digit 2-9 and X is any digit 0-9
+     *
      * @hide
      */
-    public static boolean isNanp (String dialStr) {
+    public static boolean isNanp(String dialStr) {
         boolean retVal = false;
         if (dialStr != null) {
             if (dialStr.length() == NANP_LENGTH) {
                 if (isTwoToNine(dialStr.charAt(0)) &&
-                    isTwoToNine(dialStr.charAt(3))) {
+                        isTwoToNine(dialStr.charAt(3))) {
                     retVal = true;
-                    for (int i=1; i<NANP_LENGTH; i++ ) {
-                        char c=dialStr.charAt(i);
+                    for (int i = 1; i < NANP_LENGTH; i++) {
+                        char c = dialStr.charAt(i);
                         if (!PhoneNumberUtils.isISODigit(c)) {
                             retVal = false;
                             break;
@@ -2340,9 +2382,9 @@ public class PhoneNumberUtils
         return retVal;
     }
 
-   /**
-    * This function checks if the passed in string conforms to 1-NANP format
-    */
+    /**
+     * This function checks if the passed in string conforms to 1-NANP format
+     */
     private static boolean isOneNanp(String dialStr) {
         boolean retVal = false;
         if (dialStr != null) {
@@ -2361,9 +2403,9 @@ public class PhoneNumberUtils
      * (i.e. a SIP address) rather than a regular PSTN phone number,
      * based on whether or not the number contains an "@" character.
      *
-     * @hide
      * @param number
      * @return true if number contains @
+     * @hide
      */
     public static boolean isUriNumber(String number) {
         // Note we allow either "@" or "%40" to indicate a URI, in case
@@ -2373,14 +2415,12 @@ public class PhoneNumberUtils
     }
 
     /**
-     * @return the "username" part of the specified SIP address,
-     *         i.e. the part before the "@" character (or "%40").
-     *
      * @param number SIP address of the form "username@domainname"
      *               (or the URI-escaped equivalent "username%40domainname")
-     * @see isUriNumber
-     *
+     * @return the "username" part of the specified SIP address,
+     * i.e. the part before the "@" character (or "%40").
      * @hide
+     * @see isUriNumber
      */
     public static String getUsernameFromUriNumber(String number) {
         // The delimiter between username and domain name can be
@@ -2391,7 +2431,7 @@ public class PhoneNumberUtils
         }
         if (delimiterIndex < 0) {
             Rlog.w(LOG_TAG,
-                  "getUsernameFromUriNumber: no delimiter found in SIP addr '" + number + "'");
+                    "getUsernameFromUriNumber: no delimiter found in SIP addr '" + number + "'");
             delimiterIndex = number.length();
         }
         return number.substring(0, delimiterIndex);
@@ -2411,8 +2451,8 @@ public class PhoneNumberUtils
         // If there is a plus sign at the beginning of the dial string,
         // Convert the plus sign to the default IDP since it's an international number
         if (networkDialStr != null &&
-            networkDialStr.charAt(0) == PLUS_SIGN_CHAR &&
-            networkDialStr.length() > 1) {
+                networkDialStr.charAt(0) == PLUS_SIGN_CHAR &&
+                networkDialStr.length() > 1) {
             String newStr = networkDialStr.substring(1);
             // TODO: for nonNanp, should the '+' be removed if following number is country code
             if (useNanp && isOneNanp(newStr)) {
@@ -2430,11 +2470,11 @@ public class PhoneNumberUtils
     // This function finds the index of the dialable character(s)
     // in the post dial string
     private static int findDialableIndexFromPostDialStr(String postDialStr) {
-        for (int index = 0;index < postDialStr.length();index++) {
-             char c = postDialStr.charAt(index);
-             if (isReallyDialable(c)) {
+        for (int index = 0; index < postDialStr.length(); index++) {
+            char c = postDialStr.charAt(index);
+            if (isReallyDialable(c)) {
                 return index;
-             }
+            }
         }
         return -1;
     }
@@ -2442,7 +2482,7 @@ public class PhoneNumberUtils
     // This function appends the non-dialable P/W character to the original
     // dial string based on the dialable index passed in
     private static String
-    appendPwCharBackToOrigDialStr(int dialableIndex,String origStr, String dialStr) {
+    appendPwCharBackToOrigDialStr(int dialableIndex, String origStr, String dialStr) {
         String retStr;
 
         // There is only 1 P/W character before the dialable characters
@@ -2453,7 +2493,7 @@ public class PhoneNumberUtils
         } else {
             // It means more than 1 P/W characters in the post dial string,
             // appends to retStr
-            String nonDigitStr = dialStr.substring(0,dialableIndex);
+            String nonDigitStr = dialStr.substring(0, dialableIndex);
             retStr = origStr.concat(nonDigitStr);
         }
         return retStr;
@@ -2469,8 +2509,9 @@ public class PhoneNumberUtils
      * string that will match the lookup form
      *
      */
-    /** all of a up to len must be an international prefix or
-     *  separators/non-dialing digits
+    /**
+     * all of a up to len must be an international prefix or
+     * separators/non-dialing digits
      */
     private static boolean
     matchIntlPrefix(String a, int len) {
@@ -2478,30 +2519,30 @@ public class PhoneNumberUtils
         /*        0       1                           2 3 45               */
 
         int state = 0;
-        for (int i = 0 ; i < len ; i++) {
+        for (int i = 0; i < len; i++) {
             char c = a.charAt(i);
 
             switch (state) {
                 case 0:
-                    if      (c == '+') state = 1;
+                    if (c == '+') state = 1;
                     else if (c == '0') state = 2;
                     else if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
                 case 2:
-                    if      (c == '0') state = 3;
+                    if (c == '0') state = 3;
                     else if (c == '1') state = 4;
                     else if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
                 case 4:
-                    if      (c == '1') state = 5;
+                    if (c == '1') state = 5;
                     else if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
                 default:
                     if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
             }
         }
@@ -2509,47 +2550,49 @@ public class PhoneNumberUtils
         return state == 1 || state == 3 || state == 5;
     }
 
-    /** all of 'a' up to len must be a (+|00|011)country code)
-     *  We're fast and loose with the country code. Any \d{1,3} matches */
+    /**
+     * all of 'a' up to len must be a (+|00|011)country code)
+     * We're fast and loose with the country code. Any \d{1,3} matches
+     */
     private static boolean
     matchIntlPrefixAndCC(String a, int len) {
         /*  [^0-9*#+pwn]*(\+|0(0|11)\d\d?\d? [^0-9*#+pwn] $ */
         /*      0          1 2 3 45  6 7  8                 */
 
         int state = 0;
-        for (int i = 0 ; i < len ; i++ ) {
+        for (int i = 0; i < len; i++) {
             char c = a.charAt(i);
 
             switch (state) {
                 case 0:
-                    if      (c == '+') state = 1;
+                    if (c == '+') state = 1;
                     else if (c == '0') state = 2;
                     else if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
                 case 2:
-                    if      (c == '0') state = 3;
+                    if (c == '0') state = 3;
                     else if (c == '1') state = 4;
                     else if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
                 case 4:
-                    if      (c == '1') state = 5;
+                    if (c == '1') state = 5;
                     else if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
                 case 1:
                 case 3:
                 case 5:
-                    if      (isISODigit(c)) state = 6;
+                    if (isISODigit(c)) state = 6;
                     else if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
                 case 6:
                 case 7:
-                    if      (isISODigit(c)) state++;
+                    if (isISODigit(c)) state++;
                     else if (isNonSeparator(c)) return false;
-                break;
+                    break;
 
                 default:
                     if (isNonSeparator(c)) return false;
@@ -2559,14 +2602,16 @@ public class PhoneNumberUtils
         return state == 6 || state == 7 || state == 8;
     }
 
-    /** all of 'a' up to len must match non-US trunk prefix ('0') */
+    /**
+     * all of 'a' up to len must match non-US trunk prefix ('0')
+     */
     private static boolean
     matchTrunkPrefix(String a, int len) {
         boolean found;
 
         found = false;
 
-        for (int i = 0 ; i < len ; i++) {
+        for (int i = 0; i < len; i++) {
             char c = a.charAt(i);
 
             if (c == '0' && !found) {
@@ -2587,16 +2632,16 @@ public class PhoneNumberUtils
      * If true, the number is country calling code.
      */
     private static final boolean COUNTRY_CALLING_CALL[] = {
-        true, true, false, false, false, false, false, true, false, false,
-        false, false, false, false, false, false, false, false, false, false,
-        true, false, false, false, false, false, false, true, true, false,
-        true, true, true, true, true, false, true, false, false, true,
-        true, false, false, true, true, true, true, true, true, true,
-        false, true, true, true, true, true, true, true, true, false,
-        true, true, true, true, true, true, true, false, false, false,
-        false, false, false, false, false, false, false, false, false, false,
-        false, true, true, true, true, false, true, false, false, true,
-        true, true, true, true, true, true, false, false, true, false,
+            true, true, false, false, false, false, false, true, false, false,
+            false, false, false, false, false, false, false, false, false, false,
+            true, false, false, false, false, false, false, true, true, false,
+            true, true, true, true, true, false, true, false, false, true,
+            true, false, false, true, true, true, true, true, true, true,
+            false, true, true, true, true, true, true, true, true, false,
+            true, true, true, true, true, true, true, false, false, false,
+            false, false, false, false, false, false, false, false, false, false,
+            false, true, true, true, true, false, true, false, false, true,
+            true, true, true, true, true, true, false, false, true, false,
     };
     private static final int CCC_LENGTH = COUNTRY_CALLING_CALL.length;
 
@@ -2624,6 +2669,7 @@ public class PhoneNumberUtils
     private static class CountryCallingCodeAndNewIndex {
         public final int countryCallingCode;
         public final int newIndex;
+
         public CountryCallingCodeAndNewIndex(int countryCode, int newIndex) {
             this.countryCallingCode = countryCode;
             this.newIndex = newIndex;
@@ -2636,7 +2682,7 @@ public class PhoneNumberUtils
      * digit to compare two phone numbers.
      */
     private static CountryCallingCodeAndNewIndex tryGetCountryCallingCodeAndNewIndex(
-        String str, boolean acceptThailandCase) {
+            String str, boolean acceptThailandCase) {
         // Rough regexp:
         //  ^[^0-9*#+]*((\+|0(0|11)\d\d?|166) [^0-9*#+] $
         //         0        1 2 3 45  6 7  89
@@ -2646,11 +2692,11 @@ public class PhoneNumberUtils
         int state = 0;
         int ccc = 0;
         final int length = str.length();
-        for (int i = 0 ; i < length ; i++ ) {
+        for (int i = 0; i < length; i++) {
             char ch = str.charAt(i);
             switch (state) {
                 case 0:
-                    if      (ch == '+') state = 1;
+                    if (ch == '+') state = 1;
                     else if (ch == '0') state = 2;
                     else if (ch == '1') {
                         if (acceptThailandCase) {
@@ -2661,45 +2707,44 @@ public class PhoneNumberUtils
                     } else if (isDialable(ch)) {
                         return null;
                     }
-                break;
+                    break;
 
                 case 2:
-                    if      (ch == '0') state = 3;
+                    if (ch == '0') state = 3;
                     else if (ch == '1') state = 4;
                     else if (isDialable(ch)) {
                         return null;
                     }
-                break;
+                    break;
 
                 case 4:
-                    if      (ch == '1') state = 5;
+                    if (ch == '1') state = 5;
                     else if (isDialable(ch)) {
                         return null;
                     }
-                break;
+                    break;
 
                 case 1:
                 case 3:
                 case 5:
                 case 6:
-                case 7:
-                    {
-                        int ret = tryGetISODigit(ch);
-                        if (ret > 0) {
-                            ccc = ccc * 10 + ret;
-                            if (ccc >= 100 || isCountryCallingCode(ccc)) {
-                                return new CountryCallingCodeAndNewIndex(ccc, i + 1);
-                            }
-                            if (state == 1 || state == 3 || state == 5) {
-                                state = 6;
-                            } else {
-                                state++;
-                            }
-                        } else if (isDialable(ch)) {
-                            return null;
+                case 7: {
+                    int ret = tryGetISODigit(ch);
+                    if (ret > 0) {
+                        ccc = ccc * 10 + ret;
+                        if (ccc >= 100 || isCountryCallingCode(ccc)) {
+                            return new CountryCallingCodeAndNewIndex(ccc, i + 1);
                         }
+                        if (state == 1 || state == 3 || state == 5) {
+                            state = 6;
+                        } else {
+                            state++;
+                        }
+                    } else if (isDialable(ch)) {
+                        return null;
                     }
-                    break;
+                }
+                break;
                 case 8:
                     if (ch == '6') state = 9;
                     else if (isDialable(ch)) {
@@ -2723,15 +2768,14 @@ public class PhoneNumberUtils
     /**
      * Currently this function simply ignore the first digit assuming it is
      * trunk prefix. Actually trunk prefix is different in each country.
-     *
+     * <p>
      * e.g.
      * "+79161234567" equals "89161234567" (Russian trunk digit is 8)
      * "+33123456789" equals "0123456789" (French trunk digit is 0)
-     *
      */
     private static int tryGetTrunkPrefixOmittedIndex(String str, int currentIndex) {
         int length = str.length();
-        for (int i = currentIndex ; i < length ; i++) {
+        for (int i = currentIndex; i < length; i++) {
             final char ch = str.charAt(i);
             if (tryGetISODigit(ch) >= 0) {
                 return i + 1;
@@ -2748,7 +2792,7 @@ public class PhoneNumberUtils
      * assumed to be trunk prefix.
      */
     private static boolean checkPrefixIsIgnorable(final String str,
-            int forwardIndex, int backwardIndex) {
+                                                  int forwardIndex, int backwardIndex) {
         boolean trunk_prefix_was_read = false;
         while (backwardIndex >= forwardIndex) {
             if (tryGetISODigit(str.charAt(backwardIndex)) >= 0) {

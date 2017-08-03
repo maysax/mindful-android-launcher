@@ -17,9 +17,8 @@
 package android.os;
 
 import android.system.ErrnoException;
-import android.text.TextUtils;
 import android.system.Os;
-import android.system.OsConstants;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
 
@@ -41,6 +40,7 @@ import java.util.zip.CheckedInputStream;
 
 /**
  * Tools for managing files.  Not for public consumption.
+ *
  * @hide
  */
 public class FileUtils {
@@ -61,15 +61,17 @@ public class FileUtils {
     public static final int S_IWOTH = 00002;
     public static final int S_IXOTH = 00001;
 
-    /** Regular expression for safe filenames: no spaces or metacharacters */
+    /**
+     * Regular expression for safe filenames: no spaces or metacharacters
+     */
     private static final Pattern SAFE_FILENAME_PATTERN = Pattern.compile("[\\w%+,./=_-]+");
 
     /**
      * Set owner and mode of of given {@link File}.
      *
      * @param mode to apply through {@code chmod}
-     * @param uid to apply through {@code chown}, or -1 to leave unchanged
-     * @param gid to apply through {@code chown}, or -1 to leave unchanged
+     * @param uid  to apply through {@code chown}, or -1 to leave unchanged
+     * @param gid  to apply through {@code chown}, or -1 to leave unchanged
      * @return 0 on success, otherwise errno.
      */
     public static int setPermissions(File path, int mode, int uid, int gid) {
@@ -80,8 +82,8 @@ public class FileUtils {
      * Set owner and mode of of given path.
      *
      * @param mode to apply through {@code chmod}
-     * @param uid to apply through {@code chown}, or -1 to leave unchanged
-     * @param gid to apply through {@code chown}, or -1 to leave unchanged
+     * @param uid  to apply through {@code chown}, or -1 to leave unchanged
+     * @param gid  to apply through {@code chown}, or -1 to leave unchanged
      * @return 0 on success, otherwise errno.
      */
     public static int setPermissions(String path, int mode, int uid, int gid) {
@@ -108,8 +110,8 @@ public class FileUtils {
      * Set owner and mode of of given {@link FileDescriptor}.
      *
      * @param mode to apply through {@code chmod}
-     * @param uid to apply through {@code chown}, or -1 to leave unchanged
-     * @param gid to apply through {@code chown}, or -1 to leave unchanged
+     * @param uid  to apply through {@code chown}, or -1 to leave unchanged
+     * @param gid  to apply through {@code chown}, or -1 to leave unchanged
      * @return 0 on success, otherwise errno.
      */
     public static int setPermissions(FileDescriptor fd, int mode, int uid, int gid) {
@@ -166,7 +168,7 @@ public class FileUtils {
             InputStream in = new FileInputStream(srcFile);
             try {
                 result = copyToFile(in, destFile);
-            } finally  {
+            } finally {
                 in.close();
             }
         } catch (IOException e) {
@@ -207,7 +209,8 @@ public class FileUtils {
 
     /**
      * Check if a filename is "safe" (no metacharacters or spaces).
-     * @param file  The file to check
+     *
+     * @param file The file to check
      */
     public static boolean isFilenameSafe(File file) {
         // Note, we check whether it matches what's known to be safe,
@@ -218,8 +221,9 @@ public class FileUtils {
 
     /**
      * Read a text file into a String, optionally limiting the length.
-     * @param file to read (will not seek, so things like /proc files are OK)
-     * @param max length (positive for head, negative of tail, 0 for no limit)
+     *
+     * @param file     to read (will not seek, so things like /proc files are OK)
+     * @param max      length (positive for head, negative of tail, 0 for no limit)
      * @param ellipsis to add of the file was truncated (can be null)
      * @return the contents of the file, possibly truncated
      * @throws IOException if something goes wrong reading the file
@@ -247,7 +251,9 @@ public class FileUtils {
                 byte[] data = null;
                 do {
                     if (last != null) rolled = true;
-                    byte[] tmp = last; last = data; data = tmp;
+                    byte[] tmp = last;
+                    last = data;
+                    data = tmp;
                     if (data == null) data = new byte[-max];
                     len = bis.read(data);
                 } while (len == data.length);
@@ -277,7 +283,7 @@ public class FileUtils {
         }
     }
 
-   /**
+    /**
      * Writes string to file. Basically same as "echo -n $string > $filename"
      *
      * @param filename
@@ -297,7 +303,7 @@ public class FileUtils {
      * Computes the checksum of a file using the CRC32 checksum routine.
      * The value of the checksum is returned.
      *
-     * @param file  the file to checksum, must not be null
+     * @param file the file to checksum, must not be null
      * @return the checksum value or an exception is thrown.
      */
     public static long checksumCrc32(File file) throws FileNotFoundException, IOException {
@@ -305,9 +311,9 @@ public class FileUtils {
         CheckedInputStream cis = null;
 
         try {
-            cis = new CheckedInputStream( new FileInputStream(file), checkSummer);
+            cis = new CheckedInputStream(new FileInputStream(file), checkSummer);
             byte[] buf = new byte[128];
-            while(cis.read(buf) >= 0) {
+            while (cis.read(buf) >= 0) {
                 // Just read for checksum to get calculated.
             }
             return checkSummer.getValue();
@@ -326,7 +332,7 @@ public class FileUtils {
      * constraints remain.
      *
      * @param minCount Always keep at least this many files.
-     * @param minAge Always keep files younger than this age.
+     * @param minAge   Always keep files younger than this age.
      * @return if any files were deleted.
      */
     public static boolean deleteOlderFiles(File dir, int minCount, long minAge) {

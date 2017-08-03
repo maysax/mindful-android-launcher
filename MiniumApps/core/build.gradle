@@ -69,7 +69,6 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
-
     /**
      * =================== Support libraries ===================
      */
@@ -90,7 +89,6 @@ dependencies {
     // https://github.com/excilys/androidannotations
     compile "org.androidannotations:androidannotations-api:$annotationsVersion"
 
-
     /**
      * =================== UI ===================
      */
@@ -101,7 +99,6 @@ dependencies {
     compile "com.joanzapata.iconify:android-iconify-fontawesome:$iconifyVersion"
 
     compile "de.hdodenhof:circleimageview:$circleImageViewVersion"
-
 
     /**
      * =================== Debug/Log ===================
@@ -118,7 +115,6 @@ dependencies {
     debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-
 
     /**
      * =================== EVENTS ===================

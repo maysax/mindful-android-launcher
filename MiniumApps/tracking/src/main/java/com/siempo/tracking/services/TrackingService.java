@@ -76,10 +76,10 @@ public class TrackingService {
 
                 TrackingLogger.log(new LogEvent(LogEvent.EventType.APP_USAGE)
                         .setPkg(stat.getPackageName())
-                    .setDuration(DateUtils.interval(stat.getTotalTimeInForeground()))
-                    .setFrom(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getFirstTimeStamp())))
-                    .setTo(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeStamp())))
-                    .setLastUsed(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()))));
+                        .setDuration(DateUtils.interval(stat.getTotalTimeInForeground()))
+                        .setFrom(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getFirstTimeStamp())))
+                        .setTo(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeStamp())))
+                        .setLastUsed(SimpleDateFormat.getDateTimeInstance().format(new Date(stat.getLastTimeUsed()))));
 
                 //TrackingLogger.log(info, null);
                 Tracer.d(info);

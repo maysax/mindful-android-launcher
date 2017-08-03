@@ -1,17 +1,14 @@
 package com.android.contacts.interactions;
 
-import android.content.ContentValues;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.provider.CalendarContract.Attendees;
 import android.provider.CalendarContract.Events;
 import android.text.TextUtils;
 import android.text.format.Time;
-import android.util.Log;
 
 import minium.co.contacts.R;
 

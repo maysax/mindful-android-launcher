@@ -30,15 +30,15 @@ import android.database.DataSetObserver;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
-import antistatic.spinnerwheel.adapters.WheelViewAdapter;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import antistatic.spinnerwheel.adapters.WheelViewAdapter;
 
 /**
  * Abstract spinner spinnerwheel view.
@@ -50,7 +50,7 @@ import java.util.List;
 public abstract class AbstractWheel extends View {
 
     private static final String TAG = "AbstractWheel";
-    private static int itemID    = -1;
+    private static int itemID = -1;
 
     @SuppressWarnings("unused")
     private final String LOG_TAG = AbstractWheel.class.getName() + " #" + (++itemID);
@@ -107,7 +107,7 @@ public abstract class AbstractWheel extends View {
 
     // Adapter listener
     private DataSetObserver mDataObserver;
-    public int              mLastTempDirection;
+    public int mLastTempDirection;
 
 
     //--------------------------------------------------------------------------
@@ -187,7 +187,8 @@ public abstract class AbstractWheel extends View {
                     onScrollTouchedUp(); // if scrolling IS performed, whe should use onFinished instead
             }
 
-            @Override public void onFling(int direction) {
+            @Override
+            public void onFling(int direction) {
                 mLastTempDirection = direction;
             }
 
@@ -223,12 +224,12 @@ public abstract class AbstractWheel extends View {
                     // if justify direction is not fling direction, try make it be
                     if (scrollOffsetDirection * mLastTempDirection < 0) {
                         if (mLastTempDirection == WheelScroller.SCROLL_DIRECTION_UP) {
-                            if(isValidItemIndex(mCurrentItemIdx + 1)) {
+                            if (isValidItemIndex(mCurrentItemIdx + 1)) {
                                 mScroller.scroll(mScrollingOffset + getItemDimension(), 0);
                                 handled = true;
                             }
                         } else {
-                            if(isValidItemIndex(mCurrentItemIdx - 1)) {
+                            if (isValidItemIndex(mCurrentItemIdx - 1)) {
                                 mScroller.scroll(mScrollingOffset - getItemDimension(), 0);
                                 handled = true;
                             }
@@ -367,6 +368,7 @@ public abstract class AbstractWheel extends View {
 
     /**
      * Set the friction of the scroller. This function is available over Android 3.0 (API Level 11).
+     *
      * @param friction the amount of friction
      */
     public void setFriction(float friction) {

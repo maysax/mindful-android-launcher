@@ -67,7 +67,7 @@ public class SlideshowEditor {
      *
      * @return true if success, false if reach the max slide number.
      * @throws IndexOutOfBoundsException - if position is out of range
-     *         (position < 0 || position > size()).
+     *                                   (position < 0 || position > size()).
      */
     public boolean addNewSlide(int position) {
         int size = mModel.size();
@@ -91,7 +91,7 @@ public class SlideshowEditor {
      * Generate an unique source for TextModel
      *
      * @param slideshow The current slideshow model
-     * @param position The expected position for the new model
+     * @param position  The expected position for the new model
      * @return An unique source String
      */
     private String generateTextSrc(SlideshowModel slideshow, int position) {
@@ -124,7 +124,7 @@ public class SlideshowEditor {
      *
      * @return true if success, false if reach the max slide number.
      * @throws IndexOutOfBoundsException - if position is out of range
-     *         (position < 0 || position > size()).
+     *                                   (position < 0 || position > size()).
      */
     public boolean addSlide(int position, SlideModel slide) {
         int size = mModel.size();

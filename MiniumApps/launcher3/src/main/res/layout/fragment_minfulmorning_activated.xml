@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/pause_background"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null" />
 
-        <include layout="@layout/siempo_toolbar"/>
+    <include layout="@layout/siempo_toolbar" />
 
 
     <TextView
@@ -28,6 +28,7 @@
         android:text="7:00 AM  -  7:15 AM"
         android:textColor="@color/white"
         android:textSize="24sp" />
+
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
         android:id="@+id/seekbar"
@@ -44,7 +45,8 @@
         app:text_color="@color/white"
         app:show_thumb="false"
         app:wheel_active_color="@color/white"
-        app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
+        app:wheel_unactive_color="@color/pauseSeekBarInactive" />
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,7 +73,7 @@
             android:textSize="14sp"
             android:fontFamily="sans-serif"
             android:text="Ending at "
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/txtEndingTime"
@@ -83,6 +85,7 @@
             android:textColor="@color/white"
             tools:text="01:00 pm" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/endingLayout"
         android:layout_width="wrap_content"
@@ -99,7 +102,7 @@
             android:fontFamily="sans-serif"
             android:text="..."
             android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

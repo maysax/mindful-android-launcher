@@ -99,7 +99,7 @@ public class InterfaceConfiguration implements Parcelable {
     /**
      * This function determines if the interface is up and has a valid IP
      * configuration (IP address has a non zero octet).
-     *
+     * <p>
      * Note: It is supposed to be quick and hence should not initiate
      * any network activity
      */
@@ -116,19 +116,23 @@ public class InterfaceConfiguration implements Parcelable {
         return false;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int describeContents() {
         return 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mHwAddr);
         if (mAddr != null) {
-            dest.writeByte((byte)1);
+            dest.writeByte((byte) 1);
             dest.writeParcelable(mAddr, flags);
         } else {
-            dest.writeByte((byte)0);
+            dest.writeByte((byte) 0);
         }
         dest.writeInt(mFlags.size());
         for (String flag : mFlags) {

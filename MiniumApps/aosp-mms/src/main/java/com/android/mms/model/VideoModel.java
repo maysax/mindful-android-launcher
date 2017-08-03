@@ -17,15 +17,13 @@
 
 package com.android.mms.model;
 
-import org.w3c.dom.events.Event;
-import org.w3c.dom.smil.ElementTime;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SqliteWrapper;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
+import android.provider.Telephony.Mms.Part;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -38,9 +36,11 @@ import com.android.mms.dom.smil.SmilMediaElementImpl;
 import com.android.mms.util.ItemLoadedCallback;
 import com.android.mms.util.ItemLoadedFuture;
 import com.android.mms.util.ThumbnailManager;
-import android.provider.Telephony.Mms.Part;
 import com.google.android.mms.ContentType;
 import com.google.android.mms.MmsException;
+
+import org.w3c.dom.events.Event;
+import org.w3c.dom.smil.ElementTime;
 
 public class VideoModel extends RegionMediaModel {
     private static final String TAG = MediaModel.TAG;
@@ -56,7 +56,7 @@ public class VideoModel extends RegionMediaModel {
     }
 
     public VideoModel(Context context, String contentType, String src,
-            Uri uri, RegionModel region) throws MmsException {
+                      Uri uri, RegionModel region) throws MmsException {
         super(context, SmilHelper.ELEMENT_TAG_VIDEO, contentType, src, uri, region);
     }
 
@@ -129,11 +129,11 @@ public class VideoModel extends RegionMediaModel {
                                 String extension = mSrc.substring(index + 1);
                                 if (!(TextUtils.isEmpty(extension)) &&
                                         (extension.equalsIgnoreCase("3gp") ||
-                                        extension.equalsIgnoreCase("3gpp") ||
-                                        extension.equalsIgnoreCase("3g2"))) {
+                                                extension.equalsIgnoreCase("3gpp") ||
+                                                extension.equalsIgnoreCase("3g2"))) {
                                     mContentType = ContentType.VIDEO_3GPP;
                                 }
-                            } catch(IndexOutOfBoundsException ex) {
+                            } catch (IndexOutOfBoundsException ex) {
                                 if (LOCAL_LOGV) {
                                     Log.v(TAG, "Media extension is unknown.");
                                 }

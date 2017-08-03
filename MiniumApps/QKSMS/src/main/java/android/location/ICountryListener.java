@@ -20,7 +20,6 @@ package android.location;
  * {@hide}
  */
 
-interface ICountryListener
-{
+interface ICountryListener {
     void onCountryDetected(Country country);
 }

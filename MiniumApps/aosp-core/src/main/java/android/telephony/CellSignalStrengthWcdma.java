@@ -57,7 +57,6 @@ public final class CellSignalStrengthWcdma extends CellSignalStrength implements
      * Copy constructors
      *
      * @param s Source SignalStrength
-     *
      * @hide
      */
     public CellSignalStrengthWcdma(CellSignalStrengthWcdma s) {
@@ -67,9 +66,8 @@ public final class CellSignalStrengthWcdma extends CellSignalStrength implements
     /**
      * Initialize all the values
      *
-     * @param ss SignalStrength as ASU value
+     * @param ss  SignalStrength as ASU value
      * @param ber is Bit Error Rate
-     *
      * @hide
      */
     public void initialize(int ss, int ber) {
@@ -93,7 +91,9 @@ public final class CellSignalStrengthWcdma extends CellSignalStrength implements
         return new CellSignalStrengthWcdma(this);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @Override
     public void setDefaultValues() {
         mSignalStrength = Integer.MAX_VALUE;
@@ -114,8 +114,8 @@ public final class CellSignalStrengthWcdma extends CellSignalStrength implements
         int asu = mSignalStrength;
         if (asu <= 2 || asu == 99) level = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         else if (asu >= WCDMA_SIGNAL_STRENGTH_GREAT) level = SIGNAL_STRENGTH_GREAT;
-        else if (asu >= WCDMA_SIGNAL_STRENGTH_GOOD)  level = SIGNAL_STRENGTH_GOOD;
-        else if (asu >= WCDMA_SIGNAL_STRENGTH_MODERATE)  level = SIGNAL_STRENGTH_MODERATE;
+        else if (asu >= WCDMA_SIGNAL_STRENGTH_GOOD) level = SIGNAL_STRENGTH_GOOD;
+        else if (asu >= WCDMA_SIGNAL_STRENGTH_MODERATE) level = SIGNAL_STRENGTH_MODERATE;
         else level = SIGNAL_STRENGTH_POOR;
         if (DBG) log("getLevel=" + level);
         return level;
@@ -161,7 +161,7 @@ public final class CellSignalStrengthWcdma extends CellSignalStrength implements
     }
 
     @Override
-    public boolean equals (Object o) {
+    public boolean equals(Object o) {
         CellSignalStrengthWcdma s;
 
         try {
@@ -187,7 +187,9 @@ public final class CellSignalStrengthWcdma extends CellSignalStrength implements
                 + " ber=" + mBitErrorRate;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (DBG) log("writeToParcel(Parcel, int): " + toString());
@@ -205,26 +207,30 @@ public final class CellSignalStrengthWcdma extends CellSignalStrength implements
         if (DBG) log("CellSignalStrengthWcdma(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @SuppressWarnings("hiding")
     public static final Parcelable.Creator<CellSignalStrengthWcdma> CREATOR =
             new Parcelable.Creator<CellSignalStrengthWcdma>() {
-        @Override
-        public CellSignalStrengthWcdma createFromParcel(Parcel in) {
-            return new CellSignalStrengthWcdma(in);
-        }
+                @Override
+                public CellSignalStrengthWcdma createFromParcel(Parcel in) {
+                    return new CellSignalStrengthWcdma(in);
+                }
 
-        @Override
-        public CellSignalStrengthWcdma[] newArray(int size) {
-            return new CellSignalStrengthWcdma[size];
-        }
-    };
+                @Override
+                public CellSignalStrengthWcdma[] newArray(int size) {
+                    return new CellSignalStrengthWcdma[size];
+                }
+            };
 
     /**
      * log

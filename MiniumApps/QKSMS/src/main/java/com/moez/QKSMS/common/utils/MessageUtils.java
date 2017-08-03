@@ -48,6 +48,7 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.Toast;
+
 import com.android.mms.transaction.MmsMessageSender;
 import com.google.android.mms.ContentType;
 import com.google.android.mms.MmsException;
@@ -63,7 +64,6 @@ import com.google.android.mms.pdu_alt.RetrieveConf;
 import com.google.android.mms.pdu_alt.SendReq;
 import com.moez.QKSMS.LogTag;
 import com.moez.QKSMS.MmsConfig;
-import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.QKSMSAppBase;
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.TempFileProvider;

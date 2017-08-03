@@ -18,8 +18,6 @@ package android.net.http;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-
 import org.apache.http.HeaderElement;
 import org.apache.http.entity.ContentLengthStrategy;
 import org.apache.http.message.BasicHeaderValueParser;
@@ -27,9 +25,11 @@ import org.apache.http.message.ParserCursor;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.CharArrayBuffer;
 
+import java.util.ArrayList;
+
 /**
  * Manages received headers
- *
+ * <p>
  * {@hide}
  */
 public final class Headers {
@@ -126,25 +126,25 @@ public final class Headers {
 
     private String[] mHeaders = new String[HEADER_COUNT];
     private final static String[] sHeaderNames = {
-        TRANSFER_ENCODING,
-        CONTENT_LEN,
-        CONTENT_TYPE,
-        CONTENT_ENCODING,
-        CONN_DIRECTIVE,
-        LOCATION,
-        PROXY_CONNECTION,
-        WWW_AUTHENTICATE,
-        PROXY_AUTHENTICATE,
-        CONTENT_DISPOSITION,
-        ACCEPT_RANGES,
-        EXPIRES,
-        CACHE_CONTROL,
-        LAST_MODIFIED,
-        ETAG,
-        SET_COOKIE,
-        PRAGMA,
-        REFRESH,
-        X_PERMITTED_CROSS_DOMAIN_POLICIES
+            TRANSFER_ENCODING,
+            CONTENT_LEN,
+            CONTENT_TYPE,
+            CONTENT_ENCODING,
+            CONN_DIRECTIVE,
+            LOCATION,
+            PROXY_CONNECTION,
+            WWW_AUTHENTICATE,
+            PROXY_AUTHENTICATE,
+            CONTENT_DISPOSITION,
+            ACCEPT_RANGES,
+            EXPIRES,
+            CACHE_CONTROL,
+            LAST_MODIFIED,
+            ETAG,
+            SET_COOKIE,
+            PRAGMA,
+            REFRESH,
+            X_PERMITTED_CROSS_DOMAIN_POLICIES
     };
 
     // Catch-all for headers not explicitly handled
@@ -174,137 +174,137 @@ public final class Headers {
         }
 
         switch (name.hashCode()) {
-        case HASH_TRANSFER_ENCODING:
-            if (name.equals(TRANSFER_ENCODING)) {
-                mHeaders[IDX_TRANSFER_ENCODING] = val;
-                HeaderElement[] encodings = BasicHeaderValueParser.DEFAULT
-                        .parseElements(buffer, new ParserCursor(pos,
-                                buffer.length()));
-                // The chunked encoding must be the last one applied RFC2616,
-                // 14.41
-                int len = encodings.length;
-                if (HTTP.IDENTITY_CODING.equalsIgnoreCase(val)) {
-                    transferEncoding = ContentLengthStrategy.IDENTITY;
-                } else if ((len > 0)
-                        && (HTTP.CHUNK_CODING
-                                .equalsIgnoreCase(encodings[len - 1].getName()))) {
-                    transferEncoding = ContentLengthStrategy.CHUNKED;
-                } else {
-                    transferEncoding = ContentLengthStrategy.IDENTITY;
-                }
-            }
-            break;
-        case HASH_CONTENT_LEN:
-            if (name.equals(CONTENT_LEN)) {
-                mHeaders[IDX_CONTENT_LEN] = val;
-                try {
-                    contentLength = Long.parseLong(val);
-                } catch (NumberFormatException e) {
-                    if (false) {
-                        Log.v(LOGTAG, "Headers.headers(): error parsing"
-                                + " content length: " + buffer.toString());
+            case HASH_TRANSFER_ENCODING:
+                if (name.equals(TRANSFER_ENCODING)) {
+                    mHeaders[IDX_TRANSFER_ENCODING] = val;
+                    HeaderElement[] encodings = BasicHeaderValueParser.DEFAULT
+                            .parseElements(buffer, new ParserCursor(pos,
+                                    buffer.length()));
+                    // The chunked encoding must be the last one applied RFC2616,
+                    // 14.41
+                    int len = encodings.length;
+                    if (HTTP.IDENTITY_CODING.equalsIgnoreCase(val)) {
+                        transferEncoding = ContentLengthStrategy.IDENTITY;
+                    } else if ((len > 0)
+                            && (HTTP.CHUNK_CODING
+                            .equalsIgnoreCase(encodings[len - 1].getName()))) {
+                        transferEncoding = ContentLengthStrategy.CHUNKED;
+                    } else {
+                        transferEncoding = ContentLengthStrategy.IDENTITY;
                     }
                 }
-            }
-            break;
-        case HASH_CONTENT_TYPE:
-            if (name.equals(CONTENT_TYPE)) {
-                mHeaders[IDX_CONTENT_TYPE] = val;
-            }
-            break;
-        case HASH_CONTENT_ENCODING:
-            if (name.equals(CONTENT_ENCODING)) {
-                mHeaders[IDX_CONTENT_ENCODING] = val;
-            }
-            break;
-        case HASH_CONN_DIRECTIVE:
-            if (name.equals(CONN_DIRECTIVE)) {
-                mHeaders[IDX_CONN_DIRECTIVE] = val;
-                setConnectionType(buffer, pos);
-            }
-            break;
-        case HASH_LOCATION:
-            if (name.equals(LOCATION)) {
-                mHeaders[IDX_LOCATION] = val;
-            }
-            break;
-        case HASH_PROXY_CONNECTION:
-            if (name.equals(PROXY_CONNECTION)) {
-                mHeaders[IDX_PROXY_CONNECTION] = val;
-                setConnectionType(buffer, pos);
-            }
-            break;
-        case HASH_WWW_AUTHENTICATE:
-            if (name.equals(WWW_AUTHENTICATE)) {
-                mHeaders[IDX_WWW_AUTHENTICATE] = val;
-            }
-            break;
-        case HASH_PROXY_AUTHENTICATE:
-            if (name.equals(PROXY_AUTHENTICATE)) {
-                mHeaders[IDX_PROXY_AUTHENTICATE] = val;
-            }
-            break;
-        case HASH_CONTENT_DISPOSITION:
-            if (name.equals(CONTENT_DISPOSITION)) {
-                mHeaders[IDX_CONTENT_DISPOSITION] = val;
-            }
-            break;
-        case HASH_ACCEPT_RANGES:
-            if (name.equals(ACCEPT_RANGES)) {
-                mHeaders[IDX_ACCEPT_RANGES] = val;
-            }
-            break;
-        case HASH_EXPIRES:
-            if (name.equals(EXPIRES)) {
-                mHeaders[IDX_EXPIRES] = val;
-            }
-            break;
-        case HASH_CACHE_CONTROL:
-            if (name.equals(CACHE_CONTROL)) {
-                // In case where we receive more than one header, create a ',' separated list.
-                // This should be ok, according to RFC 2616 chapter 4.2
-                if (mHeaders[IDX_CACHE_CONTROL] != null &&
-                    mHeaders[IDX_CACHE_CONTROL].length() > 0) {
-                    mHeaders[IDX_CACHE_CONTROL] += (',' + val);
-                } else {
-                    mHeaders[IDX_CACHE_CONTROL] = val;
+                break;
+            case HASH_CONTENT_LEN:
+                if (name.equals(CONTENT_LEN)) {
+                    mHeaders[IDX_CONTENT_LEN] = val;
+                    try {
+                        contentLength = Long.parseLong(val);
+                    } catch (NumberFormatException e) {
+                        if (false) {
+                            Log.v(LOGTAG, "Headers.headers(): error parsing"
+                                    + " content length: " + buffer.toString());
+                        }
+                    }
                 }
-            }
-            break;
-        case HASH_LAST_MODIFIED:
-            if (name.equals(LAST_MODIFIED)) {
-                mHeaders[IDX_LAST_MODIFIED] = val;
-            }
-            break;
-        case HASH_ETAG:
-            if (name.equals(ETAG)) {
-                mHeaders[IDX_ETAG] = val;
-            }
-            break;
-        case HASH_SET_COOKIE:
-            if (name.equals(SET_COOKIE)) {
-                mHeaders[IDX_SET_COOKIE] = val;
-                cookies.add(val);
-            }
-            break;
-        case HASH_PRAGMA:
-            if (name.equals(PRAGMA)) {
-                mHeaders[IDX_PRAGMA] = val;
-            }
-            break;
-        case HASH_REFRESH:
-            if (name.equals(REFRESH)) {
-                mHeaders[IDX_REFRESH] = val;
-            }
-            break;
-        case HASH_X_PERMITTED_CROSS_DOMAIN_POLICIES:
-            if (name.equals(X_PERMITTED_CROSS_DOMAIN_POLICIES)) {
-                mHeaders[IDX_X_PERMITTED_CROSS_DOMAIN_POLICIES] = val;
-            }
-            break;
-        default:
-            mExtraHeaderNames.add(name);
-            mExtraHeaderValues.add(val);
+                break;
+            case HASH_CONTENT_TYPE:
+                if (name.equals(CONTENT_TYPE)) {
+                    mHeaders[IDX_CONTENT_TYPE] = val;
+                }
+                break;
+            case HASH_CONTENT_ENCODING:
+                if (name.equals(CONTENT_ENCODING)) {
+                    mHeaders[IDX_CONTENT_ENCODING] = val;
+                }
+                break;
+            case HASH_CONN_DIRECTIVE:
+                if (name.equals(CONN_DIRECTIVE)) {
+                    mHeaders[IDX_CONN_DIRECTIVE] = val;
+                    setConnectionType(buffer, pos);
+                }
+                break;
+            case HASH_LOCATION:
+                if (name.equals(LOCATION)) {
+                    mHeaders[IDX_LOCATION] = val;
+                }
+                break;
+            case HASH_PROXY_CONNECTION:
+                if (name.equals(PROXY_CONNECTION)) {
+                    mHeaders[IDX_PROXY_CONNECTION] = val;
+                    setConnectionType(buffer, pos);
+                }
+                break;
+            case HASH_WWW_AUTHENTICATE:
+                if (name.equals(WWW_AUTHENTICATE)) {
+                    mHeaders[IDX_WWW_AUTHENTICATE] = val;
+                }
+                break;
+            case HASH_PROXY_AUTHENTICATE:
+                if (name.equals(PROXY_AUTHENTICATE)) {
+                    mHeaders[IDX_PROXY_AUTHENTICATE] = val;
+                }
+                break;
+            case HASH_CONTENT_DISPOSITION:
+                if (name.equals(CONTENT_DISPOSITION)) {
+                    mHeaders[IDX_CONTENT_DISPOSITION] = val;
+                }
+                break;
+            case HASH_ACCEPT_RANGES:
+                if (name.equals(ACCEPT_RANGES)) {
+                    mHeaders[IDX_ACCEPT_RANGES] = val;
+                }
+                break;
+            case HASH_EXPIRES:
+                if (name.equals(EXPIRES)) {
+                    mHeaders[IDX_EXPIRES] = val;
+                }
+                break;
+            case HASH_CACHE_CONTROL:
+                if (name.equals(CACHE_CONTROL)) {
+                    // In case where we receive more than one header, create a ',' separated list.
+                    // This should be ok, according to RFC 2616 chapter 4.2
+                    if (mHeaders[IDX_CACHE_CONTROL] != null &&
+                            mHeaders[IDX_CACHE_CONTROL].length() > 0) {
+                        mHeaders[IDX_CACHE_CONTROL] += (',' + val);
+                    } else {
+                        mHeaders[IDX_CACHE_CONTROL] = val;
+                    }
+                }
+                break;
+            case HASH_LAST_MODIFIED:
+                if (name.equals(LAST_MODIFIED)) {
+                    mHeaders[IDX_LAST_MODIFIED] = val;
+                }
+                break;
+            case HASH_ETAG:
+                if (name.equals(ETAG)) {
+                    mHeaders[IDX_ETAG] = val;
+                }
+                break;
+            case HASH_SET_COOKIE:
+                if (name.equals(SET_COOKIE)) {
+                    mHeaders[IDX_SET_COOKIE] = val;
+                    cookies.add(val);
+                }
+                break;
+            case HASH_PRAGMA:
+                if (name.equals(PRAGMA)) {
+                    mHeaders[IDX_PRAGMA] = val;
+                }
+                break;
+            case HASH_REFRESH:
+                if (name.equals(REFRESH)) {
+                    mHeaders[IDX_REFRESH] = val;
+                }
+                break;
+            case HASH_X_PERMITTED_CROSS_DOMAIN_POLICIES:
+                if (name.equals(X_PERMITTED_CROSS_DOMAIN_POLICIES)) {
+                    mHeaders[IDX_X_PERMITTED_CROSS_DOMAIN_POLICIES] = val;
+                }
+                break;
+            default:
+                mExtraHeaderNames.add(name);
+                mExtraHeaderValues.add(val);
         }
     }
 
@@ -450,10 +450,10 @@ public final class Headers {
         for (int i = 0; i < extraLen; i++) {
             if (false) {
                 HttpLog.v("Headers.getHeaders() extra: " + i + " " +
-                          mExtraHeaderNames.get(i) + " " + mExtraHeaderValues.get(i));
+                        mExtraHeaderNames.get(i) + " " + mExtraHeaderValues.get(i));
             }
             hcb.header(mExtraHeaderNames.get(i),
-                       mExtraHeaderValues.get(i));
+                    mExtraHeaderValues.get(i));
         }
 
     }

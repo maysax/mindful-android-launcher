@@ -16,15 +16,14 @@
 
 package android.os;
 
-/** @hide */
-public class RemoteMailException extends Exception
-{
-    public RemoteMailException()
-    {
+/**
+ * @hide
+ */
+public class RemoteMailException extends Exception {
+    public RemoteMailException() {
     }
 
-    public RemoteMailException(String s)
-    {
+    public RemoteMailException(String s) {
         super(s);
     }
 }

@@ -17,30 +17,6 @@
 
 package com.android.mms.model;
 
-import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_END_EVENT;
-import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_PAUSE_EVENT;
-import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_SEEK_EVENT;
-import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_START_EVENT;
-import static com.android.mms.dom.smil.SmilParElementImpl.SMIL_SLIDE_END_EVENT;
-import static com.android.mms.dom.smil.SmilParElementImpl.SMIL_SLIDE_START_EVENT;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.smil.SMILDocument;
-import org.w3c.dom.smil.SMILElement;
-import org.w3c.dom.smil.SMILLayoutElement;
-import org.w3c.dom.smil.SMILMediaElement;
-import org.w3c.dom.smil.SMILParElement;
-import org.w3c.dom.smil.SMILRegionElement;
-import org.w3c.dom.smil.SMILRegionMediaElement;
-import org.w3c.dom.smil.SMILRootLayoutElement;
-import org.xml.sax.SAXException;
-
 import android.drm.DrmManagerClient;
 import android.text.TextUtils;
 import android.util.Config;
@@ -55,6 +31,30 @@ import com.google.android.mms.ContentType;
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu.PduBody;
 import com.google.android.mms.pdu.PduPart;
+
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.smil.SMILDocument;
+import org.w3c.dom.smil.SMILElement;
+import org.w3c.dom.smil.SMILLayoutElement;
+import org.w3c.dom.smil.SMILMediaElement;
+import org.w3c.dom.smil.SMILParElement;
+import org.w3c.dom.smil.SMILRegionElement;
+import org.w3c.dom.smil.SMILRegionMediaElement;
+import org.w3c.dom.smil.SMILRootLayoutElement;
+import org.xml.sax.SAXException;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_END_EVENT;
+import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_PAUSE_EVENT;
+import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_SEEK_EVENT;
+import static com.android.mms.dom.smil.SmilMediaElementImpl.SMIL_MEDIA_START_EVENT;
+import static com.android.mms.dom.smil.SmilParElementImpl.SMIL_SLIDE_END_EVENT;
+import static com.android.mms.dom.smil.SmilParElementImpl.SMIL_SLIDE_START_EVENT;
 
 public class SmilHelper {
     private static final String TAG = LogTag.TAG;
@@ -100,10 +100,10 @@ public class SmilHelper {
      */
     private static PduPart findSmilPart(PduBody body) {
         int partNum = body.getPartsNum();
-        for(int i = 0; i < partNum; i++) {
+        for (int i = 0; i < partNum; i++) {
             PduPart part = body.getPart(i);
             if (Arrays.equals(part.getContentType(),
-                            ContentType.APP_SMIL.getBytes())) {
+                    ContentType.APP_SMIL.getBytes())) {
                 // Sure only one SMIL part.
                 return part;
             }
@@ -161,11 +161,11 @@ public class SmilHelper {
     }
 
     static public String escapeXML(String str) {
-        return str.replaceAll("&","&amp;")
-                  .replaceAll("<", "&lt;")
-                  .replaceAll(">", "&gt;")
-                  .replaceAll("\"", "&quot;")
-                  .replaceAll("'", "&apos;");
+        return str.replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&apos;");
     }
 
     private static SMILDocument createSmilDocument(PduBody pb) {
@@ -323,24 +323,24 @@ public class SmilHelper {
                     }
                     sme = SmilHelper.createMediaElement(SmilHelper.ELEMENT_TAG_TEXT, document, src);
                     txtRegionPresentInLayout = setRegion((SMILRegionMediaElement) sme,
-                                                         smilRegions,
-                                                         layoutElement,
-                                                         LayoutModel.TEXT_REGION_ID,
-                                                         txtRegionPresentInLayout);
+                            smilRegions,
+                            layoutElement,
+                            LayoutModel.TEXT_REGION_ID,
+                            txtRegionPresentInLayout);
                 } else if (media instanceof ImageModel) {
                     sme = SmilHelper.createMediaElement(SmilHelper.ELEMENT_TAG_IMAGE, document, src);
                     imgRegionPresentInLayout = setRegion((SMILRegionMediaElement) sme,
-                                                         smilRegions,
-                                                         layoutElement,
-                                                         LayoutModel.IMAGE_REGION_ID,
-                                                         imgRegionPresentInLayout);
+                            smilRegions,
+                            layoutElement,
+                            LayoutModel.IMAGE_REGION_ID,
+                            imgRegionPresentInLayout);
                 } else if (media instanceof VideoModel) {
                     sme = SmilHelper.createMediaElement(SmilHelper.ELEMENT_TAG_VIDEO, document, src);
                     imgRegionPresentInLayout = setRegion((SMILRegionMediaElement) sme,
-                                                         smilRegions,
-                                                         layoutElement,
-                                                         LayoutModel.IMAGE_REGION_ID,
-                                                         imgRegionPresentInLayout);
+                            smilRegions,
+                            layoutElement,
+                            LayoutModel.IMAGE_REGION_ID,
+                            imgRegionPresentInLayout);
                 } else if (media instanceof AudioModel) {
                     sme = SmilHelper.createMediaElement(SmilHelper.ELEMENT_TAG_AUDIO, document, src);
                 } else {

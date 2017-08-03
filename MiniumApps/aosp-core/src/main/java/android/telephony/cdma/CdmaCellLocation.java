@@ -134,25 +134,25 @@ public class CdmaCellLocation extends CellLocation {
     /**
      * Set the cell location data.
      */
-     public void setCellLocationData(int baseStationId, int baseStationLatitude,
-         int baseStationLongitude) {
-         // The following values have to be written in the correct sequence
-         this.mBaseStationId = baseStationId;
-         this.mBaseStationLatitude = baseStationLatitude;   //values[2];
-         this.mBaseStationLongitude = baseStationLongitude; //values[3];
+    public void setCellLocationData(int baseStationId, int baseStationLatitude,
+                                    int baseStationLongitude) {
+        // The following values have to be written in the correct sequence
+        this.mBaseStationId = baseStationId;
+        this.mBaseStationLatitude = baseStationLatitude;   //values[2];
+        this.mBaseStationLongitude = baseStationLongitude; //values[3];
     }
 
     /**
      * Set the cell location data.
      */
-     public void setCellLocationData(int baseStationId, int baseStationLatitude,
-         int baseStationLongitude, int systemId, int networkId) {
-         // The following values have to be written in the correct sequence
-         this.mBaseStationId = baseStationId;
-         this.mBaseStationLatitude = baseStationLatitude;   //values[2];
-         this.mBaseStationLongitude = baseStationLongitude; //values[3];
-         this.mSystemId = systemId;
-         this.mNetworkId = networkId;
+    public void setCellLocationData(int baseStationId, int baseStationLatitude,
+                                    int baseStationLongitude, int systemId, int networkId) {
+        // The following values have to be written in the correct sequence
+        this.mBaseStationId = baseStationId;
+        this.mBaseStationLatitude = baseStationLatitude;   //values[2];
+        this.mBaseStationLongitude = baseStationLongitude; //values[3];
+        this.mSystemId = systemId;
+        this.mNetworkId = networkId;
     }
 
     @Override
@@ -166,7 +166,7 @@ public class CdmaCellLocation extends CellLocation {
         CdmaCellLocation s;
 
         try {
-            s = (CdmaCellLocation)o;
+            s = (CdmaCellLocation) o;
         } catch (ClassCastException ex) {
             return false;
         }
@@ -186,10 +186,10 @@ public class CdmaCellLocation extends CellLocation {
     @Override
     public String toString() {
         return "[" + this.mBaseStationId + ","
-                   + this.mBaseStationLatitude + ","
-                   + this.mBaseStationLongitude + ","
-                   + this.mSystemId + ","
-                   + this.mNetworkId + "]";
+                + this.mBaseStationLatitude + ","
+                + this.mBaseStationLongitude + ","
+                + this.mSystemId + ","
+                + this.mNetworkId + "]";
     }
 
     /**
@@ -200,7 +200,7 @@ public class CdmaCellLocation extends CellLocation {
      * @return true if two objects equal or both are null
      */
     private static boolean equalsHandlesNulls(Object a, Object b) {
-        return (a == null) ? (b == null) : a.equals (b);
+        return (a == null) ? (b == null) : a.equals(b);
     }
 
     /**
@@ -237,11 +237,11 @@ public class CdmaCellLocation extends CellLocation {
      *                                  greater than 2592000, or is not a number.
      */
     public static double convertQuartSecToDecDegrees(int quartSec) {
-        if(Double.isNaN(quartSec) || quartSec < -2592000 || quartSec > 2592000){
+        if (Double.isNaN(quartSec) || quartSec < -2592000 || quartSec > 2592000) {
             // Invalid value
             throw new IllegalArgumentException("Invalid coordiante value:" + quartSec);
         }
-        return ((double)quartSec) / (3600 * 4);
+        return ((double) quartSec) / (3600 * 4);
     }
 
 }

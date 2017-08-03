@@ -72,7 +72,7 @@ public class EventImpl implements Event {
     }
 
     public void initEvent(String eventTypeArg, boolean canBubbleArg,
-            boolean cancelableArg) {
+                          boolean cancelableArg) {
         mEventType = eventTypeArg;
         mCanBubble = canBubbleArg;
         mCancelable = cancelableArg;
@@ -80,7 +80,7 @@ public class EventImpl implements Event {
     }
 
     public void initEvent(String eventTypeArg, boolean canBubbleArg, boolean cancelableArg,
-            int seekTo) {
+                          int seekTo) {
         mSeekTo = seekTo;
         initEvent(eventTypeArg, canBubbleArg, cancelableArg);
     }

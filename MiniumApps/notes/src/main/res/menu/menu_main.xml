@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
-    <item android:id="@+id/action_search"
+    <item
+        android:id="@+id/action_search"
         android:title="@string/label.search"
         android:icon="@android:drawable/ic_menu_search"
         android:hint="@string/label.search"
@@ -13,21 +13,24 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
 
-    <item android:id="@+id/action_backup"
+    <item
+        android:id="@+id/action_backup"
         android:title="@string/label.backup"
         android:orderInCategory="101"
         app:showAsAction="never"
-        android:visible="false"/>
+        android:visible="false" />
 
-    <item android:id="@+id/action_restore"
+    <item
+        android:id="@+id/action_restore"
         android:title="@string/label.restore"
         android:orderInCategory="102"
         app:showAsAction="never"
-        android:visible="false"/>
+        android:visible="false" />
 
-    <item android:id="@+id/action_evernote"
+    <item
+        android:id="@+id/action_evernote"
         android:title="Evernote sync"
         android:orderInCategory="103"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
 </menu>

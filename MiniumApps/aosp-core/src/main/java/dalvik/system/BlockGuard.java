@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 public class BlockGuard {
     private static Method m_getThreadPolicy;
     private static Method m_onNetwork;
+
     static {
         try {
             ClassLoader cl = ClassLoader.getSystemClassLoader();

@@ -35,13 +35,13 @@ import com.android.contacts.common.list.ContactListItemView;
 @SuppressWarnings("deprecation")
 public class LegacyPhoneNumberListAdapter extends ContactEntryListAdapter {
 
-    private static final String[] PHONES_PROJECTION = new String[] {
-        Phones._ID,             // 0
-        Phones.TYPE,            // 1
-        Phones.LABEL,           // 2
-        Phones.NUMBER,          // 3
-        People.DISPLAY_NAME,    // 4
-        People.PHONETIC_NAME,   // 5
+    private static final String[] PHONES_PROJECTION = new String[]{
+            Phones._ID,             // 0
+            Phones.TYPE,            // 1
+            Phones.LABEL,           // 2
+            Phones.NUMBER,          // 3
+            People.DISPLAY_NAME,    // 4
+            People.PHONETIC_NAME,   // 5
     };
 
     private static final int PHONE_ID_COLUMN_INDEX = 0;
@@ -67,11 +67,11 @@ public class LegacyPhoneNumberListAdapter extends ContactEntryListAdapter {
 
     @Override
     public String getContactDisplayName(int position) {
-        return ((Cursor)getItem(position)).getString(PHONE_DISPLAY_NAME_COLUMN_INDEX);
+        return ((Cursor) getItem(position)).getString(PHONE_DISPLAY_NAME_COLUMN_INDEX);
     }
 
     public Uri getPhoneUri(int position) {
-        Cursor cursor = ((Cursor)getItem(position));
+        Cursor cursor = ((Cursor) getItem(position));
         long id = cursor.getLong(PHONE_ID_COLUMN_INDEX);
         return ContentUris.withAppendedId(Phones.CONTENT_URI, id);
     }
@@ -88,7 +88,7 @@ public class LegacyPhoneNumberListAdapter extends ContactEntryListAdapter {
     @Override
     protected void bindView(View itemView, int partition, Cursor cursor, int position) {
         super.bindView(itemView, partition, cursor, position);
-        ContactListItemView view = (ContactListItemView)itemView;
+        ContactListItemView view = (ContactListItemView) itemView;
         bindName(view, cursor);
         bindViewId(view, cursor, PHONE_ID_COLUMN_INDEX);
         bindPhoneNumber(view, cursor);

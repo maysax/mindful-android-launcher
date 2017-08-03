@@ -155,25 +155,29 @@ public abstract class DocumentImpl extends NodeImpl implements Document {
         return false;
     }
 
-    public void setXmlStandalone(boolean xmlStandalone) throws DOMException {}
+    public void setXmlStandalone(boolean xmlStandalone) throws DOMException {
+    }
 
     public String getXmlVersion() {
         return null;
     }
 
-    public void setXmlVersion(String xmlVersion) throws DOMException {}
+    public void setXmlVersion(String xmlVersion) throws DOMException {
+    }
 
     public boolean getStrictErrorChecking() {
         return true;
     }
 
-    public void setStrictErrorChecking(boolean strictErrorChecking) {}
+    public void setStrictErrorChecking(boolean strictErrorChecking) {
+    }
 
     public String getDocumentURI() {
         return null;
     }
 
-    public void setDocumentURI(String documentURI) {}
+    public void setDocumentURI(String documentURI) {
+    }
 
     public Node adoptNode(Node source) throws DOMException {
         throw new DOMException(DOMException.NOT_SUPPORTED_ERR, null);

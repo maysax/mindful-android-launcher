@@ -57,10 +57,9 @@ public class OldMenuFragment extends CoreFragment {
     @Override
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
-        if(menuVisible)
-        {
+        if (menuVisible) {
             try {
-                UIUtils.hideSoftKeyboard(getActivity(),getActivity().getCurrentFocus().getWindowToken());
+                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
             } catch (Exception e) {
                 Tracer.e(e, e.getMessage());
             }

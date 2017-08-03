@@ -35,7 +35,7 @@ public class SpannedTestUtils {
      * Checks that the text contained in the text view matches the given HTML text.
      *
      * @param expectedHtmlText the expected text to be in the text view
-     * @param textView the text view from which to get the text
+     * @param textView         the text view from which to get the text
      */
     public static void checkHtmlText(String expectedHtmlText, TextView textView) {
         String actualHtmlText = Html.toHtml((Spanned) textView.getText());
@@ -51,9 +51,9 @@ public class SpannedTestUtils {
     /**
      * Assert span exists in the correct location.
      *
-     * @param seq The spannable string to check.
+     * @param seq   The spannable string to check.
      * @param start The starting index.
-     * @param end The ending index.
+     * @param end   The ending index.
      */
     public static void assertPrefixSpan(CharSequence seq, int start, int end) {
         Assert.assertTrue(seq instanceof Spanned);
@@ -74,7 +74,7 @@ public class SpannedTestUtils {
     /**
      * Asserts that the given character sequence is not a Spanned object and text is correct.
      *
-     * @param seq The sequence to check.
+     * @param seq      The sequence to check.
      * @param expected The expected text.
      */
     public static void assertNotSpanned(CharSequence seq, String expected) {

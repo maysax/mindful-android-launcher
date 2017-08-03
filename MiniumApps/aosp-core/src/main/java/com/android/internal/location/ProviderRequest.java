@@ -16,20 +16,26 @@
 
 package com.android.internal.location;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.location.LocationRequest;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.TimeUtils;
 
-/** @hide */
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @hide
+ */
 public final class ProviderRequest implements Parcelable {
-    /** Location reporting is requested (true) */
+    /**
+     * Location reporting is requested (true)
+     */
     public boolean reportLocation = false;
 
-    /** The smallest requested interval */
+    /**
+     * The smallest requested interval
+     */
     public long interval = Long.MAX_VALUE;
 
     /**
@@ -41,26 +47,28 @@ public final class ProviderRequest implements Parcelable {
      */
     public List<LocationRequest> locationRequests = new ArrayList<LocationRequest>();
 
-    public ProviderRequest() { }
+    public ProviderRequest() {
+    }
 
     public static final Parcelable.Creator<ProviderRequest> CREATOR =
             new Parcelable.Creator<ProviderRequest>() {
-        @Override
-        public ProviderRequest createFromParcel(Parcel in) {
-            ProviderRequest request = new ProviderRequest();
-            request.reportLocation = in.readInt() == 1;
-            request.interval = in.readLong();
-            int count = in.readInt();
-            for (int i = 0; i < count; i++) {
-                request.locationRequests.add(LocationRequest.CREATOR.createFromParcel(in));
-            }
-            return request;
-        }
-        @Override
-        public ProviderRequest[] newArray(int size) {
-            return new ProviderRequest[size];
-        }
-    };
+                @Override
+                public ProviderRequest createFromParcel(Parcel in) {
+                    ProviderRequest request = new ProviderRequest();
+                    request.reportLocation = in.readInt() == 1;
+                    request.interval = in.readLong();
+                    int count = in.readInt();
+                    for (int i = 0; i < count; i++) {
+                        request.locationRequests.add(LocationRequest.CREATOR.createFromParcel(in));
+                    }
+                    return request;
+                }
+
+                @Override
+                public ProviderRequest[] newArray(int size) {
+                    return new ProviderRequest[size];
+                }
+            };
 
     @Override
     public int describeContents() {

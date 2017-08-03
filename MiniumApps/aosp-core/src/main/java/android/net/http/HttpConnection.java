@@ -18,16 +18,16 @@ package android.net.http;
 
 import android.content.Context;
 
-import java.net.Socket;
-import java.io.IOException;
-
 import org.apache.http.HttpHost;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 
+import java.io.IOException;
+import java.net.Socket;
+
 /**
  * A requestConnection connecting to a normal (non secure) http server
- * 
+ * <p>
  * {@hide}
  */
 class HttpConnection extends Connection {
@@ -61,11 +61,10 @@ class HttpConnection extends Connection {
 
     /**
      * Closes the low level connection.
-     *
+     * <p>
      * If an exception is thrown then it is assumed that the
      * connection will have been closed (to the extent possible)
      * anyway and the caller does not need to take any further action.
-     *
      */
     void closeConnection() {
         try {
@@ -75,7 +74,7 @@ class HttpConnection extends Connection {
         } catch (IOException e) {
             if (HttpLog.LOGV) HttpLog.v(
                     "closeConnection(): failed closing connection " +
-                    mHost);
+                            mHost);
             e.printStackTrace();
         }
     }

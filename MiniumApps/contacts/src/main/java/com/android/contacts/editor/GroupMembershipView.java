@@ -36,12 +36,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.contacts.GroupMetaDataLoader;
+import com.android.contacts.common.model.RawContactDelta;
+import com.android.contacts.common.model.RawContactModifier;
+import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.interactions.GroupCreationDialogFragment;
 import com.android.contacts.interactions.GroupCreationDialogFragment.OnGroupCreatedListener;
-import com.android.contacts.common.model.RawContactDelta;
-import com.android.contacts.common.model.ValuesDelta;
-import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.util.UiClosables;
 import com.google.common.base.Objects;
 
@@ -100,7 +100,7 @@ public class GroupMembershipView extends LinearLayout
 
         public boolean getItemIsCheckable(int position) {
             // Item is checkable if it is NOT the last one in the list
-            return position != getCount()-1;
+            return position != getCount() - 1;
         }
 
         @Override
@@ -119,7 +119,7 @@ public class GroupMembershipView extends LinearLayout
 
             // Hide the checkable drawable.  This assumes that the item views
             // are CheckedTextView objects
-            final CheckedTextView checkedTextView = (CheckedTextView)itemView;
+            final CheckedTextView checkedTextView = (CheckedTextView) itemView;
             if (!getItemIsCheckable(position)) {
                 checkedTextView.setCheckMarkDrawable(null);
             }
@@ -232,7 +232,7 @@ public class GroupMembershipView extends LinearLayout
                         && mGroupMetaData.getInt(GroupMetaDataLoader.FAVORITES) != 0) {
                     mFavoritesGroupId = groupId;
                 } else if (!mGroupMetaData.isNull(GroupMetaDataLoader.AUTO_ADD)
-                            && mGroupMetaData.getInt(GroupMetaDataLoader.AUTO_ADD) != 0) {
+                        && mGroupMetaData.getInt(GroupMetaDataLoader.AUTO_ADD) != 0) {
                     mDefaultGroupId = groupId;
                 } else {
                     accountHasGroups = true;

@@ -44,7 +44,7 @@ class DhcpDeclinePacket extends DhcpPacket {
         ByteBuffer result = ByteBuffer.allocate(MAX_LENGTH);
 
         fillInPacket(encap, mClientIp, mYourIp, destUdp, srcUdp, result,
-            DHCP_BOOTREQUEST, false);
+                DHCP_BOOTREQUEST, false);
         result.flip();
         return result;
     }

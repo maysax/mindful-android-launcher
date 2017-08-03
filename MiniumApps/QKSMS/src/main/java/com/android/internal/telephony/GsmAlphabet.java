@@ -671,7 +671,7 @@ public class GsmAlphabet {
 
         // Septets are stored in byte-aligned octets
         for (int i = 0, sz = s.length()
-                ; i < sz && (outByteIndex - offset) < length
+             ; i < sz && (outByteIndex - offset) < length
                 ; i++
                 ) {
             char c = s.charAt(i);

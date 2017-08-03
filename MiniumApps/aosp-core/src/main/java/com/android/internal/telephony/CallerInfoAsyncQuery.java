@@ -31,15 +31,15 @@ import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.ContactsContract.PhoneLookup;
 import android.telephony.PhoneNumberUtils;
-import android.text.TextUtils;
 import android.telephony.Rlog;
 import android.telephony.SubscriptionManager;
-import android.util.Log;
+import android.text.TextUtils;
 
 /**
  * Helper class to make it easier to run asynchronous caller-id lookup queries.
- * @see CallerInfo
  *
+ * @see CallerInfo
+ * <p>
  * {@hide}
  */
 public class CallerInfoAsyncQuery {
@@ -134,7 +134,7 @@ public class CallerInfoAsyncQuery {
 
         /**
          * Context passed by the caller.
-         *
+         * <p>
          * NOTE: The actual context we use for query may *not* be this context; since we query
          * against the "current" contacts provider.  In the constructor we pass the "current"
          * context resolver (obtained via {@link #getCurrentProfileContentResolver) and pass it
@@ -146,17 +146,17 @@ public class CallerInfoAsyncQuery {
 
         /**
          * Our own query worker thread.
-         *
+         * <p>
          * This thread handles the messages enqueued in the looper.  The normal sequence
          * of events is that a new query shows up in the looper queue, followed by 0 or
          * more add listener requests, and then an end request.  Of course, these requests
          * can be interlaced with requests from other tokens, but is irrelevant to this
          * handler since the handler has no state.
-         *
+         * <p>
          * Note that we depend on the queue to keep things in order; in other words, the
          * looper queue must be FIFO with respect to input from the synchronous startQuery
          * calls and output to this handleMessage call.
-         *
+         * <p>
          * This use of the queue is required because CallerInfo objects may be accessed
          * multiple times before the query is complete.  All accesses (listeners) must be
          * queued up and informed in order when the query is complete.
@@ -177,14 +177,16 @@ public class CallerInfoAsyncQuery {
                     // However, if there is any code that this Handler calls (such as in
                     // super.handleMessage) that DOES place unexpected messages on the
                     // queue, then we need pass these messages on.
-                    if (DBG) Rlog.d(LOG_TAG, "Unexpected command (CookieWrapper is null): " + msg.what +
-                            " ignored by CallerInfoWorkerHandler, passing onto parent.");
+                    if (DBG)
+                        Rlog.d(LOG_TAG, "Unexpected command (CookieWrapper is null): " + msg.what +
+                                " ignored by CallerInfoWorkerHandler, passing onto parent.");
 
                     super.handleMessage(msg);
                 } else {
 
-                    if (DBG) Rlog.d(LOG_TAG, "Processing event: " + cw.event + " token (arg1): " + msg.arg1 +
-                        " command: " + msg.what + " query URI: " + sanitizeUriToString(args.uri));
+                    if (DBG)
+                        Rlog.d(LOG_TAG, "Processing event: " + cw.event + " token (arg1): " + msg.arg1 +
+                                " command: " + msg.what + " query URI: " + sanitizeUriToString(args.uri));
 
                     switch (cw.event) {
                         case EVENT_NEW_QUERY:
@@ -230,7 +232,7 @@ public class CallerInfoAsyncQuery {
 
         /**
          * Overrides onQueryComplete from AsyncQueryHandler.
-         *
+         * <p>
          * This method takes into account the state of this class; we construct the CallerInfo
          * object only once for each set of listeners. When the query thread has done its work
          * and calls this method, we inform the remaining listeners in the queue, until we're
@@ -240,7 +242,8 @@ public class CallerInfoAsyncQuery {
          */
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-            if (DBG) Rlog.d(LOG_TAG, "##### onQueryComplete() #####   query complete for token: " + token);
+            if (DBG)
+                Rlog.d(LOG_TAG, "##### onQueryComplete() #####   query complete for token: " + token);
 
             //get the cookie and notify the listener.
             CookieWrapper cw = (CookieWrapper) cookie;
@@ -334,13 +337,14 @@ public class CallerInfoAsyncQuery {
 
             //notify the listener that the query is complete.
             if (cw.listener != null) {
-                if (DBG) Rlog.d(LOG_TAG, "notifying listener: " + cw.listener.getClass().toString() +
-                             " for token: " + token + mCallerInfo);
+                if (DBG)
+                    Rlog.d(LOG_TAG, "notifying listener: " + cw.listener.getClass().toString() +
+                            " for token: " + token + mCallerInfo);
                 cw.listener.onQueryComplete(token, cw.cookie, mCallerInfo);
             }
 
             if (cursor != null) {
-               cursor.close();
+                cursor.close();
             }
         }
     }
@@ -356,12 +360,13 @@ public class CallerInfoAsyncQuery {
      * Factory method to start query with a Uri query spec
      */
     public static CallerInfoAsyncQuery startQuery(int token, Context context, Uri contactRef,
-            OnQueryCompleteListener listener, Object cookie) {
+                                                  OnQueryCompleteListener listener, Object cookie) {
 
         CallerInfoAsyncQuery c = new CallerInfoAsyncQuery();
         c.allocate(context, contactRef);
 
-        if (DBG) Rlog.d(LOG_TAG, "starting query for URI: " + contactRef + " handler: " + c.toString());
+        if (DBG)
+            Rlog.d(LOG_TAG, "starting query for URI: " + contactRef + " handler: " + c.toString());
 
         //create cookieWrapper, start query
         CookieWrapper cw = new CookieWrapper();
@@ -376,7 +381,7 @@ public class CallerInfoAsyncQuery {
 
     /**
      * Factory method to start the query based on a number.
-     *
+     * <p>
      * Note: if the number contains an "@" character we treat it
      * as a SIP address, and look it up directly in the Data table
      * rather than using the PhoneLookup table.
@@ -386,7 +391,7 @@ public class CallerInfoAsyncQuery {
      * the phone type of the incoming connection.
      */
     public static CallerInfoAsyncQuery startQuery(int token, Context context, String number,
-            OnQueryCompleteListener listener, Object cookie) {
+                                                  OnQueryCompleteListener listener, Object cookie) {
 
         long subId = SubscriptionManager.getDefaultSubId();
         return startQuery(token, context, number, listener, cookie, subId);
@@ -394,7 +399,7 @@ public class CallerInfoAsyncQuery {
 
     /**
      * Factory method to start the query based on a number with specific subscription.
-     *
+     * <p>
      * Note: if the number contains an "@" character we treat it
      * as a SIP address, and look it up directly in the Data table
      * rather than using the PhoneLookup table.
@@ -404,7 +409,7 @@ public class CallerInfoAsyncQuery {
      * the phone type of the incoming connection.
      */
     public static CallerInfoAsyncQuery startQuery(int token, Context context, String number,
-            OnQueryCompleteListener listener, Object cookie, long subId) {
+                                                  OnQueryCompleteListener listener, Object cookie, long subId) {
 
         if (DBG) {
             Rlog.d(LOG_TAG, "##### CallerInfoAsyncQuery startQuery()... #####");
@@ -444,12 +449,12 @@ public class CallerInfoAsyncQuery {
         }
 
         c.mHandler.startQuery(token,
-                              cw,  // cookie
-                              contactRef,  // uri
-                              null,  // projection
-                              null,  // selection
-                              null,  // selectionArgs
-                              null);  // orderBy
+                cw,  // cookie
+                contactRef,  // uri
+                null,  // projection
+                null,  // selection
+                null,  // selectionArgs
+                null);  // orderBy
         return c;
     }
 
@@ -458,8 +463,9 @@ public class CallerInfoAsyncQuery {
      */
     public void addQueryListener(int token, OnQueryCompleteListener listener, Object cookie) {
 
-        if (DBG) Rlog.d(LOG_TAG, "adding listener to query: " + sanitizeUriToString(mHandler.mQueryUri) +
-                " handler: " + mHandler.toString());
+        if (DBG)
+            Rlog.d(LOG_TAG, "adding listener to query: " + sanitizeUriToString(mHandler.mQueryUri) +
+                    " handler: " + mHandler.toString());
 
         //create cookieWrapper, add query request to end of queue.
         CookieWrapper cw = new CookieWrapper();
@@ -475,7 +481,7 @@ public class CallerInfoAsyncQuery {
      * state of context and uri.
      */
     private void allocate(Context context, Uri contactRef) {
-        if ((context == null) || (contactRef == null)){
+        if ((context == null) || (contactRef == null)) {
             throw new QueryPoolException("Bad context or query uri.");
         }
         mHandler = new CallerInfoAsyncQueryHandler(context);

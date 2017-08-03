@@ -1,14 +1,5 @@
 package com.android.contacts.interactions;
 
-import com.google.common.base.Preconditions;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import android.content.AsyncTaskLoader;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,11 +9,20 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.util.Log;
 
+import com.google.common.base.Preconditions;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 
 /**
  * Loads a list of calendar interactions showing shared calendar events with everyone passed in
  * {@param emailAddresses}.
- *
+ * <p>
  * Note: the calendar provider treats mailing lists as atomic email addresses.
  */
 public class CalendarInteractionsLoader extends AsyncTaskLoader<List<ContactInteraction>> {
@@ -38,12 +38,12 @@ public class CalendarInteractionsLoader extends AsyncTaskLoader<List<ContactInte
 
     /**
      * @param maxFutureToRetrieve The maximum number of future events to retrieve
-     * @param maxPastToRetrieve The maximum number of past events to retrieve
+     * @param maxPastToRetrieve   The maximum number of past events to retrieve
      */
     public CalendarInteractionsLoader(Context context, List<String> emailAddresses,
-            int maxFutureToRetrieve, int maxPastToRetrieve,
-            long numberFutureMillisecondToSearchLocalCalendar,
-            long numberPastMillisecondToSearchLocalCalendar) {
+                                      int maxFutureToRetrieve, int maxPastToRetrieve,
+                                      long numberFutureMillisecondToSearchLocalCalendar,
+                                      long numberPastMillisecondToSearchLocalCalendar) {
         super(context);
         mEmailAddresses = emailAddresses;
         mMaxFutureToRetrieve = maxFutureToRetrieve;
@@ -113,11 +113,11 @@ public class CalendarInteractionsLoader extends AsyncTaskLoader<List<ContactInte
     /**
      * Returns a clause that checks whether an attendee's email is equal to one of
      * {@param count} values. The comparison is insensitive to dots and case.
-     *
+     * <p>
      * NOTE #1: This function is only needed for supporting non google accounts. For calendars
      * synced by a google account, attendee email values will be be modified by the server to ensure
      * they match an entry in contacts.google.com.
-     *
+     * <p>
      * NOTE #2: This comparison clause can result in false positives. Ex#1, test@gmail.com will
      * match test@gmailco.m. Ex#2, a.2@exchange.com will match a2@exchange.com (exchange addresses
      * should be dot sensitive). This probably isn't a large concern.
@@ -167,10 +167,10 @@ public class CalendarInteractionsLoader extends AsyncTaskLoader<List<ContactInte
      * @return the Ids of calendars that are owned by accounts on the phone.
      */
     private List<String> getOwnedCalendarIds() {
-        String[] projection = new String[] {Calendars._ID, Calendars.CALENDAR_ACCESS_LEVEL};
+        String[] projection = new String[]{Calendars._ID, Calendars.CALENDAR_ACCESS_LEVEL};
         Cursor cursor = getContext().getContentResolver().query(Calendars.CONTENT_URI, projection,
                 Calendars.VISIBLE + " = 1 AND " + Calendars.CALENDAR_ACCESS_LEVEL + " = ? ",
-                new String[] {String.valueOf(Calendars.CAL_ACCESS_OWNER)}, null);
+                new String[]{String.valueOf(Calendars.CAL_ACCESS_OWNER)}, null);
         try {
             if (cursor == null || cursor.getCount() < 1) {
                 return null;

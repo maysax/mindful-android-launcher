@@ -1,7 +1,6 @@
 package minium.co.launcher2.notificationscheduler;
 
 import android.content.Context;
-import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 
 import com.android.internal.telephony.ITelephony;
@@ -35,7 +34,7 @@ public class CallReceiver extends PhonecallReceiver {
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
 
-        if(prefs.isFlowRunning().get())
+        if (prefs.isFlowRunning().get())
             rejectCalls(ctx, number, start);
         else if (prefs.isNotificationSchedulerEnabled().get()) {
             if (prefs.notificationSchedulerSupressCalls().get()) {

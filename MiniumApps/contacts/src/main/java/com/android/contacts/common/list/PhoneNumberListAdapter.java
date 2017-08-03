@@ -28,14 +28,13 @@ import android.provider.ContactsContract.CommonDataKinds.SipAddress;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Directory;
-import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.contacts.common.GeoUtil;
 import com.android.contacts.common.ContactPhotoManager.DefaultImageRequest;
+import com.android.contacts.common.GeoUtil;
 import com.android.contacts.common.extensions.ExtendedPhoneDirectoriesManager;
 import com.android.contacts.common.extensions.ExtensionsFactory;
 import com.android.contacts.common.preference.ContactsPreferences;
@@ -49,7 +48,7 @@ import minium.co.contacts.R;
 /**
  * A cursor adapter for the {@link Phone#CONTENT_ITEM_TYPE} and
  * {@link SipAddress#CONTENT_ITEM_TYPE}.
- *
+ * <p>
  * By default this adapter just handles phone numbers. When {@link #setUseCallableUri(boolean)} is
  * called with "true", this adapter starts handling SIP addresses too, by using {@link Callable}
  * API instead of {@link Phone}.
@@ -67,39 +66,39 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
     private long mFirstExtendedDirectoryId = Long.MAX_VALUE;
 
     public static class PhoneQuery {
-        public static final String[] PROJECTION_PRIMARY = new String[] {
-            Phone._ID,                          // 0
-            Phone.TYPE,                         // 1
-            Phone.LABEL,                        // 2
-            Phone.NUMBER,                       // 3
-            Phone.CONTACT_ID,                   // 4
-            Phone.LOOKUP_KEY,                   // 5
-            Phone.PHOTO_ID,                     // 6
-            Phone.DISPLAY_NAME_PRIMARY,         // 7
-            Phone.PHOTO_THUMBNAIL_URI,          // 8
+        public static final String[] PROJECTION_PRIMARY = new String[]{
+                Phone._ID,                          // 0
+                Phone.TYPE,                         // 1
+                Phone.LABEL,                        // 2
+                Phone.NUMBER,                       // 3
+                Phone.CONTACT_ID,                   // 4
+                Phone.LOOKUP_KEY,                   // 5
+                Phone.PHOTO_ID,                     // 6
+                Phone.DISPLAY_NAME_PRIMARY,         // 7
+                Phone.PHOTO_THUMBNAIL_URI,          // 8
         };
 
-        public static final String[] PROJECTION_ALTERNATIVE = new String[] {
-            Phone._ID,                          // 0
-            Phone.TYPE,                         // 1
-            Phone.LABEL,                        // 2
-            Phone.NUMBER,                       // 3
-            Phone.CONTACT_ID,                   // 4
-            Phone.LOOKUP_KEY,                   // 5
-            Phone.PHOTO_ID,                     // 6
-            Phone.DISPLAY_NAME_ALTERNATIVE,     // 7
-            Phone.PHOTO_THUMBNAIL_URI,          // 8
+        public static final String[] PROJECTION_ALTERNATIVE = new String[]{
+                Phone._ID,                          // 0
+                Phone.TYPE,                         // 1
+                Phone.LABEL,                        // 2
+                Phone.NUMBER,                       // 3
+                Phone.CONTACT_ID,                   // 4
+                Phone.LOOKUP_KEY,                   // 5
+                Phone.PHOTO_ID,                     // 6
+                Phone.DISPLAY_NAME_ALTERNATIVE,     // 7
+                Phone.PHOTO_THUMBNAIL_URI,          // 8
         };
 
-        public static final int PHONE_ID                = 0;
-        public static final int PHONE_TYPE              = 1;
-        public static final int PHONE_LABEL             = 2;
-        public static final int PHONE_NUMBER            = 3;
-        public static final int CONTACT_ID              = 4;
-        public static final int LOOKUP_KEY              = 5;
-        public static final int PHOTO_ID                = 6;
-        public static final int DISPLAY_NAME            = 7;
-        public static final int PHOTO_URI               = 8;
+        public static final int PHONE_ID = 0;
+        public static final int PHONE_TYPE = 1;
+        public static final int PHONE_LABEL = 2;
+        public static final int PHONE_NUMBER = 3;
+        public static final int CONTACT_ID = 4;
+        public static final int LOOKUP_KEY = 5;
+        public static final int PHOTO_ID = 6;
+        public static final int DISPLAY_NAME = 7;
+        public static final int PHOTO_URI = 8;
     }
 
     private static final String IGNORE_NUMBER_TOO_LONG_CLAUSE =
@@ -225,7 +224,7 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
      * filter}.
      */
     private void applyFilter(CursorLoader loader, Uri.Builder uriBuilder, long directoryId,
-            ContactListFilter filter) {
+                             ContactListFilter filter) {
         if (filter == null || directoryId != Directory.DEFAULT) {
             return;
         }
@@ -265,7 +264,7 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
     }
 
     public String getPhoneNumber(int position) {
-        final Cursor item = (Cursor)getItem(position);
+        final Cursor item = (Cursor) getItem(position);
         return item != null ? item.getString(PhoneQuery.PHONE_NUMBER) : null;
     }
 
@@ -276,13 +275,13 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
      */
     public Uri getDataUri(int position) {
         final int partitionIndex = getPartitionForPosition(position);
-        final Cursor item = (Cursor)getItem(position);
+        final Cursor item = (Cursor) getItem(position);
         return item != null ? getDataUri(partitionIndex, item) : null;
     }
 
     public Uri getDataUri(int partitionIndex, Cursor cursor) {
         final long directoryId =
-                ((DirectoryPartition)getPartition(partitionIndex)).getDirectoryId();
+                ((DirectoryPartition) getPartition(partitionIndex)).getDirectoryId();
         if (!isRemoteDirectory(directoryId)) {
             final long phoneId = cursor.getLong(PhoneQuery.PHONE_ID);
             return ContentUris.withAppendedId(Data.CONTENT_URI, phoneId);
@@ -314,7 +313,7 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
         cursor.moveToPosition(-1);
         long curContactId = -1;
         int numContacts = 0;
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             final long contactId = cursor.getLong(PhoneQuery.CONTACT_ID);
             if (contactId != curContactId) {
                 curContactId = contactId;
@@ -327,7 +326,7 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
     @Override
     protected void bindView(View itemView, int partition, Cursor cursor, int position) {
         super.bindView(itemView, partition, cursor, position);
-        ContactListItemView view = (ContactListItemView)itemView;
+        ContactListItemView view = (ContactListItemView) itemView;
 
         setHighlight(view, cursor);
 
@@ -385,7 +384,7 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
 
     protected void bindPhoneNumber(ContactListItemView view, Cursor cursor, boolean displayNumber) {
         CharSequence label = null;
-        if (displayNumber &&  !cursor.isNull(PhoneQuery.PHONE_TYPE)) {
+        if (displayNumber && !cursor.isNull(PhoneQuery.PHONE_TYPE)) {
             final int type = cursor.getInt(PhoneQuery.PHONE_TYPE);
             final String customLabel = cursor.getString(PhoneQuery.PHONE_LABEL);
 
@@ -477,11 +476,11 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
      * directories. This is done in the following steps:
      * 1. Call base implementation to add directories from the cursor.
      * 2. Iterate all base directories and establish the following information:
-     *   a. The highest directory id so that we can assign unused id's to the extended directories.
-     *   b. The index of the last non-remote directory. This is where we will insert extended
-     *      directories.
+     * a. The highest directory id so that we can assign unused id's to the extended directories.
+     * b. The index of the last non-remote directory. This is where we will insert extended
+     * directories.
      * 3. Iterate the extended directories and for each one, assign an ID and insert it in the
-     *    proper location.
+     * proper location.
      */
     @Override
     public void changeDirectories(Cursor cursor) {
@@ -528,7 +527,7 @@ public class PhoneNumberListAdapter extends ContactEntryListAdapter {
     }
 
     protected Uri getContactUri(int partitionIndex, Cursor cursor,
-            int contactIdColumn, int lookUpKeyColumn) {
+                                int contactIdColumn, int lookUpKeyColumn) {
         final DirectoryPartition directory = (DirectoryPartition) getPartition(partitionIndex);
         final long directoryId = directory.getDirectoryId();
         if (!isExtendedDirectory(directoryId)) {

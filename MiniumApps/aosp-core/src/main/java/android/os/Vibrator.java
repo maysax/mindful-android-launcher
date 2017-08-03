@@ -25,7 +25,7 @@ import android.media.AudioAttributes;
  * <p>
  * If your process exits, any vibration you started will stop.
  * </p>
- *
+ * <p>
  * To obtain an instance of the system vibrator, call
  * {@link Context#getSystemService} with {@link Context#VIBRATOR_SERVICE} as the argument.
  */
@@ -71,10 +71,10 @@ public abstract class Vibrator {
      * {@link android.Manifest.permission#VIBRATE}.
      *
      * @param milliseconds The number of milliseconds to vibrate.
-     * @param attributes {@link AudioAttributes} corresponding to the vibration. For example,
-     *        specify {@link AudioAttributes#USAGE_ALARM} for alarm vibrations or
-     *        {@link AudioAttributes#USAGE_NOTIFICATION_RINGTONE} for
-     *        vibrations associated with incoming calls.
+     * @param attributes   {@link AudioAttributes} corresponding to the vibration. For example,
+     *                     specify {@link AudioAttributes#USAGE_ALARM} for alarm vibrations or
+     *                     {@link AudioAttributes#USAGE_NOTIFICATION_RINGTONE} for
+     *                     vibrations associated with incoming calls.
      */
     public void vibrate(long milliseconds, AudioAttributes attributes) {
         vibrate(Process.myUid(), mPackageName, milliseconds, attributes);
@@ -82,7 +82,7 @@ public abstract class Vibrator {
 
     /**
      * Vibrate with a given pattern.
-     *
+     * <p>
      * <p>
      * Pass in an array of ints that are the durations for which to turn on or off
      * the vibrator in milliseconds.  The first value indicates the number of milliseconds
@@ -97,8 +97,8 @@ public abstract class Vibrator {
      * {@link android.Manifest.permission#VIBRATE}.
      *
      * @param pattern an array of longs of times for which to turn the vibrator on or off.
-     * @param repeat the index into pattern at which to repeat, or -1 if
-     *        you don't want to repeat.
+     * @param repeat  the index into pattern at which to repeat, or -1 if
+     *                you don't want to repeat.
      */
     public void vibrate(long[] pattern, int repeat) {
         vibrate(pattern, repeat, null);
@@ -106,7 +106,7 @@ public abstract class Vibrator {
 
     /**
      * Vibrate with a given pattern.
-     *
+     * <p>
      * <p>
      * Pass in an array of ints that are the durations for which to turn on or off
      * the vibrator in milliseconds.  The first value indicates the number of milliseconds
@@ -120,33 +120,31 @@ public abstract class Vibrator {
      * <p>This method requires the caller to hold the permission
      * {@link android.Manifest.permission#VIBRATE}.
      *
-     * @param pattern an array of longs of times for which to turn the vibrator on or off.
-     * @param repeat the index into pattern at which to repeat, or -1 if
-     *        you don't want to repeat.
+     * @param pattern    an array of longs of times for which to turn the vibrator on or off.
+     * @param repeat     the index into pattern at which to repeat, or -1 if
+     *                   you don't want to repeat.
      * @param attributes {@link AudioAttributes} corresponding to the vibration. For example,
-     *        specify {@link AudioAttributes#USAGE_ALARM} for alarm vibrations or
-     *        {@link AudioAttributes#USAGE_NOTIFICATION_RINGTONE} for
-     *        vibrations associated with incoming calls.
+     *                   specify {@link AudioAttributes#USAGE_ALARM} for alarm vibrations or
+     *                   {@link AudioAttributes#USAGE_NOTIFICATION_RINGTONE} for
+     *                   vibrations associated with incoming calls.
      */
     public void vibrate(long[] pattern, int repeat, AudioAttributes attributes) {
         vibrate(Process.myUid(), mPackageName, pattern, repeat, attributes);
     }
 
     /**
-     * @hide
-     * Like {@link #vibrate(long, AudioAttributes)}, but allowing the caller to specify that
+     * @hide Like {@link #vibrate(long, AudioAttributes)}, but allowing the caller to specify that
      * the vibration is owned by someone else.
      */
     public abstract void vibrate(int uid, String opPkg, long milliseconds,
-            AudioAttributes attributes);
+                                 AudioAttributes attributes);
 
     /**
-     * @hide
-     * Like {@link #vibrate(long[], int, AudioAttributes)}, but allowing the caller to specify that
+     * @hide Like {@link #vibrate(long[], int, AudioAttributes)}, but allowing the caller to specify that
      * the vibration is owned by someone else.
      */
     public abstract void vibrate(int uid, String opPkg, long[] pattern, int repeat,
-            AudioAttributes attributes);
+                                 AudioAttributes attributes);
 
     /**
      * Turn the vibrator off.

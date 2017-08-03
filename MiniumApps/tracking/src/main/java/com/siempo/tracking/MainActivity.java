@@ -7,8 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
-import minium.co.core.event.CheckVersionEvent;
-
 import com.siempo.tracking.permission.PermissionActivity_;
 import com.siempo.tracking.services.ApiClient_;
 import com.siempo.tracking.services.TrackingService_;
@@ -28,6 +26,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.Locale;
 
 import de.greenrobot.event.Subscribe;
+import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -48,7 +47,6 @@ public class MainActivity extends CoreActivity {
 
     @ViewById
     TextView txtVersion;
-
 
 
     @SystemService
@@ -87,7 +85,8 @@ public class MainActivity extends CoreActivity {
             UIUtils.confirm(MainActivity.this, "You need to allow the app to access everything it asks for.", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (which == DialogInterface.BUTTON_POSITIVE) PermissionActivity_.intent(MainActivity.this).start();
+                    if (which == DialogInterface.BUTTON_POSITIVE)
+                        PermissionActivity_.intent(MainActivity.this).start();
                 }
             });
 

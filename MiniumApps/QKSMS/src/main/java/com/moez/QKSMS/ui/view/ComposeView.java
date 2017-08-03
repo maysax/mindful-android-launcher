@@ -37,19 +37,19 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import com.github.lzyzsd.circleprogress.DonutProgress;
-import com.moez.QKSMS.common.LiveViewManager;
-import com.moez.QKSMS.enums.QKPreference;
-import com.moez.QKSMS.mmssms.Transaction;
-import com.moez.QKSMS.mmssms.Utils;
 import com.moez.QKSMS.R;
-import com.moez.QKSMS.data.Conversation;
-import com.moez.QKSMS.data.ConversationLegacy;
-import com.moez.QKSMS.interfaces.ActivityLauncher;
-import com.moez.QKSMS.interfaces.RecipientProvider;
+import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.common.utils.ImageUtils;
 import com.moez.QKSMS.common.utils.PhoneNumberUtils;
-import com.moez.QKSMS.common.utils.Units;
+import com.moez.QKSMS.data.Conversation;
+import com.moez.QKSMS.data.ConversationLegacy;
+import com.moez.QKSMS.enums.QKPreference;
+import com.moez.QKSMS.interfaces.ActivityLauncher;
+import com.moez.QKSMS.interfaces.RecipientProvider;
+import com.moez.QKSMS.mmssms.Transaction;
+import com.moez.QKSMS.mmssms.Utils;
 import com.moez.QKSMS.transaction.NotificationManager;
 import com.moez.QKSMS.transaction.SmsHelper;
 import com.moez.QKSMS.ui.ThemeManager;
@@ -221,7 +221,8 @@ public class ComposeView extends LinearLayout implements View.OnClickListener {
                             return true;
                         }
                         return false;
-                    }});
+                    }
+                });
                 break;
         }
 

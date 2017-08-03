@@ -21,12 +21,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.android.internal.util.AsyncChannel;
 import com.android.internal.util.Protocol;
 
 /**
@@ -36,12 +33,13 @@ import com.android.internal.util.Protocol;
  * can be filtered 3 ways: by NetworkCapabilities, by score and more complexly by
  * overridden function.  All of these can be dynamic - changing NetworkCapabilities
  * or score forces re-evaluation of all current requests.
- *
+ * <p>
  * If any requests pass the filter some overrideable functions will be called.
  * If the bearer only cares about very simple start/stopNetwork callbacks, those
  * functions can be overridden.  If the bearer needs more interaction, it can
  * override addNetworkRequest and removeNetworkRequest which will give it each
  * request that passes their current filters.
+ *
  * @hide
  **/
 public class NetworkFactory extends Handler {
@@ -61,15 +59,15 @@ public class NetworkFactory extends Handler {
      * those requiring a different bearer.
      * msg.obj = NetworkRequest
      * msg.arg1 = score - the score of the any network currently satisfying this
-     *            request.  If this bearer knows in advance it cannot
-     *            exceed this score it should not try to connect, holding the request
-     *            for the future.
-     *            Note that subsequent events may give a different (lower
-     *            or higher) score for this request, transmitted to each
-     *            NetworkFactory through additional CMD_REQUEST_NETWORK msgs
-     *            with the same NetworkRequest but an updated score.
-     *            Also, network conditions may change for this bearer
-     *            allowing for a better score in the future.
+     * request.  If this bearer knows in advance it cannot
+     * exceed this score it should not try to connect, holding the request
+     * for the future.
+     * Note that subsequent events may give a different (lower
+     * or higher) score for this request, transmitted to each
+     * NetworkFactory through additional CMD_REQUEST_NETWORK msgs
+     * with the same NetworkRequest but an updated score.
+     * Also, network conditions may change for this bearer
+     * allowing for a better score in the future.
      */
     public static final int CMD_REQUEST_NETWORK = BASE;
 
@@ -105,7 +103,7 @@ public class NetworkFactory extends Handler {
     private Messenger mMessenger = null;
 
     public NetworkFactory(Looper looper, Context context, String logTag,
-            NetworkCapabilities filter) {
+                          NetworkCapabilities filter) {
         super(looper);
         LOG_TAG = logTag;
         mContext = context;
@@ -132,7 +130,7 @@ public class NetworkFactory extends Handler {
     public void handleMessage(Message msg) {
         switch (msg.what) {
             case CMD_REQUEST_NETWORK: {
-                handleAddRequest((NetworkRequest)msg.obj, msg.arg1);
+                handleAddRequest((NetworkRequest) msg.obj, msg.arg1);
                 break;
             }
             case CMD_CANCEL_REQUEST: {
@@ -199,16 +197,16 @@ public class NetworkFactory extends Handler {
      * Overridable function to provide complex filtering.
      * Called for every request every time a new NetworkRequest is seen
      * and whenever the filterScore or filterNetworkCapabilities change.
-     *
+     * <p>
      * acceptRequest can be overriden to provide complex filter behavior
      * for the incoming requests
-     *
+     * <p>
      * For output, this class will call {@link #needNetworkFor} and
      * {@link #releaseNetworkFor} for every request that passes the filters.
      * If you don't need to see every request, you can leave the base
      * implementations of those two functions and instead override
      * {@link #startNetwork} and {@link #stopNetwork}.
-     *
+     * <p>
      * If you want to see every score fluctuation on every request, set
      * your score filter to a very high number and watch {@link #needNetworkFor}.
      *
@@ -221,12 +219,12 @@ public class NetworkFactory extends Handler {
     private void evalRequest(NetworkRequestInfo n) {
         if (n.requested == false && n.score < mScore &&
                 n.request.networkCapabilities.satisfiedByNetworkCapabilities(
-                mCapabilityFilter) && acceptRequest(n.request, n.score)) {
+                        mCapabilityFilter) && acceptRequest(n.request, n.score)) {
             needNetworkFor(n.request, n.score);
             n.requested = true;
         } else if (n.requested == true &&
                 (n.score > mScore || n.request.networkCapabilities.satisfiedByNetworkCapabilities(
-                mCapabilityFilter) == false || acceptRequest(n.request, n.score) == false)) {
+                        mCapabilityFilter) == false || acceptRequest(n.request, n.score) == false)) {
             releaseNetworkFor(n.request);
             n.requested = false;
         }
@@ -241,8 +239,11 @@ public class NetworkFactory extends Handler {
     }
 
     // override to do simple mode (request independent)
-    protected void startNetwork() { }
-    protected void stopNetwork() { }
+    protected void startNetwork() {
+    }
+
+    protected void stopNetwork() {
+    }
 
     // override to do fancier stuff
     protected void needNetworkFor(NetworkRequest networkRequest, int score) {

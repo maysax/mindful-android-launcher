@@ -51,10 +51,10 @@ public class PostalAddressPickerFragment
             return;
         }
         if (!isLegacyCompatibilityMode()) {
-            PostalAddressListAdapter adapter = (PostalAddressListAdapter)getAdapter();
+            PostalAddressListAdapter adapter = (PostalAddressListAdapter) getAdapter();
             pickPostalAddress(adapter.getDataUri(position));
         } else {
-            LegacyPostalAddressListAdapter adapter = (LegacyPostalAddressListAdapter)getAdapter();
+            LegacyPostalAddressListAdapter adapter = (LegacyPostalAddressListAdapter) getAdapter();
             pickPostalAddress(adapter.getContactMethodUri(position));
         }
     }

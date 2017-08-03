@@ -133,8 +133,7 @@ public class AppData implements Parcelable {
             } catch (ClassCastException e) {
                 return null;
             }
-        }
-        else
+        } else
             return null;
     }
 
@@ -288,8 +287,7 @@ public class AppData implements Parcelable {
                 } catch (ClassCastException e) {
                     return null;
                 }
-            }
-            else
+            } else
                 return null;
         }
 
@@ -302,8 +300,7 @@ public class AppData implements Parcelable {
                 } catch (ClassCastException e) {
                     return null;
                 }
-            }
-            else
+            } else
                 return null;
         }
 

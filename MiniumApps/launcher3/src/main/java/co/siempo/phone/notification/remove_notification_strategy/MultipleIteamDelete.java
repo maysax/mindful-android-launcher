@@ -6,7 +6,6 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.notification.Notification;
-import co.siempo.phone.notification.remove_notification_strategy.DeleteStrategy;
 
 /**
  * Created by tkb on 2017-04-03.
@@ -17,7 +16,7 @@ public class MultipleIteamDelete implements DeleteStrategy {
     public void delete(Notification notification) {
         List<TableNotificationSms> notificationSmsesList = DBUtility.getNotificationDao().queryBuilder()
                 .where(TableNotificationSmsDao.Properties._contact_title.eq(notification.getNumber()),
-                TableNotificationSmsDao.Properties.Notification_type.eq(notification.getNotificationType()))
+                        TableNotificationSmsDao.Properties.Notification_type.eq(notification.getNotificationType()))
                 .list();
 
         DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);

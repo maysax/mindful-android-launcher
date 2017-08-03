@@ -15,7 +15,6 @@ import org.greenrobot.greendao.database.Database;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.GreenDaoOpenHelper;
@@ -80,7 +79,7 @@ public class Launcher3App extends CoreApplication {
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
         */
-        GreenDaoOpenHelper helper2 = new GreenDaoOpenHelper(this,"noti-db",null);
+        GreenDaoOpenHelper helper2 = new GreenDaoOpenHelper(this, "noti-db", null);
         //DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"noti-db");
 
         Database db = helper2.getWritableDb();

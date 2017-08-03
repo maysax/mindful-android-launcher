@@ -17,10 +17,10 @@
 
 package com.android.mms.dom;
 
-import java.util.ArrayList;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import java.util.ArrayList;
 
 public class NodeListImpl implements NodeList {
     private ArrayList<Node> mSearchNodes;
@@ -36,20 +36,22 @@ public class NodeListImpl implements NodeList {
     /**
      * Constructs a NodeList by searching for all descendants or the direct
      * children of a root node with a given tag name.
+     *
      * @param rootNode The root <code>Node</code> of the search.
-     * @param tagName The tag name to be searched for. If null, all descendants
-     *              will be returned.
-     * @param deep Limit the search to the direct children of rootNode if false,
-     *              to all descendants otherwise.
+     * @param tagName  The tag name to be searched for. If null, all descendants
+     *                 will be returned.
+     * @param deep     Limit the search to the direct children of rootNode if false,
+     *                 to all descendants otherwise.
      */
     public NodeListImpl(Node rootNode, String tagName, boolean deepSearch) {
         mRootNode = rootNode;
-        mTagName  = tagName;
+        mTagName = tagName;
         mDeepSearch = deepSearch;
     }
 
     /**
      * Constructs a NodeList for a given static node list.
+     *
      * @param nodes The static node list.
      */
     public NodeListImpl(ArrayList<Node> nodes) {
@@ -91,10 +93,11 @@ public class NodeListImpl implements NodeList {
     /**
      * A preorder traversal is done in the following order:
      * <ul>
-     *   <li> Visit root.
-     *   <li> Traverse children from left to right in preorder.
+     * <li> Visit root.
+     * <li> Traverse children from left to right in preorder.
      * </ul>
      * This method fills the live node list.
+     *
      * @param The root of preorder traversal
      * @return The next match
      */

@@ -23,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.utils.Units;
 import com.moez.QKSMS.ui.ThemeManager;
@@ -220,7 +221,7 @@ public class QKDialog extends DialogFragment {
     /**
      * Adds a menu style item, allowing for dynamic ids for different items. This is useful when the item order
      * is set dynamically, like in the MessageListItem
-     *
+     * <p>
      * If you use this method, always make sure to use #buildMenu(OnItemClickListener) to compile the items and add the
      * click listener
      */

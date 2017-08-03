@@ -18,7 +18,7 @@ import com.android.mms.R;
  */
 public class MiniPreferenceActivity extends Activity {
     public static String DISABLE_NOTIFICATIONS_INTENT =
-        "com.android.mms.intent.action.MESSAGING_APP_NOTIFICATIONS";
+            "com.android.mms.intent.action.MESSAGING_APP_NOTIFICATIONS";
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -34,10 +34,10 @@ public class MiniPreferenceActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         AlertDialog dialog = builder.setMessage(getResources()
                 .getString(R.string.disable_notifications_dialog_message))
-            .setCancelable(true)
-            .setPositiveButton(R.string.yes, mDialogButtonListener)
-            .setNegativeButton(R.string.no, mDialogButtonListener)
-            .show();
+                .setCancelable(true)
+                .setPositiveButton(R.string.yes, mDialogButtonListener)
+                .setNegativeButton(R.string.no, mDialogButtonListener)
+                .show();
 
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             public void onDismiss(DialogInterface dialog) {
@@ -49,17 +49,17 @@ public class MiniPreferenceActivity extends Activity {
     }
 
     private DialogInterface.OnClickListener mDialogButtonListener =
-        new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    // turn off Messaging notifications
-                    MessagingPreferenceActivity.enableNotifications(false,
-                            MiniPreferenceActivity.this);
-                    setResult(RESULT_OK);
-                } else {
-                    setResult(RESULT_CANCELED);
+            new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        // turn off Messaging notifications
+                        MessagingPreferenceActivity.enableNotifications(false,
+                                MiniPreferenceActivity.this);
+                        setResult(RESULT_OK);
+                    } else {
+                        setResult(RESULT_CANCELED);
+                    }
+                    finish();
                 }
-                finish();
-            }
-    };
+            };
 }

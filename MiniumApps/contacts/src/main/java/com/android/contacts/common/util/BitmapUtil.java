@@ -19,14 +19,15 @@ package com.android.contacts.common.util;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 
 /**
  * Provides static functions to decode bitmaps at the optimal size
  */
 public class BitmapUtil {
-    private BitmapUtil() {}
+    private BitmapUtil() {
+    }
 
     /**
      * Returns Width or Height of the picture, depending on which size is smaller. Doesn't actually
@@ -45,10 +46,11 @@ public class BitmapUtil {
 
     /**
      * Finds the optimal sampleSize for loading the picture
-     * @param originalSmallerExtent Width or height of the picture, whichever is smaller
-     * @param targetExtent Width or height of the target view, whichever is bigger.
      *
-     * If either one of the parameters is 0 or smaller, no sampling is applied
+     * @param originalSmallerExtent Width or height of the picture, whichever is smaller
+     * @param targetExtent          Width or height of the target view, whichever is bigger.
+     *                              <p>
+     *                              If either one of the parameters is 0 or smaller, no sampling is applied
      */
     public static int findOptimalSampleSize(int originalSmallerExtent, int targetExtent) {
         // If we don't know sizes, we can't do sampling.
@@ -87,9 +89,9 @@ public class BitmapUtil {
     /**
      * Retrieves a copy of the specified drawable resource, rotated by a specified angle.
      *
-     * @param resources The current resources.
+     * @param resources  The current resources.
      * @param resourceId The resource ID of the drawable to rotate.
-     * @param angle The angle of rotation.
+     * @param angle      The angle of rotation.
      * @return Rotated drawable.
      */
     public static Drawable getRotatedDrawable(
@@ -102,9 +104,9 @@ public class BitmapUtil {
 
         // Perform the rotation.
         Canvas tempCanvas = new Canvas(rotated);
-        tempCanvas.rotate(angle, original.getWidth()/2, original.getHeight()/2);
+        tempCanvas.rotate(angle, original.getWidth() / 2, original.getHeight() / 2);
         tempCanvas.drawBitmap(original, 0, 0, null);
 
-        return new BitmapDrawable(resources,rotated);
+        return new BitmapDrawable(resources, rotated);
     }
 }

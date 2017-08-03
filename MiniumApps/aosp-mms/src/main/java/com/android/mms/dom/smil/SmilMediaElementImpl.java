@@ -17,17 +17,17 @@
 
 package com.android.mms.dom.smil;
 
+import android.util.Log;
+
+import com.android.mms.LogTag;
+import com.android.mms.dom.events.EventImpl;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.events.DocumentEvent;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.smil.ElementTime;
 import org.w3c.dom.smil.SMILMediaElement;
 import org.w3c.dom.smil.TimeList;
-
-import android.util.Log;
-
-import com.android.mms.LogTag;
-import com.android.mms.dom.events.EventImpl;
 
 public class SmilMediaElementImpl extends SmilElementImpl implements
         SMILMediaElement {
@@ -40,85 +40,85 @@ public class SmilMediaElementImpl extends SmilElementImpl implements
     private static final boolean LOCAL_LOGV = false;
 
     ElementTime mElementTime = new ElementTimeImpl(this) {
-            private Event createEvent(String eventType) {
-                DocumentEvent doc =
-                    (DocumentEvent)SmilMediaElementImpl.this.getOwnerDocument();
-                Event event = doc.createEvent("Event");
-                event.initEvent(eventType, false, false);
-                if (LOCAL_LOGV) {
-                    Log.v(TAG, "Dispatching 'begin' event to "
-                            + SmilMediaElementImpl.this.getTagName() + " "
-                            + SmilMediaElementImpl.this.getSrc() + " at "
-                            + System.currentTimeMillis());
+        private Event createEvent(String eventType) {
+            DocumentEvent doc =
+                    (DocumentEvent) SmilMediaElementImpl.this.getOwnerDocument();
+            Event event = doc.createEvent("Event");
+            event.initEvent(eventType, false, false);
+            if (LOCAL_LOGV) {
+                Log.v(TAG, "Dispatching 'begin' event to "
+                        + SmilMediaElementImpl.this.getTagName() + " "
+                        + SmilMediaElementImpl.this.getSrc() + " at "
+                        + System.currentTimeMillis());
+            }
+            return event;
+        }
+
+        private Event createEvent(String eventType, int seekTo) {
+            DocumentEvent doc =
+                    (DocumentEvent) SmilMediaElementImpl.this.getOwnerDocument();
+            EventImpl event = (EventImpl) doc.createEvent("Event");
+            event.initEvent(eventType, false, false, seekTo);
+            if (LOCAL_LOGV) {
+                Log.v(TAG, "Dispatching 'begin' event to "
+                        + SmilMediaElementImpl.this.getTagName() + " "
+                        + SmilMediaElementImpl.this.getSrc() + " at "
+                        + System.currentTimeMillis());
+            }
+            return event;
+        }
+
+        public boolean beginElement() {
+            Event startEvent = createEvent(SMIL_MEDIA_START_EVENT);
+            dispatchEvent(startEvent);
+            return true;
+        }
+
+        public boolean endElement() {
+            Event endEvent = createEvent(SMIL_MEDIA_END_EVENT);
+            dispatchEvent(endEvent);
+            return true;
+        }
+
+        public void resumeElement() {
+            Event resumeEvent = createEvent(SMIL_MEDIA_START_EVENT);
+            dispatchEvent(resumeEvent);
+        }
+
+        public void pauseElement() {
+            Event pauseEvent = createEvent(SMIL_MEDIA_PAUSE_EVENT);
+            dispatchEvent(pauseEvent);
+        }
+
+        public void seekElement(float seekTo) {
+            Event seekEvent = createEvent(SMIL_MEDIA_SEEK_EVENT, (int) seekTo);
+            dispatchEvent(seekEvent);
+        }
+
+        @Override
+        public float getDur() {
+            float dur = super.getDur();
+            if (dur == 0) {
+                // Duration is not specified, So get the implicit duration.
+                String tag = getTagName();
+                if (tag.equals("video") || tag.equals("audio")) {
+                    // Continuous media
+                    // FIXME Should get the duration of the media. "indefinite" instead here.
+                    dur = -1.0F;
+                } else if (tag.equals("text") || tag.equals("img")) {
+                    // Discrete media
+                    dur = 0;
+                } else {
+                    Log.w(TAG, "Unknown media type");
                 }
-                return event;
             }
+            return dur;
+        }
 
-            private Event createEvent(String eventType, int seekTo) {
-                DocumentEvent doc =
-                    (DocumentEvent)SmilMediaElementImpl.this.getOwnerDocument();
-                EventImpl event = (EventImpl) doc.createEvent("Event");
-                event.initEvent(eventType, false, false, seekTo);
-                if (LOCAL_LOGV) {
-                    Log.v(TAG, "Dispatching 'begin' event to "
-                            + SmilMediaElementImpl.this.getTagName() + " "
-                            + SmilMediaElementImpl.this.getSrc() + " at "
-                            + System.currentTimeMillis());
-                }
-                return event;
-            }
-
-            public boolean beginElement() {
-                Event startEvent = createEvent(SMIL_MEDIA_START_EVENT);
-                dispatchEvent(startEvent);
-                return true;
-            }
-
-            public boolean endElement() {
-                Event endEvent = createEvent(SMIL_MEDIA_END_EVENT);
-                dispatchEvent(endEvent);
-                return true;
-            }
-
-            public void resumeElement() {
-                Event resumeEvent = createEvent(SMIL_MEDIA_START_EVENT);
-                dispatchEvent(resumeEvent);
-            }
-
-            public void pauseElement() {
-                Event pauseEvent = createEvent(SMIL_MEDIA_PAUSE_EVENT);
-                dispatchEvent(pauseEvent);
-            }
-
-            public void seekElement(float seekTo) {
-                Event seekEvent = createEvent(SMIL_MEDIA_SEEK_EVENT, (int) seekTo);
-                dispatchEvent(seekEvent);
-            }
-
-            @Override
-            public float getDur() {
-                float dur = super.getDur();
-                if (dur == 0) {
-                    // Duration is not specified, So get the implicit duration.
-                    String tag = getTagName();
-                    if (tag.equals("video") || tag.equals("audio")) {
-                        // Continuous media
-                        // FIXME Should get the duration of the media. "indefinite" instead here.
-                        dur = -1.0F;
-                    } else if (tag.equals("text") || tag.equals("img")) {
-                        // Discrete media
-                        dur = 0;
-                    } else {
-                        Log.w(TAG, "Unknown media type");
-                    }
-                }
-                return dur;
-            }
-
-            @Override
-            ElementTime getParentElementTime() {
-                return ((SmilParElementImpl) mSmilElement.getParentNode()).mParTimeContainer;
-            }
+        @Override
+        ElementTime getParentElementTime() {
+            return ((SmilParElementImpl) mSmilElement.getParentNode()).mParTimeContainer;
+        }
     };
 
     /*

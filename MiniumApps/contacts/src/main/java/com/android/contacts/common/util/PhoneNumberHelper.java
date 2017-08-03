@@ -15,7 +15,6 @@
  */
 package com.android.contacts.common.util;
 
-import android.content.Context;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,9 +22,6 @@ import android.util.Log;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
-import com.google.i18n.phonenumbers.ShortNumberInfo;
-
-import java.util.Locale;
 
 /**
  * This class wraps several PhoneNumberUtil calls and TelephonyManager calls. Some of them are
@@ -42,7 +38,7 @@ public class PhoneNumberHelper {
      *
      * @param number Phone number
      * @return true if number contains @
-     *
+     * <p>
      * TODO: Remove if PhoneNumberUtils.isUriNumber(String number) is made public.
      */
     public static boolean isUriNumber(String number) {
@@ -58,14 +54,14 @@ public class PhoneNumberHelper {
      * The number which has only dailable character is treated as not being
      * formatted.
      *
-     * @param phoneNumber the number to be formatted.
-     * @param phoneNumberE164 The E164 format number whose country code is used if the given
-     * phoneNumber doesn't have the country code.
+     * @param phoneNumber       the number to be formatted.
+     * @param phoneNumberE164   The E164 format number whose country code is used if the given
+     *                          phoneNumber doesn't have the country code.
      * @param defaultCountryIso The ISO 3166-1 two letters country code whose convention will
-     * be used if the phoneNumberE164 is null or invalid, or if phoneNumber contains IDD.
+     *                          be used if the phoneNumberE164 is null or invalid, or if phoneNumber contains IDD.
      * @return The formatted number if the given number has been formatted, otherwise, return the
      * given number.
-     *
+     * <p>
      * TODO: Remove if PhoneNumberUtils.formatNumber(String phoneNumber, String phoneNumberE164,
      * String defaultCountryIso) is made public.
      */
@@ -106,11 +102,11 @@ public class PhoneNumberHelper {
      * If the given number doesn't have the country code, the phone will be
      * formatted to the default country's convention.
      *
-     * @param phoneNumber The number to be formatted.
+     * @param phoneNumber       The number to be formatted.
      * @param defaultCountryIso The ISO 3166-1 two letters country code whose convention will
-     * be used if the given number doesn't have the country code.
+     *                          be used if the given number doesn't have the country code.
      * @return The formatted number, or null if the given number is not valid.
-     *
+     * <p>
      * TODO: Remove if PhoneNumberUtils.formatNumber(String phoneNumber, String defaultCountryIso)
      * is made public.
      */
@@ -138,7 +134,7 @@ public class PhoneNumberHelper {
      *
      * @param phoneNumber The number to be normalized.
      * @return The normalized number.
-     *
+     * <p>
      * TODO: Remove if PhoneNumberUtils.normalizeNumber(String phoneNumber) is made public.
      */
     public static String normalizeNumber(String phoneNumber) {
@@ -160,13 +156,12 @@ public class PhoneNumberHelper {
     }
 
     /**
+     * @param number SIP address of the form "username@domainname" (or the URI-escaped equivalent
+     *               "username%40domainname")
+     *               <p>
+     *               TODO: Remove if PhoneNumberUtils.getUsernameFromUriNumber(String number) is made public.
      * @return the "username" part of the specified SIP address, i.e. the part before the "@"
      * character (or "%40").
-     *
-     * @param number SIP address of the form "username@domainname" (or the URI-escaped equivalent
-     * "username%40domainname")
-     *
-     * TODO: Remove if PhoneNumberUtils.getUsernameFromUriNumber(String number) is made public.
      */
     public static String getUsernameFromUriNumber(String number) {
         // The delimiter between username and domain name can be

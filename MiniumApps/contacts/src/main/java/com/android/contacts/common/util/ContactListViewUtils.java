@@ -1,7 +1,6 @@
 package com.android.contacts.common.util;
 
 
-
 import android.content.res.Resources;
 import android.view.View;
 import android.widget.ListView;
@@ -17,8 +16,7 @@ public class ContactListViewUtils {
     private static final double TEXT_LEFT_PADDING_TO_CARD_PADDING_RATIO = 1.1;
 
     private static void addPaddingToView(ListView listView, int parentWidth,
-            int listSpaceWeight, int listViewWeight)
-    {
+                                         int listSpaceWeight, int listViewWeight) {
         if (listSpaceWeight > 0 && listViewWeight > 0) {
             double paddingPercent = (double) listSpaceWeight / (double)
                     (listSpaceWeight * 2 + listViewWeight);
@@ -40,11 +38,11 @@ public class ContactListViewUtils {
      * padding.
      *
      * @param resources
-     * @param listView ListView that we add padding to
+     * @param listView   ListView that we add padding to
      * @param rootLayout layout that contains ListView and R.id.list_card
      */
     public static void applyCardPaddingToView(Resources resources,
-            final ListView listView, final View rootLayout) {
+                                              final ListView listView, final View rootLayout) {
         // Set a padding on the list view so it appears in the center of the card
         // in the layout if required.
         final int listSpaceWeight = resources.getInteger(
@@ -70,7 +68,7 @@ public class ContactListViewUtils {
                     // we sometimes hide the listView until we finish loading data. This would
                     // result in incorrect padding.
                     ContactListViewUtils.addPaddingToView(
-                            listView, rootLayout.getWidth(),  listSpaceWeight, listViewWeight);
+                            listView, rootLayout.getWidth(), listSpaceWeight, listViewWeight);
                 }
             });
         }

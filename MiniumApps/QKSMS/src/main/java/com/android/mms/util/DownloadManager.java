@@ -28,6 +28,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.EncodedStringValue;
 import com.google.android.mms.pdu_alt.NotificationInd;
@@ -39,15 +40,15 @@ public class DownloadManager {
     private static final boolean DEBUG = false;
     private static final boolean LOCAL_LOGV = false;
 
-    public static final int DEFERRED_MASK           = 0x04;
+    public static final int DEFERRED_MASK = 0x04;
 
-    public static final int STATE_UNKNOWN           = 0x00;
-    public static final int STATE_UNSTARTED         = 0x80;
-    public static final int STATE_DOWNLOADING       = 0x81;
+    public static final int STATE_UNKNOWN = 0x00;
+    public static final int STATE_UNSTARTED = 0x80;
+    public static final int STATE_DOWNLOADING = 0x81;
     public static final int STATE_TRANSIENT_FAILURE = 0x82;
     public static final int STATE_PERMANENT_FAILURE = 0x87;
-    public static final int STATE_PRE_DOWNLOADING   = 0x88;
-    public static final int STATE_SKIP_RETRYING     = 0x89;
+    public static final int STATE_PRE_DOWNLOADING = 0x88;
+    public static final int STATE_SKIP_RETRYING = 0x89;
 
     private final Context mContext;
     private final Handler mHandler;
@@ -121,7 +122,7 @@ public class DownloadManager {
                 SqliteWrapper.delete(mContext, mContext.getContentResolver(), uri, null, null);
                 return;
             }
-        } catch(MmsException e) {
+        } catch (MmsException e) {
             Log.e(TAG, e.getMessage(), e);
             return;
         }
@@ -150,7 +151,7 @@ public class DownloadManager {
         ContentValues values = new ContentValues(1);
         values.put("st", state);
         SqliteWrapper.update(mContext, mContext.getContentResolver(),
-                    uri, values, null, null);
+                uri, values, null, null);
     }
 
     public void showErrorCodeToast(int errorStr) {
@@ -160,7 +161,7 @@ public class DownloadManager {
                 try {
                     Toast.makeText(mContext, errStr, Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
-                    Log.e(TAG,"Caught an exception in showErrorCodeToast");
+                    Log.e(TAG, "Caught an exception in showErrorCodeToast");
                 }
             }
         });
@@ -182,7 +183,7 @@ public class DownloadManager {
 
     public int getState(Uri uri) {
         Cursor cursor = SqliteWrapper.query(mContext, mContext.getContentResolver(),
-                            uri, new String[] {"st"}, null, null, null);
+                uri, new String[]{"st"}, null, null, null);
 
         if (cursor != null) {
             try {

@@ -266,10 +266,10 @@ public class NotificationManager {
                 NotificationCompat.Builder builder =
                         new NotificationCompat.Builder(context)
                                 .setSmallIcon(R.drawable.ic_notification)
-                                        // SMS messages are high priority
+                                // SMS messages are high priority
                                 .setPriority(getNotificationPriority(context))
-                                        // Silent here because this is just an update, not a new
-                                        // notification
+                                // Silent here because this is just an update, not a new
+                                // notification
                                 .setSound(null)
                                 .setVibrate(VIBRATION_SILENT)
                                 .setAutoCancel(true);

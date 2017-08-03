@@ -47,7 +47,7 @@ public class ImageUtils {
     /**
      * Checks whether a bitmap is grayscale. Grayscale here means "very close to a perfect
      * gray".
-     *
+     * <p>
      * Instead of scanning every pixel in the bitmap, we first resize the bitmap to no more than
      * COMPACT_BITMAP_SIZE^2 pixels using filtering. The hope is that any non-gray color elements
      * will survive the squeezing process, contaminating the result with color.
@@ -77,7 +77,7 @@ public class ImageUtils {
             width = height = COMPACT_BITMAP_SIZE;
         }
 
-        final int size = height*width;
+        final int size = height * width;
         ensureBufferSize(size);
         bitmap.getPixels(mTempBuffer, 0, width, 0, 0, width, height);
         for (int i = 0; i < size; i++) {
@@ -100,7 +100,7 @@ public class ImageUtils {
     /**
      * Classifies a color as grayscale or not. Grayscale here means "very close to a perfect
      * gray"; if all three channels are approximately equal, this will return true.
-     *
+     * <p>
      * Note that really transparent colors are always grayscale.
      */
     public static boolean isGrayscale(int color) {

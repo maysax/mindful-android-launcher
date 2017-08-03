@@ -24,8 +24,6 @@ import android.view.ViewPropertyAnimator;
 import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 
-import java.lang.Float;
-
 public class AnimUtils {
     public static final int DEFAULT_DURATION = -1;
     public static final int NO_DELAY = 0;
@@ -35,8 +33,11 @@ public class AnimUtils {
     public static final Interpolator EASE_OUT_EASE_IN = new PathInterpolator(0.4f, 0, 0.2f, 1);
 
     public static class AnimationCallback {
-        public void onAnimationEnd() {}
-        public void onAnimationCancel() {}
+        public void onAnimationEnd() {
+        }
+
+        public void onAnimationCancel() {
+        }
     }
 
     public static void crossFadeViews(View fadeIn, View fadeOut, int duration) {
@@ -49,7 +50,7 @@ public class AnimUtils {
     }
 
     public static void fadeOut(final View fadeOut, int durationMs,
-            final AnimationCallback callback) {
+                               final AnimationCallback callback) {
         fadeOut.setAlpha(1);
         final ViewPropertyAnimator animator = fadeOut.animate();
         animator.cancel();
@@ -82,7 +83,7 @@ public class AnimUtils {
     }
 
     public static void fadeIn(final View fadeIn, int durationMs, int delay,
-            final AnimationCallback callback) {
+                              final AnimationCallback callback) {
         fadeIn.setAlpha(0);
         final ViewPropertyAnimator animator = fadeIn.animate();
         animator.cancel();
@@ -117,8 +118,9 @@ public class AnimUtils {
 
     /**
      * Scales in the view from scale of 0 to actual dimensions.
-     * @param view The view to scale.
-     * @param durationMs The duration of the scaling in milliseconds.
+     *
+     * @param view         The view to scale.
+     * @param durationMs   The duration of the scaling in milliseconds.
      * @param startDelayMs The delay to applying the scaling in milliseconds.
      */
     public static void scaleIn(final View view, int durationMs, int startDelayMs) {
@@ -141,7 +143,8 @@ public class AnimUtils {
 
     /**
      * Scales out the view from actual dimensions to 0.
-     * @param view The view to scale.
+     *
+     * @param view       The view to scale.
      * @param durationMs The duration of the scaling in milliseconds.
      */
     public static void scaleOut(final View view, int durationMs) {
@@ -164,8 +167,8 @@ public class AnimUtils {
     }
 
     private static void scaleInternal(final View view, int startScaleValue, int endScaleValue,
-            int durationMs, int startDelay, AnimatorListenerAdapter listener,
-            Interpolator interpolator) {
+                                      int durationMs, int startDelay, AnimatorListenerAdapter listener,
+                                      Interpolator interpolator) {
         view.setScaleX(startScaleValue);
         view.setScaleY(startScaleValue);
 
@@ -173,10 +176,10 @@ public class AnimUtils {
         animator.cancel();
 
         animator.setInterpolator(interpolator)
-            .scaleX(endScaleValue)
-            .scaleY(endScaleValue)
-            .setListener(listener)
-            .withLayer();
+                .scaleX(endScaleValue)
+                .scaleY(endScaleValue)
+                .setListener(listener)
+                .withLayer();
 
         if (durationMs != DEFAULT_DURATION) {
             animator.setDuration(durationMs);
@@ -188,8 +191,9 @@ public class AnimUtils {
 
     /**
      * Animates a view to the new specified dimensions.
-     * @param view The view to change the dimensions of.
-     * @param newWidth The new width of the view.
+     *
+     * @param view      The view to change the dimensions of.
+     * @param newWidth  The new width of the view.
      * @param newHeight The new height of the view.
      */
     public static void changeDimensions(final View view, final int newWidth, final int newHeight) {

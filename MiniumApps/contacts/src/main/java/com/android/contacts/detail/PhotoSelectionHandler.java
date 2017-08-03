@@ -34,13 +34,13 @@ import android.widget.ListPopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.Toast;
 
-import com.android.contacts.editor.PhotoActionPopup;
 import com.android.contacts.common.model.AccountTypeManager;
-import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.common.model.RawContactDelta;
+import com.android.contacts.common.model.RawContactDeltaList;
+import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType;
-import com.android.contacts.common.model.RawContactDeltaList;
+import com.android.contacts.editor.PhotoActionPopup;
 import com.android.contacts.util.ContactPhotoUtils;
 import com.android.contacts.util.UiClosables;
 
@@ -76,7 +76,7 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
     private ListPopupWindow mPopup;
 
     public PhotoSelectionHandler(Context context, View photoView, int photoMode,
-            boolean isDirectoryContact, RawContactDeltaList state) {
+                                 boolean isDirectoryContact, RawContactDeltaList state) {
         mContext = context;
         mPhotoView = photoView;
         mPhotoMode = photoMode;
@@ -114,9 +114,10 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
     /**
      * Attempts to handle the given activity result.  Returns whether this handler was able to
      * process the result successfully.
+     *
      * @param requestCode The request code.
-     * @param resultCode The result code.
-     * @param data The intent that was returned.
+     * @param resultCode  The result code.
+     * @param data        The intent that was returned.
      * @return Whether the handler was able to process the result.
      */
     public boolean handlePhotoActivityResult(int requestCode, int resultCode, Intent data) {
@@ -201,9 +202,10 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
      * Utility method to retrieve the entity delta for attaching the given bitmap to the contact.
      * This will attach the photo to the first contact-writable account that provided data to the
      * contact.  It is the caller's responsibility to apply the delta.
+     *
      * @return An entity delta list that can be applied to associate the bitmap with the contact,
-     *     or null if the photo could not be parsed or none of the accounts associated with the
-     *     contact are writable.
+     * or null if the photo could not be parsed or none of the accounts associated with the
+     * contact are writable.
      */
     public RawContactDeltaList getDeltaForAttachingPhotoToContact() {
         // Find the first writable entity.
@@ -217,7 +219,7 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
             final String type = entityValues.getAsString(RawContacts.ACCOUNT_TYPE);
             final String dataSet = entityValues.getAsString(RawContacts.DATA_SET);
             final AccountType accountType = AccountTypeManager.getInstance(mContext).getAccountType(
-                        type, dataSet);
+                    type, dataSet);
 
             final ValuesDelta child = RawContactModifier.ensureKindExists(
                     delta, accountType, Photo.CONTENT_ITEM_TYPE);
@@ -229,7 +231,9 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
         return null;
     }
 
-    /** Used by subclasses to delegate to their enclosing Activity or Fragment. */
+    /**
+     * Used by subclasses to delegate to their enclosing Activity or Fragment.
+     */
     protected abstract void startPhotoActivity(Intent intent, int requestCode, Uri photoUri);
 
     /**
@@ -248,9 +252,10 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
 
     /**
      * Should initiate an activity to take a photo using the camera.
+     *
      * @param photoFile The file path that will be used to store the photo.  This is generally
-     *     what should be returned by
-     *     {@link PhotoSelectionHandler.PhotoActionListener#getCurrentPhotoFile()}.
+     *                  what should be returned by
+     *                  {@link PhotoSelectionHandler.PhotoActionListener#getCurrentPhotoFile()}.
      */
     private void startTakePhotoActivity(Uri photoUri) {
         final Intent intent = getTakePhotoIntent(photoUri);
@@ -259,9 +264,10 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
 
     /**
      * Should initiate an activity pick a photo from the gallery.
+     *
      * @param photoFile The temporary file that the cropped image is written to before being
-     *     stored by the content-provider.
-     *     {@link PhotoSelectionHandler#handlePhotoActivityResult(int, int, Intent)}.
+     *                  stored by the content-provider.
+     *                  {@link PhotoSelectionHandler#handlePhotoActivityResult(int, int, Intent)}.
      */
     private void startPickFromGalleryActivity(Uri photoUri) {
         final Intent intent = getPhotoPickIntent(photoUri);
@@ -353,6 +359,7 @@ public abstract class PhotoSelectionHandler implements OnClickListener {
 
         /**
          * Called when the user has completed selection of a photo.
+         *
          * @throws FileNotFoundException
          */
         public abstract void onPhotoSelected(Uri uri) throws FileNotFoundException;

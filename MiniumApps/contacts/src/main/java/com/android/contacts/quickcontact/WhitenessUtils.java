@@ -24,7 +24,7 @@ import android.os.Trace;
 /**
  * Utility class for determining whether Bitmaps contain a lot of white pixels in locations
  * where QuickContactActivity will want to place white text or buttons.
- *
+ * <p>
  * This class liberally considers bitmaps white. All constants are chosen with a small amount of
  * experimentation. Despite a lack of rigour, this class successfully allows QuickContactsActivity
  * to detect when Bitmap are obviously *not* white. Therefore, it is better than nothing.
@@ -47,7 +47,7 @@ public class WhitenessUtils {
      * Colors with luma greater than this are considered close to white. This value is lower than
      * the value used in Palette's ColorUtils, since we want to liberally declare images white.
      */
-    private static final float LUMINANCE_OF_WHITE =  0.90f;
+    private static final float LUMINANCE_OF_WHITE = 0.90f;
 
     /**
      * Returns true if 20% of the image's top right corner is white, or 20% of the bottom
@@ -66,10 +66,10 @@ public class WhitenessUtils {
             int whiteCount = 0;
             for (int y = 0; y < smallBitmap.getHeight() * HEIGHT_PERCENT_ANALYZED; y++) {
                 for (int x = (int) (smallBitmap.getWidth() * (1 - THIRD));
-                        x < smallBitmap.getWidth(); x++) {
+                     x < smallBitmap.getWidth(); x++) {
                     final int rgb = rgbPixels[y * smallBitmap.getWidth() + x];
                     if (isWhite(rgb)) {
-                        whiteCount ++;
+                        whiteCount++;
                     }
                 }
             }
@@ -82,11 +82,11 @@ public class WhitenessUtils {
             // look at bottom portion of bitmap
             whiteCount = 0;
             for (int y = (int) (smallBitmap.getHeight() * (1 - HEIGHT_PERCENT_ANALYZED));
-                    y <  smallBitmap.getHeight(); y++) {
+                 y < smallBitmap.getHeight(); y++) {
                 for (int x = 0; x < smallBitmap.getWidth(); x++) {
                     final int rgb = rgbPixels[y * smallBitmap.getWidth() + x];
                     if (isWhite(rgb)) {
-                        whiteCount ++;
+                        whiteCount++;
                     }
                 }
             }

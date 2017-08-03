@@ -13,6 +13,7 @@ public class ContactListItem extends MainListItem {
     private String contactName;
     private List<ContactNumber> numbers;
     private String imageUri;
+
     public ContactListItem(long contactId, String contactName) {
         super(0, contactName, "{fa-user-o}", MainListItemType.CONTACT);
         this.contactId = contactId;

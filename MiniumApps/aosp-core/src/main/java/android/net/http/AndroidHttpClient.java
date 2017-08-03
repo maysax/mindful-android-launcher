@@ -16,6 +16,14 @@
 
 package android.net.http;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.net.SSLCertificateSocketFactory;
+import android.net.SSLSessionCache;
+import android.os.Looper;
+import android.util.Base64;
+import android.util.Log;
+
 import com.android.internal.http.HttpDateTime;
 
 import org.apache.http.Header;
@@ -49,14 +57,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.BasicHttpProcessor;
 import org.apache.http.protocol.HttpContext;
 
-import android.content.ContentResolver;
-import android.content.Context;
-import android.net.SSLCertificateSocketFactory;
-import android.net.SSLSessionCache;
-import android.os.Looper;
-import android.util.Base64;
-import android.util.Log;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,10 +69,10 @@ import java.util.zip.GZIPOutputStream;
  * Implementation of the Apache {@link DefaultHttpClient} that is configured with
  * reasonable default settings and registered schemes for Android.
  * Don't create this directly, use the {@link #newInstance} factory method.
- *
+ * <p>
  * <p>This client processes cookies but does not retain them by default.
  * To retain cookies, simply add a cookie store to the HttpContext:</p>
- *
+ * <p>
  * <pre>context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);</pre>
  */
 public final class AndroidHttpClient implements HttpClient {
@@ -85,28 +85,30 @@ public final class AndroidHttpClient implements HttpClient {
 
     private static final String TAG = "AndroidHttpClient";
 
-    private static String[] textContentTypes = new String[] {
+    private static String[] textContentTypes = new String[]{
             "text/",
             "application/xml",
             "application/json"
     };
 
-    /** Interceptor throws an exception if the executing thread is blocked */
+    /**
+     * Interceptor throws an exception if the executing thread is blocked
+     */
     private static final HttpRequestInterceptor sThreadCheckInterceptor =
             new HttpRequestInterceptor() {
-        public void process(HttpRequest request, HttpContext context) {
-            // Prevent the HttpRequest from being sent on the main thread
-            if (Looper.myLooper() != null && Looper.myLooper() == Looper.getMainLooper() ) {
-                throw new RuntimeException("This thread forbids HTTP requests");
-            }
-        }
-    };
+                public void process(HttpRequest request, HttpContext context) {
+                    // Prevent the HttpRequest from being sent on the main thread
+                    if (Looper.myLooper() != null && Looper.myLooper() == Looper.getMainLooper()) {
+                        throw new RuntimeException("This thread forbids HTTP requests");
+                    }
+                }
+            };
 
     /**
      * Create a new HttpClient with reasonable defaults (which you can update).
      *
      * @param userAgent to report in your HTTP requests
-     * @param context to use for caching SSL sessions (may be null for no caching)
+     * @param context   to use for caching SSL sessions (may be null for no caching)
      * @return AndroidHttpClient for you to use for all your requests.
      */
     public static AndroidHttpClient newInstance(String userAgent, Context context) {
@@ -134,7 +136,7 @@ public final class AndroidHttpClient implements HttpClient {
                 PlainSocketFactory.getSocketFactory(), 80));
         schemeRegistry.register(new Scheme("https",
                 SSLCertificateSocketFactory.getHttpSocketFactory(
-                SOCKET_OPERATION_TIMEOUT, sessionCache), 443));
+                        SOCKET_OPERATION_TIMEOUT, sessionCache), 443));
 
         ClientConnectionManager manager =
                 new ThreadSafeClientConnManager(params, schemeRegistry);
@@ -146,6 +148,7 @@ public final class AndroidHttpClient implements HttpClient {
 
     /**
      * Create a new HttpClient with reasonable defaults (which you can update).
+     *
      * @param userAgent to report in your HTTP requests.
      * @return AndroidHttpClient for you to use for all your requests.
      */
@@ -201,6 +204,7 @@ public final class AndroidHttpClient implements HttpClient {
     /**
      * Modifies a request to indicate to the server that we would like a
      * gzipped response.  (Uses the "Accept-Encoding" HTTP header.)
+     *
      * @param request the request to modify
      * @see #getUngzippedContent
      */
@@ -263,30 +267,30 @@ public final class AndroidHttpClient implements HttpClient {
     }
 
     public HttpResponse execute(HttpHost target, HttpRequest request,
-            HttpContext context) throws IOException {
+                                HttpContext context) throws IOException {
         return delegate.execute(target, request, context);
     }
 
     public <T> T execute(HttpUriRequest request,
-            ResponseHandler<? extends T> responseHandler)
+                         ResponseHandler<? extends T> responseHandler)
             throws IOException, ClientProtocolException {
         return delegate.execute(request, responseHandler);
     }
 
     public <T> T execute(HttpUriRequest request,
-            ResponseHandler<? extends T> responseHandler, HttpContext context)
+                         ResponseHandler<? extends T> responseHandler, HttpContext context)
             throws IOException, ClientProtocolException {
         return delegate.execute(request, responseHandler, context);
     }
 
     public <T> T execute(HttpHost target, HttpRequest request,
-            ResponseHandler<? extends T> responseHandler) throws IOException,
+                         ResponseHandler<? extends T> responseHandler) throws IOException,
             ClientProtocolException {
         return delegate.execute(target, request, responseHandler);
     }
 
     public <T> T execute(HttpHost target, HttpRequest request,
-            ResponseHandler<? extends T> responseHandler, HttpContext context)
+                         ResponseHandler<? extends T> responseHandler, HttpContext context)
             throws IOException, ClientProtocolException {
         return delegate.execute(target, request, responseHandler, context);
     }
@@ -295,6 +299,7 @@ public final class AndroidHttpClient implements HttpClient {
      * Compress data to send to server.
      * Creates a Http Entity holding the gzipped data.
      * The data will not be compressed if it is too short.
+     *
      * @param data The bytes to compress
      * @return Entity holding the data
      */
@@ -352,13 +357,15 @@ public final class AndroidHttpClient implements HttpClient {
         }
     }
 
-    /** cURL logging configuration. */
+    /**
+     * cURL logging configuration.
+     */
     private volatile LoggingConfiguration curlConfiguration;
 
     /**
      * Enables cURL request logging for this client.
      *
-     * @param name to log messages with
+     * @param name  to log messages with
      * @param level at which to log messages (see {@link android.util.Log})
      */
     public void enableCurlLogging(String name, int level) {
@@ -367,7 +374,7 @@ public final class AndroidHttpClient implements HttpClient {
         }
         if (level < Log.VERBOSE || level > Log.ASSERT) {
             throw new IllegalArgumentException("Level is out of range ["
-                + Log.VERBOSE + ".." + Log.ASSERT + "]");
+                    + Log.VERBOSE + ".." + Log.ASSERT + "]");
         }
 
         curlConfiguration = new LoggingConfiguration(name, level);
@@ -410,10 +417,10 @@ public final class AndroidHttpClient implements HttpClient {
         builder.append(request.getMethod());
         builder.append(" ");
 
-        for (Header header: request.getAllHeaders()) {
+        for (Header header : request.getAllHeaders()) {
             if (!logAuthToken
                     && (header.getName().equals("Authorization") ||
-                        header.getName().equals("Cookie"))) {
+                    header.getName().equals("Cookie"))) {
                 continue;
             }
             builder.append("--header \"");
@@ -501,7 +508,7 @@ public final class AndroidHttpClient implements HttpClient {
      *
      * @return the number of milliseconds since Jan. 1, 1970, midnight GMT.
      * @throws IllegalArgumentException if {@code dateString} is not a date or
-     *     of an unsupported format.
+     *                                  of an unsupported format.
      */
     public static long parseDate(String dateString) {
         return HttpDateTime.parse(dateString);

@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
- *
  * Sanitizes the Query portion of a URL. Simple example:
  * <code>
  * UrlQuerySanitizer sanitizer = new UrlQuerySanitizer();
@@ -33,7 +32,7 @@ import java.util.StringTokenizer;
  * String name = sanitizer.getValue("name"));
  * // name now contains "Joe_User"
  * </code>
- *
+ * <p>
  * Register ValueSanitizers to customize the way individual
  * parameters are sanitized:
  * <code>
@@ -47,7 +46,7 @@ import java.util.StringTokenizer;
  * unregistered parameter sanitizer does not allow any special characters,
  * and ' ' is a special character.)
  * </code>
- *
+ * <p>
  * There are several ways to create ValueSanitizers. In order of increasing
  * sophistication:
  * <ol>
@@ -57,25 +56,25 @@ import java.util.StringTokenizer;
  * <li>Subclass UrlQuerySanitizer.ValueSanitizer to define your own value
  * sanitizer.
  * </ol>
- *
  */
 public class UrlQuerySanitizer {
 
     /**
      * A simple tuple that holds parameter-value pairs.
-     *
      */
     public class ParameterValuePair {
         /**
          * Construct a parameter-value tuple.
+         *
          * @param parameter an unencoded parameter
-         * @param value an unencoded value
+         * @param value     an unencoded value
          */
         public ParameterValuePair(String parameter,
-                String value) {
+                                  String value) {
             mParameter = parameter;
             mValue = value;
         }
+
         /**
          * The unencoded parameter
          */
@@ -87,23 +86,23 @@ public class UrlQuerySanitizer {
     }
 
     final private HashMap<String, ValueSanitizer> mSanitizers =
-        new HashMap<String, ValueSanitizer>();
+            new HashMap<String, ValueSanitizer>();
     final private HashMap<String, String> mEntries =
-        new HashMap<String, String>();
+            new HashMap<String, String>();
     final private ArrayList<ParameterValuePair> mEntriesList =
-        new ArrayList<ParameterValuePair>();
+            new ArrayList<ParameterValuePair>();
     private boolean mAllowUnregisteredParamaters;
     private boolean mPreferFirstRepeatedParameter;
     private ValueSanitizer mUnregisteredParameterValueSanitizer =
-        getAllIllegal();
+            getAllIllegal();
 
     /**
      * A functor used to sanitize a single query value.
-     *
      */
     public static interface ValueSanitizer {
         /**
          * Sanitize an unencoded value.
+         *
          * @param value
          * @return the sanitized unencoded value
          */
@@ -116,67 +115,67 @@ public class UrlQuerySanitizer {
      * whether space is a legal character or not.
      */
     public static class IllegalCharacterValueSanitizer implements
-        ValueSanitizer {
+            ValueSanitizer {
         private int mFlags;
 
         /**
          * Allow space (' ') characters.
          */
-        public final static int SPACE_OK =              1 << 0;
+        public final static int SPACE_OK = 1 << 0;
         /**
          * Allow whitespace characters other than space. The
          * other whitespace characters are
          * '\t' '\f' '\n' '\r' and '\0x000b' (vertical tab)
          */
-        public final static int OTHER_WHITESPACE_OK =  1 << 1;
+        public final static int OTHER_WHITESPACE_OK = 1 << 1;
         /**
          * Allow characters with character codes 128 to 255.
          */
-        public final static int NON_7_BIT_ASCII_OK =    1 << 2;
+        public final static int NON_7_BIT_ASCII_OK = 1 << 2;
         /**
          * Allow double quote characters. ('"')
          */
-        public final static int DQUOTE_OK =             1 << 3;
+        public final static int DQUOTE_OK = 1 << 3;
         /**
          * Allow single quote characters. ('\'')
          */
-        public final static int SQUOTE_OK =             1 << 4;
+        public final static int SQUOTE_OK = 1 << 4;
         /**
          * Allow less-than characters. ('<')
          */
-        public final static int LT_OK =                 1 << 5;
+        public final static int LT_OK = 1 << 5;
         /**
          * Allow greater-than characters. ('>')
          */
-        public final static int GT_OK =                 1 << 6;
+        public final static int GT_OK = 1 << 6;
         /**
          * Allow ampersand characters ('&')
          */
-        public final static int AMP_OK =                1 << 7;
+        public final static int AMP_OK = 1 << 7;
         /**
          * Allow percent-sign characters ('%')
          */
-        public final static int PCT_OK =                1 << 8;
+        public final static int PCT_OK = 1 << 8;
         /**
          * Allow nul characters ('\0')
          */
-        public final static int NUL_OK =                1 << 9;
+        public final static int NUL_OK = 1 << 9;
         /**
          * Allow text to start with a script URL
          * such as "javascript:" or "vbscript:"
          */
-        public final static int SCRIPT_URL_OK =         1 << 10;
+        public final static int SCRIPT_URL_OK = 1 << 10;
 
         /**
          * Mask with all fields set to OK
          */
-        public final static int ALL_OK =                0x7ff;
+        public final static int ALL_OK = 0x7ff;
 
         /**
          * Mask with both regular space and other whitespace OK
          */
         public final static int ALL_WHITESPACE_OK =
-            SPACE_OK | OTHER_WHITESPACE_OK;
+                SPACE_OK | OTHER_WHITESPACE_OK;
 
 
         // Common flag combinations:
@@ -188,7 +187,7 @@ public class UrlQuerySanitizer {
          * </ul>
          */
         public final static int ALL_ILLEGAL =
-            0;
+                0;
         /**
          * <ul>
          * <li>Allow all special characters except Nul. ('\0').
@@ -196,19 +195,19 @@ public class UrlQuerySanitizer {
          * </ul>
          */
         public final static int ALL_BUT_NUL_LEGAL =
-            ALL_OK & ~NUL_OK;
+                ALL_OK & ~NUL_OK;
         /**
          * <ul>
          * <li>Allow all special characters except for:
          * <ul>
-         *  <li>whitespace characters
-         *  <li>Nul ('\0')
+         * <li>whitespace characters
+         * <li>Nul ('\0')
          * </ul>
          * <li>Allow script URLs.
          * </ul>
          */
         public final static int ALL_BUT_WHITESPACE_LEGAL =
-            ALL_OK & ~(ALL_WHITESPACE_OK | NUL_OK);
+                ALL_OK & ~(ALL_WHITESPACE_OK | NUL_OK);
         /**
          * <ul>
          * <li>Allow characters used by encoded URLs.
@@ -216,7 +215,7 @@ public class UrlQuerySanitizer {
          * </ul>
          */
         public final static int URL_LEGAL =
-            NON_7_BIT_ASCII_OK | SQUOTE_OK | AMP_OK | PCT_OK;
+                NON_7_BIT_ASCII_OK | SQUOTE_OK | AMP_OK | PCT_OK;
         /**
          * <ul>
          * <li>Allow characters used by encoded URLs.
@@ -225,7 +224,7 @@ public class UrlQuerySanitizer {
          * </ul>
          */
         public final static int URL_AND_SPACE_LEGAL =
-            URL_LEGAL | SPACE_OK;
+                URL_LEGAL | SPACE_OK;
         /**
          * <ul>
          * <li>Allow ampersand.
@@ -233,7 +232,7 @@ public class UrlQuerySanitizer {
          * </ul>
          */
         public final static int AMP_LEGAL =
-            AMP_OK;
+                AMP_OK;
         /**
          * <ul>
          * <li>Allow ampersand.
@@ -242,7 +241,7 @@ public class UrlQuerySanitizer {
          * </ul>
          */
         public final static int AMP_AND_SPACE_LEGAL =
-            AMP_OK | SPACE_OK;
+                AMP_OK | SPACE_OK;
         /**
          * <ul>
          * <li>Allow space.
@@ -250,22 +249,22 @@ public class UrlQuerySanitizer {
          * </ul>
          */
         public final static int SPACE_LEGAL =
-            SPACE_OK;
+                SPACE_OK;
         /**
          * <ul>
          * <li>Allow all but.
          * <ul>
-         *  <li>Nul ('\0')
-         *  <li>Angle brackets ('<', '>')
+         * <li>Nul ('\0')
+         * <li>Angle brackets ('<', '>')
          * </ul>
          * <li>Deny script URLs.
          * </ul>
          */
         public final static int ALL_BUT_NUL_AND_ANGLE_BRACKETS_LEGAL =
-            ALL_OK & ~(NUL_OK | LT_OK | GT_OK);
+                ALL_OK & ~(NUL_OK | LT_OK | GT_OK);
 
         /**
-         *  Script URL definitions
+         * Script URL definitions
          */
 
         private final static String JAVASCRIPT_PREFIX = "javascript:";
@@ -278,12 +277,14 @@ public class UrlQuerySanitizer {
         /**
          * Construct a sanitizer. The parameters set the behavior of the
          * sanitizer.
+         *
          * @param flags some combination of the XXX_OK flags.
          */
         public IllegalCharacterValueSanitizer(
-            int flags) {
+                int flags) {
             mFlags = flags;
         }
+
         /**
          * Sanitize a value.
          * <ol>
@@ -296,6 +297,7 @@ public class UrlQuerySanitizer {
          * either ' ' or '_', depending on whether a space is itself a
          * legal character.
          * </ol>
+         *
          * @param value
          * @return the sanitized value
          */
@@ -307,8 +309,8 @@ public class UrlQuerySanitizer {
             if ((mFlags & SCRIPT_URL_OK) != 0) {
                 if (length >= MIN_SCRIPT_PREFIX_LENGTH) {
                     String asLower = value.toLowerCase(Locale.ROOT);
-                    if (asLower.startsWith(JAVASCRIPT_PREFIX)  ||
-                        asLower.startsWith(VBSCRIPT_PREFIX)) {
+                    if (asLower.startsWith(JAVASCRIPT_PREFIX) ||
+                            asLower.startsWith(VBSCRIPT_PREFIX)) {
                         return "";
                     }
                 }
@@ -316,7 +318,7 @@ public class UrlQuerySanitizer {
 
             // If whitespace isn't OK, get rid of whitespace at beginning
             // and end of value.
-            if ( (mFlags & ALL_WHITESPACE_OK) == 0) {
+            if ((mFlags & ALL_WHITESPACE_OK) == 0) {
                 value = trimWhitespace(value);
                 // The length could have changed, so we need to correct
                 // the length variable.
@@ -324,13 +326,12 @@ public class UrlQuerySanitizer {
             }
 
             StringBuilder stringBuilder = new StringBuilder(length);
-            for(int i = 0; i < length; i++) {
+            for (int i = 0; i < length; i++) {
                 char c = value.charAt(i);
                 if (!characterIsLegal(c)) {
                     if ((mFlags & SPACE_OK) != 0) {
                         c = ' ';
-                    }
-                    else {
+                    } else {
                         c = '_';
                     }
                 }
@@ -344,6 +345,7 @@ public class UrlQuerySanitizer {
          * <p>
          * Note: can't use {@link String#trim} because {@link String#trim} has a
          * different definition of whitespace than we want.
+         *
          * @param value the string to trim
          * @return the trimmed string
          */
@@ -365,43 +367,58 @@ public class UrlQuerySanitizer {
 
         /**
          * Check if c is whitespace.
+         *
          * @param c character to test
          * @return true if c is a whitespace character
          */
         private boolean isWhitespace(char c) {
-            switch(c) {
-            case ' ':
-            case '\t':
-            case '\f':
-            case '\n':
-            case '\r':
-            case 11: /* VT */
-                return true;
-            default:
-                return false;
+            switch (c) {
+                case ' ':
+                case '\t':
+                case '\f':
+                case '\n':
+                case '\r':
+                case 11: /* VT */
+                    return true;
+                default:
+                    return false;
             }
         }
 
         /**
          * Check whether an individual character is legal. Uses the
          * flag bit-set passed into the constructor.
+         *
          * @param c
          * @return true if c is a legal character
          */
         private boolean characterIsLegal(char c) {
-            switch(c) {
-            case ' ' : return (mFlags & SPACE_OK) != 0;
-            case '\t': case '\f': case '\n': case '\r': case 11: /* VT */
-              return (mFlags & OTHER_WHITESPACE_OK) != 0;
-            case '\"': return (mFlags & DQUOTE_OK) != 0;
-            case '\'': return (mFlags & SQUOTE_OK) != 0;
-            case '<' : return (mFlags & LT_OK) != 0;
-            case '>' : return (mFlags & GT_OK) != 0;
-            case '&' : return (mFlags & AMP_OK) != 0;
-            case '%' : return (mFlags & PCT_OK) != 0;
-            case '\0': return (mFlags & NUL_OK) != 0;
-            default  : return (c >= 32 && c < 127) ||
-                ((c >= 128) && ((mFlags & NON_7_BIT_ASCII_OK) != 0));
+            switch (c) {
+                case ' ':
+                    return (mFlags & SPACE_OK) != 0;
+                case '\t':
+                case '\f':
+                case '\n':
+                case '\r':
+                case 11: /* VT */
+                    return (mFlags & OTHER_WHITESPACE_OK) != 0;
+                case '\"':
+                    return (mFlags & DQUOTE_OK) != 0;
+                case '\'':
+                    return (mFlags & SQUOTE_OK) != 0;
+                case '<':
+                    return (mFlags & LT_OK) != 0;
+                case '>':
+                    return (mFlags & GT_OK) != 0;
+                case '&':
+                    return (mFlags & AMP_OK) != 0;
+                case '%':
+                    return (mFlags & PCT_OK) != 0;
+                case '\0':
+                    return (mFlags & NUL_OK) != 0;
+                default:
+                    return (c >= 32 && c < 127) ||
+                            ((c >= 128) && ((mFlags & NON_7_BIT_ASCII_OK) != 0));
             }
         }
     }
@@ -424,8 +441,9 @@ public class UrlQuerySanitizer {
     /**
      * Set the value sanitizer used when processing unregistered
      * parameter values.
+     *
      * @param sanitizer set the ValueSanitizer used to sanitize unregistered
-     * parameter values.
+     *                  parameter values.
      */
     public void setUnregisteredParameterValueSanitizer(
             ValueSanitizer sanitizer) {
@@ -436,44 +454,45 @@ public class UrlQuerySanitizer {
     // Private fields for singleton sanitizers:
 
     private static final ValueSanitizer sAllIllegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.ALL_ILLEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.ALL_ILLEGAL);
 
     private static final ValueSanitizer sAllButNulLegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.ALL_BUT_NUL_LEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.ALL_BUT_NUL_LEGAL);
 
     private static final ValueSanitizer sAllButWhitespaceLegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.ALL_BUT_WHITESPACE_LEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.ALL_BUT_WHITESPACE_LEGAL);
 
     private static final ValueSanitizer sURLLegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.URL_LEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.URL_LEGAL);
 
     private static final ValueSanitizer sUrlAndSpaceLegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.URL_AND_SPACE_LEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.URL_AND_SPACE_LEGAL);
 
     private static final ValueSanitizer sAmpLegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.AMP_LEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.AMP_LEGAL);
 
     private static final ValueSanitizer sAmpAndSpaceLegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.AMP_AND_SPACE_LEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.AMP_AND_SPACE_LEGAL);
 
     private static final ValueSanitizer sSpaceLegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.SPACE_LEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.SPACE_LEGAL);
 
     private static final ValueSanitizer sAllButNulAndAngleBracketsLegal =
-        new IllegalCharacterValueSanitizer(
-                IllegalCharacterValueSanitizer.ALL_BUT_NUL_AND_ANGLE_BRACKETS_LEGAL);
+            new IllegalCharacterValueSanitizer(
+                    IllegalCharacterValueSanitizer.ALL_BUT_NUL_AND_ANGLE_BRACKETS_LEGAL);
 
     /**
      * Return a value sanitizer that does not allow any special characters,
      * and also does not allow script URLs.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getAllIllegal() {
@@ -483,66 +502,81 @@ public class UrlQuerySanitizer {
     /**
      * Return a value sanitizer that allows everything except Nul ('\0')
      * characters. Script URLs are allowed.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getAllButNulLegal() {
         return sAllButNulLegal;
     }
+
     /**
      * Return a value sanitizer that allows everything except Nul ('\0')
      * characters, space (' '), and other whitespace characters.
      * Script URLs are allowed.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getAllButWhitespaceLegal() {
         return sAllButWhitespaceLegal;
     }
+
     /**
      * Return a value sanitizer that allows all the characters used by
      * encoded URLs. Does not allow script URLs.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getUrlLegal() {
         return sURLLegal;
     }
+
     /**
      * Return a value sanitizer that allows all the characters used by
      * encoded URLs and allows spaces, which are not technically legal
      * in encoded URLs, but commonly appear anyway.
      * Does not allow script URLs.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getUrlAndSpaceLegal() {
         return sUrlAndSpaceLegal;
     }
+
     /**
      * Return a value sanitizer that does not allow any special characters
      * except ampersand ('&'). Does not allow script URLs.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getAmpLegal() {
         return sAmpLegal;
     }
+
     /**
      * Return a value sanitizer that does not allow any special characters
      * except ampersand ('&') and space (' '). Does not allow script URLs.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getAmpAndSpaceLegal() {
         return sAmpAndSpaceLegal;
     }
+
     /**
      * Return a value sanitizer that does not allow any special characters
      * except space (' '). Does not allow script URLs.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getSpaceLegal() {
         return sSpaceLegal;
     }
+
     /**
      * Return a value sanitizer that allows any special characters
      * except angle brackets ('<' and '>') and Nul ('\0').
      * Allows script URLs.
+     *
      * @return a value sanitizer
      */
     public static final ValueSanitizer getAllButNulAndAngleBracketsLegal() {
@@ -592,6 +626,7 @@ public class UrlQuerySanitizer {
      * Works by extracting the query portion from the URL and then
      * calling parseQuery(). If there is no query portion it is
      * treated as if the query portion is an empty string.
+     *
      * @param url the encoded URL to parse.
      */
     public void parseUrl(String url) {
@@ -599,8 +634,7 @@ public class UrlQuerySanitizer {
         String query;
         if (queryIndex >= 0) {
             query = url.substring(queryIndex + 1);
-        }
-        else {
+        } else {
             query = "";
         }
         parseQuery(query);
@@ -611,21 +645,21 @@ public class UrlQuerySanitizer {
      * separated by any non-zero number of ampersands. A parameter-value clause
      * is a parameter followed by an equal sign, followed by a value. If the
      * equal sign is missing, the value is assumed to be the empty string.
+     *
      * @param query the query to parse.
      */
     public void parseQuery(String query) {
         clear();
         // Split by '&'
         StringTokenizer tokenizer = new StringTokenizer(query, "&");
-        while(tokenizer.hasMoreElements()) {
+        while (tokenizer.hasMoreElements()) {
             String attributeValuePair = tokenizer.nextToken();
             if (attributeValuePair.length() > 0) {
                 int assignmentIndex = attributeValuePair.indexOf('=');
                 if (assignmentIndex < 0) {
                     // No assignment found, treat as if empty value
                     parseEntry(attributeValuePair, "");
-                }
-                else {
+                } else {
                     parseEntry(attributeValuePair.substring(0, assignmentIndex),
                             attributeValuePair.substring(assignmentIndex + 1));
                 }
@@ -637,6 +671,7 @@ public class UrlQuerySanitizer {
      * Get a set of all of the parameters found in the sanitized query.
      * <p>
      * Note: Do not modify this set. Treat it as a read-only set.
+     *
      * @return all the parameters found in the current query.
      */
     public Set<String> getParameterSet() {
@@ -655,6 +690,7 @@ public class UrlQuerySanitizer {
 
     /**
      * Check if a parameter exists in the current sanitized query.
+     *
      * @param parameter the unencoded name of a parameter.
      * @return true if the paramater exists in the current sanitized queary.
      */
@@ -666,6 +702,7 @@ public class UrlQuerySanitizer {
      * Get the value for a parameter in the current sanitized query.
      * Returns null if the parameter does not
      * exit.
+     *
      * @param parameter the unencoded name of a parameter.
      * @return the sanitized unencoded value of the parameter,
      * or null if the parameter does not exist.
@@ -680,13 +717,14 @@ public class UrlQuerySanitizer {
      * <p>
      * Registering a non-null value sanitizer for a particular parameter
      * makes that parameter a registered parameter.
-     * @param parameter an unencoded parameter name
+     *
+     * @param parameter      an unencoded parameter name
      * @param valueSanitizer the value sanitizer to use for a particular
-     * parameter. May be null in order to unregister that parameter.
+     *                       parameter. May be null in order to unregister that parameter.
      * @see #getAllowUnregisteredParamaters()
      */
     public void registerParameter(String parameter,
-            ValueSanitizer valueSanitizer) {
+                                  ValueSanitizer valueSanitizer) {
         if (valueSanitizer == null) {
             mSanitizers.remove(parameter);
         }
@@ -695,14 +733,15 @@ public class UrlQuerySanitizer {
 
     /**
      * Register a value sanitizer for an array of parameters.
-     * @param parameters An array of unencoded parameter names.
+     *
+     * @param parameters     An array of unencoded parameter names.
      * @param valueSanitizer
      * @see #registerParameter
      */
     public void registerParameters(String[] parameters,
-            ValueSanitizer valueSanitizer) {
+                                   ValueSanitizer valueSanitizer) {
         int length = parameters.length;
-        for(int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             mSanitizers.put(parameters[i], valueSanitizer);
         }
     }
@@ -712,6 +751,7 @@ public class UrlQuerySanitizer {
      * are not allowed, then they will be dropped when a query is sanitized.
      * <p>
      * Defaults to false.
+     *
      * @param allowUnregisteredParamaters true to allow unregistered parameters.
      * @see #getAllowUnregisteredParamaters()
      */
@@ -723,6 +763,7 @@ public class UrlQuerySanitizer {
     /**
      * Get whether or not unregistered parameters are allowed. If not
      * allowed, they will be dropped when a query is parsed.
+     *
      * @return true if unregistered parameters are allowed.
      * @see #setAllowUnregisteredParamaters(boolean)
      */
@@ -739,8 +780,9 @@ public class UrlQuerySanitizer {
      * is called.
      * <p>
      * defaults to false.
+     *
      * @param preferFirstRepeatedParameter True if the first repeated
-     * parameter is preferred.
+     *                                     parameter is preferred.
      * @see #getPreferFirstRepeatedParameter()
      */
     public void setPreferFirstRepeatedParameter(
@@ -751,6 +793,7 @@ public class UrlQuerySanitizer {
     /**
      * Get whether or not the first occurrence of a repeated parameter is
      * preferred.
+     *
      * @return true if the first occurrence of a repeated parameter is
      * preferred.
      * @see #setPreferFirstRepeatedParameter(boolean)
@@ -765,13 +808,14 @@ public class UrlQuerySanitizer {
      * effective value sanitizer for the parameter and uses it to sanitize
      * the value. If all goes well then addSanitizedValue is called with
      * the unescaped parameter and the sanitized unescaped value.
+     *
      * @param parameter an escaped parameter
-     * @param value an unsanitzied escaped value
+     * @param value     an unsanitzied escaped value
      */
     protected void parseEntry(String parameter, String value) {
         String unescapedParameter = unescape(parameter);
-         ValueSanitizer valueSanitizer =
-            getEffectiveValueSanitizer(unescapedParameter);
+        ValueSanitizer valueSanitizer =
+                getEffectiveValueSanitizer(unescapedParameter);
 
         if (valueSanitizer == null) {
             return;
@@ -784,8 +828,9 @@ public class UrlQuerySanitizer {
     /**
      * Record a sanitized parameter-value pair. Override if you want to
      * do additional filtering or validation.
+     *
      * @param parameter an unescaped parameter
-     * @param value a sanitized unescaped value
+     * @param value     a sanitized unescaped value
      */
     protected void addSanitizedEntry(String parameter, String value) {
         mEntriesList.add(
@@ -801,6 +846,7 @@ public class UrlQuerySanitizer {
     /**
      * Get the value sanitizer for a parameter. Returns null if there
      * is no value sanitizer registered for the parameter.
+     *
      * @param parameter the unescaped parameter
      * @return the currently registered value sanitizer for this parameter.
      * @see #registerParameter(String, android.net.UrlQuerySanitizer.ValueSanitizer)
@@ -814,6 +860,7 @@ public class UrlQuerySanitizer {
      * except if there is no value sanitizer registered for a parameter, and
      * unregistered paramaters are allowed, then the default value sanitizer is
      * returned.
+     *
      * @param parameter an unescaped parameter
      * @return the effective value sanitizer for a parameter.
      */
@@ -834,13 +881,14 @@ public class UrlQuerySanitizer {
      * corresponding unescaped character.
      * <li>Invalid escape sequences such as %1z", are passed through unchanged.
      * <ol>
+     *
      * @param string the escaped string
      * @return the unescaped string.
      */
     public String unescape(String string) {
         // Early exit if no escaped characters.
         int firstEscape = string.indexOf('%');
-        if ( firstEscape < 0) {
+        if (firstEscape < 0) {
             firstEscape = string.indexOf('+');
             if (firstEscape < 0) {
                 return string;
@@ -855,8 +903,7 @@ public class UrlQuerySanitizer {
             char c = string.charAt(i);
             if (c == '+') {
                 c = ' ';
-            }
-            else if ( c == '%' && i + 2 < length) {
+            } else if (c == '%' && i + 2 < length) {
                 char c1 = string.charAt(i + 1);
                 char c2 = string.charAt(i + 2);
                 if (isHexDigit(c1) && isHexDigit(c2)) {
@@ -872,6 +919,7 @@ public class UrlQuerySanitizer {
     /**
      * Test if a character is a hexidecimal digit. Both upper case and lower
      * case hex digits are allowed.
+     *
      * @param c the character to test
      * @return true if c is a hex digit.
      */
@@ -883,6 +931,7 @@ public class UrlQuerySanitizer {
      * Convert a character that represents a hexidecimal digit into an integer.
      * If the character is not a hexidecimal digit, then -1 is returned.
      * Both upper case and lower case hex digits are allowed.
+     *
      * @param c the hexidecimal digit.
      * @return the integer value of the hexidecimal digit.
      */
@@ -890,14 +939,11 @@ public class UrlQuerySanitizer {
     protected int decodeHexDigit(char c) {
         if (c >= '0' && c <= '9') {
             return c - '0';
-        }
-        else if (c >= 'A' && c <= 'F') {
+        } else if (c >= 'A' && c <= 'F') {
             return c - 'A' + 10;
-        }
-        else if (c >= 'a' && c <= 'f') {
+        } else if (c >= 'a' && c <= 'f') {
             return c - 'a' + 10;
-        }
-        else {
+        } else {
             return -1;
         }
     }

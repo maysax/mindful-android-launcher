@@ -29,7 +29,7 @@ import android.widget.FrameLayout;
 public class EmptyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         // Must return a ViewGroup, FrameLayout will do.
         return new FrameLayout(getActivity());
     }

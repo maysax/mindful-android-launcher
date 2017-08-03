@@ -48,21 +48,21 @@ public class ActivityChangedEvent implements Parcelable {
 
     public static final Creator<ActivityChangedEvent> CREATOR =
             new Creator<ActivityChangedEvent>() {
-        @Override
-        public ActivityChangedEvent createFromParcel(Parcel source) {
-            int activityRecognitionEventsLength = source.readInt();
-            ActivityRecognitionEvent[] activityRecognitionEvents =
-                    new ActivityRecognitionEvent[activityRecognitionEventsLength];
-            source.readTypedArray(activityRecognitionEvents, ActivityRecognitionEvent.CREATOR);
+                @Override
+                public ActivityChangedEvent createFromParcel(Parcel source) {
+                    int activityRecognitionEventsLength = source.readInt();
+                    ActivityRecognitionEvent[] activityRecognitionEvents =
+                            new ActivityRecognitionEvent[activityRecognitionEventsLength];
+                    source.readTypedArray(activityRecognitionEvents, ActivityRecognitionEvent.CREATOR);
 
-            return new ActivityChangedEvent(activityRecognitionEvents);
-        }
+                    return new ActivityChangedEvent(activityRecognitionEvents);
+                }
 
-        @Override
-        public ActivityChangedEvent[] newArray(int size) {
-            return new ActivityChangedEvent[size];
-        }
-    };
+                @Override
+                public ActivityChangedEvent[] newArray(int size) {
+                    return new ActivityChangedEvent[size];
+                }
+            };
 
     @Override
     public int describeContents() {

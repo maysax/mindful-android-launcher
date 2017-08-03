@@ -71,7 +71,7 @@ public abstract class PinnedHeaderListAdapter extends CompositeCursorAdapter
         if (hasHeader(partition)) {
             View view = null;
             if (convertView != null) {
-                Integer headerType = (Integer)convertView.getTag();
+                Integer headerType = (Integer) convertView.getTag();
                 if (headerType != null && headerType == PARTITION_HEADER_TYPE) {
                     view = convertView;
                 }
@@ -133,7 +133,7 @@ public abstract class PinnedHeaderListAdapter extends CompositeCursorAdapter
         int maxBottomHeader = size;
         int bottomHeaderHeight = 0;
         int listHeight = listView.getHeight();
-        for (int i = size; --i > maxTopHeader;) {
+        for (int i = size; --i > maxTopHeader; ) {
             if (mHeaderVisibility[i]) {
                 int position = listView.getPositionAt(listHeight - bottomHeaderHeight)
                         - headerViewsCount;

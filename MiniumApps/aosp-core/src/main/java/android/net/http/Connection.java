@@ -19,12 +19,6 @@ package android.net.http;
 import android.content.Context;
 import android.os.SystemClock;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.LinkedList;
-
-import javax.net.ssl.SSLHandshakeException;
-
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -32,9 +26,15 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
 import org.apache.http.ParseException;
 import org.apache.http.ProtocolVersion;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.BasicHttpContext;
+
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+
+import javax.net.ssl.SSLHandshakeException;
 
 /**
  * {@hide}
@@ -50,11 +50,13 @@ abstract class Connection {
     private static final int READ = 1;
     private static final int DRAIN = 2;
     private static final int DONE = 3;
-    private static final String[] states = {"SEND",  "READ", "DRAIN", "DONE"};
+    private static final String[] states = {"SEND", "READ", "DRAIN", "DONE"};
 
     Context mContext;
 
-    /** The low level connection */
+    /**
+     * The low level connection
+     */
     protected AndroidHttpClientConnection mHttpClientConnection = null;
 
     /**
@@ -71,18 +73,26 @@ abstract class Connection {
      */
     HttpHost mHost;
 
-    /** true if the connection can be reused for sending more requests */
+    /**
+     * true if the connection can be reused for sending more requests
+     */
     private boolean mCanPersist;
 
-    /** context required by ConnectionReuseStrategy. */
+    /**
+     * context required by ConnectionReuseStrategy.
+     */
     private HttpContext mHttpContext;
 
-    /** set when cancelled */
+    /**
+     * set when cancelled
+     */
     private static int STATE_NORMAL = 0;
     private static int STATE_CANCEL_REQUESTED = 1;
     private int mActive = STATE_NORMAL;
 
-    /** The number of times to try to re-connect (if connect fails). */
+    /**
+     * The number of times to try to re-connect (if connect fails).
+     */
     private final static int RETRY_REQUEST_LIMIT = 2;
 
     private static final int MIN_PIPE = 2;
@@ -147,7 +157,7 @@ abstract class Connection {
         mActive = STATE_CANCEL_REQUESTED;
         closeConnection();
         if (HttpLog.LOGV) HttpLog.v(
-            "Connection.cancel(): connection closed " + mHost);
+                "Connection.cancel(): connection closed " + mHost);
     }
 
     /**
@@ -202,13 +212,13 @@ abstract class Connection {
                     if (req.mCancelled) {
                         if (HttpLog.LOGV) HttpLog.v(
                                 "processRequests(): skipping cancelled request "
-                                + req);
+                                        + req);
                         req.complete();
                         break;
                     }
 
                     if (mHttpClientConnection == null ||
-                        !mHttpClientConnection.isOpen()) {
+                            !mHttpClientConnection.isOpen()) {
                         /* If this call fails, the address is bad or
                            the net is down.  Punt for now.
 
@@ -244,7 +254,7 @@ abstract class Connection {
                     }
                     if (exception != null) {
                         if (httpFailure(req, error, exception) &&
-                            !req.mCancelled) {
+                                !req.mCancelled) {
                             /* retry request if not permanent failure
                                or cancelled */
                             pipe.addLast(req);
@@ -265,7 +275,7 @@ abstract class Connection {
                     empty = !mRequestFeeder.haveRequest(mHost);
                     int pipeSize = pipe.size();
                     if (state != DRAIN && pipeSize < minPipe &&
-                        !empty && mCanPersist) {
+                            !empty && mCanPersist) {
                         state = SEND;
                         break;
                     } else if (pipeSize == 0) {
@@ -274,7 +284,7 @@ abstract class Connection {
                         break;
                     }
 
-                    req = (Request)pipe.removeFirst();
+                    req = (Request) pipe.removeFirst();
                     if (HttpLog.LOGV) HttpLog.v(
                             "processRequests() reading " + req);
 
@@ -292,7 +302,7 @@ abstract class Connection {
                     }
                     if (exception != null) {
                         if (httpFailure(req, error, exception) &&
-                            !req.mCancelled) {
+                                !req.mCancelled) {
                             /* retry request if not permanent failure
                                or cancelled */
                             req.reset();
@@ -304,7 +314,7 @@ abstract class Connection {
                     if (!mCanPersist) {
                         if (HttpLog.LOGV) HttpLog.v(
                                 "processRequests(): no persist, closing " +
-                                mHost);
+                                        mHost);
 
                         closeConnection();
 
@@ -322,6 +332,7 @@ abstract class Connection {
     /**
      * After a send/receive failure, any pipelined requests must be
      * cleared back to the mRequest queue
+     *
      * @return true if mRequests is empty after pipe cleared
      */
     private boolean clearPipe(LinkedList<Request> pipe) {
@@ -331,7 +342,7 @@ abstract class Connection {
         synchronized (mRequestFeeder) {
             Request tReq;
             while (!pipe.isEmpty()) {
-                tReq = (Request)pipe.removeLast();
+                tReq = (Request) pipe.removeLast();
                 if (HttpLog.LOGV) HttpLog.v(
                         "clearPipe() adding back " + mHost + " " + tReq);
                 mRequestFeeder.requeueRequest(tReq);
@@ -358,7 +369,7 @@ abstract class Connection {
             if (mHttpClientConnection != null) {
                 mHttpClientConnection.setSocketTimeout(SOCKET_TIMEOUT);
                 mHttpContext.setAttribute(HTTP_CONNECTION,
-                                          mHttpClientConnection);
+                        mHttpClientConnection);
             } else {
                 // we tried to do SSL tunneling, failed,
                 // and need to drop the request;
@@ -397,7 +408,7 @@ abstract class Connection {
         if (HttpLog.LOGV) {
             long now2 = SystemClock.uptimeMillis();
             HttpLog.v("Connection.openHttpConnection() " +
-                      (now2 - now) + " " + mHost);
+                    (now2 - now) + " " + mHost);
         }
 
         if (error == EventHandler.OK) {
@@ -417,7 +428,7 @@ abstract class Connection {
     /**
      * Helper.  Calls the mEventHandler's error() method only if
      * request failed permanently.  Increments mFailcount on failure.
-     *
+     * <p>
      * Increments failcount only if the network is believed to be
      * connected
      *
@@ -430,7 +441,7 @@ abstract class Connection {
         // e.printStackTrace();
         if (HttpLog.LOGV) HttpLog.v(
                 "httpFailure() ******* " + e + " count " + req.mFailCount +
-                " " + mHost + " " + req.getUri());
+                        " " + mHost + " " + req.getUri());
 
         if (++req.mFailCount >= RETRY_REQUEST_LIMIT) {
             ret = false;
@@ -457,12 +468,13 @@ abstract class Connection {
 
     /**
      * Use same logic as ConnectionReuseStrategy
+     *
      * @see ConnectionReuseStrategy
      */
     private boolean keepAlive(HttpEntity entity,
-            ProtocolVersion ver, int connType, final HttpContext context) {
+                              ProtocolVersion ver, int connType, final HttpContext context) {
         org.apache.http.HttpConnection conn = (org.apache.http.HttpConnection)
-            context.getAttribute(ExecutionContext.HTTP_CONNECTION);
+                context.getAttribute(ExecutionContext.HTTP_CONNECTION);
 
         if (conn != null && !conn.isOpen())
             return false;
@@ -499,9 +511,13 @@ abstract class Connection {
         return mCanPersist;
     }
 
-    /** typically http or https... set by subclass */
+    /**
+     * typically http or https... set by subclass
+     */
     abstract String getScheme();
+
     abstract void closeConnection();
+
     abstract AndroidHttpClientConnection openConnection(Request req) throws IOException;
 
     /**

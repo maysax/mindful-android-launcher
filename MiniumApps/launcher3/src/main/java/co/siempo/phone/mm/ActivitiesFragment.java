@@ -23,8 +23,8 @@ import minium.co.core.ui.CoreFragment;
  * Created by tkb on 2017-03-10.
  */
 @EFragment(R.layout.activities_layout)
-public class ActivitiesFragment  extends CoreFragment {
-    List<ActivitiesStorage>activitiesStorageList;
+public class ActivitiesFragment extends CoreFragment {
+    List<ActivitiesStorage> activitiesStorageList;
     //ListView listView;
    /* @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -35,31 +35,33 @@ public class ActivitiesFragment  extends CoreFragment {
     ListView activity_list_view;
     @ViewById
     ImageView crossActionBar;
+
     @Click
-    void crossActionBar(){
+    void crossActionBar() {
         getActivity().onBackPressed();
     }
-   @AfterViews
-   void afterViews(){
-       activity_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           @Override
-           public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-               // String [] title = {"Meditation Timer","Workout Timer","Reading Timer","Journaling Timer","Pause Timer"};
-               ((CoreActivity)getActivity()).loadChildFragment(ActivitiesDetailsFragment_.builder().title(activitiesStorageList.get(i).getName()).build(),R.id.mainView);
-               //MindfulMorningActivity_.intent(getActivity()).start();
 
-           }
-       });
+    @AfterViews
+    void afterViews() {
+        activity_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // String [] title = {"Meditation Timer","Workout Timer","Reading Timer","Journaling Timer","Pause Timer"};
+                ((CoreActivity) getActivity()).loadChildFragment(ActivitiesDetailsFragment_.builder().title(activitiesStorageList.get(i).getName()).build(), R.id.mainView);
+                //MindfulMorningActivity_.intent(getActivity()).start();
 
-   }
+            }
+        });
+
+    }
 
 
     private ArrayList<ActivitiesStorage> insertDefaultValue() {
-        String[] name = {"Meditation","Workout","Reading","Journaling","Pause"};
+        String[] name = {"Meditation", "Workout", "Reading", "Journaling", "Pause"};
         //int[] values = {0,0,0,0,0};
         ActivitiesStorage aActivityStorage;
-        ArrayList<ActivitiesStorage>activitiesStorageList = new ArrayList<>();
-        for (int i=0; i<name.length;i++){
+        ArrayList<ActivitiesStorage> activitiesStorageList = new ArrayList<>();
+        for (int i = 0; i < name.length; i++) {
             aActivityStorage = new ActivitiesStorage();
             aActivityStorage.setName(name[i]);
             aActivityStorage.setTime(0);
@@ -74,10 +76,10 @@ public class ActivitiesFragment  extends CoreFragment {
         super.onResume();
 
         activitiesStorageList = DBUtility.getActivitySession().loadAll();
-        if (activitiesStorageList.size()==0){
+        if (activitiesStorageList.size() == 0) {
             activitiesStorageList = insertDefaultValue();
         }
-        ActivitiesAdapter activitiesAdapter = new ActivitiesAdapter(getActivity(),activitiesStorageList);
+        ActivitiesAdapter activitiesAdapter = new ActivitiesAdapter(getActivity(), activitiesStorageList);
         activity_list_view.setAdapter(activitiesAdapter);
 
 

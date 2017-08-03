@@ -34,7 +34,9 @@ import minium.co.contacts.R;
  * Dialog that clears the frequently contacted list after confirming with the user.
  */
 public class ClearFrequentsDialog extends DialogFragment {
-    /** Preferred way to show this dialog */
+    /**
+     * Preferred way to show this dialog
+     */
     public static void show(FragmentManager fragmentManager) {
         ClearFrequentsDialog dialog = new ClearFrequentsDialog();
         dialog.show(fragmentManager, "clearFrequents");
@@ -66,11 +68,11 @@ public class ClearFrequentsDialog extends DialogFragment {
             }
         };
         return new AlertDialog.Builder(getActivity())
-            .setTitle(R.string.clearFrequentsConfirmation_title)
-            .setMessage(R.string.clearFrequentsConfirmation)
-            .setNegativeButton(android.R.string.cancel, null)
-            .setPositiveButton(android.R.string.ok, okListener)
-            .setCancelable(true)
-            .create();
+                .setTitle(R.string.clearFrequentsConfirmation_title)
+                .setMessage(R.string.clearFrequentsConfirmation)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(android.R.string.ok, okListener)
+                .setCancelable(true)
+                .create();
     }
 }

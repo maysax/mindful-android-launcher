@@ -35,13 +35,13 @@ import com.android.contacts.common.list.ContactListItemView;
 @SuppressWarnings("deprecation")
 public class LegacyPostalAddressListAdapter extends ContactEntryListAdapter {
 
-    static final String[] POSTALS_PROJECTION = new String[] {
-        ContactMethods._ID,     // 0
-        ContactMethods.TYPE,    // 1
-        ContactMethods.LABEL,   // 2
-        ContactMethods.DATA,    // 3
-        People.DISPLAY_NAME,    // 4
-        People.PHONETIC_NAME,   // 5
+    static final String[] POSTALS_PROJECTION = new String[]{
+            ContactMethods._ID,     // 0
+            ContactMethods.TYPE,    // 1
+            ContactMethods.LABEL,   // 2
+            ContactMethods.DATA,    // 3
+            People.DISPLAY_NAME,    // 4
+            People.PHONETIC_NAME,   // 5
     };
 
     public static final int POSTAL_ID_COLUMN_INDEX = 0;
@@ -68,11 +68,11 @@ public class LegacyPostalAddressListAdapter extends ContactEntryListAdapter {
 
     @Override
     public String getContactDisplayName(int position) {
-        return ((Cursor)getItem(position)).getString(POSTAL_DISPLAY_NAME_COLUMN_INDEX);
+        return ((Cursor) getItem(position)).getString(POSTAL_DISPLAY_NAME_COLUMN_INDEX);
     }
 
     public Uri getContactMethodUri(int position) {
-        Cursor cursor = ((Cursor)getItem(position));
+        Cursor cursor = ((Cursor) getItem(position));
         long id = cursor.getLong(POSTAL_ID_COLUMN_INDEX);
         return ContentUris.withAppendedId(ContactMethods.CONTENT_URI, id);
     }
@@ -88,7 +88,7 @@ public class LegacyPostalAddressListAdapter extends ContactEntryListAdapter {
     @Override
     protected void bindView(View itemView, int partition, Cursor cursor, int position) {
         super.bindView(itemView, partition, cursor, position);
-        ContactListItemView view = (ContactListItemView)itemView;
+        ContactListItemView view = (ContactListItemView) itemView;
         bindName(view, cursor);
         bindViewId(view, cursor, POSTAL_ID_COLUMN_INDEX);
         bindPostalAddress(view, cursor);

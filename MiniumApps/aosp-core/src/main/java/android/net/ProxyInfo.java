@@ -30,10 +30,10 @@ import java.util.Locale;
 
 /**
  * Describes a proxy configuration.
- *
+ * <p>
  * Proxy configurations are already integrated within the Apache HTTP stack.
  * So {@link URLConnection} and {@link HttpClient} will use them automatically.
- *
+ * <p>
  * Other HTTP stacks will need to obtain the proxy info from
  * {@link Proxy#PROXY_CHANGE_ACTION} broadcast as the extra {@link Proxy#EXTRA_PROXY_INFO}.
  */
@@ -46,15 +46,15 @@ public class ProxyInfo implements Parcelable {
 
     private Uri mPacFileUrl;
     /**
-     *@hide
+     * @hide
      */
     public static final String LOCAL_EXCL_LIST = "";
     /**
-     *@hide
+     * @hide
      */
     public static final int LOCAL_PORT = -1;
     /**
-     *@hide
+     * @hide
      */
     public static final String LOCAL_HOST = "localhost";
 
@@ -69,7 +69,7 @@ public class ProxyInfo implements Parcelable {
     /**
      * Constructs a {@link ProxyInfo} object that points at a Direct proxy
      * on the specified host and port.
-     *
+     * <p>
      * The proxy will not be used to access any host in exclusion list, exclList.
      *
      * @param exclList Hosts to exclude using the proxy on connections for.  These
@@ -90,6 +90,7 @@ public class ProxyInfo implements Parcelable {
 
     /**
      * Create a ProxyProperties that points at a HTTP Proxy.
+     *
      * @hide
      */
     public ProxyInfo(String host, int port, String exclList) {
@@ -101,6 +102,7 @@ public class ProxyInfo implements Parcelable {
 
     /**
      * Create a ProxyProperties that points at a PAC URL.
+     *
      * @hide
      */
     public ProxyInfo(Uri pacFileUrl) {
@@ -115,6 +117,7 @@ public class ProxyInfo implements Parcelable {
 
     /**
      * Create a ProxyProperties that points at a PAC URL.
+     *
      * @hide
      */
     public ProxyInfo(String pacFileUrl) {
@@ -126,6 +129,7 @@ public class ProxyInfo implements Parcelable {
 
     /**
      * Only used in PacManager after Local Proxy is bound.
+     *
      * @hide
      */
     public ProxyInfo(Uri pacFileUrl, int localProxyPort) {
@@ -147,6 +151,7 @@ public class ProxyInfo implements Parcelable {
     }
 
     // copy constructor instead of clone
+
     /**
      * @hide
      */
@@ -169,7 +174,8 @@ public class ProxyInfo implements Parcelable {
         InetSocketAddress inetSocketAddress = null;
         try {
             inetSocketAddress = new InetSocketAddress(mHost, mPort);
-        } catch (IllegalArgumentException e) { }
+        } catch (IllegalArgumentException e) {
+        }
         return inetSocketAddress;
     }
 
@@ -207,6 +213,7 @@ public class ProxyInfo implements Parcelable {
 
     /**
      * comma separated
+     *
      * @hide
      */
     public String getExclusionListAsString() {
@@ -229,8 +236,8 @@ public class ProxyInfo implements Parcelable {
     public boolean isValid() {
         if (!Uri.EMPTY.equals(mPacFileUrl)) return true;
         return Proxy.PROXY_VALID == Proxy.validate(mHost == null ? "" : mHost,
-                                                mPort == 0 ? "" : Integer.toString(mPort),
-                                                mExclusionList == null ? "" : mExclusionList);
+                mPort == 0 ? "" : Integer.toString(mPort),
+                mExclusionList == null ? "" : mExclusionList);
     }
 
     /**
@@ -260,7 +267,7 @@ public class ProxyInfo implements Parcelable {
             sb.append("] ");
             sb.append(Integer.toString(mPort));
             if (mExclusionList != null) {
-                    sb.append(" xl=").append(mExclusionList);
+                sb.append(" xl=").append(mExclusionList);
             }
         } else {
             sb.append("[ProxyProperties.mHost == null]");
@@ -271,7 +278,7 @@ public class ProxyInfo implements Parcelable {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ProxyInfo)) return false;
-        ProxyInfo p = (ProxyInfo)o;
+        ProxyInfo p = (ProxyInfo) o;
         // If PAC URL is present in either then they must be equal.
         // Other parameters will only be for fall back.
         if (!Uri.EMPTY.equals(mPacFileUrl)) {
@@ -294,6 +301,7 @@ public class ProxyInfo implements Parcelable {
 
     /**
      * Implement the Parcelable interface
+     *
      * @hide
      */
     public int describeContents() {
@@ -306,57 +314,58 @@ public class ProxyInfo implements Parcelable {
      */
     public int hashCode() {
         return ((null == mHost) ? 0 : mHost.hashCode())
-        + ((null == mExclusionList) ? 0 : mExclusionList.hashCode())
-        + mPort;
+                + ((null == mExclusionList) ? 0 : mExclusionList.hashCode())
+                + mPort;
     }
 
     /**
      * Implement the Parcelable interface.
+     *
      * @hide
      */
     public void writeToParcel(Parcel dest, int flags) {
         if (!Uri.EMPTY.equals(mPacFileUrl)) {
-            dest.writeByte((byte)1);
+            dest.writeByte((byte) 1);
             mPacFileUrl.writeToParcel(dest, 0);
             dest.writeInt(mPort);
             return;
         } else {
-            dest.writeByte((byte)0);
+            dest.writeByte((byte) 0);
         }
         if (mHost != null) {
-            dest.writeByte((byte)1);
+            dest.writeByte((byte) 1);
             dest.writeString(mHost);
             dest.writeInt(mPort);
         } else {
-            dest.writeByte((byte)0);
+            dest.writeByte((byte) 0);
         }
         dest.writeString(mExclusionList);
         dest.writeStringArray(mParsedExclusionList);
     }
 
     public static final Creator<ProxyInfo> CREATOR =
-        new Creator<ProxyInfo>() {
-            public ProxyInfo createFromParcel(Parcel in) {
-                String host = null;
-                int port = 0;
-                if (in.readByte() != 0) {
-                    Uri url = Uri.CREATOR.createFromParcel(in);
-                    int localPort = in.readInt();
-                    return new ProxyInfo(url, localPort);
+            new Creator<ProxyInfo>() {
+                public ProxyInfo createFromParcel(Parcel in) {
+                    String host = null;
+                    int port = 0;
+                    if (in.readByte() != 0) {
+                        Uri url = Uri.CREATOR.createFromParcel(in);
+                        int localPort = in.readInt();
+                        return new ProxyInfo(url, localPort);
+                    }
+                    if (in.readByte() != 0) {
+                        host = in.readString();
+                        port = in.readInt();
+                    }
+                    String exclList = in.readString();
+                    String[] parsedExclList = in.readStringArray();
+                    ProxyInfo proxyProperties =
+                            new ProxyInfo(host, port, exclList, parsedExclList);
+                    return proxyProperties;
                 }
-                if (in.readByte() != 0) {
-                    host = in.readString();
-                    port = in.readInt();
-                }
-                String exclList = in.readString();
-                String[] parsedExclList = in.readStringArray();
-                ProxyInfo proxyProperties =
-                        new ProxyInfo(host, port, exclList, parsedExclList);
-                return proxyProperties;
-            }
 
-            public ProxyInfo[] newArray(int size) {
-                return new ProxyInfo[size];
-            }
-        };
+                public ProxyInfo[] newArray(int size) {
+                    return new ProxyInfo[size];
+                }
+            };
 }

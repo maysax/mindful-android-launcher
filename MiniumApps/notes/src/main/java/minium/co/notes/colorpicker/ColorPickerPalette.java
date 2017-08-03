@@ -88,7 +88,7 @@ public class ColorPickerPalette extends TableLayout {
 
             tableElements++;
             rowElements++;
-            
+
             if (rowElements == mNumColumns) {
                 addView(row);
                 row = createTableRow();

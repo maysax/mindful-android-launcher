@@ -17,13 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -44,49 +37,56 @@ import com.android.mms.LogTag;
 import com.android.mms.R;
 import com.google.android.mms.pdu.PduHeaders;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * This is the UI for displaying a delivery report:
- *
+ * <p>
  * This activity can handle the following parameters from the intent
  * by which it is launched:
- *
+ * <p>
  * thread_id long The id of the conversation from which to get the recipients
- *      for the report.
+ * for the report.
  * message_id long The id of the message about which a report should be displayed.
  * message_type String The type of message (Sms or Mms).  This is used in
- *      conjunction with the message id to retrive the particular message that
- *      the report will be about.
+ * conjunction with the message id to retrive the particular message that
+ * the report will be about.
  */
 public class DeliveryReportActivity extends ListActivity {
     private static final String LOG_TAG = LogTag.TAG;
 
-    static final String[] MMS_REPORT_REQUEST_PROJECTION = new String[] {
-        Mms.Addr.ADDRESS,       //0
-        Mms.DELIVERY_REPORT,    //1
-        Mms.READ_REPORT         //2
+    static final String[] MMS_REPORT_REQUEST_PROJECTION = new String[]{
+            Mms.Addr.ADDRESS,       //0
+            Mms.DELIVERY_REPORT,    //1
+            Mms.READ_REPORT         //2
     };
 
-    static final String[] MMS_REPORT_STATUS_PROJECTION = new String[] {
-        Mms.Addr.ADDRESS,       //0
-        "delivery_status",      //1
-        "read_status"           //2
+    static final String[] MMS_REPORT_STATUS_PROJECTION = new String[]{
+            Mms.Addr.ADDRESS,       //0
+            "delivery_status",      //1
+            "read_status"           //2
     };
 
-    static final String[] SMS_REPORT_STATUS_PROJECTION = new String[] {
-        Sms.ADDRESS,            //0
-        Sms.STATUS,             //1
-        Sms.DATE_SENT,          //2
-        Sms.TYPE                //3
+    static final String[] SMS_REPORT_STATUS_PROJECTION = new String[]{
+            Sms.ADDRESS,            //0
+            Sms.STATUS,             //1
+            Sms.DATE_SENT,          //2
+            Sms.TYPE                //3
     };
 
     // These indices must sync up with the projections above.
-    static final int COLUMN_RECIPIENT           = 0;
-    static final int COLUMN_DELIVERY_REPORT     = 1;
-    static final int COLUMN_READ_REPORT         = 2;
-    static final int COLUMN_DELIVERY_STATUS     = 1;
-    static final int COLUMN_READ_STATUS         = 2;
-    static final int COLUMN_DATE_SENT           = 2;
-    static final int COLUMN_MESSAGE_TYPE        = 3;
+    static final int COLUMN_RECIPIENT = 0;
+    static final int COLUMN_DELIVERY_REPORT = 1;
+    static final int COLUMN_READ_REPORT = 2;
+    static final int COLUMN_DELIVERY_STATUS = 1;
+    static final int COLUMN_READ_STATUS = 2;
+    static final int COLUMN_DATE_SENT = 2;
+    static final int COLUMN_MESSAGE_TYPE = 3;
 
     private long mMessageId;
     private String mMessageType;
@@ -173,7 +173,7 @@ public class DeliveryReportActivity extends ListActivity {
     private List<DeliveryReportItem> getSmsReportItems() {
         String selection = "_id = " + mMessageId;
         Cursor c = SqliteWrapper.query(this, getContentResolver(), Sms.CONTENT_URI,
-                              SMS_REPORT_STATUS_PROJECTION, selection, null, null);
+                SMS_REPORT_STATUS_PROJECTION, selection, null, null);
         if (c == null) {
             return null;
         }
@@ -197,10 +197,10 @@ public class DeliveryReportActivity extends ListActivity {
                 }
 
                 items.add(new DeliveryReportItem(
-                                getString(R.string.recipient_label) + c.getString(COLUMN_RECIPIENT),
-                                getString(R.string.status_label) +
-                                        getSmsStatusText(c.getInt(COLUMN_DELIVERY_STATUS)),
-                                        deliveryDateString));
+                        getString(R.string.recipient_label) + c.getString(COLUMN_RECIPIENT),
+                        getString(R.string.status_label) +
+                                getSmsStatusText(c.getInt(COLUMN_DELIVERY_STATUS)),
+                        deliveryDateString));
             }
             return items;
         } finally {
@@ -217,8 +217,8 @@ public class DeliveryReportActivity extends ListActivity {
         }
 
         String recipient = request.getRecipient();
-        recipient = (Mms.isEmailAddress(recipient))?
-                Mms.extractAddrSpec(recipient): PhoneNumberUtils.stripSeparators(recipient);
+        recipient = (Mms.isEmailAddress(recipient)) ?
+                Mms.extractAddrSpec(recipient) : PhoneNumberUtils.stripSeparators(recipient);
         MmsReportStatus status = queryStatusByRecipient(reportStatus, recipient);
         if (status == null) {
             // haven't received any reports.
@@ -259,8 +259,7 @@ public class DeliveryReportActivity extends ListActivity {
                 if (TextUtils.equals(r, recipient)) {
                     return status.get(r);
                 }
-            }
-            else if (PhoneNumberUtils.compare(r, recipient)) {
+            } else if (PhoneNumberUtils.compare(r, recipient)) {
                 return status.get(r);
             }
         }
@@ -281,7 +280,7 @@ public class DeliveryReportActivity extends ListActivity {
         List<DeliveryReportItem> items = new ArrayList<DeliveryReportItem>();
         for (MmsReportRequest reportReq : reportReqs) {
             String statusText = getString(R.string.status_label) +
-                getMmsReportStatusText(reportReq, reportStatus);
+                    getMmsReportStatusText(reportReq, reportStatus);
             items.add(new DeliveryReportItem(getString(R.string.recipient_label) +
                     reportReq.getRecipient(), statusText, null));
         }
@@ -290,9 +289,9 @@ public class DeliveryReportActivity extends ListActivity {
 
     private Map<String, MmsReportStatus> getMmsReportStatus() {
         Uri uri = Uri.withAppendedPath(Mms.REPORT_STATUS_URI,
-                                       String.valueOf(mMessageId));
+                String.valueOf(mMessageId));
         Cursor c = SqliteWrapper.query(this, getContentResolver(), uri,
-                       MMS_REPORT_STATUS_PROJECTION, null, null, null);
+                MMS_REPORT_STATUS_PROJECTION, null, null, null);
 
         if (c == null) {
             return null;
@@ -304,12 +303,12 @@ public class DeliveryReportActivity extends ListActivity {
 
             while (c.moveToNext()) {
                 String recipient = c.getString(COLUMN_RECIPIENT);
-                recipient = (Mms.isEmailAddress(recipient))?
-                                        Mms.extractAddrSpec(recipient):
-                                            PhoneNumberUtils.stripSeparators(recipient);
+                recipient = (Mms.isEmailAddress(recipient)) ?
+                        Mms.extractAddrSpec(recipient) :
+                        PhoneNumberUtils.stripSeparators(recipient);
                 MmsReportStatus status = new MmsReportStatus(
-                                        c.getInt(COLUMN_DELIVERY_STATUS),
-                                        c.getInt(COLUMN_READ_STATUS));
+                        c.getInt(COLUMN_DELIVERY_STATUS),
+                        c.getInt(COLUMN_READ_STATUS));
                 statusMap.put(recipient, status);
             }
             return statusMap;
@@ -320,9 +319,9 @@ public class DeliveryReportActivity extends ListActivity {
 
     private List<MmsReportRequest> getMmsReportRequests() {
         Uri uri = Uri.withAppendedPath(Mms.REPORT_REQUEST_URI,
-                                       String.valueOf(mMessageId));
+                String.valueOf(mMessageId));
         Cursor c = SqliteWrapper.query(this, getContentResolver(), uri,
-                      MMS_REPORT_REQUEST_PROJECTION, null, null, null);
+                MMS_REPORT_REQUEST_PROJECTION, null, null, null);
 
         if (c == null) {
             return null;
@@ -336,9 +335,9 @@ public class DeliveryReportActivity extends ListActivity {
             List<MmsReportRequest> reqList = new ArrayList<MmsReportRequest>();
             while (c.moveToNext()) {
                 reqList.add(new MmsReportRequest(
-                                c.getString(COLUMN_RECIPIENT),
-                                c.getInt(COLUMN_DELIVERY_REPORT),
-                                c.getInt(COLUMN_READ_REPORT)));
+                        c.getString(COLUMN_RECIPIENT),
+                        c.getInt(COLUMN_DELIVERY_REPORT),
+                        c.getInt(COLUMN_READ_REPORT)));
             }
             return reqList;
         } finally {

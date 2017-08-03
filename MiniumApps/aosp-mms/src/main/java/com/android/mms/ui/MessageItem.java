@@ -17,8 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.regex.Pattern;
-
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -52,16 +50,18 @@ import com.google.android.mms.pdu.PduPersister;
 import com.google.android.mms.pdu.RetrieveConf;
 import com.google.android.mms.pdu.SendReq;
 
+import java.util.regex.Pattern;
+
 /**
  * Mostly immutable model for an SMS/MMS message.
- *
+ * <p>
  * <p>The only mutable field is the cached formatted message member,
  * the formatting of which is done outside this model in MessageListItem.
  */
 public class MessageItem {
     private static String TAG = LogTag.TAG;
 
-    public enum DeliveryStatus  { NONE, INFO, FAILED, PENDING, RECEIVED }
+    public enum DeliveryStatus {NONE, INFO, FAILED, PENDING, RECEIVED}
 
     public static int ATTACHMENT_TYPE_NOT_LOADED = -1;
 
@@ -109,7 +109,7 @@ public class MessageItem {
     private ItemLoadedFuture mItemLoadedFuture;
 
     MessageItem(Context context, String type, final Cursor cursor,
-            final ColumnsMap columnsMap, Pattern highlight) throws MmsException {
+                final ColumnsMap columnsMap, Pattern highlight) throws MmsException {
         mContext = context;
         mMsgId = cursor.getLong(columnsMap.mColumnMsgId);
         mHighlight = highlight;
@@ -190,7 +190,7 @@ public class MessageItem {
 
             mItemLoadedFuture = MmsApp.getApplication().getPduLoaderManager()
                     .getPdu(mMessageUri, loadSlideshow,
-                    new PduLoadedMessageItemCallback());
+                            new PduLoadedMessageItemCallback());
 
         } else {
             throw new MmsException("Unknown type of the message: " + type);
@@ -227,20 +227,20 @@ public class MessageItem {
         // type of MessageListItem to create: a left or right justified item depending on whether
         // the message is incoming or outgoing.
         boolean isIncomingMms = isMms()
-                                    && (mBoxId == Mms.MESSAGE_BOX_INBOX
-                                            || mBoxId == Mms.MESSAGE_BOX_ALL);
+                && (mBoxId == Mms.MESSAGE_BOX_INBOX
+                || mBoxId == Mms.MESSAGE_BOX_ALL);
         boolean isIncomingSms = isSms()
-                                    && (mBoxId == Sms.MESSAGE_TYPE_INBOX
-                                            || mBoxId == Sms.MESSAGE_TYPE_ALL);
+                && (mBoxId == Sms.MESSAGE_TYPE_INBOX
+                || mBoxId == Sms.MESSAGE_TYPE_ALL);
         return !(isIncomingMms || isIncomingSms);
     }
 
     public boolean isOutgoingMessage() {
         boolean isOutgoingMms = isMms() && (mBoxId == Mms.MESSAGE_BOX_OUTBOX);
         boolean isOutgoingSms = isSms()
-                                    && ((mBoxId == Sms.MESSAGE_TYPE_FAILED)
-                                            || (mBoxId == Sms.MESSAGE_TYPE_OUTBOX)
-                                            || (mBoxId == Sms.MESSAGE_TYPE_QUEUED));
+                && ((mBoxId == Sms.MESSAGE_TYPE_FAILED)
+                || (mBoxId == Sms.MESSAGE_TYPE_OUTBOX)
+                || (mBoxId == Sms.MESSAGE_TYPE_QUEUED));
         return isOutgoingMms || isOutgoingSms;
     }
 
@@ -250,9 +250,9 @@ public class MessageItem {
 
     public boolean isFailedMessage() {
         boolean isFailedMms = isMms()
-                            && (mErrorType >= MmsSms.ERR_TYPE_GENERIC_PERMANENT);
+                && (mErrorType >= MmsSms.ERR_TYPE_GENERIC_PERMANENT);
         boolean isFailedSms = isSms()
-                            && (mBoxId == Sms.MESSAGE_TYPE_FAILED);
+                && (mBoxId == Sms.MESSAGE_TYPE_FAILED);
         return isFailedMms || isFailedSms;
     }
 
@@ -270,7 +270,7 @@ public class MessageItem {
         if (isSending != mLastSendingState) {
             mLastSendingState = isSending;
             mCachedFormattedMessage = null;         // clear cache so we'll rebuild the message
-                                                    // to show "Sending..." or the sent date.
+            // to show "Sending..." or the sent date.
         }
         return mCachedFormattedMessage;
     }
@@ -290,12 +290,12 @@ public class MessageItem {
     @Override
     public String toString() {
         return "type: " + mType +
-            " box: " + mBoxId +
-            " uri: " + mMessageUri +
-            " address: " + mAddress +
-            " contact: " + mContact +
-            " read: " + mReadReport +
-            " delivery status: " + mDeliveryStatus;
+                " box: " + mBoxId +
+                " uri: " + mMessageUri +
+                " address: " + mAddress +
+                " contact: " + mContact +
+                " read: " + mReadReport +
+                " delivery status: " + mDeliveryStatus;
     }
 
     public class PduLoadedMessageItemCallback implements ItemLoadedCallback {
@@ -305,15 +305,15 @@ public class MessageItem {
                 return;
             }
             if (mItemLoadedFuture != null) {
-                synchronized(mItemLoadedFuture) {
+                synchronized (mItemLoadedFuture) {
                     mItemLoadedFuture.setIsDone(true);
                 }
             }
-            PduLoaderManager.PduLoaded pduLoaded = (PduLoaderManager.PduLoaded)result;
+            PduLoaderManager.PduLoaded pduLoaded = (PduLoaderManager.PduLoaded) result;
             long timestamp = 0L;
             if (PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND == mMessageType) {
                 mDeliveryStatus = DeliveryStatus.NONE;
-                NotificationInd notifInd = (NotificationInd)pduLoaded.mPdu;
+                NotificationInd notifInd = (NotificationInd) pduLoaded.mPdu;
                 interpretFrom(notifInd.getFrom(), mMessageUri);
                 // Borrow the mBody to hold the URL of the message.
                 mBody = new String(notifInd.getContentLocation());
@@ -323,7 +323,7 @@ public class MessageItem {
                 if (mCursor.isClosed()) {
                     return;
                 }
-                MultimediaMessagePdu msg = (MultimediaMessagePdu)pduLoaded.mPdu;
+                MultimediaMessagePdu msg = (MultimediaMessagePdu) pduLoaded.mPdu;
                 mSlideshow = pduLoaded.mSlideshow;
                 mAttachmentType = MessageUtils.getAttachmentType(mSlideshow, msg);
 
@@ -390,7 +390,7 @@ public class MessageItem {
                     mTimestamp = mContext.getString(R.string.expire_on,
                             MessageUtils.formatTimeStampString(mContext, timestamp));
                 } else {
-                    mTimestamp =  MessageUtils.formatTimeStampString(mContext, timestamp);
+                    mTimestamp = MessageUtils.formatTimeStampString(mContext, timestamp);
                 }
             }
             if (mPduLoadedCallback != null) {

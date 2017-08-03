@@ -17,35 +17,35 @@
 
 package com.android.mms.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 
 import com.android.mms.MmsConfig;
 import com.android.mms.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An adapter to store icons and strings for attachment type list.
  */
 public class AttachmentTypeSelectorAdapter extends IconListAdapter {
-    public final static int MODE_WITH_SLIDESHOW    = 0;
+    public final static int MODE_WITH_SLIDESHOW = 0;
     public final static int MODE_WITHOUT_SLIDESHOW = 1;
 
-    public final static int ADD_IMAGE               = 0;
-    public final static int TAKE_PICTURE            = 1;
-    public final static int ADD_VIDEO               = 2;
-    public final static int RECORD_VIDEO            = 3;
-    public final static int ADD_SOUND               = 4;
-    public final static int RECORD_SOUND            = 5;
-    public final static int ADD_SLIDESHOW           = 6;
+    public final static int ADD_IMAGE = 0;
+    public final static int TAKE_PICTURE = 1;
+    public final static int ADD_VIDEO = 2;
+    public final static int RECORD_VIDEO = 3;
+    public final static int ADD_SOUND = 4;
+    public final static int RECORD_SOUND = 5;
+    public final static int ADD_SLIDESHOW = 6;
 
     public AttachmentTypeSelectorAdapter(Context context, int mode) {
         super(context, getData(mode, context));
     }
-    
+
     public int buttonToCommand(int whichButton) {
-        AttachmentListItem item = (AttachmentListItem)getItem(whichButton);
+        AttachmentListItem item = (AttachmentListItem) getItem(whichButton);
         return item.getCommand();
     }
 
@@ -80,11 +80,11 @@ public class AttachmentTypeSelectorAdapter extends IconListAdapter {
     }
 
     protected static void addItem(List<IconListItem> data, String title,
-            int resource, int command) {
+                                  int resource, int command) {
         AttachmentListItem temp = new AttachmentListItem(title, resource, command);
         data.add(temp);
     }
-    
+
     public static class AttachmentListItem extends IconListAdapter.IconListItem {
         private int mCommand;
 

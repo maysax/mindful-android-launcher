@@ -37,14 +37,16 @@ import minium.co.contacts.R;
 
 /**
  * A simple dialog containing an {@link DatePicker}.
- *
+ * <p>
  * <p>See the <a href="{@docRoot}resources/tutorials/views/hello-datepicker.html">Date Picker
  * tutorial</a>.</p>
  */
 public class DatePickerDialog extends AlertDialog implements OnClickListener,
         OnDateChangedListener {
 
-    /** Magic year that represents "no year" */
+    /**
+     * Magic year that represents "no year"
+     */
     public static int NO_YEAR = DatePicker.NO_YEAR;
 
     private static final String YEAR = "year";
@@ -66,85 +68,85 @@ public class DatePickerDialog extends AlertDialog implements OnClickListener,
      */
     public interface OnDateSetListener {
         /**
-         * @param view The view associated with this listener.
-         * @param year The year that was set or {@link DatePickerDialog#NO_YEAR} if the user has
-         *  not specified a year
+         * @param view        The view associated with this listener.
+         * @param year        The year that was set or {@link DatePickerDialog#NO_YEAR} if the user has
+         *                    not specified a year
          * @param monthOfYear The month that was set (0-11) for compatibility
-         *  with {@link java.util.Calendar}.
-         * @param dayOfMonth The day of the month that was set.
+         *                    with {@link java.util.Calendar}.
+         * @param dayOfMonth  The day of the month that was set.
          */
         void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth);
     }
 
     /**
-     * @param context The context the dialog is to run in.
-     * @param callBack How the parent is notified that the date is set.
-     * @param year The initial year of the dialog
+     * @param context     The context the dialog is to run in.
+     * @param callBack    How the parent is notified that the date is set.
+     * @param year        The initial year of the dialog
      * @param monthOfYear The initial month of the dialog.
-     * @param dayOfMonth The initial day of the dialog.
+     * @param dayOfMonth  The initial day of the dialog.
      */
     public DatePickerDialog(Context context,
-            OnDateSetListener callBack,
-            int year,
-            int monthOfYear,
-            int dayOfMonth) {
+                            OnDateSetListener callBack,
+                            int year,
+                            int monthOfYear,
+                            int dayOfMonth) {
         this(context, callBack, year, monthOfYear, dayOfMonth, false);
     }
 
     /**
-     * @param context The context the dialog is to run in.
-     * @param callBack How the parent is notified that the date is set.
-     * @param year The initial year of the dialog or {@link DatePickerDialog#NO_YEAR} if no year
-     *  has been specified
-     * @param monthOfYear The initial month of the dialog.
-     * @param dayOfMonth The initial day of the dialog.
+     * @param context      The context the dialog is to run in.
+     * @param callBack     How the parent is notified that the date is set.
+     * @param year         The initial year of the dialog or {@link DatePickerDialog#NO_YEAR} if no year
+     *                     has been specified
+     * @param monthOfYear  The initial month of the dialog.
+     * @param dayOfMonth   The initial day of the dialog.
      * @param yearOptional Whether the year can be toggled by the user
      */
     public DatePickerDialog(Context context,
-            OnDateSetListener callBack,
-            int year,
-            int monthOfYear,
-            int dayOfMonth,
-            boolean yearOptional) {
+                            OnDateSetListener callBack,
+                            int year,
+                            int monthOfYear,
+                            int dayOfMonth,
+                            boolean yearOptional) {
         this(context, THEME_DEVICE_DEFAULT_LIGHT, callBack, year, monthOfYear, dayOfMonth,
                 yearOptional);
     }
 
     /**
-     * @param context The context the dialog is to run in.
-     * @param theme the theme to apply to this dialog
-     * @param callBack How the parent is notified that the date is set.
-     * @param year The initial year of the dialog or {@link DatePickerDialog#NO_YEAR} if no year
-     *  has been specified
+     * @param context     The context the dialog is to run in.
+     * @param theme       the theme to apply to this dialog
+     * @param callBack    How the parent is notified that the date is set.
+     * @param year        The initial year of the dialog or {@link DatePickerDialog#NO_YEAR} if no year
+     *                    has been specified
      * @param monthOfYear The initial month of the dialog.
-     * @param dayOfMonth The initial day of the dialog.
+     * @param dayOfMonth  The initial day of the dialog.
      */
     public DatePickerDialog(Context context,
-            int theme,
-            OnDateSetListener callBack,
-            int year,
-            int monthOfYear,
-            int dayOfMonth) {
+                            int theme,
+                            OnDateSetListener callBack,
+                            int year,
+                            int monthOfYear,
+                            int dayOfMonth) {
         this(context, theme, callBack, year, monthOfYear, dayOfMonth, false);
     }
 
     /**
-     * @param context The context the dialog is to run in.
-     * @param theme the theme to apply to this dialog
-     * @param callBack How the parent is notified that the date is set.
-     * @param year The initial year of the dialog or {@link DatePickerDialog#NO_YEAR} if no
-     *  year has been specified.
-     * @param monthOfYear The initial month of the dialog.
-     * @param dayOfMonth The initial day of the dialog.
+     * @param context      The context the dialog is to run in.
+     * @param theme        the theme to apply to this dialog
+     * @param callBack     How the parent is notified that the date is set.
+     * @param year         The initial year of the dialog or {@link DatePickerDialog#NO_YEAR} if no
+     *                     year has been specified.
+     * @param monthOfYear  The initial month of the dialog.
+     * @param dayOfMonth   The initial day of the dialog.
      * @param yearOptional Whether the year can be toggled by the user
      */
     public DatePickerDialog(Context context,
-            int theme,
-            OnDateSetListener callBack,
-            int year,
-            int monthOfYear,
-            int dayOfMonth,
-            boolean yearOptional) {
+                            int theme,
+                            OnDateSetListener callBack,
+                            int year,
+                            int monthOfYear,
+                            int dayOfMonth,
+                            boolean yearOptional) {
         super(context, theme);
 
         mCallBack = callBack;

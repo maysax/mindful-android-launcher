@@ -1,33 +1,19 @@
 package minium.co.launcher2.nfc;
 
-import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.nfc.FormatException;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
-import android.nfc.tech.NdefFormatable;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Parcelable;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
 import minium.co.launcher2.MainActivity;
-import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.events.NFCEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 
@@ -52,26 +38,22 @@ public class NfcManager {
         this.context = context;
         _nfcAdapter = NfcAdapter.getDefaultAdapter(context);
 
-        if (_nfcAdapter == null)
-        {
+        if (_nfcAdapter == null) {
             Tracer.w("This device does not support NFC.");
             return;
         }
 
-        if (_nfcAdapter.isEnabled())
-        {
+        if (_nfcAdapter.isEnabled()) {
             _pendingIntent = PendingIntent.getActivity(context, 0, new Intent(context, context.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
             IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
-            try
-            {
+            try {
                 ndefDetected.addDataType(_MIME_TYPE);
-            } catch (IntentFilter.MalformedMimeTypeException e)
-            {
+            } catch (IntentFilter.MalformedMimeTypeException e) {
                 Tracer.e(e, e.getMessage());
             }
 
-            _intentFilters = new IntentFilter[] { ndefDetected };
+            _intentFilters = new IntentFilter[]{ndefDetected};
             nfcCheckHandler = new Handler();
         }
     }
@@ -87,8 +69,7 @@ public class NfcManager {
 
     public void onNewIntent(Intent intent) {
         // NDEF exchange mode
-        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction()))
-        {
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             List<String> msgs = NFCUtils.getStringsFromNfcIntent(intent);
 
             Tracer.i("NFC tag read: " + msgs.get(0));

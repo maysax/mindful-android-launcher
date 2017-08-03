@@ -33,8 +33,7 @@ import java.io.OutputStream;
  * After a file is purged, attempts to read or write the file will
  * cause an IOException to be thrown.
  */
-public class MemoryFile
-{
+public class MemoryFile {
     private static String TAG = "MemoryFile";
 
     // mmap(2) protection flags from <sys/mman.h>
@@ -42,16 +41,23 @@ public class MemoryFile
     private static final int PROT_WRITE = 0x2;
 
     private static native FileDescriptor native_open(String name, int length) throws IOException;
+
     // returns memory address for ashmem region
     private static native long native_mmap(FileDescriptor fd, int length, int mode)
             throws IOException;
+
     private static native void native_munmap(long addr, int length) throws IOException;
+
     private static native void native_close(FileDescriptor fd);
+
     private static native int native_read(FileDescriptor fd, long address, byte[] buffer,
-            int srcOffset, int destOffset, int count, boolean isUnpinned) throws IOException;
+                                          int srcOffset, int destOffset, int count, boolean isUnpinned) throws IOException;
+
     private static native void native_write(FileDescriptor fd, long address, byte[] buffer,
-            int srcOffset, int destOffset, int count, boolean isUnpinned) throws IOException;
+                                            int srcOffset, int destOffset, int count, boolean isUnpinned) throws IOException;
+
     private static native void native_pin(FileDescriptor fd, boolean pin) throws IOException;
+
     private static native int native_get_size(FileDescriptor fd) throws IOException;
 
     private FileDescriptor mFD;        // ashmem file descriptor
@@ -62,7 +68,7 @@ public class MemoryFile
     /**
      * Allocates a new ashmem region. The region is initially not purgable.
      *
-     * @param name optional name for the file (can be null).
+     * @param name   optional name for the file (can be null).
      * @param length of the memory file in bytes, must be non-negative.
      * @throws IOException if the memory file could not be created.
      */
@@ -154,7 +160,7 @@ public class MemoryFile
      * Enables or disables purging of the memory file.
      *
      * @param allowPurging true if the operating system can purge the contents
-     * of the file in low memory situations
+     *                     of the file in low memory situations
      * @return previous value of allowPurging
      */
     synchronized public boolean allowPurging(boolean allowPurging) throws IOException {
@@ -169,7 +175,7 @@ public class MemoryFile
     /**
      * Creates a new InputStream for reading from the memory file.
      *
-     @return InputStream
+     * @return InputStream
      */
     public InputStream getInputStream() {
         return new MemoryInputStream();
@@ -178,9 +184,9 @@ public class MemoryFile
     /**
      * Creates a new OutputStream for writing to the memory file.
      *
-     @return OutputStream
+     * @return OutputStream
      */
-     public OutputStream getOutputStream() {
+    public OutputStream getOutputStream() {
         return new MemoryOutputStream();
     }
 
@@ -188,10 +194,10 @@ public class MemoryFile
      * Reads bytes from the memory file.
      * Will throw an IOException if the file has been purged.
      *
-     * @param buffer byte array to read bytes into.
-     * @param srcOffset offset into the memory file to read from.
+     * @param buffer     byte array to read bytes into.
+     * @param srcOffset  offset into the memory file to read from.
      * @param destOffset offset into the byte array buffer to read into.
-     * @param count number of bytes to read.
+     * @param count      number of bytes to read.
      * @return number of bytes read.
      * @throws IOException if the memory file has been purged or deactivated.
      */
@@ -213,10 +219,10 @@ public class MemoryFile
      * Write bytes to the memory file.
      * Will throw an IOException if the file has been purged.
      *
-     * @param buffer byte array to write bytes from.
-     * @param srcOffset offset into the byte array buffer to write from.
+     * @param buffer     byte array to write bytes from.
+     * @param srcOffset  offset into the byte array buffer to write from.
      * @param destOffset offset  into the memory file to write to.
-     * @param count number of bytes to write.
+     * @param count      number of bytes to write.
      * @throws IOException if the memory file has been purged or deactivated.
      */
     public void writeBytes(byte[] buffer, int srcOffset, int destOffset, int count)
@@ -235,11 +241,10 @@ public class MemoryFile
 
     /**
      * Gets a FileDescriptor for the memory file.
-     *
+     * <p>
      * The returned file descriptor is not duplicated.
      *
      * @throws IOException If the memory file has been closed.
-     *
      * @hide
      */
     public FileDescriptor getFileDescriptor() throws IOException {
@@ -251,7 +256,6 @@ public class MemoryFile
      * or -1 if the file descriptor does not refer to a memory file.
      *
      * @throws IOException If <code>fd</code> is not a valid file descriptor.
-     *
      * @hide
      */
     public static int getSize(FileDescriptor fd) throws IOException {
@@ -343,7 +347,7 @@ public class MemoryFile
             if (mSingleByte == null) {
                 mSingleByte = new byte[1];
             }
-            mSingleByte[0] = (byte)oneByte;
+            mSingleByte[0] = (byte) oneByte;
             write(mSingleByte, 0, 1);
         }
     }

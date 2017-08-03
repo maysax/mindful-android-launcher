@@ -29,7 +29,7 @@ import com.android.contacts.common.model.dataitem.DataKind;
  * {@link LabeledEditorView} and {@link EditView} on {@link EditContactActivity}.
  * It is used to assign a unique but consistent id to each view across {@link EditContactActivity}'s
  * lifecycle, so that we can re-construct view state (e.g. focused view) when the screen rotates.
- *
+ * <p>
  * <p>This class is not thread safe.
  */
 public final class ViewIdGenerator implements Parcelable {
@@ -54,7 +54,9 @@ public final class ViewIdGenerator implements Parcelable {
         mNextId = INITIAL_VIEW_ID;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int describeContents() {
         return 0;
     }
@@ -62,14 +64,14 @@ public final class ViewIdGenerator implements Parcelable {
     /**
      * Returns an id for a view associated with specified contact field.
      *
-     * @param entity {@link RawContactDelta} associated with the view
-     * @param kind {@link DataKind} associated with the view, or null if none exists.
-     * @param values {@link ValuesDelta} associated with the view, or null if none exists.
+     * @param entity    {@link RawContactDelta} associated with the view
+     * @param kind      {@link DataKind} associated with the view, or null if none exists.
+     * @param values    {@link ValuesDelta} associated with the view, or null if none exists.
      * @param viewIndex index of the view in the parent {@link Editor}, if it's a leave view.
-     *     Otherwise, pass {@link #NO_VIEW_INDEX}.
+     *                  Otherwise, pass {@link #NO_VIEW_INDEX}.
      */
     public int getId(RawContactDelta entity, DataKind kind, ValuesDelta values,
-            int viewIndex) {
+                     int viewIndex) {
         final String k = getMapKey(entity, kind, values, viewIndex);
 
         int id = mIdMap.getInt(k, INVALID_VIEW_ID);
@@ -82,7 +84,7 @@ public final class ViewIdGenerator implements Parcelable {
     }
 
     private static String getMapKey(RawContactDelta entity, DataKind kind, ValuesDelta values,
-            int viewIndex) {
+                                    int viewIndex) {
         sWorkStringBuilder.setLength(0);
         if (entity != null) {
             sWorkStringBuilder.append(entity.getValues().getId());
@@ -105,7 +107,9 @@ public final class ViewIdGenerator implements Parcelable {
         return sWorkStringBuilder.toString();
     }
 
-    /** {@Override} */
+    /**
+     * {@Override}
+     */
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mNextId);
         dest.writeBundle(mIdMap);
@@ -118,14 +122,14 @@ public final class ViewIdGenerator implements Parcelable {
 
     public static final Parcelable.Creator<ViewIdGenerator> CREATOR =
             new Parcelable.Creator<ViewIdGenerator>() {
-        public ViewIdGenerator createFromParcel(Parcel in) {
-            final ViewIdGenerator vig = new ViewIdGenerator();
-            vig.readFromParcel(in);
-            return vig;
-        }
+                public ViewIdGenerator createFromParcel(Parcel in) {
+                    final ViewIdGenerator vig = new ViewIdGenerator();
+                    vig.readFromParcel(in);
+                    return vig;
+                }
 
-        public ViewIdGenerator[] newArray(int size) {
-            return new ViewIdGenerator[size];
-        }
-    };
+                public ViewIdGenerator[] newArray(int size) {
+                    return new ViewIdGenerator[size];
+                }
+            };
 }

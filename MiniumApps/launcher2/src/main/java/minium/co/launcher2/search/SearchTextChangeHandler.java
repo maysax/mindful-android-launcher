@@ -1,9 +1,5 @@
 package minium.co.launcher2.search;
 
-import de.greenrobot.event.EventBus;
-import minium.co.launcher2.MainActivity;
-import minium.co.launcher2.events.MakeChipEvent;
-
 /**
  * Created by Shahab on 6/7/2016.
  */

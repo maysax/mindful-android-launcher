@@ -111,7 +111,7 @@ public class MainFragment extends CoreFragment {
                         prefs.selectedThemeColor().get(),
                         5, ColorPickerDialog.SIZE_SMALL);
 
-                        dialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
+                dialog.setOnColorSelectedListener(new ColorPickerSwatch.OnColorSelectedListener() {
                     @Override
                     public void onColorSelected(int color) {
                         prefs.selectedThemeColor().put(color);
@@ -169,7 +169,7 @@ public class MainFragment extends CoreFragment {
     }
 
     private ActionListItem[] getListItems() {
-        return new ActionListItem[] {
+        return new ActionListItem[]{
                 new ActionListItem(0, "{fa-comment-o}", "Text"),
                 new ActionListItem(1, "{fa-phone}", "Call"),
                 new ActionListItem(2, "{fa-sticky-note-o}", "Add Note"),

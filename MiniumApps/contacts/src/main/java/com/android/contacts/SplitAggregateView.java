@@ -55,7 +55,7 @@ public class SplitAggregateView extends ListView {
     private static final String TAG = "SplitAggregateView";
 
     private interface SplitQuery {
-        String[] COLUMNS = new String[] {
+        String[] COLUMNS = new String[]{
                 Data.MIMETYPE, RawContacts.ACCOUNT_TYPE, RawContacts.DATA_SET, Data.RAW_CONTACT_ID,
                 Data.IS_PRIMARY, StructuredName.DISPLAY_NAME, Nickname.NAME, Email.DATA,
                 Phone.NUMBER
@@ -215,7 +215,7 @@ public class SplitAggregateView extends ListView {
         }
     }
 
-    private static class SplitAggregateItemCache  {
+    private static class SplitAggregateItemCache {
         TextView name;
         TextView additionalData;
         ImageView sourceIcon;
@@ -230,7 +230,7 @@ public class SplitAggregateView extends ListView {
 
         public SplitAggregateAdapter(Context context, List<RawContactInfo> sources) {
             super(context, 0, sources);
-            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -239,12 +239,12 @@ public class SplitAggregateView extends ListView {
                 convertView = mInflater.inflate(R.layout.split_aggregate_list_item, parent, false);
             }
 
-            SplitAggregateItemCache cache = (SplitAggregateItemCache)convertView.getTag();
+            SplitAggregateItemCache cache = (SplitAggregateItemCache) convertView.getTag();
             if (cache == null) {
                 cache = new SplitAggregateItemCache();
-                cache.name = (TextView)convertView.findViewById(R.id.name);
-                cache.additionalData = (TextView)convertView.findViewById(R.id.additionalData);
-                cache.sourceIcon = (ImageView)convertView.findViewById(R.id.sourceIcon);
+                cache.name = (TextView) convertView.findViewById(R.id.name);
+                cache.additionalData = (TextView) convertView.findViewById(R.id.additionalData);
+                cache.sourceIcon = (ImageView) convertView.findViewById(R.id.sourceIcon);
                 convertView.setTag(cache);
             }
 

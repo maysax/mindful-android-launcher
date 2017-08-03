@@ -4,25 +4,25 @@
     <declare-styleable name="HoloCircleSeekBar">
         <attr name="wheel_size" format="integer" />
         <attr name="pointer_size" format="dimension" />
-        <attr name="max" format="integer"/>
-        <attr name="show_title" format="boolean"/>
-        <attr name="start_angle" format="integer"/>
-        <attr name="end_angle" format="integer"/>
-        <attr name="title_size" format="dimension"/>
-        <attr name="subTitle_size" format="dimension"/>
-        <attr name="text_size" format="dimension"/>
-        <attr name="init_position" format="integer"/>
-        <attr name="wheel_active_color" format="string"/>
-        <attr name="wheel_unactive_color" format="string"/>
-        <attr name="pointer_color" format="string"/>
-        <attr name="pointer_halo_color" format="string"/>
-        <attr name="title_color" format="string"/>
-        <attr name="subTitle_color" format="string"/>
-        <attr name="text_color" format="string"/>
+        <attr name="max" format="integer" />
+        <attr name="show_title" format="boolean" />
+        <attr name="start_angle" format="integer" />
+        <attr name="end_angle" format="integer" />
+        <attr name="title_size" format="dimension" />
+        <attr name="subTitle_size" format="dimension" />
+        <attr name="text_size" format="dimension" />
+        <attr name="init_position" format="integer" />
+        <attr name="wheel_active_color" format="string" />
+        <attr name="wheel_unactive_color" format="string" />
+        <attr name="pointer_color" format="string" />
+        <attr name="pointer_halo_color" format="string" />
+        <attr name="title_color" format="string" />
+        <attr name="subTitle_color" format="string" />
+        <attr name="text_color" format="string" />
         <attr name="thumb_size" format="dimension" />
         <attr name="thumb_image" format="reference" />
-        <attr name="show_thumb" format="boolean"/>
-        <attr name="is_touchable" format="boolean"/>
+        <attr name="show_thumb" format="boolean" />
+        <attr name="is_touchable" format="boolean" />
     </declare-styleable>
 
 </resources>

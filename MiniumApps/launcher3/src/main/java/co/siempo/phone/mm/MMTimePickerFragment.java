@@ -23,26 +23,26 @@ import antistatic.spinnerwheel.adapters.ArrayWheelAdapter;
 import antistatic.spinnerwheel.adapters.NumericWheelAdapter;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.mm.controller.AlarmController;
 import co.siempo.phone.db.ActivitiesStorage;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaysOfWeekWhichWasSetAlarm;
+import co.siempo.phone.mm.controller.AlarmController;
 import co.siempo.phone.mm.model.Utilities;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
 @EFragment(R.layout.fragment_time_picker)
 public class MMTimePickerFragment extends CoreFragment {
-    String []AmPm = new String[] {"AM", "PM"};
+    String[] AmPm = new String[]{"AM", "PM"};
     boolean isTimeChanged = false;
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
     @ViewById
-    TableRow row1,row2,row3,row4,row5;
+    TableRow row1, row2, row3, row4, row5;
 
     @ViewById
-    TextView txt_total_time,txt_alarm_days;
+    TextView txt_total_time, txt_alarm_days;
 
     @ViewById
     TextView txt_away;
@@ -56,35 +56,38 @@ public class MMTimePickerFragment extends CoreFragment {
     ImageView settingsActionBar;
 
     @Click
-    void row1(){
-        ((CoreActivity)getActivity()).loadChildFragment(new AwayFragment_(),R.id.mainView);
+    void row1() {
+        ((CoreActivity) getActivity()).loadChildFragment(new AwayFragment_(), R.id.mainView);
     }
+
     @Click
-    void row2(){
-        ((CoreActivity)getActivity()).loadChildFragment(new ActivitiesFragment_(),R.id.mainView);
+    void row2() {
+        ((CoreActivity) getActivity()).loadChildFragment(new ActivitiesFragment_(), R.id.mainView);
     }
+
     @Click
-    void row5(){
+    void row5() {
         scheduleAlarm();
     }
+
     @Click
-    void row4(){
-        ((CoreActivity)getActivity()).loadChildFragment(new RepeatFragment_(),R.id.mainView);
+    void row4() {
+        ((CoreActivity) getActivity()).loadChildFragment(new RepeatFragment_(), R.id.mainView);
 
     }
+
     @Click
-    void crossActionBar(){
+    void crossActionBar() {
         getActivity().onBackPressed();
     }
 
     @Click
-    void settingsActionBar(){
+    void settingsActionBar() {
         scheduleAlarm();
     }
 
 
-    public void scheduleAlarm()
-    {
+    public void scheduleAlarm() {
         // time at which alarm will be scheduled here alarm is scheduled at 1 day from current time,
         // we fetch  the current time in milliseconds and added 1 day time
         // i.e. 24*60*60*1000= 86,400,000   milliseconds in a day
@@ -97,27 +100,29 @@ public class MMTimePickerFragment extends CoreFragment {
         //time.setText((Integer.parseInt(hours.getCurrentItem()+"")+1)+":"+wheel.getCurrentItem()+" "+AmPm[ampm.getCurrentItem()]);
 
         //Long time =Long.parseLong(((hours.getCurrentItem()+1+timeAdjustment)*mins.getCurrentItem())*1000+"");
-        Calendar calendar =  Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY,hours.getCurrentItem()+1);
-        calendar.set(Calendar.MINUTE,mins.getCurrentItem());
-        calendar.set(Calendar.SECOND,0);
-       // Long time2 = new GregorianCalendar().getTimeInMillis()+1*1000;
-        if (ampm.getCurrentItem()==1){
-            calendar.set(Calendar.AM_PM,Calendar.PM);
-        }else {
-            calendar.set(Calendar.AM_PM,Calendar.AM);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hours.getCurrentItem() + 1);
+        calendar.set(Calendar.MINUTE, mins.getCurrentItem());
+        calendar.set(Calendar.SECOND, 0);
+        // Long time2 = new GregorianCalendar().getTimeInMillis()+1*1000;
+        if (ampm.getCurrentItem() == 1) {
+            calendar.set(Calendar.AM_PM, Calendar.PM);
+        } else {
+            calendar.set(Calendar.AM_PM, Calendar.AM);
         }
-        if (calendar.getTime().before(Calendar.getInstance().getTime())){
-            calendar.add(Calendar.DATE,1);
+        if (calendar.getTime().before(Calendar.getInstance().getTime())) {
+            calendar.add(Calendar.DATE, 1);
         }
 
-        AlarmController.setAlarm(getActivity(),calendar);
+        AlarmController.setAlarm(getActivity(), calendar);
 
     }
+
     @ViewById
-    AbstractWheel hours,mins,ampm;
+    AbstractWheel hours, mins, ampm;
+
     @AfterViews
-    void afterViews(){
+    void afterViews() {
 
         //String _hour,_minute,_amPM;
         NumericWheelAdapter hourAdapter = new NumericWheelAdapter(getActivity(), 1, 12, "%01d");
@@ -128,7 +133,7 @@ public class MMTimePickerFragment extends CoreFragment {
         hours.addChangingListener(new OnWheelChangedListener() {
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
                 isTimeChanged = true;
-                time.setText((Integer.parseInt(wheel.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+AmPm[ampm.getCurrentItem()]);
+                time.setText((Integer.parseInt(wheel.getCurrentItem() + "") + 1) + ":" + mins.getCurrentItem() + " " + AmPm[ampm.getCurrentItem()]);
             }
         });
 
@@ -141,7 +146,7 @@ public class MMTimePickerFragment extends CoreFragment {
         mins.addChangingListener(new OnWheelChangedListener() {
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
                 isTimeChanged = true;
-                time.setText((Integer.parseInt(hours.getCurrentItem()+"")+1)+":"+wheel.getCurrentItem()+" "+AmPm[ampm.getCurrentItem()]);
+                time.setText((Integer.parseInt(hours.getCurrentItem() + "") + 1) + ":" + wheel.getCurrentItem() + " " + AmPm[ampm.getCurrentItem()]);
             }
         });
 
@@ -153,7 +158,7 @@ public class MMTimePickerFragment extends CoreFragment {
         ampm.addChangingListener(new OnWheelChangedListener() {
             public void onChanged(AbstractWheel wheel, int oldValue, int newValue) {
                 isTimeChanged = true;
-                time.setText((Integer.parseInt(hours.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+" "+AmPm[wheel.getCurrentItem()]);
+                time.setText((Integer.parseInt(hours.getCurrentItem() + "") + 1) + ":" + mins.getCurrentItem() + " " + AmPm[wheel.getCurrentItem()]);
             }
         });
 
@@ -167,37 +172,37 @@ public class MMTimePickerFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (launcherPrefs.isAwayChecked().get()==true){
+        if (launcherPrefs.isAwayChecked().get() == true) {
             txt_away.setText("On");
-        }else {
+        } else {
             txt_away.setText("Off");
         }
 
         String SavedTime = launcherPrefs.time().get();
-        String [] timeArray = SavedTime.split(":");
-        hours.setCurrentItem(Integer.parseInt(timeArray[0])-1);
+        String[] timeArray = SavedTime.split(":");
+        hours.setCurrentItem(Integer.parseInt(timeArray[0]) - 1);
         mins.setCurrentItem(Integer.parseInt(timeArray[1]));
         ampm.setCurrentItem(Integer.parseInt(timeArray[2]));
 
         List<ActivitiesStorage> activitiesStorageList = DBUtility.getActivitySession().loadAll();
-        int time=0;
-        for(ActivitiesStorage activitiesStorage: activitiesStorageList){
-            time = time+activitiesStorage.getTime();
+        int time = 0;
+        for (ActivitiesStorage activitiesStorage : activitiesStorageList) {
+            time = time + activitiesStorage.getTime();
         }
 
-        txt_total_time.setText("Total: "+time+" min");
+        txt_total_time.setText("Total: " + time + " min");
         //String nameOfTheDays="";
         List<DaysOfWeekWhichWasSetAlarm> getAlarmActivatedDays = Utilities.getAlarmActivatedDays();
-        List<String>name = new ArrayList<>();
-        if (getAlarmActivatedDays.size()>=3){
+        List<String> name = new ArrayList<>();
+        if (getAlarmActivatedDays.size() >= 3) {
             txt_alarm_days.setText(Utilities.multiple);
-        }else {
+        } else {
 
-            for (DaysOfWeekWhichWasSetAlarm alarmDays : getAlarmActivatedDays){
-                name.add(alarmDays.getDay().substring(0,3));
+            for (DaysOfWeekWhichWasSetAlarm alarmDays : getAlarmActivatedDays) {
+                name.add(alarmDays.getDay().substring(0, 3));
             }
 
-            txt_alarm_days.setText(TextUtils.join(",",name)+"");
+            txt_alarm_days.setText(TextUtils.join(",", name) + "");
         }
 
     }
@@ -205,11 +210,11 @@ public class MMTimePickerFragment extends CoreFragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.e("TKB Paused","Paused");
+        Log.e("TKB Paused", "Paused");
         //This option is commented out because, the mindful morning should only triggered when the user click the
         // start button, but this option was giving a option to user if he did't click the button .
-        if (isTimeChanged){
-          //  launcherPrefs.time().put((Integer.parseInt(hours.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+":"+ampm.getCurrentItem());
+        if (isTimeChanged) {
+            //  launcherPrefs.time().put((Integer.parseInt(hours.getCurrentItem()+"")+1)+":"+mins.getCurrentItem()+":"+ampm.getCurrentItem());
         }
         isTimeChanged = false;
     }

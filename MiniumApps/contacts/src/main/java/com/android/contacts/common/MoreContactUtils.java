@@ -16,9 +16,6 @@
 
 package com.android.contacts.common;
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -30,6 +27,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.contacts.common.model.account.AccountType;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import minium.co.contacts.R;
 
@@ -47,7 +46,7 @@ public class MoreContactUtils {
      * instead
      */
     public static boolean shouldCollapse(CharSequence mimetype1, CharSequence data1,
-              CharSequence mimetype2, CharSequence data2) {
+                                         CharSequence mimetype2, CharSequence data2) {
         // different mimetypes? don't collapse
         if (!TextUtils.equals(mimetype1, mimetype2)) return false;
 
@@ -199,7 +198,7 @@ public class MoreContactUtils {
      * the first row or not.
      */
     public static void setHeaderViewBottomPadding(Context context, TextView textView,
-            boolean isFirstRow) {
+                                                  boolean isFirstRow) {
         final int topPadding;
         if (isFirstRow) {
             topPadding = (int) context.getResources().getDimension(

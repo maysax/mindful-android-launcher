@@ -44,7 +44,7 @@ public final class EventLogger {
      * Interface to allow customization of reporting behavior.
      */
     public static interface Reporter {
-        public void report (int code, Object... list);
+        public void report(int code, Object... list);
     }
 
     /**
@@ -52,7 +52,7 @@ public final class EventLogger {
      */
     private static final class DefaultReporter implements Reporter {
         @Override
-        public void report (int code, Object... list) {
+        public void report(int code, Object... list) {
             StringBuilder sb = new StringBuilder();
             sb.append(code);
             for (Object o : list) {

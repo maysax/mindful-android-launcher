@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2012 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2012 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,39 +13,27 @@
      limitations under the License.
 -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layout_marginLeft="?attr/list_item_padding_left"
     android:layout_marginRight="?attr/list_item_padding_right"
     android:layout_marginStart="?attr/list_item_padding_left"
-    android:layout_marginEnd="?attr/list_item_padding_right"
-    android:paddingBottom="6dip"
+    android:layout_marginEnd="?attr/list_item_padding_right" android:paddingBottom="6dip"
     android:background="@drawable/list_section_divider_holo_custom"
-    android:gravity="center_vertical"
-    android:orientation="vertical">
+    android:gravity="center_vertical" android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/account_type"
-        android:layout_width="match_parent"
+    <TextView android:id="@+id/account_type" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="?attr/list_item_header_text_indent"
         android:paddingStart="?attr/list_item_header_text_indent"
-        android:textAppearance="@style/DirectoryHeaderStyle"
-        android:singleLine="true"/>
+        android:textAppearance="@style/DirectoryHeaderStyle" android:singleLine="true" />
 
     <!-- TODO: Should use correct color with a correct name (content should be same).
          can use "?android:attr/textColorTertiary" -->
-    <TextView
-        android:id="@+id/account_name"
-        android:layout_width="match_parent"
+    <TextView android:id="@+id/account_name" android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="?attr/list_item_header_text_indent"
         android:paddingStart="?attr/list_item_header_text_indent"
-        android:textAppearance="@style/DirectoryHeaderStyle"
-        android:textAllCaps="false"
-        android:textSize="12sp"
-        android:singleLine="true"
-        android:ellipsize="middle" />
+        android:textAppearance="@style/DirectoryHeaderStyle" android:textAllCaps="false"
+        android:textSize="12sp" android:singleLine="true" android:ellipsize="middle" />
 </LinearLayout>

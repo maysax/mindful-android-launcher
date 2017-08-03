@@ -38,8 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.contacts.common.GeoUtil;
-import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.common.model.RawContactDelta;
+import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountWithDataSet;
@@ -88,18 +88,20 @@ public class RawContactReadOnlyEditorView extends BaseRawContactEditorView
         mListener = listener;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        mInflater = (LayoutInflater)getContext().getSystemService(
+        mInflater = (LayoutInflater) getContext().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
 
         mName = (TextView) findViewById(R.id.read_only_name);
         mEditExternallyButton = (Button) findViewById(R.id.button_edit_externally);
         mEditExternallyButton.setOnClickListener(this);
-        mGeneral = (ViewGroup)findViewById(R.id.sect_general);
+        mGeneral = (ViewGroup) findViewById(R.id.sect_general);
 
         mAccountContainer = findViewById(R.id.account_container);
         mAccountIcon = (ImageView) findViewById(R.id.account_icon);
@@ -114,7 +116,7 @@ public class RawContactReadOnlyEditorView extends BaseRawContactEditorView
      */
     @Override
     public void setState(RawContactDelta state, AccountType type, ViewIdGenerator vig,
-            boolean isProfile) {
+                         boolean isProfile) {
         // Remove any existing sections
         mGeneral.removeAllViews();
 
@@ -249,12 +251,12 @@ public class RawContactReadOnlyEditorView extends BaseRawContactEditorView
     }
 
     private void bindData(CharSequence titleText, CharSequence data, CharSequence type,
-            boolean isFirstEntry) {
+                          boolean isFirstEntry) {
         bindData(titleText, data, type, isFirstEntry, false);
     }
 
     private void bindData(CharSequence titleText, CharSequence data, CharSequence type,
-            boolean isFirstEntry, boolean forceLTR) {
+                          boolean isFirstEntry, boolean forceLTR) {
         final View field = mInflater.inflate(R.layout.item_read_only_field, mGeneral, false);
         final View divider = field.findViewById(R.id.divider);
         if (isFirstEntry) {

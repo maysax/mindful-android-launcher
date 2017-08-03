@@ -8,13 +8,13 @@
     android:background="@drawable/pause_background"
     tools:context="co.siempo.phone.pause.PauseActivity">
 
-   <!-- <ImageView
-        android:id="@+id/imgBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/pause_background"
-        android:contentDescription="@null"
-        android:visibility="visible"/>-->
+    <!-- <ImageView
+         android:id="@+id/imgBackground"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:src="@drawable/pause_background"
+         android:contentDescription="@null"
+         android:visibility="visible"/>-->
     <include
         android:id="@+id/included"
         layout="@layout/custom_toolbar_with_settings"
@@ -54,7 +54,7 @@
         app:thumb_image="@drawable/control_dial_handle"
         app:thumb_size="32dp"
         app:wheel_active_color="@color/pauseSeekBarActive"
-        app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
+        app:wheel_unactive_color="@color/pauseSeekBarInactive" />
 
     <LinearLayout
         android:id="@+id/endingLayout"
@@ -72,7 +72,7 @@
             android:fontFamily="sans-serif"
             android:text="..."
             android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

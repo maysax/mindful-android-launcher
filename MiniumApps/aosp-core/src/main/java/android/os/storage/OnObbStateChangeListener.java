@@ -76,8 +76,8 @@ public abstract class OnObbStateChangeListener {
 
     /**
      * Called when an OBB has changed states.
-     * 
-     * @param path path to the OBB file the state change has happened on
+     *
+     * @param path  path to the OBB file the state change has happened on
      * @param state the current state of the OBB
      */
     public void onObbStateChange(String path, int state) {

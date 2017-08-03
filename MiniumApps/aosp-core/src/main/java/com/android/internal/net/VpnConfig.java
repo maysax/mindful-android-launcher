@@ -58,7 +58,9 @@ public class VpnConfig implements Parcelable {
         return intent;
     }
 
-    /** NOTE: This should only be used for legacy VPN. */
+    /**
+     * NOTE: This should only be used for legacy VPN.
+     */
     public static PendingIntent getIntentForStatusPanel(Context context) {
         Intent intent = new Intent();
         intent.setClassName(DIALOGS_PACKAGE, DIALOGS_PACKAGE + ".ManageDialog");
@@ -166,32 +168,32 @@ public class VpnConfig implements Parcelable {
 
     public static final Parcelable.Creator<VpnConfig> CREATOR =
             new Parcelable.Creator<VpnConfig>() {
-        @Override
-        public VpnConfig createFromParcel(Parcel in) {
-            VpnConfig config = new VpnConfig();
-            config.user = in.readString();
-            config.interfaze = in.readString();
-            config.session = in.readString();
-            config.mtu = in.readInt();
-            in.readTypedList(config.addresses, LinkAddress.CREATOR);
-            in.readTypedList(config.routes, RouteInfo.CREATOR);
-            config.dnsServers = in.createStringArrayList();
-            config.searchDomains = in.createStringArrayList();
-            config.allowedApplications = in.createStringArrayList();
-            config.disallowedApplications = in.createStringArrayList();
-            config.configureIntent = in.readParcelable(null);
-            config.startTime = in.readLong();
-            config.legacy = in.readInt() != 0;
-            config.blocking = in.readInt() != 0;
-            config.allowBypass = in.readInt() != 0;
-            config.allowIPv4 = in.readInt() != 0;
-            config.allowIPv6 = in.readInt() != 0;
-            return config;
-        }
+                @Override
+                public VpnConfig createFromParcel(Parcel in) {
+                    VpnConfig config = new VpnConfig();
+                    config.user = in.readString();
+                    config.interfaze = in.readString();
+                    config.session = in.readString();
+                    config.mtu = in.readInt();
+                    in.readTypedList(config.addresses, LinkAddress.CREATOR);
+                    in.readTypedList(config.routes, RouteInfo.CREATOR);
+                    config.dnsServers = in.createStringArrayList();
+                    config.searchDomains = in.createStringArrayList();
+                    config.allowedApplications = in.createStringArrayList();
+                    config.disallowedApplications = in.createStringArrayList();
+                    config.configureIntent = in.readParcelable(null);
+                    config.startTime = in.readLong();
+                    config.legacy = in.readInt() != 0;
+                    config.blocking = in.readInt() != 0;
+                    config.allowBypass = in.readInt() != 0;
+                    config.allowIPv4 = in.readInt() != 0;
+                    config.allowIPv6 = in.readInt() != 0;
+                    return config;
+                }
 
-        @Override
-        public VpnConfig[] newArray(int size) {
-            return new VpnConfig[size];
-        }
-    };
+                @Override
+                public VpnConfig[] newArray(int size) {
+                    return new VpnConfig[size];
+                }
+            };
 }

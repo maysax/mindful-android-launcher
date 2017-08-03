@@ -38,32 +38,32 @@ import com.android.contacts.common.preference.ContactsPreferences;
 public class PostalAddressListAdapter extends ContactEntryListAdapter {
 
     protected static class PostalQuery {
-        private static final String[] PROJECTION_PRIMARY = new String[] {
-            StructuredPostal._ID,                       // 0
-            StructuredPostal.TYPE,                      // 1
-            StructuredPostal.LABEL,                     // 2
-            StructuredPostal.DATA,                      // 3
-            StructuredPostal.PHOTO_ID,                  // 4
-            StructuredPostal.LOOKUP_KEY,                // 5
-            StructuredPostal.DISPLAY_NAME_PRIMARY,      // 6
+        private static final String[] PROJECTION_PRIMARY = new String[]{
+                StructuredPostal._ID,                       // 0
+                StructuredPostal.TYPE,                      // 1
+                StructuredPostal.LABEL,                     // 2
+                StructuredPostal.DATA,                      // 3
+                StructuredPostal.PHOTO_ID,                  // 4
+                StructuredPostal.LOOKUP_KEY,                // 5
+                StructuredPostal.DISPLAY_NAME_PRIMARY,      // 6
         };
 
-        private static final String[] PROJECTION_ALTERNATIVE = new String[] {
-            StructuredPostal._ID,                       // 0
-            StructuredPostal.TYPE,                      // 1
-            StructuredPostal.LABEL,                     // 2
-            StructuredPostal.DATA,                      // 3
-            StructuredPostal.PHOTO_ID,                  // 4
-            StructuredPostal.LOOKUP_KEY,                // 5
-            StructuredPostal.DISPLAY_NAME_ALTERNATIVE,  // 6
+        private static final String[] PROJECTION_ALTERNATIVE = new String[]{
+                StructuredPostal._ID,                       // 0
+                StructuredPostal.TYPE,                      // 1
+                StructuredPostal.LABEL,                     // 2
+                StructuredPostal.DATA,                      // 3
+                StructuredPostal.PHOTO_ID,                  // 4
+                StructuredPostal.LOOKUP_KEY,                // 5
+                StructuredPostal.DISPLAY_NAME_ALTERNATIVE,  // 6
         };
 
-        public static final int POSTAL_ID           = 0;
-        public static final int POSTAL_TYPE         = 1;
-        public static final int POSTAL_LABEL        = 2;
-        public static final int POSTAL_ADDRESS      = 3;
-        public static final int POSTAL_PHOTO_ID     = 4;
-        public static final int POSTAL_LOOKUP_KEY   = 5;
+        public static final int POSTAL_ID = 0;
+        public static final int POSTAL_TYPE = 1;
+        public static final int POSTAL_LABEL = 2;
+        public static final int POSTAL_ADDRESS = 3;
+        public static final int POSTAL_PHOTO_ID = 4;
+        public static final int POSTAL_LOOKUP_KEY = 5;
         public static final int POSTAL_DISPLAY_NAME = 6;
     }
 
@@ -107,7 +107,7 @@ public class PostalAddressListAdapter extends ContactEntryListAdapter {
      * position.
      */
     public Uri getDataUri(int position) {
-        long id = ((Cursor)getItem(position)).getLong(PostalQuery.POSTAL_ID);
+        long id = ((Cursor) getItem(position)).getLong(PostalQuery.POSTAL_ID);
         return ContentUris.withAppendedId(Data.CONTENT_URI, id);
     }
 
@@ -124,7 +124,7 @@ public class PostalAddressListAdapter extends ContactEntryListAdapter {
     @Override
     protected void bindView(View itemView, int partition, Cursor cursor, int position) {
         super.bindView(itemView, partition, cursor, position);
-        ContactListItemView view = (ContactListItemView)itemView;
+        ContactListItemView view = (ContactListItemView) itemView;
         bindSectionHeaderAndDivider(view, position);
         bindName(view, cursor);
         bindViewId(view, cursor, PostalQuery.POSTAL_ID);
@@ -148,7 +148,7 @@ public class PostalAddressListAdapter extends ContactEntryListAdapter {
     protected void bindSectionHeaderAndDivider(final ContactListItemView view, int position) {
         final int section = getSectionForPosition(position);
         if (getPositionForSection(section) == position) {
-            String title = (String)getSections()[section];
+            String title = (String) getSections()[section];
             view.setSectionHeader(title);
         } else {
             view.setSectionHeader(null);

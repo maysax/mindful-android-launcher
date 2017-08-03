@@ -57,13 +57,13 @@ public class SlideshowEditActivity extends ListActivity {
     private static final boolean LOCAL_LOGV = false;
 
     // Menu ids.
-    private final static int MENU_MOVE_UP           = 0;
-    private final static int MENU_MOVE_DOWN         = 1;
-    private final static int MENU_REMOVE_SLIDE      = 2;
-    private final static int MENU_ADD_SLIDE         = 3;
+    private final static int MENU_MOVE_UP = 0;
+    private final static int MENU_MOVE_DOWN = 1;
+    private final static int MENU_REMOVE_SLIDE = 2;
+    private final static int MENU_ADD_SLIDE = 3;
     private final static int MENU_DISCARD_SLIDESHOW = 4;
 
-    private final static int REQUEST_CODE_EDIT_SLIDE         = 6;
+    private final static int REQUEST_CODE_EDIT_SLIDE = 6;
 
     // State.
     private final static String STATE = "state";
@@ -183,7 +183,7 @@ public class SlideshowEditActivity extends ListActivity {
     }
 
     @Override
-    protected void onPause()  {
+    protected void onPause() {
         super.onPause();
 
         synchronized (this) {
@@ -192,7 +192,7 @@ public class SlideshowEditActivity extends ListActivity {
                     PduBody pb = mSlideshowModel.toPduBody();
                     PduPersister.getPduPersister(this).updateParts(mUri, pb, null);
                     mSlideshowModel.sync(pb);
-                }  catch (MmsException e) {
+                } catch (MmsException e) {
                     Log.e(TAG, "Cannot update the message: " + mUri, e);
                 }
             }
@@ -308,7 +308,7 @@ public class SlideshowEditActivity extends ListActivity {
     }
 
     private void addNewSlide() {
-        if ( mSlideshowEditor.addNewSlide() ) {
+        if (mSlideshowEditor.addNewSlide()) {
             // add successfully
             mSlideListAdapter.notifyDataSetChanged();
 
@@ -323,12 +323,12 @@ public class SlideshowEditActivity extends ListActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
-            Intent data) {
+                                    Intent data) {
         if (resultCode != RESULT_OK) {
             return;
         }
 
-        switch(requestCode) {
+        switch (requestCode) {
             case REQUEST_CODE_EDIT_SLIDE:
                 synchronized (this) {
                     mDirty = true;
@@ -359,7 +359,7 @@ public class SlideshowEditActivity extends ListActivity {
         private final SlideshowModel mSlideshow;
 
         public SlideListAdapter(Context context, int resource,
-                SlideshowModel slideshow) {
+                                SlideshowModel slideshow) {
             super(context, resource, slideshow);
 
             mContext = context;
@@ -387,7 +387,7 @@ public class SlideshowEditActivity extends ListActivity {
             int dur = slide.getDuration() / 1000;
             text = (TextView) slideListItemView.findViewById(R.id.duration_text);
             text.setText(mContext.getResources().
-                         getQuantityString(R.plurals.slide_duration, dur, dur));
+                    getQuantityString(R.plurals.slide_duration, dur, dur));
 
             Presenter presenter = PresenterFactory.getPresenter(
                     "SlideshowPresenter", mContext, slideListItemView, mSlideshow);
@@ -399,19 +399,19 @@ public class SlideshowEditActivity extends ListActivity {
     }
 
     private final IModelChangedObserver mModelChangedObserver =
-        new IModelChangedObserver() {
-            public void onModelChanged(Model model, boolean dataChanged) {
-                synchronized (SlideshowEditActivity.this) {
-                    mDirty = true;
+            new IModelChangedObserver() {
+                public void onModelChanged(Model model, boolean dataChanged) {
+                    synchronized (SlideshowEditActivity.this) {
+                        mDirty = true;
+                    }
+                    setResult(RESULT_OK, mResultIntent);
+                    adjustAddSlideVisibility();
                 }
-                setResult(RESULT_OK, mResultIntent);
-                adjustAddSlideVisibility();
-            }
-        };
+            };
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
-            ContextMenuInfo menuInfo) {
+                                    ContextMenuInfo menuInfo) {
         menu.setHeaderTitle(R.string.slideshow_options);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -440,7 +440,7 @@ public class SlideshowEditActivity extends ListActivity {
         AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case MENU_MOVE_UP:
                 if ((position > 0) && (position < mSlideshowModel.size())) {
                     mSlideshowEditor.moveSlideUp(position);

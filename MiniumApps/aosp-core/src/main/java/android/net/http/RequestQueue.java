@@ -31,14 +31,14 @@ import android.net.Proxy;
 import android.net.WebAddress;
 import android.util.Log;
 
+import org.apache.http.HttpHost;
+
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Map;
-
-import org.apache.http.HttpHost;
 
 /**
  * {@hide}
@@ -64,7 +64,9 @@ public class RequestQueue implements RequestFeeder {
      * This class maintains active connection threads
      */
     class ActivePool implements ConnectionManager {
-        /** Threads used to process requests */
+        /**
+         * Threads used to process requests
+         */
         ConnectionThread[] mThreads;
 
         IdleCache mIdleCache;
@@ -154,7 +156,7 @@ public class RequestQueue implements RequestFeeder {
            private HashMap<HttpHost, LinkedList<ConnectionThread>> mActiveMap;
            if this turns out to be a hotspot */
         ConnectionThread getThread(HttpHost host) {
-            synchronized(RequestQueue.this) {
+            synchronized (RequestQueue.this) {
                 for (int i = 0; i < mThreads.length; i++) {
                     ConnectionThread ct = mThreads[i];
                     Connection connection = ct.mConnection;
@@ -176,6 +178,7 @@ public class RequestQueue implements RequestFeeder {
             }
             return con;
         }
+
         public boolean recycleConnection(Connection connection) {
             return mIdleCache.cacheConnection(connection.getHost(), connection);
         }
@@ -202,8 +205,8 @@ public class RequestQueue implements RequestFeeder {
      * is read.  It supports request prioritization, connection reuse
      * and pipelining.
      *
-     * @param context application context
-     * @param connectionCount The number of simultaneous connections 
+     * @param context         application context
+     * @param connectionCount The number of simultaneous connections
      */
     public RequestQueue(Context context, int connectionCount) {
         mContext = context;
@@ -232,7 +235,7 @@ public class RequestQueue implements RequestFeeder {
                         }
                     };
             mContext.registerReceiver(mProxyChangeReceiver,
-                                      new IntentFilter(Proxy.PROXY_CHANGE_ACTION));
+                    new IntentFilter(Proxy.PROXY_CHANGE_ACTION));
         }
         // we need to resample the current proxy setup
         setProxyConfig();
@@ -273,6 +276,7 @@ public class RequestQueue implements RequestFeeder {
 
     /**
      * used by webkit
+     *
      * @return proxy host if set, null otherwise
      */
     public HttpHost getProxyHost() {
@@ -281,13 +285,14 @@ public class RequestQueue implements RequestFeeder {
 
     /**
      * Queues an HTTP request
-     * @param url The url to load.
-     * @param method "GET" or "POST."
-     * @param headers A hashmap of http headers.
+     *
+     * @param url          The url to load.
+     * @param method       "GET" or "POST."
+     * @param headers      A hashmap of http headers.
      * @param eventHandler The event handler for handling returned
-     * data.  Callbacks will be made on the supplied instance.
+     *                     data.  Callbacks will be made on the supplied instance.
      * @param bodyProvider InputStream providing HTTP body, null if none
-     * @param bodyLength length of body, must be 0 if bodyProvider is null
+     * @param bodyLength   length of body, must be 0 if bodyProvider is null
      */
     public RequestHandle queueRequest(
             String url, String method,
@@ -295,19 +300,20 @@ public class RequestQueue implements RequestFeeder {
             InputStream bodyProvider, int bodyLength) {
         WebAddress uri = new WebAddress(url);
         return queueRequest(url, uri, method, headers, eventHandler,
-                            bodyProvider, bodyLength);
+                bodyProvider, bodyLength);
     }
 
     /**
      * Queues an HTTP request
-     * @param url The url to load.
-     * @param uri The uri of the url to load.
-     * @param method "GET" or "POST."
-     * @param headers A hashmap of http headers.
+     *
+     * @param url          The url to load.
+     * @param uri          The uri of the url to load.
+     * @param method       "GET" or "POST."
+     * @param headers      A hashmap of http headers.
      * @param eventHandler The event handler for handling returned
-     * data.  Callbacks will be made on the supplied instance.
+     *                     data.  Callbacks will be made on the supplied instance.
      * @param bodyProvider InputStream providing HTTP body, null if none
-     * @param bodyLength length of body, must be 0 if bodyProvider is null
+     * @param bodyLength   length of body, must be 0 if bodyProvider is null
      */
     public RequestHandle queueRequest(
             String url, WebAddress uri, String method, Map<String, String> headers,
@@ -327,7 +333,7 @@ public class RequestQueue implements RequestFeeder {
 
         // set up request
         req = new Request(method, httpHost, mProxyHost, uri.getPath(), bodyProvider,
-                          bodyLength, eventHandler, headers);
+                bodyLength, eventHandler, headers);
 
         queueRequest(req, false);
 
@@ -345,28 +351,33 @@ public class RequestQueue implements RequestFeeder {
         // This is used in the case where the request fails and needs to be
         // requeued into the RequestFeeder.
         private Request mRequest;
+
         SyncFeeder() {
         }
+
         public Request getRequest() {
             Request r = mRequest;
             mRequest = null;
             return r;
         }
+
         public Request getRequest(HttpHost host) {
             return getRequest();
         }
+
         public boolean haveRequest(HttpHost host) {
             return mRequest != null;
         }
+
         public void requeueRequest(Request r) {
             mRequest = r;
         }
     }
 
     public RequestHandle queueSynchronousRequest(String url, WebAddress uri,
-            String method, Map<String, String> headers,
-            EventHandler eventHandler, InputStream bodyProvider,
-            int bodyLength) {
+                                                 String method, Map<String, String> headers,
+                                                 EventHandler eventHandler, InputStream bodyProvider,
+                                                 int bodyLength) {
         if (HttpLog.LOGV) {
             HttpLog.v("RequestQueue.dispatchSynchronousRequest " + uri);
         }
@@ -430,7 +441,7 @@ public class RequestQueue implements RequestFeeder {
                 LinkedList<Request> reqList = entry.getValue();
                 ListIterator reqIter = reqList.listIterator(0);
                 while (iter.hasNext()) {
-                    Request request = (Request)iter.next();
+                    Request request = (Request) iter.next();
                     line.append(request + " ");
                 }
                 dump.append(line);
@@ -536,7 +547,9 @@ public class RequestQueue implements RequestFeeder {
      */
     interface ConnectionManager {
         HttpHost getProxyHost();
+
         Connection getConnection(Context context, HttpHost host);
+
         boolean recycleConnection(Connection connection);
     }
 }

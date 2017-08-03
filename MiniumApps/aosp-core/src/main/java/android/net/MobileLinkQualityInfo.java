@@ -19,9 +19,10 @@ package android.net;
 import android.os.Parcel;
 
 /**
- *  Class that represents useful attributes of mobile network links
- *  such as the upload/download throughput or error rate etc.
- *  @hide
+ * Class that represents useful attributes of mobile network links
+ * such as the upload/download throughput or error rate etc.
+ *
+ * @hide
  */
 public class MobileLinkQualityInfo extends LinkQualityInfo {
     // Represents TelephonyManager.NetworkType
@@ -41,6 +42,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * Implement the Parcelable interface.
+     *
      * @hide
      */
     @Override
@@ -63,6 +65,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
     }
 
     /* Un-parceling helper */
+
     /**
      * @hide
      */
@@ -91,6 +94,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns mobile network type as defined by {@link android.telephony.TelephonyManager}
+     *
      * @return network type or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getMobileNetworkType() {
@@ -106,6 +110,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns signal strength for GSM networks
+     *
      * @return signal strength in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getRssi() {
@@ -121,6 +126,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns error rates for GSM networks
+     *
      * @return error rate or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getGsmErrorRate() {
@@ -136,6 +142,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns signal strength for CDMA networks
+     *
      * @return signal strength in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getCdmaDbm() {
@@ -151,6 +158,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns signal to noise ratio for CDMA networks
+     *
      * @return signal to noise ratio in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getCdmaEcio() {
@@ -166,6 +174,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns signal strength for EVDO networks
+     *
      * @return signal strength in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getEvdoDbm() {
@@ -181,6 +190,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns signal to noise ratio for EVDO spectrum
+     *
      * @return signal to noise ration in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getEvdoEcio() {
@@ -196,6 +206,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns end-to-end signal to noise ratio for EVDO networks
+     *
      * @return signal to noise ration in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getEvdoSnr() {
@@ -211,6 +222,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns signal strength for LTE network
+     *
      * @return signal strength in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getLteSignalStrength() {
@@ -226,6 +238,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns RSRP (Reference Signal Received Power) for LTE network
+     *
      * @return RSRP in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getLteRsrp() {
@@ -241,6 +254,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns RSRQ (Reference Signal Received Quality) for LTE network
+     *
      * @return RSRQ ??? or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getLteRsrq() {
@@ -256,6 +270,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns signal to noise ratio for LTE networks
+     *
      * @return signal to noise ration in db or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getLteRssnr() {
@@ -271,6 +286,7 @@ public class MobileLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns channel quality indicator for LTE networks
+     *
      * @return CQI or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getLteCqi() {

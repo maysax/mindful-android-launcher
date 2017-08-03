@@ -30,13 +30,13 @@ import android.util.SparseArray;
  * that receives a device wakeup event and then passes the work off
  * to a {@link android.app.Service}, while ensuring that the
  * device does not go back to sleep during the transition.
- *
+ * <p>
  * <p>This class takes care of creating and managing a partial wake lock
  * for you; you must request the {@link android.Manifest.permission#WAKE_LOCK}
  * permission to use it.</p>
- *
+ * <p>
  * <h3>Example</h3>
- *
+ * <p>
  * <p>A {@link WakefulBroadcastReceiver} uses the method
  * {@link WakefulBroadcastReceiver#startWakefulService startWakefulService()}
  * to start the service that does the work. This method is comparable to
@@ -45,16 +45,16 @@ import android.util.SparseArray;
  * starts. The intent that is passed with
  * {@link WakefulBroadcastReceiver#startWakefulService startWakefulService()}
  * holds an extra identifying the wake lock.</p>
- *
+ * <p>
  * {@sample development/samples/Support4Demos/src/com/example/android/supportv4/content/SimpleWakefulReceiver.java complete}
- *
+ * <p>
  * <p>The service (in this example, an {@link android.app.IntentService}) does
  * some work. When it is finished, it releases the wake lock by calling
  * {@link WakefulBroadcastReceiver#completeWakefulIntent
  * completeWakefulIntent(intent)}. The intent it passes as a parameter
  * is the same intent that the {@link WakefulBroadcastReceiver} originally
  * passed in.</p>
- *
+ * <p>
  * {@sample development/samples/Support4Demos/src/com/example/android/supportv4/content/SimpleWakefulService.java complete}
  */
 public abstract class WakefulBroadcastReceiver extends BroadcastReceiver {
@@ -74,9 +74,9 @@ public abstract class WakefulBroadcastReceiver extends BroadcastReceiver {
      * the wake lock.
      *
      * @param context The Context in which it operate.
-     * @param intent The Intent with which to start the service, as per
-     * {@link android.content.Context#startService(android.content.Intent)
-     * Context.startService}.
+     * @param intent  The Intent with which to start the service, as per
+     *                {@link android.content.Context#startService(android.content.Intent)
+     *                Context.startService}.
      */
     public static ComponentName startWakefulService(Context context, Intent intent) {
         synchronized (mActiveWakeLocks) {
@@ -92,11 +92,11 @@ public abstract class WakefulBroadcastReceiver extends BroadcastReceiver {
                 return null;
             }
 
-            PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     "wake:" + comp.flattenToShortString());
             wl.setReferenceCounted(false);
-            wl.acquire(60*1000);
+            wl.acquire(60 * 1000);
             mActiveWakeLocks.put(id, wl);
             return comp;
         }

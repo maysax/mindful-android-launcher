@@ -25,9 +25,9 @@ import java.util.regex.Pattern;
 
 /**
  * Information identifying a Wi-Fi network.
- * @see NetworkKey
  *
  * @hide
+ * @see NetworkKey
  */
 @SystemApi
 public class WifiKey implements Parcelable {
@@ -54,12 +54,12 @@ public class WifiKey implements Parcelable {
     /**
      * Construct a new {@link WifiKey} for the given Wi-Fi SSID/BSSID pair.
      *
-     * @param ssid the service set identifier (SSID) of an 802.11 network. If the SSID can be
-     *         decoded as UTF-8, it should be surrounded by double quotation marks. Otherwise,
-     *         it should be a string of hex digits starting with 0x.
+     * @param ssid  the service set identifier (SSID) of an 802.11 network. If the SSID can be
+     *              decoded as UTF-8, it should be surrounded by double quotation marks. Otherwise,
+     *              it should be a string of hex digits starting with 0x.
      * @param bssid the basic service set identifier (BSSID) of this network's access point.
-     *         This should be in the form of a six-byte MAC address: {@code XX:XX:XX:XX:XX:XX},
-     *         where each X is a hexadecimal digit.
+     *              This should be in the form of a six-byte MAC address: {@code XX:XX:XX:XX:XX:XX},
+     *              where each X is a hexadecimal digit.
      * @throws IllegalArgumentException if either the SSID or BSSID is invalid.
      */
     public WifiKey(String ssid, String bssid) {

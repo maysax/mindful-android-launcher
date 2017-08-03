@@ -16,15 +16,6 @@
 
 package com.android.contacts.detail;
 
-import com.google.common.collect.Iterables;
-
-import com.android.contacts.common.model.Contact;
-import com.android.contacts.common.model.RawContact;
-import com.android.contacts.common.model.dataitem.DataItem;
-import com.android.contacts.common.model.dataitem.OrganizationDataItem;
-import com.android.contacts.common.preference.ContactsPreferences;
-import com.android.contacts.util.MoreMath;
-
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -43,6 +34,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.android.contacts.common.model.Contact;
+import com.android.contacts.common.model.RawContact;
+import com.android.contacts.common.model.dataitem.DataItem;
+import com.android.contacts.common.model.dataitem.OrganizationDataItem;
+import com.android.contacts.common.preference.ContactsPreferences;
+import com.android.contacts.util.MoreMath;
+import com.google.common.collect.Iterables;
 
 import java.util.List;
 
@@ -158,7 +157,7 @@ public class ContactDisplayUtils {
      * Sets the starred state of this contact.
      */
     public static void configureStarredImageView(ImageView starredView, boolean isDirectoryEntry,
-            boolean isUserProfile, boolean isStarred) {
+                                                 boolean isUserProfile, boolean isStarred) {
         // Check if the starred state should be visible
         if (!isDirectoryEntry && !isUserProfile) {
             starredView.setVisibility(View.VISIBLE);
@@ -178,7 +177,7 @@ public class ContactDisplayUtils {
      * Sets the starred state of this contact.
      */
     public static void configureStarredMenuItem(MenuItem starredMenuItem, boolean isDirectoryEntry,
-            boolean isUserProfile, boolean isStarred) {
+                                                boolean isUserProfile, boolean isStarred) {
         // Check if the starred state should be visible
         if (!isDirectoryEntry && !isUserProfile) {
             starredMenuItem.setVisible(true);
@@ -260,9 +259,13 @@ public class ContactDisplayUtils {
         return sImageGetter;
     }
 
-    /** Fetcher for images from resources to be included in HTML text. */
+    /**
+     * Fetcher for images from resources to be included in HTML text.
+     */
     private static class DefaultImageGetter implements Html.ImageGetter {
-        /** The scheme used to load resources. */
+        /**
+         * The scheme used to load resources.
+         */
         private static final String RES_SCHEME = "res";
 
         private final PackageManager mPackageManager;
@@ -317,7 +320,9 @@ public class ContactDisplayUtils {
             }
         }
 
-        /** Returns the drawable associated with the given id. */
+        /**
+         * Returns the drawable associated with the given id.
+         */
         private Drawable getResourceDrawable(Resources resources, int resId)
                 throws NotFoundException {
             Drawable drawable = resources.getDrawable(resId);
@@ -325,7 +330,9 @@ public class ContactDisplayUtils {
             return drawable;
         }
 
-        /** Returns the {@link Resources} of the package of the given resource name. */
+        /**
+         * Returns the {@link Resources} of the package of the given resource name.
+         */
         private Resources getResourcesForResourceName(String packageName) {
             try {
                 return mPackageManager.getResourcesForApplication(packageName);
@@ -364,8 +371,9 @@ public class ContactDisplayUtils {
     /**
      * Tries to scroll the first item in the list to the given offset (this can be a no-op if the
      * list is already in the correct position).
+     *
      * @param listView that should be scrolled
-     * @param offset which should be <= 0
+     * @param offset   which should be <= 0
      */
     public static void requestToMoveToOffset(ListView listView, int offset) {
         // We try to offset the list if the first item in the list is showing (which is presumed

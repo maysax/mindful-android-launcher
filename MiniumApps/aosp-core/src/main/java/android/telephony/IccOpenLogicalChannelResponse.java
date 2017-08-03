@@ -31,7 +31,7 @@ public class IccOpenLogicalChannelResponse implements Parcelable {
 
     /**
      * Possible status values returned by open channel command.
-     *
+     * <p>
      * STATUS_NO_ERROR: Open channel command returned successfully.
      * STATUS_MISSING_RESOURCE: No logical channels available.
      * STATUS_NO_SUCH_ELEMENT: AID not found on UICC.
@@ -111,17 +111,17 @@ public class IccOpenLogicalChannelResponse implements Parcelable {
     }
 
     public static final Parcelable.Creator<IccOpenLogicalChannelResponse> CREATOR
-             = new Parcelable.Creator<IccOpenLogicalChannelResponse>() {
+            = new Parcelable.Creator<IccOpenLogicalChannelResponse>() {
 
         @Override
         public IccOpenLogicalChannelResponse createFromParcel(Parcel in) {
-             return new IccOpenLogicalChannelResponse(in);
-         }
+            return new IccOpenLogicalChannelResponse(in);
+        }
 
-         public IccOpenLogicalChannelResponse[] newArray(int size) {
-             return new IccOpenLogicalChannelResponse[size];
-         }
-     };
+        public IccOpenLogicalChannelResponse[] newArray(int size) {
+            return new IccOpenLogicalChannelResponse[size];
+        }
+    };
 
     @Override
     public String toString() {

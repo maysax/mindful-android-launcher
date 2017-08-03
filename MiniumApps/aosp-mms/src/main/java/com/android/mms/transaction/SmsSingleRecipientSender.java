@@ -1,7 +1,5 @@
 package com.android.mms.transaction;
 
-import java.util.ArrayList;
-
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +16,8 @@ import com.android.mms.data.Conversation;
 import com.android.mms.ui.MessageUtils;
 import com.google.android.mms.MmsException;
 
+import java.util.ArrayList;
+
 public class SmsSingleRecipientSender extends SmsMessageSender {
 
     private final boolean mRequestDeliveryReport;
@@ -26,7 +26,7 @@ public class SmsSingleRecipientSender extends SmsMessageSender {
     private static final String TAG = LogTag.TAG;
 
     public SmsSingleRecipientSender(Context context, String dest, String msgText, long threadId,
-            boolean requestDeliveryReport, Uri uri) {
+                                    boolean requestDeliveryReport, Uri uri) {
         super(context, null, msgText, threadId);
         mRequestDeliveryReport = requestDeliveryReport;
         mDest = dest;
@@ -76,7 +76,7 @@ public class SmsSingleRecipientSender extends SmsMessageSender {
                     mRequestDeliveryReport);
         }
 
-        ArrayList<PendingIntent> deliveryIntents =  new ArrayList<PendingIntent>(messageCount);
+        ArrayList<PendingIntent> deliveryIntents = new ArrayList<PendingIntent>(messageCount);
         ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(messageCount);
         for (int i = 0; i < messageCount; i++) {
             if (mRequestDeliveryReport && (i == (messageCount - 1))) {
@@ -90,17 +90,17 @@ public class SmsSingleRecipientSender extends SmsMessageSender {
                                 mUri,
                                 mContext,
                                 MessageStatusReceiver.class),
-                                0));
+                        0));
             } else {
                 deliveryIntents.add(null);
             }
-            Intent intent  = new Intent(SmsReceiverService.MESSAGE_SENT_ACTION,
+            Intent intent = new Intent(SmsReceiverService.MESSAGE_SENT_ACTION,
                     mUri,
                     mContext,
                     SmsReceiver.class);
 
             int requestCode = 0;
-            if (i == messageCount -1) {
+            if (i == messageCount - 1) {
                 // Changing the requestCode so that a different pending intent
                 // is created for the last fragment with
                 // EXTRA_MESSAGE_SENT_SEND_NEXT set to true.

@@ -56,8 +56,9 @@ public class DataUtils {
 
     /**
      * Wrap 'notes' array into a root object and store in file 'toFile'
+     *
      * @param toFile File to store notes into
-     * @param notes Array of notes to be saved
+     * @param notes  Array of notes to be saved
      * @return true if successfully saved, false otherwise
      */
     public static boolean saveData(File toFile, JSONArray notes) {
@@ -153,6 +154,7 @@ public class DataUtils {
 
     /**
      * Read from file 'fromFile' and return parsed JSONArray of notes
+     *
      * @param fromFile File we are reading from
      * @return JSONArray of notes
      */
@@ -233,7 +235,8 @@ public class DataUtils {
 
     /**
      * Create new JSONArray of notes from 'from' without the notes at positions in 'selectedNotes'
-     * @param from Main notes array to delete from
+     *
+     * @param from          Main notes array to delete from
      * @param selectedNotes ArrayList of Integer which represent note positions to be deleted
      * @return New JSONArray of notes without the notes at positions 'selectedNotes'
      */
@@ -261,6 +264,7 @@ public class DataUtils {
 
     /**
      * Check if external storage is writable or not
+     *
      * @return true if writable, false otherwise
      */
     public static boolean isExternalStorageWritable() {
@@ -269,6 +273,7 @@ public class DataUtils {
 
     /**
      * Check if external storage is readable or not
+     *
      * @return true if readable, false otherwise
      */
     public static boolean isExternalStorageReadable() {

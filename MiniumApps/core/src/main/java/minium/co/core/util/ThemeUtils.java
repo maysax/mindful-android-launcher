@@ -25,7 +25,7 @@ public class ThemeUtils {
 
     private static int getThemeColor(Context context, int attr) {
         TypedValue typedValue = new TypedValue();
-        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[] { attr });
+        TypedArray a = context.obtainStyledAttributes(typedValue.data, new int[]{attr});
         int color = a.getColor(0, 0);
         a.recycle();
         return color;

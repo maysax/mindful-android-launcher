@@ -27,7 +27,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 /**
  * Denotes that an integer parameter, field or method return value is expected
  * to be a raw resource reference.
- *
+ * <p>
  * {@hide}
  */
 @Documented

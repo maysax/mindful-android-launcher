@@ -115,7 +115,7 @@ public class PacProxySelector extends ProxySelector {
             String host = hostPort[0];
             int port = Integer.parseInt(hostPort[1]);
             return new Proxy(type, InetSocketAddress.createUnresolved(host, port));
-        } catch (NumberFormatException|ArrayIndexOutOfBoundsException e) {
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
             Log.d(TAG, "Unable to parse proxy " + hostPortString + " " + e);
             return null;
         }

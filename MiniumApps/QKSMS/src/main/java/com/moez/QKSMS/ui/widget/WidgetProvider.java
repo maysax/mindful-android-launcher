@@ -77,7 +77,7 @@ public class WidgetProvider extends AppWidgetProvider {
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager,
                                           int appWidgetId, Bundle newOptions) {
         Log.v("TAG", "Changed widget dimensions");
-        updateWidget(context, appWidgetId, isSmallWidget(appWidgetManager,appWidgetId));
+        updateWidget(context, appWidgetId, isSmallWidget(appWidgetManager, appWidgetId));
 
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
     }

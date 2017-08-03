@@ -22,15 +22,21 @@ import com.android.vcard.VCardEntry;
 
 interface VCardImportExportListener {
     void onImportProcessed(ImportRequest request, int jobId, int sequence);
+
     void onImportParsed(ImportRequest request, int jobId, VCardEntry entry, int currentCount,
-            int totalCount);
+                        int totalCount);
+
     void onImportFinished(ImportRequest request, int jobId, Uri uri);
+
     void onImportFailed(ImportRequest request);
+
     void onImportCanceled(ImportRequest request, int jobId);
 
     void onExportProcessed(ExportRequest request, int jobId);
+
     void onExportFailed(ExportRequest request);
 
     void onCancelRequest(CancelRequest request, int type);
+
     void onComplete();
 }

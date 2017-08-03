@@ -12,6 +12,7 @@ public class Notification {
     private co.siempo.phone.notification.NotificationContactModel notificationContactModel;
     private int notificationType;
     private String number;
+
     public Notification(co.siempo.phone.notification.NotificationContactModel notificationContactModel, Long id, String number, String _text, String _time, boolean _status, int notificationType) {
         this.notificationContactModel = notificationContactModel;
         this.id = id;

@@ -30,7 +30,7 @@ import android.widget.Toast;
 public final class SqliteWrapper {
     private static final String TAG = "SqliteWrapper";
     private static final String SQLITE_EXCEPTION_DETAIL_MESSAGE
-                = "unable to open database file";
+            = "unable to open database file";
 
     private SqliteWrapper() {
         // Forbidden being instantiated.
@@ -44,7 +44,7 @@ public final class SqliteWrapper {
         }
 
         ActivityManager am = (ActivityManager)
-                        context.getSystemService(Context.ACTIVITY_SERVICE);
+                context.getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo outInfo = new ActivityManager.MemoryInfo();
         am.getMemoryInfo(outInfo);
 
@@ -66,7 +66,7 @@ public final class SqliteWrapper {
     }
 
     public static Cursor query(Context context, ContentResolver resolver, Uri uri,
-            String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+                               String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         try {
             return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
         } catch (SQLiteException e) {
@@ -85,8 +85,9 @@ public final class SqliteWrapper {
             return false;
         }
     }
+
     public static int update(Context context, ContentResolver resolver, Uri uri,
-            ContentValues values, String where, String[] selectionArgs) {
+                             ContentValues values, String where, String[] selectionArgs) {
         try {
             return resolver.update(uri, values, where, selectionArgs);
         } catch (SQLiteException e) {
@@ -97,7 +98,7 @@ public final class SqliteWrapper {
     }
 
     public static int delete(Context context, ContentResolver resolver, Uri uri,
-            String where, String[] selectionArgs) {
+                             String where, String[] selectionArgs) {
         try {
             return resolver.delete(uri, where, selectionArgs);
         } catch (SQLiteException e) {
@@ -108,7 +109,7 @@ public final class SqliteWrapper {
     }
 
     public static Uri insert(Context context, ContentResolver resolver,
-            Uri uri, ContentValues values) {
+                             Uri uri, ContentValues values) {
         try {
             return resolver.insert(uri, values);
         } catch (SQLiteException e) {

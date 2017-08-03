@@ -28,6 +28,7 @@ public class AwayFragment extends CoreFragment {
     public AwayFragment() {
         // Required empty public constructor
     }
+
     @ViewById
     Switch switch_away;
 
@@ -38,7 +39,7 @@ public class AwayFragment extends CoreFragment {
     EditText text_update_message;
 
     @Click
-    void crossActionBar(){
+    void crossActionBar() {
         launcherPrefs.awayMessage().put(text_update_message.getText().toString());
         getActivity().onBackPressed();
 

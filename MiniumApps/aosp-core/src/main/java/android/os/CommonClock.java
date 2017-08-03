@@ -15,19 +15,22 @@
  */
 package android.os;
 
-import java.net.InetSocketAddress;
-import java.util.NoSuchElementException;
 import android.os.Binder;
 import android.os.CommonTimeUtils;
 import android.os.IBinder;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+
+import java.net.InetSocketAddress;
+import java.util.NoSuchElementException;
+
 import static android.system.OsConstants.*;
 
 /**
  * Used for accessing the android common time service's common clock and receiving notifications
  * about common time synchronization status changes.
+ *
  * @hide
  */
 public class CommonClock {
@@ -107,10 +110,11 @@ public class CommonClock {
 
     /**
      * Class constructor.
+     *
      * @throws android.os.RemoteException
      */
     public CommonClock()
-    throws RemoteException {
+            throws RemoteException {
         mRemote = ServiceManager.getService(SERVICE_NAME);
         if (null == mRemote)
             throw new RemoteException();
@@ -129,8 +133,7 @@ public class CommonClock {
 
         try {
             retVal = new CommonClock();
-        }
-        catch (RemoteException e) {
+        } catch (RemoteException e) {
             retVal = null;
         }
 
@@ -151,8 +154,8 @@ public class CommonClock {
         if (null != mRemote) {
             try {
                 mRemote.unlinkToDeath(mDeathHandler, 0);
+            } catch (NoSuchElementException e) {
             }
-            catch (NoSuchElementException e) { }
             mRemote = null;
         }
         mUtils = null;
@@ -167,7 +170,7 @@ public class CommonClock {
      * @throws android.os.RemoteException
      */
     public long getTime()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetLong(METHOD_GET_COMMON_TIME, TIME_NOT_SYNCED);
     }
@@ -186,7 +189,7 @@ public class CommonClock {
      * @throws android.os.RemoteException
      */
     public int getEstimatedError()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetInt(METHOD_GET_ESTIMATED_ERROR, ERROR_ESTIMATE_UNKNOWN);
     }
@@ -200,7 +203,7 @@ public class CommonClock {
      * @throws android.os.RemoteException
      */
     public long getTimelineId()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetLong(METHOD_GET_TIMELINE_ID, INVALID_TIMELINE_ID);
     }
@@ -214,7 +217,7 @@ public class CommonClock {
      * @throws android.os.RemoteException
      */
     public int getState()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetInt(METHOD_GET_STATE, STATE_INVALID);
     }
@@ -227,7 +230,7 @@ public class CommonClock {
      * @throws android.os.RemoteException
      */
     public InetSocketAddress getMasterAddr()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetSockaddr(METHOD_GET_MASTER_ADDRESS);
     }
@@ -239,13 +242,13 @@ public class CommonClock {
      * client application can implement this interface and register the listener with the
      * {@link #setTimelineChangedListener(OnTimelineChangedListener)} method.
      */
-    public interface OnTimelineChangedListener  {
+    public interface OnTimelineChangedListener {
         /**
          * Method called when the time service's timeline has changed.
          *
          * @param newTimelineId a long which uniquely identifies the timeline the time
-         * synchronization service is now a member of, or {@link #INVALID_TIMELINE_ID} if the the
-         * service is not synchronized to any timeline.
+         *                      synchronization service is now a member of, or {@link #INVALID_TIMELINE_ID} if the the
+         *                      service is not synchronized to any timeline.
          */
         void onTimelineChanged(long newTimelineId);
     }
@@ -267,7 +270,7 @@ public class CommonClock {
      * released and re-created.  The client application can implement this interface and register
      * the listener with the {@link #setServerDiedListener(OnServerDiedListener)} method.
      */
-    public interface OnServerDiedListener  {
+    public interface OnServerDiedListener {
         /**
          * Method called when the native media server has died.  <p>If the native common time
          * service encounters a fatal error and needs to restart, the binder connection from the
@@ -288,7 +291,9 @@ public class CommonClock {
         }
     }
 
-    protected void finalize() throws Throwable { release(); }
+    protected void finalize() throws Throwable {
+        release();
+    }
 
     private void throwOnDeadServer() throws RemoteException {
         if ((null == mRemote) || (null == mUtils))
@@ -315,7 +320,7 @@ public class CommonClock {
     private class TimelineChangedListener extends Binder {
         @Override
         protected boolean onTransact(int code, Parcel data, Parcel reply, int flags)
-        throws RemoteException {
+                throws RemoteException {
             switch (code) {
                 case METHOD_CBK_ON_TIMELINE_CHANGED:
                     data.enforceInterface(DESCRIPTOR);
@@ -331,7 +336,9 @@ public class CommonClock {
         }
 
         private static final String DESCRIPTOR = "android.os.ICommonClockListener";
-    };
+    }
+
+    ;
 
     private TimelineChangedListener mCallbackTgt = null;
 
@@ -340,7 +347,7 @@ public class CommonClock {
             return;
 
         boolean success = false;
-        android.os.Parcel data  = android.os.Parcel.obtain();
+        android.os.Parcel data = android.os.Parcel.obtain();
         android.os.Parcel reply = android.os.Parcel.obtain();
         mCallbackTgt = new TimelineChangedListener();
 
@@ -349,11 +356,9 @@ public class CommonClock {
             data.writeStrongBinder(mCallbackTgt);
             mRemote.transact(METHOD_REGISTER_LISTENER, data, reply, 0);
             success = (0 == reply.readInt());
-        }
-        catch (RemoteException e) {
+        } catch (RemoteException e) {
             success = false;
-        }
-        finally {
+        } finally {
             reply.recycle();
             data.recycle();
         }
@@ -372,16 +377,15 @@ public class CommonClock {
         if (null == mCallbackTgt)
             return;
 
-        android.os.Parcel data  = android.os.Parcel.obtain();
+        android.os.Parcel data = android.os.Parcel.obtain();
         android.os.Parcel reply = android.os.Parcel.obtain();
 
         try {
             data.writeInterfaceToken(mInterfaceDesc);
             data.writeStrongBinder(mCallbackTgt);
             mRemote.transact(METHOD_UNREGISTER_LISTENER, data, reply, 0);
-        }
-        catch (RemoteException e) { }
-        finally {
+        } catch (RemoteException e) {
+        } finally {
             reply.recycle();
             data.recycle();
             mCallbackTgt = null;

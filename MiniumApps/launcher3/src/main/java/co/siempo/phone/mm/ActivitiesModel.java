@@ -27,7 +27,7 @@ public class ActivitiesModel {
     }
 
     public ArrayList<ActivitiesModel> getActivityModel() {
-        String[] values = {"Meditation","Workout","Reading","Journaling","Pause"};
+        String[] values = {"Meditation", "Workout", "Reading", "Journaling", "Pause"};
 
         ArrayList<ActivitiesModel> activitiDataArray = new ArrayList<>();
         ActivitiesModel activitiesModel;
@@ -43,7 +43,7 @@ public class ActivitiesModel {
     }
 
     public ArrayList<ActivitiesModel> getActivityModel2() {
-        String[] values = {"Meditation","Workout","Reading"};
+        String[] values = {"Meditation", "Workout", "Reading"};
 
         ArrayList<ActivitiesModel> activitiDataArray = new ArrayList<>();
         ActivitiesModel activitiesModel;

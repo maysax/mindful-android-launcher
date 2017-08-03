@@ -19,21 +19,11 @@ package android.net;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
-
-import java.lang.IllegalArgumentException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * This class represents the capabilities of a network.  This is used both to specify
  * needs to {@link ConnectivityManager} and when inspecting a network.
- *
+ * <p>
  * Note that this replaces the old {@link ConnectivityManager#TYPE_MOBILE} method
  * of network selection.  Rather than indicate a need for Wi-Fi because an application
  * needs high bandwidth and risk obselence when a new, fast network appears (like LTE),
@@ -72,77 +62,77 @@ public final class NetworkCapabilities implements Parcelable {
      * Indicates this is a network that has the ability to reach the
      * carrier's MMSC for sending and receiving MMS messages.
      */
-    public static final int NET_CAPABILITY_MMS            = 0;
+    public static final int NET_CAPABILITY_MMS = 0;
 
     /**
      * Indicates this is a network that has the ability to reach the carrier's
      * SUPL server, used to retrieve GPS information.
      */
-    public static final int NET_CAPABILITY_SUPL           = 1;
+    public static final int NET_CAPABILITY_SUPL = 1;
 
     /**
      * Indicates this is a network that has the ability to reach the carrier's
      * DUN or tethering gateway.
      */
-    public static final int NET_CAPABILITY_DUN            = 2;
+    public static final int NET_CAPABILITY_DUN = 2;
 
     /**
      * Indicates this is a network that has the ability to reach the carrier's
      * FOTA portal, used for over the air updates.
      */
-    public static final int NET_CAPABILITY_FOTA           = 3;
+    public static final int NET_CAPABILITY_FOTA = 3;
 
     /**
      * Indicates this is a network that has the ability to reach the carrier's
      * IMS servers, used for network registration and signaling.
      */
-    public static final int NET_CAPABILITY_IMS            = 4;
+    public static final int NET_CAPABILITY_IMS = 4;
 
     /**
      * Indicates this is a network that has the ability to reach the carrier's
      * CBS servers, used for carrier specific services.
      */
-    public static final int NET_CAPABILITY_CBS            = 5;
+    public static final int NET_CAPABILITY_CBS = 5;
 
     /**
      * Indicates this is a network that has the ability to reach a Wi-Fi direct
      * peer.
      */
-    public static final int NET_CAPABILITY_WIFI_P2P       = 6;
+    public static final int NET_CAPABILITY_WIFI_P2P = 6;
 
     /**
      * Indicates this is a network that has the ability to reach a carrier's
      * Initial Attach servers.
      */
-    public static final int NET_CAPABILITY_IA             = 7;
+    public static final int NET_CAPABILITY_IA = 7;
 
     /**
      * Indicates this is a network that has the ability to reach a carrier's
      * RCS servers, used for Rich Communication Services.
      */
-    public static final int NET_CAPABILITY_RCS            = 8;
+    public static final int NET_CAPABILITY_RCS = 8;
 
     /**
      * Indicates this is a network that has the ability to reach a carrier's
      * XCAP servers, used for configuration and control.
      */
-    public static final int NET_CAPABILITY_XCAP           = 9;
+    public static final int NET_CAPABILITY_XCAP = 9;
 
     /**
      * Indicates this is a network that has the ability to reach a carrier's
      * Emergency IMS servers, used for network signaling during emergency calls.
      */
-    public static final int NET_CAPABILITY_EIMS           = 10;
+    public static final int NET_CAPABILITY_EIMS = 10;
 
     /**
      * Indicates that this network is unmetered.
      */
-    public static final int NET_CAPABILITY_NOT_METERED    = 11;
+    public static final int NET_CAPABILITY_NOT_METERED = 11;
 
     /**
      * Indicates that this network should be able to reach the internet.
      */
-    public static final int NET_CAPABILITY_INTERNET       = 12;
+    public static final int NET_CAPABILITY_INTERNET = 12;
 
     /**
      * Indicates that this network is available for general use.  If this is not set
@@ -158,13 +148,13 @@ public final class NetworkCapabilities implements Parcelable {
      * BT device or a wifi the user asked to connect to.  Untrusted networks
      * are probably limited to unknown wifi AP.  Set by default.
      */
-    public static final int NET_CAPABILITY_TRUSTED        = 14;
+    public static final int NET_CAPABILITY_TRUSTED = 14;
 
     /*
      * Indicates that this network is not a VPN.  This capability is set by default and should be
      * explicitly cleared when creating VPN networks.
      */
-    public static final int NET_CAPABILITY_NOT_VPN        = 15;
+    public static final int NET_CAPABILITY_NOT_VPN = 15;
 
 
     private static final int MIN_NET_CAPABILITY = NET_CAPABILITY_MMS;
@@ -206,7 +196,7 @@ public final class NetworkCapabilities implements Parcelable {
      * Gets all the capabilities set on this {@code NetworkCapability} instance.
      *
      * @return an array of {@code NetworkCapabilities.NET_CAPABILITY_*} values
-     *         for this instance.
+     * for this instance.
      * @hide
      */
     public int[] getCapabilities() {
@@ -329,7 +319,7 @@ public final class NetworkCapabilities implements Parcelable {
      * Gets all the transports set on this {@code NetworkCapability} instance.
      *
      * @return an array of {@code NetworkCapabilities.TRANSPORT_*} values
-     *         for this instance.
+     * for this instance.
      * @hide
      */
     public int[] getTransportTypes() {
@@ -352,10 +342,12 @@ public final class NetworkCapabilities implements Parcelable {
     private void combineTransportTypes(NetworkCapabilities nc) {
         this.mTransportTypes |= nc.mTransportTypes;
     }
+
     private boolean satisfiedByTransportTypes(NetworkCapabilities nc) {
         return ((this.mTransportTypes == 0) ||
                 ((this.mTransportTypes & nc.mTransportTypes) != 0));
     }
+
     private boolean equalsTransportTypes(NetworkCapabilities nc) {
         return (nc.mTransportTypes == this.mTransportTypes);
     }
@@ -432,16 +424,19 @@ public final class NetworkCapabilities implements Parcelable {
         this.mLinkDownBandwidthKbps =
                 Math.max(this.mLinkDownBandwidthKbps, nc.mLinkDownBandwidthKbps);
     }
+
     private boolean satisfiedByLinkBandwidths(NetworkCapabilities nc) {
         return !(this.mLinkUpBandwidthKbps > nc.mLinkUpBandwidthKbps ||
                 this.mLinkDownBandwidthKbps > nc.mLinkDownBandwidthKbps);
     }
+
     private boolean equalsLinkBandwidths(NetworkCapabilities nc) {
         return (this.mLinkUpBandwidthKbps == nc.mLinkUpBandwidthKbps &&
                 this.mLinkDownBandwidthKbps == nc.mLinkDownBandwidthKbps);
     }
 
     private String mNetworkSpecifier;
+
     /**
      * Sets the optional bearer specific network specifier.
      * This has no meaning if a single transport is also not specified, so calling
@@ -470,7 +465,7 @@ public final class NetworkCapabilities implements Parcelable {
      * Gets the optional bearer specific network specifier.
      *
      * @return The optional {@code String} specifying the bearer specific network specifier.
-     *         See {@link #setNetworkSpecifier}.
+     * See {@link #setNetworkSpecifier}.
      * @hide
      */
     public String getNetworkSpecifier() {
@@ -485,10 +480,12 @@ public final class NetworkCapabilities implements Parcelable {
         }
         setNetworkSpecifier(otherSpecifier);
     }
+
     private boolean satisfiedBySpecifier(NetworkCapabilities nc) {
         return (TextUtils.isEmpty(mNetworkSpecifier) ||
                 mNetworkSpecifier.equals(nc.mNetworkSpecifier));
     }
+
     private boolean equalsSpecifier(NetworkCapabilities nc) {
         if (TextUtils.isEmpty(mNetworkSpecifier)) {
             return TextUtils.isEmpty(nc.mNetworkSpecifier);
@@ -523,7 +520,7 @@ public final class NetworkCapabilities implements Parcelable {
     @Override
     public boolean equals(Object obj) {
         if (obj == null || (obj instanceof NetworkCapabilities == false)) return false;
-        NetworkCapabilities that = (NetworkCapabilities)obj;
+        NetworkCapabilities that = (NetworkCapabilities) obj;
         return (equalsNetCapabilities(that) &&
                 equalsTransportTypes(that) &&
                 equalsLinkBandwidths(that) &&
@@ -532,10 +529,10 @@ public final class NetworkCapabilities implements Parcelable {
 
     @Override
     public int hashCode() {
-        return ((int)(mNetworkCapabilities & 0xFFFFFFFF) +
-                ((int)(mNetworkCapabilities >> 32) * 3) +
-                ((int)(mTransportTypes & 0xFFFFFFFF) * 5) +
-                ((int)(mTransportTypes >> 32) * 7) +
+        return ((int) (mNetworkCapabilities & 0xFFFFFFFF) +
+                ((int) (mNetworkCapabilities >> 32) * 3) +
+                ((int) (mTransportTypes & 0xFFFFFFFF) * 5) +
+                ((int) (mTransportTypes >> 32) * 7) +
                 (mLinkUpBandwidthKbps * 11) +
                 (mLinkDownBandwidthKbps * 13) +
                 (TextUtils.isEmpty(mNetworkSpecifier) ? 0 : mNetworkSpecifier.hashCode() * 17));
@@ -544,6 +541,7 @@ public final class NetworkCapabilities implements Parcelable {
     public int describeContents() {
         return 0;
     }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(mNetworkCapabilities);
         dest.writeLong(mTransportTypes);
@@ -551,33 +549,45 @@ public final class NetworkCapabilities implements Parcelable {
         dest.writeInt(mLinkDownBandwidthKbps);
         dest.writeString(mNetworkSpecifier);
     }
-    public static final Creator<NetworkCapabilities> CREATOR =
-        new Creator<NetworkCapabilities>() {
-            public NetworkCapabilities createFromParcel(Parcel in) {
-                NetworkCapabilities netCap = new NetworkCapabilities();
 
-                netCap.mNetworkCapabilities = in.readLong();
-                netCap.mTransportTypes = in.readLong();
-                netCap.mLinkUpBandwidthKbps = in.readInt();
-                netCap.mLinkDownBandwidthKbps = in.readInt();
-                netCap.mNetworkSpecifier = in.readString();
-                return netCap;
-            }
-            public NetworkCapabilities[] newArray(int size) {
-                return new NetworkCapabilities[size];
-            }
-        };
+    public static final Creator<NetworkCapabilities> CREATOR =
+            new Creator<NetworkCapabilities>() {
+                public NetworkCapabilities createFromParcel(Parcel in) {
+                    NetworkCapabilities netCap = new NetworkCapabilities();
+
+                    netCap.mNetworkCapabilities = in.readLong();
+                    netCap.mTransportTypes = in.readLong();
+                    netCap.mLinkUpBandwidthKbps = in.readInt();
+                    netCap.mLinkDownBandwidthKbps = in.readInt();
+                    netCap.mNetworkSpecifier = in.readString();
+                    return netCap;
+                }
+
+                public NetworkCapabilities[] newArray(int size) {
+                    return new NetworkCapabilities[size];
+                }
+            };
 
     public String toString() {
         int[] types = getTransportTypes();
         String transports = (types.length > 0 ? " Transports: " : "");
-        for (int i = 0; i < types.length;) {
+        for (int i = 0; i < types.length; ) {
             switch (types[i]) {
-                case TRANSPORT_CELLULAR:    transports += "CELLULAR"; break;
-                case TRANSPORT_WIFI:        transports += "WIFI"; break;
-                case TRANSPORT_BLUETOOTH:   transports += "BLUETOOTH"; break;
-                case TRANSPORT_ETHERNET:    transports += "ETHERNET"; break;
-                case TRANSPORT_VPN:         transports += "VPN"; break;
+                case TRANSPORT_CELLULAR:
+                    transports += "CELLULAR";
+                    break;
+                case TRANSPORT_WIFI:
+                    transports += "WIFI";
+                    break;
+                case TRANSPORT_BLUETOOTH:
+                    transports += "BLUETOOTH";
+                    break;
+                case TRANSPORT_ETHERNET:
+                    transports += "ETHERNET";
+                    break;
+                case TRANSPORT_VPN:
+                    transports += "VPN";
+                    break;
             }
             if (++i < types.length) transports += "|";
         }
@@ -586,22 +596,54 @@ public final class NetworkCapabilities implements Parcelable {
         String capabilities = (types.length > 0 ? " Capabilities: " : "");
         for (int i = 0; i < types.length; ) {
             switch (types[i]) {
-                case NET_CAPABILITY_MMS:            capabilities += "MMS"; break;
-                case NET_CAPABILITY_SUPL:           capabilities += "SUPL"; break;
-                case NET_CAPABILITY_DUN:            capabilities += "DUN"; break;
-                case NET_CAPABILITY_FOTA:           capabilities += "FOTA"; break;
-                case NET_CAPABILITY_IMS:            capabilities += "IMS"; break;
-                case NET_CAPABILITY_CBS:            capabilities += "CBS"; break;
-                case NET_CAPABILITY_WIFI_P2P:       capabilities += "WIFI_P2P"; break;
-                case NET_CAPABILITY_IA:             capabilities += "IA"; break;
-                case NET_CAPABILITY_RCS:            capabilities += "RCS"; break;
-                case NET_CAPABILITY_XCAP:           capabilities += "XCAP"; break;
-                case NET_CAPABILITY_EIMS:           capabilities += "EIMS"; break;
-                case NET_CAPABILITY_NOT_METERED:    capabilities += "NOT_METERED"; break;
-                case NET_CAPABILITY_INTERNET:       capabilities += "INTERNET"; break;
-                case NET_CAPABILITY_NOT_RESTRICTED: capabilities += "NOT_RESTRICTED"; break;
-                case NET_CAPABILITY_TRUSTED:        capabilities += "TRUSTED"; break;
-                case NET_CAPABILITY_NOT_VPN:        capabilities += "NOT_VPN"; break;
+                case NET_CAPABILITY_MMS:
+                    capabilities += "MMS";
+                    break;
+                case NET_CAPABILITY_SUPL:
+                    capabilities += "SUPL";
+                    break;
+                case NET_CAPABILITY_DUN:
+                    capabilities += "DUN";
+                    break;
+                case NET_CAPABILITY_FOTA:
+                    capabilities += "FOTA";
+                    break;
+                case NET_CAPABILITY_IMS:
+                    capabilities += "IMS";
+                    break;
+                case NET_CAPABILITY_CBS:
+                    capabilities += "CBS";
+                    break;
+                case NET_CAPABILITY_WIFI_P2P:
+                    capabilities += "WIFI_P2P";
+                    break;
+                case NET_CAPABILITY_IA:
+                    capabilities += "IA";
+                    break;
+                case NET_CAPABILITY_RCS:
+                    capabilities += "RCS";
+                    break;
+                case NET_CAPABILITY_XCAP:
+                    capabilities += "XCAP";
+                    break;
+                case NET_CAPABILITY_EIMS:
+                    capabilities += "EIMS";
+                    break;
+                case NET_CAPABILITY_NOT_METERED:
+                    capabilities += "NOT_METERED";
+                    break;
+                case NET_CAPABILITY_INTERNET:
+                    capabilities += "INTERNET";
+                    break;
+                case NET_CAPABILITY_NOT_RESTRICTED:
+                    capabilities += "NOT_RESTRICTED";
+                    break;
+                case NET_CAPABILITY_TRUSTED:
+                    capabilities += "TRUSTED";
+                    break;
+                case NET_CAPABILITY_NOT_VPN:
+                    capabilities += "NOT_VPN";
+                    break;
             }
             if (++i < types.length) capabilities += "&";
         }

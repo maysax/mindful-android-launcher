@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -73,7 +72,7 @@ public class TempoFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
+        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
         titleActionBar.setText(R.string.title_tempo);
 
         updateUI(launcherPrefs.isTempoActive().get());
@@ -102,7 +101,7 @@ public class TempoFragment extends CoreFragment {
     TextView text_status;
 
     @Click
-    void btnOff(){
+    void btnOff() {
         toggleButton(false);
         launcherPrefs.isTempoActive().put(false);
         setStatus();
@@ -111,8 +110,9 @@ public class TempoFragment extends CoreFragment {
         tempoHandler();
         if (alarmMgr != null) alarmMgr.cancel(alarmIntent);
     }
+
     @Click
-    void btnOn(){
+    void btnOn() {
         toggleButton(true);
         setAlarm();
         launcherPrefs.isTempoActive().put(true);
@@ -137,7 +137,7 @@ public class TempoFragment extends CoreFragment {
 
     @Click
     void imgRight() {
-        ((CoreActivity)getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(),R.id.mainView);
+        ((CoreActivity) getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(), R.id.mainView);
     }
 
     private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {
@@ -149,7 +149,8 @@ public class TempoFragment extends CoreFragment {
         }
 
         @Override
-        public void onStartTrackingTouch(HoloCircleSeekBar seekBar) {}
+        public void onStartTrackingTouch(HoloCircleSeekBar seekBar) {
+        }
 
         @Override
         public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
@@ -170,7 +171,7 @@ public class TempoFragment extends CoreFragment {
     }
 
     private void setStatus() {
-        if (btnOn.isActivated()){
+        if (btnOn.isActivated()) {
             text_status.setText(getString(R.string.msg_tempo_active, seekbar.getValue()));
         } else {
             text_status.setText(R.string.msg_tempo_inactive);

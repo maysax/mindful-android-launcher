@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,12 +15,8 @@
 
 <!-- The actual padding is embedded in a FrameLayout since we cannot change the
      visibility of a header view in a ListView without having a parent view. -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <View
-        android:id="@+id/contact_detail_list_padding"
-        android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+    <View android:id="@+id/contact_detail_list_padding" android:layout_width="match_parent"
         android:layout_height="@dimen/list_header_extra_top_padding" />
 </FrameLayout>

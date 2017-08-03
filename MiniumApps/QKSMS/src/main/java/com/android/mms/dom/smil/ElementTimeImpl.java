@@ -35,9 +35,9 @@ public abstract class ElementTimeImpl implements ElementTime {
     private static final String FILL_FREEZE_ATTRIBUTE = "freeze";
     private static final String FILL_HOLD_ATTRIBUTE = "hold";
     private static final String FILL_TRANSITION_ATTRIBUTE = "transition";
-    private static final String FILL_AUTO_ATTRIBUTE   = "auto";
-    private static final String FILL_ATTRIBUTE_NAME   = "fill";
-    private static final String FILLDEFAULT_ATTRIBUTE_NAME   = "fillDefault";
+    private static final String FILL_AUTO_ATTRIBUTE = "auto";
+    private static final String FILL_ATTRIBUTE_NAME = "fill";
+    private static final String FILLDEFAULT_ATTRIBUTE_NAME = "fillDefault";
 
     final SMILElement mSmilElement;
 
@@ -60,6 +60,7 @@ public abstract class ElementTimeImpl implements ElementTime {
 
     /**
      * To get the parent node on the ElementTime tree. It is in opposition to getTimeChildren.
+     *
      * @return the parent ElementTime. Returns <code>null</code> if there is no parent.
      */
     abstract ElementTime getParentElementTime();
@@ -267,7 +268,7 @@ public abstract class ElementTimeImpl implements ElementTime {
     public float getRepeatDur() {
         try {
             float repeatDur =
-                TimeImpl.parseClockValue(mSmilElement.getAttribute("repeatDur"));
+                    TimeImpl.parseClockValue(mSmilElement.getAttribute("repeatDur"));
             if (repeatDur > 0) {
                 return repeatDur;
             } else {
@@ -297,7 +298,7 @@ public abstract class ElementTimeImpl implements ElementTime {
     public void setDur(float dur) throws DOMException {
         // In SMIL 3.0, the dur could be a timecount-value which may contain fractions.
         // However, in MMS 1.3, the dur SHALL be expressed in integer milliseconds.
-        mSmilElement.setAttribute("dur", Integer.toString((int)(dur * 1000)) + "ms");
+        mSmilElement.setAttribute("dur", Integer.toString((int) (dur * 1000)) + "ms");
     }
 
     public void setEnd(TimeList end) throws DOMException {

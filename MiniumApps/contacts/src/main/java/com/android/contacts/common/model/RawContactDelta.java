@@ -168,6 +168,7 @@ public class RawContactDelta implements Parcelable {
 
     /**
      * calls {@link #getSuperPrimaryEntry(String, boolean)} with true
+     *
      * @see #getSuperPrimaryEntry(String, boolean)
      */
     public ValuesDelta getSuperPrimaryEntry(String mimeType) {
@@ -176,8 +177,9 @@ public class RawContactDelta implements Parcelable {
 
     /**
      * Returns the super-primary entry for the given mime type
+     *
      * @param forceSelection if true, will try to return some value even if a super-primary
-     *     doesn't exist (may be a primary, or just a random item
+     *                       doesn't exist (may be a primary, or just a random item
      * @return
      */
     @NeededForTesting
@@ -325,7 +327,7 @@ public class RawContactDelta implements Parcelable {
     @Override
     public boolean equals(Object object) {
         if (object instanceof RawContactDelta) {
-            final RawContactDelta other = (RawContactDelta)object;
+            final RawContactDelta other = (RawContactDelta) object;
 
             // Equality failed if parent values different
             if (!other.mValues.equals(mValues)) return false;
@@ -389,7 +391,7 @@ public class RawContactDelta implements Parcelable {
      * appending it to the given list, which only happens if builder is valid.
      */
     private void possibleAdd(ArrayList<ContentProviderOperation> diff,
-            ContentProviderOperation.Builder builder) {
+                             ContentProviderOperation.Builder builder) {
         if (builder != null) {
             diff.add(builder.build());
         }
@@ -503,13 +505,17 @@ public class RawContactDelta implements Parcelable {
         return builder;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int describeContents() {
         // Nothing special about this parcel
         return 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void writeToParcel(Parcel dest, int flags) {
         final int size = this.getEntryCount(false);
         dest.writeInt(size);
@@ -525,10 +531,10 @@ public class RawContactDelta implements Parcelable {
     public void readFromParcel(Parcel source) {
         final ClassLoader loader = getClass().getClassLoader();
         final int size = source.readInt();
-        mValues = source.<ValuesDelta> readParcelable(loader);
-        mContactsQueryUri = source.<Uri> readParcelable(loader);
+        mValues = source.<ValuesDelta>readParcelable(loader);
+        mContactsQueryUri = source.<Uri>readParcelable(loader);
         for (int i = 0; i < size; i++) {
-            final ValuesDelta child = source.<ValuesDelta> readParcelable(loader);
+            final ValuesDelta child = source.<ValuesDelta>readParcelable(loader);
             this.addEntry(child);
         }
     }
@@ -542,15 +548,15 @@ public class RawContactDelta implements Parcelable {
 
     public static final Parcelable.Creator<RawContactDelta> CREATOR =
             new Parcelable.Creator<RawContactDelta>() {
-        public RawContactDelta createFromParcel(Parcel in) {
-            final RawContactDelta state = new RawContactDelta();
-            state.readFromParcel(in);
-            return state;
-        }
+                public RawContactDelta createFromParcel(Parcel in) {
+                    final RawContactDelta state = new RawContactDelta();
+                    state.readFromParcel(in);
+                    return state;
+                }
 
-        public RawContactDelta[] newArray(int size) {
-            return new RawContactDelta[size];
-        }
-    };
+                public RawContactDelta[] newArray(int size) {
+                    return new RawContactDelta[size];
+                }
+            };
 
 }

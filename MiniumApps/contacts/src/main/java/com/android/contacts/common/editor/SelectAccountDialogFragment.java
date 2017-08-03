@@ -30,7 +30,7 @@ import com.android.contacts.common.util.AccountsListAdapter.AccountListFilter;
 
 /**
  * Shows a dialog asking the user which account to chose.
- *
+ * <p>
  * The result is passed to {@code targetFragment} passed to {@link #show}.
  */
 public final class SelectAccountDialogFragment extends DialogFragment {
@@ -46,17 +46,17 @@ public final class SelectAccountDialogFragment extends DialogFragment {
     /**
      * Show the dialog.
      *
-     * @param fragmentManager {@link FragmentManager}.
-     * @param targetFragment {@link Fragment} that implements {@link Listener}.
-     * @param titleResourceId resource ID to use as the title.
+     * @param fragmentManager   {@link FragmentManager}.
+     * @param targetFragment    {@link Fragment} that implements {@link Listener}.
+     * @param titleResourceId   resource ID to use as the title.
      * @param accountListFilter account filter.
-     * @param extraArgs Extra arguments, which will later be passed to
-     *     {@link Listener#onAccountChosen}.  {@code null} will be converted to
-     *     {@link Bundle#EMPTY}.
+     * @param extraArgs         Extra arguments, which will later be passed to
+     *                          {@link Listener#onAccountChosen}.  {@code null} will be converted to
+     *                          {@link Bundle#EMPTY}.
      */
     public static <F extends Fragment & Listener> void show(FragmentManager fragmentManager,
-            F targetFragment, int titleResourceId,
-            AccountListFilter accountListFilter, Bundle extraArgs) {
+                                                            F targetFragment, int titleResourceId,
+                                                            AccountListFilter accountListFilter, Bundle extraArgs) {
         final Bundle args = new Bundle();
         args.putInt(KEY_TITLE_RES_ID, titleResourceId);
         args.putSerializable(KEY_LIST_FILTER, accountListFilter);
@@ -79,13 +79,13 @@ public final class SelectAccountDialogFragment extends DialogFragment {
 
         final DialogInterface.OnClickListener clickListener =
                 new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
 
-                onAccountSelected(accountAdapter.getItem(which));
-            }
-        };
+                        onAccountSelected(accountAdapter.getItem(which));
+                    }
+                };
 
         builder.setTitle(args.getInt(KEY_TITLE_RES_ID));
         builder.setSingleChoiceItems(accountAdapter, 0, clickListener);
@@ -116,6 +116,7 @@ public final class SelectAccountDialogFragment extends DialogFragment {
 
     public interface Listener {
         void onAccountChosen(AccountWithDataSet account, Bundle extraArgs);
+
         void onAccountSelectorCancelled();
     }
 }

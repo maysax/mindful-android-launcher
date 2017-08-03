@@ -62,7 +62,6 @@ public class VCardConstants {
     public static final String PROPERTY_CALURI = "CALURI";  // (4.0)
 
 
-
     // defact SIP property which had been used till RFC 4770.
     public static final String PROPERTY_X_SIP = "X-SIP";
 

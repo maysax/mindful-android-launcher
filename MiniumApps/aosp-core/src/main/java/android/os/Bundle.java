@@ -24,11 +24,9 @@ import android.util.SparseArray;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A mapping from String values to various Parcelable types.
- *
  */
 public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
     public static final Bundle EMPTY;
@@ -76,7 +74,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * instantiating Parcelable and Serializable objects.
      *
      * @param loader An explicit ClassLoader to use when instantiating objects
-     * inside of the Bundle.
+     *               inside of the Bundle.
      */
     public Bundle(ClassLoader loader) {
         super(loader);
@@ -130,7 +128,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Changes the ClassLoader this Bundle uses when instantiating objects.
      *
      * @param loader An explicit ClassLoader to use when instantiating objects
-     * inside of the Bundle.
+     *               inside of the Bundle.
      */
     @Override
     public void setClassLoader(ClassLoader loader) {
@@ -145,7 +143,9 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
         return super.getClassLoader();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public boolean setAllowFds(boolean allowFds) {
         boolean orig = mAllowFds;
         mAllowFds = allowFds;
@@ -200,10 +200,10 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
                 }
             } else {
                 // It's been unparcelled, so we need to walk the map
-                for (int i=mMap.size()-1; i>=0; i--) {
+                for (int i = mMap.size() - 1; i >= 0; i--) {
                     Object obj = mMap.valueAt(i);
                     if (obj instanceof Parcelable) {
-                        if ((((Parcelable)obj).describeContents()
+                        if ((((Parcelable) obj).describeContents()
                                 & Parcelable.CONTENTS_FILE_DESCRIPTOR) != 0) {
                             fdFound = true;
                             break;
@@ -255,7 +255,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a Boolean value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a Boolean, or null
      */
     @Override
@@ -267,7 +267,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a byte value into the mapping of this Bundle, replacing
      * any existing value for the given key.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a byte
      */
     @Override
@@ -279,7 +279,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a char value into the mapping of this Bundle, replacing
      * any existing value for the given key.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a char, or null
      */
     @Override
@@ -291,7 +291,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a short value into the mapping of this Bundle, replacing
      * any existing value for the given key.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a short
      */
     @Override
@@ -303,7 +303,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a float value into the mapping of this Bundle, replacing
      * any existing value for the given key.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a float
      */
     @Override
@@ -315,7 +315,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a CharSequence value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a CharSequence, or null
      */
     @Override
@@ -327,7 +327,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a Parcelable value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a Parcelable object, or null
      */
     public void putParcelable(String key, Parcelable value) {
@@ -340,7 +340,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a Size value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a Size object, or null
      */
     public void putSize(String key, Size value) {
@@ -352,7 +352,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a SizeF value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a SizeF object, or null
      */
     public void putSizeF(String key, SizeF value) {
@@ -365,7 +365,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * replacing any existing value for the given key.  Either key or value may
      * be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value an array of Parcelable objects, or null
      */
     public void putParcelableArray(String key, Parcelable[] value) {
@@ -379,17 +379,19 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * replacing any existing value for the given key.  Either key or value may
      * be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value an ArrayList of Parcelable objects, or null
      */
     public void putParcelableArrayList(String key,
-            ArrayList<? extends Parcelable> value) {
+                                       ArrayList<? extends Parcelable> value) {
         unparcel();
         mMap.put(key, value);
         mFdsKnown = false;
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public void putParcelableList(String key, List<? extends Parcelable> value) {
         unparcel();
         mMap.put(key, value);
@@ -401,11 +403,11 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Bundle, replacing any existing value for the given key.  Either key
      * or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a SparseArray of Parcelable objects, or null
      */
     public void putSparseParcelableArray(String key,
-            SparseArray<? extends Parcelable> value) {
+                                         SparseArray<? extends Parcelable> value) {
         unparcel();
         mMap.put(key, value);
         mFdsKnown = false;
@@ -415,7 +417,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts an ArrayList<Integer> value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value an ArrayList<Integer> object, or null
      */
     @Override
@@ -427,7 +429,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts an ArrayList<String> value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value an ArrayList<String> object, or null
      */
     @Override
@@ -439,7 +441,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts an ArrayList<CharSequence> value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value an ArrayList<CharSequence> object, or null
      */
     @Override
@@ -451,7 +453,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a Serializable value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a Serializable object, or null
      */
     @Override
@@ -463,7 +465,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a boolean array value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a boolean array object, or null
      */
     @Override
@@ -475,7 +477,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a byte array value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a byte array object, or null
      */
     @Override
@@ -487,7 +489,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a short array value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a short array object, or null
      */
     @Override
@@ -499,7 +501,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a char array value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a char array object, or null
      */
     @Override
@@ -511,7 +513,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a float array value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a float array object, or null
      */
     @Override
@@ -523,7 +525,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a CharSequence array value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a CharSequence array object, or null
      */
     @Override
@@ -535,7 +537,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts a Bundle value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a Bundle object, or null
      */
     public void putBundle(String key, Bundle value) {
@@ -546,7 +548,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
     /**
      * Inserts an {@link IBinder} value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
-     *
+     * <p>
      * <p class="note">You should be very careful when using this function.  In many
      * places where Bundles are used (such as inside of Intent objects), the Bundle
      * can live longer inside of another process than the process that had originally
@@ -554,7 +556,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * when your process goes away, and no longer usable, even if a new process is
      * created for you later on.</p>
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value an IBinder object, or null
      */
     public void putBinder(String key, IBinder value) {
@@ -566,11 +568,10 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Inserts an IBinder value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value an IBinder object, or null
-     *
-     * @deprecated
      * @hide This is the old name of the function.
+     * @deprecated
      */
     @Deprecated
     public void putIBinder(String key, IBinder value) {
@@ -594,7 +595,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Returns the value associated with the given key, or defaultValue if
      * no mapping of the desired type exists for the given key.
      *
-     * @param key a String
+     * @param key          a String
      * @param defaultValue Value to return if key does not exist
      * @return a boolean value
      */
@@ -619,7 +620,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Returns the value associated with the given key, or defaultValue if
      * no mapping of the desired type exists for the given key.
      *
-     * @param key a String
+     * @param key          a String
      * @param defaultValue Value to return if key does not exist
      * @return a byte value
      */
@@ -644,7 +645,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Returns the value associated with the given key, or defaultValue if
      * no mapping of the desired type exists for the given key.
      *
-     * @param key a String
+     * @param key          a String
      * @param defaultValue Value to return if key does not exist
      * @return a char value
      */
@@ -669,7 +670,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Returns the value associated with the given key, or defaultValue if
      * no mapping of the desired type exists for the given key.
      *
-     * @param key a String
+     * @param key          a String
      * @param defaultValue Value to return if key does not exist
      * @return a short value
      */
@@ -694,7 +695,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * Returns the value associated with the given key, or defaultValue if
      * no mapping of the desired type exists for the given key.
      *
-     * @param key a String
+     * @param key          a String
      * @param defaultValue Value to return if key does not exist
      * @return a float value
      */
@@ -721,11 +722,11 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * no mapping of the desired type exists for the given key or if a null
      * value is explicitly associatd with the given key.
      *
-     * @param key a String, or null
+     * @param key          a String, or null
      * @param defaultValue Value to return if key does not exist or if a null
-     *     value is associated with the given key.
+     *                     value is associated with the given key.
      * @return the CharSequence value associated with the given key, or defaultValue
-     *     if no valid CharSequence object is currently mapped to that key.
+     * if no valid CharSequence object is currently mapped to that key.
      */
     @Override
     public CharSequence getCharSequence(String key, CharSequence defaultValue) {
@@ -864,7 +865,6 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      * value is explicitly associated with the key.
      *
      * @param key a String, or null
-     *
      * @return a SparseArray of T values, or null
      */
     public <T extends Parcelable> SparseArray<T> getSparseParcelableArray(String key) {
@@ -1040,9 +1040,8 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
      *
      * @param key a String, or null
      * @return an IBinder value, or null
-     *
-     * @deprecated
      * @hide This is the old name of the function.
+     * @deprecated
      */
     @Deprecated
     public IBinder getIBinder(String key) {
@@ -1060,17 +1059,17 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
     }
 
     public static final Parcelable.Creator<Bundle> CREATOR =
-        new Parcelable.Creator<Bundle>() {
-        @Override
-        public Bundle createFromParcel(Parcel in) {
-            return in.readBundle();
-        }
+            new Parcelable.Creator<Bundle>() {
+                @Override
+                public Bundle createFromParcel(Parcel in) {
+                    return in.readBundle();
+                }
 
-        @Override
-        public Bundle[] newArray(int size) {
-            return new Bundle[size];
-        }
-    };
+                @Override
+                public Bundle[] newArray(int size) {
+                    return new Bundle[size];
+                }
+            };
 
     /**
      * Report the nature of this Parcelable's contents
@@ -1087,6 +1086,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
     /**
      * Writes the Bundle contents to a Parcel, typically in order for
      * it to be passed through an IBinder connection.
+     *
      * @param parcel The parcel to copy this bundle to.
      */
     @Override
@@ -1102,6 +1102,7 @@ public final class Bundle extends BaseBundle implements Cloneable, Parcelable {
     /**
      * Reads the Parcel contents into this Bundle, typically in order for
      * it to be passed through an IBinder connection.
+     *
      * @param parcel The parcel to overwrite this bundle from.
      */
     public void readFromParcel(Parcel parcel) {

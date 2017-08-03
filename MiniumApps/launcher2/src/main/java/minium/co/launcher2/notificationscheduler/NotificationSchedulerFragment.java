@@ -27,12 +27,12 @@ import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.DateUtils;
+import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
 import minium.co.launcher2.events.NotificationSchedulerEvent;
 import minium.co.launcher2.flow.SiempoNotificationService;
 import minium.co.launcher2.flow.SiempoNotificationService_;
-import minium.co.core.util.ServiceUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +61,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
     PendingIntent alarmIntent;
 
 
-    private String[] pickerData = new String[] { "0", "1", "5", "10", "15", "30", "60" };
+    private String[] pickerData = new String[]{"0", "1", "5", "10", "15", "30", "60"};
 
 
     public NotificationSchedulerFragment() {
@@ -96,7 +96,9 @@ public class NotificationSchedulerFragment extends CoreFragment {
         }
     }
 
-    /** @return True if {@link SiempoNotificationService} is enabled. */
+    /**
+     * @return True if {@link SiempoNotificationService} is enabled.
+     */
     public static boolean isEnabled(Context mContext) {
         return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationService_.class);
     }
@@ -114,8 +116,8 @@ public class NotificationSchedulerFragment extends CoreFragment {
     private void updateUI(int newVal) {
         if (newVal == 0) {
             txtMsg.setText("Notification is enabled always");
-        } else if (newVal < pickerData.length){
-            txtMsg.setText(String.format(Locale.US, "Notification will be enabled for every %s minutes", pickerData [newVal]));
+        } else if (newVal < pickerData.length) {
+            txtMsg.setText(String.format(Locale.US, "Notification will be enabled for every %s minutes", pickerData[newVal]));
         }
 
     }
@@ -124,11 +126,11 @@ public class NotificationSchedulerFragment extends CoreFragment {
         if (alarmMgr != null) alarmMgr.cancel(alarmIntent);
 
         if (newVal != 0) {
-            long nextIntervalMillis = DateUtils.nextIntervalMillis(Integer.parseInt(pickerData [newVal]) * 60 * 1000);
+            long nextIntervalMillis = DateUtils.nextIntervalMillis(Integer.parseInt(pickerData[newVal]) * 60 * 1000);
 
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,
                     nextIntervalMillis,
-                    Integer.parseInt(pickerData [newVal]) * 60 * 1000, alarmIntent);
+                    Integer.parseInt(pickerData[newVal]) * 60 * 1000, alarmIntent);
 
             Tracer.d("NotificationScheduleAlarm set at: " + DateUtils.log() + " || Next fire: " + DateUtils.log(nextIntervalMillis));
 
@@ -166,7 +168,7 @@ public class NotificationSchedulerFragment extends CoreFragment {
         setAlarm(newVal);
         makeEnabled(newVal);
         prefs.notificationScheduleIndex().put(newVal);
-        prefs.notificationSchedulerValue().put(Integer.parseInt(pickerData [newVal]));
+        prefs.notificationSchedulerValue().put(Integer.parseInt(pickerData[newVal]));
         EventBus.getDefault().post(new NotificationSchedulerEvent(newVal != 0));
     }
 }

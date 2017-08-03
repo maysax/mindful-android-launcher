@@ -16,10 +16,14 @@
 
 package android.os;
 
+import android.util.Log;
+
 import com.android.internal.util.FastPrintWriter;
 import com.android.internal.util.TypedProperties;
 
-import android.util.Log;
+import org.apache.harmony.dalvik.ddmc.Chunk;
+import org.apache.harmony.dalvik.ddmc.ChunkHandler;
+import org.apache.harmony.dalvik.ddmc.DdmServer;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -28,16 +32,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import org.apache.harmony.dalvik.ddmc.Chunk;
-import org.apache.harmony.dalvik.ddmc.ChunkHandler;
-import org.apache.harmony.dalvik.ddmc.DdmServer;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 import dalvik.bytecode.OpcodeInfo;
 import dalvik.system.VMDebug;
@@ -49,35 +49,35 @@ import dalvik.system.VMDebug;
  * <p><strong>Logging Trace Files</strong></p>
  * <p>Debug can create log files that give details about an application, such as
  * a call stack and start/stop times for any running methods. See <a
-href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
+ * href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
  * information about reading trace files. To start logging trace files, call one
  * of the startMethodTracing() methods. To stop tracing, call
  * {@link #stopMethodTracing()}.
  */
-public final class Debug
-{
+public final class Debug {
     private static final String TAG = "Debug";
 
     /**
      * Flags for startMethodTracing().  These can be ORed together.
-     *
+     * <p>
      * TRACE_COUNT_ALLOCS adds the results from startAllocCounting to the
      * trace key file.
      */
-    public static final int TRACE_COUNT_ALLOCS  = VMDebug.TRACE_COUNT_ALLOCS;
+    public static final int TRACE_COUNT_ALLOCS = VMDebug.TRACE_COUNT_ALLOCS;
 
     /**
      * Flags for printLoadedClasses().  Default behavior is to only show
      * the class name.
      */
-    public static final int SHOW_FULL_DETAIL    = 1;
-    public static final int SHOW_CLASSLOADER    = (1 << 1);
-    public static final int SHOW_INITIALIZED    = (1 << 2);
+    public static final int SHOW_FULL_DETAIL = 1;
+    public static final int SHOW_CLASSLOADER = (1 << 1);
+    public static final int SHOW_INITIALIZED = (1 << 2);
 
     // set/cleared by waitForDebugger()
     private static volatile boolean mWaiting = false;
 
-    private Debug() {}
+    private Debug() {
+    }
 
     /*
      * How long to wait for the debugger to finish sending requests.  I've
@@ -94,12 +94,12 @@ public final class Debug
      * Default trace file path and file
      */
     private static final String DEFAULT_TRACE_PATH_PREFIX =
-        Environment.getLegacyExternalStorageDirectory().getPath() + "/";
+            Environment.getLegacyExternalStorageDirectory().getPath() + "/";
     private static final String DEFAULT_TRACE_BODY = "dmtrace";
     private static final String DEFAULT_TRACE_EXTENSION = ".trace";
     private static final String DEFAULT_TRACE_FILE_PATH =
-        DEFAULT_TRACE_PATH_PREFIX + DEFAULT_TRACE_BODY
-        + DEFAULT_TRACE_EXTENSION;
+            DEFAULT_TRACE_PATH_PREFIX + DEFAULT_TRACE_BODY
+                    + DEFAULT_TRACE_EXTENSION;
 
 
     /**
@@ -107,88 +107,150 @@ public final class Debug
      * process. The returns info broken down by dalvik, native, and other. All results are in kB.
      */
     public static class MemoryInfo implements Parcelable {
-        /** The proportional set size for dalvik heap.  (Doesn't include other Dalvik overhead.) */
+        /**
+         * The proportional set size for dalvik heap.  (Doesn't include other Dalvik overhead.)
+         */
         public int dalvikPss;
         /** The proportional set size that is swappable for dalvik heap. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int dalvikSwappablePss;
-        /** The private dirty pages used by dalvik heap. */
+        /**
+         * The private dirty pages used by dalvik heap.
+         */
         public int dalvikPrivateDirty;
-        /** The shared dirty pages used by dalvik heap. */
+        /**
+         * The shared dirty pages used by dalvik heap.
+         */
         public int dalvikSharedDirty;
         /** The private clean pages used by dalvik heap. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int dalvikPrivateClean;
         /** The shared clean pages used by dalvik heap. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int dalvikSharedClean;
         /** The dirty dalvik pages that have been swapped out. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int dalvikSwappedOut;
 
-        /** The proportional set size for the native heap. */
+        /**
+         * The proportional set size for the native heap.
+         */
         public int nativePss;
         /** The proportional set size that is swappable for the native heap. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int nativeSwappablePss;
-        /** The private dirty pages used by the native heap. */
+        /**
+         * The private dirty pages used by the native heap.
+         */
         public int nativePrivateDirty;
-        /** The shared dirty pages used by the native heap. */
+        /**
+         * The shared dirty pages used by the native heap.
+         */
         public int nativeSharedDirty;
         /** The private clean pages used by the native heap. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int nativePrivateClean;
         /** The shared clean pages used by the native heap. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int nativeSharedClean;
         /** The dirty native pages that have been swapped out. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int nativeSwappedOut;
 
-        /** The proportional set size for everything else. */
+        /**
+         * The proportional set size for everything else.
+         */
         public int otherPss;
         /** The proportional set size that is swappable for everything else. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int otherSwappablePss;
-        /** The private dirty pages used by everything else. */
+        /**
+         * The private dirty pages used by everything else.
+         */
         public int otherPrivateDirty;
-        /** The shared dirty pages used by everything else. */
+        /**
+         * The shared dirty pages used by everything else.
+         */
         public int otherSharedDirty;
         /** The private clean pages used by everything else. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int otherPrivateClean;
         /** The shared clean pages used by everything else. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int otherSharedClean;
         /** The dirty pages used by anyting else that have been swapped out. */
-        /** @hide We may want to expose this, eventually. */
+        /**
+         * @hide We may want to expose this, eventually.
+         */
         public int otherSwappedOut;
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int NUM_OTHER_STATS = 16;
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int NUM_DVK_STATS = 5;
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int NUM_CATEGORIES = 7;
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int offsetPss = 0;
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int offsetSwappablePss = 1;
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int offsetPrivateDirty = 2;
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int offsetSharedDirty = 3;
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int offsetPrivateClean = 4;
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int offsetSharedClean = 5;
-        /** @hide */
+        /**
+         * @hide
+         */
         public static final int offsetSwappedOut = 6;
 
-        private int[] otherStats = new int[(NUM_OTHER_STATS+NUM_DVK_STATS)*NUM_CATEGORIES];
+        private int[] otherStats = new int[(NUM_OTHER_STATS + NUM_DVK_STATS) * NUM_CATEGORIES];
 
         public MemoryInfo() {
         }
@@ -246,74 +308,113 @@ public final class Debug
 
         /**
          * Return total swapped out memory in kB.
+         *
          * @hide
          */
         public int getTotalSwappedOut() {
             return dalvikSwappedOut + nativeSwappedOut + otherSwappedOut;
         }
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public int getOtherPss(int which) {
-            return otherStats[which*NUM_CATEGORIES + offsetPss];
+            return otherStats[which * NUM_CATEGORIES + offsetPss];
         }
 
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public int getOtherSwappablePss(int which) {
-            return otherStats[which*NUM_CATEGORIES + offsetSwappablePss];
+            return otherStats[which * NUM_CATEGORIES + offsetSwappablePss];
         }
 
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public int getOtherPrivateDirty(int which) {
-            return otherStats[which*NUM_CATEGORIES + offsetPrivateDirty];
+            return otherStats[which * NUM_CATEGORIES + offsetPrivateDirty];
         }
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public int getOtherSharedDirty(int which) {
-            return otherStats[which*NUM_CATEGORIES + offsetSharedDirty];
+            return otherStats[which * NUM_CATEGORIES + offsetSharedDirty];
         }
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public int getOtherPrivateClean(int which) {
-            return otherStats[which*NUM_CATEGORIES + offsetPrivateClean];
+            return otherStats[which * NUM_CATEGORIES + offsetPrivateClean];
         }
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public int getOtherSharedClean(int which) {
-            return otherStats[which*NUM_CATEGORIES + offsetSharedClean];
+            return otherStats[which * NUM_CATEGORIES + offsetSharedClean];
         }
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public int getOtherSwappedOut(int which) {
-            return otherStats[which*NUM_CATEGORIES + offsetSwappedOut];
+            return otherStats[which * NUM_CATEGORIES + offsetSwappedOut];
         }
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public static String getOtherLabel(int which) {
             switch (which) {
-                case 0: return "Dalvik Other";
-                case 1: return "Stack";
-                case 2: return "Cursor";
-                case 3: return "Ashmem";
-                case 4: return "Other dev";
-                case 5: return ".so mmap";
-                case 6: return ".jar mmap";
-                case 7: return ".apk mmap";
-                case 8: return ".ttf mmap";
-                case 9: return ".dex mmap";
-                case 10: return "code mmap";
-                case 11: return "image mmap";
-                case 12: return "Other mmap";
-                case 13: return "Graphics";
-                case 14: return "GL";
-                case 15: return "Memtrack";
-                case 16: return ".Heap";
-                case 17: return ".LOS";
-                case 18: return ".LinearAlloc";
-                case 19: return ".GC";
-                case 20: return ".JITCache";
-                default: return "????";
+                case 0:
+                    return "Dalvik Other";
+                case 1:
+                    return "Stack";
+                case 2:
+                    return "Cursor";
+                case 3:
+                    return "Ashmem";
+                case 4:
+                    return "Other dev";
+                case 5:
+                    return ".so mmap";
+                case 6:
+                    return ".jar mmap";
+                case 7:
+                    return ".apk mmap";
+                case 8:
+                    return ".ttf mmap";
+                case 9:
+                    return ".dex mmap";
+                case 10:
+                    return "code mmap";
+                case 11:
+                    return "image mmap";
+                case 12:
+                    return "Other mmap";
+                case 13:
+                    return "Graphics";
+                case 14:
+                    return "GL";
+                case 15:
+                    return "Memtrack";
+                case 16:
+                    return ".Heap";
+                case 17:
+                    return ".LOS";
+                case 18:
+                    return ".LinearAlloc";
+                case 19:
+                    return ".GC";
+                case 20:
+                    return ".JITCache";
+                default:
+                    return "????";
             }
         }
 
@@ -375,6 +476,7 @@ public final class Debug
             public MemoryInfo createFromParcel(Parcel source) {
                 return new MemoryInfo(source);
             }
+
             public MemoryInfo[] newArray(int size) {
                 return new MemoryInfo[size];
             }
@@ -401,14 +503,16 @@ public final class Debug
 
         // if DDMS is listening, inform them of our plight
         System.out.println("Sending WAIT chunk");
-        byte[] data = new byte[] { 0 };     // 0 == "waiting for debugger"
+        byte[] data = new byte[]{0};     // 0 == "waiting for debugger"
         Chunk waitChunk = new Chunk(ChunkHandler.type("WAIT"), data, 0, 1);
         DdmServer.sendChunk(waitChunk);
 
         mWaiting = true;
         while (!isDebuggerConnected()) {
-            try { Thread.sleep(SPIN_DELAY); }
-            catch (InterruptedException ie) {}
+            try {
+                Thread.sleep(SPIN_DELAY);
+            } catch (InterruptedException ie) {
+            }
         }
         mWaiting = false;
 
@@ -432,8 +536,10 @@ public final class Debug
 
             if (delta < MIN_DEBUGGER_IDLE) {
                 System.out.println("waiting for debugger to settle...");
-                try { Thread.sleep(SPIN_DELAY); }
-                catch (InterruptedException ie) {}
+                try {
+                    Thread.sleep(SPIN_DELAY);
+                } catch (InterruptedException ie) {
+                }
             } else {
                 System.out.println("debugger has settled (" + delta + ")");
                 break;
@@ -473,7 +579,8 @@ public final class Debug
      * @deprecated no longer needed or useful
      */
     @Deprecated
-    public static void changeDebugPort(int port) {}
+    public static void changeDebugPort(int port) {
+    }
 
     /**
      * This is the pathname to the sysfs file that enables and disables
@@ -489,7 +596,7 @@ public final class Debug
      * <code>emulator -trace foo</code><br />
      * will start running the emulator and create a trace file named "foo". This
      * method simply enables writing the trace records to the trace file.
-     *
+     * <p>
      * <p>
      * The main differences between this and {@link #startMethodTracing()} are
      * that tracing in the qemu emulator traces every cpu instruction of every
@@ -500,7 +607,7 @@ public final class Debug
      * without modifying the application or perturbing the timing of calls
      * because no instrumentation is added to the application being traced.
      * </p>
-     *
+     * <p>
      * <p>
      * One limitation of using this method compared to using
      * {@link #startMethodTracing()} on the real device is that the emulator
@@ -527,7 +634,7 @@ public final class Debug
 
     /**
      * Stop qemu tracing.  See {@link #startNativeTracing()} to start tracing.
-     *
+     * <p>
      * <p>Tracing can be started and stopped as many times as desired.  When
      * the qemu emulator itself is stopped then the buffered trace records
      * are flushed and written to the trace file.  In fact, it is not necessary
@@ -559,10 +666,10 @@ public final class Debug
      * is no corresponding "disable" call -- this is intended for use by
      * the framework when tracing should be turned on and left that way, so
      * that traces captured with F9/F10 will include the necessary data.
-     *
+     * <p>
      * This puts the VM into "profile" mode, which has performance
      * consequences.
-     *
+     * <p>
      * To temporarily enable tracing, use {@link #startNativeTracing()}.
      */
     public static void enableEmulatorTraceOutput() {
@@ -571,7 +678,7 @@ public final class Debug
 
     /**
      * Start method tracing with default log name and buffer size. See <a
-href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
+     * href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
      * information about reading these files. Call stopMethodTracing() to stop
      * tracing.
      */
@@ -583,13 +690,13 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * Start method tracing, specifying the trace log file name.  The trace
      * file will be put under "/sdcard" unless an absolute path is given.
      * See <a
-       href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
+     * href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
      * information about reading trace files.
      *
      * @param traceName Name for the trace log file to create.
-     * If {@code traceName} is null, this value defaults to "/sdcard/dmtrace.trace".
-     * If the files already exist, they will be truncated.
-     * If the trace file given does not end in ".trace", it will be appended for you.
+     *                  If {@code traceName} is null, this value defaults to "/sdcard/dmtrace.trace".
+     *                  If the files already exist, they will be truncated.
+     *                  If the trace file given does not end in ".trace", it will be appended for you.
      */
     public static void startMethodTracing(String traceName) {
         startMethodTracing(traceName, 0, 0);
@@ -599,14 +706,14 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * Start method tracing, specifying the trace log file name and the
      * buffer size. The trace files will be put under "/sdcard" unless an
      * absolute path is given. See <a
-       href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
+     * href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
      * information about reading trace files.
-     * @param traceName    Name for the trace log file to create.
-     * If {@code traceName} is null, this value defaults to "/sdcard/dmtrace.trace".
-     * If the files already exist, they will be truncated.
-     * If the trace file given does not end in ".trace", it will be appended for you.
      *
-     * @param bufferSize    The maximum amount of trace data we gather. If not given, it defaults to 8MB.
+     * @param traceName  Name for the trace log file to create.
+     *                   If {@code traceName} is null, this value defaults to "/sdcard/dmtrace.trace".
+     *                   If the files already exist, they will be truncated.
+     *                   If the trace file given does not end in ".trace", it will be appended for you.
+     * @param bufferSize The maximum amount of trace data we gather. If not given, it defaults to 8MB.
      */
     public static void startMethodTracing(String traceName, int bufferSize) {
         startMethodTracing(traceName, bufferSize, 0);
@@ -616,9 +723,9 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * Start method tracing, specifying the trace log file name and the
      * buffer size. The trace files will be put under "/sdcard" unless an
      * absolute path is given. See <a
-       href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
+     * href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a> for
      * information about reading trace files.
-     *
+     * <p>
      * <p>
      * When method tracing is enabled, the VM will run more slowly than
      * usual, so the timings from the trace files should only be considered
@@ -630,15 +737,15 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * "native" tracing in the emulator via {@link #startNativeTracing()}.
      * </p>
      *
-     * @param traceName    Name for the trace log file to create.
-     * If {@code traceName} is null, this value defaults to "/sdcard/dmtrace.trace".
-     * If the files already exist, they will be truncated.
-     * If the trace file given does not end in ".trace", it will be appended for you.
-     * @param bufferSize    The maximum amount of trace data we gather. If not given, it defaults to 8MB.
-     * @param flags    Flags to control method tracing. The only one that is currently defined is {@link #TRACE_COUNT_ALLOCS}.
+     * @param traceName  Name for the trace log file to create.
+     *                   If {@code traceName} is null, this value defaults to "/sdcard/dmtrace.trace".
+     *                   If the files already exist, they will be truncated.
+     *                   If the trace file given does not end in ".trace", it will be appended for you.
+     * @param bufferSize The maximum amount of trace data we gather. If not given, it defaults to 8MB.
+     * @param flags      Flags to control method tracing. The only one that is currently defined is {@link #TRACE_COUNT_ALLOCS}.
      */
     public static void startMethodTracing(String traceName, int bufferSize,
-        int flags) {
+                                          int flags) {
         VMDebug.startMethodTracing(fixTraceName(traceName), bufferSize, flags, false, 0);
     }
 
@@ -646,18 +753,18 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * Start sampling-based method tracing, specifying the trace log file name,
      * the buffer size, and the sampling interval. The trace files will be put
      * under "/sdcard" unless an absolute path is given. See <a
-       href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a>
+     * href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Log Viewer</a>
      * for information about reading trace files.
      *
-     * @param traceName    Name for the trace log file to create.
-     * If {@code traceName} is null, this value defaults to "/sdcard/dmtrace.trace".
-     * If the files already exist, they will be truncated.
-     * If the trace file given does not end in ".trace", it will be appended for you.
-     * @param bufferSize    The maximum amount of trace data we gather. If not given, it defaults to 8MB.
-     * @param intervalUs    The amount of time between each sample in microseconds.
+     * @param traceName  Name for the trace log file to create.
+     *                   If {@code traceName} is null, this value defaults to "/sdcard/dmtrace.trace".
+     *                   If the files already exist, they will be truncated.
+     *                   If the trace file given does not end in ".trace", it will be appended for you.
+     * @param bufferSize The maximum amount of trace data we gather. If not given, it defaults to 8MB.
+     * @param intervalUs The amount of time between each sample in microseconds.
      */
     public static void startMethodTracingSampling(String traceName,
-        int bufferSize, int intervalUs) {
+                                                  int bufferSize, int intervalUs) {
         VMDebug.startMethodTracing(fixTraceName(traceName), bufferSize, 0, true, intervalUs);
     }
 
@@ -679,13 +786,14 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * Like startMethodTracing(String, int, int), but taking an already-opened
      * FileDescriptor in which the trace is written.  The file name is also
      * supplied simply for logging.  Makes a dup of the file descriptor.
-     *
+     * <p>
      * Not exposed in the SDK unless we are really comfortable with supporting
      * this and find it would be useful.
+     *
      * @hide
      */
     public static void startMethodTracing(String traceName, FileDescriptor fd,
-        int bufferSize, int flags) {
+                                          int bufferSize, int flags) {
         VMDebug.startMethodTracing(traceName, fd, bufferSize, flags, false, 0);
     }
 
@@ -697,7 +805,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * @hide
      */
     public static void startMethodTracingDdms(int bufferSize, int flags,
-        boolean samplingEnabled, int intervalUs) {
+                                              boolean samplingEnabled, int intervalUs) {
         VMDebug.startMethodTracingDdms(bufferSize, flags, samplingEnabled, intervalUs);
     }
 
@@ -722,11 +830,11 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * Get an indication of thread CPU usage.  The value returned
      * indicates the amount of time that the current thread has spent
      * executing code or waiting for certain types of I/O.
-     *
+     * <p>
      * The time is expressed in nanoseconds, and is only meaningful
      * when compared to the result from an earlier call.  Note that
      * nanosecond resolution does not imply nanosecond accuracy.
-     *
+     * <p>
      * On system which don't support this operation, the call returns -1.
      */
     public static long threadCpuTimeNanos() {
@@ -735,13 +843,13 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Start counting the number and aggregate size of memory allocations.
-     *
+     * <p>
      * <p>The {@link #startAllocCounting() start} method resets the counts and enables counting.
      * The {@link #stopAllocCounting() stop} method disables the counting so that the analysis
      * code doesn't cause additional allocations.  The various <code>get</code> methods return
      * the specified value. And the various <code>reset</code> methods reset the specified
      * count.</p>
-     *
+     * <p>
      * <p>Counts are kept for the system as a whole (global) and for each thread.
      * The per-thread counts for threads other than the current thread
      * are not cleared by the "reset" or "start" calls.</p>
@@ -773,6 +881,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the global count of objects allocated.
+     *
      * @see #getGlobalAllocCount()
      */
     public static void resetGlobalAllocCount() {
@@ -789,6 +898,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the global size of objects allocated.
+     *
      * @see #getGlobalAllocSize()
      */
     public static void resetGlobalAllocSize() {
@@ -805,6 +915,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the global count of objects freed.
+     *
      * @see #getGlobalFreedCount()
      */
     public static void resetGlobalFreedCount() {
@@ -821,6 +932,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the global size of objects freed.
+     *
      * @see #getGlobalFreedSize()
      */
     public static void resetGlobalFreedSize() {
@@ -837,6 +949,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the count of non-concurrent GC invocations.
+     *
      * @see #getGlobalGcInvocationCount()
      */
     public static void resetGlobalGcInvocationCount() {
@@ -854,6 +967,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the count of classes initialized.
+     *
      * @see #getGlobalClassInitCount()
      */
     public static void resetGlobalClassInitCount() {
@@ -871,6 +985,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the count of time spent initializing classes.
+     *
      * @see #getGlobalClassInitTime()
      */
     public static void resetGlobalClassInitTime() {
@@ -879,6 +994,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * This method exists for compatibility and always returns 0.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
@@ -888,20 +1004,25 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
-    public static void resetGlobalExternalAllocSize() {}
+    public static void resetGlobalExternalAllocSize() {
+    }
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
-    public static void resetGlobalExternalAllocCount() {}
+    public static void resetGlobalExternalAllocCount() {
+    }
 
     /**
      * This method exists for compatibility and always returns 0.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
@@ -911,6 +1032,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * This method exists for compatibility and always returns 0.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
@@ -920,13 +1042,16 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
-    public static void resetGlobalExternalFreedCount() {}
+    public static void resetGlobalExternalFreedCount() {
+    }
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
@@ -936,10 +1061,12 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
-    public static void resetGlobalExternalFreedSize() {}
+    public static void resetGlobalExternalFreedSize() {
+    }
 
     /**
      * Returns the thread-local count of objects allocated by the runtime between a
@@ -951,6 +1078,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the thread-local count of objects allocated.
+     *
      * @see #getThreadAllocCount()
      */
     public static void resetThreadAllocCount() {
@@ -960,6 +1088,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
     /**
      * Returns the thread-local size of objects allocated by the runtime between a
      * {@link #startAllocCounting() start} and {@link #stopAllocCounting() stop}.
+     *
      * @return The allocated size in bytes.
      */
     public static int getThreadAllocSize() {
@@ -968,6 +1097,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the thread-local count of objects allocated.
+     *
      * @see #getThreadAllocSize()
      */
     public static void resetThreadAllocSize() {
@@ -976,6 +1106,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
@@ -985,13 +1116,16 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
-    public static void resetThreadExternalAllocCount() {}
+    public static void resetThreadExternalAllocCount() {
+    }
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
@@ -1001,10 +1135,12 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * This method exists for compatibility and has no effect.
+     *
      * @deprecated This method is now obsolete.
      */
     @Deprecated
-    public static void resetThreadExternalAllocSize() {}
+    public static void resetThreadExternalAllocSize() {
+    }
 
     /**
      * Returns the number of thread-local non-concurrent GC invocations between a
@@ -1016,6 +1152,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears the thread-local count of non-concurrent GC invocations.
+     *
      * @see #getThreadGcInvocationCount()
      */
     public static void resetThreadGcInvocationCount() {
@@ -1024,6 +1161,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Clears all the global and thread-local memory allocation counters.
+     *
      * @see #startAllocCounting()
      */
     public static void resetAllCounts() {
@@ -1032,18 +1170,21 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Returns the size of the native heap.
+     *
      * @return The size of the native heap in bytes.
      */
     public static native long getNativeHeapSize();
 
     /**
      * Returns the amount of allocated memory in the native heap.
+     *
      * @return The allocated size in bytes.
      */
     public static native long getNativeHeapAllocatedSize();
 
     /**
      * Returns the amount of free memory in the native heap.
+     *
      * @return The freed size in bytes.
      */
     public static native long getNativeHeapFreeSize();
@@ -1057,6 +1198,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
     /**
      * Note: currently only works when the requested pid has the same UID
      * as the caller.
+     *
      * @hide
      */
     public static native void getMemoryInfo(int pid, MemoryInfo memoryInfo);
@@ -1074,30 +1216,51 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      */
     public static native long getPss(int pid, long[] outUss);
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_TOTAL = 0;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_FREE = 1;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_BUFFERS = 2;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_CACHED = 3;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_SHMEM = 4;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_SLAB = 5;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_SWAP_TOTAL = 6;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_SWAP_FREE = 7;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_ZRAM_TOTAL = 8;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int MEMINFO_COUNT = 9;
 
     /**
      * Retrieves /proc/meminfo.  outSizes is filled with fields
      * as defined by MEMINFO_* offsets.
+     *
      * @hide
      */
     public static native void getMemInfo(long[] outSizes);
@@ -1140,6 +1303,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Get the number of loaded classes.
+     *
      * @return the number of loaded classes.
      */
     public static int getLoadedClassCount() {
@@ -1151,8 +1315,8 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      *
      * @param fileName Full pathname of output file (e.g. "/sdcard/dump.hprof").
      * @throws UnsupportedOperationException if the VM was built without
-     *         HPROF support.
-     * @throws IOException if an error occurs while opening or writing files.
+     *                                       HPROF support.
+     * @throws IOException                   if an error occurs while opening or writing files.
      */
     public static void dumpHprofData(String fileName) throws IOException {
         VMDebug.dumpHprofData(fileName);
@@ -1162,7 +1326,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * Like dumpHprofData(String), but takes an already-opened
      * FileDescriptor to which the trace is written.  The file name is also
      * supplied simply for logging.  Makes a dup of the file descriptor.
-     *
+     * <p>
      * Primarily for use by the "am" shell command.
      *
      * @hide
@@ -1176,7 +1340,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * Collect "hprof" and send it to DDMS.  This may cause a GC.
      *
      * @throws UnsupportedOperationException if the VM was built without
-     *         HPROF support.
+     *                                       HPROF support.
      * @hide
      */
     public static void dumpHprofDataDdms() {
@@ -1191,7 +1355,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
     public static native void dumpNativeHeap(FileDescriptor fd);
 
     /**
-      * Returns a count of the extant instances of a class.
+     * Returns a count of the extant instances of a class.
      *
      * @hide
      */
@@ -1201,12 +1365,14 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Returns the number of sent transactions from this process.
+     *
      * @return The number of sent transactions or -1 if it could not read t.
      */
     public static native int getBinderSentTransactions();
 
     /**
      * Returns the number of received transactions from the binder driver.
+     *
      * @return The number of received transactions or -1 if it could not read the stats.
      */
     public static native int getBinderReceivedTransactions();
@@ -1231,17 +1397,16 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Primes the register map cache.
-     *
+     * <p>
      * Only works for classes in the bootstrap class loader.  Does not
      * cause classes to be loaded if they're not already present.
-     *
+     * <p>
      * The classAndMethodDesc argument is a concatentation of the VM-internal
      * class descriptor, method name, and method descriptor.  Examples:
-     *     Landroid/os/Looper;.loop:()V
-     *     Landroid/app/ActivityThread;.main:([Ljava/lang/String;)V
+     * Landroid/os/Looper;.loop:()V
+     * Landroid/app/ActivityThread;.main:([Ljava/lang/String;)V
      *
      * @param classAndMethodDesc the method to prepare
-     *
      * @hide
      */
     public static final boolean cacheRegisterMap(String classAndMethodDesc) {
@@ -1260,7 +1425,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * API for gathering and querying instruction counts.
-     *
+     * <p>
      * Example usage:
      * <pre>
      *   Debug.InstructionCount icount = new Debug.InstructionCount();
@@ -1276,7 +1441,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      */
     public static class InstructionCount {
         private static final int NUM_INSTR =
-            OpcodeInfo.MAXIMUM_PACKED_VALUE + 1;
+                OpcodeInfo.MAXIMUM_PACKED_VALUE + 1;
 
         private int[] mCounts;
 
@@ -1356,7 +1521,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
     static {
         if (false) {
             final String TAG = "DebugProperties";
-            final String[] files = { "/system/debug.prop", "/debug.prop", "/data/debug.prop" };
+            final String[] files = {"/system/debug.prop", "/debug.prop", "/data/debug.prop"};
             final TypedProperties tp = new TypedProperties();
 
             // Read the properties from each of the files, if present.
@@ -1435,33 +1600,33 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
                         field.set(null, null);  // null object for static fields; null string
                     } catch (IllegalAccessException ex) {
                         throw new IllegalArgumentException(
-                            "Cannot set field for " + propertyName, ex);
+                                "Cannot set field for " + propertyName, ex);
                     }
                     return;
                 case TypedProperties.STRING_NOT_SET:
                     return;
                 case TypedProperties.STRING_TYPE_MISMATCH:
                     throw new IllegalArgumentException(
-                        "Type of " + propertyName + " " +
-                        " does not match field type (" + field.getType() + ")");
+                            "Type of " + propertyName + " " +
+                                    " does not match field type (" + field.getType() + ")");
                 default:
                     throw new IllegalStateException(
-                        "Unexpected getStringInfo(" + propertyName + ") return value " +
-                        stringInfo);
+                            "Unexpected getStringInfo(" + propertyName + ") return value " +
+                                    stringInfo);
             }
         }
         Object value = properties.get(propertyName);
         if (value != null) {
             if (!fieldTypeMatches(field, value.getClass())) {
                 throw new IllegalArgumentException(
-                    "Type of " + propertyName + " (" + value.getClass() + ") " +
-                    " does not match field type (" + field.getType() + ")");
+                        "Type of " + propertyName + " (" + value.getClass() + ") " +
+                                " does not match field type (" + field.getType() + ")");
             }
             try {
                 field.set(null, value);  // null object for static fields
             } catch (IllegalAccessException ex) {
                 throw new IllegalArgumentException(
-                    "Cannot set field for " + propertyName, ex);
+                        "Cannot set field for " + propertyName, ex);
             }
         }
     }
@@ -1470,9 +1635,8 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
     /**
      * Equivalent to <code>setFieldsOn(cl, false)</code>.
      *
-     * @see #setFieldsOn(Class, boolean)
-     *
      * @hide
+     * @see #setFieldsOn(Class, boolean)
      */
     public static void setFieldsOn(Class<?> cl) {
         setFieldsOn(cl, false);
@@ -1522,16 +1686,16 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      * <p>
      * These properties are only set during platform debugging, and are not
      * meant to be used as a general-purpose properties store.
-     *
+     * <p>
      * {@hide}
      *
-     * @param cl The class to (possibly) modify
+     * @param cl      The class to (possibly) modify
      * @param partial If false, sets all static fields, otherwise, only set
-     *        fields with the {@link android.os.Debug.DebugProperty}
-     *        annotation
+     *                fields with the {@link android.os.Debug.DebugProperty}
+     *                annotation
      * @throws IllegalArgumentException if any fields are final or non-static,
-     *         or if the type of the field does not match the type of
-     *         the internal debugging property value.
+     *                                  or if the type of the field does not match the type of
+     *                                  the internal debugging property value.
      */
     public static void setFieldsOn(Class<?> cl, boolean partial) {
         if (false) {
@@ -1547,7 +1711,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
                         if (!isStatic || isFinal) {
                             throw new IllegalArgumentException(propertyName +
-                                " must be static and non-final");
+                                    " must be static and non-final");
                         }
                         modifyFieldIfSet(field, debugProperties, propertyName);
                     }
@@ -1555,8 +1719,8 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
             }
         } else {
             Log.wtf(TAG,
-                  "setFieldsOn(" + (cl == null ? "null" : cl.getName()) +
-                  ") called in non-DEBUG build");
+                    "setFieldsOn(" + (cl == null ? "null" : cl.getName()) +
+                            ") called in non-DEBUG build");
         }
     }
 
@@ -1566,21 +1730,21 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
      *
      * @hide
      */
-    @Target({ ElementType.FIELD })
+    @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
     public @interface DebugProperty {
     }
 
     /**
      * Get a debugging dump of a system service by name.
-     *
+     * <p>
      * <p>Most services require the caller to hold android.permission.DUMP.
      *
      * @param name of the service to dump
-     * @param fd to write dump output to (usually an output log file)
+     * @param fd   to write dump output to (usually an output log file)
      * @param args to pass to the service's dump method, may be null
      * @return true if the service was dumped successfully, false if
-     *     the service could not be found or had an error while dumping
+     * the service could not be found or had an error while dumping
      */
     public static boolean dumpService(String name, FileDescriptor fd, String[] args) {
         IBinder service = ServiceManager.getService(name);
@@ -1601,14 +1765,16 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
     /**
      * Have the stack traces of the given native process dumped to the
      * specified file.  Will be appended to the file.
+     *
      * @hide
      */
     public static native void dumpNativeBacktraceToFile(int pid, String file);
 
     /**
      * Return a String describing the calling method and location at a particular stack depth.
+     *
      * @param callStack the Thread stack
-     * @param depth the depth of stack to return information for.
+     * @param depth     the depth of stack to return information for.
      * @return the String describing the caller at that depth.
      */
     private static String getCaller(StackTraceElement callStack[], int depth) {
@@ -1622,6 +1788,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Return a string consisting of methods and locations at multiple call stack levels.
+     *
      * @param depth the number of levels to return, starting with the immediate caller.
      * @return a string describing the call stack.
      * {@hide}
@@ -1637,6 +1804,7 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
 
     /**
      * Return a string consisting of methods and locations at multiple call stack levels.
+     *
      * @param depth the number of levels to return, starting with the immediate caller.
      * @return a string describing the call stack.
      * {@hide}
@@ -1654,7 +1822,8 @@ href="{@docRoot}guide/developing/tools/traceview.html">Traceview: A Graphical Lo
     /**
      * Like {@link #getCallers(int)}, but each location is append to the string
      * as a new line with <var>linePrefix</var> in front of it.
-     * @param depth the number of levels to return, starting with the immediate caller.
+     *
+     * @param depth      the number of levels to return, starting with the immediate caller.
      * @param linePrefix prefix to put in front of each location.
      * @return a string describing the call stack.
      * {@hide}

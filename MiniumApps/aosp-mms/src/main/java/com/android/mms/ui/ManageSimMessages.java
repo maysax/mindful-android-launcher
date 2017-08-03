@@ -95,11 +95,11 @@ public class ManageSimMessages extends Activity
 
     private final ContentObserver simChangeObserver =
             new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfUpdate) {
-            refreshMessageList();
-        }
-    };
+                @Override
+                public void onChange(boolean selfUpdate) {
+                    refreshMessageList();
+                }
+            };
 
     @Override
     protected void onCreate(Bundle icicle) {
@@ -196,7 +196,7 @@ public class ManageSimMessages extends Activity
             ContextMenu menu, View v,
             ContextMenu.ContextMenuInfo menuInfo) {
         menu.add(0, MENU_COPY_TO_PHONE_MEMORY, 0,
-                 R.string.sim_copy_to_phone_memory);
+                R.string.sim_copy_to_phone_memory);
         menu.add(0, MENU_DELETE_FROM_SIM, 0, R.string.sim_delete);
 
         // TODO: Enable this once viewMessage is written.
@@ -207,7 +207,7 @@ public class ManageSimMessages extends Activity
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info;
         try {
-             info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         } catch (ClassCastException exception) {
             Log.e(TAG, "Bad menuInfo.", exception);
             return false;
@@ -278,7 +278,7 @@ public class ManageSimMessages extends Activity
                 cursor.getColumnIndexOrThrow("status"));
 
         return (messageStatus == SmsManager.STATUS_ON_ICC_READ) ||
-               (messageStatus == SmsManager.STATUS_ON_ICC_UNREAD);
+                (messageStatus == SmsManager.STATUS_ON_ICC_UNREAD);
     }
 
     private void deleteFromSim(Cursor cursor) {

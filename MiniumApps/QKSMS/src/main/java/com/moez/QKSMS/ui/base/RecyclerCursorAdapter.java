@@ -3,6 +3,7 @@ package com.moez.QKSMS.ui.base;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
 import com.moez.QKSMS.common.utils.CursorUtils;
 
 import java.util.HashMap;

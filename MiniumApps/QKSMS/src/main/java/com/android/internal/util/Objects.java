@@ -51,7 +51,7 @@ public class Objects {
      * public int hashCode() {
      *   return Objects.hashCode(getX(), getY(), getZ());
      * }</pre>
-     *
+     * <p>
      * <b>Warning</b>: When a single object is supplied, the returned hash code
      * does not equal the hash code of that object.
      */

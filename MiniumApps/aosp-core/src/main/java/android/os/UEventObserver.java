@@ -23,13 +23,13 @@ import java.util.HashMap;
 
 /**
  * UEventObserver is an abstract class that receives UEvent's from the kernel.<p>
- *
+ * <p>
  * Subclass UEventObserver, implementing onUEvent(UEvent event), then call
  * startObserving() with a match string. The UEvent thread will then call your
  * onUEvent() method when a UEvent occurs that contains your match string.<p>
- *
+ * <p>
  * Call stopObserving() to stop receiving UEvent's.<p>
- *
+ * <p>
  * There is only one UEvent thread per process, even if that process has
  * multiple UEventObserver subclass instances. The UEvent thread starts when
  * the startObserving() is called for the first time in that process. Once
@@ -37,7 +37,7 @@ import java.util.HashMap;
  * UEventObserver's via stopObserving()).<p>
  *
  * @hide
-*/
+ */
 public abstract class UEventObserver {
     private static final String TAG = "UEventObserver";
     private static final boolean DEBUG = false;
@@ -45,8 +45,11 @@ public abstract class UEventObserver {
     private static UEventThread sThread;
 
     private static native void nativeSetup();
+
     private static native String nativeWaitForNextEvent();
+
     private static native void nativeAddMatch(String match);
+
     private static native void nativeRemoveMatch(String match);
 
     public UEventObserver() {
@@ -88,10 +91,10 @@ public abstract class UEventObserver {
      * matches.
      *
      * @param match A substring of the UEvent to match.  Try to be as specific
-     * as possible to avoid incurring unintended additional cost from processing
-     * irrelevant messages.  Netlink messages can be moderately high bandwidth and
-     * are expensive to parse.  For example, some devices may send one netlink message
-     * for each vsync period.
+     *              as possible to avoid incurring unintended additional cost from processing
+     *              irrelevant messages.  Netlink messages can be moderately high bandwidth and
+     *              are expensive to parse.  For example, some devices may send one netlink message
+     *              for each vsync period.
      */
     public final void startObserving(String match) {
         if (match == null || match.isEmpty()) {
@@ -125,7 +128,7 @@ public abstract class UEventObserver {
      */
     public static final class UEvent {
         // collection of key=value pairs parsed from the uevent message
-        private final HashMap<String,String> mMap = new HashMap<String,String>();
+        private final HashMap<String, String> mMap = new HashMap<String, String>();
 
         public UEvent(String message) {
             int offset = 0;
@@ -161,10 +164,12 @@ public abstract class UEventObserver {
     }
 
     private static final class UEventThread extends Thread {
-        /** Many to many mapping of string match to observer.
-         *  Multimap would be better, but not available in android, so use
-         *  an ArrayList where even elements are the String match and odd
-         *  elements the corresponding UEventObserver observer */
+        /**
+         * Many to many mapping of string match to observer.
+         * Multimap would be better, but not available in android, so use
+         * an ArrayList where even elements are the String match and odd
+         * elements the corresponding UEventObserver observer
+         */
         private final ArrayList<Object> mKeysAndObservers = new ArrayList<Object>();
 
         private final ArrayList<UEventObserver> mTempObserversToSignal =
@@ -193,10 +198,10 @@ public abstract class UEventObserver {
             synchronized (mKeysAndObservers) {
                 final int N = mKeysAndObservers.size();
                 for (int i = 0; i < N; i += 2) {
-                    final String key = (String)mKeysAndObservers.get(i);
+                    final String key = (String) mKeysAndObservers.get(i);
                     if (message.contains(key)) {
                         final UEventObserver observer =
-                                (UEventObserver)mKeysAndObservers.get(i + 1);
+                                (UEventObserver) mKeysAndObservers.get(i + 1);
                         mTempObserversToSignal.add(observer);
                     }
                 }
@@ -221,13 +226,15 @@ public abstract class UEventObserver {
             }
         }
 
-        /** Removes every key/value pair where value=observer from mObservers */
+        /**
+         * Removes every key/value pair where value=observer from mObservers
+         */
         public void removeObserver(UEventObserver observer) {
             synchronized (mKeysAndObservers) {
                 for (int i = 0; i < mKeysAndObservers.size(); ) {
                     if (mKeysAndObservers.get(i + 1) == observer) {
                         mKeysAndObservers.remove(i + 1);
-                        final String match = (String)mKeysAndObservers.remove(i);
+                        final String match = (String) mKeysAndObservers.remove(i);
                         nativeRemoveMatch(match);
                     } else {
                         i += 2;

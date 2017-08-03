@@ -16,15 +16,16 @@
 
 package com.android.internal.util;
 
+import android.util.Slog;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
-
-import android.util.Slog;
 
 /**
  * Helper class for logging serious issues, which also keeps a small
  * snapshot of the logged events that can be printed later, such as part
  * of a system service's dumpsys output.
+ *
  * @hide
  */
 public class LocalLog {
@@ -54,7 +55,7 @@ public class LocalLog {
             if (header != null) {
                 pw.println(header);
             }
-            for (int i=0; i<mLines.size(); i++) {
+            for (int i = 0; i < mLines.size(); i++) {
                 if (prefix != null) {
                     pw.print(prefix);
                 }

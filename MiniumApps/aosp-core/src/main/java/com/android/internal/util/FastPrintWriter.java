@@ -55,10 +55,8 @@ public class FastPrintWriter extends PrintWriter {
      * stream. By default, the new print writer does not automatically flush its
      * contents to the target stream when a newline is encountered.
      *
-     * @param out
-     *            the target output stream.
-     * @throws NullPointerException
-     *             if {@code out} is {@code null}.
+     * @param out the target output stream.
+     * @throws NullPointerException if {@code out} is {@code null}.
      */
     public FastPrintWriter(OutputStream out) {
         this(out, false, 8192);
@@ -70,13 +68,10 @@ public class FastPrintWriter extends PrintWriter {
      * automatically flushes its contents to the target stream when a newline is
      * encountered.
      *
-     * @param out
-     *            the target output stream.
-     * @param autoFlush
-     *            indicates whether contents are flushed upon encountering a
-     *            newline sequence.
-     * @throws NullPointerException
-     *             if {@code out} is {@code null}.
+     * @param out       the target output stream.
+     * @param autoFlush indicates whether contents are flushed upon encountering a
+     *                  newline sequence.
+     * @throws NullPointerException if {@code out} is {@code null}.
      */
     public FastPrintWriter(OutputStream out, boolean autoFlush) {
         this(out, autoFlush, 8192);
@@ -88,16 +83,12 @@ public class FastPrintWriter extends PrintWriter {
      * if the print writer automatically flushes its contents to the target stream
      * when a newline is encountered.
      *
-     * @param out
-     *            the target output stream.
-     * @param autoFlush
-     *            indicates whether contents are flushed upon encountering a
-     *            newline sequence.
-     * @param bufferLen
-     *            specifies the size of the FastPrintWriter's internal buffer; the
-     *            default is 8192.
-     * @throws NullPointerException
-     *             if {@code out} is {@code null}.
+     * @param out       the target output stream.
+     * @param autoFlush indicates whether contents are flushed upon encountering a
+     *                  newline sequence.
+     * @param bufferLen specifies the size of the FastPrintWriter's internal buffer; the
+     *                  default is 8192.
+     * @throws NullPointerException if {@code out} is {@code null}.
      */
     public FastPrintWriter(OutputStream out, boolean autoFlush, int bufferLen) {
         super(sDummyWriter, autoFlush);
@@ -119,15 +110,13 @@ public class FastPrintWriter extends PrintWriter {
      * Constructs a new {@code PrintWriter} with {@code wr} as its target
      * writer. By default, the new print writer does not automatically flush its
      * contents to the target writer when a newline is encountered.
-     *
+     * <p>
      * <p>NOTE: Unlike PrintWriter, this version will still do buffering inside of
      * FastPrintWriter before sending data to the Writer.  This means you must call
      * flush() before retrieving any data from the Writer.</p>
      *
-     * @param wr
-     *            the target writer.
-     * @throws NullPointerException
-     *             if {@code wr} is {@code null}.
+     * @param wr the target writer.
+     * @throws NullPointerException if {@code wr} is {@code null}.
      */
     public FastPrintWriter(Writer wr) {
         this(wr, false, 8192);
@@ -139,13 +128,10 @@ public class FastPrintWriter extends PrintWriter {
      * automatically flushes its contents to the target writer when a newline is
      * encountered.
      *
-     * @param wr
-     *            the target writer.
-     * @param autoFlush
-     *            indicates whether to flush contents upon encountering a
-     *            newline sequence.
-     * @throws NullPointerException
-     *             if {@code out} is {@code null}.
+     * @param wr        the target writer.
+     * @param autoFlush indicates whether to flush contents upon encountering a
+     *                  newline sequence.
+     * @throws NullPointerException if {@code out} is {@code null}.
      */
     public FastPrintWriter(Writer wr, boolean autoFlush) {
         this(wr, autoFlush, 8192);
@@ -157,16 +143,12 @@ public class FastPrintWriter extends PrintWriter {
      * if the print writer automatically flushes its contents to the target writer
      * when a newline is encountered.
      *
-     * @param wr
-     *            the target writer.
-     * @param autoFlush
-     *            indicates whether to flush contents upon encountering a
-     *            newline sequence.
-     * @param bufferLen
-     *            specifies the size of the FastPrintWriter's internal buffer; the
-     *            default is 8192.
-     * @throws NullPointerException
-     *             if {@code wr} is {@code null}.
+     * @param wr        the target writer.
+     * @param autoFlush indicates whether to flush contents upon encountering a
+     *                  newline sequence.
+     * @param bufferLen specifies the size of the FastPrintWriter's internal buffer; the
+     *                  default is 8192.
+     * @throws NullPointerException if {@code wr} is {@code null}.
      */
     public FastPrintWriter(Writer wr, boolean autoFlush, int bufferLen) {
         super(sDummyWriter, autoFlush);
@@ -189,10 +171,8 @@ public class FastPrintWriter extends PrintWriter {
      * printer and the default buffer size.  Because a {@link Printer} is line-base,
      * autoflush is always enabled.
      *
-     * @param pr
-     *            the target writer.
-     * @throws NullPointerException
-     *             if {@code pr} is {@code null}.
+     * @param pr the target writer.
+     * @throws NullPointerException if {@code pr} is {@code null}.
      */
     public FastPrintWriter(Printer pr) {
         this(pr, 512);
@@ -203,13 +183,10 @@ public class FastPrintWriter extends PrintWriter {
      * printer and a custom buffer size.  Because a {@link Printer} is line-base,
      * autoflush is always enabled.
      *
-     * @param pr
-     *            the target writer.
-     * @param bufferLen
-     *            specifies the size of the FastPrintWriter's internal buffer; the
-     *            default is 512.
-     * @throws NullPointerException
-     *             if {@code pr} is {@code null}.
+     * @param pr        the target writer.
+     * @param bufferLen specifies the size of the FastPrintWriter's internal buffer; the
+     *                  default is 512.
+     * @throws NullPointerException if {@code pr} is {@code null}.
      */
     public FastPrintWriter(Printer pr, int bufferLen) {
         super(sDummyWriter, true);
@@ -241,8 +218,8 @@ public class FastPrintWriter extends PrintWriter {
      * Flushes this writer and returns the value of the error flag.
      *
      * @return {@code true} if either an {@code IOException} has been thrown
-     *         previously or if {@code setError()} has been called;
-     *         {@code false} otherwise.
+     * previously or if {@code setError()} has been called;
+     * {@code false} otherwise.
      * @see #setError()
      */
     public boolean checkError() {
@@ -254,6 +231,7 @@ public class FastPrintWriter extends PrintWriter {
 
     /**
      * Sets the error state of the stream to false.
+     *
      * @since 1.6
      */
     protected void clearError() {
@@ -279,12 +257,12 @@ public class FastPrintWriter extends PrintWriter {
 
     private void appendLocked(char c) throws IOException {
         int pos = mPos;
-        if (pos >= (mBufferLen-1)) {
+        if (pos >= (mBufferLen - 1)) {
             flushLocked();
             pos = mPos;
         }
         mText[pos] = c;
-        mPos = pos+1;
+        mPos = pos + 1;
     }
 
     private void appendLocked(String str, int i, final int length) throws IOException {
@@ -299,7 +277,7 @@ public class FastPrintWriter extends PrintWriter {
             return;
         }
         int pos = mPos;
-        if ((pos+length) > BUFFER_LEN) {
+        if ((pos + length) > BUFFER_LEN) {
             flushLocked();
             pos = mPos;
         }
@@ -319,7 +297,7 @@ public class FastPrintWriter extends PrintWriter {
             return;
         }
         int pos = mPos;
-        if ((pos+length) > BUFFER_LEN) {
+        if ((pos + length) > BUFFER_LEN) {
             flushLocked();
             pos = mPos;
         }
@@ -361,14 +339,14 @@ public class FastPrintWriter extends PrintWriter {
                 int nonEolOff = 0;
                 final int sepLen = mSeparator.length();
                 final int len = sepLen < mPos ? sepLen : mPos;
-                while (nonEolOff < len && mText[mPos-1-nonEolOff]
-                        == mSeparator.charAt(mSeparator.length()-1-nonEolOff)) {
+                while (nonEolOff < len && mText[mPos - 1 - nonEolOff]
+                        == mSeparator.charAt(mSeparator.length() - 1 - nonEolOff)) {
                     nonEolOff++;
                 }
                 if (nonEolOff >= mPos) {
                     mPrinter.println("");
                 } else {
-                    mPrinter.println(new String(mText, 0, mPos-nonEolOff));
+                    mPrinter.println(new String(mText, 0, mPos - nonEolOff));
                 }
             }
             mPos = 0;
@@ -416,8 +394,7 @@ public class FastPrintWriter extends PrintWriter {
      * Prints the string representation of the specified character array
      * to the target.
      *
-     * @param charArray
-     *            the character array to print to the target.
+     * @param charArray the character array to print to the target.
      * @see #print(String)
      */
     public void print(char[] charArray) {
@@ -433,8 +410,7 @@ public class FastPrintWriter extends PrintWriter {
      * Prints the string representation of the specified character to the
      * target.
      *
-     * @param ch
-     *            the character to print to the target.
+     * @param ch the character to print to the target.
      * @see #print(String)
      */
     public void print(char ch) {
@@ -453,8 +429,7 @@ public class FastPrintWriter extends PrintWriter {
      * <p>
      * If an I/O error occurs, this writer's error flag is set to {@code true}.
      *
-     * @param str
-     *            the string to print to the target.
+     * @param str the string to print to the target.
      * @see #write(int)
      */
     public void print(String str) {
@@ -548,15 +523,11 @@ public class FastPrintWriter extends PrintWriter {
      * This writer's error flag is set to {@code true} if this writer is closed
      * or an I/O error occurs.
      *
-     * @param buf
-     *            the buffer to write to the target.
-     * @param offset
-     *            the index of the first character in {@code buffer} to write.
-     * @param count
-     *            the number of characters in {@code buffer} to write.
-     * @throws IndexOutOfBoundsException
-     *             if {@code offset < 0} or {@code count < 0}, or if {@code
-     *             offset + count} is greater than the length of {@code buf}.
+     * @param buf    the buffer to write to the target.
+     * @param offset the index of the first character in {@code buffer} to write.
+     * @param count  the number of characters in {@code buffer} to write.
+     * @throws IndexOutOfBoundsException if {@code offset < 0} or {@code count < 0}, or if {@code
+     *                                   offset + count} is greater than the length of {@code buf}.
      */
     @Override
     public void write(char[] buf, int offset, int count) {
@@ -575,8 +546,7 @@ public class FastPrintWriter extends PrintWriter {
      * This writer's error flag is set to {@code true} if this writer is closed
      * or an I/O error occurs.
      *
-     * @param oneChar
-     *            the character to write to the target.
+     * @param oneChar the character to write to the target.
      */
     @Override
     public void write(int oneChar) {
@@ -591,8 +561,7 @@ public class FastPrintWriter extends PrintWriter {
     /**
      * Writes the characters from the specified string to the target.
      *
-     * @param str
-     *            the non-null string containing the characters to write.
+     * @param str the non-null string containing the characters to write.
      */
     @Override
     public void write(String str) {
@@ -608,15 +577,11 @@ public class FastPrintWriter extends PrintWriter {
      * Writes {@code count} characters from {@code str} starting at {@code
      * offset} to the target.
      *
-     * @param str
-     *            the non-null string containing the characters to write.
-     * @param offset
-     *            the index of the first character in {@code str} to write.
-     * @param count
-     *            the number of characters from {@code str} to write.
-     * @throws IndexOutOfBoundsException
-     *             if {@code offset < 0} or {@code count < 0}, or if {@code
-     *             offset + count} is greater than the length of {@code str}.
+     * @param str    the non-null string containing the characters to write.
+     * @param offset the index of the first character in {@code str} to write.
+     * @param count  the number of characters from {@code str} to write.
+     * @throws IndexOutOfBoundsException if {@code offset < 0} or {@code count < 0}, or if {@code
+     *                                   offset + count} is greater than the length of {@code str}.
      */
     @Override
     public void write(String str, int offset, int count) {
@@ -635,19 +600,15 @@ public class FastPrintWriter extends PrintWriter {
      * csq} is {@code null}, then the specified subsequence of the string "null"
      * will be written to the target.
      *
-     * @param csq
-     *            the character sequence appended to the target.
-     * @param start
-     *            the index of the first char in the character sequence appended
-     *            to the target.
-     * @param end
-     *            the index of the character following the last character of the
-     *            subsequence appended to the target.
+     * @param csq   the character sequence appended to the target.
+     * @param start the index of the first char in the character sequence appended
+     *              to the target.
+     * @param end   the index of the character following the last character of the
+     *              subsequence appended to the target.
      * @return this writer.
-     * @throws StringIndexOutOfBoundsException
-     *             if {@code start > end}, {@code start < 0}, {@code end < 0} or
-     *             either {@code start} or {@code end} are greater or equal than
-     *             the length of {@code csq}.
+     * @throws StringIndexOutOfBoundsException if {@code start > end}, {@code start < 0}, {@code end < 0} or
+     *                                         either {@code start} or {@code end} are greater or equal than
+     *                                         the length of {@code csq}.
      */
     @Override
     public PrintWriter append(CharSequence csq, int start, int end) {

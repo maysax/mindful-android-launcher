@@ -72,8 +72,9 @@ public class PermissionUtil {
     }
 
 
-
-    /** @return True if {@link NotificationListener_} is enabled. */
+    /**
+     * @return True if {@link NotificationListener_} is enabled.
+     */
     private boolean isEnabled() {
         return ServiceUtils.isNotificationListenerServiceRunning(context, NotificationListener_.class);
     }

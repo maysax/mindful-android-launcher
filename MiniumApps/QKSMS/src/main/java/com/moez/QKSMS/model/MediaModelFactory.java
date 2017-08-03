@@ -25,7 +25,6 @@ import com.google.android.mms.ContentType;
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.PduBody;
 import com.google.android.mms.pdu_alt.PduPart;
-import com.moez.QKSMS.LogTag;
 import com.moez.QKSMS.MmsConfig;
 
 import org.json.JSONArray;
@@ -63,7 +62,7 @@ public class MediaModelFactory {
                                            ArrayList<String> srcs, LayoutModel layouts,
                                            PduBody pb)
 
-        throws IOException, IllegalArgumentException, MmsException {
+            throws IOException, IllegalArgumentException, MmsException {
 
         String tag = sme.getTagName();
         String src = sme.getSrc();
@@ -72,28 +71,28 @@ public class MediaModelFactory {
 
         if (sme instanceof SMILRegionMediaElement) {
             return getRegionMediaModel(
-                context, tag, src, (SMILRegionMediaElement) sme, layouts, part);
+                    context, tag, src, (SMILRegionMediaElement) sme, layouts, part);
         } else {
             return getGenericMediaModel(
-                context, tag, src, sme, part, null);
+                    context, tag, src, sme, part, null);
         }
     }
 
     /**
      * This method is meant to identify the part in the given PduBody that corresponds to the given
      * src string.
-     *
+     * <p>
      * Essentially, a SMIL MMS is formatted as follows:
-     *
+     * <p>
      * 1. A smil/application part, which contains XML-like formatting for images, text, audio,
      * slideshows, videos, etc.
      * 2. One or more parts that correspond to one of the elements that was mentioned in the
      * formatting above.
-     *
+     * <p>
      * In the smil/application part, elements are identified by a "src" attribute in an XML-like
      * element. The challenge of this method lies in the fact that sometimes, the src string isn't
      * located at all in the part that it is meant to identify.
-     *
+     * <p>
      * We employ several methods of pairing src strings up to parts, using certain patterns we've
      * seen in failed MMS messages. These are described in this method.
      * TODO TODO TODO: Create a testing suite for this!
@@ -360,10 +359,10 @@ public class MediaModelFactory {
 
     private static String unescapeXML(String str) {
         return str.replaceAll("&lt;", "<")
-            .replaceAll("&gt;", ">")
-            .replaceAll("&quot;", "\"")
-            .replaceAll("&apos;", "'")
-            .replaceAll("&amp;", "&");
+                .replaceAll("&gt;", ">")
+                .replaceAll("&quot;", "\"")
+                .replaceAll("&apos;", "'")
+                .replaceAll("&amp;", "&");
     }
 
     private static MediaModel getRegionMediaModel(Context context,
@@ -396,7 +395,7 @@ public class MediaModelFactory {
     // When we encounter a content type we can't handle, such as "application/vnd.smaf", instead
     // of throwing an exception and crashing, insert an empty TextModel in its place.
     private static MediaModel createEmptyTextModel(Context context, RegionModel regionModel)
-        throws IOException {
+            throws IOException {
         return new TextModel(context, ContentType.TEXT_PLAIN, null, regionModel);
     }
 
@@ -406,7 +405,7 @@ public class MediaModelFactory {
         byte[] bytes = part.getContentType();
         if (bytes == null) {
             throw new IllegalArgumentException(
-                "Content-Type of the part may not be null.");
+                    "Content-Type of the part may not be null.");
         }
 
         String contentType = new String(bytes);
@@ -415,36 +414,36 @@ public class MediaModelFactory {
         switch (tag) {
             case SmilHelper.ELEMENT_TAG_TEXT:
                 media = new TextModel(context, contentType, src,
-                    part.getCharset(), part.getData(), regionModel);
+                        part.getCharset(), part.getData(), regionModel);
                 break;
             case SmilHelper.ELEMENT_TAG_IMAGE:
                 media = new ImageModel(context, contentType, src,
-                    part.getDataUri(), regionModel);
+                        part.getDataUri(), regionModel);
                 break;
             case SmilHelper.ELEMENT_TAG_VIDEO:
                 media = new VideoModel(context, contentType, src,
-                    part.getDataUri(), regionModel);
+                        part.getDataUri(), regionModel);
                 break;
             case SmilHelper.ELEMENT_TAG_AUDIO:
                 media = new AudioModel(context, contentType, src,
-                    part.getDataUri());
+                        part.getDataUri());
                 break;
             case SmilHelper.ELEMENT_TAG_REF:
                 if (ContentType.isTextType(contentType)) {
                     media = new TextModel(context, contentType, src,
-                        part.getCharset(), part.getData(), regionModel);
+                            part.getCharset(), part.getData(), regionModel);
                 } else if (ContentType.isImageType(contentType)) {
                     media = new ImageModel(context, contentType, src,
-                        part.getDataUri(), regionModel);
+                            part.getDataUri(), regionModel);
                 } else if (ContentType.isVideoType(contentType)) {
                     media = new VideoModel(context, contentType, src,
-                        part.getDataUri(), regionModel);
+                            part.getDataUri(), regionModel);
                 } else if (ContentType.isAudioType(contentType)) {
                     media = new AudioModel(context, contentType, src,
-                        part.getDataUri());
+                            part.getDataUri());
                 } else {
                     Log.d(TAG, "[MediaModelFactory] getGenericMediaModel Unsupported Content-Type: "
-                        + contentType);
+                            + contentType);
                     media = createEmptyTextModel(context, regionModel);
                 }
                 break;

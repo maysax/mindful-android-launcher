@@ -18,11 +18,11 @@ import minium.co.launcher2.R;
  */
 public class ButtonItemAdapter extends RecyclerView.Adapter<ButtonItemAdapter.ButtonVH> {
 
-public interface Callback {
-    void onItemClicked(int index);
+    public interface Callback {
+        void onItemClicked(int index);
 
-    void onButtonClicked(int index);
-}
+        void onButtonClicked(int index);
+    }
 
     private final CharSequence[] mItems;
     private Callback mCallback;
@@ -58,31 +58,31 @@ public interface Callback {
         return mItems.length;
     }
 
-public static class ButtonVH extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ButtonVH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    final TextView title;
-    final ImageButton button;
-    final ButtonItemAdapter adapter;
+        final TextView title;
+        final ImageButton button;
+        final ButtonItemAdapter adapter;
 
-    public ButtonVH(View itemView, ButtonItemAdapter adapter) {
-        super(itemView);
-        title = (TextView) itemView.findViewById(R.id.md_title);
-        button = (ImageButton) itemView.findViewById(R.id.md_button);
+        public ButtonVH(View itemView, ButtonItemAdapter adapter) {
+            super(itemView);
+            title = (TextView) itemView.findViewById(R.id.md_title);
+            button = (ImageButton) itemView.findViewById(R.id.md_button);
 
-        this.adapter = adapter;
-        itemView.setOnClickListener(this);
-        button.setOnClickListener(this);
-    }
+            this.adapter = adapter;
+            itemView.setOnClickListener(this);
+            button.setOnClickListener(this);
+        }
 
-    @Override
-    public void onClick(View view) {
-        if (adapter.mCallback == null)
-            return;
-        if (view instanceof Button) {
-            adapter.mCallback.onButtonClicked(getAdapterPosition());
-        } else {
-            adapter.mCallback.onItemClicked(getAdapterPosition());
+        @Override
+        public void onClick(View view) {
+            if (adapter.mCallback == null)
+                return;
+            if (view instanceof Button) {
+                adapter.mCallback.onButtonClicked(getAdapterPosition());
+            } else {
+                adapter.mCallback.onItemClicked(getAdapterPosition());
+            }
         }
     }
-}
 }

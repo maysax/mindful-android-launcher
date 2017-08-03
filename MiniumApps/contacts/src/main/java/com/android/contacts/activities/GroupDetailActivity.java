@@ -30,10 +30,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.android.contacts.ContactsActivity;
-import com.android.contacts.group.GroupDetailDisplayUtils;
-import com.android.contacts.group.GroupDetailFragment;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountType;
+import com.android.contacts.group.GroupDetailDisplayUtils;
+import com.android.contacts.group.GroupDetailFragment;
 
 import minium.co.contacts.R;
 
@@ -72,45 +72,45 @@ public class GroupDetailActivity extends ContactsActivity {
         if (actionBar != null) {
             actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE,
                     ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE
-                    | ActionBar.DISPLAY_SHOW_HOME);
+                            | ActionBar.DISPLAY_SHOW_HOME);
         }
     }
 
     private final GroupDetailFragment.Listener mFragmentListener =
             new GroupDetailFragment.Listener() {
 
-        @Override
-        public void onGroupSizeUpdated(String size) {
-            getActionBar().setSubtitle(size);
-        }
+                @Override
+                public void onGroupSizeUpdated(String size) {
+                    getActionBar().setSubtitle(size);
+                }
 
-        @Override
-        public void onGroupTitleUpdated(String title) {
-            getActionBar().setTitle(title);
-        }
+                @Override
+                public void onGroupTitleUpdated(String title) {
+                    getActionBar().setTitle(title);
+                }
 
-        @Override
-        public void onAccountTypeUpdated(String accountTypeString, String dataSet) {
-            mAccountTypeString = accountTypeString;
-            mDataSet = dataSet;
-            invalidateOptionsMenu();
-        }
+                @Override
+                public void onAccountTypeUpdated(String accountTypeString, String dataSet) {
+                    mAccountTypeString = accountTypeString;
+                    mDataSet = dataSet;
+                    invalidateOptionsMenu();
+                }
 
-        @Override
-        public void onEditRequested(Uri groupUri) {
-            final Intent intent = new Intent(GroupDetailActivity.this, GroupEditorActivity.class);
-            intent.setData(groupUri);
-            intent.setAction(Intent.ACTION_EDIT);
-            startActivity(intent);
-        }
+                @Override
+                public void onEditRequested(Uri groupUri) {
+                    final Intent intent = new Intent(GroupDetailActivity.this, GroupEditorActivity.class);
+                    intent.setData(groupUri);
+                    intent.setAction(Intent.ACTION_EDIT);
+                    startActivity(intent);
+                }
 
-        @Override
-        public void onContactSelected(Uri contactUri) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, contactUri);
-            startActivity(intent);
-        }
+                @Override
+                public void onContactSelected(Uri contactUri) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, contactUri);
+                    startActivity(intent);
+                }
 
-    };
+            };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

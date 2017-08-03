@@ -44,7 +44,7 @@ import com.android.mms.data.Conversation;
  * This class manages the view for given conversation.
  */
 public class ConversationListItem extends RelativeLayout implements Contact.UpdateListener,
-            Checkable {
+        Checkable {
     private static final String TAG = LogTag.TAG;
     private static final boolean DEBUG = false;
 
@@ -112,7 +112,7 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
             buf.append(mContext.getResources().getString(R.string.message_count_format,
                     mConversation.getMessageCount()));
             buf.setSpan(new ForegroundColorSpan(
-                    mContext.getResources().getColor(R.color.message_count_color)),
+                            mContext.getResources().getColor(R.color.message_count_color)),
                     before, buf.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         if (mConversation.hasDraft()) {
@@ -124,7 +124,7 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
             buf.setSpan(new TextAppearanceSpan(mContext, size, color), before,
                     buf.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             buf.setSpan(new ForegroundColorSpan(
-                    mContext.getResources().getColor(R.drawable.text_color_red)),
+                            mContext.getResources().getColor(R.drawable.text_color_red)),
                     before, buf.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
         }
 
@@ -179,7 +179,7 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
 
         updateBackground();
 
-        LayoutParams attachmentLayout = (LayoutParams)mAttachmentView.getLayoutParams();
+        LayoutParams attachmentLayout = (LayoutParams) mAttachmentView.getLayoutParams();
         boolean hasError = conversation.hasError();
         // When there's an error icon, the attachment icon is left of the error icon.
         // When there is not an error icon, the attachment icon is left of the date text.
@@ -209,10 +209,10 @@ public class ConversationListItem extends RelativeLayout implements Contact.Upda
 
         // Subject
         mSubjectView.setText(conversation.getSnippet());
-        LayoutParams subjectLayout = (LayoutParams)mSubjectView.getLayoutParams();
+        LayoutParams subjectLayout = (LayoutParams) mSubjectView.getLayoutParams();
         // We have to make the subject left of whatever optional items are shown on the right.
         subjectLayout.addRule(RelativeLayout.LEFT_OF, hasAttachment ? R.id.attachment :
-            (hasError ? R.id.error : R.id.date));
+                (hasError ? R.id.error : R.id.date));
 
         // Transmission error indicator.
         mErrorIndicator.setVisibility(hasError ? VISIBLE : GONE);

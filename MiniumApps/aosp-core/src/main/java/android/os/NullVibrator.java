@@ -51,7 +51,7 @@ public class NullVibrator extends Vibrator {
      */
     @Override
     public void vibrate(int uid, String opPkg, long[] pattern, int repeat,
-            AudioAttributes attributes) {
+                        AudioAttributes attributes) {
         if (repeat >= pattern.length) {
             throw new ArrayIndexOutOfBoundsException();
         }

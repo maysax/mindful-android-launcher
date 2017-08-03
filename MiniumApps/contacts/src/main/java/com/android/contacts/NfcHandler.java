@@ -33,13 +33,13 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
-  * This class implements sharing the currently displayed
-  * contact to another device using NFC. NFC sharing is only
-  * enabled when the activity is in the foreground and resumed.
-  * When an NFC link is established, {@link #createMessage}
-  * will be called to create the data to be sent over the link,
-  * which is a vCard in this case.
-  */
+ * This class implements sharing the currently displayed
+ * contact to another device using NFC. NFC sharing is only
+ * enabled when the activity is in the foreground and resumed.
+ * When an NFC link is established, {@link #createMessage}
+ * will be called to create the data to be sent over the link,
+ * which is a vCard in this case.
+ */
 public class NfcHandler implements NfcAdapter.CreateNdefMessageCallback {
 
     private static final String TAG = "ContactNfcHandler";
@@ -71,13 +71,13 @@ public class NfcHandler implements NfcAdapter.CreateNdefMessageCallback {
             // of determining this.
             if (lookupKey.equals(PROFILE_LOOKUP_KEY)) {
                 shareUri = Profile.CONTENT_VCARD_URI.buildUpon().
-                appendQueryParameter(Contacts.QUERY_PARAMETER_VCARD_NO_PHOTO, "true").
-                build();
+                        appendQueryParameter(Contacts.QUERY_PARAMETER_VCARD_NO_PHOTO, "true").
+                        build();
             } else {
                 shareUri = Contacts.CONTENT_VCARD_URI.buildUpon().
-                appendPath(lookupKey).
-                appendQueryParameter(Contacts.QUERY_PARAMETER_VCARD_NO_PHOTO, "true").
-                build();
+                        appendPath(lookupKey).
+                        appendQueryParameter(Contacts.QUERY_PARAMETER_VCARD_NO_PHOTO, "true").
+                        build();
             }
             ByteArrayOutputStream ndefBytes = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];

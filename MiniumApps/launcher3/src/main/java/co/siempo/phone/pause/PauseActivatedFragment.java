@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.util.AudioUtils;
+import co.siempo.phone.util.VibrationUtils_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
@@ -77,7 +79,7 @@ public class PauseActivatedFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
+        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
         handler = new Handler();
         titleActionBar.setText(R.string.title_pause);
         imgRight.setVisibility(View.INVISIBLE);
@@ -113,7 +115,7 @@ public class PauseActivatedFragment extends CoreFragment {
 
     @Click
     void imgRight() {
-        ((CoreActivity)getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(),R.id.mainView);
+        ((CoreActivity) getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(), R.id.mainView);
     }
 
     private Runnable pauseActiveRunnable = new Runnable() {
@@ -143,6 +145,8 @@ public class PauseActivatedFragment extends CoreFragment {
         handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
         getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
+        VibrationUtils_.getInstance_(getActivity()).vibrate();
+        AudioUtils.playnotification(getActivity());
         getActivity().finish();
     }
 }

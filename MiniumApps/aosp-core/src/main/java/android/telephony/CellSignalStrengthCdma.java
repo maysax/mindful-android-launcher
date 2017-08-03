@@ -49,7 +49,7 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
      * @hide
      */
     public CellSignalStrengthCdma(int cdmaDbm, int cdmaEcio, int evdoDbm, int evdoEcio,
-            int evdoSnr) {
+                                  int evdoSnr) {
         initialize(cdmaDbm, cdmaEcio, evdoDbm, evdoEcio, evdoSnr);
     }
 
@@ -57,7 +57,6 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
      * Copy constructors
      *
      * @param s Source SignalStrength
-     *
      * @hide
      */
     public CellSignalStrengthCdma(CellSignalStrengthCdma s) {
@@ -72,7 +71,6 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
      * @param evdoDbm
      * @param evdoEcio
      * @param evdoSnr
-     *
      * @hide
      */
     public void initialize(int cdmaDbm, int cdmaEcio, int evdoDbm, int evdoEcio, int evdoSnr) {
@@ -102,7 +100,9 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         return new CellSignalStrengthCdma(this);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @Override
     public void setDefaultValues() {
         mCdmaDbm = Integer.MAX_VALUE;
@@ -236,7 +236,10 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
     public int getCdmaDbm() {
         return mCdmaDbm;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCdmaDbm(int cdmaDbm) {
         mCdmaDbm = cdmaDbm;
     }
@@ -247,7 +250,10 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
     public int getCdmaEcio() {
         return mCdmaEcio;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCdmaEcio(int cdmaEcio) {
         mCdmaEcio = cdmaEcio;
     }
@@ -258,7 +264,10 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
     public int getEvdoDbm() {
         return mEvdoDbm;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setEvdoDbm(int evdoDbm) {
         mEvdoDbm = evdoDbm;
     }
@@ -269,7 +278,10 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
     public int getEvdoEcio() {
         return mEvdoEcio;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setEvdoEcio(int evdoEcio) {
         mEvdoEcio = evdoEcio;
     }
@@ -280,7 +292,10 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
     public int getEvdoSnr() {
         return mEvdoSnr;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setEvdoSnr(int evdoSnr) {
         mEvdoSnr = evdoSnr;
     }
@@ -293,7 +308,7 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
     }
 
     @Override
-    public boolean equals (Object o) {
+    public boolean equals(Object o) {
         CellSignalStrengthCdma s;
 
         try {
@@ -326,7 +341,9 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
                 + " evdoSnr=" + mEvdoSnr;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (DBG) log("writeToParcel(Parcel, int): " + toString());
@@ -355,26 +372,30 @@ public final class CellSignalStrengthCdma extends CellSignalStrength implements 
         if (DBG) log("CellSignalStrengthCdma(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @SuppressWarnings("hiding")
     public static final Parcelable.Creator<CellSignalStrengthCdma> CREATOR =
             new Parcelable.Creator<CellSignalStrengthCdma>() {
-        @Override
-        public CellSignalStrengthCdma createFromParcel(Parcel in) {
-            return new CellSignalStrengthCdma(in);
-        }
+                @Override
+                public CellSignalStrengthCdma createFromParcel(Parcel in) {
+                    return new CellSignalStrengthCdma(in);
+                }
 
-        @Override
-        public CellSignalStrengthCdma[] newArray(int size) {
-            return new CellSignalStrengthCdma[size];
-        }
-    };
+                @Override
+                public CellSignalStrengthCdma[] newArray(int size) {
+                    return new CellSignalStrengthCdma[size];
+                }
+            };
 
     /**
      * log

@@ -22,14 +22,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.provider.ContactsContract.DisplayPhoto;
-import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountWithDataSet;
 import com.android.contacts.common.model.dataitem.ImDataItem;
 import com.android.contacts.common.testing.NeededForTesting;
-import com.android.contacts.common.model.AccountTypeManager;
 
 import java.util.List;
 
@@ -138,7 +137,7 @@ public class ContactsUtils {
         if (sThumbnailSize == -1) {
             final Cursor c = context.getContentResolver().query(
                     DisplayPhoto.CONTENT_MAX_DIMENSIONS_URI,
-                    new String[] { DisplayPhoto.THUMBNAIL_MAX_DIM }, null, null, null);
+                    new String[]{DisplayPhoto.THUMBNAIL_MAX_DIM}, null, null, null);
             try {
                 c.moveToFirst();
                 sThumbnailSize = c.getInt(0);
@@ -193,18 +192,18 @@ public class ContactsUtils {
             final int chatCapability = im.getChatCapability();
             if ((chatCapability & Im.CAPABILITY_HAS_CAMERA) != 0) {
                 intent = new Intent(Intent.ACTION_SENDTO,
-                                Uri.parse("xmpp:" + data + "?message"));
+                        Uri.parse("xmpp:" + data + "?message"));
                 secondaryIntent = new Intent(Intent.ACTION_SENDTO,
                         Uri.parse("xmpp:" + data + "?call"));
             } else if ((chatCapability & Im.CAPABILITY_HAS_VOICE) != 0) {
                 // Allow Talking and Texting
                 intent =
-                    new Intent(Intent.ACTION_SENDTO, Uri.parse("xmpp:" + data + "?message"));
+                        new Intent(Intent.ACTION_SENDTO, Uri.parse("xmpp:" + data + "?message"));
                 secondaryIntent =
-                    new Intent(Intent.ACTION_SENDTO, Uri.parse("xmpp:" + data + "?call"));
+                        new Intent(Intent.ACTION_SENDTO, Uri.parse("xmpp:" + data + "?call"));
             } else {
                 intent =
-                    new Intent(Intent.ACTION_SENDTO, Uri.parse("xmpp:" + data + "?message"));
+                        new Intent(Intent.ACTION_SENDTO, Uri.parse("xmpp:" + data + "?message"));
             }
         } else {
             // Build an IM Intent

@@ -40,6 +40,7 @@ public class MaterialColorMapUtils {
             mPrimaryColor = primaryColor;
             mSecondaryColor = secondaryColor;
         }
+
         public final int mPrimaryColor;
         public final int mSecondaryColor;
     }

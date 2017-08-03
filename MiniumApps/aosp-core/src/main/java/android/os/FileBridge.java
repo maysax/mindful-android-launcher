@@ -16,23 +16,23 @@
 
 package android.os;
 
-import static android.system.OsConstants.AF_UNIX;
-import static android.system.OsConstants.SOCK_STREAM;
-
 import android.system.ErrnoException;
 import android.system.Os;
 import android.util.Log;
-
-import libcore.io.IoBridge;
-import libcore.io.IoUtils;
-import libcore.io.Memory;
-import libcore.io.Streams;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+
+import libcore.io.IoBridge;
+import libcore.io.IoUtils;
+import libcore.io.Memory;
+import libcore.io.Streams;
+
+import static android.system.OsConstants.AF_UNIX;
+import static android.system.OsConstants.SOCK_STREAM;
 
 /**
  * Simple bridge that allows file access across process boundaries without
@@ -49,11 +49,17 @@ public class FileBridge extends Thread {
 
     private static final int MSG_LENGTH = 8;
 
-    /** CMD_WRITE [len] [data] */
+    /**
+     * CMD_WRITE [len] [data]
+     */
     private static final int CMD_WRITE = 1;
-    /** CMD_FSYNC */
+    /**
+     * CMD_FSYNC
+     */
     private static final int CMD_FSYNC = 2;
-    /** CMD_CLOSE */
+    /**
+     * CMD_CLOSE
+     */
     private static final int CMD_CLOSE = 3;
 
     private FileDescriptor mTarget;

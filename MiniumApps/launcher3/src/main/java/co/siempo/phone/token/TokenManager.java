@@ -32,7 +32,7 @@ public class TokenManager {
     }
 
     public TokenItem get(TokenItemType type) {
-        for (TokenItem token: items) {
+        for (TokenItem token : items) {
             if (token.getItemType() == type) return token;
         }
         return null;
@@ -61,15 +61,16 @@ public class TokenManager {
     }
 
     public boolean has(TokenItemType type) {
-        for (TokenItem token: items) {
+        for (TokenItem token : items) {
             if (token.getItemType() == type) return true;
         }
         return false;
     }
 
     public boolean hasCompleted(TokenItemType type) {
-        for (TokenItem token: items) {
-            if (token.getItemType() == type && token.getCompleteType() == TokenCompleteType.FULL) return true;
+        for (TokenItem token : items) {
+            if (token.getItemType() == type && token.getCompleteType() == TokenCompleteType.FULL)
+                return true;
         }
         return false;
     }

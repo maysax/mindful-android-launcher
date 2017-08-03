@@ -38,7 +38,7 @@ public class ActivityInfo extends ComponentInfo
      * activity's theme.  From the "theme" attribute or, if not set, 0.
      */
     public int theme;
-    
+
     /**
      * Constant corresponding to <code>standard</code> in
      * the {@link android.R.attr#launchMode} attribute.
@@ -63,7 +63,7 @@ public class ActivityInfo extends ComponentInfo
      * The launch mode style requested by the activity.  From the
      * {@link android.R.attr#launchMode} attribute, one of
      * {@link #LAUNCH_MULTIPLE},
-     * {@link #LAUNCH_SINGLE_TOP}, {@link #LAUNCH_SINGLE_TASK}, or 
+     * {@link #LAUNCH_SINGLE_TOP}, {@link #LAUNCH_SINGLE_TASK}, or
      * {@link #LAUNCH_SINGLE_INSTANCE}.
      */
     public int launchMode;
@@ -93,7 +93,7 @@ public class ActivityInfo extends ComponentInfo
      * {@link android.R.attr#documentLaunchMode} attribute, one of
      * {@link #DOCUMENT_LAUNCH_NONE}, {@link #DOCUMENT_LAUNCH_INTO_EXISTING},
      * {@link #DOCUMENT_LAUNCH_ALWAYS}.
-     *
+     * <p>
      * <p>Modes DOCUMENT_LAUNCH_ALWAYS
      * and DOCUMENT_LAUNCH_INTO_EXISTING are equivalent to {@link
      * android.content.Intent#FLAG_ACTIVITY_NEW_DOCUMENT
@@ -136,7 +136,7 @@ public class ActivityInfo extends ComponentInfo
      * Activity.  From the "permission" attribute.
      */
     public String permission;
-    
+
     /**
      * The affinity this activity has for another task in the system.  The
      * string here is the name of the task, often the package name of the
@@ -144,13 +144,13 @@ public class ActivityInfo extends ComponentInfo
      * {@link android.R.attr#taskAffinity} attribute.
      */
     public String taskAffinity;
-    
+
     /**
      * If this is an activity alias, this is the real activity class to run
      * for it.  Otherwise, this is null.
      */
     public String targetActivity;
-    
+
     /**
      * Bit in {@link #flags} indicating whether this activity is able to
      * run in multiple processes.  If
@@ -225,6 +225,7 @@ public class ActivityInfo extends ComponentInfo
     /**
      * Value for {@link #flags}: true when the application can be displayed over the lockscreen
      * and consequently over all users' windows.
+     *
      * @hide
      */
     public static final int FLAG_SHOW_ON_LOCK_SCREEN = 0x0400;
@@ -241,7 +242,7 @@ public class ActivityInfo extends ComponentInfo
      * {@link #FLAG_IMMERSIVE} set, however, will not be interrupted; the
      * notification may be shown in some other way (such as a small floating
      * "toast" window).
-     *
+     * <p>
      * Note that this flag will always reflect the Activity's
      * <code>android:immersive</code> manifest definition, even if the Activity's
      * immersive state is changed at runtime via
@@ -305,7 +306,9 @@ public class ActivityInfo extends ComponentInfo
      */
     public int flags;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @IntDef({
             SCREEN_ORIENTATION_UNSPECIFIED,
             SCREEN_ORIENTATION_LANDSCAPE,
@@ -325,7 +328,8 @@ public class ActivityInfo extends ComponentInfo
             SCREEN_ORIENTATION_LOCKED
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface ScreenOrientation {}
+    public @interface ScreenOrientation {
+    }
 
     /**
      * Constant corresponding to <code>unspecified</code> in
@@ -357,7 +361,7 @@ public class ActivityInfo extends ComponentInfo
      * the {@link android.R.attr#screenOrientation} attribute.
      */
     public static final int SCREEN_ORIENTATION_SENSOR = 4;
-  
+
     /**
      * Constant corresponding to <code>nosensor</code> in
      * the {@link android.R.attr#screenOrientation} attribute.
@@ -422,7 +426,7 @@ public class ActivityInfo extends ComponentInfo
      * The preferred screen orientation this activity would like to run in.
      * From the {@link android.R.attr#screenOrientation} attribute, one of
      * {@link #SCREEN_ORIENTATION_UNSPECIFIED},
-     * {@link #SCREEN_ORIENTATION_LANDSCAPE}, 
+     * {@link #SCREEN_ORIENTATION_LANDSCAPE},
      * {@link #SCREEN_ORIENTATION_PORTRAIT},
      * {@link #SCREEN_ORIENTATION_USER},
      * {@link #SCREEN_ORIENTATION_BEHIND},
@@ -440,7 +444,7 @@ public class ActivityInfo extends ComponentInfo
      */
     @ScreenOrientation
     public int screenOrientation = SCREEN_ORIENTATION_UNSPECIFIED;
-    
+
     /**
      * Bit in {@link #configChanges} that indicates that the activity
      * can itself handle changes to the IMSI MCC.  Set from the
@@ -547,35 +551,36 @@ public class ActivityInfo extends ComponentInfo
      * constant starts at the high bits.
      */
     public static final int CONFIG_FONT_SCALE = 0x40000000;
-    
-    /** @hide
-     * Unfortunately the constants for config changes in native code are
+
+    /**
+     * @hide Unfortunately the constants for config changes in native code are
      * different from ActivityInfo. :(  Here are the values we should use for the
      * native side given the bit we have assigned in ActivityInfo.
      */
-    public static int[] CONFIG_NATIVE_BITS = new int[] {
-        Configuration.NATIVE_CONFIG_MNC,                    // MNC
-        Configuration.NATIVE_CONFIG_MCC,                    // MCC
-        Configuration.NATIVE_CONFIG_LOCALE,                 // LOCALE
-        Configuration.NATIVE_CONFIG_TOUCHSCREEN,            // TOUCH SCREEN
-        Configuration.NATIVE_CONFIG_KEYBOARD,               // KEYBOARD
-        Configuration.NATIVE_CONFIG_KEYBOARD_HIDDEN,        // KEYBOARD HIDDEN
-        Configuration.NATIVE_CONFIG_NAVIGATION,             // NAVIGATION
-        Configuration.NATIVE_CONFIG_ORIENTATION,            // ORIENTATION
-        Configuration.NATIVE_CONFIG_SCREEN_LAYOUT,          // SCREEN LAYOUT
-        Configuration.NATIVE_CONFIG_UI_MODE,                // UI MODE
-        Configuration.NATIVE_CONFIG_SCREEN_SIZE,            // SCREEN SIZE
-        Configuration.NATIVE_CONFIG_SMALLEST_SCREEN_SIZE,   // SMALLEST SCREEN SIZE
-        Configuration.NATIVE_CONFIG_DENSITY,                // DENSITY
-        Configuration.NATIVE_CONFIG_LAYOUTDIR,              // LAYOUT DIRECTION
+    public static int[] CONFIG_NATIVE_BITS = new int[]{
+            Configuration.NATIVE_CONFIG_MNC,                    // MNC
+            Configuration.NATIVE_CONFIG_MCC,                    // MCC
+            Configuration.NATIVE_CONFIG_LOCALE,                 // LOCALE
+            Configuration.NATIVE_CONFIG_TOUCHSCREEN,            // TOUCH SCREEN
+            Configuration.NATIVE_CONFIG_KEYBOARD,               // KEYBOARD
+            Configuration.NATIVE_CONFIG_KEYBOARD_HIDDEN,        // KEYBOARD HIDDEN
+            Configuration.NATIVE_CONFIG_NAVIGATION,             // NAVIGATION
+            Configuration.NATIVE_CONFIG_ORIENTATION,            // ORIENTATION
+            Configuration.NATIVE_CONFIG_SCREEN_LAYOUT,          // SCREEN LAYOUT
+            Configuration.NATIVE_CONFIG_UI_MODE,                // UI MODE
+            Configuration.NATIVE_CONFIG_SCREEN_SIZE,            // SCREEN SIZE
+            Configuration.NATIVE_CONFIG_SMALLEST_SCREEN_SIZE,   // SMALLEST SCREEN SIZE
+            Configuration.NATIVE_CONFIG_DENSITY,                // DENSITY
+            Configuration.NATIVE_CONFIG_LAYOUTDIR,              // LAYOUT DIRECTION
     };
-    /** @hide
-     * Convert Java change bits to native.
+
+    /**
+     * @hide Convert Java change bits to native.
      */
     public static int activityInfoConfigToNative(int input) {
         int output = 0;
-        for (int i=0; i<CONFIG_NATIVE_BITS.length; i++) {
-            if ((input&(1<<i)) != 0) {
+        for (int i = 0; i < CONFIG_NATIVE_BITS.length; i++) {
+            if ((input & (1 << i)) != 0) {
                 output |= CONFIG_NATIVE_BITS[i];
             }
         }
@@ -583,8 +588,7 @@ public class ActivityInfo extends ComponentInfo
     }
 
     /**
-     * @hide
-     * Unfortunately some developers (OpenFeint I am looking at you) have
+     * @hide Unfortunately some developers (OpenFeint I am looking at you) have
      * compared the configChanges bit field against absolute values, so if we
      * introduce a new bit they break.  To deal with that, we will make sure
      * the public field will not have a value that breaks them, and let the
@@ -593,7 +597,7 @@ public class ActivityInfo extends ComponentInfo
     public int getRealConfigChanged() {
         return applicationInfo.targetSdkVersion < android.os.Build.VERSION_CODES.HONEYCOMB_MR2
                 ? (configChanges | ActivityInfo.CONFIG_SCREEN_SIZE
-                        | ActivityInfo.CONFIG_SMALLEST_SCREEN_SIZE)
+                | ActivityInfo.CONFIG_SMALLEST_SCREEN_SIZE)
                 : configChanges;
     }
 
@@ -609,7 +613,7 @@ public class ActivityInfo extends ComponentInfo
      * attribute.
      */
     public int configChanges;
-    
+
     /**
      * The desired soft input mode for this activity's main window.
      * Set from the {@link android.R.attr#windowSoftInputMode} attribute
@@ -659,12 +663,12 @@ public class ActivityInfo extends ComponentInfo
         parentActivityName = orig.parentActivityName;
         maxRecents = orig.maxRecents;
     }
-    
+
     /**
      * Return the theme resource identifier to use for this activity.  If
      * the activity defines a theme, that is used; else, the application
      * theme is used.
-     * 
+     *
      * @return The theme associated with this activity.
      */
     public final int getThemeResource() {
@@ -672,11 +676,15 @@ public class ActivityInfo extends ComponentInfo
     }
 
     private String persistableModeToString() {
-        switch(persistableMode) {
-            case PERSIST_ROOT_ONLY: return "PERSIST_ROOT_ONLY";
-            case PERSIST_NEVER: return "PERSIST_NEVER";
-            case PERSIST_ACROSS_REBOOTS: return "PERSIST_ACROSS_REBOOTS";
-            default: return "UNKNOWN=" + persistableMode;
+        switch (persistableMode) {
+            case PERSIST_ROOT_ONLY:
+                return "PERSIST_ROOT_ONLY";
+            case PERSIST_NEVER:
+                return "PERSIST_NEVER";
+            case PERSIST_ACROSS_REBOOTS:
+                return "PERSIST_ACROSS_REBOOTS";
+            default:
+                return "UNKNOWN=" + persistableMode;
         }
     }
 
@@ -704,11 +712,11 @@ public class ActivityInfo extends ComponentInfo
         }
         super.dumpBack(pw, prefix);
     }
-    
+
     public String toString() {
         return "ActivityInfo{"
-            + Integer.toHexString(System.identityHashCode(this))
-            + " " + name + "}";
+                + Integer.toHexString(System.identityHashCode(this))
+                + " " + name + "}";
     }
 
     public int describeContents() {
@@ -737,6 +745,7 @@ public class ActivityInfo extends ComponentInfo
         public ActivityInfo createFromParcel(Parcel source) {
             return new ActivityInfo(source);
         }
+
         public ActivityInfo[] newArray(int size) {
             return new ActivityInfo[size];
         }

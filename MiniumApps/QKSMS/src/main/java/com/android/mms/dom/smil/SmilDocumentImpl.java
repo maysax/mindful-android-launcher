@@ -289,7 +289,7 @@ public class SmilDocumentImpl extends DocumentImpl implements SMILDocument, Docu
             return new EventImpl();
         } else {
             throw new DOMException(DOMException.NOT_SUPPORTED_ERR,
-                       "Not supported interface");
+                    "Not supported interface");
         }
     }
 }

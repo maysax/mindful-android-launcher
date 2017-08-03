@@ -18,8 +18,8 @@ package android.net.dhcp;
 
 import android.util.Log;
 
-import java.net.InetAddress;
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 /**
@@ -32,14 +32,14 @@ class DhcpRequestPacket extends DhcpPacket {
     DhcpRequestPacket(int transId, InetAddress clientIp, byte[] clientMac,
                       boolean broadcast) {
         super(transId, clientIp, Inet4Address.ANY, Inet4Address.ANY,
-          Inet4Address.ANY, clientMac, broadcast);
+                Inet4Address.ANY, clientMac, broadcast);
     }
 
     public String toString() {
         String s = super.toString();
         return s + " REQUEST, desired IP " + mRequestedIp + " from host '"
-            + mHostName + "', param list length "
-            + (mRequestedParams == null ? 0 : mRequestedParams.length);
+                + mHostName + "', param list length "
+                + (mRequestedParams == null ? 0 : mRequestedParams.length);
     }
 
     /**
@@ -49,7 +49,7 @@ class DhcpRequestPacket extends DhcpPacket {
         ByteBuffer result = ByteBuffer.allocate(MAX_LENGTH);
 
         fillInPacket(encap, Inet4Address.ALL, Inet4Address.ANY, destUdp, srcUdp,
-            result, DHCP_BOOTREQUEST, mBroadcast);
+                result, DHCP_BOOTREQUEST, mBroadcast);
         result.flip();
         return result;
     }
@@ -77,10 +77,10 @@ class DhcpRequestPacket extends DhcpPacket {
      */
     public void doNextOp(DhcpStateMachine machine) {
         InetAddress clientRequest =
-            mRequestedIp == null ? mClientIp : mRequestedIp;
+                mRequestedIp == null ? mClientIp : mRequestedIp;
         Log.v(TAG, "requested IP is " + mRequestedIp + " and client IP is " +
-            mClientIp);
+                mClientIp);
         machine.onRequestReceived(mBroadcast, mTransId, mClientMac,
-            clientRequest, mRequestedParams, mHostName);
+                clientRequest, mRequestedParams, mHostName);
     }
 }

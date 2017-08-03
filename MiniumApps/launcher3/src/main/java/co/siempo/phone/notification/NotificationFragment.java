@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -15,7 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
@@ -62,7 +62,9 @@ public class NotificationFragment extends CoreFragment {
     @ViewById
     LinearLayout layout_notification;
 
-    private enum mSwipeDirection {UP, DOWN, NONE};
+    private enum mSwipeDirection {UP, DOWN, NONE}
+
+    ;
 
     TableNotificationSmsDao smsDao;
     CallStorageDao callStorageDao;
@@ -96,7 +98,6 @@ public class NotificationFragment extends CoreFragment {
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, getActivity());
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
-
 
 
         layout_notification.setOnTouchListener(new View.OnTouchListener() {
@@ -177,8 +178,7 @@ public class NotificationFragment extends CoreFragment {
         if (items.size() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
@@ -191,7 +191,7 @@ public class NotificationFragment extends CoreFragment {
         Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
 
-        String contactName="", imageUrl = "";
+        String contactName = "", imageUrl = "";
         try {
             if (cursor != null && cursor.moveToFirst()) {
                 contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
@@ -203,8 +203,8 @@ public class NotificationFragment extends CoreFragment {
             } else {
                 contactName = number;
             }
-        }catch (Exception e){
-            contactName="";
+        } catch (Exception e) {
+            contactName = "";
             imageUrl = "";
             e.printStackTrace();
         }
@@ -239,7 +239,6 @@ public class NotificationFragment extends CoreFragment {
                                 && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                             Log.i(TAG, "Down to Top");
                             animateOut();
-
                         } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
                                 && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                             Log.i(TAG, "Top to Down");
@@ -276,6 +275,7 @@ public class NotificationFragment extends CoreFragment {
                     EventBus.getDefault().post(new NotificationTrayEvent(false));
                     getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
                     Config.isNotificationAlive = false;
+                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
                 } catch (Exception e) {
                     Tracer.e(e, e.getMessage());
                 }

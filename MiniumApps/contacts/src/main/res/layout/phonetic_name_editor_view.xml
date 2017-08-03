@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2011 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,35 +15,21 @@
   -->
 
 <com.android.contacts.editor.PhoneticNameEditorView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="@dimen/editor_min_line_item_height"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:minHeight="@dimen/editor_min_line_item_height"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/spinner"
-        layout="@layout/edit_spinner"
-        android:visibility="gone" />
+    <include android:id="@+id/spinner" layout="@layout/edit_spinner" android:visibility="gone" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:gravity="center_vertical">
 
-        <include
-            android:id="@+id/editors"
-            layout="@layout/edit_field_list" />
+        <include android:id="@+id/editors" layout="@layout/edit_field_list" />
 
-        <include
-            android:id="@+id/expansion_view_container"
-            layout="@layout/name_edit_expansion_view"
-            android:visibility="gone" />
+        <include android:id="@+id/expansion_view_container"
+            layout="@layout/name_edit_expansion_view" android:visibility="gone" />
 
-        <include
-            android:id="@+id/delete_button_container"
-            layout="@layout/edit_delete_button"
+        <include android:id="@+id/delete_button_container" layout="@layout/edit_delete_button"
             android:visibility="gone" />
 
     </LinearLayout>

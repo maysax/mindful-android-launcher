@@ -16,8 +16,6 @@
 
 package android.os.storage;
 
-import static android.net.TrafficStats.MB_IN_BYTES;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Environment;
@@ -39,6 +37,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static android.net.TrafficStats.MB_IN_BYTES;
 
 /**
  * StorageManager is the interface to the systems storage service. The storage
@@ -294,7 +294,9 @@ public class StorageManager {
         }
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static StorageManager from(Context context) {
         return (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
     }
@@ -302,13 +304,12 @@ public class StorageManager {
     /**
      * Constructs a StorageManager object through which an application can
      * can communicate with the systems mount service.
-     * 
+     *
      * @param tgtLooper The {@link android.os.Looper} which events will be received on.
-     *
-     * <p>Applications can get instance of this class by calling
-     * {@link android.content.Context#getSystemService(java.lang.String)} with an argument
-     * of {@link android.content.Context#STORAGE_SERVICE}.
-     *
+     *                  <p>
+     *                  <p>Applications can get instance of this class by calling
+     *                  {@link android.content.Context#getSystemService(java.lang.String)} with an argument
+     *                  of {@link android.content.Context#STORAGE_SERVICE}.
      * @hide
      */
     public StorageManager(ContentResolver resolver, Looper tgtLooper) throws RemoteException {
@@ -325,7 +326,6 @@ public class StorageManager {
      * Registers a {@link android.os.storage.StorageEventListener StorageEventListener}.
      *
      * @param listener A {@link android.os.storage.StorageEventListener StorageEventListener} object.
-     *
      * @hide
      */
     public void registerListener(StorageEventListener listener) {
@@ -334,7 +334,7 @@ public class StorageManager {
         }
 
         synchronized (mListeners) {
-            if (mBinderListener == null ) {
+            if (mBinderListener == null) {
                 try {
                     mBinderListener = new MountServiceBinderListener();
                     mMountService.registerListener(mBinderListener);
@@ -351,7 +351,6 @@ public class StorageManager {
      * Unregisters a {@link android.os.storage.StorageEventListener StorageEventListener}.
      *
      * @param listener A {@link android.os.storage.StorageEventListener StorageEventListener} object.
-     *
      * @hide
      */
     public void unregisterListener(StorageEventListener listener) {
@@ -361,7 +360,7 @@ public class StorageManager {
 
         synchronized (mListeners) {
             final int size = mListeners.size();
-            for (int i=0 ; i<size ; i++) {
+            for (int i = 0; i < size; i++) {
                 ListenerDelegate l = mListeners.get(i);
                 if (l.getListener() == listener) {
                     mListeners.remove(i);
@@ -376,7 +375,7 @@ public class StorageManager {
                     return;
                 }
             }
-       }
+        }
     }
 
     /**
@@ -407,8 +406,8 @@ public class StorageManager {
 
     /**
      * Query if a USB Mass Storage (UMS) host is connected.
-     * @return true if UMS host is connected.
      *
+     * @return true if UMS host is connected.
      * @hide
      */
     public boolean isUsbMassStorageConnected() {
@@ -422,8 +421,8 @@ public class StorageManager {
 
     /**
      * Query if a USB Mass Storage (UMS) is enabled on the device.
-     * @return true if UMS host is enabled.
      *
+     * @return true if UMS host is enabled.
      * @hide
      */
     public boolean isUsbMassStorageEnabled() {
@@ -449,10 +448,10 @@ public class StorageManager {
      * file matches a package ID that is owned by the calling program's UID.
      * That is, shared UID applications can attempt to mount any other
      * application's OBB that shares its UID.
-     * 
-     * @param rawPath the path to the OBB file
-     * @param key secret used to encrypt the OBB; may be <code>null</code> if no
-     *            encryption was used on the OBB.
+     *
+     * @param rawPath  the path to the OBB file
+     * @param key      secret used to encrypt the OBB; may be <code>null</code> if no
+     *                 encryption was used on the OBB.
      * @param listener will receive the success or failure of the operation
      * @return whether the mount call was successfully queued or not
      */
@@ -487,10 +486,10 @@ public class StorageManager {
      * That is, shared UID applications can obtain access to any other
      * application's OBB that shares its UID.
      * <p>
-     * 
-     * @param rawPath path to the OBB file
-     * @param force whether to kill any programs using this in order to unmount
-     *            it
+     *
+     * @param rawPath  path to the OBB file
+     * @param force    whether to kill any programs using this in order to unmount
+     *                 it
      * @param listener will receive the success or failure of the operation
      * @return whether the unmount call was successfully queued or not
      */
@@ -511,7 +510,7 @@ public class StorageManager {
 
     /**
      * Check whether an Opaque Binary Blob (OBB) is mounted or not.
-     * 
+     *
      * @param rawPath path to OBB image
      * @return true if OBB is mounted; false if not mounted or on error
      */
@@ -531,10 +530,10 @@ public class StorageManager {
      * Check the mounted path of an Opaque Binary Blob (OBB) file. This will
      * give you the path to where you can obtain access to the internals of the
      * OBB.
-     * 
+     *
      * @param rawPath path to OBB image
      * @return absolute path to mounted OBB image data or <code>null</code> if
-     *         not mounted or exception encountered trying to read status
+     * not mounted or exception encountered trying to read status
      */
     public String getMountedObbPath(String rawPath) {
         Preconditions.checkNotNull(rawPath, "rawPath cannot be null");
@@ -550,10 +549,11 @@ public class StorageManager {
 
     /**
      * Gets the state of a volume via its mountpoint.
+     *
      * @hide
      */
     public String getVolumeState(String mountPoint) {
-         if (mMountService == null) return Environment.MEDIA_REMOVED;
+        if (mMountService == null) return Environment.MEDIA_REMOVED;
         try {
             return mMountService.getVolumeState(mountPoint);
         } catch (RemoteException e) {
@@ -564,6 +564,7 @@ public class StorageManager {
 
     /**
      * Returns list of all mountable volumes.
+     *
      * @hide
      */
     public StorageVolume[] getVolumeList() {
@@ -574,7 +575,7 @@ public class StorageManager {
             int length = list.length;
             StorageVolume[] result = new StorageVolume[length];
             for (int i = 0; i < length; i++) {
-                result[i] = (StorageVolume)list[i];
+                result[i] = (StorageVolume) list[i];
             }
             return result;
         } catch (RemoteException e) {
@@ -585,6 +586,7 @@ public class StorageManager {
 
     /**
      * Returns list of paths for all mountable volumes.
+     *
      * @hide
      */
     public String[] getVolumePaths() {
@@ -598,12 +600,16 @@ public class StorageManager {
         return paths;
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public StorageVolume getPrimaryVolume() {
         return getPrimaryVolume(getVolumeList());
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static StorageVolume getPrimaryVolume(StorageVolume[] volumes) {
         for (StorageVolume volume : volumes) {
             if (volume.isPrimary()) {
@@ -657,20 +663,34 @@ public class StorageManager {
     }
 
     /// Consts to match the password types in cryptfs.h
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int CRYPT_TYPE_PASSWORD = 0;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int CRYPT_TYPE_DEFAULT = 1;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int CRYPT_TYPE_PATTERN = 2;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int CRYPT_TYPE_PIN = 3;
 
     // Constants for the data available via MountService.getField.
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final String SYSTEM_LOCALE_KEY = "SystemLocale";
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final String OWNER_INFO_KEY = "OwnerInfo";
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final String PATTERN_VISIBLE_KEY = "PatternVisible";
 }

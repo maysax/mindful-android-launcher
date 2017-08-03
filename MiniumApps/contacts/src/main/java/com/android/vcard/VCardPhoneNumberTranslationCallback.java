@@ -19,7 +19,7 @@ package com.android.vcard;
  * Callback functionality which can be used with
  * {@link VCardComposer#setPhoneNumberTranslationCallback(VCardPhoneNumberTranslationCallback)}.
  * See the doc for the method.
- *
+ * <p>
  * <p>
  * TODO: this should be more generic
  * </p>
@@ -29,6 +29,7 @@ package com.android.vcard;
 public interface VCardPhoneNumberTranslationCallback {
     /**
      * Called when a phone number is being handled.
+     *
      * @return formatted phone number.
      */
     public String onValueReceived(String rawValue, int type, String label, boolean isPrimary);

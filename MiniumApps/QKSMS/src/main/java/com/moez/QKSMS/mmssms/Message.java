@@ -277,7 +277,7 @@ public class Message {
         this.images = new Bitmap[1];
         this.images[0] = image;
     }
-    
+
     /**
      * Sets audio file
      *
@@ -301,7 +301,7 @@ public class Message {
     /**
      * Sets other media
      *
-     * @param media is the media you want to send
+     * @param media    is the media you want to send
      * @param mimeType is the mimeType of the media
      */
     public void setMedia(byte[] media, String mimeType) {
@@ -424,7 +424,7 @@ public class Message {
     public String[] getImageNames() {
         return this.imageNames;
     }
-    
+
     /**
      * Gets the audio sample in the message
      *
@@ -475,7 +475,9 @@ public class Message {
      *
      * @return the type of the message
      */
-    public int getType() { return this.type; }
+    public int getType() {
+        return this.type;
+    }
 
     /**
      * Static method to convert a bitmap into a byte array to easily send it over http

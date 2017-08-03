@@ -38,7 +38,9 @@ public class FrameLayoutWithOverlay extends FrameLayout {
         addView(mOverlay);
     }
 
-    /** After adding the View, bring the overlay to the front to ensure it's always on top. */
+    /**
+     * After adding the View, bring the overlay to the front to ensure it's always on top.
+     */
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
         super.addView(child, index, params);
@@ -55,17 +57,23 @@ public class FrameLayoutWithOverlay extends FrameLayout {
         mOverlay.setAlphaLayer(layer);
     }
 
-    /** Delegate to overlay: set the alpha value on the alpha layer. */
+    /**
+     * Delegate to overlay: set the alpha value on the alpha layer.
+     */
     public void setAlphaLayerValue(float alpha) {
         mOverlay.setAlphaLayerValue(alpha);
     }
 
-    /** Delegate to overlay. */
+    /**
+     * Delegate to overlay.
+     */
     public void setOverlayOnClickListener(OnClickListener listener) {
         mOverlay.setOverlayOnClickListener(listener);
     }
 
-    /** Delegate to overlay. */
+    /**
+     * Delegate to overlay.
+     */
     public void setOverlayClickable(boolean clickable) {
         mOverlay.setOverlayClickable(clickable);
     }

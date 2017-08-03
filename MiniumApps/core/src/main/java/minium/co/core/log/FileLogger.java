@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import minium.co.core.app.CoreApplication;
-import minium.co.core.config.Config;
 
 /**
  * Created by shahabuddin on 10/29/15.

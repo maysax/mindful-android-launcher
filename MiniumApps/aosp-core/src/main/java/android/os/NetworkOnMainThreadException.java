@@ -18,14 +18,14 @@ package android.os;
 /**
  * The exception that is thrown when an application attempts
  * to perform a networking operation on its main thread.
- *
+ * <p>
  * <p>This is only thrown for applications targeting the Honeycomb
  * SDK or higher.  Applications targeting earlier SDK versions
  * are allowed to do networking on their main event loop threads,
  * but it's heavily discouraged.  See the document
  * <a href="{@docRoot}guide/practices/design/responsiveness.html">
  * Designing for Responsiveness</a>.
- *
+ * <p>
  * <p>Also see {@link StrictMode}.
  */
 public class NetworkOnMainThreadException extends RuntimeException {

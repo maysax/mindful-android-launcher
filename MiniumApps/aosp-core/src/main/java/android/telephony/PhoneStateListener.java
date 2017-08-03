@@ -20,15 +20,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.telephony.CellLocation;
 import android.telephony.CellInfo;
-import android.telephony.VoLteServiceState;
+import android.telephony.CellLocation;
+import android.telephony.PreciseCallState;
+import android.telephony.PreciseDataConnectionState;
 import android.telephony.Rlog;
 import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.SubscriptionManager;
-import android.telephony.PreciseCallState;
-import android.telephony.PreciseDataConnectionState;
+import android.telephony.VoLteServiceState;
 
 import com.android.internal.telephony.IPhoneStateListener;
 
@@ -59,12 +59,12 @@ public class PhoneStateListener {
     public static final int LISTEN_NONE = 0;
 
     /**
-     *  Listen for changes to the network service state (cellular).
+     * Listen for changes to the network service state (cellular).
      *
-     *  @see #onServiceStateChanged
-     *  @see ServiceState
+     * @see #onServiceStateChanged
+     * @see ServiceState
      */
-    public static final int LISTEN_SERVICE_STATE                            = 0x00000001;
+    public static final int LISTEN_SERVICE_STATE = 0x00000001;
 
     /**
      * Listen for changes to the network signal strength (cellular).
@@ -74,11 +74,10 @@ public class PhoneStateListener {
      * <p>
      *
      * @see #onSignalStrengthChanged
-     *
      * @deprecated by {@link #LISTEN_SIGNAL_STRENGTHS}
      */
     @Deprecated
-    public static final int LISTEN_SIGNAL_STRENGTH                          = 0x00000002;
+    public static final int LISTEN_SIGNAL_STRENGTH = 0x00000002;
 
     /**
      * Listen for changes to the message-waiting indicator.
@@ -91,16 +90,17 @@ public class PhoneStateListener {
      *
      * @see #onMessageWaitingIndicatorChanged
      */
-    public static final int LISTEN_MESSAGE_WAITING_INDICATOR                = 0x00000004;
+    public static final int LISTEN_MESSAGE_WAITING_INDICATOR = 0x00000004;
 
     /**
      * Listen for changes to the call-forwarding indicator.
      * {@more}
      * Requires Permission: {@link android.Manifest.permission#READ_PHONE_STATE
      * READ_PHONE_STATE}
+     *
      * @see #onCallForwardingIndicatorChanged
      */
-    public static final int LISTEN_CALL_FORWARDING_INDICATOR                = 0x00000008;
+    public static final int LISTEN_CALL_FORWARDING_INDICATOR = 0x00000008;
 
     /**
      * Listen for changes to the device's cell location. Note that
@@ -116,23 +116,24 @@ public class PhoneStateListener {
      *
      * @see #onCellLocationChanged
      */
-    public static final int LISTEN_CELL_LOCATION                            = 0x00000010;
+    public static final int LISTEN_CELL_LOCATION = 0x00000010;
 
     /**
      * Listen for changes to the device call state.
      * {@more}
      * Requires Permission: {@link android.Manifest.permission#READ_PHONE_STATE
      * READ_PHONE_STATE}
+     *
      * @see #onCallStateChanged
      */
-    public static final int LISTEN_CALL_STATE                               = 0x00000020;
+    public static final int LISTEN_CALL_STATE = 0x00000020;
 
     /**
      * Listen for changes to the data connection state (cellular).
      *
      * @see #onDataConnectionStateChanged
      */
-    public static final int LISTEN_DATA_CONNECTION_STATE                    = 0x00000040;
+    public static final int LISTEN_DATA_CONNECTION_STATE = 0x00000040;
 
     /**
      * Listen for changes to the direction of data traffic on the data
@@ -145,7 +146,7 @@ public class PhoneStateListener {
      *
      * @see #onDataActivity
      */
-    public static final int LISTEN_DATA_ACTIVITY                            = 0x00000080;
+    public static final int LISTEN_DATA_ACTIVITY = 0x00000080;
 
     /**
      * Listen for changes to the network signal strengths (cellular).
@@ -155,15 +156,15 @@ public class PhoneStateListener {
      *
      * @see #onSignalStrengthsChanged
      */
-    public static final int LISTEN_SIGNAL_STRENGTHS                         = 0x00000100;
+    public static final int LISTEN_SIGNAL_STRENGTHS = 0x00000100;
 
     /**
      * Listen for changes to OTASP mode.
      *
-     * @see #onOtaspChanged
      * @hide
+     * @see #onOtaspChanged
      */
-    public static final int LISTEN_OTASP_CHANGED                            = 0x00000200;
+    public static final int LISTEN_OTASP_CHANGED = 0x00000200;
 
     /**
      * Listen for changes to observed cell info.
@@ -180,7 +181,7 @@ public class PhoneStateListener {
      *
      * @hide
      */
-    public static final int LISTEN_PRECISE_CALL_STATE                       = 0x00000800;
+    public static final int LISTEN_PRECISE_CALL_STATE = 0x00000800;
 
     /**
      * Listen for precise changes and fails on the data connection (cellular).
@@ -188,10 +189,10 @@ public class PhoneStateListener {
      * Requires Permission: {@link android.Manifest.permission#READ_PRECISE_PHONE_STATE
      * READ_PRECISE_PHONE_STATE}
      *
-     * @see #onPreciseDataConnectionStateChanged
      * @hide
+     * @see #onPreciseDataConnectionStateChanged
      */
-    public static final int LISTEN_PRECISE_DATA_CONNECTION_STATE            = 0x00001000;
+    public static final int LISTEN_PRECISE_DATA_CONNECTION_STATE = 0x00001000;
 
     /**
      * Listen for real time info for all data connections (cellular)).
@@ -199,32 +200,34 @@ public class PhoneStateListener {
      * Requires Permission: {@link android.Manifest.permission#READ_PRECISE_PHONE_STATE
      * READ_PRECISE_PHONE_STATE}
      *
-     * @see #onDataConnectionRealTimeInfoChanged(DataConnectionRealTimeInfo)
      * @hide
+     * @see #onDataConnectionRealTimeInfoChanged(DataConnectionRealTimeInfo)
      */
-    public static final int LISTEN_DATA_CONNECTION_REAL_TIME_INFO           = 0x00002000;
+    public static final int LISTEN_DATA_CONNECTION_REAL_TIME_INFO = 0x00002000;
 
     /**
      * Listen for changes to LTE network state
      *
-     * @see #onLteNetworkStateChanged
      * @hide
+     * @see #onLteNetworkStateChanged
      */
-    public static final int LISTEN_VOLTE_STATE                              = 0x00004000;
+    public static final int LISTEN_VOLTE_STATE = 0x00004000;
 
     /**
      * Listen for OEM hook raw event
      *
-     * @see #onOemHookRawEvent
      * @hide
+     * @see #onOemHookRawEvent
      */
-    public static final int LISTEN_OEM_HOOK_RAW_EVENT                       = 0x00008000;
+    public static final int LISTEN_OEM_HOOK_RAW_EVENT = 0x00008000;
 
      /*
      * Subscription used to listen to the phone state changes
      * @hide
      */
-    /** @hide */
+    /**
+     * @hide
+     */
     protected long mSubId = 0;
 
     private final Handler mHandler;
@@ -241,6 +244,7 @@ public class PhoneStateListener {
     /**
      * Create a PhoneStateListener for the Phone with the default subscription
      * using a particular non-null Looper.
+     *
      * @hide
      */
     public PhoneStateListener(Looper looper) {
@@ -251,6 +255,7 @@ public class PhoneStateListener {
      * Create a PhoneStateListener for the Phone using the specified subscription.
      * This class requires Looper.myLooper() not return null. To supply your
      * own non-null Looper use PhoneStateListener(long subId, Looper looper) below.
+     *
      * @hide
      */
     public PhoneStateListener(long subId) {
@@ -260,6 +265,7 @@ public class PhoneStateListener {
     /**
      * Create a PhoneStateListener for the Phone using the specified subscription
      * and non-null Looper.
+     *
      * @hide
      */
     public PhoneStateListener(long subId, Looper looper) {
@@ -273,7 +279,7 @@ public class PhoneStateListener {
                 }
                 switch (msg.what) {
                     case LISTEN_SERVICE_STATE:
-                        PhoneStateListener.this.onServiceStateChanged((ServiceState)msg.obj);
+                        PhoneStateListener.this.onServiceStateChanged((ServiceState) msg.obj);
                         break;
                     case LISTEN_SIGNAL_STRENGTH:
                         PhoneStateListener.this.onSignalStrengthChanged(msg.arg1);
@@ -285,10 +291,10 @@ public class PhoneStateListener {
                         PhoneStateListener.this.onCallForwardingIndicatorChanged(msg.arg1 != 0);
                         break;
                     case LISTEN_CELL_LOCATION:
-                        PhoneStateListener.this.onCellLocationChanged((CellLocation)msg.obj);
+                        PhoneStateListener.this.onCellLocationChanged((CellLocation) msg.obj);
                         break;
                     case LISTEN_CALL_STATE:
-                        PhoneStateListener.this.onCallStateChanged(msg.arg1, (String)msg.obj);
+                        PhoneStateListener.this.onCallStateChanged(msg.arg1, (String) msg.obj);
                         break;
                     case LISTEN_DATA_CONNECTION_STATE:
                         PhoneStateListener.this.onDataConnectionStateChanged(msg.arg1, msg.arg2);
@@ -298,30 +304,30 @@ public class PhoneStateListener {
                         PhoneStateListener.this.onDataActivity(msg.arg1);
                         break;
                     case LISTEN_SIGNAL_STRENGTHS:
-                        PhoneStateListener.this.onSignalStrengthsChanged((SignalStrength)msg.obj);
+                        PhoneStateListener.this.onSignalStrengthsChanged((SignalStrength) msg.obj);
                         break;
                     case LISTEN_OTASP_CHANGED:
                         PhoneStateListener.this.onOtaspChanged(msg.arg1);
                         break;
                     case LISTEN_CELL_INFO:
-                        PhoneStateListener.this.onCellInfoChanged((List<CellInfo>)msg.obj);
+                        PhoneStateListener.this.onCellInfoChanged((List<CellInfo>) msg.obj);
                         break;
                     case LISTEN_PRECISE_CALL_STATE:
-                        PhoneStateListener.this.onPreciseCallStateChanged((PreciseCallState)msg.obj);
+                        PhoneStateListener.this.onPreciseCallStateChanged((PreciseCallState) msg.obj);
                         break;
                     case LISTEN_PRECISE_DATA_CONNECTION_STATE:
                         PhoneStateListener.this.onPreciseDataConnectionStateChanged(
-                                (PreciseDataConnectionState)msg.obj);
+                                (PreciseDataConnectionState) msg.obj);
                         break;
                     case LISTEN_DATA_CONNECTION_REAL_TIME_INFO:
                         PhoneStateListener.this.onDataConnectionRealTimeInfoChanged(
-                                (DataConnectionRealTimeInfo)msg.obj);
+                                (DataConnectionRealTimeInfo) msg.obj);
                         break;
                     case LISTEN_VOLTE_STATE:
-                        PhoneStateListener.this.onVoLteServiceStateChanged((VoLteServiceState)msg.obj);
+                        PhoneStateListener.this.onVoLteServiceStateChanged((VoLteServiceState) msg.obj);
                         break;
                     case LISTEN_OEM_HOOK_RAW_EVENT:
-                        PhoneStateListener.this.onOemHookRawEvent((byte[])msg.obj);
+                        PhoneStateListener.this.onOemHookRawEvent((byte[]) msg.obj);
                         break;
 
                 }
@@ -434,11 +440,11 @@ public class PhoneStateListener {
     /**
      * The Over The Air Service Provisioning (OTASP) has changed. Requires
      * the READ_PHONE_STATE permission.
-     * @param otaspMode is integer <code>OTASP_UNKNOWN=1<code>
-     *   means the value is currently unknown and the system should wait until
-     *   <code>OTASP_NEEDED=2<code> or <code>OTASP_NOT_NEEDED=3<code> is received before
-     *   making the decision to perform OTASP or not.
      *
+     * @param otaspMode is integer <code>OTASP_UNKNOWN=1<code>
+     *                  means the value is currently unknown and the system should wait until
+     *                  <code>OTASP_NEEDED=2<code> or <code>OTASP_NOT_NEEDED=3<code> is received before
+     *                  making the decision to perform OTASP or not.
      * @hide
      */
     public void onOtaspChanged(int otaspMode) {
@@ -448,6 +454,7 @@ public class PhoneStateListener {
     /**
      * Callback invoked when a observed cell info has changed,
      * or new cells have been added or removed.
+     *
      * @param cellInfo is the list of currently visible cells.
      */
     public void onCellInfoChanged(List<CellInfo> cellInfo) {
@@ -485,6 +492,7 @@ public class PhoneStateListener {
     /**
      * Callback invoked when the service state of LTE network
      * related to the VoLTE service has changed.
+     *
      * @param stateInfo is the current LTE network information
      * @hide
      */
@@ -494,6 +502,7 @@ public class PhoneStateListener {
     /**
      * Callback invoked when OEM hook raw event is received. Requires
      * the READ_PRIVILEGED_PHONE_STATE permission.
+     *
      * @param rawData is the byte array of the OEM hook raw data.
      * @hide
      */

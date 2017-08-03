@@ -88,7 +88,7 @@ public class Contact {
     private int mPresenceResId;      // TODO: make this a state instead of a res ID
     private String mPresenceText;
     private BitmapDrawable mAvatar;
-    private byte [] mAvatarData;
+    private byte[] mAvatarData;
     private boolean mIsStale;
     private boolean mQueryPending;
     private boolean mIsMe;          // true if this contact is me!
@@ -101,6 +101,7 @@ public class Contact {
     private Contact(String number, String name) {
         init(number, name);
     }
+
     /*
      * Make a basic contact object with a phone number.
      */
@@ -151,7 +152,7 @@ public class Contact {
         for (int i = 3; i < stop; i++) {
             String methodName = stack[i].getMethodName();
             sb.append(methodName);
-            if ((i+1) != stop) {
+            if ((i + 1) != stop) {
                 sb.append(" <- ");
             }
         }
@@ -204,7 +205,7 @@ public class Contact {
      * @param name
      * @param number
      * @param numberE164 the number's E.164 representation, is used to get the
-     *        country the number belongs to.
+     *                   country the number belongs to.
      * @return the formatted name and number
      */
     public static String formatNameAndNumber(String name, String number, String numberE164) {
@@ -235,7 +236,7 @@ public class Contact {
 
     public synchronized void setNumber(String number) {
         if (!SmsHelper.isEmailAddress(number)) {
-            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164,  ((QKSMSAppBase) CoreApplication.getInstance()).getCurrentCountryIso());
+            mNumber = PhoneNumberUtils.formatNumber(number, mNumberE164, ((QKSMSAppBase) CoreApplication.getInstance()).getCurrentCountryIso());
         } else {
             mNumber = number;
         }
@@ -316,7 +317,7 @@ public class Contact {
             int i = 0;
             Log.i(TAG, "[Contact] dumpListeners; size=" + mListeners.size());
             for (UpdateListener listener : mListeners) {
-                Log.i(TAG, "["+ (i++) + "]" + listener);
+                Log.i(TAG, "[" + (i++) + "]" + listener);
             }
         }
     }
@@ -390,11 +391,11 @@ public class Contact {
          * one's normalized format. If the phone number's normalized format in
          * the lookup table is the suffix of the given number's one, it is
          * treated as matched CallerId. E164 format number must fully equal.
-         *
+         * <p>
          * For example: Both 650-123-4567 and +1 (650) 123-4567 will match the
          * normalized number 6501234567 in the phone lookup.
-         *
-         *  The min_match is used to narrow down the candidates for the final
+         * <p>
+         * The min_match is used to narrow down the candidates for the final
          * comparison.
          */
         // query params for caller id lookup
@@ -409,7 +410,7 @@ public class Contact {
                 + " substr(?, ? - lookup.len + 1) = lookup.normalized_number))";
 
         // query params for caller id lookup without E164 number as param
-        private static final String CALLER_ID_SELECTION_WITHOUT_E164 =  " Data._ID IN "
+        private static final String CALLER_ID_SELECTION_WITHOUT_E164 = " Data._ID IN "
                 + " (SELECT DISTINCT lookup.data_id "
                 + " FROM "
                 + " (SELECT data_id, normalized_number, length(normalized_number) as len "
@@ -422,7 +423,7 @@ public class Contact {
         // Utilizing private API
         private static final Uri PHONES_WITH_PRESENCE_URI = Data.CONTENT_URI;
 
-        private static final String[] CALLER_ID_PROJECTION = new String[] {
+        private static final String[] CALLER_ID_PROJECTION = new String[]{
                 Phone._ID,                      // 0
                 Phone.NUMBER,                   // 1
                 Phone.LABEL,                    // 2
@@ -444,7 +445,7 @@ public class Contact {
         private static final int PHONE_NORMALIZED_NUMBER = 7;
         private static final int SEND_TO_VOICEMAIL = 8;
 
-        private static final String[] SELF_PROJECTION = new String[] {
+        private static final String[] SELF_PROJECTION = new String[]{
                 Phone._ID,                      // 0
                 Phone.DISPLAY_NAME,             // 1
         };
@@ -458,7 +459,7 @@ public class Contact {
         private static final String EMAIL_SELECTION = "UPPER(" + Email.DATA + ")=UPPER(?) AND "
                 + Data.MIMETYPE + "='" + Email.CONTENT_ITEM_TYPE + "'";
 
-        private static final String[] EMAIL_PROJECTION = new String[] {
+        private static final String[] EMAIL_PROJECTION = new String[]{
                 Email._ID,                    // 0
                 Email.DISPLAY_NAME,           // 1
                 Email.CONTACT_PRESENCE,       // 2
@@ -763,7 +764,7 @@ public class Contact {
                         // access to mListeners is synchronized on ContactsCache
                         HashSet<UpdateListener> iterator;
                         synchronized (mListeners) {
-                            iterator = (HashSet<UpdateListener>)Contact.mListeners.clone();
+                            iterator = (HashSet<UpdateListener>) Contact.mListeners.clone();
                         }
                         for (UpdateListener l : iterator) {
                             if (Log.isLoggable(LogTag.CONTACT, Log.DEBUG)) {
@@ -840,6 +841,7 @@ public class Contact {
 
         /**
          * Queries the caller id info with the phone number.
+         *
          * @return a Contact containing the caller id info corresponding to the number.
          */
         private Contact getContactInfoForPhoneNumber(String number) {
@@ -855,15 +857,15 @@ public class Contact {
             if (!TextUtils.isEmpty(normalizedNumber) && !TextUtils.isEmpty(minMatch)) {
                 String numberLen = String.valueOf(normalizedNumber.length());
                 String numberE164 = PhoneNumberUtils.formatNumberToE164(
-                        number,  ((QKSMSAppBase) CoreApplication.getInstance()).getCurrentCountryIso());
+                        number, ((QKSMSAppBase) CoreApplication.getInstance()).getCurrentCountryIso());
                 String selection;
                 String[] args;
                 if (TextUtils.isEmpty(numberE164)) {
                     selection = CALLER_ID_SELECTION_WITHOUT_E164;
-                    args = new String[] {minMatch, numberLen, normalizedNumber, numberLen};
+                    args = new String[]{minMatch, numberLen, normalizedNumber, numberLen};
                 } else {
                     selection = CALLER_ID_SELECTION;
-                    args = new String[] {
+                    args = new String[]{
                             minMatch, numberE164, numberLen, normalizedNumber, numberLen};
                 }
 
@@ -956,6 +958,7 @@ public class Contact {
                 contact.mAvatarData = data;
             }
         }
+
         /*
          * Load the avatar data from the cursor into memory.  Don't decode the data
          * until someone calls for it (see getAvatar).  Hang onto the raw data so that
@@ -964,7 +967,7 @@ public class Contact {
          * the raw bytes after the image is decoded.
          */
         private byte[] loadAvatarData(Contact entry) {
-            byte [] data = null;
+            byte[] data = null;
 
             if ((!entry.mIsMe && entry.mPersonId == 0) || entry.mAvatar != null) {
                 return null;
@@ -1022,7 +1025,7 @@ public class Contact {
                     EMAIL_WITH_PRESENCE_URI,
                     EMAIL_PROJECTION,
                     EMAIL_SELECTION,
-                    new String[] { email },
+                    new String[]{email},
                     null);
 
             if (cursor != null) {
@@ -1113,7 +1116,7 @@ public class Contact {
                 if (candidates != null) {
                     int length = candidates.size();
                     for (int i = 0; i < length; i++) {
-                        Contact c= candidates.get(i);
+                        Contact c = candidates.get(i);
                         if (isNotRegularPhoneNumber) {
                             if (numberOrEmail.equals(c.mNumber)) {
                                 return c;

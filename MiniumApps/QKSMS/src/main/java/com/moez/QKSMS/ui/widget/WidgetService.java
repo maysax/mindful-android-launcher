@@ -196,8 +196,7 @@ public class WidgetService extends RemoteViewsService {
                 if (mSmallWidget == 0) {
                     remoteViews.setViewVisibility(R.id.avatar, View.VISIBLE);
                     bindAvatar(remoteViews, conversation);
-                }
-                else remoteViews.setViewVisibility(R.id.avatar, View.GONE);
+                } else remoteViews.setViewVisibility(R.id.avatar, View.GONE);
                 bindIndicators(remoteViews, conversation);
                 bindDate(remoteViews, conversation);
                 bindName(remoteViews, conversation);
