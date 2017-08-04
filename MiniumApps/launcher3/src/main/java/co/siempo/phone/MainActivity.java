@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -52,6 +53,7 @@ import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.NFCEvent;
+import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
@@ -210,20 +212,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void checkVersionEvent(CheckVersionEvent event) {
         Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
         if (event.getVersion() > BuildConfig.VERSION_CODE) {
-            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-                // UIUtils.toast(this, "New version found! Downloading apk...");
-                UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            launcherPrefs.updatePrompt().put(false);
-                            new ActivityHelper(MainActivity.this).openBecomeATester();
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            if (activeNetwork != null) { // connected to the internet
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                    UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == DialogInterface.BUTTON_POSITIVE) {
+                                launcherPrefs.updatePrompt().put(false);
+                                new ActivityHelper(MainActivity.this).openBecomeATester();
+                            }
                         }
-                    }
-                });
-                // ApiClient_.getInstance_(this).downloadApk();
-            } else {
-                UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
+                    });
+                }
+                else{
+                    UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
+                }
+            }
+            else{
+                Log.i(LogConfig.LOG_TAG,getString(R.string.nointernetconnection));
             }
         }
     }
