@@ -79,7 +79,7 @@ public class PauseActivatedFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
+        ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
         handler = new Handler();
         titleActionBar.setText(R.string.title_pause);
         imgRight.setVisibility(View.INVISIBLE);
@@ -115,7 +115,7 @@ public class PauseActivatedFragment extends CoreFragment {
 
     @Click
     void imgRight() {
-        ((CoreActivity) getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(), R.id.mainView);
+        ((CoreActivity)getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(),R.id.mainView);
     }
 
     private Runnable pauseActiveRunnable = new Runnable() {
@@ -125,7 +125,7 @@ public class PauseActivatedFragment extends CoreFragment {
                 atMillis += 1000;
 
                 if (atMillis >= maxMillis) {
-                    stopPause();
+                    stopPause(false);
                 } else {
                     Tracer.v("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
                     seekbar.setValue(atMillis / (1000 * 60.0f));
@@ -139,14 +139,16 @@ public class PauseActivatedFragment extends CoreFragment {
         }
     };
 
-    public void stopPause() {
+    public void stopPause(boolean isStopByUser) {
         seekbar.setValue(0);
         seekbar.setShowTitle(false);
         handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
         getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
-        VibrationUtils_.getInstance_(getActivity()).vibrate();
-        AudioUtils.playnotification(getActivity());
+        if (!isStopByUser) {
+            VibrationUtils_.getInstance_(getActivity()).vibrate();
+            AudioUtils.playnotification(getActivity());
+        }
         getActivity().finish();
     }
 }

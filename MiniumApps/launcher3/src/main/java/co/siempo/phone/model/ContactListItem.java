@@ -13,7 +13,6 @@ public class ContactListItem extends MainListItem {
     private String contactName;
     private List<ContactNumber> numbers;
     private String imageUri;
-
     public ContactListItem(long contactId, String contactName) {
         super(0, contactName, "{fa-user-o}", MainListItemType.CONTACT);
         this.contactId = contactId;
@@ -38,8 +37,26 @@ public class ContactListItem extends MainListItem {
     }
 
     public void addNumbers(String label, String number) {
-        getNumbers().add(new ContactNumber(number, label));
+        if (!isNumberExists(number))
+            getNumbers().add(new ContactNumber(number, label));
+
     }
+
+    private boolean isNumberExists(String number) {
+        String strNum = number.replaceAll("[\\D]", "");
+        if (getNumbers() != null) {
+            for (ContactNumber strNumber : getNumbers()) {
+                String str2 = strNumber.getNumber().replaceAll("[\\D]", "");
+                if (str2.equals(strNum))
+                    return true;
+                else
+                    return false;
+
+            }
+        }
+        return false;
+    }
+
 
     public boolean hasMultipleNumber() {
         if (numbers == null) return false;

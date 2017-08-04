@@ -1,5 +1,8 @@
 package co.siempo.phone.token;
 
+import android.util.Config;
+import android.util.Log;
+
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ public class TokenManager {
     }
 
     public TokenItem get(TokenItemType type) {
-        for (TokenItem token : items) {
+        for (TokenItem token: items) {
             if (token.getItemType() == type) return token;
         }
         return null;
@@ -61,16 +64,15 @@ public class TokenManager {
     }
 
     public boolean has(TokenItemType type) {
-        for (TokenItem token : items) {
+        for (TokenItem token: items) {
             if (token.getItemType() == type) return true;
         }
         return false;
     }
 
     public boolean hasCompleted(TokenItemType type) {
-        for (TokenItem token : items) {
-            if (token.getItemType() == type && token.getCompleteType() == TokenCompleteType.FULL)
-                return true;
+        for (TokenItem token: items) {
+            if (token.getItemType() == type && token.getCompleteType() == TokenCompleteType.FULL) return true;
         }
         return false;
     }

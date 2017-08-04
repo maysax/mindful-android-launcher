@@ -74,7 +74,7 @@ public class PauseActivity extends CoreActivity {
         super.onStart();
         Tracer.d("onStart PauseActivity");
         if (tag != null) {
-            if (nfcCheckHandler == null) nfcCheckHandler = new Handler();
+            if (nfcCheckHandler == null ) nfcCheckHandler = new Handler();
             nfcCheckHandler.postDelayed(buildNfcRunnable(tag), 5000);
         }
     }
@@ -85,7 +85,7 @@ public class PauseActivity extends CoreActivity {
         Tracer.d("onStop PauseActivity");
         if (nfcCheckHandler != null) {
             nfcCheckHandler.removeCallbacks(nfcRunnable);
-            Ndef ndef = Ndef.get(tag);
+            Ndef  ndef = Ndef.get(tag);
             if (ndef != null) {
                 try {
                     ndef.close();
@@ -114,7 +114,7 @@ public class PauseActivity extends CoreActivity {
 
     private void stopPause() {
         if (pauseActivatedFragment != null) {
-            pauseActivatedFragment.stopPause();
+            pauseActivatedFragment.stopPause(true);
         }
     }
 
@@ -129,7 +129,7 @@ public class PauseActivity extends CoreActivity {
         return nfcRunnable = new Runnable() {
             @Override
             public void run() {
-                Ndef ndef = Ndef.get(tag);
+                Ndef  ndef = Ndef.get(tag);
                 Tracer.d("Ndef: " + ndef);
                 try {
                     ndef.connect();

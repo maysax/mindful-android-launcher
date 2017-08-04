@@ -98,16 +98,16 @@ public class SearchLayout extends CardView {
     void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                handleAfterTextChanged(s.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                handleAfterTextChanged(s);
+
             }
         });
     }
@@ -122,11 +122,10 @@ public class SearchLayout extends CardView {
         @Override
         public void run() {
             UIUtils.showKeyboard(txtSearchBox);
-
         }
     };
 
-    private void handleAfterTextChanged(Editable s) {
+    private void handleAfterTextChanged(String s) {
         if (s.length() != 0) {
             btnClear.setVisibility(VISIBLE);
         } else {
