@@ -1,39 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:id="@+id/layout_notification"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:paddingLeft="18dp"
-    android:paddingRight="18dp"
-    android:layout_marginTop="27dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView_notification_title"
-        android:text="@string/string_notification_title"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="28sp"
-        android:fontFamily="sans-serif"
-        android:textColor="#de000000" />
+        android:background="#FFFFFF"
+        android:orientation="vertical"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="wrap_content"
-        android:layout_height="450dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="48dp"
-        android:clipToPadding="false"
-        android:layout_gravity="center_horizontal"
-        android:scrollbars="vertical" />
+        <TextView
+            android:id="@+id/textView_notification_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="@string/string_notification_title"
+            android:textColor="#de000000"
+            android:textSize="28sp" />
 
-    <TextView
-        android:id="@+id/emptyView"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="48dp"
+            android:clipToPadding="false"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_10"
+            android:gravity="center"
+            android:padding="@dimen/dp_10"
+            android:text="@string/msg.notificationEmpty"
+            android:textSize="@dimen/text.size.medium" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linSecond"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textSize="@dimen/text.size.medium"
-        android:text="@string/msg.notificationEmpty" />
-
+        android:background="#E6FFFFFF"
+        android:orientation="vertical"></LinearLayout>
 </LinearLayout>

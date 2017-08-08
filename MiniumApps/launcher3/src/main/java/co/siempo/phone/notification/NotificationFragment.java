@@ -3,6 +3,7 @@ package co.siempo.phone.notification;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -26,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -46,7 +50,7 @@ import minium.co.core.util.UIUtils;
  * Created by itc on 17/02/17.
  */
 @EFragment(R.layout.notification_main)
-public class NotificationFragment extends CoreFragment {
+public class NotificationFragment extends CoreFragment implements View.OnTouchListener {
 
     private static final String TAG = "NotificationFragment";
 
@@ -62,17 +66,27 @@ public class NotificationFragment extends CoreFragment {
     @ViewById
     LinearLayout layout_notification;
 
-    private enum mSwipeDirection {UP, DOWN, NONE}
+    @ViewById
+    LinearLayout linSecond;
 
-    ;
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        Log.d(TAG, "" + event.getAction());
+        return false;
+    }
+
+    private enum mSwipeDirection {UP, DOWN, NONE}
 
     TableNotificationSmsDao smsDao;
     CallStorageDao callStorageDao;
+    int count = 1;
 
     @AfterViews
     void afterViews() {
 
         notificationList = new ArrayList<>();
+        recyclerView.setNestedScrollingEnabled(false);
 
         smsDao = DBUtility.getNotificationDao();
         callStorageDao = DBUtility.getCallStorageDao();
@@ -100,24 +114,44 @@ public class NotificationFragment extends CoreFragment {
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-        layout_notification.setOnTouchListener(new View.OnTouchListener() {
-
+        linSecond.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                animateOut();
+                return false;
 
-                return gesture.onTouchEvent(event);
             }
         });
-
 
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
+                Log.d(TAG, "1 :::::   " + count);
+                if (isLastItemDisplaying(recyclerView) && event.getAction() == MotionEvent.ACTION_UP && count >= 2) {
+                   animateOut();
+                }
                 return gesture.onTouchEvent(event);
             }
         });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (isLastItemDisplaying(recyclerView)) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            count++;
+                        }
+                    },500);
+
+                    Log.d(TAG, "" + count);
+                }
+
+            }
+        });
+
 
         ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
 
@@ -163,6 +197,8 @@ public class NotificationFragment extends CoreFragment {
         setUpNotifications(SMSItems);
         EventBus.getDefault().post(new TopBarUpdateEvent());
     }
+
+
 
     private void setUpNotifications(List<TableNotificationSms> items) {
 
@@ -229,10 +265,12 @@ public class NotificationFragment extends CoreFragment {
                 public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
                                        float velocityY) {
                     Log.i(TAG, "onFling has been called!");
-                    final int SWIPE_MIN_DISTANCE = 120;
+                    final int SWIPE_MIN_DISTANCE = 30;
                     final int SWIPE_MAX_OFF_PATH = 250;
                     final int SWIPE_THRESHOLD_VELOCITY = 200;
+
                     try {
+
                         if (Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_OFF_PATH)
                             return false;
                         if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
@@ -251,8 +289,19 @@ public class NotificationFragment extends CoreFragment {
                 }
             });
 
+    private boolean isLastItemDisplaying(RecyclerView recyclerView) {
+        if (recyclerView.getAdapter().getItemCount() != 0) {
+            int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+            if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1)
+                return true;
+        }
+        count = 1;
+        return false;
+    }
+
     public void animateOut() {
-        TranslateAnimation trans = new TranslateAnimation(0, 0, 0, -300 * UIUtils.getDensity(getActivity()));
+        TranslateAnimation trans = new TranslateAnimation(0, 0, 0, -500 * UIUtils.getDensity(getActivity()));
+        trans.setFillAfter(true);
         trans.setDuration(500);
         trans.setAnimationListener(new Animation.AnimationListener() {
 
@@ -270,9 +319,9 @@ public class NotificationFragment extends CoreFragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                // TODO Auto-generated method stub
                 try {
                     EventBus.getDefault().post(new NotificationTrayEvent(false));
+                    getActivity().getFragmentManager().popBackStack();
                     getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
                     Config.isNotificationAlive = false;
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));

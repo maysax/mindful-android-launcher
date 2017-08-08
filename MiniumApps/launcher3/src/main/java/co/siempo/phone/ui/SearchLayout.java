@@ -115,7 +115,7 @@ public class SearchLayout extends CardView {
     public void askFocus() {
         txtSearchBox.requestFocus();
         txtSearchBox.setText("");
-        handler.postDelayed(showKeyboardRunnable, 200);
+        handler.postDelayed(showKeyboardRunnable, 500);
     }
 
     private Runnable showKeyboardRunnable = new Runnable() {
