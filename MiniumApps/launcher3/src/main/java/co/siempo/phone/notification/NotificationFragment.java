@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -29,7 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -122,6 +119,12 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 //
 //            }
 //        });
+        emptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateOut();
+            }
+        });
         linSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +138,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d(TAG, "1 :::::   " + count);
                 if (isLastItemDisplaying(recyclerView) && event.getAction() == MotionEvent.ACTION_UP && count >= 2) {
-                   animateOut();
+                    animateOut();
                 }
                 return gesture.onTouchEvent(event);
             }
@@ -150,7 +153,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                         public void run() {
                             count++;
                         }
-                    },500);
+                    }, 500);
 
                     Log.d(TAG, "" + count);
                 }
@@ -203,7 +206,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         setUpNotifications(SMSItems);
         EventBus.getDefault().post(new TopBarUpdateEvent());
     }
-
 
 
     private void setUpNotifications(List<TableNotificationSms> items) {
