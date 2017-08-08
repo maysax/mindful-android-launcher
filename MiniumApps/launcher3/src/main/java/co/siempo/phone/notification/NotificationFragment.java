@@ -114,12 +114,18 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
 
-        linSecond.setOnTouchListener(new View.OnTouchListener() {
+//        linSecond.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                animateOut();
+//                return false;
+//
+//            }
+//        });
+        linSecond.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 animateOut();
-                return false;
-
             }
         });
 

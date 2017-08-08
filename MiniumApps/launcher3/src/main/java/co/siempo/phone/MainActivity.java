@@ -333,6 +333,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     protected void onNewIntent(Intent intent) {
+        currentItem =0;
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);

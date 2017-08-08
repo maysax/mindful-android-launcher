@@ -146,8 +146,8 @@ public class PauseActivatedFragment extends CoreFragment {
         launcherPrefs.isPauseActive().put(false);
         getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
         if (!isStopByUser) {
-            VibrationUtils_.getInstance_(getActivity()).vibrate();
-            AudioUtils.playnotification(getActivity());
+//            VibrationUtils_.getInstance_(getActivity()).vibrate();
+//            AudioUtils.playnotification(getActivity());
         }
         getActivity().finish();
     }

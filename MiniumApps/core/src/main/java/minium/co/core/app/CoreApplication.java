@@ -5,12 +5,15 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
 import com.androidnetworking.AndroidNetworking;
+import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
+import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
@@ -82,11 +85,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-//        final Fabric fabric = new Fabric.Builder(this)
-//                .kits(new Crashlytics())
-//                .debuggable(Config.DEBUG)
-//                .build();
-//        Fabric.with(fabric);
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(Config.DEBUG)
+                .build();
+        Fabric.with(fabric);
     }
 
 
