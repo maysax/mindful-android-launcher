@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Created by Ghost Ninja(Technologx) https://technologx.com -->
-<!-- All rights have been given to James for use in this project! -->
+<?xml version="1.0" encoding="utf-8"?><!-- Created by Ghost Ninja(Technologx) https://technologx.com --><!-- All rights have been given to James for use in this project! -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="288.000000dp"
     android:height="288.000000dp"
@@ -8,9 +6,9 @@
     android:viewportHeight="288.000000">
 
     <group
-            android:translateY="288.000000"
-            android:scaleX="0.100000"
-            android:scaleY="-0.100000">
+        android:translateY="288.000000"
+        android:scaleX="0.100000"
+        android:scaleY="-0.100000">
         <path
             android:fillColor="#f4f4f4"
             android:strokeWidth="1"

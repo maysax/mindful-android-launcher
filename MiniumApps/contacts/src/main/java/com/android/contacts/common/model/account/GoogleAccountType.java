@@ -24,7 +24,6 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.Relation;
 import android.util.Log;
 
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.common.util.CommonDateUtils;
 import com.google.common.collect.Lists;
@@ -159,7 +158,7 @@ public class GoogleAccountType extends BaseAccountType {
 
     private DataKind addDataKindEvent(Context context) throws DefinitionException {
         DataKind kind = addKind(new DataKind(Event.CONTENT_ITEM_TYPE,
-                    R.string.eventLabelsGroup, 150, true));
+                R.string.eventLabelsGroup, 150, true));
         kind.actionHeader = new EventActionInflater();
         kind.actionBody = new SimpleInflater(Event.START_DATE);
 

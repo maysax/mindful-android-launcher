@@ -49,7 +49,7 @@ public class TopFragment extends CoreFragment {
     @Pref
     DroidPrefs_ prefs;
 
-    FontAwesomeIcons [] batteryIcons = {
+    FontAwesomeIcons[] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
             FontAwesomeIcons.fa_battery_1,
             FontAwesomeIcons.fa_battery_2,
@@ -102,18 +102,18 @@ public class TopFragment extends CoreFragment {
 
         iTxt3.setText(getString(R.string.format_battery,
                 prefs.isNotificationSchedulerEnabled().get() ? String.format(Locale.US, "{fa-bell 12dp} %d min",
-                prefs.notificationSchedulerValue().get()) : "", currentBatteryLevel));
+                        prefs.notificationSchedulerValue().get()) : "", currentBatteryLevel));
 
         iTxt3.setCompoundDrawablesWithIntrinsicBounds(null, null, new IconDrawable(context, getBatteryIcon(currentBatteryLevel)).colorRes(R.color.white).sizeDp(12), null);
     }
 
     private Icon getBatteryIcon(int level) {
-        if (level < 15) return batteryIcons [0];
-        else if (level <= 25) return batteryIcons [1];
-        else if (level <= 65) return batteryIcons [2];
-        else if (level <= 80) return batteryIcons [3];
-        else if (level > 80) return batteryIcons [4];
-        return batteryIcons [2];
+        if (level < 15) return batteryIcons[0];
+        else if (level <= 25) return batteryIcons[1];
+        else if (level <= 65) return batteryIcons[2];
+        else if (level <= 80) return batteryIcons[3];
+        else if (level > 80) return batteryIcons[4];
+        return batteryIcons[2];
     }
 
     private class SignalStrengthListener extends PhoneStateListener {

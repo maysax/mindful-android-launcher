@@ -15,21 +15,14 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
-import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.db.TableNotificationSms;
-
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.TopBarUpdateEvent;
-import co.siempo.phone.mm.model.Utilities;
-import co.siempo.phone.notification.Notification;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.VibrationUtils;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 
 @EReceiver
@@ -48,7 +41,7 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
 
-        if((launcherPrefs.isPauseActive().get() && !launcherPrefs.isPauseAllowCallsChecked().get()) ||
+        if ((launcherPrefs.isPauseActive().get() && !launcherPrefs.isPauseAllowCallsChecked().get()) ||
                 (launcherPrefs.isTempoActive().get() && !launcherPrefs.tempoAllowCalls().get())) {
             rejectCalls(ctx, number, start);
         }
@@ -116,7 +109,7 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
     }
 
     // Keep this method as it is
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void disconnectPhoneITelephony(Context context) {
         try {
 

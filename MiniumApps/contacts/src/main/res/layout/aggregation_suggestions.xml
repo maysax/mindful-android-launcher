@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
  * Copyright 2010, The Android Open Source Project
  *
@@ -18,14 +17,8 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@drawable/aggregation_suggestions_bg">
-    <LinearLayout
-        android:id="@+id/aggregation_suggestions"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-    />
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:background="@drawable/aggregation_suggestions_bg">
+    <LinearLayout android:id="@+id/aggregation_suggestions" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="vertical" />
 </LinearLayout>

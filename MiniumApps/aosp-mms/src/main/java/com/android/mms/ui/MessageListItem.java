@@ -17,10 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -63,7 +59,6 @@ import com.android.mms.R;
 import com.android.mms.data.Contact;
 import com.android.mms.data.WorkingMessage;
 import com.android.mms.model.SlideModel;
-import com.android.mms.model.SlideshowModel;
 import com.android.mms.transaction.Transaction;
 import com.android.mms.transaction.TransactionBundle;
 import com.android.mms.transaction.TransactionService;
@@ -72,6 +67,10 @@ import com.android.mms.util.ItemLoadedCallback;
 import com.android.mms.util.ThumbnailManager.ImageLoaded;
 import com.google.android.mms.ContentType;
 import com.google.android.mms.pdu.PduHeaders;
+
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class provides view of a message in the messages list.
@@ -84,8 +83,8 @@ public class MessageListItem extends LinearLayout implements
     private static final boolean DEBUG = false;
     private static final boolean DEBUG_DONT_LOAD_IMAGES = false;
 
-    static final int MSG_LIST_EDIT    = 1;
-    static final int MSG_LIST_PLAY    = 2;
+    static final int MSG_LIST_EDIT = 1;
+    static final int MSG_LIST_PLAY = 2;
     static final int MSG_LIST_DETAILS = 3;
 
     private View mMmsView;
@@ -146,7 +145,7 @@ public class MessageListItem extends LinearLayout implements
     public void bind(MessageItem msgItem, boolean convHasMultiRecipients, int position) {
         if (DEBUG) {
             Log.v(TAG, "bind for item: " + position + " old: " +
-                   (mMessageItem != null ? mMessageItem.toString() : "NULL" ) +
+                    (mMessageItem != null ? mMessageItem.toString() : "NULL") +
                     " new " + msgItem.toString());
         }
         boolean sameItem = mMessageItem != null && mMessageItem.mMsgId == msgItem.mMsgId;
@@ -157,9 +156,9 @@ public class MessageListItem extends LinearLayout implements
 
         setLongClickable(false);
         setClickable(false);    // let the list view handle clicks on the item normally. When
-                                // clickable is true, clicks bypass the listview and go straight
-                                // to this listitem. We always want the listview to handle the
-                                // clicks first.
+        // clickable is true, clicks bypass the listview and go straight
+        // to this listitem. We always want the listview to handle the
+        // clicks first.
 
         switch (msgItem.mMessageType) {
             case PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND:
@@ -201,13 +200,13 @@ public class MessageListItem extends LinearLayout implements
         showMmsView(false);
 
         String msgSizeText = mContext.getString(R.string.message_size_label)
-                                + String.valueOf((mMessageItem.mMessageSize + 1023) / 1024)
-                                + mContext.getString(R.string.kilobyte);
+                + String.valueOf((mMessageItem.mMessageSize + 1023) / 1024)
+                + mContext.getString(R.string.kilobyte);
 
         mBodyTextView.setText(formatMessage(mMessageItem, null,
-                                            mMessageItem.mSubject,
-                                            mMessageItem.mHighlight,
-                                            mMessageItem.mTextContentType));
+                mMessageItem.mSubject,
+                mMessageItem.mHighlight,
+                mMessageItem.mTextContentType));
 
         mDateView.setText(buildTimestampLine(msgSizeText + " " + mMessageItem.mTimestamp));
 
@@ -250,7 +249,7 @@ public class MessageListItem extends LinearLayout implements
                         mContext.startService(intent);
 
                         DownloadManager.getInstance().markState(
-                                    mMessageItem.mMessageUri, DownloadManager.STATE_PRE_DOWNLOADING);
+                                mMessageItem.mMessageUri, DownloadManager.STATE_PRE_DOWNLOADING);
                     }
                 });
                 break;
@@ -332,10 +331,10 @@ public class MessageListItem extends LinearLayout implements
         CharSequence formattedMessage = mMessageItem.getCachedFormattedMessage();
         if (formattedMessage == null) {
             formattedMessage = formatMessage(mMessageItem,
-                                             mMessageItem.mBody,
-                                             mMessageItem.mSubject,
-                                             mMessageItem.mHighlight,
-                                             mMessageItem.mTextContentType);
+                    mMessageItem.mBody,
+                    mMessageItem.mSubject,
+                    mMessageItem.mHighlight,
+                    mMessageItem.mTextContentType);
             mMessageItem.setCachedFormattedMessage(formattedMessage);
         }
         if (!sameItem || haveLoadedPdu) {
@@ -365,7 +364,7 @@ public class MessageListItem extends LinearLayout implements
         if (!sameItem || haveLoadedPdu) {
             mDateView.setText(buildTimestampLine(mMessageItem.isSending() ?
                     mContext.getResources().getString(R.string.sending_message) :
-                        mMessageItem.mTimestamp));
+                    mMessageItem.mTimestamp));
         }
         if (mMessageItem.isSms()) {
             showMmsView(false);
@@ -518,13 +517,13 @@ public class MessageListItem extends LinearLayout implements
     private LineHeightSpan mSpan = new LineHeightSpan() {
         @Override
         public void chooseHeight(CharSequence text, int start,
-                int end, int spanstartv, int v, FontMetricsInt fm) {
+                                 int end, int spanstartv, int v, FontMetricsInt fm) {
             fm.ascent -= 10;
         }
     };
 
     TextAppearanceSpan mTextSmallSpan =
-        new TextAppearanceSpan(mContext, android.R.style.TextAppearance_Small);
+            new TextAppearanceSpan(mContext, android.R.style.TextAppearance_Small);
 
     ForegroundColorSpan mColorSpan = null;  // set in ctor
 
@@ -609,7 +608,7 @@ public class MessageListItem extends LinearLayout implements
         // regardless of whether it has links in it
         if (mMessageItem != null &&
                 mMessageItem.isOutgoingMessage() &&
-                mMessageItem.isFailedMessage() ) {
+                mMessageItem.isFailedMessage()) {
 
             // Assuming the current message is a failed one, reload it into the compose view so
             // the user can resend it.
@@ -626,40 +625,39 @@ public class MessageListItem extends LinearLayout implements
             spans[0].onClick(mBodyTextView);
         } else {
             ArrayAdapter<URLSpan> adapter =
-                new ArrayAdapter<URLSpan>(mContext, android.R.layout.select_dialog_item, spans) {
-                @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
-                    View v = super.getView(position, convertView, parent);
-                    try {
-                        URLSpan span = getItem(position);
-                        String url = span.getURL();
-                        Uri uri = Uri.parse(url);
-                        TextView tv = (TextView) v;
-                        Drawable d = mContext.getPackageManager().getActivityIcon(
-                                new Intent(Intent.ACTION_VIEW, uri));
-                        if (d != null) {
-                            d.setBounds(0, 0, d.getIntrinsicHeight(), d.getIntrinsicHeight());
-                            tv.setCompoundDrawablePadding(10);
-                            tv.setCompoundDrawables(d, null, null, null);
-                        }
-                        final String telPrefix = "tel:";
-                        if (url.startsWith(telPrefix)) {
-                            if ((mDefaultCountryIso == null) || mDefaultCountryIso.isEmpty()) {
-                                url = url.substring(telPrefix.length());
+                    new ArrayAdapter<URLSpan>(mContext, android.R.layout.select_dialog_item, spans) {
+                        @Override
+                        public View getView(int position, View convertView, ViewGroup parent) {
+                            View v = super.getView(position, convertView, parent);
+                            try {
+                                URLSpan span = getItem(position);
+                                String url = span.getURL();
+                                Uri uri = Uri.parse(url);
+                                TextView tv = (TextView) v;
+                                Drawable d = mContext.getPackageManager().getActivityIcon(
+                                        new Intent(Intent.ACTION_VIEW, uri));
+                                if (d != null) {
+                                    d.setBounds(0, 0, d.getIntrinsicHeight(), d.getIntrinsicHeight());
+                                    tv.setCompoundDrawablePadding(10);
+                                    tv.setCompoundDrawables(d, null, null, null);
+                                }
+                                final String telPrefix = "tel:";
+                                if (url.startsWith(telPrefix)) {
+                                    if ((mDefaultCountryIso == null) || mDefaultCountryIso.isEmpty()) {
+                                        url = url.substring(telPrefix.length());
+                                    } else {
+                                        url = PhoneNumberUtils.formatNumber(
+                                                url.substring(telPrefix.length()), mDefaultCountryIso);
+                                    }
+                                }
+                                tv.setText(url);
+                            } catch (android.content.pm.PackageManager.NameNotFoundException ex) {
+                                // it's ok if we're unable to set the drawable for this view - the user
+                                // can still use it
                             }
-                            else {
-                                url = PhoneNumberUtils.formatNumber(
-                                        url.substring(telPrefix.length()), mDefaultCountryIso);
-                            }
+                            return v;
                         }
-                        tv.setText(url);
-                    } catch (android.content.pm.PackageManager.NameNotFoundException ex) {
-                        // it's ok if we're unable to set the drawable for this view - the user
-                        // can still use it
-                    }
-                    return v;
-                }
-            };
+                    };
 
             AlertDialog.Builder b = new AlertDialog.Builder(mContext);
 
@@ -689,7 +687,7 @@ public class MessageListItem extends LinearLayout implements
     }
 
     private void setOnClickListener(final MessageItem msgItem) {
-        switch(msgItem.mAttachmentType) {
+        switch (msgItem.mAttachmentType) {
             case WorkingMessage.IMAGE:
             case WorkingMessage.VIDEO:
                 mImageView.setOnClickListener(new OnClickListener() {
@@ -709,7 +707,7 @@ public class MessageListItem extends LinearLayout implements
             default:
                 mImageView.setOnClickListener(null);
                 break;
-            }
+        }
     }
 
     private void drawRightStatusIndicator(MessageItem msgItem) {
@@ -744,7 +742,7 @@ public class MessageListItem extends LinearLayout implements
         // by selecting the "View report" menu.
         if (msgItem.mDeliveryStatus == MessageItem.DeliveryStatus.INFO || msgItem.mReadReport
                 || (msgItem.isMms() &&
-                        msgItem.mDeliveryStatus == MessageItem.DeliveryStatus.RECEIVED)) {
+                msgItem.mDeliveryStatus == MessageItem.DeliveryStatus.RECEIVED)) {
             mDetailsIndicator.setImageResource(R.drawable.ic_sms_mms_details);
             mDetailsIndicator.setVisibility(View.VISIBLE);
         } else {

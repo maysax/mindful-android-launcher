@@ -44,10 +44,10 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.ContactsUtils;
-import com.android.contacts.common.model.ValuesDelta;
+import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.model.RawContactModifier;
+import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType.EditType;
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.util.DialogManager;
@@ -127,7 +127,9 @@ public abstract class LabeledEditorView extends LinearLayout implements Editor, 
                 R.dimen.editor_min_line_item_height);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onFinishInflate() {
 
@@ -343,7 +345,7 @@ public abstract class LabeledEditorView extends LinearLayout implements Editor, 
      */
     @Override
     public void setValues(DataKind kind, ValuesDelta entry, RawContactDelta state, boolean readOnly,
-            ViewIdGenerator vig) {
+                          ViewIdGenerator vig) {
         mKind = kind;
         mEntry = entry;
         mState = state;
@@ -493,9 +495,9 @@ public abstract class LabeledEditorView extends LinearLayout implements Editor, 
             if (!(context instanceof DialogManager.DialogShowingViewActivity)) {
                 throw new IllegalStateException(
                         "View must be hosted in an Activity that implements " +
-                        "DialogManager.DialogShowingViewActivity");
+                                "DialogManager.DialogShowingViewActivity");
             }
-            mDialogManager = ((DialogManager.DialogShowingViewActivity)context).getDialogManager();
+            mDialogManager = ((DialogManager.DialogShowingViewActivity) context).getDialogManager();
         }
         return mDialogManager;
     }
@@ -554,7 +556,7 @@ public abstract class LabeledEditorView extends LinearLayout implements Editor, 
         }
 
         private View createViewFromResource(int position, View convertView, ViewGroup parent,
-                int resource) {
+                                            int resource) {
             TextView textView;
 
             if (convertView == null) {

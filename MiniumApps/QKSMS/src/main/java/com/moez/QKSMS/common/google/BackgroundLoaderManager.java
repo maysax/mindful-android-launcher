@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * request lots of images around the same time, and AsyncTask may reject tasks
  * in that case and has no way of bounding the number of threads used by those
  * tasks.
- *
+ * <p>
  * Based on BooksImageManager by Virgil King.
  */
 abstract class BackgroundLoaderManager {
@@ -93,15 +93,15 @@ abstract class BackgroundLoaderManager {
     /**
      * Attempts to add a callback for a resource.
      *
-     * @param uri the {@link android.net.Uri} of the resource for which a callback is
-     *            desired.
+     * @param uri      the {@link android.net.Uri} of the resource for which a callback is
+     *                 desired.
      * @param callback the callback to register.
      * @return {@code true} if the callback is guaranteed to be invoked with
-     *         a non-null result (as long as there is no error and the
-     *         callback is not canceled), or {@code false} if the callback
-     *         cannot be registered with this task because the result for
-     *         the desired {@link android.net.Uri} has already been discarded due to
-     *         low-memory.
+     * a non-null result (as long as there is no error and the
+     * callback is not canceled), or {@code false} if the callback
+     * cannot be registered with this task because the result for
+     * the desired {@link android.net.Uri} has already been discarded due to
+     * low-memory.
      * @throws NullPointerException if either argument is {@code null}
      */
     public boolean addCallback(Uri uri, ItemLoadedCallback callback) {
@@ -153,7 +153,7 @@ abstract class BackgroundLoaderManager {
         }
 
         public Thread newThread(final Runnable r) {
-            Thread t =  new Thread(r, mTag + "-" + mCount.getAndIncrement());
+            Thread t = new Thread(r, mTag + "-" + mCount.getAndIncrement());
 
             if (t.getPriority() != Thread.MIN_PRIORITY)
                 t.setPriority(Thread.MIN_PRIORITY);

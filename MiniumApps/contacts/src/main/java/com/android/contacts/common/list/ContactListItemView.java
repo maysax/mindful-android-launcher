@@ -50,7 +50,6 @@ import com.android.contacts.common.ContactStatusUtil;
 import com.android.contacts.common.format.TextHighlighter;
 import com.android.contacts.common.util.SearchUtil;
 import com.android.contacts.common.util.ViewUtil;
-
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -67,11 +66,11 @@ import minium.co.contacts.R;
  * icons for presence and call.
  * The view uses no XML file for layout and all the measurements and layouts are done
  * in the onMeasure and onLayout methods.
- *
+ * <p>
  * The layout puts the contact's photo on the right side of the view, the call icon (if present)
  * to the left of the photo, the text lines are aligned to the left and the presence icon (if
  * present) is set to the left of the status line.
- *
+ * <p>
  * The layout also supports a header (used as a header of a group of contacts) that is above the
  * contact's data and a divider between contact view.
  */
@@ -123,7 +122,7 @@ public class ContactListItemView extends ViewGroup
 
     /**
      * Where to put contact photo. This affects the other Views' layout or look-and-feel.
-     *
+     * <p>
      * TODO: replace enum with int constants
      */
     public enum PhotoPosition {
@@ -162,7 +161,6 @@ public class ContactListItemView extends ViewGroup
     private ImageView mPresenceIcon;
 
     private ColorStateList mSecondaryTextColor;
-
 
 
     private int mDefaultPhotoViewSize = 0;
@@ -219,7 +217,9 @@ public class ContactListItemView extends ViewGroup
 
     private Rect mBoundsWithoutHeader = new Rect();
 
-    /** A helper used to highlight a prefix in a text field. */
+    /**
+     * A helper used to highlight a prefix in a text field.
+     */
     private final TextHighlighter mTextHighlighter;
     private CharSequence mUnknownNameText;
 
@@ -793,9 +793,9 @@ public class ContactListItemView extends ViewGroup
      * Removes the photo view.
      *
      * @param keepHorizontalPadding True means data on the right side will have
-     *            padding on left, pretending there is still a photo view.
-     * @param keepVerticalPadding True means the View will have some height
-     *            enough for accommodating a photo view.
+     *                              padding on left, pretending there is still a photo view.
+     * @param keepVerticalPadding   True means the View will have some height
+     *                              enough for accommodating a photo view.
      */
     public void removePhotoView(boolean keepHorizontalPadding, boolean keepVerticalPadding) {
         mPhotoViewWidthAndHeightAreReady = false;
@@ -832,8 +832,9 @@ public class ContactListItemView extends ViewGroup
 
     /**
      * Adds a highlight sequence to the name highlighter.
+     *
      * @param start The start position of the highlight sequence.
-     * @param end The end position of the highlight sequence.
+     * @param end   The end position of the highlight sequence.
      */
     public void addNameHighlightSequence(int start, int end) {
         mNameHighlightSequence.add(new HighlightSequence(start, end));
@@ -841,8 +842,9 @@ public class ContactListItemView extends ViewGroup
 
     /**
      * Adds a highlight sequence to the number highlighter.
+     *
      * @param start The start position of the highlight sequence.
-     * @param end The end position of the highlight sequence.
+     * @param end   The end position of the highlight sequence.
      */
     public void addNumberHighlightSequence(int start, int end) {
         mNumberHighlightSequence.add(new HighlightSequence(start, end));
@@ -1180,7 +1182,7 @@ public class ContactListItemView extends ViewGroup
      * Sets the proper icon (star or presence or nothing) and/or status message.
      */
     public void showPresenceAndStatusMessage(Cursor cursor, int presenceColumnIndex,
-            int contactStatusColumnIndex) {
+                                             int contactStatusColumnIndex) {
         Drawable icon = null;
         int presence = 0;
         if (!cursor.isNull(presenceColumnIndex)) {
@@ -1266,8 +1268,8 @@ public class ContactListItemView extends ViewGroup
      * Used for deferred snippets from the database. The contents come back as large strings which
      * need to be extracted for display.
      *
-     * @param snippet The snippet from the database.
-     * @param query The search query substring.
+     * @param snippet     The snippet from the database.
+     * @param query       The search query substring.
      * @param displayName The contact display name.
      * @return The proper snippet to display.
      */
@@ -1426,7 +1428,7 @@ public class ContactListItemView extends ViewGroup
      * of the photo view
      *
      * @param backgroundId Id of background resource
-     * @param drawableId Id of drawable resource
+     * @param drawableId   Id of drawable resource
      */
     public void setDrawableResource(int backgroundId, int drawableId) {
         final ImageView photo = getPhotoView();

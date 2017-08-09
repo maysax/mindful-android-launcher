@@ -31,11 +31,17 @@ public class IndentingPrintWriter extends PrintWriter {
     private final String mSingleIndent;
     private final int mWrapLength;
 
-    /** Mutable version of current indent */
+    /**
+     * Mutable version of current indent
+     */
     private StringBuilder mIndentBuilder = new StringBuilder();
-    /** Cache of current {@link #mIndentBuilder} value */
+    /**
+     * Cache of current {@link #mIndentBuilder} value
+     */
     private char[] mCurrentIndent;
-    /** Length of current line being built, excluding any indent */
+    /**
+     * Length of current line being built, excluding any indent
+     */
     private int mCurrentLength;
 
     /**

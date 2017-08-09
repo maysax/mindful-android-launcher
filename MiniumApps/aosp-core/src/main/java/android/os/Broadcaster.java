@@ -16,21 +16,20 @@
 
 package android.os;
 
-/** @hide */
-public class Broadcaster
-{
-    public Broadcaster()
-    {
+/**
+ * @hide
+ */
+public class Broadcaster {
+    public Broadcaster() {
     }
 
     /**
-     *  Sign up for notifications about something.
-     *
-     *  When this broadcaster pushes a message with senderWhat in the what field,
-     *  target will be sent a copy of that message with targetWhat in the what field.
+     * Sign up for notifications about something.
+     * <p>
+     * When this broadcaster pushes a message with senderWhat in the what field,
+     * target will be sent a copy of that message with targetWhat in the what field.
      */
-    public void request(int senderWhat, Handler target, int targetWhat)
-    {
+    public void request(int senderWhat, Handler target, int targetWhat) {
         synchronized (this) {
             Registration r = null;
             if (mReg == null) {
@@ -69,7 +68,7 @@ public class Broadcaster
                     if (r == mReg && r.senderWhat > reg.senderWhat) {
                         mReg = reg;
                     }
-                    
+
                     r = reg;
                     n = 0;
                 } else {
@@ -77,14 +76,14 @@ public class Broadcaster
                     Handler[] oldTargets = r.targets;
                     int[] oldWhats = r.targetWhats;
                     // check for duplicates, and don't do it if we are dup.
-                    for (int i=0; i<n; i++) {
+                    for (int i = 0; i < n; i++) {
                         if (oldTargets[i] == target && oldWhats[i] == targetWhat) {
                             return;
                         }
                     }
-                    r.targets = new Handler[n+1];
+                    r.targets = new Handler[n + 1];
                     System.arraycopy(oldTargets, 0, r.targets, 0, n);
-                    r.targetWhats = new int[n+1];
+                    r.targetWhats = new int[n + 1];
                     System.arraycopy(oldWhats, 0, r.targetWhats, 0, n);
                 }
                 r.targets[n] = target;
@@ -92,45 +91,44 @@ public class Broadcaster
             }
         }
     }
-    
+
     /**
      * Unregister for notifications for this senderWhat/target/targetWhat tuple.
      */
-    public void cancelRequest(int senderWhat, Handler target, int targetWhat)
-    {
+    public void cancelRequest(int senderWhat, Handler target, int targetWhat) {
         synchronized (this) {
             Registration start = mReg;
             Registration r = start;
-            
+
             if (r == null) {
                 return;
             }
-            
+
             do {
                 if (r.senderWhat >= senderWhat) {
                     break;
                 }
                 r = r.next;
             } while (r != start);
-            
+
             if (r.senderWhat == senderWhat) {
                 Handler[] targets = r.targets;
                 int[] whats = r.targetWhats;
                 int oldLen = targets.length;
-                for (int i=0; i<oldLen; i++) {
+                for (int i = 0; i < oldLen; i++) {
                     if (targets[i] == target && whats[i] == targetWhat) {
-                        r.targets = new Handler[oldLen-1];
-                        r.targetWhats = new int[oldLen-1];
+                        r.targets = new Handler[oldLen - 1];
+                        r.targetWhats = new int[oldLen - 1];
                         if (i > 0) {
                             System.arraycopy(targets, 0, r.targets, 0, i);
                             System.arraycopy(whats, 0, r.targetWhats, 0, i);
                         }
 
-                        int remainingLen = oldLen-i-1;
+                        int remainingLen = oldLen - i - 1;
                         if (remainingLen != 0) {
-                            System.arraycopy(targets, i+1, r.targets, i,
+                            System.arraycopy(targets, i + 1, r.targets, i,
                                     remainingLen);
-                            System.arraycopy(whats, i+1, r.targetWhats, i,
+                            System.arraycopy(whats, i + 1, r.targetWhats, i,
                                     remainingLen);
                         }
                         break;
@@ -143,8 +141,7 @@ public class Broadcaster
     /**
      * For debugging purposes, print the registrations to System.out
      */
-    public void dumpRegistrations()
-    {
+    public void dumpRegistrations() {
         synchronized (this) {
             Registration start = mReg;
             System.out.println("Broadcaster " + this + " {");
@@ -153,9 +150,9 @@ public class Broadcaster
                 do {
                     System.out.println("    senderWhat=" + r.senderWhat);
                     int n = r.targets.length;
-                    for (int i=0; i<n; i++) {
+                    for (int i = 0; i < n; i++) {
                         System.out.println("        [" + r.targetWhats[i]
-                                        + "] " + r.targets[i]);
+                                + "] " + r.targets[i]);
                     }
                     r = r.next;
                 } while (r != start);
@@ -168,13 +165,12 @@ public class Broadcaster
      * Send out msg.  Anyone who has registered via the request() method will be
      * sent the message.
      */
-    public void broadcast(Message msg)
-    {
+    public void broadcast(Message msg) {
         synchronized (this) {
             if (mReg == null) {
                 return;
             }
-            
+
             int senderWhat = msg.what;
             Registration start = mReg;
             Registration r = start;
@@ -188,7 +184,7 @@ public class Broadcaster
                 Handler[] targets = r.targets;
                 int[] whats = r.targetWhats;
                 int n = targets.length;
-                for (int i=0; i<n; i++) {
+                for (int i = 0; i < n; i++) {
                     Handler target = targets[i];
                     Message m = Message.obtain();
                     m.copyFrom(msg);
@@ -199,8 +195,7 @@ public class Broadcaster
         }
     }
 
-    private class Registration
-    {
+    private class Registration {
         Registration next;
         Registration prev;
 
@@ -208,5 +203,6 @@ public class Broadcaster
         Handler[] targets;
         int[] targetWhats;
     }
+
     private Registration mReg;
 }

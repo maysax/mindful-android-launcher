@@ -17,16 +17,6 @@
 
 package com.android.mms.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.smil.ElementTime;
-
 import android.text.TextUtils;
 import android.util.Config;
 import android.util.Log;
@@ -35,6 +25,16 @@ import com.android.mms.ContentRestrictionException;
 import com.android.mms.LogTag;
 import com.android.mms.dom.smil.SmilParElementImpl;
 import com.google.android.mms.ContentType;
+
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.smil.ElementTime;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class SlideModel extends Model implements List<MediaModel>, EventListener {
     public static final String TAG = LogTag.TAG;
@@ -71,12 +71,11 @@ public class SlideModel extends Model implements List<MediaModel>, EventListener
     /**
      * Create a SlideModel with exist media collection.
      *
-     * @param duration The duration of the slide.
+     * @param duration  The duration of the slide.
      * @param mediaList The exist media collection.
-     *
      * @throws IllegalStateException One or more media in the mediaList cannot
-     *         be added into the slide due to a slide cannot contain image
-     *         and video or audio and video at the same time.
+     *                               be added into the slide due to a slide cannot contain image
+     *                               and video or audio and video at the same time.
      */
     public SlideModel(int duration, ArrayList<MediaModel> mediaList) {
         mDuration = duration;
@@ -117,7 +116,7 @@ public class SlideModel extends Model implements List<MediaModel>, EventListener
                 mCanAddVideo = false;
             } else {
                 Log.w(TAG, "[SlideModel] content type " + media.getContentType() +
-                    " - can't add image in this state");
+                        " - can't add image in this state");
             }
         } else if (media.isAudio()) {
             if (mCanAddAudio) {
@@ -126,7 +125,7 @@ public class SlideModel extends Model implements List<MediaModel>, EventListener
                 mCanAddVideo = false;
             } else {
                 Log.w(TAG, "[SlideModel] content type " + media.getContentType() +
-                    " - can't add audio in this state");
+                        " - can't add audio in this state");
             }
         } else if (media.isVideo()) {
             if (mCanAddVideo) {
@@ -136,7 +135,7 @@ public class SlideModel extends Model implements List<MediaModel>, EventListener
                 mCanAddAudio = false;
             } else {
                 Log.w(TAG, "[SlideModel] content type " + media.getContentType() +
-                    " - can't add video in this state");
+                        " - can't add video in this state");
             }
         }
     }
@@ -194,7 +193,7 @@ public class SlideModel extends Model implements List<MediaModel>, EventListener
             // Just before we send the slideshow, we take the remaining space in the
             // slideshow and equally allocate it to all the resizeable media items and resize them.
             int decreaseSize = ((MediaModel) object).getMediaResizable() ? 0
-                                        : ((MediaModel) object).getMediaSize();
+                    : ((MediaModel) object).getMediaSize();
             decreaseSlideSize(decreaseSize);
             decreaseMessageSize(decreaseSize);
 
@@ -274,11 +273,10 @@ public class SlideModel extends Model implements List<MediaModel>, EventListener
      *
      * @param object A media object to be added into the slide.
      * @return true
-     * @throws IllegalStateException One or more media in the mediaList cannot
-     *         be added into the slide due to a slide cannot contain image
-     *         and video or audio and video at the same time.
+     * @throws IllegalStateException       One or more media in the mediaList cannot
+     *                                     be added into the slide due to a slide cannot contain image
+     *                                     and video or audio and video at the same time.
      * @throws ContentRestrictionException when can not add this object.
-     *
      */
     public boolean add(MediaModel object) {
         internalAdd(object);
@@ -363,7 +361,7 @@ public class SlideModel extends Model implements List<MediaModel>, EventListener
     }
 
     public boolean addAll(int location,
-            Collection<? extends MediaModel> collection) {
+                          Collection<? extends MediaModel> collection) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 

@@ -50,12 +50,12 @@ import android.widget.Toast;
 import com.android.contacts.GroupMemberLoader;
 import com.android.contacts.GroupMetaDataLoader;
 import com.android.contacts.common.ContactPhotoManager;
-import com.android.contacts.interactions.GroupDeletionDialogFragment;
 import com.android.contacts.common.list.ContactTileAdapter;
 import com.android.contacts.common.list.ContactTileView;
-import com.android.contacts.list.GroupMemberTileAdapter;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountType;
+import com.android.contacts.interactions.GroupDeletionDialogFragment;
+import com.android.contacts.list.GroupMemberTileAdapter;
 
 import minium.co.contacts.R;
 
@@ -165,7 +165,7 @@ public class GroupDetailFragment extends Fragment implements OnScrollListener {
     }
 
     public void loadGroup(Uri groupUri) {
-        mGroupUri= groupUri;
+        mGroupUri = groupUri;
         startGroupMetadataLoader();
     }
 
@@ -216,22 +216,22 @@ public class GroupDetailFragment extends Fragment implements OnScrollListener {
     private final ContactTileView.Listener mContactTileListener =
             new ContactTileView.Listener() {
 
-        @Override
-        public void onContactSelected(Uri contactUri, Rect targetRect) {
-            mListener.onContactSelected(contactUri);
-        }
+                @Override
+                public void onContactSelected(Uri contactUri, Rect targetRect) {
+                    mListener.onContactSelected(contactUri);
+                }
 
-        @Override
-        public void onCallNumberDirectly(String phoneNumber) {
-            // No need to call phone number directly from People app.
-            Log.w(TAG, "unexpected invocation of onCallNumberDirectly()");
-        }
+                @Override
+                public void onCallNumberDirectly(String phoneNumber) {
+                    // No need to call phone number directly from People app.
+                    Log.w(TAG, "unexpected invocation of onCallNumberDirectly()");
+                }
 
-        @Override
-        public int getApproximateTileWidth() {
-            return getView().getWidth() / mAdapter.getColumnCount();
-        }
-    };
+                @Override
+                public int getApproximateTileWidth() {
+                    return getView().getWidth() / mAdapter.getColumnCount();
+                }
+            };
 
     /**
      * The listener for the group metadata loader.
@@ -239,35 +239,36 @@ public class GroupDetailFragment extends Fragment implements OnScrollListener {
     private final LoaderManager.LoaderCallbacks<Cursor> mGroupMetadataLoaderListener =
             new LoaderCallbacks<Cursor>() {
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            return new GroupMetaDataLoader(mContext, mGroupUri);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (data == null || data.isClosed()) {
-                Log.e(TAG, "Failed to load group metadata");
-                return;
-            }
-            data.moveToPosition(-1);
-            if (data.moveToNext()) {
-                boolean deleted = data.getInt(GroupMetaDataLoader.DELETED) == 1;
-                if (!deleted) {
-                    bindGroupMetaData(data);
-
-                    // Retrieve the list of members
-                    startGroupMembersLoader();
-                    return;
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    return new GroupMetaDataLoader(mContext, mGroupUri);
                 }
-            }
-            updateSize(-1);
-            updateTitle(null);
-        }
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {}
-    };
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    if (data == null || data.isClosed()) {
+                        Log.e(TAG, "Failed to load group metadata");
+                        return;
+                    }
+                    data.moveToPosition(-1);
+                    if (data.moveToNext()) {
+                        boolean deleted = data.getInt(GroupMetaDataLoader.DELETED) == 1;
+                        if (!deleted) {
+                            bindGroupMetaData(data);
+
+                            // Retrieve the list of members
+                            startGroupMembersLoader();
+                            return;
+                        }
+                    }
+                    updateSize(-1);
+                    updateTitle(null);
+                }
+
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {
+                }
+            };
 
     /**
      * The listener for the group members list loader
@@ -275,25 +276,26 @@ public class GroupDetailFragment extends Fragment implements OnScrollListener {
     private final LoaderManager.LoaderCallbacks<Cursor> mGroupMemberListLoaderListener =
             new LoaderCallbacks<Cursor>() {
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            return GroupMemberLoader.constructLoaderForGroupDetailQuery(mContext, mGroupId);
-        }
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    return GroupMemberLoader.constructLoaderForGroupDetailQuery(mContext, mGroupId);
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (data == null || data.isClosed()) {
-                Log.e(TAG, "Failed to load group members");
-                return;
-            }
-            updateSize(data.getCount());
-            mAdapter.setContactCursor(data);
-            mMemberListView.setEmptyView(mEmptyView);
-        }
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    if (data == null || data.isClosed()) {
+                        Log.e(TAG, "Failed to load group members");
+                        return;
+                    }
+                    updateSize(data.getCount());
+                    mAdapter.setContactCursor(data);
+                    mMemberListView.setEmptyView(mEmptyView);
+                }
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {}
-    };
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {
+                }
+            };
 
     private void bindGroupMetaData(Cursor cursor) {
         cursor.moveToPosition(-1);
@@ -305,7 +307,7 @@ public class GroupDetailFragment extends Fragment implements OnScrollListener {
             mIsReadOnly = cursor.getInt(GroupMetaDataLoader.IS_READ_ONLY) == 1;
             updateTitle(mGroupName);
             // Must call invalidate so that the option menu will get updated
-            getActivity().invalidateOptionsMenu ();
+            getActivity().invalidateOptionsMenu();
 
             final String accountTypeString = cursor.getString(GroupMetaDataLoader.ACCOUNT_TYPE);
             final String dataSet = cursor.getString(GroupMetaDataLoader.DATA_SET);
@@ -323,6 +325,7 @@ public class GroupDetailFragment extends Fragment implements OnScrollListener {
 
     /**
      * Display the count of the number of group members.
+     *
      * @param size of the group (can be -1 if no size could be determined)
      */
     private void updateSize(int size) {
@@ -414,7 +417,7 @@ public class GroupDetailFragment extends Fragment implements OnScrollListener {
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-            int totalItemCount) {
+                         int totalItemCount) {
     }
 
     @Override

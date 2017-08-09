@@ -18,10 +18,10 @@ package com.android.internal.util;
 
 /**
  * An object that provides bitwise incremental write access to a byte array.
- *
+ * <p>
  * This is useful, for example, when writing a series of fields that
  * may not be aligned on byte boundaries.
- *
+ * <p>
  * NOTE -- This class is not threadsafe.
  */
 public class BitwiseOutputStream {
@@ -82,7 +82,7 @@ public class BitwiseOutputStream {
 
     /**
      * Write some data and increment the current position.
-     *
+     * <p>
      * The 8-bit limit on access to bitwise streams is intentional to
      * avoid endianness issues.
      *
@@ -107,13 +107,13 @@ public class BitwiseOutputStream {
      * Write data in bulk from a byte array and increment the current position.
      *
      * @param bits the amount of data to write
-     * @param arr the byte array containing data to be written
+     * @param arr  the byte array containing data to be written
      */
     public void writeByteArray(int bits, byte[] arr) throws AccessException {
         for (int i = 0; i < arr.length; i++) {
             int increment = Math.min(8, bits - (i << 3));
             if (increment > 0) {
-                write(increment, (byte)(arr[i] >>> (8 - increment)));
+                write(increment, (byte) (arr[i] >>> (8 - increment)));
             }
         }
     }

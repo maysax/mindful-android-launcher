@@ -10,20 +10,20 @@
         android:id="@+id/statusView"
         android:layout_width="match_parent"
         android:layout_height="27dp"
-        tools:background="@color/material.core.red"/>
+        tools:background="@color/material.core.red" />
 
     <FrameLayout
-    android:id="@+id/mainView"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1"
-    tools:background="@color/material.core.orange">
+        android:id="@+id/mainView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:background="@color/material.core.orange">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-        </FrameLayout>
+    </FrameLayout>
 
 
 </LinearLayout>

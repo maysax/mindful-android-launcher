@@ -15,15 +15,13 @@
  */
 package com.android.contacts.interactions;
 
-import com.google.common.base.Preconditions;
-
 import android.content.Context;
 import android.text.format.DateUtils;
 
 import com.android.contacts.common.testing.NeededForTesting;
+import com.google.common.base.Preconditions;
 
 import java.text.DateFormat;
-
 import java.util.Calendar;
 
 import minium.co.contacts.R;
@@ -66,7 +64,7 @@ public class ContactInteractionUtil {
      */
     @NeededForTesting
     public static String formatDateStringFromTimestamp(long timestamp, Context context,
-            Calendar compareCalendar) {
+                                                       Calendar compareCalendar) {
         Calendar interactionCalendar = Calendar.getInstance();
         interactionCalendar.setTimeInMillis(timestamp);
 

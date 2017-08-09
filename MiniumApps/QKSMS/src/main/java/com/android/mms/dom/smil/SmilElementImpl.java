@@ -27,11 +27,10 @@ public class SmilElementImpl extends ElementImpl implements SMILElement {
     /**
      * This constructor is used by the factory methods of the SmilDocument.
      *
-     * @param owner The SMIL document to which this element belongs to
+     * @param owner   The SMIL document to which this element belongs to
      * @param tagName The tag name of the element
      */
-    SmilElementImpl(SmilDocumentImpl owner, String tagName)
-    {
+    SmilElementImpl(SmilDocumentImpl owner, String tagName) {
         super(owner, tagName.toLowerCase());
     }
 

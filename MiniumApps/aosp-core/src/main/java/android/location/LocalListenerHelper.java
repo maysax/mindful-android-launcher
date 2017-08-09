@@ -16,11 +16,11 @@
 
 package android.location;
 
-import com.android.internal.util.Preconditions;
-
 import android.annotation.NonNull;
 import android.os.RemoteException;
 import android.util.Log;
+
+import com.android.internal.util.Preconditions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -85,6 +85,7 @@ abstract class LocalListenerHelper<TListener> {
     }
 
     protected abstract boolean registerWithServer() throws RemoteException;
+
     protected abstract void unregisterFromServer() throws RemoteException;
 
     protected interface ListenerOperation<TListener> {

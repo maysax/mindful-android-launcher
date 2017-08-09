@@ -17,42 +17,40 @@
 
 package libcore.io;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
  * Unsafe access to memory.
  */
 public final class Memory {
-    private Memory() { }
+    private Memory() {
+    }
 
     /**
      * Used to optimize nio heap buffer bulk get operations. 'dst' must be a primitive array.
      * 'dstOffset' is measured in units of 'sizeofElements' bytes.
      */
     public static native void unsafeBulkGet(Object dst, int dstOffset, int byteCount,
-            byte[] src, int srcOffset, int sizeofElements, boolean swap);
+                                            byte[] src, int srcOffset, int sizeofElements, boolean swap);
 
     /**
      * Used to optimize nio heap buffer bulk put operations. 'src' must be a primitive array.
      * 'srcOffset' is measured in units of 'sizeofElements' bytes.
      */
     public static native void unsafeBulkPut(byte[] dst, int dstOffset, int byteCount,
-            Object src, int srcOffset, int sizeofElements, boolean swap);
+                                            Object src, int srcOffset, int sizeofElements, boolean swap);
 
     public static int peekInt(byte[] src, int offset, ByteOrder order) {
         if (order == ByteOrder.BIG_ENDIAN) {
             return (((src[offset++] & 0xff) << 24) |
                     ((src[offset++] & 0xff) << 16) |
-                    ((src[offset++] & 0xff) <<  8) |
-                    ((src[offset  ] & 0xff) <<  0));
+                    ((src[offset++] & 0xff) << 8) |
+                    ((src[offset] & 0xff) << 0));
         } else {
-            return (((src[offset++] & 0xff) <<  0) |
-                    ((src[offset++] & 0xff) <<  8) |
+            return (((src[offset++] & 0xff) << 0) |
+                    ((src[offset++] & 0xff) << 8) |
                     ((src[offset++] & 0xff) << 16) |
-                    ((src[offset  ] & 0xff) << 24));
+                    ((src[offset] & 0xff) << 24));
         }
     }
 
@@ -60,22 +58,22 @@ public final class Memory {
         if (order == ByteOrder.BIG_ENDIAN) {
             int h = ((src[offset++] & 0xff) << 24) |
                     ((src[offset++] & 0xff) << 16) |
-                    ((src[offset++] & 0xff) <<  8) |
-                    ((src[offset++] & 0xff) <<  0);
+                    ((src[offset++] & 0xff) << 8) |
+                    ((src[offset++] & 0xff) << 0);
             int l = ((src[offset++] & 0xff) << 24) |
                     ((src[offset++] & 0xff) << 16) |
-                    ((src[offset++] & 0xff) <<  8) |
-                    ((src[offset  ] & 0xff) <<  0);
+                    ((src[offset++] & 0xff) << 8) |
+                    ((src[offset] & 0xff) << 0);
             return (((long) h) << 32L) | ((long) l) & 0xffffffffL;
         } else {
-            int l = ((src[offset++] & 0xff) <<  0) |
-                    ((src[offset++] & 0xff) <<  8) |
+            int l = ((src[offset++] & 0xff) << 0) |
+                    ((src[offset++] & 0xff) << 8) |
                     ((src[offset++] & 0xff) << 16) |
                     ((src[offset++] & 0xff) << 24);
-            int h = ((src[offset++] & 0xff) <<  0) |
-                    ((src[offset++] & 0xff) <<  8) |
+            int h = ((src[offset++] & 0xff) << 0) |
+                    ((src[offset++] & 0xff) << 8) |
                     ((src[offset++] & 0xff) << 16) |
-                    ((src[offset  ] & 0xff) << 24);
+                    ((src[offset] & 0xff) << 24);
             return (((long) h) << 32L) | ((long) l) & 0xffffffffL;
         }
     }
@@ -92,13 +90,13 @@ public final class Memory {
         if (order == ByteOrder.BIG_ENDIAN) {
             dst[offset++] = (byte) ((value >> 24) & 0xff);
             dst[offset++] = (byte) ((value >> 16) & 0xff);
-            dst[offset++] = (byte) ((value >>  8) & 0xff);
-            dst[offset  ] = (byte) ((value >>  0) & 0xff);
+            dst[offset++] = (byte) ((value >> 8) & 0xff);
+            dst[offset] = (byte) ((value >> 0) & 0xff);
         } else {
-            dst[offset++] = (byte) ((value >>  0) & 0xff);
-            dst[offset++] = (byte) ((value >>  8) & 0xff);
+            dst[offset++] = (byte) ((value >> 0) & 0xff);
+            dst[offset++] = (byte) ((value >> 8) & 0xff);
             dst[offset++] = (byte) ((value >> 16) & 0xff);
-            dst[offset  ] = (byte) ((value >> 24) & 0xff);
+            dst[offset] = (byte) ((value >> 24) & 0xff);
         }
     }
 
@@ -107,34 +105,34 @@ public final class Memory {
             int i = (int) (value >> 32);
             dst[offset++] = (byte) ((i >> 24) & 0xff);
             dst[offset++] = (byte) ((i >> 16) & 0xff);
-            dst[offset++] = (byte) ((i >>  8) & 0xff);
-            dst[offset++] = (byte) ((i >>  0) & 0xff);
+            dst[offset++] = (byte) ((i >> 8) & 0xff);
+            dst[offset++] = (byte) ((i >> 0) & 0xff);
             i = (int) value;
             dst[offset++] = (byte) ((i >> 24) & 0xff);
             dst[offset++] = (byte) ((i >> 16) & 0xff);
-            dst[offset++] = (byte) ((i >>  8) & 0xff);
-            dst[offset  ] = (byte) ((i >>  0) & 0xff);
+            dst[offset++] = (byte) ((i >> 8) & 0xff);
+            dst[offset] = (byte) ((i >> 0) & 0xff);
         } else {
             int i = (int) value;
-            dst[offset++] = (byte) ((i >>  0) & 0xff);
-            dst[offset++] = (byte) ((i >>  8) & 0xff);
+            dst[offset++] = (byte) ((i >> 0) & 0xff);
+            dst[offset++] = (byte) ((i >> 8) & 0xff);
             dst[offset++] = (byte) ((i >> 16) & 0xff);
             dst[offset++] = (byte) ((i >> 24) & 0xff);
             i = (int) (value >> 32);
-            dst[offset++] = (byte) ((i >>  0) & 0xff);
-            dst[offset++] = (byte) ((i >>  8) & 0xff);
+            dst[offset++] = (byte) ((i >> 0) & 0xff);
+            dst[offset++] = (byte) ((i >> 8) & 0xff);
             dst[offset++] = (byte) ((i >> 16) & 0xff);
-            dst[offset  ] = (byte) ((i >> 24) & 0xff);
+            dst[offset] = (byte) ((i >> 24) & 0xff);
         }
     }
 
     public static void pokeShort(byte[] dst, int offset, short value, ByteOrder order) {
         if (order == ByteOrder.BIG_ENDIAN) {
             dst[offset++] = (byte) ((value >> 8) & 0xff);
-            dst[offset  ] = (byte) ((value >> 0) & 0xff);
+            dst[offset] = (byte) ((value >> 0) & 0xff);
         } else {
             dst[offset++] = (byte) ((value >> 0) & 0xff);
-            dst[offset  ] = (byte) ((value >> 8) & 0xff);
+            dst[offset] = (byte) ((value >> 8) & 0xff);
         }
     }
 
@@ -159,6 +157,7 @@ public final class Memory {
         }
         return result;
     }
+
     private static native int peekIntNative(long address);
 
     public static long peekLong(long address, boolean swap) {
@@ -168,6 +167,7 @@ public final class Memory {
         }
         return result;
     }
+
     private static native long peekLongNative(long address);
 
     public static short peekShort(long address, boolean swap) {
@@ -177,14 +177,21 @@ public final class Memory {
         }
         return result;
     }
+
     private static native short peekShortNative(long address);
 
     public static native void peekByteArray(long address, byte[] dst, int dstOffset, int byteCount);
+
     public static native void peekCharArray(long address, char[] dst, int dstOffset, int charCount, boolean swap);
+
     public static native void peekDoubleArray(long address, double[] dst, int dstOffset, int doubleCount, boolean swap);
+
     public static native void peekFloatArray(long address, float[] dst, int dstOffset, int floatCount, boolean swap);
+
     public static native void peekIntArray(long address, int[] dst, int dstOffset, int intCount, boolean swap);
+
     public static native void peekLongArray(long address, long[] dst, int dstOffset, int longCount, boolean swap);
+
     public static native void peekShortArray(long address, short[] dst, int dstOffset, int shortCount, boolean swap);
 
     public static native void pokeByte(long address, byte value);
@@ -195,6 +202,7 @@ public final class Memory {
         }
         pokeIntNative(address, value);
     }
+
     private static native void pokeIntNative(long address, int value);
 
     public static void pokeLong(long address, long value, boolean swap) {
@@ -203,6 +211,7 @@ public final class Memory {
         }
         pokeLongNative(address, value);
     }
+
     private static native void pokeLongNative(long address, long value);
 
     public static void pokeShort(long address, short value, boolean swap) {
@@ -211,13 +220,20 @@ public final class Memory {
         }
         pokeShortNative(address, value);
     }
+
     private static native void pokeShortNative(long address, short value);
 
     public static native void pokeByteArray(long address, byte[] src, int offset, int count);
+
     public static native void pokeCharArray(long address, char[] src, int offset, int count, boolean swap);
+
     public static native void pokeDoubleArray(long address, double[] src, int offset, int count, boolean swap);
+
     public static native void pokeFloatArray(long address, float[] src, int offset, int count, boolean swap);
+
     public static native void pokeIntArray(long address, int[] src, int offset, int count, boolean swap);
+
     public static native void pokeLongArray(long address, long[] src, int offset, int count, boolean swap);
+
     public static native void pokeShortArray(long address, short[] src, int offset, int count, boolean swap);
 }

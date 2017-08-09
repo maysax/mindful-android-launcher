@@ -57,7 +57,6 @@ public final class CellSignalStrengthGsm extends CellSignalStrength implements P
      * Copy constructors
      *
      * @param s Source SignalStrength
-     *
      * @hide
      */
     public CellSignalStrengthGsm(CellSignalStrengthGsm s) {
@@ -67,9 +66,8 @@ public final class CellSignalStrengthGsm extends CellSignalStrength implements P
     /**
      * Initialize all the values
      *
-     * @param ss SignalStrength as ASU value
+     * @param ss  SignalStrength as ASU value
      * @param ber is Bit Error Rate
-     *
      * @hide
      */
     public void initialize(int ss, int ber) {
@@ -93,7 +91,9 @@ public final class CellSignalStrengthGsm extends CellSignalStrength implements P
         return new CellSignalStrengthGsm(this);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @Override
     public void setDefaultValues() {
         mSignalStrength = Integer.MAX_VALUE;
@@ -114,8 +114,8 @@ public final class CellSignalStrengthGsm extends CellSignalStrength implements P
         int asu = mSignalStrength;
         if (asu <= 2 || asu == 99) level = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         else if (asu >= GSM_SIGNAL_STRENGTH_GREAT) level = SIGNAL_STRENGTH_GREAT;
-        else if (asu >= GSM_SIGNAL_STRENGTH_GOOD)  level = SIGNAL_STRENGTH_GOOD;
-        else if (asu >= GSM_SIGNAL_STRENGTH_MODERATE)  level = SIGNAL_STRENGTH_MODERATE;
+        else if (asu >= GSM_SIGNAL_STRENGTH_GOOD) level = SIGNAL_STRENGTH_GOOD;
+        else if (asu >= GSM_SIGNAL_STRENGTH_MODERATE) level = SIGNAL_STRENGTH_MODERATE;
         else level = SIGNAL_STRENGTH_POOR;
         if (DBG) log("getLevel=" + level);
         return level;
@@ -161,7 +161,7 @@ public final class CellSignalStrengthGsm extends CellSignalStrength implements P
     }
 
     @Override
-    public boolean equals (Object o) {
+    public boolean equals(Object o) {
         CellSignalStrengthGsm s;
 
         try {
@@ -187,7 +187,9 @@ public final class CellSignalStrengthGsm extends CellSignalStrength implements P
                 + " ber=" + mBitErrorRate;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (DBG) log("writeToParcel(Parcel, int): " + toString());
@@ -205,26 +207,30 @@ public final class CellSignalStrengthGsm extends CellSignalStrength implements P
         if (DBG) log("CellSignalStrengthGsm(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @SuppressWarnings("hiding")
     public static final Parcelable.Creator<CellSignalStrengthGsm> CREATOR =
             new Parcelable.Creator<CellSignalStrengthGsm>() {
-        @Override
-        public CellSignalStrengthGsm createFromParcel(Parcel in) {
-            return new CellSignalStrengthGsm(in);
-        }
+                @Override
+                public CellSignalStrengthGsm createFromParcel(Parcel in) {
+                    return new CellSignalStrengthGsm(in);
+                }
 
-        @Override
-        public CellSignalStrengthGsm[] newArray(int size) {
-            return new CellSignalStrengthGsm[size];
-        }
-    };
+                @Override
+                public CellSignalStrengthGsm[] newArray(int size) {
+                    return new CellSignalStrengthGsm[size];
+                }
+            };
 
     /**
      * log

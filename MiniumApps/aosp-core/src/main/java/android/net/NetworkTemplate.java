@@ -16,6 +16,14 @@
 
 package android.net;
 
+import android.content.res.Resources;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.android.internal.annotations.VisibleForTesting;
+
+import java.util.Objects;
+
 import static android.net.ConnectivityManager.TYPE_ETHERNET;
 import static android.net.ConnectivityManager.TYPE_WIFI;
 import static android.net.ConnectivityManager.TYPE_WIFI_P2P;
@@ -29,14 +37,6 @@ import static android.telephony.TelephonyManager.NETWORK_CLASS_4_G;
 import static android.telephony.TelephonyManager.NETWORK_CLASS_UNKNOWN;
 import static android.telephony.TelephonyManager.getNetworkClass;
 import static com.android.internal.util.ArrayUtils.contains;
-
-import android.content.res.Resources;
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import java.util.Objects;
-
-import com.android.internal.annotations.VisibleForTesting;
 
 /**
  * Template definition used to generically match {@link NetworkIdentity},

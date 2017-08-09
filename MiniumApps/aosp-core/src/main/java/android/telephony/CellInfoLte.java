@@ -31,14 +31,18 @@ public final class CellInfoLte extends CellInfo implements Parcelable {
     private CellIdentityLte mCellIdentityLte;
     private CellSignalStrengthLte mCellSignalStrengthLte;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public CellInfoLte() {
         super();
         mCellIdentityLte = new CellIdentityLte();
         mCellSignalStrengthLte = new CellSignalStrengthLte();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public CellInfoLte(CellInfoLte ci) {
         super(ci);
         this.mCellIdentityLte = ci.mCellIdentityLte.copy();
@@ -49,7 +53,10 @@ public final class CellInfoLte extends CellInfo implements Parcelable {
         if (DBG) log("getCellIdentity: " + mCellIdentityLte);
         return mCellIdentityLte;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCellIdentity(CellIdentityLte cid) {
         if (DBG) log("setCellIdentity: " + cid);
         mCellIdentityLte = cid;
@@ -59,7 +66,10 @@ public final class CellInfoLte extends CellInfo implements Parcelable {
         if (DBG) log("getCellSignalStrength: " + mCellSignalStrengthLte);
         return mCellSignalStrengthLte;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCellSignalStrength(CellSignalStrengthLte css) {
         if (DBG) log("setCellSignalStrength: " + css);
         mCellSignalStrengthLte = css;
@@ -100,13 +110,17 @@ public final class CellInfoLte extends CellInfo implements Parcelable {
         return sb.toString();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (DBG) log("writeToParcel(Parcel, int): " + toString());
@@ -126,7 +140,9 @@ public final class CellInfoLte extends CellInfo implements Parcelable {
         if (DBG) log("CellInfoLte(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static final Creator<CellInfoLte> CREATOR = new Creator<CellInfoLte>() {
         @Override
         public CellInfoLte createFromParcel(Parcel in) {
@@ -140,7 +156,9 @@ public final class CellInfoLte extends CellInfo implements Parcelable {
         }
     };
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected static CellInfoLte createFromParcelBody(Parcel in) {
         return new CellInfoLte(in);
     }

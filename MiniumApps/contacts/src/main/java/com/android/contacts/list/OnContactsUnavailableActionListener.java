@@ -18,7 +18,7 @@ package com.android.contacts.list;
 /**
  * Action callbacks that can be sent by the "contacts unavailable" fragment.
  */
-public interface OnContactsUnavailableActionListener  {
+public interface OnContactsUnavailableActionListener {
 
     /**
      * Creates a new contact.

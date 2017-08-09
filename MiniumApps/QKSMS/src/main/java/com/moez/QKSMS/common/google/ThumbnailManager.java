@@ -52,7 +52,7 @@ import java.util.Set;
  * are stored in a local cache with SoftReferences. Once a thumbnail is loaded, it will call the
  * passed in callback with the result. If a thumbnail is immediately available in the cache,
  * the callback will be called immediately as well.
- *
+ * <p>
  * Based on BooksImageManager by Virgil King.
  */
 public class ThumbnailManager extends BackgroundLoaderManager {
@@ -94,7 +94,8 @@ public class ThumbnailManager extends BackgroundLoaderManager {
     /**
      * getThumbnail must be called on the same thread that created ThumbnailManager. This is
      * normally the UI thread.
-     * @param uri the uri of the image
+     *
+     * @param uri      the uri of the image
      * @param callback the callback to call when the thumbnail is fully loaded
      * @return
      */
@@ -105,17 +106,18 @@ public class ThumbnailManager extends BackgroundLoaderManager {
     /**
      * getVideoThumbnail must be called on the same thread that created ThumbnailManager. This is
      * normally the UI thread.
-     * @param uri the uri of the image
+     *
+     * @param uri      the uri of the image
      * @param callback the callback to call when the thumbnail is fully loaded
      * @return
      */
     public ItemLoadedFuture getVideoThumbnail(Uri uri,
-            final ItemLoadedCallback<ImageLoaded> callback) {
+                                              final ItemLoadedCallback<ImageLoaded> callback) {
         return getThumbnail(uri, true, callback);
     }
 
     private ItemLoadedFuture getThumbnail(Uri uri, boolean isVideo,
-            final ItemLoadedCallback<ImageLoaded> callback) {
+                                          final ItemLoadedCallback<ImageLoaded> callback) {
         if (uri == null) {
             throw new NullPointerException();
         }
@@ -228,7 +230,9 @@ public class ThumbnailManager extends BackgroundLoaderManager {
             mIsVideo = isVideo;
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void run() {
             if (DEBUG_DISABLE_LOAD) {
@@ -377,7 +381,7 @@ public class ThumbnailManager extends BackgroundLoaderManager {
         }
 
         private Bitmap requestDecode(byte[] bytes, int offset,
-                int length, Options options) {
+                                     int length, Options options) {
             if (options == null) {
                 options = new Options();
             }
@@ -494,7 +498,7 @@ public class ThumbnailManager extends BackgroundLoaderManager {
         // This computes a sample size which makes the longer side at least
         // minSideLength long. If that's not possible, return 1.
         private int computeSampleSizeLarger(int w, int h,
-                int minSideLength) {
+                                            int minSideLength) {
             int initialSize = Math.max(w / minSideLength, h / minSideLength);
             if (initialSize <= 1) return 1;
 

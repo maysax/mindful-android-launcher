@@ -60,6 +60,7 @@ public class CancelActivity extends Activity implements ServiceConnection {
         public void onClick(DialogInterface dialog, int which) {
             finish();
         }
+
         @Override
         public void onCancel(DialogInterface dialog) {
             finish();
@@ -84,31 +85,31 @@ public class CancelActivity extends Activity implements ServiceConnection {
     @Override
     protected Dialog onCreateDialog(int id, Bundle bundle) {
         switch (id) {
-        case R.id.dialog_cancel_confirmation: {
-            final String message;
-            if (mType == VCardService.TYPE_IMPORT) {
-                message = getString(R.string.cancel_import_confirmation_message, mDisplayName);
-            } else {
-                message = getString(R.string.cancel_export_confirmation_message, mDisplayName);
+            case R.id.dialog_cancel_confirmation: {
+                final String message;
+                if (mType == VCardService.TYPE_IMPORT) {
+                    message = getString(R.string.cancel_import_confirmation_message, mDisplayName);
+                } else {
+                    message = getString(R.string.cancel_export_confirmation_message, mDisplayName);
+                }
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok, new RequestCancelListener())
+                        .setOnCancelListener(mCancelListener)
+                        .setNegativeButton(android.R.string.cancel, mCancelListener);
+                return builder.create();
             }
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok, new RequestCancelListener())
-                    .setOnCancelListener(mCancelListener)
-                    .setNegativeButton(android.R.string.cancel, mCancelListener);
-            return builder.create();
-        }
-        case R.id.dialog_cancel_failed:
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle(R.string.cancel_vcard_import_or_export_failed)
-                    .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setMessage(getString(R.string.fail_reason_unknown))
-                    .setOnCancelListener(mCancelListener)
-                    .setPositiveButton(android.R.string.ok, mCancelListener);
-            return builder.create();
-        default:
-            Log.w(LOG_TAG, "Unknown dialog id: " + id);
-            break;
+            case R.id.dialog_cancel_failed:
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                        .setTitle(R.string.cancel_vcard_import_or_export_failed)
+                        .setIconAttribute(android.R.attr.alertDialogIcon)
+                        .setMessage(getString(R.string.fail_reason_unknown))
+                        .setOnCancelListener(mCancelListener)
+                        .setPositiveButton(android.R.string.ok, mCancelListener);
+                return builder.create();
+            default:
+                Log.w(LOG_TAG, "Unknown dialog id: " + id);
+                break;
         }
         return super.onCreateDialog(id, bundle);
     }

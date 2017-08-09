@@ -54,7 +54,8 @@ public class PermissionActivity extends CoreActivity {
         PermissionUtil pu = new PermissionUtil(this);
 
         if (pu.hasGiven(PermissionUtil.APP_PERMISSION)) switchAppPermission.setChecked(true);
-        if (pu.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) switchNotificationAccess.setChecked(true);
+        if (pu.hasGiven(PermissionUtil.NOTIFICATION_ACCESS))
+            switchNotificationAccess.setChecked(true);
         if (pu.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) switchDrawingOver.setChecked(true);
         if (pu.hasGiven(PermissionUtil.USAGE_STATISTICS)) switchUsageStatistics.setChecked(true);
 
@@ -81,7 +82,7 @@ public class PermissionActivity extends CoreActivity {
     @CheckedChange
     void switchNotificationAccess(CompoundButton btn, boolean isChecked) {
         if (isChecked) {
-            if(!new PermissionUtil(this).hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
+            if (!new PermissionUtil(this).hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
                 startActivityForResult(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), PermissionUtil.NOTIFICATION_ACCESS);
             }
         } else {
@@ -102,12 +103,12 @@ public class PermissionActivity extends CoreActivity {
 
     @TargetApi(23)
     @CheckedChange
-            void switchDrawingOver(CompoundButton btn, boolean isChecked) {
+    void switchDrawingOver(CompoundButton btn, boolean isChecked) {
         if (isChecked) {
             if (!new PermissionUtil(this).hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent, PermissionUtil.DRAWING_OVER_OTHER_APPS);
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, PermissionUtil.DRAWING_OVER_OTHER_APPS);
 
             }
         } else {
@@ -136,7 +137,7 @@ public class PermissionActivity extends CoreActivity {
 
     @OnActivityResult(PermissionUtil.APP_PERMISSION)
     void onResultAppPermission(int resultCode) {
-        if(!new PermissionUtil(this).hasGiven(PermissionUtil.APP_PERMISSION)) {
+        if (!new PermissionUtil(this).hasGiven(PermissionUtil.APP_PERMISSION)) {
             switchAppPermission.setChecked(false);
             UIUtils.toast(PermissionActivity.this, "Notification access permission is not given");
         } else {
@@ -146,7 +147,7 @@ public class PermissionActivity extends CoreActivity {
 
     @OnActivityResult(PermissionUtil.NOTIFICATION_ACCESS)
     void onResultNotificationAccess(int resultCode) {
-        if(!new PermissionUtil(this).hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
+        if (!new PermissionUtil(this).hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
             switchNotificationAccess.setChecked(false);
             UIUtils.toast(PermissionActivity.this, "Notification access permission is not given");
         } else {
@@ -156,7 +157,7 @@ public class PermissionActivity extends CoreActivity {
 
     @OnActivityResult(PermissionUtil.USAGE_STATISTICS)
     void onResultUsageStatistics(int resultCode) {
-        if(!new PermissionUtil(this).hasGiven(PermissionUtil.USAGE_STATISTICS)) {
+        if (!new PermissionUtil(this).hasGiven(PermissionUtil.USAGE_STATISTICS)) {
             switchUsageStatistics.setChecked(false);
             UIUtils.toast(PermissionActivity.this, "Usage statistics permission is not given");
         } else {
@@ -166,7 +167,7 @@ public class PermissionActivity extends CoreActivity {
 
     @OnActivityResult(PermissionUtil.DRAWING_OVER_OTHER_APPS)
     void onResultDrawOverlays(int resultCode) {
-        if(!new PermissionUtil(this).hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+        if (!new PermissionUtil(this).hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
             switchDrawingOver.setChecked(false);
             UIUtils.toast(PermissionActivity.this, "Draw overlays permission is not given");
         } else {

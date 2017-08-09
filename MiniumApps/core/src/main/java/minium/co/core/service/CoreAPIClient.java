@@ -89,6 +89,7 @@ public abstract class CoreAPIClient {
                         Tracer.i("Download completed");
                         EventBus.getDefault().post(new DownloadApkEvent(externalFilesDir.getAbsolutePath() + File.separator + getAppName() + ".apk"));
                     }
+
                     @Override
                     public void onError(ANError error) {
                         Tracer.e(error.getCause(), error.getErrorDetail());

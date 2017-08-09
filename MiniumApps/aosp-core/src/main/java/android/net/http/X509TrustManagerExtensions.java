@@ -22,8 +22,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.X509TrustManager;
 
 /**
@@ -55,13 +53,13 @@ public class X509TrustManagerExtensions {
 
     /**
      * Verifies the given certificate chain.
-     *
+     * <p>
      * <p>See {@link X509TrustManager#checkServerTrusted(X509Certificate[], String)} for a
      * description of the chain and authType parameters. The final parameter, host, should be the
      * hostname of the server.</p>
      *
-     * @throws CertificateException if the chain does not verify correctly.
      * @return the properly ordered chain used for verification as a list of X509Certificates.
+     * @throws CertificateException if the chain does not verify correctly.
      */
     public List<X509Certificate> checkServerTrusted(X509Certificate[] chain, String authType,
                                                     String host) throws CertificateException {
@@ -70,7 +68,7 @@ public class X509TrustManagerExtensions {
 
     /**
      * Checks whether a CA certificate is added by an user.
-     *
+     * <p>
      * <p>Since {@link X509TrustManager#checkServerTrusted} allows its parameter {@code chain} to
      * chain up to user-added CA certificates, this method can be used to perform additional
      * policies for user-added CA certificates.

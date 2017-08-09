@@ -38,7 +38,6 @@ public class SmilContentHandler extends DefaultHandler {
 
     /**
      * Resets this handler.
-     *
      */
     public void reset() {
         mSmilDocument = new SmilDocumentImpl();
@@ -47,6 +46,7 @@ public class SmilContentHandler extends DefaultHandler {
 
     /**
      * Returns the SMILDocument.
+     *
      * @return The SMILDocument instance
      */
     public SMILDocument getSmilDocument() {
@@ -55,7 +55,8 @@ public class SmilContentHandler extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
-        if (LOCAL_LOGV) Log.v(TAG, "SmilContentHandler.startElement. Creating element " + localName);
+        if (LOCAL_LOGV)
+            Log.v(TAG, "SmilContentHandler.startElement. Creating element " + localName);
         Element element = mSmilDocument.createElement(localName);
         if (attributes != null) {
             for (int i = 0; i < attributes.getLength(); i++) {
@@ -80,6 +81,7 @@ public class SmilContentHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) {
-        if (LOCAL_LOGV) Log.v(TAG, "SmilContentHandler.characters. ch = " + new String(ch, start, length));
+        if (LOCAL_LOGV)
+            Log.v(TAG, "SmilContentHandler.characters. ch = " + new String(ch, start, length));
     }
 }

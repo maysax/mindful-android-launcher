@@ -28,7 +28,9 @@ import com.android.mms.MmsApp;
 public class DrmUtils {
     private static final String TAG = LogTag.TAG;
 
-    /** The MIME type of special DRM files */
+    /**
+     * The MIME type of special DRM files
+     */
     private static final String EXTENSION_ANDROID_FWDL = ".fl";
 
     private DrmUtils() {

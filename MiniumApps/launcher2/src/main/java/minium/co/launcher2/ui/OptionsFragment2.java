@@ -69,9 +69,9 @@ public class OptionsFragment2 extends CoreFragment {
     }
 
     private OptionsListItem[] getListItems() {
-        return new OptionsListItem[] {
+        return new OptionsListItem[]{
                 new OptionsListItem(0, "{fa-phone}", "Call"),
-            new OptionsListItem(1, "{fa-comment-o}", "Text")
+                new OptionsListItem(1, "{fa-comment-o}", "Text")
 
         };
     }

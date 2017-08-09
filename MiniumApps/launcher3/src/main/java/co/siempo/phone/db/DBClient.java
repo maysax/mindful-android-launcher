@@ -2,7 +2,6 @@ package co.siempo.phone.db;
 
 import java.util.List;
 
-import co.siempo.phone.notification.Notification;
 import minium.co.core.log.Tracer;
 
 /**

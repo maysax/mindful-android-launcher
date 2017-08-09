@@ -35,7 +35,7 @@ import android.util.Log;
  * <p/>
  * To add a preference to the list, a subclass of {@link SettingInjectorService} must be declared in
  * the manifest as so:
- *
+ * <p>
  * <pre>
  *     &lt;service android:name="com.example.android.injector.MyInjectorService" &gt;
  *         &lt;intent-filter&gt;
@@ -57,19 +57,19 @@ import android.util.Log;
  * </pre>
  * Here:
  * <ul>
- *     <li>title: The {@link android.preference.Preference#getTitle()} value. The title should make
- *     it clear which apps are affected by the setting, typically by including the name of the
- *     developer. For example, "Acme Corp. ads preferences." </li>
- *
- *     <li>icon: The {@link android.preference.Preference#getIcon()} value. Typically this will be a
- *     generic icon for the developer rather than the icon for an individual app.</li>
- *
- *     <li>settingsActivity: the activity which is launched to allow the user to modify the setting
- *     value.  The activity must be in the same package as the subclass of
- *     {@link SettingInjectorService}. The activity should use your own branding to help emphasize
- *     to the user that it is not part of the system settings.</li>
+ * <li>title: The {@link android.preference.Preference#getTitle()} value. The title should make
+ * it clear which apps are affected by the setting, typically by including the name of the
+ * developer. For example, "Acme Corp. ads preferences." </li>
+ * <p>
+ * <li>icon: The {@link android.preference.Preference#getIcon()} value. Typically this will be a
+ * generic icon for the developer rather than the icon for an individual app.</li>
+ * <p>
+ * <li>settingsActivity: the activity which is launched to allow the user to modify the setting
+ * value.  The activity must be in the same package as the subclass of
+ * {@link SettingInjectorService}. The activity should use your own branding to help emphasize
+ * to the user that it is not part of the system settings.</li>
  * </ul>
- *
+ * <p>
  * To ensure a good user experience, your {@link android.app.Application#onCreate()},
  * and {@link #onGetEnabled()} methods must all be fast. If either is slow,
  * it can delay the display of settings values for other apps as well. Note further that these
@@ -192,7 +192,6 @@ public abstract class SettingInjectorService extends Service {
      * setting.
      *
      * @return ignored
-     *
      * @deprecated not called any more
      */
     @Deprecated

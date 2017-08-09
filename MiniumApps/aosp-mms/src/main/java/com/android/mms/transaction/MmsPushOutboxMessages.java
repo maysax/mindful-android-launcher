@@ -14,12 +14,12 @@
 */
 package com.android.mms.transaction;
 
-import com.android.mms.LogTag;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import com.android.mms.LogTag;
 
 /**
  * MmsPushOutboxMessages listens for MMS_SEND_OUTBOX_MSG intent .
@@ -38,8 +38,8 @@ public class MmsPushOutboxMessages extends BroadcastReceiver {
             Log.v(TAG, "Received the MMS_SEND_OUTBOX_MSG intent: " + intent);
         }
         String action = intent.getAction();
-        if(action.equalsIgnoreCase(INTENT_MMS_SEND_OUTBOX_MSG)){
-            Log.d(TAG,"Now waking up the MMS service");
+        if (action.equalsIgnoreCase(INTENT_MMS_SEND_OUTBOX_MSG)) {
+            Log.d(TAG, "Now waking up the MMS service");
             context.startService(new Intent(context, TransactionService.class));
         }
     }

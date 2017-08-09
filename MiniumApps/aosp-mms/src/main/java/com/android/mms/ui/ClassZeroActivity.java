@@ -52,22 +52,30 @@ import java.util.ArrayList;
 public class ClassZeroActivity extends Activity {
     private static final String TAG = LogTag.TAG;
     private static final int ON_AUTO_SAVE = 1;
-    private static final String[] REPLACE_PROJECTION = new String[] { Sms._ID,
-            Sms.ADDRESS, Sms.PROTOCOL };
+    private static final String[] REPLACE_PROJECTION = new String[]{Sms._ID,
+            Sms.ADDRESS, Sms.PROTOCOL};
     private static final int REPLACE_COLUMN_ID = 0;
 
-    /** Default timer to dismiss the dialog. */
+    /**
+     * Default timer to dismiss the dialog.
+     */
     private static final long DEFAULT_TIMER = 5 * 60 * 1000;
 
-    /** To remember the exact time when the timer should fire. */
+    /**
+     * To remember the exact time when the timer should fire.
+     */
     private static final String TIMER_FIRE = "timer_fire";
 
     private SmsMessage mMessage = null;
 
-    /** Is the message read. */
+    /**
+     * Is the message read.
+     */
     private boolean mRead = false;
 
-    /** The timer to dismiss the dialog automatically. */
+    /**
+     * The timer to dismiss the dialog automatically.
+     */
     private long mTimerSet = 0;
     private AlertDialog mDialog = null;
 
@@ -250,8 +258,8 @@ public class ClassZeroActivity extends Activity {
         String originatingAddress = sms.getOriginatingAddress();
         int protocolIdentifier = sms.getProtocolIdentifier();
         String selection = Sms.ADDRESS + " = ? AND " + Sms.PROTOCOL + " = ?";
-        String[] selectionArgs = new String[] { originatingAddress,
-                Integer.toString(protocolIdentifier) };
+        String[] selectionArgs = new String[]{originatingAddress,
+                Integer.toString(protocolIdentifier)};
 
         Cursor cursor = SqliteWrapper.query(this, resolver, Inbox.CONTENT_URI,
                 REPLACE_PROJECTION, selection, selectionArgs, null);

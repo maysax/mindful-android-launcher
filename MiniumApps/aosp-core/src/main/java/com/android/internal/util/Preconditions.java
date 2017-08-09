@@ -43,9 +43,9 @@ public class Preconditions {
      * Ensures that an object reference passed as a parameter to the calling
      * method is not null.
      *
-     * @param reference an object reference
+     * @param reference    an object reference
      * @param errorMessage the exception message to use if the check fails; will
-     *     be converted to a string using {@link String#valueOf(Object)}
+     *                     be converted to a string using {@link String#valueOf(Object)}
      * @return the non-null reference that was validated
      * @throws NullPointerException if {@code reference} is null
      */
@@ -84,7 +84,7 @@ public class Preconditions {
     /**
      * Ensures that that the argument numeric value is non-negative.
      *
-     * @param value a numeric int value
+     * @param value        a numeric int value
      * @param errorMessage the exception message to use if the check fails
      * @return the validated numeric value
      * @throws IllegalArgumentException if {@code value} was negative
@@ -100,7 +100,7 @@ public class Preconditions {
     /**
      * Ensures that that the argument numeric value is non-negative.
      *
-     * @param value a numeric long value
+     * @param value        a numeric long value
      * @param errorMessage the exception message to use if the check fails
      * @return the validated numeric value
      * @throws IllegalArgumentException if {@code value} was negative
@@ -116,7 +116,7 @@ public class Preconditions {
     /**
      * Ensures that that the argument numeric value is positive.
      *
-     * @param value a numeric int value
+     * @param value        a numeric int value
      * @param errorMessage the exception message to use if the check fails
      * @return the validated numeric value
      * @throws IllegalArgumentException if {@code value} was not positive
@@ -131,15 +131,13 @@ public class Preconditions {
 
     /**
      * Ensures that the argument floating point value is a finite number.
-     *
+     * <p>
      * <p>A finite number is defined to be both representable (that is, not NaN) and
      * not infinite (that is neither positive or negative infinity).</p>
      *
-     * @param value a floating point value
+     * @param value     a floating point value
      * @param valueName the name of the argument to use if the check fails
-     *
      * @return the validated floating point value
-     *
      * @throws IllegalArgumentException if {@code value} was not finite
      */
     public static float checkArgumentFinite(final float value, final String valueName) {
@@ -154,21 +152,19 @@ public class Preconditions {
 
     /**
      * Ensures that the argument floating point value is within the inclusive range.
-     *
+     * <p>
      * <p>While this can be used to range check against +/- infinity, note that all NaN numbers
      * will always be out of range.</p>
      *
-     * @param value a floating point value
-     * @param lower the lower endpoint of the inclusive range
-     * @param upper the upper endpoint of the inclusive range
+     * @param value     a floating point value
+     * @param lower     the lower endpoint of the inclusive range
+     * @param upper     the upper endpoint of the inclusive range
      * @param valueName the name of the argument to use if the check fails
-     *
      * @return the validated floating point value
-     *
      * @throws IllegalArgumentException if {@code value} was not within the range
      */
     public static float checkArgumentInRange(float value, float lower, float upper,
-            String valueName) {
+                                             String valueName) {
         if (Float.isNaN(value)) {
             throw new IllegalArgumentException(valueName + " must not be NaN");
         } else if (value < lower) {
@@ -187,17 +183,15 @@ public class Preconditions {
     /**
      * Ensures that the argument int value is within the inclusive range.
      *
-     * @param value a int value
-     * @param lower the lower endpoint of the inclusive range
-     * @param upper the upper endpoint of the inclusive range
+     * @param value     a int value
+     * @param lower     the lower endpoint of the inclusive range
+     * @param upper     the upper endpoint of the inclusive range
      * @param valueName the name of the argument to use if the check fails
-     *
      * @return the validated int value
-     *
      * @throws IllegalArgumentException if {@code value} was not within the range
      */
     public static int checkArgumentInRange(int value, int lower, int upper,
-            String valueName) {
+                                           String valueName) {
         if (value < lower) {
             throw new IllegalArgumentException(
                     String.format(
@@ -214,11 +208,9 @@ public class Preconditions {
     /**
      * Ensures that the array is not {@code null}, and none of its elements are {@code null}.
      *
-     * @param value an array of boxed objects
+     * @param value     an array of boxed objects
      * @param valueName the name of the argument to use if the check fails
-     *
      * @return the validated array
-     *
      * @throws NullPointerException if the {@code value} or any of its elements were {@code null}
      */
     public static <T> T[] checkArrayElementsNotNull(final T[] value, final String valueName) {
@@ -240,15 +232,13 @@ public class Preconditions {
      * Ensures that the {@link Collection} is not {@code null}, and none of its elements are
      * {@code null}.
      *
-     * @param value a {@link Collection} of boxed objects
+     * @param value     a {@link Collection} of boxed objects
      * @param valueName the name of the argument to use if the check fails
-     *
      * @return the validated {@link Collection}
-     *
      * @throws NullPointerException if the {@code value} or any of its elements were {@code null}
      */
     public static <T> Collection<T> checkCollectionElementsNotNull(final Collection<T> value,
-            final String valueName) {
+                                                                   final String valueName) {
         if (value == null) {
             throw new NullPointerException(valueName + " must not be null");
         }
@@ -268,16 +258,14 @@ public class Preconditions {
     /**
      * Ensures that the {@link Collection} is not {@code null}, and contains at least one element.
      *
-     * @param value a {@link Collection} of boxed elements.
+     * @param value     a {@link Collection} of boxed elements.
      * @param valueName the name of the argument to use if the check fails.
-
      * @return the validated {@link Collection}
-     *
-     * @throws NullPointerException if the {@code value} was {@code null}
+     * @throws NullPointerException     if the {@code value} was {@code null}
      * @throws IllegalArgumentException if the {@code value} was empty
      */
     public static <T> Collection<T> checkCollectionNotEmpty(final Collection<T> value,
-            final String valueName) {
+                                                            final String valueName) {
         if (value == null) {
             throw new NullPointerException(valueName + " must not be null");
         }
@@ -289,22 +277,20 @@ public class Preconditions {
 
     /**
      * Ensures that all elements in the argument floating point array are within the inclusive range
-     *
+     * <p>
      * <p>While this can be used to range check against +/- infinity, note that all NaN numbers
      * will always be out of range.</p>
      *
-     * @param value a floating point array of values
-     * @param lower the lower endpoint of the inclusive range
-     * @param upper the upper endpoint of the inclusive range
+     * @param value     a floating point array of values
+     * @param lower     the lower endpoint of the inclusive range
+     * @param upper     the upper endpoint of the inclusive range
      * @param valueName the name of the argument to use if the check fails
-     *
      * @return the validated floating point value
-     *
      * @throws IllegalArgumentException if any of the elements in {@code value} were out of range
-     * @throws NullPointerException if the {@code value} was {@code null}
+     * @throws NullPointerException     if the {@code value} was {@code null}
      */
     public static float[] checkArrayElementsInRange(float[] value, float lower, float upper,
-            String valueName) {
+                                                    String valueName) {
         checkNotNull(value, valueName + " must not be null");
 
         for (int i = 0; i < value.length; ++i) {

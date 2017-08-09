@@ -37,11 +37,11 @@ public class SimFullReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Settings.Global.getInt(context.getContentResolver(),
-            Settings.Global.DEVICE_PROVISIONED, 0) == 1 &&
-            Telephony.Sms.Intents.SIM_FULL_ACTION.equals(intent.getAction())) {
+                Settings.Global.DEVICE_PROVISIONED, 0) == 1 &&
+                Telephony.Sms.Intents.SIM_FULL_ACTION.equals(intent.getAction())) {
 
             NotificationManager nm = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             Intent viewSimIntent = new Intent(context, ManageSimMessages.class);
             viewSimIntent.setAction(Intent.ACTION_VIEW);
@@ -59,7 +59,7 @@ public class SimFullReceiver extends BroadcastReceiver {
                     context.getString(R.string.sim_full_body),
                     pendingIntent);
             nm.notify(ManageSimMessages.SIM_FULL_NOTIFICATION_ID, notification);
-       }
+        }
     }
 
 }

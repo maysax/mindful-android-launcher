@@ -64,14 +64,13 @@ import com.android.contacts.GroupMetaDataLoader;
 import com.android.contacts.activities.GroupEditorActivity;
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.ContactPhotoManager.DefaultImageRequest;
+import com.android.contacts.common.editor.SelectAccountDialogFragment;
+import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountWithDataSet;
-import com.android.contacts.common.editor.SelectAccountDialogFragment;
-import com.android.contacts.group.SuggestedMemberListAdapter.SuggestedMember;
-import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.util.AccountsListAdapter.AccountListFilter;
 import com.android.contacts.common.util.ViewUtil;
-
+import com.android.contacts.group.SuggestedMemberListAdapter.SuggestedMember;
 import com.google.common.base.Objects;
 
 import java.util.ArrayList;
@@ -128,20 +127,20 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
     private static final String MEMBER_RAW_CONTACT_ID_KEY = "rawContactId";
     private static final String MEMBER_LOOKUP_URI_KEY = "memberLookupUri";
 
-    protected static final String[] PROJECTION_CONTACT = new String[] {
-        Contacts._ID,                           // 0
-        Contacts.DISPLAY_NAME_PRIMARY,          // 1
-        Contacts.DISPLAY_NAME_ALTERNATIVE,      // 2
-        Contacts.SORT_KEY_PRIMARY,              // 3
-        Contacts.STARRED,                       // 4
-        Contacts.CONTACT_PRESENCE,              // 5
-        Contacts.CONTACT_CHAT_CAPABILITY,       // 6
-        Contacts.PHOTO_ID,                      // 7
-        Contacts.PHOTO_THUMBNAIL_URI,           // 8
-        Contacts.LOOKUP_KEY,                    // 9
-        Contacts.PHONETIC_NAME,                 // 10
-        Contacts.HAS_PHONE_NUMBER,              // 11
-        Contacts.IS_USER_PROFILE,               // 12
+    protected static final String[] PROJECTION_CONTACT = new String[]{
+            Contacts._ID,                           // 0
+            Contacts.DISPLAY_NAME_PRIMARY,          // 1
+            Contacts.DISPLAY_NAME_ALTERNATIVE,      // 2
+            Contacts.SORT_KEY_PRIMARY,              // 3
+            Contacts.STARRED,                       // 4
+            Contacts.CONTACT_PRESENCE,              // 5
+            Contacts.CONTACT_CHAT_CAPABILITY,       // 6
+            Contacts.PHOTO_ID,                      // 7
+            Contacts.PHOTO_THUMBNAIL_URI,           // 8
+            Contacts.LOOKUP_KEY,                    // 9
+            Contacts.PHONETIC_NAME,                 // 10
+            Contacts.HAS_PHONE_NUMBER,              // 11
+            Contacts.IS_USER_PROFILE,               // 12
     };
 
     protected static final int CONTACT_ID_COLUMN_INDEX = 0;
@@ -361,7 +360,7 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
 
     /**
      * @return true if the group membership is editable on this account type.  false otherwise,
-     *         or account is not set yet.
+     * or account is not set yet.
      */
     private boolean isGroupMembershipEditable() {
         if (mAccountType == null) {
@@ -458,7 +457,7 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
 
         // If the group name is ready only, don't let the user focus on the field.
         mGroupNameView.setFocusable(!mGroupNameIsReadOnly);
-        if(isNewEditor) {
+        if (isNewEditor) {
             mRootView.addView(editorView);
         }
         mStatus = Status.EDITING;
@@ -553,12 +552,12 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setMessage(R.string.cancel_confirmation_dialog_message)
                     .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int whichButton) {
-                                ((GroupEditorFragment) getTargetFragment()).doRevertAction();
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int whichButton) {
+                                    ((GroupEditorFragment) getTargetFragment()).doRevertAction();
+                                }
                             }
-                        }
                     )
                     .setNegativeButton(android.R.string.cancel, null)
                     .create();
@@ -569,6 +568,7 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
     /**
      * Saves or creates the group based on the mode, and if successful
      * finishes the activity. This actually only handles saving the group name.
+     *
      * @return true when successful
      */
     public boolean save() {
@@ -748,23 +748,24 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
     private final LoaderManager.LoaderCallbacks<Cursor> mGroupMetaDataLoaderListener =
             new LoaderCallbacks<Cursor>() {
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            return new GroupMetaDataLoader(mContext, mGroupUri);
-        }
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    return new GroupMetaDataLoader(mContext, mGroupUri);
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            bindGroupMetaData(data);
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    bindGroupMetaData(data);
 
-            // Load existing members
-            getLoaderManager().initLoader(LOADER_EXISTING_MEMBERS, null,
-                    mGroupMemberListLoaderListener);
-        }
+                    // Load existing members
+                    getLoaderManager().initLoader(LOADER_EXISTING_MEMBERS, null,
+                            mGroupMemberListLoaderListener);
+                }
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {}
-    };
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {
+                }
+            };
 
     /**
      * The loader listener for the list of existing group members.
@@ -772,36 +773,37 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
     private final LoaderManager.LoaderCallbacks<Cursor> mGroupMemberListLoaderListener =
             new LoaderCallbacks<Cursor>() {
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            return GroupMemberLoader.constructLoaderForGroupEditorQuery(mContext, mGroupId);
-        }
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    return GroupMemberLoader.constructLoaderForGroupEditorQuery(mContext, mGroupId);
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            List<Member> listExistingMembers = new ArrayList<Member>();
-            data.moveToPosition(-1);
-            while (data.moveToNext()) {
-                long contactId = data.getLong(GroupEditorQuery.CONTACT_ID);
-                long rawContactId = data.getLong(GroupEditorQuery.RAW_CONTACT_ID);
-                String lookupKey = data.getString(GroupEditorQuery.CONTACT_LOOKUP_KEY);
-                String displayName = data.getString(GroupEditorQuery.CONTACT_DISPLAY_NAME_PRIMARY);
-                String photoUri = data.getString(GroupEditorQuery.CONTACT_PHOTO_URI);
-                listExistingMembers.add(new Member(rawContactId, lookupKey, contactId,
-                        displayName, photoUri));
-            }
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    List<Member> listExistingMembers = new ArrayList<Member>();
+                    data.moveToPosition(-1);
+                    while (data.moveToNext()) {
+                        long contactId = data.getLong(GroupEditorQuery.CONTACT_ID);
+                        long rawContactId = data.getLong(GroupEditorQuery.RAW_CONTACT_ID);
+                        String lookupKey = data.getString(GroupEditorQuery.CONTACT_LOOKUP_KEY);
+                        String displayName = data.getString(GroupEditorQuery.CONTACT_DISPLAY_NAME_PRIMARY);
+                        String photoUri = data.getString(GroupEditorQuery.CONTACT_PHOTO_URI);
+                        listExistingMembers.add(new Member(rawContactId, lookupKey, contactId,
+                                displayName, photoUri));
+                    }
 
-            // Update the display list
-            addExistingMembers(listExistingMembers);
+                    // Update the display list
+                    addExistingMembers(listExistingMembers);
 
-            // No more updates
-            // TODO: move to a runnable
-            getLoaderManager().destroyLoader(LOADER_EXISTING_MEMBERS);
-        }
+                    // No more updates
+                    // TODO: move to a runnable
+                    getLoaderManager().destroyLoader(LOADER_EXISTING_MEMBERS);
+                }
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {}
-    };
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {
+                }
+            };
 
     /**
      * The listener to load a summary of details for a contact.
@@ -811,35 +813,36 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
     private final LoaderManager.LoaderCallbacks<Cursor> mContactLoaderListener =
             new LoaderCallbacks<Cursor>() {
 
-        private long mRawContactId;
+                private long mRawContactId;
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            String memberId = args.getString(MEMBER_LOOKUP_URI_KEY);
-            mRawContactId = args.getLong(MEMBER_RAW_CONTACT_ID_KEY);
-            return new CursorLoader(mContext, Uri.withAppendedPath(Contacts.CONTENT_URI, memberId),
-                    PROJECTION_CONTACT, null, null, null);
-        }
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    String memberId = args.getString(MEMBER_LOOKUP_URI_KEY);
+                    mRawContactId = args.getLong(MEMBER_RAW_CONTACT_ID_KEY);
+                    return new CursorLoader(mContext, Uri.withAppendedPath(Contacts.CONTENT_URI, memberId),
+                            PROJECTION_CONTACT, null, null, null);
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-            if (!cursor.moveToFirst()) {
-                return;
-            }
-            // Retrieve the contact data fields that will be sufficient to update the adapter with
-            // a new entry for this contact
-            long contactId = cursor.getLong(CONTACT_ID_COLUMN_INDEX);
-            String displayName = cursor.getString(CONTACT_DISPLAY_NAME_PRIMARY_COLUMN_INDEX);
-            String lookupKey = cursor.getString(CONTACT_LOOKUP_KEY_COLUMN_INDEX);
-            String photoUri = cursor.getString(CONTACT_PHOTO_URI_COLUMN_INDEX);
-            getLoaderManager().destroyLoader(LOADER_NEW_GROUP_MEMBER);
-            Member member = new Member(mRawContactId, lookupKey, contactId, displayName, photoUri);
-            addMember(member);
-        }
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+                    if (!cursor.moveToFirst()) {
+                        return;
+                    }
+                    // Retrieve the contact data fields that will be sufficient to update the adapter with
+                    // a new entry for this contact
+                    long contactId = cursor.getLong(CONTACT_ID_COLUMN_INDEX);
+                    String displayName = cursor.getString(CONTACT_DISPLAY_NAME_PRIMARY_COLUMN_INDEX);
+                    String lookupKey = cursor.getString(CONTACT_LOOKUP_KEY_COLUMN_INDEX);
+                    String photoUri = cursor.getString(CONTACT_PHOTO_URI_COLUMN_INDEX);
+                    getLoaderManager().destroyLoader(LOADER_NEW_GROUP_MEMBER);
+                    Member member = new Member(mRawContactId, lookupKey, contactId, displayName, photoUri);
+                    addMember(member);
+                }
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {}
-    };
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {
+                }
+            };
 
     /**
      * This represents a single member of the current group.
@@ -855,7 +858,7 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
         private final String mLookupKey;
 
         public Member(long rawContactId, String lookupKey, long contactId, String displayName,
-                String photoUri) {
+                      String photoUri) {
             mRawContactId = rawContactId;
             mContactId = contactId;
             mLookupKey = lookupKey;
@@ -952,7 +955,7 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
             View result;
             if (convertView == null) {
                 result = mLayoutInflater.inflate(mIsGroupMembershipEditable ?
-                        R.layout.group_member_item : R.layout.external_group_member_item,
+                                R.layout.group_member_item : R.layout.external_group_member_item,
                         parent, false);
             } else {
                 result = convertView;
@@ -978,7 +981,7 @@ public class GroupEditorFragment extends Fragment implements SelectAccountDialog
                     member.getLookupKey(), true /* isCircular */);
             mPhotoManager.loadPhoto(badge, member.getPhotoUri(),
                     ViewUtil.getConstantPreLayoutWidth(badge), false, true /* isCircular */,
-                            request);
+                    request);
             return result;
         }
 

@@ -23,8 +23,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
         <activity
@@ -42,15 +42,15 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="minium.co.notes.CREATE_NOTES"/>
+                <action android:name="minium.co.notes.CREATE_NOTES" />
             </intent-filter>
             <intent-filter>
-                <action android:name="minium.co.notes.EDIT_NOTES"/>
+                <action android:name="minium.co.notes.EDIT_NOTES" />
             </intent-filter>
         </receiver>
 
         <activity android:name="com.evernote.client.android.EvernoteOAuthActivity" />
-        <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity"/>
+        <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity" />
     </application>
 
 </manifest>

@@ -21,17 +21,18 @@ import android.os.Parcelable;
 
 /**
  * Data connection real time information
- *
+ * <p>
  * TODO: How to handle multiple subscriptions?
+ *
  * @hide
  */
 public class DataConnectionRealTimeInfo implements Parcelable {
     private long mTime;             // Time the info was collected since boot in nanos;
 
-    public static int DC_POWER_STATE_LOW       = 1;
-    public static int DC_POWER_STATE_MEDIUM    = 2;
-    public static int DC_POWER_STATE_HIGH      = 3;
-    public static int DC_POWER_STATE_UNKNOWN   = Integer.MAX_VALUE;
+    public static int DC_POWER_STATE_LOW = 1;
+    public static int DC_POWER_STATE_MEDIUM = 2;
+    public static int DC_POWER_STATE_HIGH = 3;
+    public static int DC_POWER_STATE_UNKNOWN = Integer.MAX_VALUE;
 
     private int mDcPowerState;      // DC_POWER_STATE_[LOW | MEDIUM | HIGH | UNKNOWN]
 
@@ -108,7 +109,7 @@ public class DataConnectionRealTimeInfo implements Parcelable {
         long result = 1;
         result = (prime * result) + mTime;
         result += (prime * result) + mDcPowerState;
-        return (int)result;
+        return (int) result;
     }
 
     @Override

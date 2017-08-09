@@ -212,7 +212,7 @@ public class NfcImportVCardActivity extends Activity implements ServiceConnectio
 
     @Override
     public void onImportParsed(ImportRequest request, int jobId, VCardEntry entry, int currentCount,
-            int totalCount) {
+                               int totalCount) {
         // do nothing
     }
 

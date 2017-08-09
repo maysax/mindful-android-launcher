@@ -60,13 +60,15 @@ public class ImportExportDialogFragment extends AnalyticsDialogFragment
     private static final String KEY_RES_ID = "resourceId";
     private static final String ARG_CONTACTS_ARE_AVAILABLE = "CONTACTS_ARE_AVAILABLE";
 
-    private final String[] LOOKUP_PROJECTION = new String[] {
+    private final String[] LOOKUP_PROJECTION = new String[]{
             Contacts.LOOKUP_KEY
     };
 
-    /** Preferred way to show this dialog */
+    /**
+     * Preferred way to show this dialog
+     */
     public static void show(FragmentManager fragmentManager, boolean contactsAreAvailable,
-            Class callingActivity) {
+                            Class callingActivity) {
         final ImportExportDialogFragment fragment = new ImportExportDialogFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_CONTACTS_ARE_AVAILABLE, contactsAreAvailable);
@@ -85,7 +87,7 @@ public class ImportExportDialogFragment extends AnalyticsDialogFragment
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Wrap our context to inflate list items using the correct theme
         final Resources res = getActivity().getResources();
-        final LayoutInflater dialogInflater = (LayoutInflater)getActivity()
+        final LayoutInflater dialogInflater = (LayoutInflater) getActivity()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final boolean contactsAreAvailable = getArguments().getBoolean(ARG_CONTACTS_ARE_AVAILABLE);
         final String callingActivity = getArguments().getString(
@@ -96,7 +98,7 @@ public class ImportExportDialogFragment extends AnalyticsDialogFragment
                 R.layout.select_dialog_item) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                final TextView result = (TextView)(convertView != null ? convertView :
+                final TextView result = (TextView) (convertView != null ? convertView :
                         dialogInflater.inflate(R.layout.select_dialog_item, parent, false));
 
                 final int resId = getItem(position);
@@ -128,40 +130,40 @@ public class ImportExportDialogFragment extends AnalyticsDialogFragment
 
         final DialogInterface.OnClickListener clickListener =
                 new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                boolean dismissDialog;
-                final int resId = adapter.getItem(which);
-                switch (resId) {
-                    case R.string.import_from_sim:
-                    case R.string.import_from_sdcard: {
-                        dismissDialog = handleImportRequest(resId);
-                        break;
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        boolean dismissDialog;
+                        final int resId = adapter.getItem(which);
+                        switch (resId) {
+                            case R.string.import_from_sim:
+                            case R.string.import_from_sdcard: {
+                                dismissDialog = handleImportRequest(resId);
+                                break;
+                            }
+                            case R.string.export_to_sdcard: {
+                                dismissDialog = true;
+                                Intent exportIntent = new Intent(getActivity(), ExportVCardActivity.class);
+                                exportIntent.putExtra(VCardCommonArguments.ARG_CALLING_ACTIVITY,
+                                        callingActivity);
+                                getActivity().startActivity(exportIntent);
+                                break;
+                            }
+                            case R.string.share_visible_contacts: {
+                                dismissDialog = true;
+                                doShareVisibleContacts();
+                                break;
+                            }
+                            default: {
+                                dismissDialog = true;
+                                Log.e(TAG, "Unexpected resource: "
+                                        + getActivity().getResources().getResourceEntryName(resId));
+                            }
+                        }
+                        if (dismissDialog) {
+                            dialog.dismiss();
+                        }
                     }
-                    case R.string.export_to_sdcard: {
-                        dismissDialog = true;
-                        Intent exportIntent = new Intent(getActivity(), ExportVCardActivity.class);
-                        exportIntent.putExtra(VCardCommonArguments.ARG_CALLING_ACTIVITY,
-                                callingActivity);
-                        getActivity().startActivity(exportIntent);
-                        break;
-                    }
-                    case R.string.share_visible_contacts: {
-                        dismissDialog = true;
-                        doShareVisibleContacts();
-                        break;
-                    }
-                    default: {
-                        dismissDialog = true;
-                        Log.e(TAG, "Unexpected resource: "
-                                + getActivity().getResources().getResourceEntryName(resId));
-                    }
-                }
-                if (dismissDialog) {
-                    dialog.dismiss();
-                }
-            }
-        };
+                };
         return new AlertDialog.Builder(getActivity())
                 .setTitle(contactsAreAvailable
                         ? R.string.dialog_import_export

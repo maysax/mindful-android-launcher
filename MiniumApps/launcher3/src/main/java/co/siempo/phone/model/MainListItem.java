@@ -28,6 +28,14 @@ public class MainListItem {
         this.iconRes = R.drawable.icon_sms;
     }
 
+    public MainListItem(int id, String title, String icon, int iconRes, MainListItemType itemType) {
+        this.id = id;
+        this.title = title;
+        this.icon = icon;
+        this.itemType = itemType;
+        this.iconRes = iconRes;
+    }
+
     public MainListItem(int id, String title, int iconRes, MainListItemType itemType) {
         this.id = id;
         this.title = title;

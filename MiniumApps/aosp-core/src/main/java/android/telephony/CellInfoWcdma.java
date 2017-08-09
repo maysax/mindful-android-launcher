@@ -31,14 +31,18 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
     private CellIdentityWcdma mCellIdentityWcdma;
     private CellSignalStrengthWcdma mCellSignalStrengthWcdma;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public CellInfoWcdma() {
         super();
         mCellIdentityWcdma = new CellIdentityWcdma();
         mCellSignalStrengthWcdma = new CellSignalStrengthWcdma();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public CellInfoWcdma(CellInfoWcdma ci) {
         super(ci);
         this.mCellIdentityWcdma = ci.mCellIdentityWcdma.copy();
@@ -48,7 +52,10 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
     public CellIdentityWcdma getCellIdentity() {
         return mCellIdentityWcdma;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCellIdentity(CellIdentityWcdma cid) {
         mCellIdentityWcdma = cid;
     }
@@ -56,7 +63,10 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
     public CellSignalStrengthWcdma getCellSignalStrength() {
         return mCellSignalStrengthWcdma;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCellSignalStrength(CellSignalStrengthWcdma css) {
         mCellSignalStrengthWcdma = css;
     }
@@ -96,13 +106,17 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
         return sb.toString();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags, TYPE_WCDMA);
@@ -120,7 +134,9 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
         mCellSignalStrengthWcdma = CellSignalStrengthWcdma.CREATOR.createFromParcel(in);
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static final Creator<CellInfoWcdma> CREATOR = new Creator<CellInfoWcdma>() {
         @Override
         public CellInfoWcdma createFromParcel(Parcel in) {
@@ -134,7 +150,9 @@ public final class CellInfoWcdma extends CellInfo implements Parcelable {
         }
     };
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected static CellInfoWcdma createFromParcelBody(Parcel in) {
         return new CellInfoWcdma(in);
     }

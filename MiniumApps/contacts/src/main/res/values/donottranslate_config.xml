@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 ** Copyright 2009, The Android Open Source Project
 **
@@ -33,15 +32,15 @@
 
     <!-- Help URL pointing to main TOC for People. This is intentionally empty because
          the overlay will fill this in during build time. -->
-    <string name="help_url_people_main"/>
+    <string name="help_url_people_main" />
 
     <!-- Help URL pointing to adding contacts in People. This is intentionally empty because
          the overlay will fill this in during build time. -->
-    <string name="help_url_people_add"/>
+    <string name="help_url_people_add" />
 
     <!-- Help URL pointing to editing contacts in People. This is intentionally empty because
          the overlay will fill this in during build time. -->
-    <string name="help_url_people_edit"/>
+    <string name="help_url_people_edit" />
 
     <!-- Flag indicating whether Contacts app is allowed to import contacts from SDCard -->
     <bool name="config_allow_import_from_sdcard">true</bool>
@@ -80,10 +79,10 @@
     <string name="config_import_vcard_type" translatable="false">default</string>
 
     <!-- Prefix of exported VCard file -->
-    <string name="config_export_file_prefix" translatable="false"/>
+    <string name="config_export_file_prefix" translatable="false" />
 
     <!-- Suffix of exported VCard file. Attached before an extension -->
-    <string name="config_export_file_suffix" translatable="false"/>
+    <string name="config_export_file_suffix" translatable="false" />
 
     <!-- Extension for exported VCard files -->
     <string name="config_export_file_extension" translatable="false">vcf</string>
@@ -98,7 +97,7 @@
      config_export_extension. e.g. If "aaa" is added to here and 00001.vcf and 00002.aaa
      exist in a target directory, 00003.vcf becomes a next file name candidate.
      Without this configuration, 00002.vcf becomes the candidate.-->
-    <string name="config_export_extensions_to_consider" translatable="false"/>
+    <string name="config_export_extensions_to_consider" translatable="false" />
 
     <!-- If true, enable the "import contacts from SIM" feature if the device
          has an appropriate SIM or ICC card.

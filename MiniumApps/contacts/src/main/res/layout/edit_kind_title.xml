@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
  * Copyright 2011, The Android Open Source Project
  *
@@ -17,16 +16,9 @@
  */
 -->
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingStart="8dip"
-    android:paddingEnd="8dip"
-    android:focusable="false">
-    <TextView
-        android:id="@+id/kind_title"
-        style="@style/EditKindSeparatorTextViewStyle"
-        android:paddingStart="0dip"
-        android:paddingEnd="8dip" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:paddingStart="8dip" android:paddingEnd="8dip" android:focusable="false">
+    <TextView android:id="@+id/kind_title" style="@style/EditKindSeparatorTextViewStyle"
+        android:paddingStart="0dip" android:paddingEnd="8dip" />
 </FrameLayout>

@@ -19,8 +19,6 @@ package android.net.http;
 import android.content.Context;
 import android.os.SystemClock;
 
-import java.lang.Thread;
-
 /**
  * {@hide}
  */
@@ -68,7 +66,7 @@ class ConnectionThread extends Thread {
     public void run() {
         android.os.Process.setThreadPriority(
                 android.os.Process.THREAD_PRIORITY_DEFAULT +
-                android.os.Process.THREAD_PRIORITY_LESS_FAVORABLE);
+                        android.os.Process.THREAD_PRIORITY_LESS_FAVORABLE);
 
         // these are used to get performance data. When it is not in the timing,
         // mCurrentThreadTime is 0. When it starts timing, mCurrentThreadTime is
@@ -89,7 +87,7 @@ class ConnectionThread extends Thread {
 
             /* wait for work */
             if (request == null) {
-                synchronized(mRequestFeeder) {
+                synchronized (mRequestFeeder) {
                     if (HttpLog.LOGV) HttpLog.v("ConnectionThread: Waiting for work");
                     mWaiting = true;
                     try {
@@ -104,7 +102,7 @@ class ConnectionThread extends Thread {
                 }
             } else {
                 if (HttpLog.LOGV) HttpLog.v("ConnectionThread: new request " +
-                                            request.mHost + " " + request );
+                        request.mHost + " " + request);
 
                 mConnection = mConnectionManager.getConnection(mContext,
                         request.mHost);
@@ -131,7 +129,7 @@ class ConnectionThread extends Thread {
     public synchronized String toString() {
         String con = mConnection == null ? "" : mConnection.toString();
         String active = mWaiting ? "w" : "a";
-        return "cid " + mId + " " + active + " "  + con;
+        return "cid " + mId + " " + active + " " + con;
     }
 
 }

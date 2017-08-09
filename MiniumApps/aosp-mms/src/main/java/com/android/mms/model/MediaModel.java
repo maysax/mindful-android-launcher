@@ -17,17 +17,8 @@
 
 package com.android.mms.model;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import org.w3c.dom.events.EventListener;
-
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -35,8 +26,15 @@ import android.util.Log;
 
 import com.android.mms.LogTag;
 import com.android.mms.MmsConfig;
-
 import com.google.android.mms.MmsException;
+
+import org.w3c.dom.events.EventListener;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 // TODO: remove dependency for SDK build
 
 public abstract class MediaModel extends Model implements EventListener {
@@ -56,6 +54,7 @@ public abstract class MediaModel extends Model implements EventListener {
     protected boolean mMediaResizeable;
 
     private final ArrayList<MediaAction> mMediaActions;
+
     public static enum MediaAction {
         NO_ACTIVE_ACTION,
         START,
@@ -65,7 +64,7 @@ public abstract class MediaModel extends Model implements EventListener {
     }
 
     public MediaModel(Context context, String tag, String contentType,
-            String src, Uri uri) throws MmsException {
+                      String src, Uri uri) throws MmsException {
         mContext = context;
         mTag = tag;
         mContentType = contentType;
@@ -76,7 +75,7 @@ public abstract class MediaModel extends Model implements EventListener {
     }
 
     public MediaModel(Context context, String tag, String contentType,
-            String src, byte[] data) {
+                      String src, byte[] data) {
         if (data == null) {
             throw new IllegalArgumentException("data may not be null.");
         }
@@ -304,6 +303,7 @@ public abstract class MediaModel extends Model implements EventListener {
     /**
      * If the attached media is resizeable, resize it to fit within the byteLimit. Save the
      * new part in the pdu.
+     *
      * @param byteLimit the max size of the media attachment
      * @throws MmsException
      */

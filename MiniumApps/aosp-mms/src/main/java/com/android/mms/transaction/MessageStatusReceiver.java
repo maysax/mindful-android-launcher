@@ -30,6 +30,6 @@ public class MessageStatusReceiver extends BroadcastReceiver {
         if (MESSAGE_STATUS_RECEIVED_ACTION.equals(intent.getAction())) {
             intent.setClass(context, MessageStatusService.class);
             context.startService(intent);
-       }
+        }
     }
 }

@@ -16,12 +16,6 @@
 
 package com.android.internal.net;
 
-import static android.net.NetworkStats.SET_ALL;
-import static android.net.NetworkStats.TAG_ALL;
-import static android.net.NetworkStats.TAG_NONE;
-import static android.net.NetworkStats.UID_ALL;
-import static com.android.server.NetworkManagementSocketTagger.kernelToTag;
-
 import android.net.NetworkStats;
 import android.os.StrictMode;
 import android.os.SystemClock;
@@ -32,13 +26,19 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.ProcFileReader;
 
-import libcore.io.IoUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.Objects;
+
+import libcore.io.IoUtils;
+
+import static android.net.NetworkStats.SET_ALL;
+import static android.net.NetworkStats.TAG_ALL;
+import static android.net.NetworkStats.TAG_NONE;
+import static android.net.NetworkStats.UID_ALL;
+import static com.android.server.NetworkManagementSocketTagger.kernelToTag;
 
 /**
  * Creates {@link NetworkStats} instances by parsing various {@code /proc/}
@@ -50,11 +50,17 @@ public class NetworkStatsFactory {
     private static final boolean USE_NATIVE_PARSING = true;
     private static final boolean SANITY_CHECK_NATIVE = false;
 
-    /** Path to {@code /proc/net/xt_qtaguid/iface_stat_all}. */
+    /**
+     * Path to {@code /proc/net/xt_qtaguid/iface_stat_all}.
+     */
     private final File mStatsXtIfaceAll;
-    /** Path to {@code /proc/net/xt_qtaguid/iface_stat_fmt}. */
+    /**
+     * Path to {@code /proc/net/xt_qtaguid/iface_stat_fmt}.
+     */
     private final File mStatsXtIfaceFmt;
-    /** Path to {@code /proc/net/xt_qtaguid/stats}. */
+    /**
+     * Path to {@code /proc/net/xt_qtaguid/stats}.
+     */
     private final File mStatsXtUid;
 
     @GuardedBy("sStackedIfaces")
@@ -187,7 +193,7 @@ public class NetworkStatsFactory {
     }
 
     public NetworkStats readNetworkStatsDetail(int limitUid, String[] limitIfaces, int limitTag,
-            NetworkStats lastStats) throws IOException {
+                                               NetworkStats lastStats) throws IOException {
         final NetworkStats stats = readNetworkStatsDetailInternal(limitUid, limitIfaces, limitTag,
                 lastStats);
 
@@ -234,7 +240,7 @@ public class NetworkStatsFactory {
     }
 
     private NetworkStats readNetworkStatsDetailInternal(int limitUid, String[] limitIfaces,
-            int limitTag, NetworkStats lastStats) throws IOException {
+                                                        int limitTag, NetworkStats lastStats) throws IOException {
         if (USE_NATIVE_PARSING) {
             final NetworkStats stats;
             if (lastStats != null) {
@@ -264,7 +270,7 @@ public class NetworkStatsFactory {
      */
     @VisibleForTesting
     public static NetworkStats javaReadNetworkStatsDetail(File detailPath, int limitUid,
-            String[] limitIfaces, int limitTag)
+                                                          String[] limitIfaces, int limitTag)
             throws IOException {
         final StrictMode.ThreadPolicy savedPolicy = StrictMode.allowThreadDiskReads();
 

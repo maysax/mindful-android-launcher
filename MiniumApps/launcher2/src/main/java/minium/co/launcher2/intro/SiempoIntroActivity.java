@@ -1,14 +1,8 @@
 package minium.co.launcher2.intro;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 
 import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntroFragment;
@@ -17,7 +11,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import minium.co.core.app.DroidPrefs;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.launcher2.MainActivity_;
 import minium.co.launcher2.R;
@@ -34,7 +27,7 @@ public class SiempoIntroActivity extends AppIntro2 {
     DroidPrefs_ prefs;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setFadeAnimation();

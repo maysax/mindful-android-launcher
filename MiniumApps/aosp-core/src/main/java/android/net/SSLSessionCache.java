@@ -46,12 +46,11 @@ public final class SSLSessionCache {
      * be used on all socket factories created by this context (including factories
      * created before this call).
      *
-     * @param cache the cache instance to install, or {@code null} to uninstall any
-     *         existing cache.
+     * @param cache   the cache instance to install, or {@code null} to uninstall any
+     *                existing cache.
      * @param context the context to install it on.
      * @throws IllegalArgumentException if the context does not support a session
-     *         cache.
-     *
+     *                                  cache.
      * @hide candidate for public API
      */
     public static void install(SSLSessionCache cache, SSLContext context) {

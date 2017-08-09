@@ -22,7 +22,7 @@ import android.widget.QuickContactBadge;
 
 /**
  * Custom {@link QuickContactBadge} that improves layouting performance.
- *
+ * <p>
  * This improves the performance by not passing requestLayout() to its parent, taking advantage
  * of knowing that image size won't change once set.
  */

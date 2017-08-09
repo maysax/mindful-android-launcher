@@ -20,7 +20,6 @@ import android.annotation.SystemApi;
 import android.util.SparseArray;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
 
 /**
  * Representation of a user on the device.
@@ -31,35 +30,53 @@ public final class UserHandle implements Parcelable {
      */
     public static final int PER_USER_RANGE = 100000;
 
-    /** @hide A user id to indicate all users on the device */
+    /**
+     * @hide A user id to indicate all users on the device
+     */
     public static final int USER_ALL = -1;
 
-    /** @hide A user handle to indicate all users on the device */
+    /**
+     * @hide A user handle to indicate all users on the device
+     */
     public static final UserHandle ALL = new UserHandle(USER_ALL);
 
-    /** @hide A user id to indicate the currently active user */
+    /**
+     * @hide A user id to indicate the currently active user
+     */
     public static final int USER_CURRENT = -2;
 
-    /** @hide A user handle to indicate the current user of the device */
+    /**
+     * @hide A user handle to indicate the current user of the device
+     */
     public static final UserHandle CURRENT = new UserHandle(USER_CURRENT);
 
-    /** @hide A user id to indicate that we would like to send to the current
-     *  user, but if this is calling from a user process then we will send it
-     *  to the caller's user instead of failing wiht a security exception */
+    /**
+     * @hide A user id to indicate that we would like to send to the current
+     * user, but if this is calling from a user process then we will send it
+     * to the caller's user instead of failing wiht a security exception
+     */
     public static final int USER_CURRENT_OR_SELF = -3;
 
-    /** @hide A user handle to indicate that we would like to send to the current
-     *  user, but if this is calling from a user process then we will send it
-     *  to the caller's user instead of failing wiht a security exception */
+    /**
+     * @hide A user handle to indicate that we would like to send to the current
+     * user, but if this is calling from a user process then we will send it
+     * to the caller's user instead of failing wiht a security exception
+     */
     public static final UserHandle CURRENT_OR_SELF = new UserHandle(USER_CURRENT_OR_SELF);
 
-    /** @hide An undefined user id */
+    /**
+     * @hide An undefined user id
+     */
     public static final int USER_NULL = -10000;
 
-    /** @hide A user id constant to indicate the "owner" user of the device */
+    /**
+     * @hide A user id constant to indicate the "owner" user of the device
+     */
     public static final int USER_OWNER = 0;
 
-    /** @hide A user handle to indicate the primary/owner user of the device */
+    /**
+     * @hide A user handle to indicate the primary/owner user of the device
+     */
     public static final UserHandle OWNER = new UserHandle(USER_OWNER);
 
     /**
@@ -75,6 +92,7 @@ public final class UserHandle implements Parcelable {
     /**
      * Checks to see if the user id is the same for the two uids, i.e., they belong to the same
      * user.
+     *
      * @hide
      */
     public static final boolean isSameUser(int uid1, int uid2) {
@@ -84,6 +102,7 @@ public final class UserHandle implements Parcelable {
     /**
      * Checks to see if both uids are referring to the same app id, ignoring the user id part of the
      * uids.
+     *
      * @param uid1 uid to compare
      * @param uid2 other uid to compare
      * @return whether the appId is the same for both uids
@@ -93,7 +112,9 @@ public final class UserHandle implements Parcelable {
         return getAppId(uid1) == getAppId(uid2);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final boolean isIsolated(int uid) {
         if (uid > 0) {
             final int appId = getAppId(uid);
@@ -103,7 +124,9 @@ public final class UserHandle implements Parcelable {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static boolean isApp(int uid) {
         if (uid > 0) {
             final int appId = getAppId(uid);
@@ -115,6 +138,7 @@ public final class UserHandle implements Parcelable {
 
     /**
      * Returns the user id for a given uid.
+     *
      * @hide
      */
     public static final int getUserId(int uid) {
@@ -125,12 +149,16 @@ public final class UserHandle implements Parcelable {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int getCallingUserId() {
         return getUserId(Binder.getCallingUid());
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final UserHandle getCallingUserHandle() {
         int userId = getUserId(Binder.getCallingUid());
         UserHandle userHandle = userHandles.get(userId);
@@ -144,6 +172,7 @@ public final class UserHandle implements Parcelable {
 
     /**
      * Returns the uid that is composed from the userId and the appId.
+     *
      * @hide
      */
     public static final int getUid(int userId, int appId) {
@@ -156,6 +185,7 @@ public final class UserHandle implements Parcelable {
 
     /**
      * Returns the app id (or base uid) for a given uid, stripping out the user id from it.
+     *
      * @hide
      */
     public static final int getAppId(int uid) {
@@ -164,6 +194,7 @@ public final class UserHandle implements Parcelable {
 
     /**
      * Returns the gid shared between all apps with this userId.
+     *
      * @hide
      */
     public static final int getUserGid(int userId) {
@@ -172,6 +203,7 @@ public final class UserHandle implements Parcelable {
 
     /**
      * Returns the shared app gid for a given uid or appId.
+     *
      * @hide
      */
     public static final int getSharedAppGid(int id) {
@@ -182,6 +214,7 @@ public final class UserHandle implements Parcelable {
     /**
      * Generate a text representation of the uid, breaking out its individual
      * components -- user, app, isolated, etc.
+     *
      * @hide
      */
     public static void formatUid(StringBuilder sb, int uid) {
@@ -207,6 +240,7 @@ public final class UserHandle implements Parcelable {
     /**
      * Generate a text representation of the uid, breaking out its individual
      * components -- user, app, isolated, etc.
+     *
      * @hide
      */
     public static void formatUid(PrintWriter pw, int uid) {
@@ -231,6 +265,7 @@ public final class UserHandle implements Parcelable {
 
     /**
      * Returns the user id of the current process
+     *
      * @return user id of the current process
      * @hide
      */
@@ -241,6 +276,7 @@ public final class UserHandle implements Parcelable {
 
     /**
      * Returns true if this UserHandle refers to the owner user; false otherwise.
+     *
      * @return true if this UserHandle refers to the owner user; false otherwise.
      * @hide
      */
@@ -249,13 +285,16 @@ public final class UserHandle implements Parcelable {
         return this.equals(OWNER);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public UserHandle(int h) {
         mHandle = h;
     }
 
     /**
      * Returns the userId stored in this UserHandle.
+     *
      * @hide
      */
     @SystemApi
@@ -272,7 +311,7 @@ public final class UserHandle implements Parcelable {
     public boolean equals(Object obj) {
         try {
             if (obj != null) {
-                UserHandle other = (UserHandle)obj;
+                UserHandle other = (UserHandle) obj;
                 return mHandle == other.mHandle;
             }
         } catch (ClassCastException e) {
@@ -284,7 +323,7 @@ public final class UserHandle implements Parcelable {
     public int hashCode() {
         return mHandle;
     }
-    
+
     public int describeContents() {
         return 0;
     }
@@ -296,10 +335,9 @@ public final class UserHandle implements Parcelable {
     /**
      * Write a UserHandle to a Parcel, handling null pointers.  Must be
      * read with {@link #readFromParcel(Parcel)}.
-     * 
-     * @param h The UserHandle to be written.
+     *
+     * @param h   The UserHandle to be written.
      * @param out The Parcel in which the UserHandle will be placed.
-     * 
      * @see #readFromParcel(Parcel)
      */
     public static void writeToParcel(UserHandle h, Parcel out) {
@@ -309,23 +347,22 @@ public final class UserHandle implements Parcelable {
             out.writeInt(USER_NULL);
         }
     }
-    
+
     /**
      * Read a UserHandle from a Parcel that was previously written
      * with {@link #writeToParcel(UserHandle, Parcel)}, returning either
      * a null or new object as appropriate.
-     * 
+     *
      * @param in The Parcel from which to read the UserHandle
      * @return Returns a new UserHandle matching the previously written
      * object, or null if a null had been written.
-     * 
      * @see #writeToParcel(UserHandle, Parcel)
      */
     public static UserHandle readFromParcel(Parcel in) {
         int h = in.readInt();
         return h != USER_NULL ? new UserHandle(h) : null;
     }
-    
+
     public static final Parcelable.Creator<UserHandle> CREATOR
             = new Parcelable.Creator<UserHandle>() {
         public UserHandle createFromParcel(Parcel in) {
@@ -343,9 +380,9 @@ public final class UserHandle implements Parcelable {
      * must not use this with data written by
      * {@link #writeToParcel(UserHandle, Parcel)} since it is not possible
      * to handle a null UserHandle here.
-     * 
+     *
      * @param in The Parcel containing the previously written UserHandle,
-     * positioned at the location in the buffer where it was written.
+     *           positioned at the location in the buffer where it was written.
      */
     public UserHandle(Parcel in) {
         mHandle = in.readInt();

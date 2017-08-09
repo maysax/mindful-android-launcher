@@ -64,7 +64,7 @@ import java.util.Map;
  * <p>
  * The services are referred to by type V and are made available via the
  * {@link #getServiceInfo} method.
- * 
+ *
  * @hide
  */
 public abstract class RegisteredServicesCache<V> {
@@ -111,7 +111,7 @@ public abstract class RegisteredServicesCache<V> {
     private Handler mHandler;
 
     public RegisteredServicesCache(Context context, String interfaceName, String metaDataName,
-            String attributeName, XmlSerializerAndParser<V> serializerAndParser) {
+                                   String attributeName, XmlSerializerAndParser<V> serializerAndParser) {
         mContext = context;
         mInterfaceName = interfaceName;
         mMetaDataName = metaDataName;
@@ -221,7 +221,7 @@ public abstract class RegisteredServicesCache<V> {
             Log.d(TAG, "notifyListener: " + type + " is " + (removed ? "removed" : "added"));
         }
         RegisteredServicesCacheListener<V> listener;
-        Handler handler; 
+        Handler handler;
         synchronized (this) {
             listener = mListener;
             handler = mHandler;
@@ -229,7 +229,7 @@ public abstract class RegisteredServicesCache<V> {
         if (listener == null) {
             return;
         }
-        
+
         final RegisteredServicesCacheListener<V> listener2 = listener;
         handler.post(new Runnable() {
             public void run() {
@@ -247,7 +247,9 @@ public abstract class RegisteredServicesCache<V> {
         public final ComponentName componentName;
         public final int uid;
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public ServiceInfo(V type, ComponentName componentName, int uid) {
             this.type = type;
             this.componentName = componentName;
@@ -262,6 +264,7 @@ public abstract class RegisteredServicesCache<V> {
 
     /**
      * Accessor for the registered authenticators.
+     *
      * @param type the account type of the authenticator
      * @return the AuthenticatorInfo that matches the account type or null if none is present
      */
@@ -464,14 +467,14 @@ public abstract class RegisteredServicesCache<V> {
             AttributeSet attrs = Xml.asAttributeSet(parser);
 
             int type;
-            while ((type=parser.next()) != XmlPullParser.END_DOCUMENT
+            while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
                     && type != XmlPullParser.START_TAG) {
             }
 
             String nodeName = parser.getName();
             if (!mAttributesName.equals(nodeName)) {
                 throw new XmlPullParserException(
-                        "Meta-data does not start with " + mAttributesName +  " tag");
+                        "Meta-data does not start with " + mAttributesName + " tag");
             }
 
             V v = parseServiceAttributes(pm.getResourcesForApplication(si.applicationInfo),
@@ -582,5 +585,5 @@ public abstract class RegisteredServicesCache<V> {
     }
 
     public abstract V parseServiceAttributes(Resources res,
-            String packageName, AttributeSet attrs);
+                                             String packageName, AttributeSet attrs);
 }

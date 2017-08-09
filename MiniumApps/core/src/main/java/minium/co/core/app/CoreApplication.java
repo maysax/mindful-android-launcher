@@ -11,9 +11,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-import org.androidannotations.annotations.EApplication;
-import org.androidannotations.annotations.Trace;
-
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
 import minium.co.core.config.Config;
@@ -27,7 +24,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * Each application should contain an {@link Application} class instance
  * All applications of this project should extend their own application from this class
  * This will be first class where we can initialize all necessary first time configurations
- *
+ * <p>
  * Created by shahab on 3/17/16.
  */
 public abstract class CoreApplication extends MultiDexApplication {

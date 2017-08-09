@@ -18,9 +18,11 @@ package android.net;
 
 import android.os.SystemProperties;
 import android.util.Log;
+
 import com.android.org.conscrypt.OpenSSLContextImpl;
 import com.android.org.conscrypt.OpenSSLSocketImpl;
 import com.android.org.conscrypt.SSLClientSessionCache;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -28,6 +30,7 @@ import java.net.SocketException;
 import java.security.KeyManagementException;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+
 import javax.net.SocketFactory;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -42,30 +45,30 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * SSLSocketFactory implementation with several extra features:
- *
+ * <p>
  * <ul>
  * <li>Timeout specification for SSL handshake operations
  * <li>Hostname verification in most cases (see WARNINGs below)
  * <li>Optional SSL session caching with {@link SSLSessionCache}
  * <li>Optionally bypass all SSL certificate checks
  * </ul>
- *
+ * <p>
  * The handshake timeout does not apply to actual TCP socket connection.
  * If you want a connection timeout as well, use {@link #createSocket()}
  * and {@link Socket#connect(SocketAddress, int)}, after which you
  * must verify the identity of the server you are connected to.
- *
+ * <p>
  * <p class="caution"><b>Most {@link SSLSocketFactory} implementations do not
  * verify the server's identity, allowing man-in-the-middle attacks.</b>
  * This implementation does check the server's certificate hostname, but only
  * for createSocket variants that specify a hostname.  When using methods that
  * use {@link InetAddress} or which return an unconnected socket, you MUST
  * verify the server's identity yourself to ensure a secure connection.</p>
- *
+ * <p>
  * <p>One way to verify the server's identity is to use
  * {@link HttpsURLConnection#getDefaultHostnameVerifier()} to get a
  * {@link HostnameVerifier} to verify the certificate hostname.
- *
+ * <p>
  * <p>On development devices, "setprop socket.relaxsslcheck yes" bypasses all
  * SSL certificate and hostname checks for testing purposes.  This setting
  * requires root access.
@@ -73,12 +76,18 @@ import javax.net.ssl.X509TrustManager;
 public class SSLCertificateSocketFactory extends SSLSocketFactory {
     private static final String TAG = "SSLCertificateSocketFactory";
 
-    private static final TrustManager[] INSECURE_TRUST_MANAGER = new TrustManager[] {
-        new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() { return null; }
-            public void checkClientTrusted(X509Certificate[] certs, String authType) { }
-            public void checkServerTrusted(X509Certificate[] certs, String authType) { }
-        }
+    private static final TrustManager[] INSECURE_TRUST_MANAGER = new TrustManager[]{
+            new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }
     };
 
     private SSLSocketFactory mInsecureFactory = null;
@@ -93,7 +102,9 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
     private final SSLClientSessionCache mSessionCache;
     private final boolean mSecure;
 
-    /** @deprecated Use {@link #getDefault(int)} instead. */
+    /**
+     * @deprecated Use {@link #getDefault(int)} instead.
+     */
     @Deprecated
     public SSLCertificateSocketFactory(int handshakeTimeoutMillis) {
         this(handshakeTimeoutMillis, null, true);
@@ -110,7 +121,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * Returns a new socket factory instance with an optional handshake timeout.
      *
      * @param handshakeTimeoutMillis to use for SSL connection handshake, or 0
-     *         for none.  The socket timeout is reset to 0 after the handshake.
+     *                               for none.  The socket timeout is reset to 0 after the handshake.
      * @return a new SSLSocketFactory with the specified parameters
      */
     public static SocketFactory getDefault(int handshakeTimeoutMillis) {
@@ -122,8 +133,8 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * and SSL session cache.
      *
      * @param handshakeTimeoutMillis to use for SSL connection handshake, or 0
-     *         for none.  The socket timeout is reset to 0 after the handshake.
-     * @param cache The {@link SSLSessionCache} to use, or null for no cache.
+     *                               for none.  The socket timeout is reset to 0 after the handshake.
+     * @param cache                  The {@link SSLSessionCache} to use, or null for no cache.
      * @return a new SSLSocketFactory with the specified parameters
      */
     public static SSLSocketFactory getDefault(int handshakeTimeoutMillis, SSLSessionCache cache) {
@@ -133,13 +144,13 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
     /**
      * Returns a new instance of a socket factory with all SSL security checks
      * disabled, using an optional handshake timeout and SSL session cache.
-     *
+     * <p>
      * <p class="caution"><b>Warning:</b> Sockets created using this factory
      * are vulnerable to man-in-the-middle attacks!</p>
      *
      * @param handshakeTimeoutMillis to use for SSL connection handshake, or 0
-     *         for none.  The socket timeout is reset to 0 after the handshake.
-     * @param cache The {@link SSLSessionCache} to use, or null for no cache.
+     *                               for none.  The socket timeout is reset to 0 after the handshake.
+     * @param cache                  The {@link SSLSessionCache} to use, or null for no cache.
      * @return an insecure SSLSocketFactory with the specified parameters
      */
     public static SSLSocketFactory getInsecure(int handshakeTimeoutMillis, SSLSessionCache cache) {
@@ -151,8 +162,8 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * namespace) for use with the Apache HTTP stack.
      *
      * @param handshakeTimeoutMillis to use for SSL connection handshake, or 0
-     *         for none.  The socket timeout is reset to 0 after the handshake.
-     * @param cache The {@link SSLSessionCache} to use, or null for no cache.
+     *                               for none.  The socket timeout is reset to 0 after the handshake.
+     * @param cache                  The {@link SSLSessionCache} to use, or null for no cache.
      * @return a new SocketFactory with the specified parameters
      */
     public static org.apache.http.conn.ssl.SSLSocketFactory getHttpSocketFactory(
@@ -166,16 +177,15 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * connected socket.  You MUST call this if you did not supply a hostname
      * to {@link #createSocket()}.  It is harmless to call this method
      * redundantly if the hostname has already been verified.
-     *
+     * <p>
      * <p>Wildcard certificates are allowed to verify any matching hostname,
      * so "foo.bar.example.com" is verified if the peer has a certificate
      * for "*.example.com".
      *
-     * @param socket An SSL socket which has been connected to a server
+     * @param socket   An SSL socket which has been connected to a server
      * @param hostname The expected hostname of the remote server
-     * @throws IOException if something goes wrong handshaking with the server
+     * @throws IOException                if something goes wrong handshaking with the server
      * @throws SSLPeerUnverifiedException if the server cannot prove its identity
-     *
      * @hide
      */
     public static void verifyHostname(Socket socket, String hostname) throws IOException {
@@ -214,7 +224,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     private static boolean isSslCheckRelaxed() {
         return "1".equals(SystemProperties.get("ro.debuggable")) &&
-            "yes".equals(SystemProperties.get("socket.relaxsslcheck"));
+                "yes".equals(SystemProperties.get("socket.relaxsslcheck"));
     }
 
     private synchronized SSLSocketFactory getDelegate() {
@@ -252,18 +262,18 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
     /**
      * Sets the <a href="http://technotes.googlecode.com/git/nextprotoneg.html">Next
      * Protocol Negotiation (NPN)</a> protocols that this peer is interested in.
-     *
+     * <p>
      * <p>For servers this is the sequence of protocols to advertise as
      * supported, in order of preference. This list is sent unencrypted to
      * all clients that support NPN.
-     *
+     * <p>
      * <p>For clients this is a list of supported protocols to match against the
      * server's list. If there is no protocol supported by both client and
      * server then the first protocol in the client's list will be selected.
      * The order of the client's protocols is otherwise insignificant.
      *
      * @param npnProtocols a non-empty list of protocol byte arrays. All arrays
-     *     must be non-empty and of length less than 256.
+     *                     must be non-empty and of length less than 256.
      */
     public void setNpnProtocols(byte[][] npnProtocols) {
         this.mNpnProtocols = toLengthPrefixedList(npnProtocols);
@@ -274,18 +284,18 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * <a href="http://tools.ietf.org/html/draft-ietf-tls-applayerprotoneg-01">
      * Application Layer Protocol Negotiation (ALPN)</a> protocols that this peer
      * is interested in.
-     *
+     * <p>
      * <p>For servers this is the sequence of protocols to advertise as
      * supported, in order of preference. This list is sent unencrypted to
      * all clients that support ALPN.
-     *
+     * <p>
      * <p>For clients this is a list of supported protocols to match against the
      * server's list. If there is no protocol supported by both client and
      * server then the first protocol in the client's list will be selected.
      * The order of the client's protocols is otherwise insignificant.
      *
      * @param protocols a non-empty list of protocol byte arrays. All arrays
-     *     must be non-empty and of length less than 256.
+     *                  must be non-empty and of length less than 256.
      * @hide
      */
     public void setAlpnProtocols(byte[][] protocols) {
@@ -360,9 +370,8 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * factory.
      *
      * @param privateKey private key (enables TLS Channel ID) or {@code null} for no key (disables
-     *        TLS Channel ID). The private key has to be an Elliptic Curve (EC) key based on the
-     *        NIST P-256 curve (aka SECG secp256r1 or ANSI X9.62 prime256v1).
-     *
+     *                   TLS Channel ID). The private key has to be an Elliptic Curve (EC) key based on the
+     *                   NIST P-256 curve (aka SECG secp256r1 or ANSI X9.62 prime256v1).
      * @hide
      */
     public void setChannelIdPrivateKey(PrivateKey privateKey) {
@@ -373,7 +382,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * Enables <a href="http://tools.ietf.org/html/rfc5077#section-3.2">session ticket</a>
      * support on the given socket.
      *
-     * @param socket a socket created by this factory
+     * @param socket            a socket created by this factory
      * @param useSessionTickets {@code true} to enable session ticket support on this socket.
      * @throws IllegalArgumentException if the socket was not created by this factory.
      */
@@ -385,7 +394,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * Turns on <a href="http://tools.ietf.org/html/rfc6066#section-3">Server
      * Name Indication (SNI)</a> on a given socket.
      *
-     * @param socket a socket created by this factory.
+     * @param socket   a socket created by this factory.
      * @param hostName the desired SNI hostname, null to disable.
      * @throws IllegalArgumentException if the socket was not created by this factory.
      */
@@ -398,10 +407,9 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
      * Use 0 for no timeout.
      * To take effect, this option must be set before the blocking method was called.
      *
-     * @param socket a socket created by this factory.
+     * @param socket  a socket created by this factory.
      * @param timeout the desired write timeout in milliseconds.
      * @throws IllegalArgumentException if the socket was not created by this factory.
-     *
      * @hide
      */
     public void setSoWriteTimeout(Socket socket, int writeTimeoutMilliseconds)
@@ -420,7 +428,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p>This method verifies the peer's certificate hostname after connecting
      * (unless created with {@link #getInsecure(int, SSLSessionCache)}).
      */
@@ -440,7 +448,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
     /**
      * Creates a new socket which is not connected to any remote host.
      * You must use {@link Socket#connect} to connect the socket.
-     *
+     * <p>
      * <p class="caution"><b>Warning:</b> Hostname verification is not performed
      * with this method.  You MUST verify the server's identity after connecting
      * the socket to avoid man-in-the-middle attacks.</p>
@@ -457,7 +465,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p class="caution"><b>Warning:</b> Hostname verification is not performed
      * with this method.  You MUST verify the server's identity after connecting
      * the socket to avoid man-in-the-middle attacks.</p>
@@ -476,7 +484,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p class="caution"><b>Warning:</b> Hostname verification is not performed
      * with this method.  You MUST verify the server's identity after connecting
      * the socket to avoid man-in-the-middle attacks.</p>
@@ -493,7 +501,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p>This method verifies the peer's certificate hostname after connecting
      * (unless created with {@link #getInsecure(int, SSLSessionCache)}).
      */
@@ -514,7 +522,7 @@ public class SSLCertificateSocketFactory extends SSLSocketFactory {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p>This method verifies the peer's certificate hostname after connecting
      * (unless created with {@link #getInsecure(int, SSLSessionCache)}).
      */

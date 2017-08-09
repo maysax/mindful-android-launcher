@@ -1,5 +1,8 @@
 package co.siempo.phone.token;
 
+import android.util.Config;
+import android.util.Log;
+
 import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;

@@ -16,12 +16,12 @@
 
 package android.net.http;
 
-import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.CharArrayBuffer;
 
 /**
  * Utility methods for working on CharArrayBuffers.
- * 
+ * <p>
  * {@hide}
  */
 class CharArrayBuffers {
@@ -32,12 +32,12 @@ class CharArrayBuffers {
      * Returns true if the buffer contains the given string. Ignores leading
      * whitespace and case.
      *
-     * @param buffer to search
+     * @param buffer     to search
      * @param beginIndex index at which we should start
-     * @param str to search for
+     * @param str        to search for
      */
     static boolean containsIgnoreCaseTrimmed(CharArrayBuffer buffer,
-            int beginIndex, final String str) {
+                                             int beginIndex, final String str) {
         int len = buffer.length();
         char[] chars = buffer.buffer();
         while (beginIndex < len && HTTP.isWhitespace(chars[beginIndex])) {
@@ -45,8 +45,8 @@ class CharArrayBuffers {
         }
         int size = str.length();
         boolean ok = len >= beginIndex + size;
-        for (int j=0; ok && (j<size); j++) {
-            char a = chars[beginIndex+j];
+        for (int j = 0; ok && (j < size); j++) {
+            char a = chars[beginIndex + j];
             char b = str.charAt(j);
             if (a != b) {
                 a = toLower(a);
@@ -71,7 +71,7 @@ class CharArrayBuffers {
             char current = chars[i];
             if (current == ch) {
                 return i;
-            } else if (current >= 'A' && current <= 'Z'){
+            } else if (current >= 'A' && current <= 'Z') {
                 // make lower case
                 current += uppercaseAddon;
                 chars[i] = current;
@@ -81,7 +81,7 @@ class CharArrayBuffers {
     }
 
     private static char toLower(char c) {
-        if (c >= 'A' && c <= 'Z'){
+        if (c >= 'A' && c <= 'Z') {
             c += uppercaseAddon;
         }
         return c;

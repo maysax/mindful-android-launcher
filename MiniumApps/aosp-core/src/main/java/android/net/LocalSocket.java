@@ -36,13 +36,21 @@ public class LocalSocket implements Closeable {
     private boolean isConnected;
     private final int sockType;
 
-    /** unknown socket type (used for constructor with existing file descriptor) */
+    /**
+     * unknown socket type (used for constructor with existing file descriptor)
+     */
     /* package */ static final int SOCKET_UNKNOWN = 0;
-    /** Datagram socket type */
+    /**
+     * Datagram socket type
+     */
     public static final int SOCKET_DGRAM = 1;
-    /** Stream socket type */
+    /**
+     * Stream socket type
+     */
     public static final int SOCKET_STREAM = 2;
-    /** Sequential packet socket type */
+    /**
+     * Sequential packet socket type
+     */
     public static final int SOCKET_SEQPACKET = 3;
 
     /**
@@ -56,7 +64,7 @@ public class LocalSocket implements Closeable {
      * Creates a AF_LOCAL/UNIX domain stream socket with given socket type
      *
      * @param sockType either {@link #SOCKET_DGRAM}, {@link #SOCKET_STREAM}
-     * or {@link #SOCKET_SEQPACKET}
+     *                 or {@link #SOCKET_SEQPACKET}
      */
     public LocalSocket(int sockType) {
         this(new LocalSocketImpl(), sockType);
@@ -66,6 +74,7 @@ public class LocalSocket implements Closeable {
 
     /**
      * Creates a AF_LOCAL/UNIX domain stream socket with FileDescriptor.
+     *
      * @hide
      */
     public LocalSocket(FileDescriptor fd) throws IOException {
@@ -76,6 +85,7 @@ public class LocalSocket implements Closeable {
 
     /**
      * for use with AndroidServerSocket
+     *
      * @param impl a SocketImpl
      */
     /*package*/ LocalSocket(LocalSocketImpl impl, int sockType) {
@@ -85,7 +95,9 @@ public class LocalSocket implements Closeable {
         this.isBound = false;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return super.toString() + " impl:" + impl;
@@ -118,7 +130,7 @@ public class LocalSocket implements Closeable {
      *
      * @param endpoint endpoint address
      * @throws IOException if socket is in invalid state or the address does
-     * not exist.
+     *                     not exist.
      */
     public void connect(LocalSocketAddress endpoint) throws IOException {
         synchronized (this) {
@@ -215,11 +227,11 @@ public class LocalSocket implements Closeable {
         implCreateIfNeeded();
         impl.shutdownOutput();
     }
-    
+
     public void setReceiveBufferSize(int size) throws IOException {
         impl.setOption(SocketOptions.SO_RCVBUF, Integer.valueOf(size));
     }
-    
+
     public int getReceiveBufferSize() throws IOException {
         return ((Integer) impl.getOption(SocketOptions.SO_RCVBUF)).intValue();
     }
@@ -227,7 +239,7 @@ public class LocalSocket implements Closeable {
     public void setSoTimeout(int n) throws IOException {
         impl.setOption(SocketOptions.SO_TIMEOUT, Integer.valueOf(n));
     }
-    
+
     public int getSoTimeout() throws IOException {
         return ((Integer) impl.getOption(SocketOptions.SO_TIMEOUT)).intValue();
     }
@@ -235,7 +247,7 @@ public class LocalSocket implements Closeable {
     public void setSendBufferSize(int n) throws IOException {
         impl.setOption(SocketOptions.SO_SNDBUF, Integer.valueOf(n));
     }
-    
+
     public int getSendBufferSize() throws IOException {
         return ((Integer) impl.getOption(SocketOptions.SO_SNDBUF)).intValue();
     }
@@ -320,5 +332,5 @@ public class LocalSocket implements Closeable {
      */
     public FileDescriptor getFileDescriptor() {
         return impl.getFileDescriptor();
-    }    
+    }
 }

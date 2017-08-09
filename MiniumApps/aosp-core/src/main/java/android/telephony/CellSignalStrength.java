@@ -21,28 +21,46 @@ package android.telephony;
  */
 public abstract class CellSignalStrength {
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_POOR = 1;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_MODERATE = 2;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_GOOD = 3;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_GREAT = 4;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int NUM_SIGNAL_STRENGTH_BINS = 5;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final String[] SIGNAL_STRENGTH_NAMES = {
-        "none", "poor", "moderate", "good", "great"
+            "none", "poor", "moderate", "good", "great"
     };
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected CellSignalStrength() {
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public abstract void setDefaultValues();
 
     /**
@@ -72,5 +90,5 @@ public abstract class CellSignalStrength {
     public abstract int hashCode();
 
     @Override
-    public abstract boolean equals (Object o);
+    public abstract boolean equals(Object o);
 }

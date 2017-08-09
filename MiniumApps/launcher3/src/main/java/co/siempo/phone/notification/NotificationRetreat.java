@@ -1,12 +1,11 @@
 package co.siempo.phone.notification;
 
-import android.app.*;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import org.androidannotations.annotations.EBean;
@@ -20,7 +19,6 @@ import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.util.PackageUtil;
 import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 4/21/2017.
@@ -57,14 +55,14 @@ public class NotificationRetreat {
     }
 
 
-
     private String getAppName(String packageName) {
         PackageManager packageManager = context.getPackageManager();
         ApplicationInfo applicationInfo = null;
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName, 0);
-        } catch (final PackageManager.NameNotFoundException e) {}
-        final String title = (String)((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "???");
+        } catch (final PackageManager.NameNotFoundException e) {
+        }
+        final String title = (String) ((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "???");
         return title;
     }
 
@@ -72,9 +70,9 @@ public class NotificationRetreat {
 
         try {
             android.app.Notification.Builder mBuilder = new android.app.Notification.Builder(context)
-                            .setSmallIcon(R.drawable.ic_siempo_notification)
-                            .setContentTitle(getAppName(storage.getPackageName()))
-                            .setContentText(storage.getContent())
+                    .setSmallIcon(R.drawable.ic_siempo_notification)
+                    .setContentTitle(getAppName(storage.getPackageName()))
+                    .setContentText(storage.getContent())
                     .setAutoCancel(true);
             // Creates an explicit intent for an Activity in your app
             Intent resultIntent = context.getPackageManager().getLaunchIntentForPackage(storage.getPackageName());
@@ -103,7 +101,7 @@ public class NotificationRetreat {
             // mId allows you to update the notification later on.
             notificationManager.notify(PackageUtil.getIdByPackage(storage.getPackageName()), mBuilder.build());
         } catch (Exception e) {
-            Tracer.e(e,e.getMessage());
+            Tracer.e(e, e.getMessage());
         }
     }
 }

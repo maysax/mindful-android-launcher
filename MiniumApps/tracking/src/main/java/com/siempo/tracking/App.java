@@ -2,7 +2,6 @@ package com.siempo.tracking;
 
 import android.provider.Settings;
 
-import com.google.gson.Gson;
 import com.siempo.tracking.model.LogEvent;
 import com.siempo.tracking.util.TrackingLogger;
 import com.siempo.tracking.util.TrackingPref_;

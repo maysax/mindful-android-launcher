@@ -16,16 +16,16 @@
 
 package com.android.mms.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
 import com.android.mms.LogTag;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class CacheManager {
     private static final String TAG = LogTag.TAG;
@@ -40,7 +40,7 @@ public class CacheManager {
     // there is no SD card found.
     // This can only be called from data thread.
     public static BlobCache getCache(Context context, String filename,
-            int maxEntries, int maxBytes, int version) {
+                                     int maxEntries, int maxBytes, int version) {
         synchronized (sCacheMap) {
             if (!sOldCheckDone) {
                 removeOldFilesIfNecessary(context);

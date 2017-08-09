@@ -34,11 +34,11 @@ import android.widget.TextView;
 
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.ContactsActivity;
-import com.android.contacts.editor.ContactEditorFragment;
-import com.android.contacts.editor.ContactEditorFragment.SaveMode;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountWithDataSet;
+import com.android.contacts.editor.ContactEditorFragment;
+import com.android.contacts.editor.ContactEditorFragment.SaveMode;
 import com.android.contacts.interactions.ContactDeletionInteraction;
 import com.android.contacts.util.DialogManager;
 
@@ -119,7 +119,7 @@ public class ContactEditorActivity extends ContactsActivity
             // Show the custom action bar but hide the home icon and title
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
                     ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME |
-                    ActionBar.DISPLAY_SHOW_TITLE);
+                            ActionBar.DISPLAY_SHOW_TITLE);
             actionBar.setCustomView(customActionBarView);
         }
 
@@ -168,105 +168,105 @@ public class ContactEditorActivity extends ContactsActivity
     private final ContactEditorFragment.Listener mFragmentListener =
             new ContactEditorFragment.Listener() {
 
-        @Override
-        public void onDeleteRequested(Uri contactUri) {
-            ContactDeletionInteraction.start(ContactEditorActivity.this, contactUri, true);
-        }
+                @Override
+                public void onDeleteRequested(Uri contactUri) {
+                    ContactDeletionInteraction.start(ContactEditorActivity.this, contactUri, true);
+                }
 
-        @Override
-        public void onReverted() {
-            finish();
-        }
+                @Override
+                public void onReverted() {
+                    finish();
+                }
 
-        @Override
-        public void onSaveFinished(Intent resultIntent) {
-            if (mFinishActivityOnSaveCompleted) {
-                setResult(resultIntent == null ? RESULT_CANCELED : RESULT_OK, resultIntent);
-            } else if (resultIntent != null) {
-                startActivity(resultIntent);
-            }
-            finish();
-        }
+                @Override
+                public void onSaveFinished(Intent resultIntent) {
+                    if (mFinishActivityOnSaveCompleted) {
+                        setResult(resultIntent == null ? RESULT_CANCELED : RESULT_OK, resultIntent);
+                    } else if (resultIntent != null) {
+                        startActivity(resultIntent);
+                    }
+                    finish();
+                }
 
-        @Override
-        public void onContactSplit(Uri newLookupUri) {
-            finish();
-        }
+                @Override
+                public void onContactSplit(Uri newLookupUri) {
+                    finish();
+                }
 
-        @Override
-        public void onContactNotFound() {
-            finish();
-        }
+                @Override
+                public void onContactNotFound() {
+                    finish();
+                }
 
-        @Override
-        public void onEditOtherContactRequested(
-                Uri contactLookupUri, ArrayList<ContentValues> values) {
-            Intent intent = new Intent(Intent.ACTION_EDIT, contactLookupUri);
-            intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                    | Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-            intent.putExtra(ContactEditorFragment.INTENT_EXTRA_ADD_TO_DEFAULT_DIRECTORY, "");
+                @Override
+                public void onEditOtherContactRequested(
+                        Uri contactLookupUri, ArrayList<ContentValues> values) {
+                    Intent intent = new Intent(Intent.ACTION_EDIT, contactLookupUri);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                            | Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                    intent.putExtra(ContactEditorFragment.INTENT_EXTRA_ADD_TO_DEFAULT_DIRECTORY, "");
 
-            // Pass on all the data that has been entered so far
-            if (values != null && values.size() != 0) {
-                intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, values);
-            }
+                    // Pass on all the data that has been entered so far
+                    if (values != null && values.size() != 0) {
+                        intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, values);
+                    }
 
-            startActivity(intent);
-            finish();
-        }
+                    startActivity(intent);
+                    finish();
+                }
 
-        @Override
-        public void onCustomCreateContactActivityRequested(AccountWithDataSet account,
-                Bundle intentExtras) {
-            final AccountTypeManager accountTypes =
-                    AccountTypeManager.getInstance(ContactEditorActivity.this);
-            final AccountType accountType = accountTypes.getAccountType(
-                    account.type, account.dataSet);
+                @Override
+                public void onCustomCreateContactActivityRequested(AccountWithDataSet account,
+                                                                   Bundle intentExtras) {
+                    final AccountTypeManager accountTypes =
+                            AccountTypeManager.getInstance(ContactEditorActivity.this);
+                    final AccountType accountType = accountTypes.getAccountType(
+                            account.type, account.dataSet);
 
-            Intent intent = new Intent();
-            intent.setClassName(accountType.syncAdapterPackageName,
-                    accountType.getCreateContactActivityClassName());
-            intent.setAction(Intent.ACTION_INSERT);
-            intent.setType(Contacts.CONTENT_ITEM_TYPE);
-            if (intentExtras != null) {
-                intent.putExtras(intentExtras);
-            }
-            intent.putExtra(RawContacts.ACCOUNT_NAME, account.name);
-            intent.putExtra(RawContacts.ACCOUNT_TYPE, account.type);
-            intent.putExtra(RawContacts.DATA_SET, account.dataSet);
-            intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                    | Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-            startActivity(intent);
-            finish();
-        }
+                    Intent intent = new Intent();
+                    intent.setClassName(accountType.syncAdapterPackageName,
+                            accountType.getCreateContactActivityClassName());
+                    intent.setAction(Intent.ACTION_INSERT);
+                    intent.setType(Contacts.CONTENT_ITEM_TYPE);
+                    if (intentExtras != null) {
+                        intent.putExtras(intentExtras);
+                    }
+                    intent.putExtra(RawContacts.ACCOUNT_NAME, account.name);
+                    intent.putExtra(RawContacts.ACCOUNT_TYPE, account.type);
+                    intent.putExtra(RawContacts.DATA_SET, account.dataSet);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                            | Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                    startActivity(intent);
+                    finish();
+                }
 
-        @Override
-        public void onCustomEditContactActivityRequested(AccountWithDataSet account,
-                Uri rawContactUri, Bundle intentExtras, boolean redirect) {
-            final AccountTypeManager accountTypes =
-                    AccountTypeManager.getInstance(ContactEditorActivity.this);
-            final AccountType accountType = accountTypes.getAccountType(
-                    account.type, account.dataSet);
+                @Override
+                public void onCustomEditContactActivityRequested(AccountWithDataSet account,
+                                                                 Uri rawContactUri, Bundle intentExtras, boolean redirect) {
+                    final AccountTypeManager accountTypes =
+                            AccountTypeManager.getInstance(ContactEditorActivity.this);
+                    final AccountType accountType = accountTypes.getAccountType(
+                            account.type, account.dataSet);
 
-            Intent intent = new Intent();
-            intent.setClassName(accountType.syncAdapterPackageName,
-                    accountType.getEditContactActivityClassName());
-            intent.setAction(Intent.ACTION_EDIT);
-            intent.setData(rawContactUri);
-            if (intentExtras != null) {
-                intent.putExtras(intentExtras);
-            }
+                    Intent intent = new Intent();
+                    intent.setClassName(accountType.syncAdapterPackageName,
+                            accountType.getEditContactActivityClassName());
+                    intent.setAction(Intent.ACTION_EDIT);
+                    intent.setData(rawContactUri);
+                    if (intentExtras != null) {
+                        intent.putExtras(intentExtras);
+                    }
 
-            if (redirect) {
-                intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
-                        | Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                startActivity(intent);
-                finish();
-            } else {
-                startActivity(intent);
-            }
-        }
-    };
+                    if (redirect) {
+                        intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                                | Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        startActivity(intent);
+                    }
+                }
+            };
 
     @Override
     public DialogManager getDialogManager() {

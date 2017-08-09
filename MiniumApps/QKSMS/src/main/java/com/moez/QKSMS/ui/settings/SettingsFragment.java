@@ -150,7 +150,6 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     public static final String CROWDIN = "pref_key_crowdin";
 
 
-
     public static final String DEFAULT_NOTIFICATION_TONE = "content://settings/system/notification_sound";
 
     public static final String CATEGORY_TAG = "settings_category_fragment_tag";
@@ -529,7 +528,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             case SHOULD_I_ANSWER:
                 final String packageName = "org.mistergroup.muzutozvednout";
                 if (!PackageUtils.isAppInstalled(mContext, packageName)) {
-                    String referrer="referrer=utm_source%3Dqksms%26utm_medium%3Dapp%26utm_campaign%3Dqksmssettings";
+                    String referrer = "referrer=utm_source%3Dqksms%26utm_medium%3Dapp%26utm_campaign%3Dqksmssettings";
                     new QKDialog()
                             .setContext(mContext)
                             .setTitle(R.string.dialog_should_i_answer_title)

@@ -33,11 +33,11 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 
-import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.ContactSaveService;
+import com.android.contacts.common.ContactPhotoManager;
+import com.android.contacts.common.model.RawContactDeltaList;
 import com.android.contacts.detail.PhotoSelectionHandler;
 import com.android.contacts.editor.PhotoActionPopup;
-import com.android.contacts.common.model.RawContactDeltaList;
 import com.android.contacts.util.SchedulingUtils;
 
 import minium.co.contacts.R;
@@ -49,31 +49,49 @@ public class PhotoSelectionActivity extends Activity {
 
     private static final String TAG = "PhotoSelectionActivity";
 
-    /** Number of ms for the animation to expand the photo. */
+    /**
+     * Number of ms for the animation to expand the photo.
+     */
     private static final int PHOTO_EXPAND_DURATION = 100;
 
-    /** Number of ms for the animation to contract the photo on activity exit. */
+    /**
+     * Number of ms for the animation to contract the photo on activity exit.
+     */
     private static final int PHOTO_CONTRACT_DURATION = 50;
 
-    /** Number of ms for the animation to hide the backdrop on finish. */
+    /**
+     * Number of ms for the animation to hide the backdrop on finish.
+     */
     private static final int BACKDROP_FADEOUT_DURATION = 100;
 
-    /** Key used to persist photo uri. */
+    /**
+     * Key used to persist photo uri.
+     */
     private static final String KEY_CURRENT_PHOTO_URI = "currentphotouri";
 
-    /** Key used to persist whether a sub-activity is currently in progress. */
+    /**
+     * Key used to persist whether a sub-activity is currently in progress.
+     */
     private static final String KEY_SUB_ACTIVITY_IN_PROGRESS = "subinprogress";
 
-    /** Intent extra to get the photo URI. */
+    /**
+     * Intent extra to get the photo URI.
+     */
     public static final String PHOTO_URI = "photo_uri";
 
-    /** Intent extra to get the entity delta list. */
+    /**
+     * Intent extra to get the entity delta list.
+     */
     public static final String ENTITY_DELTA_LIST = "entity_delta_list";
 
-    /** Intent extra to indicate whether the contact is the user's profile. */
+    /**
+     * Intent extra to indicate whether the contact is the user's profile.
+     */
     public static final String IS_PROFILE = "is_profile";
 
-    /** Intent extra to indicate whether the contact is from a directory (non-editable). */
+    /**
+     * Intent extra to indicate whether the contact is from a directory (non-editable).
+     */
     public static final String IS_DIRECTORY_CONTACT = "is_directory_contact";
 
     /**
@@ -83,7 +101,9 @@ public class PhotoSelectionActivity extends Activity {
      */
     public static final String EXPAND_PHOTO = "expand_photo";
 
-    /** Source bounds of the image that was clicked on. */
+    /**
+     * Source bounds of the image that was clicked on.
+     */
     private Rect mSourceBounds;
 
     /**
@@ -91,16 +111,24 @@ public class PhotoSelectionActivity extends Activity {
      */
     private Uri mPhotoUri;
 
-    /** Entity delta list of the contact. */
+    /**
+     * Entity delta list of the contact.
+     */
     private RawContactDeltaList mState;
 
-    /** Whether the contact is the user's profile. */
+    /**
+     * Whether the contact is the user's profile.
+     */
     private boolean mIsProfile;
 
-    /** Whether the contact is from a directory. */
+    /**
+     * Whether the contact is from a directory.
+     */
     private boolean mIsDirectoryContact;
 
-    /** Whether to animate the photo to an expanded view covering more of the screen. */
+    /**
+     * Whether to animate the photo to an expanded view covering more of the screen.
+     */
     private boolean mExpandPhoto;
 
     /**
@@ -109,37 +137,59 @@ public class PhotoSelectionActivity extends Activity {
      */
     private int mExpandedPhotoSize;
 
-    /** Height (in pixels) to leave underneath the expanded photo to show the list popup */
+    /**
+     * Height (in pixels) to leave underneath the expanded photo to show the list popup
+     */
     private int mHeightOffset;
 
-    /** The semi-transparent backdrop. */
+    /**
+     * The semi-transparent backdrop.
+     */
     private View mBackdrop;
 
-    /** The photo view. */
+    /**
+     * The photo view.
+     */
     private ImageView mPhotoView;
 
-    /** The photo handler attached to this activity, if any. */
+    /**
+     * The photo handler attached to this activity, if any.
+     */
     private PhotoHandler mPhotoHandler;
 
-    /** Animator to expand the photo out to full size. */
+    /**
+     * Animator to expand the photo out to full size.
+     */
     private ObjectAnimator mPhotoAnimator;
 
-    /** Listener for the animation. */
+    /**
+     * Listener for the animation.
+     */
     private AnimatorListenerAdapter mAnimationListener;
 
-    /** Whether a change in layout of the photo has occurred that has no animation yet. */
+    /**
+     * Whether a change in layout of the photo has occurred that has no animation yet.
+     */
     private boolean mAnimationPending;
 
-    /** Prior position of the image (for animating). */
+    /**
+     * Prior position of the image (for animating).
+     */
     Rect mOriginalPos = new Rect();
 
-    /** Layout params for the photo view before we started animating. */
+    /**
+     * Layout params for the photo view before we started animating.
+     */
     private LayoutParams mPhotoStartParams;
 
-    /** Layout params for the photo view after we finished animating. */
+    /**
+     * Layout params for the photo view after we finished animating.
+     */
     private LayoutParams mPhotoEndParams;
 
-    /** Whether a sub-activity is currently in progress. */
+    /**
+     * Whether a sub-activity is currently in progress.
+     */
     private boolean mSubActivityInProgress;
 
     private boolean mCloseActivityWhenCameBackFromSubActivity;
@@ -205,8 +255,9 @@ public class PhotoSelectionActivity extends Activity {
     /**
      * Compute the adjusted expanded photo size to fit within the enclosing view with the same
      * aspect ratio.
+     *
      * @param enclosingView This is the view that the photo must fit within.
-     * @param heightOffset This is the amount of height to leave open for the photo action popup.
+     * @param heightOffset  This is the amount of height to leave open for the photo action popup.
      */
     private int getAdjustedExpandedPhotoSize(View enclosingView, int heightOffset) {
         // pull out the bounds of the backdrop
@@ -252,24 +303,25 @@ public class PhotoSelectionActivity extends Activity {
 
     /**
      * Builds a well-formed intent for invoking this activity.
-     * @param context The context.
-     * @param photoUri The URI of the current photo (may be null, in which case the default
-     *     avatar image will be displayed).
-     * @param photoBitmap The bitmap of the current photo (may be null, in which case the default
-     *     avatar image will be displayed).
-     * @param photoBytes The bytes for the current photo (may be null, in which case the default
-     *     avatar image will be displayed).
-     * @param photoBounds The pixel bounds of the current photo.
-     * @param delta The entity delta list for the contact.
-     * @param isProfile Whether the contact is the user's profile.
+     *
+     * @param context            The context.
+     * @param photoUri           The URI of the current photo (may be null, in which case the default
+     *                           avatar image will be displayed).
+     * @param photoBitmap        The bitmap of the current photo (may be null, in which case the default
+     *                           avatar image will be displayed).
+     * @param photoBytes         The bytes for the current photo (may be null, in which case the default
+     *                           avatar image will be displayed).
+     * @param photoBounds        The pixel bounds of the current photo.
+     * @param delta              The entity delta list for the contact.
+     * @param isProfile          Whether the contact is the user's profile.
      * @param isDirectoryContact Whether the contact comes from a directory (non-editable).
      * @param expandPhotoOnClick Whether the photo should be expanded on click or not (generally,
-     *     this should be true for phones, and false for tablets).
+     *                           this should be true for phones, and false for tablets).
      * @return An intent that can be used to invoke the photo selection activity.
      */
     public static Intent buildIntent(Context context, Uri photoUri, Bitmap photoBitmap,
-            byte[] photoBytes, Rect photoBounds, RawContactDeltaList delta, boolean isProfile,
-            boolean isDirectoryContact, boolean expandPhotoOnClick) {
+                                     byte[] photoBytes, Rect photoBounds, RawContactDeltaList delta, boolean isProfile,
+                                     boolean isDirectoryContact, boolean expandPhotoOnClick) {
         Intent intent = new Intent(context, PhotoSelectionActivity.class);
         if (photoUri != null && photoBitmap != null && photoBytes != null) {
             intent.putExtra(PHOTO_URI, photoUri);
@@ -330,7 +382,7 @@ public class PhotoSelectionActivity extends Activity {
         mPhotoView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom,
-                    int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 if (mAnimationPending) {
                     mAnimationPending = false;
                     PropertyValuesHolder pvhLeft =
@@ -563,6 +615,7 @@ public class PhotoSelectionActivity extends Activity {
         final private int mRequestCode;
         final private int mResultCode;
         final private Intent mData;
+
         private PendingPhotoResult(int requestCode, int resultCode, Intent data) {
             mRequestCode = requestCode;
             mResultCode = resultCode;

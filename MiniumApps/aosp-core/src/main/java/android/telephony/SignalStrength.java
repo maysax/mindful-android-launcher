@@ -29,24 +29,40 @@ public class SignalStrength implements Parcelable {
     private static final String LOG_TAG = "SignalStrength";
     private static final boolean DBG = false;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_NONE_OR_UNKNOWN = 0;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_POOR = 1;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_MODERATE = 2;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_GOOD = 3;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int SIGNAL_STRENGTH_GREAT = 4;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int NUM_SIGNAL_STRENGTH_BINS = 5;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final String[] SIGNAL_STRENGTH_NAMES = {
-        "none", "poor", "moderate", "good", "great"
+            "none", "poor", "moderate", "good", "great"
     };
 
-    /** @hide */
+    /**
+     * @hide
+     */
     //Use int max, as -1 is a valid value in signal strength
     public static final int INVALID = 0x7FFFFFFF;
 
@@ -67,13 +83,12 @@ public class SignalStrength implements Parcelable {
 
     /**
      * Create a new SignalStrength from a intent notifier Bundle
-     *
+     * <p>
      * This method is used by PhoneStateIntentReceiver and maybe by
      * external applications.
      *
      * @param m Bundle from intent notifier
      * @return newly created SignalStrength
-     *
      * @hide
      */
     public static SignalStrength newFromBundle(Bundle m) {
@@ -134,10 +149,10 @@ public class SignalStrength implements Parcelable {
      * @hide
      */
     public SignalStrength(int gsmSignalStrength, int gsmBitErrorRate,
-            int cdmaDbm, int cdmaEcio,
-            int evdoDbm, int evdoEcio, int evdoSnr,
-            int lteSignalStrength, int lteRsrp, int lteRsrq, int lteRssnr, int lteCqi,
-            boolean gsmFlag) {
+                          int cdmaDbm, int cdmaEcio,
+                          int evdoDbm, int evdoEcio, int evdoSnr,
+                          int lteSignalStrength, int lteRsrp, int lteRsrq, int lteRssnr, int lteCqi,
+                          boolean gsmFlag) {
         initialize(gsmSignalStrength, gsmBitErrorRate, cdmaDbm, cdmaEcio,
                 evdoDbm, evdoEcio, evdoSnr, lteSignalStrength, lteRsrp,
                 lteRsrq, lteRssnr, lteCqi, gsmFlag);
@@ -149,9 +164,9 @@ public class SignalStrength implements Parcelable {
      * @hide
      */
     public SignalStrength(int gsmSignalStrength, int gsmBitErrorRate,
-            int cdmaDbm, int cdmaEcio,
-            int evdoDbm, int evdoEcio, int evdoSnr,
-            boolean gsmFlag) {
+                          int cdmaDbm, int cdmaEcio,
+                          int evdoDbm, int evdoEcio, int evdoSnr,
+                          boolean gsmFlag) {
         initialize(gsmSignalStrength, gsmBitErrorRate, cdmaDbm, cdmaEcio,
                 evdoDbm, evdoEcio, evdoSnr, 99, INVALID,
                 INVALID, INVALID, INVALID, gsmFlag);
@@ -161,7 +176,6 @@ public class SignalStrength implements Parcelable {
      * Copy constructors
      *
      * @param s Source SignalStrength
-     *
      * @hide
      */
     public SignalStrength(SignalStrength s) {
@@ -179,13 +193,12 @@ public class SignalStrength implements Parcelable {
      * @param evdoEcio
      * @param evdoSnr
      * @param gsm
-     *
      * @hide
      */
     public void initialize(int gsmSignalStrength, int gsmBitErrorRate,
-            int cdmaDbm, int cdmaEcio,
-            int evdoDbm, int evdoEcio, int evdoSnr,
-            boolean gsm) {
+                           int cdmaDbm, int cdmaEcio,
+                           int evdoDbm, int evdoEcio, int evdoSnr,
+                           boolean gsm) {
         initialize(gsmSignalStrength, gsmBitErrorRate, cdmaDbm, cdmaEcio,
                 evdoDbm, evdoEcio, evdoSnr, 99, INVALID,
                 INVALID, INVALID, INVALID, gsm);
@@ -207,14 +220,13 @@ public class SignalStrength implements Parcelable {
      * @param lteRssnr
      * @param lteCqi
      * @param gsm
-     *
      * @hide
      */
     public void initialize(int gsmSignalStrength, int gsmBitErrorRate,
-            int cdmaDbm, int cdmaEcio,
-            int evdoDbm, int evdoEcio, int evdoSnr,
-            int lteSignalStrength, int lteRsrp, int lteRsrq, int lteRssnr, int lteCqi,
-            boolean gsm) {
+                           int cdmaDbm, int cdmaEcio,
+                           int evdoDbm, int evdoEcio, int evdoSnr,
+                           int lteSignalStrength, int lteRsrp, int lteRsrq, int lteRssnr, int lteCqi,
+                           boolean gsm) {
         mGsmSignalStrength = gsmSignalStrength;
         mGsmBitErrorRate = gsmBitErrorRate;
         mCdmaDbm = cdmaDbm;
@@ -348,8 +360,7 @@ public class SignalStrength implements Parcelable {
      * Cdma, evdo, lte rsrp & rsrq values are sign converted
      * when received from ril interface
      *
-     * @return
-     *      Valid values for all signalstrength fields
+     * @return Valid values for all signalstrength fields
      * @hide
      */
     public void validateInput() {
@@ -377,10 +388,10 @@ public class SignalStrength implements Parcelable {
 
     /**
      * @param true - Gsm, Lte phones
-     *        false - Cdma phones
-     *
-     * Used by voice phone to set the isGsm
-     *        flag
+     *             false - Cdma phones
+     *             <p>
+     *             Used by voice phone to set the isGsm
+     *             flag
      * @hide
      */
     public void setGsm(boolean gsmFlag) {
@@ -437,27 +448,37 @@ public class SignalStrength implements Parcelable {
         return this.mEvdoSnr;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int getLteSignalStrength() {
         return mLteSignalStrength;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int getLteRsrp() {
         return mLteRsrp;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int getLteRsrq() {
         return mLteRsrq;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int getLteRssnr() {
         return mLteRssnr;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int getLteCqi() {
         return mLteCqi;
     }
@@ -532,7 +553,7 @@ public class SignalStrength implements Parcelable {
     public int getDbm() {
         int dBm;
 
-        if(isGsm()) {
+        if (isGsm()) {
             dBm = getLteDbm();
             if (dBm == INVALID) {
                 dBm = getGsmDbm();
@@ -582,8 +603,8 @@ public class SignalStrength implements Parcelable {
         int asu = getGsmSignalStrength();
         if (asu <= 2 || asu == 99) level = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
         else if (asu >= 12) level = SIGNAL_STRENGTH_GREAT;
-        else if (asu >= 8)  level = SIGNAL_STRENGTH_GOOD;
-        else if (asu >= 5)  level = SIGNAL_STRENGTH_MODERATE;
+        else if (asu >= 8) level = SIGNAL_STRENGTH_GOOD;
+        else if (asu >= 5) level = SIGNAL_STRENGTH_MODERATE;
         else level = SIGNAL_STRENGTH_POOR;
         if (DBG) log("getGsmLevel=" + level);
         return level;
@@ -794,6 +815,7 @@ public class SignalStrength implements Parcelable {
         return rssiIconLevel;
 
     }
+
     /**
      * Get the LTE signal level as an asu value between 0..97, 99 is unknown
      * Asu is calculated based on 3GPP RSRP. Refer to 3GPP 27.007 (Ver 10.3.0) Sec 8.69
@@ -818,7 +840,7 @@ public class SignalStrength implements Parcelable {
          */
         if (lteDbm == SignalStrength.INVALID) lteAsuLevel = 255;
         else lteAsuLevel = lteDbm + 140;
-        if (DBG) log("Lte Asu level: "+lteAsuLevel);
+        if (DBG) log("Lte Asu level: " + lteAsuLevel);
         return lteAsuLevel;
     }
 
@@ -848,7 +870,7 @@ public class SignalStrength implements Parcelable {
      * @return true if the signal strengths are the same
      */
     @Override
-    public boolean equals (Object o) {
+    public boolean equals(Object o) {
         SignalStrength s;
 
         try {

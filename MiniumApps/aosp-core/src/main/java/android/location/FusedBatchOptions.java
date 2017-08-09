@@ -21,6 +21,7 @@ import android.os.Parcelable;
 
 /**
  * A data class representing a set of options to configure batching sessions.
+ *
  * @hide
  */
 public class FusedBatchOptions implements Parcelable {
@@ -87,17 +88,17 @@ public class FusedBatchOptions implements Parcelable {
      * Such values need to be kept in sync with the ones in fused_location.h
      */
     public static final class SourceTechnologies {
-        public static int GNSS = 1<<0;
-        public static int WIFI = 1<<1;
-        public static int SENSORS = 1<<2;
-        public static int CELL = 1<<3;
-        public static int BLUETOOTH = 1<<4;
+        public static int GNSS = 1 << 0;
+        public static int WIFI = 1 << 1;
+        public static int SENSORS = 1 << 2;
+        public static int CELL = 1 << 3;
+        public static int BLUETOOTH = 1 << 4;
     }
 
     public static final class BatchFlags {
         // follow the definitions to the letter in fused_location.h
         public static int WAKEUP_ON_FIFO_FULL = 0x0000001;
-        public static int CALLBACK_ON_LOCATION_FIX =0x0000002;
+        public static int CALLBACK_ON_LOCATION_FIX = 0x0000002;
     }
 
     /*
@@ -105,21 +106,21 @@ public class FusedBatchOptions implements Parcelable {
      */
     public static final Parcelable.Creator<FusedBatchOptions> CREATOR =
             new Parcelable.Creator<FusedBatchOptions>() {
-        @Override
-        public FusedBatchOptions createFromParcel(Parcel parcel) {
-            FusedBatchOptions options = new FusedBatchOptions();
-            options.setMaxPowerAllocationInMW(parcel.readDouble());
-            options.setPeriodInNS(parcel.readLong());
-            options.setSourceToUse(parcel.readInt());
-            options.setFlag(parcel.readInt());
-            return options;
-        }
+                @Override
+                public FusedBatchOptions createFromParcel(Parcel parcel) {
+                    FusedBatchOptions options = new FusedBatchOptions();
+                    options.setMaxPowerAllocationInMW(parcel.readDouble());
+                    options.setPeriodInNS(parcel.readLong());
+                    options.setSourceToUse(parcel.readInt());
+                    options.setFlag(parcel.readInt());
+                    return options;
+                }
 
-        @Override
-        public FusedBatchOptions[] newArray(int size) {
-            return new FusedBatchOptions[size];
-        }
-    };
+                @Override
+                public FusedBatchOptions[] newArray(int size) {
+                    return new FusedBatchOptions[size];
+                }
+            };
 
     @Override
     public int describeContents() {

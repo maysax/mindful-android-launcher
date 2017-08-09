@@ -17,11 +17,11 @@
 
 package com.android.mms.transaction;
 
-import com.android.mms.LogTag;
-
 import android.content.Context;
 import android.util.Config;
 import android.util.Log;
+
+import com.android.mms.LogTag;
 
 /**
  * Default retry scheme, based on specs.
@@ -32,7 +32,7 @@ public class DefaultRetryScheme extends AbstractRetryScheme {
     private static final boolean LOCAL_LOGV = DEBUG ? Config.LOGD : Config.LOGV;
 
     private static final int[] sDefaultRetryScheme = {
-        0, 1 * 60 * 1000, 5 * 60 * 1000, 10 * 60 * 1000, 30 * 60 * 1000};
+            0, 1 * 60 * 1000, 5 * 60 * 1000, 10 * 60 * 1000, 30 * 60 * 1000};
 
     public DefaultRetryScheme(Context context, int retriedTimes) {
         super(retriedTimes);

@@ -21,14 +21,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- *  A parcelable holder class of byte[] for ISms aidl implementation
+ * A parcelable holder class of byte[] for ISms aidl implementation
  */
 public class SmsRawData implements Parcelable {
     byte[] data;
 
     //Static Methods
     public static final Parcelable.Creator<SmsRawData> CREATOR
-            = new Parcelable.Creator<SmsRawData> (){
+            = new Parcelable.Creator<SmsRawData>() {
         public SmsRawData createFromParcel(Parcel source) {
             int size;
             size = source.readInt();

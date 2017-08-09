@@ -38,7 +38,7 @@ public class CallLogInteractionsLoader extends AsyncTaskLoader<List<ContactInter
     private List<ContactInteraction> mData;
 
     public CallLogInteractionsLoader(Context context, String[] phoneNumbers,
-            int maxToRetrieve) {
+                                     int maxToRetrieve) {
         super(context);
         mPhoneNumbers = phoneNumbers;
         mMaxToRetrieve = maxToRetrieve;
@@ -80,6 +80,7 @@ public class CallLogInteractionsLoader extends AsyncTaskLoader<List<ContactInter
      * matching is inexact). Therefore, we need to remove duplicates. In a reasonable call log,
      * every entry should have a distinct date. Therefore, we can assume duplicate entries are
      * adjacent entries.
+     *
      * @param interactions The interaction list potentially containing duplicates
      * @return The list with duplicates removed
      */
@@ -88,7 +89,7 @@ public class CallLogInteractionsLoader extends AsyncTaskLoader<List<ContactInter
         final List<ContactInteraction> subsetInteractions = new ArrayList<>();
         for (int i = 0; i < interactions.size(); i++) {
             if (i >= 1 && interactions.get(i).getInteractionDate() ==
-                    interactions.get(i-1).getInteractionDate()) {
+                    interactions.get(i - 1).getInteractionDate()) {
                 continue;
             }
             subsetInteractions.add(interactions.get(i));

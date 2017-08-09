@@ -30,7 +30,7 @@ public final class DumpUtils {
 
     /**
      * Helper for dumping state owned by a handler thread.
-     *
+     * <p>
      * Because the caller might be holding an important lock that the handler is
      * trying to acquire, we use a short timeout to avoid deadlocks.  The process
      * is inelegant but this function is only used for debugging purposes.

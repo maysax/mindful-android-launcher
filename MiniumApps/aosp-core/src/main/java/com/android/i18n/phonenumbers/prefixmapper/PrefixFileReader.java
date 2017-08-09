@@ -32,112 +32,112 @@ import java.util.logging.Logger;
  * @author Shaopeng Jia
  */
 public class PrefixFileReader {
-  private static final Logger LOGGER = Logger.getLogger(PrefixFileReader.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PrefixFileReader.class.getName());
 
-  private final String phonePrefixDataDirectory;
-  // The mappingFileProvider knows for which combination of countryCallingCode and language a phone
-  // prefix mapping file is available in the file system, so that a file can be loaded when needed.
-  private MappingFileProvider mappingFileProvider = new MappingFileProvider();
-  // A mapping from countryCallingCode_lang to the corresponding phone prefix map that has been
-  // loaded.
-  private Map<String, PhonePrefixMap> availablePhonePrefixMaps =
-      new HashMap<String, PhonePrefixMap>();
+    private final String phonePrefixDataDirectory;
+    // The mappingFileProvider knows for which combination of countryCallingCode and language a phone
+    // prefix mapping file is available in the file system, so that a file can be loaded when needed.
+    private MappingFileProvider mappingFileProvider = new MappingFileProvider();
+    // A mapping from countryCallingCode_lang to the corresponding phone prefix map that has been
+    // loaded.
+    private Map<String, PhonePrefixMap> availablePhonePrefixMaps =
+            new HashMap<String, PhonePrefixMap>();
 
-  public PrefixFileReader(String phonePrefixDataDirectory) {
-    this.phonePrefixDataDirectory = phonePrefixDataDirectory;
-    loadMappingFileProvider();
-  }
-
-  private void loadMappingFileProvider() {
-    InputStream source =
-        PrefixFileReader.class.getResourceAsStream(phonePrefixDataDirectory + "config");
-    ObjectInputStream in = null;
-    try {
-      in = new ObjectInputStream(source);
-      mappingFileProvider.readExternal(in);
-    } catch (IOException e) {
-      LOGGER.log(Level.WARNING, e.toString());
-    } finally {
-      close(in);
+    public PrefixFileReader(String phonePrefixDataDirectory) {
+        this.phonePrefixDataDirectory = phonePrefixDataDirectory;
+        loadMappingFileProvider();
     }
-  }
 
-  private PhonePrefixMap getPhonePrefixDescriptions(
-      int prefixMapKey, String language, String script, String region) {
-    String fileName = mappingFileProvider.getFileName(prefixMapKey, language, script, region);
-    if (fileName.length() == 0) {
-      return null;
+    private void loadMappingFileProvider() {
+        InputStream source =
+                PrefixFileReader.class.getResourceAsStream(phonePrefixDataDirectory + "config");
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(source);
+            mappingFileProvider.readExternal(in);
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, e.toString());
+        } finally {
+            close(in);
+        }
     }
-    if (!availablePhonePrefixMaps.containsKey(fileName)) {
-      loadPhonePrefixMapFromFile(fileName);
-    }
-    return availablePhonePrefixMaps.get(fileName);
-  }
 
-  private void loadPhonePrefixMapFromFile(String fileName) {
-    InputStream source =
-        PrefixFileReader.class.getResourceAsStream(phonePrefixDataDirectory + fileName);
-    ObjectInputStream in = null;
-    try {
-      in = new ObjectInputStream(source);
-      PhonePrefixMap map = new PhonePrefixMap();
-      map.readExternal(in);
-      availablePhonePrefixMaps.put(fileName, map);
-    } catch (IOException e) {
-      LOGGER.log(Level.WARNING, e.toString());
-    } finally {
-      close(in);
+    private PhonePrefixMap getPhonePrefixDescriptions(
+            int prefixMapKey, String language, String script, String region) {
+        String fileName = mappingFileProvider.getFileName(prefixMapKey, language, script, region);
+        if (fileName.length() == 0) {
+            return null;
+        }
+        if (!availablePhonePrefixMaps.containsKey(fileName)) {
+            loadPhonePrefixMapFromFile(fileName);
+        }
+        return availablePhonePrefixMaps.get(fileName);
     }
-  }
 
-  private static void close(InputStream in) {
-    if (in != null) {
-      try {
-        in.close();
-      } catch (IOException e) {
-        LOGGER.log(Level.WARNING, e.toString());
-      }
+    private void loadPhonePrefixMapFromFile(String fileName) {
+        InputStream source =
+                PrefixFileReader.class.getResourceAsStream(phonePrefixDataDirectory + fileName);
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(source);
+            PhonePrefixMap map = new PhonePrefixMap();
+            map.readExternal(in);
+            availablePhonePrefixMaps.put(fileName, map);
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, e.toString());
+        } finally {
+            close(in);
+        }
     }
-  }
 
-  /**
-   * Returns a text description in the given language for the given phone number.
-   *
-   * @param number  the phone number for which we want to get a text description
-   * @param lang  two-letter lowercase ISO language codes as defined by ISO 639-1
-   * @param script  four-letter titlecase (the first letter is uppercase and the rest of the letters
-   *     are lowercase) ISO script codes as defined in ISO 15924
-   * @param region  two-letter uppercase ISO country codes as defined by ISO 3166-1
-   * @return  a text description in the given language for the given phone number, or an empty
-   *     string if a description is not available
-   */
-  public String getDescriptionForNumber(
-      PhoneNumber number, String lang, String script, String region) {
-    int countryCallingCode = number.getCountryCode();
-    // As the NANPA data is split into multiple files covering 3-digit areas, use a phone number
-    // prefix of 4 digits for NANPA instead, e.g. 1650.
-    int phonePrefix = (countryCallingCode != 1) ?
-        countryCallingCode : (1000 + (int) (number.getNationalNumber() / 10000000));
-    PhonePrefixMap phonePrefixDescriptions =
-        getPhonePrefixDescriptions(phonePrefix, lang, script, region);
-    String description = (phonePrefixDescriptions != null) ?
-        phonePrefixDescriptions.lookup(number) : null;
-    // When a location is not available in the requested language, fall back to English.
-    if ((description == null || description.length() == 0) && mayFallBackToEnglish(lang)) {
-      PhonePrefixMap defaultMap = getPhonePrefixDescriptions(phonePrefix, "en", "", "");
-      if (defaultMap == null) {
-        return "";
-      }
-      description = defaultMap.lookup(number);
+    private static void close(InputStream in) {
+        if (in != null) {
+            try {
+                in.close();
+            } catch (IOException e) {
+                LOGGER.log(Level.WARNING, e.toString());
+            }
+        }
     }
-    return description != null ? description : "";
-  }
 
-  private boolean mayFallBackToEnglish(String lang) {
-    // Don't fall back to English if the requested language is among the following:
-    // - Chinese
-    // - Japanese
-    // - Korean
-    return !lang.equals("zh") && !lang.equals("ja") && !lang.equals("ko");
-  }
+    /**
+     * Returns a text description in the given language for the given phone number.
+     *
+     * @param number the phone number for which we want to get a text description
+     * @param lang   two-letter lowercase ISO language codes as defined by ISO 639-1
+     * @param script four-letter titlecase (the first letter is uppercase and the rest of the letters
+     *               are lowercase) ISO script codes as defined in ISO 15924
+     * @param region two-letter uppercase ISO country codes as defined by ISO 3166-1
+     * @return a text description in the given language for the given phone number, or an empty
+     * string if a description is not available
+     */
+    public String getDescriptionForNumber(
+            PhoneNumber number, String lang, String script, String region) {
+        int countryCallingCode = number.getCountryCode();
+        // As the NANPA data is split into multiple files covering 3-digit areas, use a phone number
+        // prefix of 4 digits for NANPA instead, e.g. 1650.
+        int phonePrefix = (countryCallingCode != 1) ?
+                countryCallingCode : (1000 + (int) (number.getNationalNumber() / 10000000));
+        PhonePrefixMap phonePrefixDescriptions =
+                getPhonePrefixDescriptions(phonePrefix, lang, script, region);
+        String description = (phonePrefixDescriptions != null) ?
+                phonePrefixDescriptions.lookup(number) : null;
+        // When a location is not available in the requested language, fall back to English.
+        if ((description == null || description.length() == 0) && mayFallBackToEnglish(lang)) {
+            PhonePrefixMap defaultMap = getPhonePrefixDescriptions(phonePrefix, "en", "", "");
+            if (defaultMap == null) {
+                return "";
+            }
+            description = defaultMap.lookup(number);
+        }
+        return description != null ? description : "";
+    }
+
+    private boolean mayFallBackToEnglish(String lang) {
+        // Don't fall back to English if the requested language is among the following:
+        // - Chinese
+        // - Japanese
+        // - Korean
+        return !lang.equals("zh") && !lang.equals("ja") && !lang.equals("ko");
+    }
 }

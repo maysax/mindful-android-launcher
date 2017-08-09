@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +93,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        MainListItemType itemViewType = MainListItemType.values() [getItemViewType(position)];
+        MainListItemType itemViewType = MainListItemType.values()[getItemViewType(position)];
 
         switch (itemViewType) {
             case CONTACT:
@@ -240,7 +238,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 for (int i = 0; i < count; i++) {
 
                     String filterableString;
-                    String [] splits;
+                    String[] splits;
 
                     switch (originalData.get(i).getItemType()) {
                         case CONTACT:
@@ -252,9 +250,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                  */
                                 String searchString2 = searchString.replaceAll("@", "").trim();
                                 ContactListItem item = (ContactListItem) originalData.get(i);
-                                filterableString =  item.getContactName();
+                                filterableString = item.getContactName();
                                 boolean isAdded = false;
-                                if (filterableString.toString().toLowerCase().contains(searchString2)){
+                                if (filterableString.toString().toLowerCase().contains(searchString2)) {
                                     buildData.add(originalData.get(i));
                                     isAdded = true;
                                 }
@@ -277,7 +275,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             filterableString = originalData.get(i).getTitle();
                             splits = filterableString.split(" ");
 
-                            for (String str: splits) {
+                            for (String str : splits) {
                                 if (str.toLowerCase().startsWith(searchString)) {
                                     buildData.add(originalData.get(i));
                                     break;

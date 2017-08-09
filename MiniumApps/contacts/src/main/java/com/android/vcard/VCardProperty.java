@@ -27,31 +27,31 @@ import java.util.Map;
 
 /**
  * Represents vCard's property, or logical "one line" of each vCard entry.
- *
+ * <p>
  * e.g.
  * Given a vCard below, objects for <code>N:name</code>, <code>TEL:1111111111</code> are
  * "property".
- *
+ * <p>
  * <code>
  * BEGIN:VCARD
  * N:name
  * TEL:1111111111
  * END:VCARD
  * </code>
- *
+ * <p>
  * vCard's property has three elements: name, parameter (or param), and value. Name is the name
  * of each property. Parameter or param is additional information for the property. Value is one
  * or multiple values representing the parameter.
- *
+ * <p>
  * e.g.
  * <code>N;CHARSET=UTF-8:Joe;Due;M.;Mr.;Ph.D.</code>, has "N" for name, "CHALSET=UTF-8" for param,
  * and "Joe;Due;M.;Mr.;Ph.D." for value.
- *
+ * <p>
  * Usually params are represented as "key=value" pair, but not always
  * (The property <code>TEL;WORK;VOICE:(111) 555-1212</code> has two params without key "TYPE",
  * which are same as "TYPE=WORK" and "TYPE=VOICE". In vCard 3.0, we can even express them as
  * "TYPE=WORK,VOICE").
- *
+ * <p>
  * Sometimes (not always) value can be separated by semi-colon. In the example above "Joe;Due;;;"
  * should be interpreted as five strings: "Joe" (for family name), "Due" (for given name), "M."
  * (for middle name), "Mr." (for prefix), and "Ph.D." (for suffix). Whether the value is

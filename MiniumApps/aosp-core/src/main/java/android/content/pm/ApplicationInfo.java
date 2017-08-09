@@ -36,60 +36,60 @@ import java.util.Objects;
  * &lt;application&gt; tag.
  */
 public class ApplicationInfo extends PackageItemInfo implements Parcelable {
-    
+
     /**
-     * Default task affinity of all activities in this application. See 
-     * {@link ActivityInfo#taskAffinity} for more information.  This comes 
-     * from the "taskAffinity" attribute. 
+     * Default task affinity of all activities in this application. See
+     * {@link ActivityInfo#taskAffinity} for more information.  This comes
+     * from the "taskAffinity" attribute.
      */
     public String taskAffinity;
-    
+
     /**
      * Optional name of a permission required to be able to access this
      * application's components.  From the "permission" attribute.
      */
     public String permission;
-    
+
     /**
      * The name of the process this application should run in.  From the
      * "process" attribute or, if not set, the same as
      * <var>packageName</var>.
      */
     public String processName;
-    
+
     /**
      * Class implementing the Application object.  From the "class"
      * attribute.
      */
     public String className;
-    
+
     /**
      * A style resource identifier (in the package's resources) of the
      * description of an application.  From the "description" attribute
      * or, if not set, 0.
      */
-    public int descriptionRes;    
-    
+    public int descriptionRes;
+
     /**
      * A style resource identifier (in the package's resources) of the
      * default visual theme of the application.  From the "theme" attribute
      * or, if not set, 0.
      */
     public int theme;
-    
+
     /**
      * Class implementing the Application's manage space
      * functionality.  From the "manageSpaceActivity"
      * attribute. This is an optional attribute and will be null if
      * applications don't specify it in their manifest
      */
-    public String manageSpaceActivityName;    
-    
+    public String manageSpaceActivityName;
+
     /**
      * Class implementing the Application's backup functionality.  From
      * the "backupAgent" attribute.  This is an optional attribute and
      * will be null if the application does not specify it in its manifest.
-     * 
+     * <p>
      * <p>If android:allowBackup is set to false, this attribute is ignored.
      */
     public String backupAgentName;
@@ -105,8 +105,8 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * Value for {@link #flags}: if set, this application is installed in the
      * device's system image.
      */
-    public static final int FLAG_SYSTEM = 1<<0;
-    
+    public static final int FLAG_SYSTEM = 1 << 0;
+
     /**
      * Value for {@link #flags}: set to true if this application would like to
      * allow debugging of its
@@ -114,56 +114,56 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * from {@link android.R.styleable#AndroidManifestApplication_debuggable
      * android:debuggable} of the &lt;application&gt; tag.
      */
-    public static final int FLAG_DEBUGGABLE = 1<<1;
-    
+    public static final int FLAG_DEBUGGABLE = 1 << 1;
+
     /**
      * Value for {@link #flags}: set to true if this application has code
      * associated with it.  Comes
      * from {@link android.R.styleable#AndroidManifestApplication_hasCode
      * android:hasCode} of the &lt;application&gt; tag.
      */
-    public static final int FLAG_HAS_CODE = 1<<2;
-    
+    public static final int FLAG_HAS_CODE = 1 << 2;
+
     /**
      * Value for {@link #flags}: set to true if this application is persistent.
      * Comes from {@link android.R.styleable#AndroidManifestApplication_persistent
      * android:persistent} of the &lt;application&gt; tag.
      */
-    public static final int FLAG_PERSISTENT = 1<<3;
+    public static final int FLAG_PERSISTENT = 1 << 3;
 
     /**
      * Value for {@link #flags}: set to true if this application holds the
      * {@link android.Manifest.permission#FACTORY_TEST} permission and the
      * device is running in factory test mode.
      */
-    public static final int FLAG_FACTORY_TEST = 1<<4;
+    public static final int FLAG_FACTORY_TEST = 1 << 4;
 
     /**
      * Value for {@link #flags}: default value for the corresponding ActivityInfo flag.
      * Comes from {@link android.R.styleable#AndroidManifestApplication_allowTaskReparenting
      * android:allowTaskReparenting} of the &lt;application&gt; tag.
      */
-    public static final int FLAG_ALLOW_TASK_REPARENTING = 1<<5;
-    
+    public static final int FLAG_ALLOW_TASK_REPARENTING = 1 << 5;
+
     /**
      * Value for {@link #flags}: default value for the corresponding ActivityInfo flag.
      * Comes from {@link android.R.styleable#AndroidManifestApplication_allowClearUserData
      * android:allowClearUserData} of the &lt;application&gt; tag.
      */
-    public static final int FLAG_ALLOW_CLEAR_USER_DATA = 1<<6;
-    
+    public static final int FLAG_ALLOW_CLEAR_USER_DATA = 1 << 6;
+
     /**
      * Value for {@link #flags}: this is set if this application has been
      * install as an update to a built-in system application.
      */
-    public static final int FLAG_UPDATED_SYSTEM_APP = 1<<7;
-    
+    public static final int FLAG_UPDATED_SYSTEM_APP = 1 << 7;
+
     /**
      * Value for {@link #flags}: this is set of the application has specified
      * {@link android.R.styleable#AndroidManifestApplication_testOnly
      * android:testOnly} to be true.
      */
-    public static final int FLAG_TEST_ONLY = 1<<8;
+    public static final int FLAG_TEST_ONLY = 1 << 8;
 
     /**
      * Value for {@link #flags}: true when the application's window can be
@@ -171,57 +171,57 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * {@link android.R.styleable#AndroidManifestSupportsScreens_smallScreens
      * android:smallScreens}.
      */
-    public static final int FLAG_SUPPORTS_SMALL_SCREENS = 1<<9;
-    
+    public static final int FLAG_SUPPORTS_SMALL_SCREENS = 1 << 9;
+
     /**
      * Value for {@link #flags}: true when the application's window can be
      * displayed on normal screens.  Corresponds to
      * {@link android.R.styleable#AndroidManifestSupportsScreens_normalScreens
      * android:normalScreens}.
      */
-    public static final int FLAG_SUPPORTS_NORMAL_SCREENS = 1<<10; 
-    
+    public static final int FLAG_SUPPORTS_NORMAL_SCREENS = 1 << 10;
+
     /**
      * Value for {@link #flags}: true when the application's window can be
      * increased in size for larger screens.  Corresponds to
      * {@link android.R.styleable#AndroidManifestSupportsScreens_largeScreens
      * android:largeScreens}.
      */
-    public static final int FLAG_SUPPORTS_LARGE_SCREENS = 1<<11;
-    
+    public static final int FLAG_SUPPORTS_LARGE_SCREENS = 1 << 11;
+
     /**
      * Value for {@link #flags}: true when the application knows how to adjust
      * its UI for different screen sizes.  Corresponds to
      * {@link android.R.styleable#AndroidManifestSupportsScreens_resizeable
      * android:resizeable}.
      */
-    public static final int FLAG_RESIZEABLE_FOR_SCREENS = 1<<12;
-    
+    public static final int FLAG_RESIZEABLE_FOR_SCREENS = 1 << 12;
+
     /**
      * Value for {@link #flags}: true when the application knows how to
      * accomodate different screen densities.  Corresponds to
      * {@link android.R.styleable#AndroidManifestSupportsScreens_anyDensity
      * android:anyDensity}.
      */
-    public static final int FLAG_SUPPORTS_SCREEN_DENSITIES = 1<<13;
-    
+    public static final int FLAG_SUPPORTS_SCREEN_DENSITIES = 1 << 13;
+
     /**
      * Value for {@link #flags}: set to true if this application would like to
      * request the VM to operate under the safe mode. Comes from
      * {@link android.R.styleable#AndroidManifestApplication_vmSafeMode
      * android:vmSafeMode} of the &lt;application&gt; tag.
      */
-    public static final int FLAG_VM_SAFE_MODE = 1<<14;
+    public static final int FLAG_VM_SAFE_MODE = 1 << 14;
 
     /**
      * Value for {@link #flags}: set to <code>false</code> if the application does not wish
      * to permit any OS-driven backups of its data; <code>true</code> otherwise.
-     * 
+     * <p>
      * <p>Comes from the
      * {@link android.R.styleable#AndroidManifestApplication_allowBackup android:allowBackup}
      * attribute of the &lt;application&gt; tag.
      */
-    public static final int FLAG_ALLOW_BACKUP = 1<<15;
+    public static final int FLAG_ALLOW_BACKUP = 1 << 15;
 
     /**
      * Value for {@link #flags}: set to <code>false</code> if the application must be kept
@@ -229,18 +229,18 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * Ordinarily, during a full system restore operation each application is shut down
      * following execution of its agent's onRestore() method.  Setting this attribute to
      * <code>false</code> prevents this.  Most applications will not need to set this attribute.
-     *
+     * <p>
      * <p>If
      * {@link android.R.styleable#AndroidManifestApplication_allowBackup android:allowBackup}
      * is set to <code>false</code> or no
      * {@link android.R.styleable#AndroidManifestApplication_backupAgent android:backupAgent}
      * is specified, this flag will be ignored.
-     *
+     * <p>
      * <p>Comes from the
      * {@link android.R.styleable#AndroidManifestApplication_killAfterRestore android:killAfterRestore}
      * attribute of the &lt;application&gt; tag.
      */
-    public static final int FLAG_KILL_AFTER_RESTORE = 1<<16;
+    public static final int FLAG_KILL_AFTER_RESTORE = 1 << 16;
 
     /**
      * Value for {@link #flags}: Set to <code>true</code> if the application's backup
@@ -249,18 +249,18 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * the one currently installed on the device.  <i>Use with caution!</i>  By default
      * this attribute is <code>false</code> and the Backup Manager will ensure that data
      * from "future" versions of the application are never supplied during a restore operation.
-     *
+     * <p>
      * <p>If
      * {@link android.R.styleable#AndroidManifestApplication_allowBackup android:allowBackup}
      * is set to <code>false</code> or no
      * {@link android.R.styleable#AndroidManifestApplication_backupAgent android:backupAgent}
      * is specified, this flag will be ignored.
-     *
+     * <p>
      * <p>Comes from the
      * {@link android.R.styleable#AndroidManifestApplication_restoreAnyVersion android:restoreAnyVersion}
      * attribute of the &lt;application&gt; tag.
      */
-    public static final int FLAG_RESTORE_ANY_VERSION = 1<<17;
+    public static final int FLAG_RESTORE_ANY_VERSION = 1 << 17;
 
     /**
      * Value for {@link #flags}: Set to true if the application is
@@ -270,7 +270,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * the application has been uninstalled (its .apk is no longer available)
      * but its persistent data is not removed.
      */
-    public static final int FLAG_EXTERNAL_STORAGE = 1<<18;
+    public static final int FLAG_EXTERNAL_STORAGE = 1 << 18;
 
     /**
      * Value for {@link #flags}: true when the application's window can be
@@ -278,51 +278,51 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * {@link android.R.styleable#AndroidManifestSupportsScreens_xlargeScreens
      * android:xlargeScreens}.
      */
-    public static final int FLAG_SUPPORTS_XLARGE_SCREENS = 1<<19;
-    
+    public static final int FLAG_SUPPORTS_XLARGE_SCREENS = 1 << 19;
+
     /**
      * Value for {@link #flags}: true when the application has requested a
      * large heap for its processes.  Corresponds to
      * {@link android.R.styleable#AndroidManifestApplication_largeHeap
      * android:largeHeap}.
      */
-    public static final int FLAG_LARGE_HEAP = 1<<20;
+    public static final int FLAG_LARGE_HEAP = 1 << 20;
 
     /**
      * Value for {@link #flags}: true if this application's package is in
      * the stopped state.
      */
-    public static final int FLAG_STOPPED = 1<<21;
+    public static final int FLAG_STOPPED = 1 << 21;
 
     /**
      * Value for {@link #flags}: true  when the application is willing to support
      * RTL (right to left). All activities will inherit this value.
-     *
+     * <p>
      * Set from the {@link android.R.attr#supportsRtl} attribute in the
      * activity's manifest.
-     *
+     * <p>
      * Default value is false (no support for RTL).
      */
-    public static final int FLAG_SUPPORTS_RTL = 1<<22;
+    public static final int FLAG_SUPPORTS_RTL = 1 << 22;
 
     /**
      * Value for {@link #flags}: true if the application is currently
      * installed for the calling user.
      */
-    public static final int FLAG_INSTALLED = 1<<23;
+    public static final int FLAG_INSTALLED = 1 << 23;
 
     /**
      * Value for {@link #flags}: true if the application only has its
      * data installed; the application package itself does not currently
      * exist on the device.
      */
-    public static final int FLAG_IS_DATA_ONLY = 1<<24;
+    public static final int FLAG_IS_DATA_ONLY = 1 << 24;
 
     /**
      * Value for {@link #flags}: true if the application was declared to be a game, or
      * false if it is a non-game application.
      */
-    public static final int FLAG_IS_GAME = 1<<25;
+    public static final int FLAG_IS_GAME = 1 << 25;
 
     /**
      * Value for {@link #flags}: {@code true} if the application asks that only
@@ -331,58 +331,58 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * indicates that the app will manage its backed-up data via incremental
      * key/value updates.
      */
-    public static final int FLAG_FULL_BACKUP_ONLY = 1<<26;
+    public static final int FLAG_FULL_BACKUP_ONLY = 1 << 26;
 
     /**
      * Value for {@link #flags}: true if the application is hidden via restrictions and for
      * most purposes is considered as not installed.
      * {@hide}
      */
-    public static final int FLAG_HIDDEN = 1<<27;
+    public static final int FLAG_HIDDEN = 1 << 27;
 
     /**
      * Value for {@link #flags}: set to <code>true</code> if the application
      * has reported that it is heavy-weight, and thus can not participate in
      * the normal application lifecycle.
-     *
+     * <p>
      * <p>Comes from the
      * android.R.styleable#AndroidManifestApplication_cantSaveState
      * attribute of the &lt;application&gt; tag.
-     *
+     * <p>
      * {@hide}
      */
-    public static final int FLAG_CANT_SAVE_STATE = 1<<28;
+    public static final int FLAG_CANT_SAVE_STATE = 1 << 28;
 
     /**
      * Value for {@link #flags}: Set to true if the application has been
      * installed using the forward lock option.
-     *
+     * <p>
      * NOTE: DO NOT CHANGE THIS VALUE!  It is saved in packages.xml.
-     * 
+     * <p>
      * {@hide}
      */
-    public static final int FLAG_FORWARD_LOCK = 1<<29;
+    public static final int FLAG_FORWARD_LOCK = 1 << 29;
 
     /**
      * Value for {@link #flags}: set to {@code true} if the application
      * is permitted to hold privileged permissions.
-     *
+     * <p>
      * {@hide}
      */
-    public static final int FLAG_PRIVILEGED = 1<<30;
+    public static final int FLAG_PRIVILEGED = 1 << 30;
 
     /**
      * Value for {@link #flags}: true if code from this application will need to be
      * loaded into other applications' processes. On devices that support multiple
      * instruction sets, this implies the code might be loaded into a process that's
      * using any of the devices supported instruction sets.
-     *
+     * <p>
      * <p> The system might treat such applications specially, for eg., by
      * extracting the application's native libraries for all supported instruction
      * sets or by compiling the application's dex code for all supported instruction
      * sets.
      */
-    public static final int FLAG_MULTIARCH  = 1 << 31;
+    public static final int FLAG_MULTIARCH = 1 << 31;
 
     /**
      * Flags associated with the application.  Any combination of
@@ -423,9 +423,13 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      */
     public int largestWidthLimitDp = 0;
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public String scanSourceDir;
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public String scanPublicSourceDir;
 
     /**
@@ -457,7 +461,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * Full paths to the locations of extra resource packages this application
      * uses. This field is only used if there are extra resource packages,
      * otherwise it is null.
-     * 
+     * <p>
      * {@hide}
      */
     public String[] resourceDirs;
@@ -466,7 +470,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * String retrieved from the seinfo tag found in selinux policy. This value
      * is useful in setting an SELinux security context on the process as well
      * as its data directory.
-     *
+     * <p>
      * {@hide}
      */
     public String seinfo;
@@ -478,7 +482,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * the structure.
      */
     public String[] sharedLibraryFiles;
-    
+
     /**
      * Full path to a directory assigned to the package for its persistent
      * data.
@@ -493,11 +497,11 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
     /**
      * Full path where unpacked native libraries for {@link #secondaryCpuAbi}
      * are stored, if present.
-     *
+     * <p>
      * The main reason this exists is for bundled multi-arch apps, where
      * it's not trivial to calculate the location of libs for the secondary abi
      * given the location of the primary.
-     *
+     * <p>
      * TODO: Change the layout of bundled installs so that we can use
      * nativeLibraryRootDir & nativeLibraryRootRequiresIsa there as well.
      * (e.g {@code [ "/system/app-lib/Foo/arm", "/system/app-lib/Foo/arm64" ]}
@@ -530,9 +534,9 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * The primary ABI that this application requires, This is inferred from the ABIs
      * of the native JNI libraries the application bundles. Will be {@code null}
      * if this application does not require any particular ABI.
-     *
+     * <p>
      * If non-null, the application will always be launched with this ABI.
-     *
+     * <p>
      * {@hide}
      */
     public String primaryCpuAbi;
@@ -541,7 +545,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * The secondary ABI for this application. Might be non-null for multi-arch
      * installs. The application itself never uses this ABI, but other applications that
      * use its code might.
-     *
+     * <p>
      * {@hide}
      */
     public String secondaryCpuAbi;
@@ -552,7 +556,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * the same uid).
      */
     public int uid;
-    
+
     /**
      * The minimum SDK version this application targets.  It may run on earlier
      * versions, but it knows how to work with any new behavior added at this
@@ -565,6 +569,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
 
     /**
      * The app's declared version code.
+     *
      * @hide
      */
     public int versionCode;
@@ -577,12 +582,14 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
 
     /**
      * For convenient access to the current enabled setting of this app.
+     *
      * @hide
      */
     public int enabledSetting = PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
 
     /**
      * For convenient access to package's install location.
+     *
      * @hide
      */
     public int installLocation = PackageInfo.INSTALL_LOCATION_UNSPECIFIED;
@@ -626,10 +633,10 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
         pw.println(prefix + "enabled=" + enabled + " targetSdkVersion=" + targetSdkVersion
                 + " versionCode=" + versionCode);
         if (manageSpaceActivityName != null) {
-            pw.println(prefix + "manageSpaceActivityName="+manageSpaceActivityName);
+            pw.println(prefix + "manageSpaceActivityName=" + manageSpaceActivityName);
         }
         if (descriptionRes != 0) {
-            pw.println(prefix + "description=0x"+Integer.toHexString(descriptionRes));
+            pw.println(prefix + "description=0x" + Integer.toHexString(descriptionRes));
         }
         if (uiOptions != 0) {
             pw.println(prefix + "uiOptions=0x" + Integer.toHexString(uiOptions));
@@ -645,7 +652,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
     public boolean hasRtlSupport() {
         return (flags & FLAG_SUPPORTS_RTL) == FLAG_SUPPORTS_RTL;
     }
-    
+
     public static class DisplayNameComparator
             implements Comparator<ApplicationInfo> {
         public DisplayNameComparator(PackageManager pm) {
@@ -653,25 +660,25 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
         }
 
         public final int compare(ApplicationInfo aa, ApplicationInfo ab) {
-            CharSequence  sa = mPM.getApplicationLabel(aa);
+            CharSequence sa = mPM.getApplicationLabel(aa);
             if (sa == null) {
                 sa = aa.packageName;
             }
-            CharSequence  sb = mPM.getApplicationLabel(ab);
+            CharSequence sb = mPM.getApplicationLabel(ab);
             if (sb == null) {
                 sb = ab.packageName;
             }
-            
+
             return sCollator.compare(sa.toString(), sb.toString());
         }
 
-        private final Collator   sCollator = Collator.getInstance();
-        private PackageManager   mPM;
+        private final Collator sCollator = Collator.getInstance();
+        private PackageManager mPM;
     }
 
     public ApplicationInfo() {
     }
-    
+
     public ApplicationInfo(ApplicationInfo orig) {
         super(orig);
         taskAffinity = orig.taskAffinity;
@@ -714,8 +721,8 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
 
     public String toString() {
         return "ApplicationInfo{"
-            + Integer.toHexString(System.identityHashCode(this))
-            + " " + packageName + "}";
+                + Integer.toHexString(System.identityHashCode(this))
+                + " " + packageName + "}";
     }
 
     public int describeContents() {
@@ -766,6 +773,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
         public ApplicationInfo createFromParcel(Parcel source) {
             return new ApplicationInfo(source);
         }
+
         public ApplicationInfo[] newArray(int size) {
             return new ApplicationInfo[size];
         }
@@ -816,8 +824,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
      * the application.
      *
      * @param pm A PackageManager from which the label can be loaded; usually
-     * the PackageManager from which you originally retrieved this item.
-     *
+     *           the PackageManager from which you originally retrieved this item.
      * @return Returns a CharSequence containing the application's description.
      * If there is no description, null is returned.
      */
@@ -833,7 +840,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
 
     /**
      * Disable compatibility mode
-     * 
+     *
      * @hide
      */
     public void disableCompatibilityMode() {
@@ -841,7 +848,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
                 FLAG_SUPPORTS_SMALL_SCREENS | FLAG_RESIZEABLE_FOR_SCREENS |
                 FLAG_SUPPORTS_SCREEN_DENSITIES | FLAG_SUPPORTS_XLARGE_SCREENS);
     }
-    
+
     /**
      * @hide
      */
@@ -854,7 +861,7 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
         }
         return pm.getDefaultActivityIcon();
     }
-    
+
     private boolean isPackageUnavailable(PackageManager pm) {
         try {
             return pm.getPackageInfo(packageName, 0) == null;
@@ -866,21 +873,92 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
     /**
      * @hide
      */
-    @Override protected ApplicationInfo getApplicationInfo() {
+    @Override
+    protected ApplicationInfo getApplicationInfo() {
         return this;
     }
 
-    /** {@hide} */ public void setCodePath(String codePath) { scanSourceDir = codePath; }
-    /** {@hide} */ public void setBaseCodePath(String baseCodePath) { sourceDir = baseCodePath; }
-    /** {@hide} */ public void setSplitCodePaths(String[] splitCodePaths) { splitSourceDirs = splitCodePaths; }
-    /** {@hide} */ public void setResourcePath(String resourcePath) { scanPublicSourceDir = resourcePath; }
-    /** {@hide} */ public void setBaseResourcePath(String baseResourcePath) { publicSourceDir = baseResourcePath; }
-    /** {@hide} */ public void setSplitResourcePaths(String[] splitResourcePaths) { splitPublicSourceDirs = splitResourcePaths; }
+    /**
+     * {@hide}
+     */
+    public void setCodePath(String codePath) {
+        scanSourceDir = codePath;
+    }
 
-    /** {@hide} */ public String getCodePath() { return scanSourceDir; }
-    /** {@hide} */ public String getBaseCodePath() { return sourceDir; }
-    /** {@hide} */ public String[] getSplitCodePaths() { return splitSourceDirs; }
-    /** {@hide} */ public String getResourcePath() { return scanPublicSourceDir; }
-    /** {@hide} */ public String getBaseResourcePath() { return publicSourceDir; }
-    /** {@hide} */ public String[] getSplitResourcePaths() { return splitSourceDirs; }
+    /**
+     * {@hide}
+     */
+    public void setBaseCodePath(String baseCodePath) {
+        sourceDir = baseCodePath;
+    }
+
+    /**
+     * {@hide}
+     */
+    public void setSplitCodePaths(String[] splitCodePaths) {
+        splitSourceDirs = splitCodePaths;
+    }
+
+    /**
+     * {@hide}
+     */
+    public void setResourcePath(String resourcePath) {
+        scanPublicSourceDir = resourcePath;
+    }
+
+    /**
+     * {@hide}
+     */
+    public void setBaseResourcePath(String baseResourcePath) {
+        publicSourceDir = baseResourcePath;
+    }
+
+    /**
+     * {@hide}
+     */
+    public void setSplitResourcePaths(String[] splitResourcePaths) {
+        splitPublicSourceDirs = splitResourcePaths;
+    }
+
+    /**
+     * {@hide}
+     */
+    public String getCodePath() {
+        return scanSourceDir;
+    }
+
+    /**
+     * {@hide}
+     */
+    public String getBaseCodePath() {
+        return sourceDir;
+    }
+
+    /**
+     * {@hide}
+     */
+    public String[] getSplitCodePaths() {
+        return splitSourceDirs;
+    }
+
+    /**
+     * {@hide}
+     */
+    public String getResourcePath() {
+        return scanPublicSourceDir;
+    }
+
+    /**
+     * {@hide}
+     */
+    public String getBaseResourcePath() {
+        return publicSourceDir;
+    }
+
+    /**
+     * {@hide}
+     */
+    public String[] getSplitResourcePaths() {
+        return splitSourceDirs;
+    }
 }

@@ -36,11 +36,14 @@ import java.util.Objects;
 // etc.) so that clients can pull out these details depending on the type of network.
 public class NetworkKey implements Parcelable {
 
-    /** A wifi network, for which {@link #wifiKey} will be populated. */
+    /**
+     * A wifi network, for which {@link #wifiKey} will be populated.
+     */
     public static final int TYPE_WIFI = 1;
 
     /**
      * The type of this network.
+     *
      * @see #TYPE_WIFI
      */
     public final int type;
@@ -53,6 +56,7 @@ public class NetworkKey implements Parcelable {
 
     /**
      * Construct a new {@link NetworkKey} for a Wi-Fi network.
+     *
      * @param wifiKey the {@link WifiKey} identifying this Wi-Fi network.
      */
     public NetworkKey(WifiKey wifiKey) {

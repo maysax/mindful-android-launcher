@@ -24,13 +24,13 @@ import android.util.SparseBooleanArray;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.ArrayUtils;
 
-import libcore.util.EmptyArray;
-
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
+
+import libcore.util.EmptyArray;
 
 /**
  * Collection of active network statistics. Can contain summary details across
@@ -42,19 +42,33 @@ import java.util.Objects;
  * @hide
  */
 public class NetworkStats implements Parcelable {
-    /** {@link #iface} value when interface details unavailable. */
+    /**
+     * {@link #iface} value when interface details unavailable.
+     */
     public static final String IFACE_ALL = null;
-    /** {@link #uid} value when UID details unavailable. */
+    /**
+     * {@link #uid} value when UID details unavailable.
+     */
     public static final int UID_ALL = -1;
-    /** {@link #tag} value matching any tag. */
+    /**
+     * {@link #tag} value matching any tag.
+     */
     public static final int TAG_ALL = -1;
-    /** {@link #set} value when all sets combined. */
+    /**
+     * {@link #set} value when all sets combined.
+     */
     public static final int SET_ALL = -1;
-    /** {@link #set} value where background data is accounted. */
+    /**
+     * {@link #set} value where background data is accounted.
+     */
     public static final int SET_DEFAULT = 0;
-    /** {@link #set} value where foreground data is accounted. */
+    /**
+     * {@link #set} value where foreground data is accounted.
+     */
     public static final int SET_FOREGROUND = 1;
-    /** {@link #tag} value for total data across all tags. */
+    /**
+     * {@link #tag} value for total data across all tags.
+     */
     public static final int TAG_NONE = 0;
 
     // TODO: move fields to "mVariable" notation
@@ -97,7 +111,7 @@ public class NetworkStats implements Parcelable {
         }
 
         public Entry(String iface, int uid, int set, int tag, long rxBytes, long rxPackets,
-                long txBytes, long txPackets, long operations) {
+                     long txBytes, long txPackets, long operations) {
             this.iface = iface;
             this.uid = uid;
             this.set = set;
@@ -234,7 +248,7 @@ public class NetworkStats implements Parcelable {
 
     @VisibleForTesting
     public NetworkStats addValues(String iface, int uid, int set, int tag, long rxBytes,
-            long rxPackets, long txBytes, long txPackets, long operations) {
+                                  long rxPackets, long txBytes, long txPackets, long operations) {
         return addValues(new Entry(
                 iface, uid, set, tag, rxBytes, rxPackets, txBytes, txPackets, operations));
     }
@@ -316,13 +330,13 @@ public class NetworkStats implements Parcelable {
 
     @Deprecated
     public NetworkStats combineValues(String iface, int uid, int tag, long rxBytes, long rxPackets,
-            long txBytes, long txPackets, long operations) {
+                                      long txBytes, long txPackets, long operations) {
         return combineValues(
                 iface, uid, SET_DEFAULT, tag, rxBytes, rxPackets, txBytes, txPackets, operations);
     }
 
     public NetworkStats combineValues(String iface, int uid, int set, int tag, long rxBytes,
-            long rxPackets, long txBytes, long txPackets, long operations) {
+                                      long rxPackets, long txBytes, long txPackets, long operations) {
         return combineValues(new Entry(
                 iface, uid, set, tag, rxBytes, rxPackets, txBytes, txPackets, operations));
     }
@@ -483,7 +497,7 @@ public class NetworkStats implements Parcelable {
      * the requested {@link #iface} and {@link #uid}.
      *
      * @param limitIface Set of {@link #iface} to include in total; or {@code
-     *            null} to include all ifaces.
+     *                   null} to include all ifaces.
      */
     private Entry getTotal(
             Entry recycle, HashSet<String> limitIface, int limitUid, boolean includeTags) {
@@ -522,7 +536,7 @@ public class NetworkStats implements Parcelable {
      */
     public long getTotalPackets() {
         long total = 0;
-        for (int i = size-1; i >= 0; i--) {
+        for (int i = size - 1; i >= 0; i--) {
             total += rxPackets[i] + txPackets[i];
         }
         return total;
@@ -546,7 +560,7 @@ public class NetworkStats implements Parcelable {
      * reported to the given {@link NonMonotonicObserver}.
      */
     public static <C> NetworkStats subtract(NetworkStats left, NetworkStats right,
-            NonMonotonicObserver<C> observer, C cookie) {
+                                            NonMonotonicObserver<C> observer, C cookie) {
         return subtract(left, right, observer, cookie, null);
     }
 
@@ -563,7 +577,7 @@ public class NetworkStats implements Parcelable {
      * the data.
      */
     public static <C> NetworkStats subtract(NetworkStats left, NetworkStats right,
-            NonMonotonicObserver<C> observer, C cookie, NetworkStats recycle) {
+                                            NonMonotonicObserver<C> observer, C cookie, NetworkStats recycle) {
         long deltaRealtime = left.elapsedRealtime - right.elapsedRealtime;
         if (deltaRealtime < 0) {
             if (observer != null) {
@@ -700,19 +714,31 @@ public class NetworkStats implements Parcelable {
 
     public void dump(String prefix, PrintWriter pw) {
         pw.print(prefix);
-        pw.print("NetworkStats: elapsedRealtime="); pw.println(elapsedRealtime);
+        pw.print("NetworkStats: elapsedRealtime=");
+        pw.println(elapsedRealtime);
         for (int i = 0; i < size; i++) {
             pw.print(prefix);
-            pw.print("  ["); pw.print(i); pw.print("]");
-            pw.print(" iface="); pw.print(iface[i]);
-            pw.print(" uid="); pw.print(uid[i]);
-            pw.print(" set="); pw.print(setToString(set[i]));
-            pw.print(" tag="); pw.print(tagToString(tag[i]));
-            pw.print(" rxBytes="); pw.print(rxBytes[i]);
-            pw.print(" rxPackets="); pw.print(rxPackets[i]);
-            pw.print(" txBytes="); pw.print(txBytes[i]);
-            pw.print(" txPackets="); pw.print(txPackets[i]);
-            pw.print(" operations="); pw.println(operations[i]);
+            pw.print("  [");
+            pw.print(i);
+            pw.print("]");
+            pw.print(" iface=");
+            pw.print(iface[i]);
+            pw.print(" uid=");
+            pw.print(uid[i]);
+            pw.print(" set=");
+            pw.print(setToString(set[i]));
+            pw.print(" tag=");
+            pw.print(tagToString(tag[i]));
+            pw.print(" rxBytes=");
+            pw.print(rxBytes[i]);
+            pw.print(" rxPackets=");
+            pw.print(rxPackets[i]);
+            pw.print(" txBytes=");
+            pw.print(txBytes[i]);
+            pw.print(" txPackets=");
+            pw.print(txPackets[i]);
+            pw.print(" operations=");
+            pw.println(operations[i]);
         }
     }
 

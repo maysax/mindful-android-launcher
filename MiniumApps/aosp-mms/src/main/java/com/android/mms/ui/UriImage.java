@@ -52,6 +52,7 @@ public class UriImage {
     private static final boolean LOCAL_LOGV = false;
     private static final int MMS_PART_ID = 12;
     private static final UriMatcher sURLMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         sURLMatcher.addURI("mms", "part/#", MMS_PART_ID);
     }
@@ -109,7 +110,7 @@ public class UriImage {
     private void buildSrcFromPath() {
         mSrc = mPath.substring(mPath.lastIndexOf('/') + 1);
 
-        if(mSrc.startsWith(".") && mSrc.length() > 1) {
+        if (mSrc.startsWith(".") && mSrc.length() > 1) {
             mSrc = mSrc.substring(1);
         }
 
@@ -123,7 +124,7 @@ public class UriImage {
     private void initFromContentUri(Context context, Uri uri) {
         ContentResolver resolver = context.getContentResolver();
         Cursor c = SqliteWrapper.query(context, resolver,
-                            uri, null, null, null, null);
+                uri, null, null, null, null);
 
         mSrc = null;
         if (c == null) {
@@ -235,15 +236,15 @@ public class UriImage {
      * that the content type of the resulting PduPart may not be the same as the content type of
      * this UriImage; always call {@link PduPart#getContentType()} to get the new content type.
      *
-     * @param widthLimit The width limit, in pixels
+     * @param widthLimit  The width limit, in pixels
      * @param heightLimit The height limit, in pixels
-     * @param byteLimit The binary size limit, in bytes
+     * @param byteLimit   The binary size limit, in bytes
      * @return A new PduPart containing the resized image data
      */
     public PduPart getResizedImageAsPart(int widthLimit, int heightLimit, int byteLimit) {
         PduPart part = new PduPart();
 
-        byte[] data =  getResizedImageData(mWidth, mHeight,
+        byte[] data = getResizedImageData(mWidth, mHeight,
                 widthLimit, heightLimit, byteLimit, mUri, mContext);
         if (data == null) {
             if (LOCAL_LOGV) {
@@ -264,13 +265,14 @@ public class UriImage {
     /**
      * Resize and recompress the image such that it fits the given limits. The resulting byte
      * array contains an image in JPEG format, regardless of the original image's content type.
-     * @param widthLimit The width limit, in pixels
+     *
+     * @param widthLimit  The width limit, in pixels
      * @param heightLimit The height limit, in pixels
-     * @param byteLimit The binary size limit, in bytes
+     * @param byteLimit   The binary size limit, in bytes
      * @return A resized/recompressed version of this image, in JPEG format
      */
     public static byte[] getResizedImageData(int width, int height,
-            int widthLimit, int heightLimit, int byteLimit, Uri uri, Context context) {
+                                             int widthLimit, int heightLimit, int byteLimit, Uri uri, Context context) {
         int outWidth = width;
         int outHeight = height;
 
@@ -309,7 +311,7 @@ public class UriImage {
                     b = BitmapFactory.decodeStream(input, null, options);
                     if (b == null) {
                         return null;    // Couldn't decode and it wasn't because of an exception,
-                                        // bail.
+                        // bail.
                     }
                 } catch (OutOfMemoryError e) {
                     Log.w(TAG, "getResizedBitmap: img too large to decode (OutOfMemoryError), " +
@@ -346,8 +348,8 @@ public class UriImage {
                             (os != null && os.size() > byteLimit)) {
                         // The decoder does not support the inSampleSize option.
                         // Scale the bitmap using Bitmap library.
-                        int scaledWidth = (int)(outWidth * scaleFactor);
-                        int scaledHeight = (int)(outHeight * scaleFactor);
+                        int scaledWidth = (int) (outWidth * scaleFactor);
+                        int scaledHeight = (int) (outHeight * scaleFactor);
 
                         if (Log.isLoggable(LogTag.APP, Log.VERBOSE)) {
                             Log.v(TAG, "getResizedImageData: retry scaling using " +
@@ -463,7 +465,7 @@ public class UriImage {
     /**
      * Bitmap rotation method
      *
-     * @param bitmap The input bitmap
+     * @param bitmap  The input bitmap
      * @param degrees The rotation angle
      */
     public static Bitmap rotateBitmap(Bitmap bitmap, int degrees) {
@@ -494,7 +496,7 @@ public class UriImage {
      * 0 degrees is returned.
      *
      * @param context Used to get the ContentResolver
-     * @param uri Path to the image
+     * @param uri     Path to the image
      */
     public static int getOrientation(Context context, Uri uri) {
         long dur = System.currentTimeMillis();
@@ -508,7 +510,7 @@ public class UriImage {
                 try {
                     exif.readExif(inputStream);
                     Integer val = exif.getTagIntValue(ExifInterface.TAG_ORIENTATION);
-                    if (val == null){
+                    if (val == null) {
                         return 0;
                     }
                     int orientation =
@@ -538,8 +540,8 @@ public class UriImage {
             Cursor cursor = null;
             try {
                 cursor = context.getContentResolver().query(uri,
-                        new String[] {
-                            MediaStore.Images.ImageColumns.ORIENTATION
+                        new String[]{
+                                MediaStore.Images.ImageColumns.ORIENTATION
                         },
                         null, null, null);
                 if (cursor.moveToNext()) {

@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.moez.QKSMS.common.utils.Units;
 
 public class CustomViewBehind extends ViewGroup {
@@ -137,8 +138,8 @@ public class CustomViewBehind extends ViewGroup {
     /**
      * Returns whether x is on a menu.
      *
-     * @param content  content
-     * @param x        the position of the touch
+     * @param content content
+     * @param x       the position of the touch
      */
     public boolean menuTouchInQuickReturn(View content, float x) {
         return x >= content.getLeft();

@@ -24,30 +24,44 @@ import android.os.Parcelable;
 /**
  * Represents verification parameters used to verify packages to be installed.
  *
- * @deprecated callers should migrate to {@link PackageInstaller}.
  * @hide
+ * @deprecated callers should migrate to {@link PackageInstaller}.
  */
 @Deprecated
 public class VerificationParams implements Parcelable {
-    /** A constant used to indicate that a uid value is not present. */
+    /**
+     * A constant used to indicate that a uid value is not present.
+     */
     public static final int NO_UID = -1;
 
-    /** What we print out first when toString() is called. */
+    /**
+     * What we print out first when toString() is called.
+     */
     private static final String TO_STRING_PREFIX = "VerificationParams{";
 
-    /** The location of the supplementary verification file. */
+    /**
+     * The location of the supplementary verification file.
+     */
     private final Uri mVerificationURI;
 
-    /** URI referencing where the package was downloaded from. */
+    /**
+     * URI referencing where the package was downloaded from.
+     */
     private final Uri mOriginatingURI;
 
-    /** HTTP referrer URI associated with the originatingURI. */
+    /**
+     * HTTP referrer URI associated with the originatingURI.
+     */
     private final Uri mReferrer;
 
-    /** UID of the application that the install request originated from. */
+    /**
+     * UID of the application that the install request originated from.
+     */
     private final int mOriginatingUid;
 
-    /** UID of application requesting the install */
+    /**
+     * UID of application requesting the install
+     */
     private int mInstallerUid;
 
     /**
@@ -60,18 +74,18 @@ public class VerificationParams implements Parcelable {
      * Creates verification specifications for installing with application verification.
      *
      * @param verificationURI The location of the supplementary verification
-     *            file. This can be a 'file:' or a 'content:' URI. May be {@code null}.
-     * @param originatingURI URI referencing where the package was downloaded
-     *            from. May be {@code null}.
-     * @param referrer HTTP referrer URI associated with the originatingURI.
-     *            May be {@code null}.
-     * @param originatingUid UID of the application that the install request originated
-     *            from, or NO_UID if not present
-     * @param manifestDigest an object that holds the digest of the package
-     *            which can be used to verify ownership. May be {@code null}.
+     *                        file. This can be a 'file:' or a 'content:' URI. May be {@code null}.
+     * @param originatingURI  URI referencing where the package was downloaded
+     *                        from. May be {@code null}.
+     * @param referrer        HTTP referrer URI associated with the originatingURI.
+     *                        May be {@code null}.
+     * @param originatingUid  UID of the application that the install request originated
+     *                        from, or NO_UID if not present
+     * @param manifestDigest  an object that holds the digest of the package
+     *                        which can be used to verify ownership. May be {@code null}.
      */
     public VerificationParams(Uri verificationURI, Uri originatingURI, Uri referrer,
-            int originatingUid, ManifestDigest manifestDigest) {
+                              int originatingUid, ManifestDigest manifestDigest) {
         mVerificationURI = verificationURI;
         mOriginatingURI = originatingURI;
         mReferrer = referrer;
@@ -92,7 +106,9 @@ public class VerificationParams implements Parcelable {
         return mReferrer;
     }
 
-    /** return NO_UID if not available */
+    /**
+     * return NO_UID if not available
+     */
     public int getOriginatingUid() {
         return mOriginatingUid;
     }
@@ -101,7 +117,9 @@ public class VerificationParams implements Parcelable {
         return mManifestDigest;
     }
 
-    /** @return NO_UID when not set */
+    /**
+     * @return NO_UID when not set
+     */
     public int getInstallerUid() {
         return mInstallerUid;
     }
@@ -227,12 +245,12 @@ public class VerificationParams implements Parcelable {
 
     public static final Parcelable.Creator<VerificationParams> CREATOR =
             new Parcelable.Creator<VerificationParams>() {
-        public VerificationParams createFromParcel(Parcel source) {
-                return new VerificationParams(source);
-        }
+                public VerificationParams createFromParcel(Parcel source) {
+                    return new VerificationParams(source);
+                }
 
-        public VerificationParams[] newArray(int size) {
-            return new VerificationParams[size];
-        }
-    };
+                public VerificationParams[] newArray(int size) {
+                    return new VerificationParams[size];
+                }
+            };
 }

@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +47,6 @@ import com.android.common.widget.CompositeCursorAdapter.Partition;
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.preference.ContactsPreferences;
 import com.android.contacts.common.util.ContactListViewUtils;
-import com.android.contacts.common.util.SchedulingUtils;
 import com.android.dialerbind.analytics.AnalyticsFragment;
 
 import java.util.Locale;
@@ -59,7 +57,7 @@ import java.util.Locale;
 public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter>
         extends AnalyticsFragment
         implements OnItemClickListener, OnScrollListener, OnFocusChangeListener, OnTouchListener,
-                LoaderCallbacks<Cursor> {
+        LoaderCallbacks<Cursor> {
     private static final String TAG = "ContactEntryListFragment";
 
     // TODO: Make this protected. This should not be used from the PeopleActivity but
@@ -158,12 +156,13 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
     private int defaultVerticalScrollbarPosition;
 
     protected abstract View inflateView(LayoutInflater inflater, ViewGroup container);
+
     protected abstract T createListAdapter();
 
     /**
      * @param position Please note that the position is already adjusted for
-     *            header views, so "0" means the first list item below header
-     *            views.
+     *                 header views, so "0" means the first list item below header
+     *                 views.
      */
     protected abstract void onItemClick(int position, long id);
 
@@ -304,7 +303,7 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
         for (int i = 0; i < partitionCount; i++) {
             Partition partition = mAdapter.getPartition(i);
             if (partition instanceof DirectoryPartition) {
-                DirectoryPartition directoryPartition = (DirectoryPartition)partition;
+                DirectoryPartition directoryPartition = (DirectoryPartition) partition;
                 if (directoryPartition.getStatus() == DirectoryPartition.STATUS_NOT_LOADED) {
                     if (directoryPartition.isPriorityDirectory() || !mLoadPriorityDirectoriesOnly) {
                         startLoadingDirectoryPartition(i);
@@ -342,7 +341,7 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
     }
 
     private void startLoadingDirectoryPartition(int partitionIndex) {
-        DirectoryPartition partition = (DirectoryPartition)mAdapter.getPartition(partitionIndex);
+        DirectoryPartition partition = (DirectoryPartition) mAdapter.getPartition(partitionIndex);
         partition.setStatus(DirectoryPartition.STATUS_LOADING);
         long directoryId = partition.getDirectoryId();
         if (mForceLoad) {
@@ -449,7 +448,7 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
     public boolean isLoadingDirectoryList() {
         return isSearchMode() && getDirectorySearchMode() != DirectoryListLoader.SEARCH_MODE_NONE
                 && (mDirectoryListStatus == STATUS_NOT_LOADED
-                        || mDirectoryListStatus == STATUS_LOADING);
+                || mDirectoryListStatus == STATUS_LOADING);
     }
 
     @Override
@@ -555,7 +554,7 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
 
     public void setIncludeProfile(boolean flag) {
         mIncludeProfile = flag;
-        if(mAdapter != null) {
+        if (mAdapter != null) {
             mAdapter.setIncludeProfile(flag);
         }
     }
@@ -563,7 +562,7 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
     /**
      * Enter/exit search mode. This is method is tightly related to the current query, and should
      * only be called by {@link #setQueryString}.
-     *
+     * <p>
      * Also note this method doesn't call {@link #reloadData()}; {@link #setQueryString} does it.
      */
     protected void setSearchMode(boolean flag) {
@@ -692,7 +691,7 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         onCreateView(inflater, container);
 
         boolean searchMode = isSearchMode();
@@ -712,11 +711,11 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
     protected void onCreateView(LayoutInflater inflater, ViewGroup container) {
         mView = inflateView(inflater, container);
 
-        mListView = (ListView)mView.findViewById(android.R.id.list);
+        mListView = (ListView) mView.findViewById(android.R.id.list);
         if (mListView == null) {
             throw new RuntimeException(
                     "Your content must have a ListView whose id attribute is " +
-                    "'android.R.id.list'");
+                            "'android.R.id.list'");
         }
 
         View emptyView = mView.findViewById(android.R.id.empty);
@@ -789,7 +788,7 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-            int totalItemCount) {
+                         int totalItemCount) {
     }
 
     @Override
@@ -869,12 +868,12 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
 
     private ContactsPreferences.ChangeListener mPreferencesChangeListener =
             new ContactsPreferences.ChangeListener() {
-        @Override
-        public void onChange() {
-            loadPreferences();
-            reloadData();
-        }
-    };
+                @Override
+                public void onChange() {
+                    loadPreferences();
+                    reloadData();
+                }
+            };
 
     private int getDefaultVerticalScrollbarPosition() {
         final Locale locale = Locale.getDefault();

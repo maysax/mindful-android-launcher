@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.service.notification.StatusBarNotification;
 
 import co.siempo.phone.service.SiempoDndService;
 
@@ -23,7 +22,7 @@ public class PackageUtil {
     }
 
     public static boolean isSiempoLauncher(Context context) {
-        Intent intent= new Intent(Intent.ACTION_MAIN);
+        Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
         String defaultLauncherStr = defaultLauncher.activityInfo.packageName;

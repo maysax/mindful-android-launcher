@@ -16,8 +16,8 @@
 
 package android.net.dhcp;
 
-import java.net.InetAddress;
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 /**
@@ -31,7 +31,7 @@ class DhcpNakPacket extends DhcpPacket {
                   InetAddress nextIp, InetAddress relayIp,
                   byte[] clientMac) {
         super(transId, Inet4Address.ANY, Inet4Address.ANY, nextIp, relayIp,
-            clientMac, false);
+                clientMac, false);
     }
 
     public String toString() {
@@ -48,7 +48,7 @@ class DhcpNakPacket extends DhcpPacket {
         InetAddress srcIp = mYourIp;
 
         fillInPacket(encap, destIp, srcIp, destUdp, srcUdp, result,
-            DHCP_BOOTREPLY, mBroadcast);
+                DHCP_BOOTREPLY, mBroadcast);
         result.flip();
         return result;
     }

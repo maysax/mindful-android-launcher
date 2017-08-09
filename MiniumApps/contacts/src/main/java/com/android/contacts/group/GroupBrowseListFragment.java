@@ -43,9 +43,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.contacts.GroupListLoader;
-import com.android.contacts.group.GroupBrowseListAdapter.GroupListItemViewCache;
 import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.common.list.AutoScrollListView;
+import com.android.contacts.group.GroupBrowseListAdapter.GroupListItemViewCache;
 
 import minium.co.contacts.R;
 
@@ -58,7 +58,7 @@ public class GroupBrowseListFragment extends Fragment
     /**
      * Action callbacks that can be sent by a group list.
      */
-    public interface OnGroupBrowserActionListener  {
+    public interface OnGroupBrowserActionListener {
 
         /**
          * Opens the specified group for viewing.
@@ -99,7 +99,7 @@ public class GroupBrowseListFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mSelectedGroupUri = savedInstanceState.getParcelable(EXTRA_KEY_GROUP_URI);
             if (mSelectedGroupUri != null) {
@@ -110,7 +110,7 @@ public class GroupBrowseListFragment extends Fragment
         }
 
         mRootView = inflater.inflate(R.layout.group_browse_list_fragment, null);
-        mEmptyView = (TextView)mRootView.findViewById(R.id.empty);
+        mEmptyView = (TextView) mRootView.findViewById(R.id.empty);
 
         mAdapter = new GroupBrowseListAdapter(mContext);
         mAdapter.setSelectionVisible(mSelectionVisible);
@@ -141,7 +141,7 @@ public class GroupBrowseListFragment extends Fragment
                 Intent intent = new Intent(Settings.ACTION_ADD_ACCOUNT);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
                 intent.putExtra(Settings.EXTRA_AUTHORITIES,
-                        new String[] { ContactsContract.AUTHORITY });
+                        new String[]{ContactsContract.AUTHORITY});
                 startActivity(intent);
             }
         });
@@ -197,21 +197,21 @@ public class GroupBrowseListFragment extends Fragment
     private final LoaderManager.LoaderCallbacks<Cursor> mGroupLoaderListener =
             new LoaderCallbacks<Cursor>() {
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            mEmptyView.setText(null);
-            return new GroupListLoader(mContext);
-        }
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    mEmptyView.setText(null);
+                    return new GroupListLoader(mContext);
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            mGroupListCursor = data;
-            bindGroupList();
-        }
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    mGroupListCursor = data;
+                    bindGroupList();
+                }
 
-        public void onLoaderReset(Loader<Cursor> loader) {
-        }
-    };
+                public void onLoaderReset(Loader<Cursor> loader) {
+                }
+            };
 
     private void bindGroupList() {
         mEmptyView.setText(R.string.noGroups);

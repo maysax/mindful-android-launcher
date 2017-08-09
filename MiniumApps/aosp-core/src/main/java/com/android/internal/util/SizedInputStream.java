@@ -16,10 +16,10 @@
 
 package com.android.internal.util;
 
-import libcore.io.Streams;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import libcore.io.Streams;
 
 /**
  * Reads exact number of bytes from wrapped stream, returning EOF once those

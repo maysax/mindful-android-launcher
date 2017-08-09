@@ -18,7 +18,6 @@ import java.util.Locale;
 
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
-import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.DateUtils;

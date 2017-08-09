@@ -28,7 +28,7 @@ import com.google.common.annotations.VisibleForTesting;
  * A general purpose adapter that is composed of multiple sub-adapters. It just
  * appends them in the order they are added. It listens to changes from all
  * sub-adapters and propagates them to its own listeners.
- *
+ * <p>
  * This class not used for now -- but let's keep running the test in case we want to revive it...
  * (So NeededForTesting)
  */

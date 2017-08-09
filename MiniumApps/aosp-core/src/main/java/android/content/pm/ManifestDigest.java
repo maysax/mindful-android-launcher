@@ -41,13 +41,19 @@ import libcore.io.IoUtils;
 public class ManifestDigest implements Parcelable {
     private static final String TAG = "ManifestDigest";
 
-    /** The digest of the manifest in our preferred order. */
+    /**
+     * The digest of the manifest in our preferred order.
+     */
     private final byte[] mDigest;
 
-    /** What we print out first when toString() is called. */
+    /**
+     * What we print out first when toString() is called.
+     */
     private static final String TO_STRING_PREFIX = "ManifestDigest {mDigest=";
 
-    /** Digest algorithm to use. */
+    /**
+     * Digest algorithm to use.
+     */
     private static final String DIGEST_ALGORITHM = "SHA-256";
 
     ManifestDigest(byte[] digest) {

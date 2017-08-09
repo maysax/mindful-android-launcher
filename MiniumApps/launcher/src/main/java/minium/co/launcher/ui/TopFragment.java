@@ -1,8 +1,8 @@
 package minium.co.launcher.ui;
 
 
-import android.content.Context;
 import android.app.Fragment;
+import android.content.Context;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
@@ -39,7 +39,7 @@ public class TopFragment extends CoreFragment {
     @ViewById
     TextView iTxt3;
 
-    FontAwesomeIcons [] batteryIcons = {
+    FontAwesomeIcons[] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
             FontAwesomeIcons.fa_battery_1,
             FontAwesomeIcons.fa_battery_2,
@@ -91,12 +91,12 @@ public class TopFragment extends CoreFragment {
     }
 
     private Icon getBatteryIcon(int level) {
-        if (level < 15) return batteryIcons [0];
-        else if (level <= 25) return batteryIcons [1];
-        else if (level <= 65) return batteryIcons [2];
-        else if (level <= 80) return batteryIcons [3];
-        else if (level > 80) return batteryIcons [4];
-        return batteryIcons [2];
+        if (level < 15) return batteryIcons[0];
+        else if (level <= 25) return batteryIcons[1];
+        else if (level <= 65) return batteryIcons[2];
+        else if (level <= 80) return batteryIcons[3];
+        else if (level > 80) return batteryIcons[4];
+        return batteryIcons[2];
     }
 
     private class SignalStrengthListener extends PhoneStateListener {

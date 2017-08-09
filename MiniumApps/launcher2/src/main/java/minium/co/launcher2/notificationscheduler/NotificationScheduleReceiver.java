@@ -64,16 +64,15 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
     }
 
 
-
     void showNotifications(Context context) {
         long count =
                 Select.from(MissedCallItem.class)
-                .where(Condition.prop("has_displayed").eq(0))
-                .count() +
-
-                Select.from(ReceivedSMSItem.class)
                         .where(Condition.prop("has_displayed").eq(0))
-                        .count();
+                        .count() +
+
+                        Select.from(ReceivedSMSItem.class)
+                                .where(Condition.prop("has_displayed").eq(0))
+                                .count();
 
         if (count > 0) {
             DisplayAlertActivity_.intent(context).flags(Intent.FLAG_ACTIVITY_NEW_TASK).start();
@@ -84,9 +83,9 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
     private void showSMSNotifications(Context context, String number, String body, int size) {
         Intent intent = new Intent();
         intent.setComponent(new ComponentName("minium.co.messages", "com.moez.QKSMS.ui.MainActivity_"));
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification notification  = new Notification.Builder(context)
+        Notification notification = new Notification.Builder(context)
                 .setContentTitle(number)
                 .setContentText(body)
                 .setContentInfo(size == 1 ? "" : String.valueOf(size))
@@ -99,9 +98,9 @@ public class NotificationScheduleReceiver extends BroadcastReceiver {
     @Deprecated
     private void showCallNotifications(Context context, String number, int size) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + number));
-        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent,  PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification notification  = new Notification.Builder(context)
+        Notification notification = new Notification.Builder(context)
                 .setContentTitle("Missed Call!")
                 .setContentText("Missed call from " + number)
                 .setContentInfo(size == 1 ? "" : String.valueOf(size))

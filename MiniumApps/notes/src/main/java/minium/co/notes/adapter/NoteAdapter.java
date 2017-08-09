@@ -20,8 +20,16 @@ import org.json.JSONObject;
 
 import minium.co.notes.R;
 
-import static minium.co.notes.utils.DataUtils.*;
-import static minium.co.notes.ui.MainActivity.*;
+import static minium.co.notes.ui.MainActivity.checkedArray;
+import static minium.co.notes.ui.MainActivity.deleteActive;
+import static minium.co.notes.ui.MainActivity.searchActive;
+import static minium.co.notes.ui.MainActivity.setFavourite;
+import static minium.co.notes.utils.DataUtils.NOTE_BODY;
+import static minium.co.notes.utils.DataUtils.NOTE_COLOUR;
+import static minium.co.notes.utils.DataUtils.NOTE_FAVOURED;
+import static minium.co.notes.utils.DataUtils.NOTE_FONT_SIZE;
+import static minium.co.notes.utils.DataUtils.NOTE_HIDE_BODY;
+import static minium.co.notes.utils.DataUtils.NOTE_TITLE;
 
 /**
  * Adapter class for custom notes ListView
@@ -33,7 +41,8 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
 
     /**
      * Adapter constructor -> Sets class variables
-     * @param context application context
+     *
+     * @param context     application context
      * @param adapterData JSONArray of notes
      */
     public NoteAdapter(Context context, JSONArray adapterData) {
@@ -138,7 +147,7 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
             if (hideBody)
                 bodyView.setVisibility(View.GONE);
 
-            // Else -> set visible note body, text to normal and set text size to 'fontSize' as sp
+                // Else -> set visible note body, text to normal and set text size to 'fontSize' as sp
             else {
                 bodyView.setVisibility(View.VISIBLE);
                 bodyView.setText(body);

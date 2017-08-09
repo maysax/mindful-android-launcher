@@ -140,8 +140,8 @@ public class MmsWidgetService extends RemoteViewsService {
             int unreadCount = 0;
             try {
                 cursor = mContext.getContentResolver().query(
-                    Conversation.sAllThreadsUri, Conversation.ALL_THREADS_PROJECTION,
-                    Threads.READ + "=0", null, null);
+                        Conversation.sAllThreadsUri, Conversation.ALL_THREADS_PROJECTION,
+                        Threads.READ + "=0", null, null);
                 if (cursor != null) {
                     unreadCount = cursor.getCount();
                 }
@@ -156,6 +156,7 @@ public class MmsWidgetService extends RemoteViewsService {
         /**
          * Returns the number of items should be shown in the widget list.  This method also updates
          * the boolean that indicates whether the "show more" item should be shown.
+         *
          * @return the number of items to be displayed in the list.
          */
         @Override
@@ -177,6 +178,7 @@ public class MmsWidgetService extends RemoteViewsService {
          * Returns the number of conversations that should be shown in the widget.  This method
          * doesn't update the boolean that indicates that the "show more" item should be included
          * in the list.
+         *
          * @return
          */
         private int getConversationCount() {
@@ -236,13 +238,13 @@ public class MmsWidgetService extends RemoteViewsService {
                 }
                 boolean hasAttachment = conv.hasAttachment();
                 remoteViews.setViewVisibility(R.id.attachment, hasAttachment ? View.VISIBLE :
-                    View.GONE);
+                        View.GONE);
 
                 // Date
                 remoteViews.setTextViewText(R.id.date,
                         addColor(MessageUtils.formatTimeStampString(mContext, conv.getDate()),
                                 conv.hasUnreadMessages() ? SUBJECT_TEXT_COLOR_UNREAD :
-                                    SUBJECT_TEXT_COLOR_READ));
+                                        SUBJECT_TEXT_COLOR_READ));
 
                 // From
                 int color = conv.hasUnreadMessages() ? SENDERS_TEXT_COLOR_UNREAD :
@@ -255,10 +257,10 @@ public class MmsWidgetService extends RemoteViewsService {
                     int before = from.length();
                     from.append(mContext.getResources().getString(R.string.has_draft));
                     from.setSpan(new TextAppearanceSpan(mContext,
-                            android.R.style.TextAppearance_Small, color), before,
+                                    android.R.style.TextAppearance_Small, color), before,
                             from.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
                     from.setSpan(new ForegroundColorSpan(
-                            mContext.getResources().getColor(R.drawable.text_color_red)),
+                                    mContext.getResources().getColor(R.drawable.text_color_red)),
                             before, from.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
 
@@ -273,7 +275,7 @@ public class MmsWidgetService extends RemoteViewsService {
                 remoteViews.setTextViewText(R.id.subject,
                         addColor(conv.getSnippet(),
                                 conv.hasUnreadMessages() ? SUBJECT_TEXT_COLOR_UNREAD :
-                                    SUBJECT_TEXT_COLOR_READ));
+                                        SUBJECT_TEXT_COLOR_READ));
 
                 // On click intent.
                 Intent clickIntent = new Intent(Intent.ACTION_VIEW);
@@ -299,7 +301,7 @@ public class MmsWidgetService extends RemoteViewsService {
                     R.id.loading_text, mContext.getText(R.string.view_more_conversations));
             PendingIntent pendingIntent =
                     PendingIntent.getActivity(mContext, 0, new Intent(mContext,
-                            ConversationList.class),
+                                    ConversationList.class),
                             PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent(R.id.widget_loading, pendingIntent);
             return view;

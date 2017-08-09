@@ -20,16 +20,19 @@ import android.net.Uri;
 
 /**
  * @link PduFuture for a pdu that is available now.
- *
  */
 public class NullItemLoadedFuture implements ItemLoadedFuture {
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void cancel(Uri uri) {
         // The callback has already been made, so there's nothing to cancel.
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public boolean isDone() {
         return true;
     }

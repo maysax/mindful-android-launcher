@@ -49,9 +49,6 @@ import android.util.SparseIntArray;
 import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.ValuesDelta;
-import com.android.contacts.common.util.CommonDateUtils;
-import com.android.contacts.common.util.DateUtils;
-import com.android.contacts.common.util.NameConverter;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountType.EditField;
 import com.android.contacts.common.model.account.AccountType.EditType;
@@ -60,6 +57,9 @@ import com.android.contacts.common.model.account.GoogleAccountType;
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.common.model.dataitem.PhoneDataItem;
 import com.android.contacts.common.model.dataitem.StructuredNameDataItem;
+import com.android.contacts.common.util.CommonDateUtils;
+import com.android.contacts.common.util.DateUtils;
+import com.android.contacts.common.util.NameConverter;
 
 import java.text.ParsePosition;
 import java.util.ArrayList;
@@ -79,7 +79,9 @@ import java.util.Set;
 public class RawContactModifier {
     private static final String TAG = RawContactModifier.class.getSimpleName();
 
-    /** Set to true in order to view logs on entity operations */
+    /**
+     * Set to true in order to view logs on entity operations
+     */
     private static final boolean DEBUG = false;
 
     /**
@@ -107,8 +109,9 @@ public class RawContactModifier {
     /**
      * Ensure that at least one of the given {@link DataKind} exists in the
      * given {@link RawContactDelta} state, and try creating one if none exist.
+     *
      * @return The child (either newly created or the first existing one), or null if the
-     *     account doesn't support this {@link DataKind}.
+     * account doesn't support this {@link DataKind}.
      */
     public static ValuesDelta ensureKindExists(
             RawContactDelta state, AccountType accountType, String mimeType) {
@@ -146,11 +149,11 @@ public class RawContactModifier {
      * {@link AccountType}.
      *
      * @param forceInclude Always include this {@link EditType} in the returned
-     *            list, even when an otherwise-invalid choice. This is useful
-     *            when showing a dialog that includes the current type.
+     *                     list, even when an otherwise-invalid choice. This is useful
+     *                     when showing a dialog that includes the current type.
      */
     public static ArrayList<EditType> getValidTypes(RawContactDelta state, DataKind kind,
-            EditType forceInclude) {
+                                                    EditType forceInclude) {
         return getValidTypes(state, kind, forceInclude, true, null);
     }
 
@@ -159,17 +162,17 @@ public class RawContactModifier {
      * list possible {@link EditType} options available based on
      * {@link AccountType}.
      *
-     * @param forceInclude Always include this {@link EditType} in the returned
-     *            list, even when an otherwise-invalid choice. This is useful
-     *            when showing a dialog that includes the current type.
+     * @param forceInclude     Always include this {@link EditType} in the returned
+     *                         list, even when an otherwise-invalid choice. This is useful
+     *                         when showing a dialog that includes the current type.
      * @param includeSecondary If true, include any valid types marked as
-     *            {@link EditType#secondary}.
-     * @param typeCount When provided, will be used for the frequency count of
-     *            each {@link EditType}, otherwise built using
-     *            {@link #getTypeFrequencies(RawContactDelta, DataKind)}.
+     *                         {@link EditType#secondary}.
+     * @param typeCount        When provided, will be used for the frequency count of
+     *                         each {@link EditType}, otherwise built using
+     *                         {@link #getTypeFrequencies(RawContactDelta, DataKind)}.
      */
     private static ArrayList<EditType> getValidTypes(RawContactDelta state, DataKind kind,
-            EditType forceInclude, boolean includeSecondary, SparseIntArray typeCount) {
+                                                     EditType forceInclude, boolean includeSecondary, SparseIntArray typeCount) {
         final ArrayList<EditType> validTypes = new ArrayList<EditType>();
 
         // Bail early if no types provided
@@ -303,7 +306,7 @@ public class RawContactModifier {
      * exist, we pick the last valid option.
      */
     public static EditType getBestValidType(RawContactDelta state, DataKind kind,
-            boolean includeSecondary, int exactValue) {
+                                            boolean includeSecondary, int exactValue) {
         // Shortcut when no types
         if (kind == null || kind.typeColumn == null) return null;
 
@@ -527,7 +530,7 @@ public class RawContactModifier {
      * assuming the extras defined through {@link Intents}.
      */
     public static void parseExtras(Context context, AccountType accountType, RawContactDelta state,
-            Bundle extras) {
+                                   Bundle extras) {
         if (extras == null || extras.size() == 0) {
             // Bail early if no useful data
             return;
@@ -774,7 +777,7 @@ public class RawContactModifier {
 
                 if (addEntry) {
                     state.addEntry(entry);
-                } else if (Note.CONTENT_ITEM_TYPE.equals(mimeType)){
+                } else if (Note.CONTENT_ITEM_TYPE.equals(mimeType)) {
                     // Note is most likely to contain large amounts of text
                     // that we don't want to drop on the ground.
                     for (ValuesDelta delta : entries) {
@@ -860,7 +863,7 @@ public class RawContactModifier {
      * {@literal null}
      */
     private static int getEntryCountByType(ArrayList<ValuesDelta> entries, String typeColumn,
-            int type) {
+                                           int type) {
         int count = 0;
         if (entries != null) {
             for (ValuesDelta entry : entries) {
@@ -886,9 +889,9 @@ public class RawContactModifier {
             final Object protocol = android.provider.Contacts.ContactMethods
                     .decodeImProtocol(encodedString);
             if (protocol instanceof Integer) {
-                bundle.putInt(Insert.IM_PROTOCOL, (Integer)protocol);
+                bundle.putInt(Insert.IM_PROTOCOL, (Integer) protocol);
             } else {
-                bundle.putString(Insert.IM_PROTOCOL, (String)protocol);
+                bundle.putString(Insert.IM_PROTOCOL, (String) protocol);
             }
         } catch (IllegalArgumentException e) {
             // Ignore exception when legacy parser fails
@@ -900,13 +903,13 @@ public class RawContactModifier {
      * given {@link RawContactDelta}. Silently skips the insert when missing value
      * or no valid {@link EditType} found.
      *
-     * @param typeExtra {@link Bundle} key that holds the incoming
-     *            {@link EditType#rawValue} value.
-     * @param valueExtra {@link Bundle} key that holds the incoming value.
+     * @param typeExtra   {@link Bundle} key that holds the incoming
+     *                    {@link EditType#rawValue} value.
+     * @param valueExtra  {@link Bundle} key that holds the incoming value.
      * @param valueColumn Column to write value into {@link ValuesDelta}.
      */
     public static ValuesDelta parseExtras(RawContactDelta state, DataKind kind, Bundle extras,
-            String typeExtra, String valueExtra, String valueColumn) {
+                                          String typeExtra, String valueExtra, String valueColumn) {
         final CharSequence value = extras.getCharSequence(valueExtra);
 
         // Bail early if account type doesn't handle this MIME type
@@ -956,19 +959,19 @@ public class RawContactModifier {
                     GroupMembership.CONTENT_ITEM_TYPE));
     // CommonColumns.TYPE cannot be accessed as it is protected interface, so use
     // Phone.TYPE instead.
-    private static final String COLUMN_FOR_TYPE  = Phone.TYPE;
-    private static final String COLUMN_FOR_LABEL  = Phone.LABEL;
+    private static final String COLUMN_FOR_TYPE = Phone.TYPE;
+    private static final String COLUMN_FOR_LABEL = Phone.LABEL;
     private static final int TYPE_CUSTOM = Phone.TYPE_CUSTOM;
 
     /**
      * Migrates old RawContactDelta to newly created one with a new restriction supplied from
      * newAccountType.
-     *
+     * <p>
      * This is only for account switch during account creation (which must be insert operation).
      */
     public static void migrateStateForNewContact(Context context,
-            RawContactDelta oldState, RawContactDelta newState,
-            AccountType oldAccountType, AccountType newAccountType) {
+                                                 RawContactDelta oldState, RawContactDelta newState,
+                                                 AccountType oldAccountType, AccountType newAccountType) {
         if (newAccountType == oldAccountType) {
             // Just copying all data in oldState isn't enough, but we can still rely on a lot of
             // shortcuts.
@@ -1021,7 +1024,7 @@ public class RawContactModifier {
      * the number of entries (ValuesDelta) inside newState.
      */
     private static ArrayList<ValuesDelta> ensureEntryMaxSize(RawContactDelta newState,
-            DataKind kind, ArrayList<ValuesDelta> mimeEntries) {
+                                                             DataKind kind, ArrayList<ValuesDelta> mimeEntries) {
         if (mimeEntries == null) {
             return null;
         }
@@ -1037,7 +1040,9 @@ public class RawContactModifier {
         return mimeEntries;
     }
 
-    /** @hide Public only for testing. */
+    /**
+     * @hide Public only for testing.
+     */
     public static void migrateStructuredName(
             Context context, RawContactDelta oldState, RawContactDelta newState,
             DataKind newDataKind) {
@@ -1141,9 +1146,11 @@ public class RawContactModifier {
         newState.addEntry(ValuesDelta.fromAfter(values));
     }
 
-    /** @hide Public only for testing. */
+    /**
+     * @hide Public only for testing.
+     */
     public static void migratePostal(RawContactDelta oldState, RawContactDelta newState,
-            DataKind newDataKind) {
+                                     DataKind newDataKind) {
         final ArrayList<ValuesDelta> mimeEntries = ensureEntryMaxSize(newState, newDataKind,
                 oldState.getMimeEntries(StructuredPostal.CONTENT_ITEM_TYPE));
         if (mimeEntries == null || mimeEntries.isEmpty()) {
@@ -1212,23 +1219,23 @@ public class RawContactModifier {
                     final boolean useJapaneseOrder =
                             Locale.JAPANESE.getLanguage().equals(Locale.getDefault().getLanguage());
                     if (useJapaneseOrder) {
-                        structuredData = new String[] {
+                        structuredData = new String[]{
                                 values.getAsString(StructuredPostal.COUNTRY),
                                 values.getAsString(StructuredPostal.POSTCODE),
                                 values.getAsString(StructuredPostal.REGION),
                                 values.getAsString(StructuredPostal.CITY),
                                 values.getAsString(StructuredPostal.NEIGHBORHOOD),
                                 values.getAsString(StructuredPostal.STREET),
-                                values.getAsString(StructuredPostal.POBOX) };
+                                values.getAsString(StructuredPostal.POBOX)};
                     } else {
-                        structuredData = new String[] {
+                        structuredData = new String[]{
                                 values.getAsString(StructuredPostal.POBOX),
                                 values.getAsString(StructuredPostal.STREET),
                                 values.getAsString(StructuredPostal.NEIGHBORHOOD),
                                 values.getAsString(StructuredPostal.CITY),
                                 values.getAsString(StructuredPostal.REGION),
                                 values.getAsString(StructuredPostal.POSTCODE),
-                                values.getAsString(StructuredPostal.COUNTRY) };
+                                values.getAsString(StructuredPostal.COUNTRY)};
                     }
                     final StringBuilder builder = new StringBuilder();
                     for (String elem : structuredData) {
@@ -1252,9 +1259,11 @@ public class RawContactModifier {
         }
     }
 
-    /** @hide Public only for testing. */
+    /**
+     * @hide Public only for testing.
+     */
     public static void migrateEvent(RawContactDelta oldState, RawContactDelta newState,
-            DataKind newDataKind, Integer defaultYear) {
+                                    DataKind newDataKind, Integer defaultYear) {
         final ArrayList<ValuesDelta> mimeEntries = ensureEntryMaxSize(newState, newDataKind,
                 oldState.getMimeEntries(Event.CONTENT_ITEM_TYPE));
         if (mimeEntries == null || mimeEntries.isEmpty()) {
@@ -1308,7 +1317,9 @@ public class RawContactModifier {
         }
     }
 
-    /** @hide Public only for testing. */
+    /**
+     * @hide Public only for testing.
+     */
     public static void migrateGenericWithoutTypeColumn(
             RawContactDelta oldState, RawContactDelta newState, DataKind newDataKind) {
         final ArrayList<ValuesDelta> mimeEntries = ensureEntryMaxSize(newState, newDataKind,
@@ -1325,7 +1336,9 @@ public class RawContactModifier {
         }
     }
 
-    /** @hide Public only for testing. */
+    /**
+     * @hide Public only for testing.
+     */
     public static void migrateGenericWithTypeColumn(
             RawContactDelta oldState, RawContactDelta newState, DataKind newDataKind) {
         final ArrayList<ValuesDelta> mimeEntries = oldState.getMimeEntries(newDataKind.mimeType);

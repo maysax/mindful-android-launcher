@@ -26,46 +26,72 @@ import java.util.HashMap;
  * to fire an event after files are accessed or changed by by any process on
  * the device (including this one).  FileObserver is an abstract class;
  * subclasses must implement the event handler {@link #onEvent(int, String)}.
- *
+ * <p>
  * <p>Each FileObserver instance monitors a single file or directory.
  * If a directory is monitored, events will be triggered for all files and
  * subdirectories inside the monitored directory.</p>
- *
+ * <p>
  * <p>An event mask is used to specify which changes or actions to report.
  * Event type constants are used to describe the possible changes in the
  * event mask as well as what actually happened in event callbacks.</p>
- *
+ * <p>
  * <p class="caution"><b>Warning</b>: If a FileObserver is garbage collected, it
  * will stop sending events.  To ensure you keep receiving events, you must
  * keep a reference to the FileObserver instance from some other live object.</p>
  */
 public abstract class FileObserver {
-    /** Event type: Data was read from a file */
+    /**
+     * Event type: Data was read from a file
+     */
     public static final int ACCESS = 0x00000001;
-    /** Event type: Data was written to a file */
+    /**
+     * Event type: Data was written to a file
+     */
     public static final int MODIFY = 0x00000002;
-    /** Event type: Metadata (permissions, owner, timestamp) was changed explicitly */
+    /**
+     * Event type: Metadata (permissions, owner, timestamp) was changed explicitly
+     */
     public static final int ATTRIB = 0x00000004;
-    /** Event type: Someone had a file or directory open for writing, and closed it */
+    /**
+     * Event type: Someone had a file or directory open for writing, and closed it
+     */
     public static final int CLOSE_WRITE = 0x00000008;
-    /** Event type: Someone had a file or directory open read-only, and closed it */
+    /**
+     * Event type: Someone had a file or directory open read-only, and closed it
+     */
     public static final int CLOSE_NOWRITE = 0x00000010;
-    /** Event type: A file or directory was opened */
+    /**
+     * Event type: A file or directory was opened
+     */
     public static final int OPEN = 0x00000020;
-    /** Event type: A file or subdirectory was moved from the monitored directory */
+    /**
+     * Event type: A file or subdirectory was moved from the monitored directory
+     */
     public static final int MOVED_FROM = 0x00000040;
-    /** Event type: A file or subdirectory was moved to the monitored directory */
+    /**
+     * Event type: A file or subdirectory was moved to the monitored directory
+     */
     public static final int MOVED_TO = 0x00000080;
-    /** Event type: A new file or subdirectory was created under the monitored directory */
+    /**
+     * Event type: A new file or subdirectory was created under the monitored directory
+     */
     public static final int CREATE = 0x00000100;
-    /** Event type: A file was deleted from the monitored directory */
+    /**
+     * Event type: A file was deleted from the monitored directory
+     */
     public static final int DELETE = 0x00000200;
-    /** Event type: The monitored file or directory was deleted; monitoring effectively stops */
+    /**
+     * Event type: The monitored file or directory was deleted; monitoring effectively stops
+     */
     public static final int DELETE_SELF = 0x00000400;
-    /** Event type: The monitored file or directory was moved; monitoring continues */
+    /**
+     * Event type: The monitored file or directory was moved; monitoring continues
+     */
     public static final int MOVE_SELF = 0x00000800;
 
-    /** Event mask: All valid event types, combined */
+    /**
+     * Event mask: All valid event types, combined
+     */
     public static final int ALL_EVENTS = ACCESS | MODIFY | ATTRIB | CLOSE_WRITE
             | CLOSE_NOWRITE | OPEN | MOVED_FROM | MOVED_TO | DELETE | CREATE
             | DELETE_SELF | MOVE_SELF;
@@ -127,8 +153,11 @@ public abstract class FileObserver {
         }
 
         private native int init();
+
         private native void observe(int fd);
+
         private native int startWatching(int fd, String path, int mask);
+
         private native void stopWatching(int fd, int wfd);
     }
 
@@ -194,17 +223,17 @@ public abstract class FileObserver {
 
     /**
      * The event handler, which must be implemented by subclasses.
-     *
+     * <p>
      * <p class="note">This method is invoked on a special FileObserver thread.
      * It runs independently of any threads, so take care to use appropriate
      * synchronization!  Consider using {@link Handler#post(Runnable)} to shift
      * event handling work to the main thread to avoid concurrency problems.</p>
-     *
+     * <p>
      * <p>Event handlers must not throw exceptions.</p>
      *
      * @param event The type of event which happened
-     * @param path The path, relative to the main monitored file or directory,
-     *     of the file or directory which triggered the event
+     * @param path  The path, relative to the main monitored file or directory,
+     *              of the file or directory which triggered the event
      */
     public abstract void onEvent(int event, String path);
 }

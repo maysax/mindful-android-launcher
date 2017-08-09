@@ -15,7 +15,6 @@ public class MainListItem {
     }
 
 
-
     public enum ItemType {
         ACTION_LIST_ITEM, CONTACT_ITEM, OPTION_ITEM
     }

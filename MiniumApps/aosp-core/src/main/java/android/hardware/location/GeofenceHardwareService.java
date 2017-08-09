@@ -86,6 +86,7 @@ public class GeofenceHardwareService extends Service {
 
             return mGeofenceHardwareImpl.getStatusOfMonitoringType(monitoringType);
         }
+
         public boolean addCircularFence(
                 int monitoringType,
                 GeofenceHardwareRequestParcelable request,
@@ -121,7 +122,7 @@ public class GeofenceHardwareService extends Service {
         }
 
         public boolean registerForMonitorStateChangeCallback(int monitoringType,
-                IGeofenceHardwareMonitorCallback callback) {
+                                                             IGeofenceHardwareMonitorCallback callback) {
             mContext.enforceCallingPermission(Manifest.permission.LOCATION_HARDWARE,
                     "Location Hardware permission not granted to access hardware geofence");
 
@@ -131,7 +132,7 @@ public class GeofenceHardwareService extends Service {
         }
 
         public boolean unregisterForMonitorStateChangeCallback(int monitoringType,
-                IGeofenceHardwareMonitorCallback callback) {
+                                                               IGeofenceHardwareMonitorCallback callback) {
             mContext.enforceCallingPermission(Manifest.permission.LOCATION_HARDWARE,
                     "Location Hardware permission not granted to access hardware geofence");
 

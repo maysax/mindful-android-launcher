@@ -83,7 +83,7 @@ public class MmsSystemEventReceiver extends BroadcastReceiver {
 
             if (Log.isLoggable(LogTag.TRANSACTION, Log.VERBOSE)) {
                 Log.v(TAG, "TYPE_MOBILE_MMS available = " + available +
-                           ", isConnected = " + isConnected);
+                        ", isConnected = " + isConnected);
             }
 
             // Wake up transact service when MMS data is available and isn't connected.

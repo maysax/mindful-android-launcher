@@ -13,7 +13,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,10 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evernote.client.android.EvernoteSession;
-import com.evernote.client.android.asyncclient.EvernoteCallback;
-import com.evernote.client.android.asyncclient.EvernoteNoteStoreClient;
 import com.evernote.client.android.login.EvernoteLoginFragment;
-import com.evernote.edam.type.Notebook;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,13 +32,11 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.notes.R;
 import minium.co.notes.adapter.NoteAdapter;
-import minium.co.notes.app.Config;
 import minium.co.notes.evernote.EvernoteManager;
 
 import static minium.co.notes.utils.DataUtils.BACKUP_FILE_NAME;
@@ -115,7 +109,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         if (Build.VERSION.SDK_INT >= 18)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
 
-        // Android version < 18 -> set orientation sensorPortrait
+            // Android version < 18 -> set orientation sensorPortrait
         else
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
@@ -132,10 +126,10 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         setContentView(R.layout.activity_main_notes);
 
         // Init layout components
-        toolbar = (Toolbar)findViewById(R.id.toolbarMain);
-        listView = (ListView)findViewById(R.id.listView);
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        listView = (ListView) findViewById(R.id.listView);
         newNote = (FloatingActionButton) findViewById(R.id.fab);
-        noNotes = (TextView)findViewById(R.id.noNotes);
+        noNotes = (TextView) findViewById(R.id.noNotes);
 
         if (toolbar != null)
             initToolbar();
@@ -161,7 +155,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                 if (view.getFirstVisiblePosition() > lastFirstVisibleItem)
                     newNoteButtonVisibility(false);
 
-                // If scrolled down and delete/search not active -> show newNote button
+                    // If scrolled down and delete/search not active -> show newNote button
                 else if (view.getFirstVisiblePosition() < lastFirstVisibleItem &&
                         !deleteActive && !searchActive) {
 
@@ -174,7 +168,8 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-                                 int totalItemCount) {}
+                                 int totalItemCount) {
+            }
         });
 
 
@@ -252,29 +247,29 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     MenuItemCompat.setOnActionExpandListener(searchMenu,
                             new MenuItemCompat.OnActionExpandListener() {
 
-                        @Override
-                        public boolean onMenuItemActionExpand(MenuItem item) {
-                            searchActive = true;
-                            newNoteButtonVisibility(false);
-                            // Disable long-click on listView to prevent deletion
-                            listView.setLongClickable(false);
+                                @Override
+                                public boolean onMenuItemActionExpand(MenuItem item) {
+                                    searchActive = true;
+                                    newNoteButtonVisibility(false);
+                                    // Disable long-click on listView to prevent deletion
+                                    listView.setLongClickable(false);
 
-                            // Init realIndexes array
-                            realIndexesOfSearchResults = new ArrayList<Integer>();
-                            for (int i = 0; i < notes.length(); i++)
-                                realIndexesOfSearchResults.add(i);
+                                    // Init realIndexes array
+                                    realIndexesOfSearchResults = new ArrayList<Integer>();
+                                    for (int i = 0; i < notes.length(); i++)
+                                        realIndexesOfSearchResults.add(i);
 
-                            adapter.notifyDataSetChanged();
+                                    adapter.notifyDataSetChanged();
 
-                            return true;
-                        }
+                                    return true;
+                                }
 
-                        @Override
-                        public boolean onMenuItemActionCollapse(MenuItem item) {
-                            searchEnded();
-                            return true;
-                        }
-                    });
+                                @Override
+                                public boolean onMenuItemActionCollapse(MenuItem item) {
+                                    searchEnded();
+                                    return true;
+                                }
+                            });
                 }
             }
         }
@@ -284,6 +279,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     /**
      * Implementation of AlertDialogs such as
      * - backupCheckDialog, backupOKDialog, restoreCheckDialog, restoreFailedDialog -
+     *
      * @param context The Activity context of the dialogs; in this case MainActivity context
      */
     protected void initDialogs(Context context) {
@@ -459,9 +455,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                 if (notes.getJSONObject(newPosition).has(NOTE_HIDE_BODY)) {
                     intent.putExtra(NOTE_HIDE_BODY,
                             notes.getJSONObject(newPosition).getBoolean(NOTE_HIDE_BODY));
-                }
-
-                else
+                } else
                     intent.putExtra(NOTE_HIDE_BODY, false);
 
             } catch (JSONException e) {
@@ -484,9 +478,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                 if (notes.getJSONObject(position).has(NOTE_HIDE_BODY)) {
                     intent.putExtra(NOTE_HIDE_BODY,
                             notes.getJSONObject(position).getBoolean(NOTE_HIDE_BODY));
-                }
-
-                else
+                } else
                     intent.putExtra(NOTE_HIDE_BODY, false);
 
             } catch (JSONException e) {
@@ -501,6 +493,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
     /**
      * Item clicked in Toolbar menu callback method
+     *
      * @param menuItem Item clicked
      * @return true if click detected and logic finished, false otherwise
      */
@@ -569,10 +562,11 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
     /**
      * During multi-choice menu_delete selection mode, callback method if items checked changed
-     * @param mode ActionMode of selection
+     *
+     * @param mode     ActionMode of selection
      * @param position Position checked
-     * @param id ID of item, if exists
-     * @param checked true if checked, false otherwise
+     * @param id       ID of item, if exists
+     * @param checked  true if checked, false otherwise
      */
     @Override
     public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
@@ -580,7 +574,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         if (checked)
             checkedArray.add(position);
 
-        // If item unchecked
+            // If item unchecked
         else {
             int index = -1;
 
@@ -604,6 +598,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
     /**
      * Callback method when 'Delete' icon pressed
+     *
      * @param mode ActionMode of selection
      * @param item MenuItem clicked, in our case just action_delete
      * @return true if clicked, false otherwise
@@ -693,6 +688,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
     /**
      * Method to show and hide the newNote button
+     *
      * @param isVisible true to show button, false to hide
      */
     protected void newNoteButtonVisibility(boolean isVisible) {
@@ -708,6 +704,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
     /**
      * Callback method for 'searchView' menu item widget text change
+     *
      * @param s String which changed
      * @return true if text changed and logic finished, false otherwise
      */
@@ -738,7 +735,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                 if (note != null) {
                     try {
                         if (note.getString(NOTE_TITLE).toLowerCase().contains(s) ||
-                            note.getString(NOTE_BODY).toLowerCase().contains(s)) {
+                                note.getString(NOTE_BODY).toLowerCase().contains(s)) {
 
                             notesFound.put(note);
                             realIndexesOfSearchResults.add(i);
@@ -790,9 +787,10 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
     /**
      * Callback method when EditActivity finished adding new note or editing existing note
+     *
      * @param requestCode requestCode for intent sent, in our case either NEW_NOTE_REQUEST or position
-     * @param resultCode resultCode from activity, either RESULT_OK or RESULT_CANCELED
-     * @param data Data bundle passed back from EditActivity
+     * @param resultCode  resultCode from activity, either RESULT_OK or RESULT_CANCELED
+     * @param data        Data bundle passed back from EditActivity
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -885,10 +883,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     }
                 }
             }
-        }
-
-
-        else if (resultCode == RESULT_CANCELED) {
+        } else if (resultCode == RESULT_CANCELED) {
             Bundle mBundle = null;
 
             // If data is not null, has "request" extra and is new note -> get extras to bundle
@@ -911,9 +906,10 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
     /**
      * Favourite or un-favourite the note at position
-     * @param context application context
+     *
+     * @param context   application context
      * @param favourite true to favourite, false to un-favourite
-     * @param position position of note
+     * @param position  position of note
      */
     public static void setFavourite(Context context, boolean favourite, int position) {
         JSONObject newFavourite = null;
@@ -1022,6 +1018,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     /**
      * Orientation changed callback method
      * If orientation changed -> If any AlertDialog is showing, dismiss it to prevent WindowLeaks
+     *
      * @param newConfig New Configuration passed by system
      */
     @Override

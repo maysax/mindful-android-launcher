@@ -16,10 +16,6 @@
 
 package android.net;
 
-import static android.net.ConnectivityManager.TYPE_WIFI;
-import static android.net.ConnectivityManager.getNetworkTypeName;
-import static android.net.ConnectivityManager.isNetworkTypeMobile;
-
 import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -27,6 +23,10 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import java.util.Objects;
+
+import static android.net.ConnectivityManager.TYPE_WIFI;
+import static android.net.ConnectivityManager.getNetworkTypeName;
+import static android.net.ConnectivityManager.isNetworkTypeMobile;
 
 /**
  * Network definition that includes strong identity. Analogous to combining

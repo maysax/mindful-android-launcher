@@ -9,8 +9,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
         android:id="@+id/activity_list_view"
-        android:divider="@null"
-        />
+        android:divider="@null" />
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -38,7 +37,7 @@
                 android:textColor="#de000000"
                 android:layout_centerInParent="true"
                 android:fontFamily="sans-serif-medium"
-                android:text="Activities"/>
+                android:text="Activities" />
 
             <ImageView
                 android:id="@+id/crossActionBar"

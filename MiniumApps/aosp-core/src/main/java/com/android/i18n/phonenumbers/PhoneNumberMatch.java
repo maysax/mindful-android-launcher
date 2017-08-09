@@ -23,14 +23,14 @@ import java.util.Arrays;
 /**
  * The immutable match of a phone number within a piece of text. Matches may be found using
  * {@link PhoneNumberUtil#findNumbers}.
- *
+ * <p>
  * <p>A match consists of the {@linkplain #number() phone number} as well as the
  * {@linkplain #start() start} and {@linkplain #end() end} offsets of the corresponding subsequence
  * of the searched text. Use {@link #rawString()} to obtain a copy of the matched subsequence.
- *
+ * <p>
  * <p>The following annotated example clarifies the relationship between the searched text, the
  * match offsets, and the parsed number:
-
+ * <p>
  * <pre>
  * CharSequence text = "Call me at +1 425 882-8080 for details.";
  * RegionCode country = RegionCode.US;
@@ -52,72 +52,86 @@ import java.util.Arrays;
  * </pre>
  */
 public final class PhoneNumberMatch {
-  /** The start index into the text. */
-  private final int start;
-  /** The raw substring matched. */
-  private final String rawString;
-  /** The matched phone number. */
-  private final PhoneNumber number;
+    /**
+     * The start index into the text.
+     */
+    private final int start;
+    /**
+     * The raw substring matched.
+     */
+    private final String rawString;
+    /**
+     * The matched phone number.
+     */
+    private final PhoneNumber number;
 
-  /**
-   * Creates a new match.
-   *
-   * @param start  the start index into the target text
-   * @param rawString  the matched substring of the target text
-   * @param number  the matched phone number
-   */
-  PhoneNumberMatch(int start, String rawString, PhoneNumber number) {
-    if (start < 0) {
-      throw new IllegalArgumentException("Start index must be >= 0.");
+    /**
+     * Creates a new match.
+     *
+     * @param start     the start index into the target text
+     * @param rawString the matched substring of the target text
+     * @param number    the matched phone number
+     */
+    PhoneNumberMatch(int start, String rawString, PhoneNumber number) {
+        if (start < 0) {
+            throw new IllegalArgumentException("Start index must be >= 0.");
+        }
+        if (rawString == null || number == null) {
+            throw new NullPointerException();
+        }
+        this.start = start;
+        this.rawString = rawString;
+        this.number = number;
     }
-    if (rawString == null || number == null) {
-      throw new NullPointerException();
+
+    /**
+     * Returns the phone number matched by the receiver.
+     */
+    public PhoneNumber number() {
+        return number;
     }
-    this.start = start;
-    this.rawString = rawString;
-    this.number = number;
-  }
 
-  /** Returns the phone number matched by the receiver. */
-  public PhoneNumber number() {
-    return number;
-  }
-
-  /** Returns the start index of the matched phone number within the searched text. */
-  public int start() {
-    return start;
-  }
-
-  /** Returns the exclusive end index of the matched phone number within the searched text. */
-  public int end() {
-    return start + rawString.length();
-  }
-
-  /** Returns the raw string matched as a phone number in the searched text. */
-  public String rawString() {
-    return rawString;
-  }
-
-  @Override
-  public int hashCode() {
-    return Arrays.hashCode(new Object[]{start, rawString, number});
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
+    /**
+     * Returns the start index of the matched phone number within the searched text.
+     */
+    public int start() {
+        return start;
     }
-    if (!(obj instanceof PhoneNumberMatch)) {
-      return false;
-    }
-    PhoneNumberMatch other = (PhoneNumberMatch) obj;
-    return rawString.equals(other.rawString) && (start == other.start) &&
-        number.equals(other.number);
-  }
 
-  @Override
-  public String toString() {
-    return "PhoneNumberMatch [" + start() + "," + end() + ") " + rawString;
-  }
+    /**
+     * Returns the exclusive end index of the matched phone number within the searched text.
+     */
+    public int end() {
+        return start + rawString.length();
+    }
+
+    /**
+     * Returns the raw string matched as a phone number in the searched text.
+     */
+    public String rawString() {
+        return rawString;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new Object[]{start, rawString, number});
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof PhoneNumberMatch)) {
+            return false;
+        }
+        PhoneNumberMatch other = (PhoneNumberMatch) obj;
+        return rawString.equals(other.rawString) && (start == other.start) &&
+                number.equals(other.number);
+    }
+
+    @Override
+    public String toString() {
+        return "PhoneNumberMatch [" + start() + "," + end() + ") " + rawString;
+    }
 }

@@ -20,9 +20,9 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Messenger;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.android.internal.util.Preconditions;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Interface to control and observe state of a specific network, hiding

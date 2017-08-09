@@ -18,7 +18,6 @@ package com.android.contacts.list;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.ContactsContract.ProviderStatus;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,7 +129,7 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
 
             case 2:
                 String message = getResources().getString(R.string.upgrade_out_of_memory,
-                        new Object[] { providerStatus.data});
+                        new Object[]{providerStatus.data});
                 mMessageView.setText(message);
                 mMessageView.setGravity(Gravity.START);
                 mMessageView.setVisibility(View.VISIBLE);
@@ -170,6 +169,7 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
                 break;
         }
     }
+
     /**
      * Set the message to be shown if no data is available for the selected tab
      *
@@ -179,7 +179,7 @@ public class ContactsUnavailableFragment extends Fragment implements OnClickList
         mNoContactsMsgResId = resId;
         mNSecNoContactsMsgResId = secResId;
         if ((mMessageView != null) && (mProviderStatus != null)
-                //&& (mProviderStatus.status == ProviderStatus.STATUS_NO_ACCOUNTS_NO_CONTACTS)
+            //&& (mProviderStatus.status == ProviderStatus.STATUS_NO_ACCOUNTS_NO_CONTACTS)
                 ) {
             if (resId != -1) {
                 mMessageView.setText(mNoContactsMsgResId);

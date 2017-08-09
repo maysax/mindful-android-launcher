@@ -17,9 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.provider.Telephony.Mms;
 import android.telephony.PhoneNumberUtils;
@@ -49,6 +46,9 @@ import com.android.mms.R;
 import com.android.mms.data.Contact;
 import com.android.mms.data.ContactList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Provide UI for editing the recipients of multi-media messages.
  */
@@ -59,7 +59,9 @@ public class RecipientsEditor extends RecipientEditTextView {
     private Runnable mOnSelectChipRunnable;
     private final AddressValidator mInternalValidator;
 
-    /** A noop validator that does not munge invalid texts and claims any address is valid */
+    /**
+     * A noop validator that does not munge invalid texts and claims any address is valid
+     */
     private class AddressValidator implements Validator {
         public CharSequence fixText(CharSequence invalidText) {
             return invalidText;
@@ -98,14 +100,14 @@ public class RecipientsEditor extends RecipientEditTextView {
 
             @Override
             public void beforeTextChanged(CharSequence s, int start,
-                    int count, int after) {
+                                          int count, int after) {
                 mAffected = ((Spanned) s).getSpans(start, start + count,
                         Annotation.class);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start,
-                    int before, int after) {
+                                      int before, int after) {
                 if (before == 0 && after == 1) {    // inserting a character
                     char c = s.charAt(start);
                     if (c == ',' || c == ';') {
@@ -373,7 +375,7 @@ public class RecipientsEditor extends RecipientEditTextView {
     }
 
     private static String getFieldAt(String field, Spanned sp, int start, int end,
-            Context context) {
+                                     Context context) {
         Annotation[] a = sp.getSpans(start, end, Annotation.class);
         String fieldValue = getAnnotation(a, field);
         if (TextUtils.isEmpty(fieldValue)) {
@@ -451,7 +453,7 @@ public class RecipientsEditor extends RecipientEditTextView {
                 if (text instanceof Spanned) {
                     SpannableString sp = new SpannableString(text + separator);
                     TextUtils.copySpansFrom((Spanned) text, 0, text.length(),
-                                            Object.class, sp, 0);
+                            Object.class, sp, 0);
                     return sp;
                 } else {
                     return text + separator;

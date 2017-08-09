@@ -1,31 +1,19 @@
 package co.siempo.phone.main;
 
-import android.os.Build;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
-import co.siempo.phone.call.CallLogActivity_;
 import co.siempo.phone.contact.ContactsLoader;
 import co.siempo.phone.event.CreateNoteEvent;
-import co.siempo.phone.helper.ActivityHelper;
-import co.siempo.phone.mm.MMTimePickerActivity_;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
-import co.siempo.phone.pause.PauseActivity_;
-import co.siempo.phone.tempo.TempoActivity_;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenRouter;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
-
-import static co.siempo.phone.R.string.title_defaultLauncher;
 
 /**
  * Created by shahab on 2/16/17.
@@ -80,10 +68,9 @@ class MainFragmentMediator {
 
     private void loadDefaults() {
         try {
-            if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()){
+            if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-            }
-            else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)){
+            } else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
                 items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
             } else if (fragment.getManager().hasCompleted(TokenItemType.DATA)) {

@@ -1,12 +1,12 @@
 package com.android.contacts.widget;
 
-import com.android.contacts.common.lettertiles.LetterTileDrawable;
-
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import com.android.contacts.common.lettertiles.LetterTileDrawable;
 
 import minium.co.contacts.R;
 
@@ -14,10 +14,10 @@ import minium.co.contacts.R;
 /**
  * An {@link ImageView} designed to display QuickContact's contact photo. When requested to draw
  * {@link LetterTileDrawable}'s, this class instead draws a different default avatar drawable.
- *
+ * <p>
  * In addition to supporting {@link ImageView#setColorFilter} this also supports a {@link #setTint}
  * method.
- *
+ * <p>
  * This entire class can be deleted once use of LetterTileDrawable is no longer used
  * inside QuickContactsActivity at all.
  */
@@ -41,7 +41,7 @@ public class QuickContactImageView extends ImageView {
     }
 
     public QuickContactImageView(Context context, AttributeSet attrs, int defStyleAttr,
-            int defStyleRes) {
+                                 int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

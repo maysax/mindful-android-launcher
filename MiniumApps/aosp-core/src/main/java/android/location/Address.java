@@ -16,18 +16,18 @@
 
 package android.location;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * A class representing an Address, i.e, a set of Strings describing a location.
- *
+ * <p>
  * The addres format is a simplified version of xAL (eXtensible Address Language)
  * http://www.oasis-open.org/committees/ciq/ciq.html#6
  */
@@ -89,7 +89,7 @@ public class Address implements Parcelable {
         if (index < 0) {
             throw new IllegalArgumentException("index = " + index + " < 0");
         }
-        return mAddressLines == null? null :  mAddressLines.get(index);
+        return mAddressLines == null ? null : mAddressLines.get(index);
     }
 
     /**
@@ -296,7 +296,7 @@ public class Address implements Parcelable {
      * Returns the latitude of the address if known.
      *
      * @throws IllegalStateException if this Address has not been assigned
-     * a latitude.
+     *                               a latitude.
      */
     public double getLatitude() {
         if (mHasLatitude) {
@@ -333,7 +333,7 @@ public class Address implements Parcelable {
      * Returns the longitude of the address if known.
      *
      * @throws IllegalStateException if this Address has not been assigned
-     * a longitude.
+     *                               a longitude.
      */
     public double getLongitude() {
         if (mHasLongitude) {
@@ -363,7 +363,7 @@ public class Address implements Parcelable {
      * or null if it is unknown.
      *
      * @throws IllegalStateException if this Address has not been assigned
-     * a latitude.
+     *                               a latitude.
      */
     public String getPhone() {
         return mPhone;
@@ -396,12 +396,12 @@ public class Address implements Parcelable {
      * address as a Bundle.  The keys and values are determined
      * by the provider.  If no additional information is available,
      * null is returned.
-     *
+     * <p>
      * <!--
      * <p> A number of common key/value pairs are listed
      * below. Providers that use any of the keys on this list must
      * provide the corresponding value as described below.
-     *
+     * <p>
      * <ul>
      * </ul>
      * -->
@@ -473,58 +473,58 @@ public class Address implements Parcelable {
     }
 
     public static final Parcelable.Creator<Address> CREATOR =
-        new Parcelable.Creator<Address>() {
-        public Address createFromParcel(Parcel in) {
-            String language = in.readString();
-            String country = in.readString();
-            Locale locale = country.length() > 0 ?
-                new Locale(language, country) :
-                new Locale(language);
-            Address a = new Address(locale);
+            new Parcelable.Creator<Address>() {
+                public Address createFromParcel(Parcel in) {
+                    String language = in.readString();
+                    String country = in.readString();
+                    Locale locale = country.length() > 0 ?
+                            new Locale(language, country) :
+                            new Locale(language);
+                    Address a = new Address(locale);
 
-            int N = in.readInt();
-            if (N > 0) {
-                a.mAddressLines = new HashMap<Integer, String>(N);
-                for (int i = 0; i < N; i++) {
-                    int index = in.readInt();
-                    String line = in.readString();
-                    a.mAddressLines.put(index, line);
-                    a.mMaxAddressLineIndex =
-                        Math.max(a.mMaxAddressLineIndex, index);
+                    int N = in.readInt();
+                    if (N > 0) {
+                        a.mAddressLines = new HashMap<Integer, String>(N);
+                        for (int i = 0; i < N; i++) {
+                            int index = in.readInt();
+                            String line = in.readString();
+                            a.mAddressLines.put(index, line);
+                            a.mMaxAddressLineIndex =
+                                    Math.max(a.mMaxAddressLineIndex, index);
+                        }
+                    } else {
+                        a.mAddressLines = null;
+                        a.mMaxAddressLineIndex = -1;
+                    }
+                    a.mFeatureName = in.readString();
+                    a.mAdminArea = in.readString();
+                    a.mSubAdminArea = in.readString();
+                    a.mLocality = in.readString();
+                    a.mSubLocality = in.readString();
+                    a.mThoroughfare = in.readString();
+                    a.mSubThoroughfare = in.readString();
+                    a.mPremises = in.readString();
+                    a.mPostalCode = in.readString();
+                    a.mCountryCode = in.readString();
+                    a.mCountryName = in.readString();
+                    a.mHasLatitude = in.readInt() == 0 ? false : true;
+                    if (a.mHasLatitude) {
+                        a.mLatitude = in.readDouble();
+                    }
+                    a.mHasLongitude = in.readInt() == 0 ? false : true;
+                    if (a.mHasLongitude) {
+                        a.mLongitude = in.readDouble();
+                    }
+                    a.mPhone = in.readString();
+                    a.mUrl = in.readString();
+                    a.mExtras = in.readBundle();
+                    return a;
                 }
-            } else {
-                a.mAddressLines = null;
-                a.mMaxAddressLineIndex = -1;
-            }
-            a.mFeatureName = in.readString();
-            a.mAdminArea = in.readString();
-            a.mSubAdminArea = in.readString();
-            a.mLocality = in.readString();
-            a.mSubLocality = in.readString();
-            a.mThoroughfare = in.readString();
-            a.mSubThoroughfare = in.readString();
-            a.mPremises = in.readString();
-            a.mPostalCode = in.readString();
-            a.mCountryCode = in.readString();
-            a.mCountryName = in.readString();
-            a.mHasLatitude = in.readInt() == 0 ? false : true;
-            if (a.mHasLatitude) {
-                a.mLatitude = in.readDouble();
-            }
-            a.mHasLongitude = in.readInt() == 0 ? false : true;
-            if (a.mHasLongitude) {
-                a.mLongitude = in.readDouble();
-            }
-            a.mPhone = in.readString();
-            a.mUrl = in.readString();
-            a.mExtras = in.readBundle();
-            return a;
-        }
 
-        public Address[] newArray(int size) {
-            return new Address[size];
-        }
-    };
+                public Address[] newArray(int size) {
+                    return new Address[size];
+                }
+            };
 
     public int describeContents() {
         return (mExtras != null) ? mExtras.describeContents() : 0;
@@ -559,7 +559,7 @@ public class Address implements Parcelable {
             parcel.writeDouble(mLatitude);
         }
         parcel.writeInt(mHasLongitude ? 1 : 0);
-        if (mHasLongitude){
+        if (mHasLongitude) {
             parcel.writeDouble(mLongitude);
         }
         parcel.writeString(mPhone);

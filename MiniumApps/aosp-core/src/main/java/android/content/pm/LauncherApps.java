@@ -16,7 +16,6 @@
 
 package android.content.pm;
 
-import android.app.AppGlobals;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -67,23 +66,23 @@ public class LauncherApps {
     public static abstract class Callback {
         /**
          * Indicates that a package was removed from the specified profile.
-         *
+         * <p>
          * If a package is removed while being updated onPackageChanged will be
          * called instead.
          *
          * @param packageName The name of the package that was removed.
-         * @param user The UserHandle of the profile that generated the change.
+         * @param user        The UserHandle of the profile that generated the change.
          */
         abstract public void onPackageRemoved(String packageName, UserHandle user);
 
         /**
          * Indicates that a package was added to the specified profile.
-         *
+         * <p>
          * If a package is added while being updated then onPackageChanged will be
          * called instead.
          *
          * @param packageName The name of the package that was added.
-         * @param user The UserHandle of the profile that generated the change.
+         * @param user        The UserHandle of the profile that generated the change.
          */
         abstract public void onPackageAdded(String packageName, UserHandle user);
 
@@ -93,7 +92,7 @@ public class LauncherApps {
          * one or more components are enabled or disabled.
          *
          * @param packageName The name of the package that has changed.
-         * @param user The UserHandle of the profile that generated the change.
+         * @param user        The UserHandle of the profile that generated the change.
          */
         abstract public void onPackageChanged(String packageName, UserHandle user);
 
@@ -103,13 +102,13 @@ public class LauncherApps {
          * reappeared.
          *
          * @param packageNames The names of the packages that have become
-         *            available.
-         * @param user The UserHandle of the profile that generated the change.
-         * @param replacing Indicates whether these packages are replacing
-         *            existing ones.
+         *                     available.
+         * @param user         The UserHandle of the profile that generated the change.
+         * @param replacing    Indicates whether these packages are replacing
+         *                     existing ones.
          */
         abstract public void onPackagesAvailable(String[] packageNames, UserHandle user,
-                boolean replacing);
+                                                 boolean replacing);
 
         /**
          * Indicates that one or more packages have become unavailable. For
@@ -117,16 +116,18 @@ public class LauncherApps {
          * removed.
          *
          * @param packageNames The names of the packages that have become
-         *            unavailable.
-         * @param user The UserHandle of the profile that generated the change.
-         * @param replacing Indicates whether the packages are about to be
-         *            replaced with new versions.
+         *                     unavailable.
+         * @param user         The UserHandle of the profile that generated the change.
+         * @param replacing    Indicates whether the packages are about to be
+         *                     replaced with new versions.
          */
         abstract public void onPackagesUnavailable(String[] packageNames, UserHandle user,
-                boolean replacing);
+                                                   boolean replacing);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public LauncherApps(Context context, ILauncherApps service) {
         mContext = context;
         mService = service;
@@ -138,8 +139,8 @@ public class LauncherApps {
      * {@link Intent#CATEGORY_LAUNCHER}, for a specified user.
      *
      * @param packageName The specific package to query. If null, it checks all installed packages
-     *            in the profile.
-     * @param user The UserHandle of the profile.
+     *                    in the profile.
+     * @param user        The UserHandle of the profile.
      * @return List of launchable activities. Can be an empty list but will not be null.
      */
     public List<LauncherActivityInfo> getActivityList(String packageName, UserHandle user) {
@@ -158,7 +159,7 @@ public class LauncherApps {
             long firstInstallTime = 0;
             try {
                 firstInstallTime = mPm.getPackageInfo(ri.activityInfo.packageName,
-                    PackageManager.GET_UNINSTALLED_PACKAGES).firstInstallTime;
+                        PackageManager.GET_UNINSTALLED_PACKAGES).firstInstallTime;
             } catch (NameNotFoundException nnfe) {
                 // Sorry, can't find package
             }
@@ -182,7 +183,7 @@ public class LauncherApps {
      * returns null.
      *
      * @param intent The intent to find a match for.
-     * @param user The profile to look in for a match.
+     * @param user   The profile to look in for a match.
      * @return An activity info object if there is a match.
      */
     public LauncherActivityInfo resolveActivity(Intent intent, UserHandle user) {
@@ -209,13 +210,13 @@ public class LauncherApps {
     /**
      * Starts a Main activity in the specified profile.
      *
-     * @param component The ComponentName of the activity to launch
-     * @param user The UserHandle of the profile
+     * @param component    The ComponentName of the activity to launch
+     * @param user         The UserHandle of the profile
      * @param sourceBounds The Rect containing the source bounds of the clicked icon
-     * @param opts Options to pass to startActivity
+     * @param opts         Options to pass to startActivity
      */
     public void startMainActivity(ComponentName component, UserHandle user, Rect sourceBounds,
-            Bundle opts) {
+                                  Bundle opts) {
         if (DEBUG) {
             Log.i(TAG, "StartMainActivity " + component + " " + user.getIdentifier());
         }
@@ -230,13 +231,13 @@ public class LauncherApps {
      * Starts the settings activity to show the application details for a
      * package in the specified profile.
      *
-     * @param component The ComponentName of the package to launch settings for.
-     * @param user The UserHandle of the profile
+     * @param component    The ComponentName of the package to launch settings for.
+     * @param user         The UserHandle of the profile
      * @param sourceBounds The Rect containing the source bounds of the clicked icon
-     * @param opts Options to pass to startActivity
+     * @param opts         Options to pass to startActivity
      */
     public void startAppDetailsActivity(ComponentName component, UserHandle user,
-            Rect sourceBounds, Bundle opts) {
+                                        Rect sourceBounds, Bundle opts) {
         try {
             mService.showAppDetailsAsUser(component, sourceBounds, opts, user);
         } catch (RemoteException re) {
@@ -248,8 +249,7 @@ public class LauncherApps {
      * Checks if the package is installed and enabled for a profile.
      *
      * @param packageName The package to check.
-     * @param user The UserHandle of the profile.
-     *
+     * @param user        The UserHandle of the profile.
      * @return true if the package exists and is enabled.
      */
     public boolean isPackageEnabled(String packageName, UserHandle user) {
@@ -264,8 +264,7 @@ public class LauncherApps {
      * Checks if the activity exists and it enabled for a profile.
      *
      * @param component The activity to check.
-     * @param user The UserHandle of the profile.
-     *
+     * @param user      The UserHandle of the profile.
      * @return true if the activity exists and is enabled.
      */
     public boolean isActivityEnabled(ComponentName component, UserHandle user) {
@@ -290,7 +289,7 @@ public class LauncherApps {
      * Registers a callback for changes to packages in current and managed profiles.
      *
      * @param callback The callback to register.
-     * @param handler that should be used to post callbacks on, may be null.
+     * @param handler  that should be used to post callbacks on, may be null.
      */
     public void registerCallback(Callback callback, Handler handler) {
         synchronized (this) {
@@ -410,7 +409,7 @@ public class LauncherApps {
                 for (CallbackMessageHandler callback : mCallbacks) {
                     callback.postOnPackagesUnavailable(packageNames, user, replacing);
                 }
-           }
+            }
         }
     };
 
@@ -482,7 +481,7 @@ public class LauncherApps {
         }
 
         public void postOnPackagesAvailable(String[] packageNames, UserHandle user,
-                boolean replacing) {
+                                            boolean replacing) {
             CallbackInfo info = new CallbackInfo();
             info.packageNames = packageNames;
             info.replacing = replacing;
@@ -491,7 +490,7 @@ public class LauncherApps {
         }
 
         public void postOnPackagesUnavailable(String[] packageNames, UserHandle user,
-                boolean replacing) {
+                                              boolean replacing) {
             CallbackInfo info = new CallbackInfo();
             info.packageNames = packageNames;
             info.replacing = replacing;
@@ -502,6 +501,7 @@ public class LauncherApps {
 
     /**
      * TODO Remove after 2014-09-22
+     *
      * @hide
      */
     public void addCallback(Callback callback) {
@@ -510,6 +510,7 @@ public class LauncherApps {
 
     /**
      * TODO Remove after 2014-09-22
+     *
      * @hide
      */
     public void removeCallback(Callback callback) {

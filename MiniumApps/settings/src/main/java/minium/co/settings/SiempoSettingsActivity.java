@@ -277,7 +277,7 @@ public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
 
             Preference data_usage_preference = (Preference) findPreference("data_usage");
             Intent intent_data_usage = new Intent();
-            intent_data_usage.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$DataUsageSummaryActivity"));
+            intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
             //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             data_usage_preference.setIntent(intent_data_usage);
             bindPreferenceSummaryToValue(data_usage_preference);
@@ -318,7 +318,7 @@ public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
 
             Preference process_usage_preference = (Preference) findPreference("key_process_usage");
             Intent intent_data_usage = new Intent();
-            intent_data_usage.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$MemorySettingsActivity"));
+            intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$MemorySettingsActivity"));
             //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             process_usage_preference.setIntent(intent_data_usage);
         }
@@ -354,7 +354,7 @@ public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
 
             Preference pref_language_input = (Preference) findPreference("key_pref_language_input");
             Intent intent_input_method_language_settings = new Intent();
-            intent_input_method_language_settings.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$InputMethodAndLanguageSettingsActivity"));
+            intent_input_method_language_settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$InputMethodAndLanguageSettingsActivity"));
             //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             pref_language_input.setIntent(intent_input_method_language_settings);
 

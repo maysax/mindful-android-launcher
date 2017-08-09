@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.mmssms.Apn;
 import com.moez.QKSMS.mmssms.ApnUtils;
@@ -56,7 +57,7 @@ public class MMSSetupFragment extends QKFragment implements DialogFragmentListen
 
     /**
      * If non-null, the dialog will not be shown if the pref given is "true".
-     *
+     * <p>
      * Additionally, if ARG_ASK_FIRST is true, a DON'T ASK AGAIN button will be shown when asking
      * the user if they want to configure MMS.
      */
@@ -178,7 +179,7 @@ public class MMSSetupFragment extends QKFragment implements DialogFragmentListen
                 launchDialog(NEXT_STEPS);
             }
 
-        // Configuration dialog that the single MMS configuration found worked well
+            // Configuration dialog that the single MMS configuration found worked well
         } else if (ONE_CONFIGURATION_FOUND.equals(dialogTag)) {
             if (resultCode == POSITIVE_BUTTON_RESULT) {
                 // Success! Save the APN settings and show them instructions for how to change
@@ -195,7 +196,7 @@ public class MMSSetupFragment extends QKFragment implements DialogFragmentListen
                 launchDialog(NO_CONFIGURATIONS_FOUND);
             }
 
-        // Multiple configurations were found and the user said that none of them looked right.
+            // Multiple configurations were found and the user said that none of them looked right.
         } else if (MULTIPLE_CONFIGURATIONS_FOUND.equals(dialogTag)) {
             if (resultCode == NEGATIVE_BUTTON_RESULT) {
 
@@ -225,6 +226,7 @@ public class MMSSetupFragment extends QKFragment implements DialogFragmentListen
 
     /**
      * Sends an email to mms-support@qklabs.com with a bunch of MMS-related debugging information.
+     *
      * @param context current context
      */
     public static void contactSupport(Context context) {

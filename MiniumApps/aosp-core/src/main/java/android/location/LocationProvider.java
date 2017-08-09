@@ -23,7 +23,7 @@ import com.android.internal.location.ProviderProperties;
  * An abstract superclass for location providers.  A location provider
  * provides periodic reports on the geographical location of the
  * device.
- *
+ * <p>
  * <p> Each provider has a set of criteria under which it may be used;
  * for example, some providers require GPS hardware and visibility to
  * a number of satellites; others require the use of the cellular
@@ -41,6 +41,7 @@ public class LocationProvider {
     /**
      * A regular expression matching characters that may not appear
      * in the name of a LocationProvider
+     *
      * @hide
      */
     public static final String BAD_CHARS_REGEX = "[^a-zA-Z0-9]";
@@ -53,7 +54,6 @@ public class LocationProvider {
      * consist only of the characters [a-zA-Z0-9].
      *
      * @throws IllegalArgumentException if name contains an illegal character
-     *
      * @hide
      */
     public LocationProvider(String name, ProviderProperties properties) {
@@ -83,7 +83,7 @@ public class LocationProvider {
      * @hide
      */
     public static boolean propertiesMeetCriteria(String name, ProviderProperties properties,
-            Criteria criteria) {
+                                                 Criteria criteria) {
         if (LocationManager.PASSIVE_PROVIDER.equals(name)) {
             // passive provider never matches
             return false;

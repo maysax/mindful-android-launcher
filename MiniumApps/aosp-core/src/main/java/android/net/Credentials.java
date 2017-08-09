@@ -21,14 +21,20 @@ package android.net;
  * on UNIX domain sockets. See "man 7 unix" on a desktop linux distro.
  */
 public class Credentials {
-    /** pid of process. root peers may lie. */
+    /**
+     * pid of process. root peers may lie.
+     */
     private final int pid;
-    /** uid of process. root peers may lie. */
+    /**
+     * uid of process. root peers may lie.
+     */
     private final int uid;
-    /** gid of process. root peers may lie. */
+    /**
+     * gid of process. root peers may lie.
+     */
     private final int gid;
 
-    public Credentials (int pid, int uid, int gid) {
+    public Credentials(int pid, int uid, int gid) {
         this.pid = pid;
         this.uid = uid;
         this.gid = gid;
@@ -41,7 +47,7 @@ public class Credentials {
     public int getUid() {
         return uid;
     }
-    
+
     public int getGid() {
         return gid;
     }

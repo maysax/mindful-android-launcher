@@ -28,26 +28,39 @@ import com.android.contacts.common.Collapser;
  */
 public interface Action extends Collapser.Collapsible<Action> {
     public CharSequence getBody();
+
     public CharSequence getSubtitle();
 
     public String getMimeType();
 
-    /** Returns an icon that can be clicked for the alternate action. */
+    /**
+     * Returns an icon that can be clicked for the alternate action.
+     */
     public Drawable getAlternateIcon();
 
-    /** Returns the content description of the icon for the alternate action. */
+    /**
+     * Returns the content description of the icon for the alternate action.
+     */
     public String getAlternateIconDescription();
 
-    /** Build an {@link Intent} that will perform this action. */
+    /**
+     * Build an {@link Intent} that will perform this action.
+     */
     public Intent getIntent();
 
-    /** Build an {@link Intent} that will perform the alternate action. */
+    /**
+     * Build an {@link Intent} that will perform the alternate action.
+     */
     public Intent getAlternateIntent();
 
-    /** Checks if the contact data for this action is primary. */
+    /**
+     * Checks if the contact data for this action is primary.
+     */
     public boolean isPrimary();
 
-    /** Checks if the contact data for this action is super primary. */
+    /**
+     * Checks if the contact data for this action is super primary.
+     */
     public boolean isSuperPrimary();
 
     /**
@@ -62,7 +75,9 @@ public interface Action extends Collapser.Collapsible<Action> {
      */
     public long getDataId();
 
-    /** Returns the presence of this item or -1 if it was never set */
+    /**
+     * Returns the presence of this item or -1 if it was never set
+     */
     public int getPresence();
 
     /**

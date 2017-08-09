@@ -46,16 +46,17 @@ public final class CellIdentityGsm implements Parcelable {
         mLac = Integer.MAX_VALUE;
         mCid = Integer.MAX_VALUE;
     }
+
     /**
      * public constructor
+     *
      * @param mcc 3-digit Mobile Country Code, 0..999
      * @param mnc 2 or 3-digit Mobile Network Code, 0..999
      * @param lac 16-bit Location Area Code, 0..65535
      * @param cid 16-bit GSM Cell Identity or 28-bit UMTS Cell Identity
-     *
      * @hide
      */
-    public CellIdentityGsm (int mcc, int mnc, int lac, int cid) {
+    public CellIdentityGsm(int mcc, int mnc, int lac, int cid) {
         mMcc = mcc;
         mMnc = mnc;
         mLac = lac;
@@ -70,7 +71,7 @@ public final class CellIdentityGsm implements Parcelable {
     }
 
     CellIdentityGsm copy() {
-       return new CellIdentityGsm(this);
+        return new CellIdentityGsm(this);
     }
 
     /**
@@ -121,7 +122,7 @@ public final class CellIdentityGsm implements Parcelable {
     public boolean equals(Object other) {
         if (super.equals(other)) {
             try {
-                CellIdentityGsm o = (CellIdentityGsm)other;
+                CellIdentityGsm o = (CellIdentityGsm) other;
                 return mMcc == o.mMcc &&
                         mMnc == o.mMnc &&
                         mLac == o.mLac &&
@@ -146,13 +147,17 @@ public final class CellIdentityGsm implements Parcelable {
         return sb.toString();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (DBG) log("writeToParcel(Parcel, int): " + toString());
@@ -162,7 +167,9 @@ public final class CellIdentityGsm implements Parcelable {
         dest.writeInt(mCid);
     }
 
-    /** Construct from Parcel, type has already been processed */
+    /**
+     * Construct from Parcel, type has already been processed
+     */
     private CellIdentityGsm(Parcel in) {
         mMcc = in.readInt();
         mMnc = in.readInt();
@@ -171,20 +178,22 @@ public final class CellIdentityGsm implements Parcelable {
         if (DBG) log("CellIdentityGsm(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @SuppressWarnings("hiding")
     public static final Creator<CellIdentityGsm> CREATOR =
             new Creator<CellIdentityGsm>() {
-        @Override
-        public CellIdentityGsm createFromParcel(Parcel in) {
-            return new CellIdentityGsm(in);
-        }
+                @Override
+                public CellIdentityGsm createFromParcel(Parcel in) {
+                    return new CellIdentityGsm(in);
+                }
 
-        @Override
-        public CellIdentityGsm[] newArray(int size) {
-            return new CellIdentityGsm[size];
-        }
-    };
+                @Override
+                public CellIdentityGsm[] newArray(int size) {
+                    return new CellIdentityGsm[size];
+                }
+            };
 
     /**
      * log

@@ -21,7 +21,7 @@ import android.net.Uri;
 /**
  * Action callbacks that can be sent by a contact picker.
  */
-public interface OnContactPickerActionListener  {
+public interface OnContactPickerActionListener {
 
     /**
      * Returns the selected contact to the requester.

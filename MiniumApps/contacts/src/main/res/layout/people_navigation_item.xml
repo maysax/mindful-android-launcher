@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2012 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2012 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -21,12 +20,7 @@
      PeopleNavigationDropDownTextAppearance - text appearance of the item in the drop down part of
          the navigation drop down list of the action bar. -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:paddingLeft="18dip"
-    android:paddingRight="18dip"
-    android:paddingStart="18dip"
-    android:paddingEnd="18dip"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"
-/>
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:gravity="center_vertical" android:paddingLeft="18dip" android:paddingRight="18dip"
+    android:paddingStart="18dip" android:paddingEnd="18dip"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall" />

@@ -27,7 +27,7 @@ public abstract class PowerManagerInternal {
     /**
      * Used by the window manager to override the screen brightness based on the
      * current foreground activity.
-     *
+     * <p>
      * This method must only be called by the window manager.
      *
      * @param brightness The overridden brightness, or -1 to disable the override.
@@ -37,7 +37,7 @@ public abstract class PowerManagerInternal {
     /**
      * Used by the window manager to override the button brightness based on the
      * current foreground activity.
-     *
+     * <p>
      * This method must only be called by the window manager.
      *
      * @param brightness The overridden brightness, or -1 to disable the override.
@@ -48,7 +48,7 @@ public abstract class PowerManagerInternal {
      * Used by the window manager to override the user activity timeout based on the
      * current foreground activity.  It can only be used to make the timeout shorter
      * than usual, not longer.
-     *
+     * <p>
      * This method must only be called by the window manager.
      *
      * @param timeoutMillis The overridden timeout, or -1 to disable the override.
@@ -58,10 +58,10 @@ public abstract class PowerManagerInternal {
     /**
      * Used by the dream manager to override certain properties while dozing.
      *
-     * @param screenState The overridden screen state, or {@link Display.STATE_UNKNOWN}
-     * to disable the override.
+     * @param screenState      The overridden screen state, or {@link Display.STATE_UNKNOWN}
+     *                         to disable the override.
      * @param screenBrightness The overridden screen brightness, or
-     * {@link PowerManager#BRIGHTNESS_DEFAULT} to disable the override.
+     *                         {@link PowerManager#BRIGHTNESS_DEFAULT} to disable the override.
      */
     public abstract void setDozeOverrideFromDreamManager(
             int screenState, int screenBrightness);

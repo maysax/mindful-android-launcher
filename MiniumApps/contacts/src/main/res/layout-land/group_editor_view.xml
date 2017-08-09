@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,50 +13,28 @@
      limitations under the License.
 -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="8dip"
-        android:paddingRight="8dip"
-        android:paddingStart="8dip"
-        android:paddingEnd="8dip"
-        android:orientation="horizontal"
-        >
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+        android:paddingLeft="8dip" android:paddingRight="8dip" android:paddingStart="8dip"
+        android:paddingEnd="8dip" android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/group_name"
-            android:layout_width="0dip"
-            android:layout_weight="1"
+        <EditText android:id="@+id/group_name" android:layout_width="0dip" android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:inputType="textCapWords"
-            android:imeOptions="flagNoExtractUi|flagNoFullscreen"
-            android:hint="@string/group_name_hint"
-            android:minHeight="48dip"
-            android:paddingRight="8dip"
-            android:paddingEnd="8dip"
-            />
+            android:inputType="textCapWords" android:imeOptions="flagNoExtractUi|flagNoFullscreen"
+            android:hint="@string/group_name_hint" android:minHeight="48dip"
+            android:paddingRight="8dip" android:paddingEnd="8dip" />
 
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:paddingLeft="8dip"
-            android:paddingStart="8dip"
-            android:orientation="vertical"
-            >
-            <include
-                layout="@layout/group_editor_autocomplete_view"
-                android:id="@+id/add_member_field"/>
-            <include
-                layout="@layout/group_editor_existing_member_list"
-                android:id="@android:id/list"/>
+        <LinearLayout android:layout_width="0dip" android:layout_weight="1"
+            android:layout_height="match_parent" android:paddingLeft="8dip"
+            android:paddingStart="8dip" android:orientation="vertical">
+            <include layout="@layout/group_editor_autocomplete_view"
+                android:id="@+id/add_member_field" />
+            <include layout="@layout/group_editor_existing_member_list"
+                android:id="@android:id/list" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

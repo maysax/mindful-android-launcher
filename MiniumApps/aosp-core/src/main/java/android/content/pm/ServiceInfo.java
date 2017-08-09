@@ -78,11 +78,11 @@ public class ServiceInfo extends ComponentInfo
         pw.println(prefix + "permission=" + permission);
         pw.println(prefix + "flags=0x" + Integer.toHexString(flags));
     }
-    
+
     public String toString() {
         return "ServiceInfo{"
-            + Integer.toHexString(System.identityHashCode(this))
-            + " " + name + "}";
+                + Integer.toHexString(System.identityHashCode(this))
+                + " " + name + "}";
     }
 
     public int describeContents() {
@@ -96,14 +96,15 @@ public class ServiceInfo extends ComponentInfo
     }
 
     public static final Creator<ServiceInfo> CREATOR =
-        new Creator<ServiceInfo>() {
-        public ServiceInfo createFromParcel(Parcel source) {
-            return new ServiceInfo(source);
-        }
-        public ServiceInfo[] newArray(int size) {
-            return new ServiceInfo[size];
-        }
-    };
+            new Creator<ServiceInfo>() {
+                public ServiceInfo createFromParcel(Parcel source) {
+                    return new ServiceInfo(source);
+                }
+
+                public ServiceInfo[] newArray(int size) {
+                    return new ServiceInfo[size];
+                }
+            };
 
     private ServiceInfo(Parcel source) {
         super(source);

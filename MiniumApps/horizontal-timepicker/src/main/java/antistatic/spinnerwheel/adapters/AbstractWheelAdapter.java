@@ -24,12 +24,12 @@
 
 package antistatic.spinnerwheel.adapters;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Abstract Wheel adapter.
@@ -37,7 +37,7 @@ import android.view.ViewGroup;
 public abstract class AbstractWheelAdapter implements WheelViewAdapter {
     // Observers
     private List<DataSetObserver> datasetObservers;
-    
+
     @Override
     public View getEmptyItem(View convertView, ViewGroup parent) {
         return null;
@@ -57,7 +57,7 @@ public abstract class AbstractWheelAdapter implements WheelViewAdapter {
             datasetObservers.remove(observer);
         }
     }
-    
+
     /**
      * Notifies observers about data changing
      */
@@ -68,7 +68,7 @@ public abstract class AbstractWheelAdapter implements WheelViewAdapter {
             }
         }
     }
-    
+
     /**
      * Notifies observers about invalidating data
      */

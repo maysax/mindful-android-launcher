@@ -17,13 +17,13 @@
 
 package com.android.mms.model;
 
-import java.util.ArrayList;
-
 import android.util.Config;
 import android.util.Log;
 
 import com.android.mms.layout.LayoutManager;
 import com.android.mms.layout.LayoutParameters;
+
+import java.util.ArrayList;
 
 public class LayoutModel extends Model {
     private static final String TAG = SlideModel.TAG;
@@ -31,10 +31,10 @@ public class LayoutModel extends Model {
     private static final boolean LOCAL_LOGV = DEBUG ? Config.LOGD : Config.LOGV;
 
     public static final String IMAGE_REGION_ID = "Image";
-    public static final String TEXT_REGION_ID  = "Text";
+    public static final String TEXT_REGION_ID = "Text";
 
     public static final int LAYOUT_BOTTOM_TEXT = 0;
-    public static final int LAYOUT_TOP_TEXT    = 1;
+    public static final int LAYOUT_TOP_TEXT = 1;
     public static final int DEFAULT_LAYOUT_TYPE = LAYOUT_BOTTOM_TEXT;
 
     private int mLayoutType = DEFAULT_LAYOUT_TYPE;
@@ -76,7 +76,7 @@ public class LayoutModel extends Model {
 
     private void createDefaultRootLayout() {
         mRootLayout = new RegionModel(null, 0, 0, mLayoutParams.getWidth(),
-                                                  mLayoutParams.getHeight());
+                mLayoutParams.getHeight());
     }
 
     private void createDefaultImageRegion() {

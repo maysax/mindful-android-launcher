@@ -22,10 +22,10 @@ import com.android.vcard.VCardSourceDetector;
 
 /**
  * Class representing one request for importing vCard (given as a Uri).
- *
+ * <p>
  * Mainly used when {@link ImportVCardActivity} requests {@link VCardService}
  * to import some specific Uri.
- *
+ * <p>
  * Note: This object's accepting only One Uri does NOT mean that
  * there's only one vCard entry inside the instance, as one Uri often has multiple
  * vCard entries inside it.
@@ -40,7 +40,7 @@ public class ImportRequest {
      * Uri to be imported. May have different content than originally given from users, so
      * when displaying user-friendly information (e.g. "importing xxx.vcf"), use
      * {@link #displayName} instead.
-     *
+     * <p>
      * If this is null {@link #data} contains the byte stream of the vcard.
      */
     public final Uri uri;
@@ -68,7 +68,7 @@ public class ImportRequest {
     /**
      * Assumes that one Uri contains only one version, while there's a (tiny) possibility
      * we may have two types in one vCard.
-     *
+     * <p>
      * e.g.
      * BEGIN:VCARD
      * VERSION:2.1
@@ -78,7 +78,7 @@ public class ImportRequest {
      * VERSION:3.0
      * ...
      * END:VCARD
-     *
+     * <p>
      * We've never seen this kind of a file, but we may have to cope with it in the future.
      */
     public final int vcardVersion;
@@ -87,7 +87,7 @@ public class ImportRequest {
      * The count of vCard entries in {@link #uri}. A receiver of this object can use it
      * when showing the progress of import. Thus a receiver must be able to torelate this
      * variable being invalid because of vCard's limitation.
-     *
+     * <p>
      * vCard does not let us know this count without looking over a whole file content,
      * which means we have to open and scan over {@link #uri} to know this value, while
      * it may not be opened more than once (Uri does not require it to be opened multiple times
@@ -96,8 +96,8 @@ public class ImportRequest {
     public final int entryCount;
 
     public ImportRequest(Account account,
-            byte[] data, Uri uri, String displayName, int estimatedType, String estimatedCharset,
-            int vcardVersion, int entryCount) {
+                         byte[] data, Uri uri, String displayName, int estimatedType, String estimatedCharset,
+                         int vcardVersion, int entryCount) {
         this.account = account;
         this.data = data;
         this.uri = uri;

@@ -4,9 +4,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
 import java.nio.ShortBuffer;
-
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -212,7 +211,7 @@ abstract class DhcpPacket {
      * the packet for transmission.
      */
     public abstract ByteBuffer buildPacket(int encap, short destUdp,
-        short srcUdp);
+                                           short srcUdp);
 
     /**
      * Allows the concrete class to fill in packet-type-specific details,
@@ -245,8 +244,8 @@ abstract class DhcpPacket {
      * finishPacket() to insert the per-packet contents.
      */
     protected void fillInPacket(int encap, InetAddress destIp,
-        InetAddress srcIp, short destUdp, short srcUdp, ByteBuffer buf,
-        byte requestCode, boolean broadcast) {
+                                InetAddress srcIp, short destUdp, short srcUdp, ByteBuffer buf,
+                                byte requestCode, boolean broadcast) {
         byte[] destIpArray = destIp.getAddress();
         byte[] srcIpArray = srcIp.getAddress();
         int ipLengthOffset = 0;
@@ -267,8 +266,8 @@ abstract class DhcpPacket {
             buf.put(IP_VERSION_HEADER_LEN);
             buf.put(IP_TOS_LOWDELAY);    // tos: IPTOS_LOWDELAY
             ipLengthOffset = buf.position();
-            buf.putShort((short)0);  // length
-            buf.putShort((short)0);  // id
+            buf.putShort((short) 0);  // length
+            buf.putShort((short) 0);  // id
             buf.putShort(IP_FLAGS_OFFSET); // ip offset: don't fragment
             buf.put(IP_TTL);    // TTL: use default 64 from RFC1340
             buf.put(IP_TYPE_UDP);
@@ -309,9 +308,9 @@ abstract class DhcpPacket {
         buf.put(mRelayIp.getAddress());
         buf.put(mClientMac);
         buf.position(buf.position() +
-                     (16 - mClientMac.length) // pad addr to 16 bytes
-                     + 64     // empty server host name (64 bytes)
-                     + 128);  // empty boot file name (128 bytes)
+                (16 - mClientMac.length) // pad addr to 16 bytes
+                + 64     // empty server host name (64 bytes)
+                + 128);  // empty boot file name (128 bytes)
         buf.putInt(0x63825363); // magic number
         finishPacket(buf);
 
@@ -324,7 +323,7 @@ abstract class DhcpPacket {
         // computed.
         if (encap == ENCAP_L3) {
             // fix UDP header: insert length
-            short udpLen = (short)(buf.position() - udpHeaderOffset);
+            short udpLen = (short) (buf.position() - udpHeaderOffset);
             buf.putShort(udpLengthOffset, udpLen);
             // fix UDP header: checksum
             // checksum for UDP at udpChecksumOffset
@@ -342,13 +341,13 @@ abstract class DhcpPacket {
             udpSeed += udpLen;
             // and compute UDP checksum
             buf.putShort(udpChecksumOffset, (short) checksum(buf, udpSeed,
-                                                             udpHeaderOffset,
-                                                             buf.position()));
+                    udpHeaderOffset,
+                    buf.position()));
             // fix IP header: insert length
-            buf.putShort(ipLengthOffset, (short)buf.position());
+            buf.putShort(ipLengthOffset, (short) buf.position());
             // fixup IP-header checksum
             buf.putShort(ipChecksumOffset,
-                         (short) checksum(buf, 0, 0, endIpHeader));
+                    (short) checksum(buf, 0, 0, endIpHeader));
         }
     }
 
@@ -361,7 +360,7 @@ abstract class DhcpPacket {
             int r = v + 65536;
             return r;
         } else {
-            return(v);
+            return (v);
         }
     }
 
@@ -444,7 +443,7 @@ abstract class DhcpPacket {
     protected void addTlv(ByteBuffer buf, byte type, List<InetAddress> addrs) {
         if (addrs != null && addrs.size() > 0) {
             buf.put(type);
-            buf.put((byte)(4 * addrs.size()));
+            buf.put((byte) (4 * addrs.size()));
 
             for (InetAddress addr : addrs) {
                 buf.put(addr.getAddress());
@@ -549,8 +548,7 @@ abstract class DhcpPacket {
      * A subset of the optional parameters are parsed and are stored
      * in object fields.
      */
-    public static DhcpPacket decodeFullPacket(ByteBuffer packet, int pktType)
-    {
+    public static DhcpPacket decodeFullPacket(ByteBuffer packet, int pktType) {
         // bootp parameters
         int transactionId;
         InetAddress clientIp;
@@ -651,12 +649,12 @@ abstract class DhcpPacket {
 
         // skip over address padding (16 octets allocated)
         packet.position(packet.position() + (16 - addrLen)
-                        + 64    // skip server host name (64 chars)
-                        + 128); // skip boot file name (128 chars)
+                + 64    // skip server host name (64 chars)
+                + 128); // skip boot file name (128 chars)
 
         int dhcpMagicCookie = packet.getInt();
 
-        if (dhcpMagicCookie !=  0x63825363)
+        if (dhcpMagicCookie != 0x63825363)
             return null;
 
         // parse options
@@ -671,7 +669,7 @@ abstract class DhcpPacket {
                 byte optionLen = packet.get();
                 int expectedLen = 0;
 
-                switch(optionType) {
+                switch (optionType) {
                     case DHCP_SUBNET_MASK:
                         netMask = readIpAddress(packet);
                         expectedLen = 4;
@@ -733,7 +731,8 @@ abstract class DhcpPacket {
                         byte[] id = new byte[optionLen];
                         packet.get(id);
                         expectedLen = optionLen;
-                    } break;
+                    }
+                    break;
                     default:
                         // ignore any other parameters
                         for (int i = 0; i < optionLen; i++) {
@@ -750,38 +749,39 @@ abstract class DhcpPacket {
 
         DhcpPacket newPacket;
 
-        switch(dhcpType) {
-            case -1: return null;
+        switch (dhcpType) {
+            case -1:
+                return null;
             case DHCP_MESSAGE_TYPE_DISCOVER:
                 newPacket = new DhcpDiscoverPacket(
-                    transactionId, clientMac, broadcast);
+                        transactionId, clientMac, broadcast);
                 break;
             case DHCP_MESSAGE_TYPE_OFFER:
                 newPacket = new DhcpOfferPacket(
-                    transactionId, broadcast, ipSrc, yourIp, clientMac);
+                        transactionId, broadcast, ipSrc, yourIp, clientMac);
                 break;
             case DHCP_MESSAGE_TYPE_REQUEST:
                 newPacket = new DhcpRequestPacket(
-                    transactionId, clientIp, clientMac, broadcast);
+                        transactionId, clientIp, clientMac, broadcast);
                 break;
             case DHCP_MESSAGE_TYPE_DECLINE:
                 newPacket = new DhcpDeclinePacket(
-                    transactionId, clientIp, yourIp, nextIp, relayIp,
-                    clientMac);
+                        transactionId, clientIp, yourIp, nextIp, relayIp,
+                        clientMac);
                 break;
             case DHCP_MESSAGE_TYPE_ACK:
                 newPacket = new DhcpAckPacket(
-                    transactionId, broadcast, ipSrc, yourIp, clientMac);
+                        transactionId, broadcast, ipSrc, yourIp, clientMac);
                 break;
             case DHCP_MESSAGE_TYPE_NAK:
                 newPacket = new DhcpNakPacket(
-                    transactionId, clientIp, yourIp, nextIp, relayIp,
-                    clientMac);
+                        transactionId, clientIp, yourIp, nextIp, relayIp,
+                        clientMac);
                 break;
             case DHCP_MESSAGE_TYPE_INFORM:
                 newPacket = new DhcpInformPacket(
-                    transactionId, clientIp, yourIp, nextIp, relayIp,
-                    clientMac);
+                        transactionId, clientIp, yourIp, nextIp, relayIp,
+                        clientMac);
                 break;
             default:
                 System.out.println("Unimplemented type: " + dhcpType);
@@ -805,8 +805,7 @@ abstract class DhcpPacket {
     /**
      * Parse a packet from an array of bytes.
      */
-    public static DhcpPacket decodeFullPacket(byte[] packet, int pktType)
-    {
+    public static DhcpPacket decodeFullPacket(byte[] packet, int pktType) {
         ByteBuffer buffer = ByteBuffer.wrap(packet).order(ByteOrder.BIG_ENDIAN);
         return decodeFullPacket(buffer, pktType);
     }
@@ -816,9 +815,9 @@ abstract class DhcpPacket {
      * parameters.
      */
     public static ByteBuffer buildDiscoverPacket(int encap, int transactionId,
-        byte[] clientMac, boolean broadcast, byte[] expectedParams) {
+                                                 byte[] clientMac, boolean broadcast, byte[] expectedParams) {
         DhcpPacket pkt = new DhcpDiscoverPacket(
-            transactionId, clientMac, broadcast);
+                transactionId, clientMac, broadcast);
         pkt.mRequestedParams = expectedParams;
         return pkt.buildPacket(encap, DHCP_SERVER, DHCP_CLIENT);
     }
@@ -828,12 +827,12 @@ abstract class DhcpPacket {
      * parameters.
      */
     public static ByteBuffer buildOfferPacket(int encap, int transactionId,
-        boolean broadcast, InetAddress serverIpAddr, InetAddress clientIpAddr,
-        byte[] mac, Integer timeout, InetAddress netMask, InetAddress bcAddr,
-        InetAddress gateway, List<InetAddress> dnsServers,
-        InetAddress dhcpServerIdentifier, String domainName) {
+                                              boolean broadcast, InetAddress serverIpAddr, InetAddress clientIpAddr,
+                                              byte[] mac, Integer timeout, InetAddress netMask, InetAddress bcAddr,
+                                              InetAddress gateway, List<InetAddress> dnsServers,
+                                              InetAddress dhcpServerIdentifier, String domainName) {
         DhcpPacket pkt = new DhcpOfferPacket(
-            transactionId, broadcast, serverIpAddr, clientIpAddr, mac);
+                transactionId, broadcast, serverIpAddr, clientIpAddr, mac);
         pkt.mGateway = gateway;
         pkt.mDnsServers = dnsServers;
         pkt.mLeaseTime = timeout;
@@ -848,12 +847,12 @@ abstract class DhcpPacket {
      * Builds a DHCP-ACK packet from the required specified parameters.
      */
     public static ByteBuffer buildAckPacket(int encap, int transactionId,
-        boolean broadcast, InetAddress serverIpAddr, InetAddress clientIpAddr,
-        byte[] mac, Integer timeout, InetAddress netMask, InetAddress bcAddr,
-        InetAddress gateway, List<InetAddress> dnsServers,
-        InetAddress dhcpServerIdentifier, String domainName) {
+                                            boolean broadcast, InetAddress serverIpAddr, InetAddress clientIpAddr,
+                                            byte[] mac, Integer timeout, InetAddress netMask, InetAddress bcAddr,
+                                            InetAddress gateway, List<InetAddress> dnsServers,
+                                            InetAddress dhcpServerIdentifier, String domainName) {
         DhcpPacket pkt = new DhcpAckPacket(
-            transactionId, broadcast, serverIpAddr, clientIpAddr, mac);
+                transactionId, broadcast, serverIpAddr, clientIpAddr, mac);
         pkt.mGateway = gateway;
         pkt.mDnsServers = dnsServers;
         pkt.mLeaseTime = timeout;
@@ -868,9 +867,9 @@ abstract class DhcpPacket {
      * Builds a DHCP-NAK packet from the required specified parameters.
      */
     public static ByteBuffer buildNakPacket(int encap, int transactionId,
-        InetAddress serverIpAddr, InetAddress clientIpAddr, byte[] mac) {
+                                            InetAddress serverIpAddr, InetAddress clientIpAddr, byte[] mac) {
         DhcpPacket pkt = new DhcpNakPacket(transactionId, clientIpAddr,
-            serverIpAddr, serverIpAddr, serverIpAddr, mac);
+                serverIpAddr, serverIpAddr, serverIpAddr, mac);
         pkt.mMessage = "requested address not available";
         pkt.mRequestedIp = clientIpAddr;
         return pkt.buildPacket(encap, DHCP_CLIENT, DHCP_SERVER);
@@ -880,11 +879,11 @@ abstract class DhcpPacket {
      * Builds a DHCP-REQUEST packet from the required specified parameters.
      */
     public static ByteBuffer buildRequestPacket(int encap,
-        int transactionId, InetAddress clientIp, boolean broadcast,
-        byte[] clientMac, InetAddress requestedIpAddress,
-        InetAddress serverIdentifier, byte[] requestedParams, String hostName) {
+                                                int transactionId, InetAddress clientIp, boolean broadcast,
+                                                byte[] clientMac, InetAddress requestedIpAddress,
+                                                InetAddress serverIdentifier, byte[] requestedParams, String hostName) {
         DhcpPacket pkt = new DhcpRequestPacket(transactionId, clientIp,
-            clientMac, broadcast);
+                clientMac, broadcast);
         pkt.mRequestedIp = requestedIpAddress;
         pkt.mServerIdentifier = serverIdentifier;
         pkt.mHostName = hostName;

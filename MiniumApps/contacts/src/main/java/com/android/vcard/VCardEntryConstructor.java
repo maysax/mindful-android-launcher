@@ -16,12 +16,8 @@
 package com.android.vcard;
 
 import android.accounts.Account;
-import android.text.TextUtils;
-import android.util.Base64;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -73,7 +69,7 @@ public class VCardEntryConstructor implements VCardInterpreter {
      */
     @Deprecated
     public VCardEntryConstructor(final int vcardType, final Account account,
-            String targetCharset) {
+                                 String targetCharset) {
         mVCardType = vcardType;
         mAccount = account;
     }

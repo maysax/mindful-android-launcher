@@ -41,34 +41,34 @@ public class PackageInfo implements Parcelable {
      * attribute.
      */
     public int versionCode;
-    
+
     /**
      * The version name of this package, as specified by the &lt;manifest&gt;
      * tag's {@link android.R.styleable#AndroidManifest_versionName versionName}
      * attribute.
      */
     public String versionName;
-    
+
     /**
      * The shared user ID name of this package, as specified by the &lt;manifest&gt;
      * tag's {@link android.R.styleable#AndroidManifest_sharedUserId sharedUserId}
      * attribute.
      */
     public String sharedUserId;
-    
+
     /**
      * The shared user ID label of this package, as specified by the &lt;manifest&gt;
      * tag's {@link android.R.styleable#AndroidManifest_sharedUserLabel sharedUserLabel}
      * attribute.
      */
     public int sharedUserLabel;
-    
+
     /**
      * Information collected from the &lt;application&gt; tag, or null if
      * there was none.
      */
     public ApplicationInfo applicationInfo;
-    
+
     /**
      * The time at which the app was first installed.  Units are as
      * per {@link System#currentTimeMillis()}.
@@ -126,7 +126,7 @@ public class PackageInfo implements Parcelable {
      * {@link PackageManager#GET_INSTRUMENTATION} was set.
      */
     public InstrumentationInfo[] instrumentation;
-    
+
     /**
      * Array of all {@link android.R.styleable#AndroidManifestPermission
      * &lt;permission&gt;} tags included under &lt;manifest&gt;,
@@ -134,7 +134,7 @@ public class PackageInfo implements Parcelable {
      * {@link PackageManager#GET_PERMISSIONS} was set.
      */
     public PermissionInfo[] permissions;
-    
+
     /**
      * Array of all {@link android.R.styleable#AndroidManifestUsesPermission
      * &lt;uses-permission&gt;} tags included under &lt;manifest&gt;,
@@ -144,7 +144,7 @@ public class PackageInfo implements Parcelable {
      * by the system at install time.
      */
     public String[] requestedPermissions;
-    
+
     /**
      * Array of flags of all {@link android.R.styleable#AndroidManifestUsesPermission
      * &lt;uses-permission&gt;} tags included under &lt;manifest&gt;,
@@ -161,20 +161,20 @@ public class PackageInfo implements Parcelable {
      * is required for the application to run; the user can not optionally
      * disable it.  Currently all permissions are required.
      */
-    public static final int REQUESTED_PERMISSION_REQUIRED = 1<<0;
+    public static final int REQUESTED_PERMISSION_REQUIRED = 1 << 0;
 
     /**
      * Flag for {@link #requestedPermissionsFlags}: the requested permission
      * is currently granted to the application.
      */
-    public static final int REQUESTED_PERMISSION_GRANTED = 1<<1;
+    public static final int REQUESTED_PERMISSION_GRANTED = 1 << 1;
 
     /**
      * Array of all signatures read from the package file.  This is only filled
      * in if the flag {@link PackageManager#GET_SIGNATURES} was set.
      */
     public Signature[] signatures;
-    
+
     /**
      * Application specified preferred configuration
      * {@link android.R.styleable#AndroidManifestUsesConfiguration
@@ -204,6 +204,7 @@ public class PackageInfo implements Parcelable {
     /**
      * Constant corresponding to <code>auto</code> in
      * the {@link android.R.attr#installLocation} attribute.
+     *
      * @hide
      */
     public static final int INSTALL_LOCATION_UNSPECIFIED = -1;
@@ -234,22 +235,31 @@ public class PackageInfo implements Parcelable {
      */
     public int installLocation = INSTALL_LOCATION_INTERNAL_ONLY;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public boolean coreApp;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public boolean requiredForAllUsers;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public String restrictedAccountType;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public String requiredAccountType;
 
     /**
      * What package, if any, this package will overlay.
-     *
+     * <p>
      * Package name of target package, or null.
+     *
      * @hide
      */
     public String overlayTarget;
@@ -259,8 +269,8 @@ public class PackageInfo implements Parcelable {
 
     public String toString() {
         return "PackageInfo{"
-            + Integer.toHexString(System.identityHashCode(this))
-            + " " + packageName + "}";
+                + Integer.toHexString(System.identityHashCode(this))
+                + " " + packageName + "}";
     }
 
     public int describeContents() {

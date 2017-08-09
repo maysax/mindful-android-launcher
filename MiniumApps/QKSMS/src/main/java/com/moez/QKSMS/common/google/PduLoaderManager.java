@@ -48,7 +48,7 @@ import java.util.Set;
  * from that loaded pdu. Then it will call the passed in callback with the result. This class
  * uses the PduCache built into the mms framework. It also manages a local cache of slideshow
  * models. The slideshow cache uses SoftReferences to hang onto the slideshow.
- *
+ * <p>
  * Based on BooksImageManager by Virgil King.
  */
 public class PduLoaderManager extends BackgroundLoaderManager {
@@ -73,13 +73,13 @@ public class PduLoaderManager extends BackgroundLoaderManager {
     }
 
     public ItemLoadedFuture getPdu(Uri uri, boolean requestSlideshow,
-            final ItemLoadedCallback<PduLoaded> callback) {
+                                   final ItemLoadedCallback<PduLoaded> callback) {
         if (uri == null) {
             throw new NullPointerException();
         }
 
         PduCacheEntry cacheEntry = null;
-        synchronized(mPduCache) {
+        synchronized (mPduCache) {
             if (!mPduCache.isUpdating(uri)) {
                 cacheEntry = mPduCache.get(uri);
             }
@@ -116,7 +116,7 @@ public class PduLoaderManager extends BackgroundLoaderManager {
             public void cancel(Uri uri) {
                 cancelCallback(callback);
                 removePdu(uri);     // the pdu and/or slideshow might be half loaded. Make sure
-                                    // we load fresh the next time this uri is requested.
+                // we load fresh the next time this uri is requested.
             }
 
             public void setIsDone(boolean done) {
@@ -133,7 +133,7 @@ public class PduLoaderManager extends BackgroundLoaderManager {
     public void clear() {
         super.clear();
 
-        synchronized(mPduCache) {
+        synchronized (mPduCache) {
             mPduCache.purgeAll();
         }
         mSlideshowCache.clear();
@@ -144,7 +144,7 @@ public class PduLoaderManager extends BackgroundLoaderManager {
             Log.d(TAG, "removePdu: " + uri);
         }
         if (uri != null) {
-            synchronized(mPduCache) {
+            synchronized (mPduCache) {
                 mPduCache.purge(uri);
             }
             mSlideshowCache.remove(uri);
@@ -167,7 +167,9 @@ public class PduLoaderManager extends BackgroundLoaderManager {
             mRequestSlideshow = requestSlideshow;
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public void run() {
             if (DEBUG_DISABLE_PDUS) {
                 return;
@@ -184,7 +186,7 @@ public class PduLoaderManager extends BackgroundLoaderManager {
             try {
                 pdu = mPduPersister.load(mUri);
                 if (pdu != null && mRequestSlideshow) {
-                    slideshow = SlideshowModel.createFromPduBody(mContext, ((MultimediaMessagePdu)pdu).getBody());
+                    slideshow = SlideshowModel.createFromPduBody(mContext, ((MultimediaMessagePdu) pdu).getBody());
                 }
             } catch (final MmsException e) {
                 Log.e(TAG, "MmsException loading uri: " + mUri, e);

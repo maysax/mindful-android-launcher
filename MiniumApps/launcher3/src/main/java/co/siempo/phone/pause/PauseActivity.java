@@ -3,7 +3,6 @@ package co.siempo.phone.pause;
 import android.content.DialogInterface;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
-import android.nfc.tech.NdefFormatable;
 import android.os.Handler;
 import android.view.KeyEvent;
 
@@ -13,15 +12,12 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
-import de.greenrobot.event.EventBus;
-import minium.co.core.event.NFCEvent;
 import co.siempo.phone.event.PauseStartEvent;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
@@ -118,7 +114,7 @@ public class PauseActivity extends CoreActivity {
 
     private void stopPause() {
         if (pauseActivatedFragment != null) {
-            pauseActivatedFragment.stopPause();
+            pauseActivatedFragment.stopPause(true);
         }
     }
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="minium.co.launcher">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="minium.co.launcher">
 
     <!--
     On SDK version 23 and up, your app data will be automatically backed up and restored on app install.
@@ -8,36 +7,29 @@
     which configures which files to backup.
     More info: https://developer.android.com/preview/backup/index.html
     -->
-    <application
-        android:name=".app.LauncherApp_"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/CoreTheme">
+    <application android:name=".app.LauncherApp_" android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
+        android:supportsRtl="true" android:theme="@style/CoreTheme">
 
         <!-- Fabric configuration -->
-        <meta-data
-            android:name="io.fabric.ApiKey"
+        <meta-data android:name="io.fabric.ApiKey"
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
-        <activity android:name=".ui.MainActivity_"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:excludeFromRecents="true"
+        <activity android:name=".ui.MainActivity_" android:label="@string/app_name"
+            android:launchMode="singleTask" android:excludeFromRecents="true"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.HOME"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>
-                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED"/>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
     </application>

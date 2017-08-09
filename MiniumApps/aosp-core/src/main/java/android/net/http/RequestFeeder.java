@@ -28,6 +28,7 @@ import org.apache.http.HttpHost;
 interface RequestFeeder {
 
     Request getRequest();
+
     Request getRequest(HttpHost host);
 
     /**

@@ -11,7 +11,7 @@ import minium.co.core.log.Tracer;
 /**
  * Concrete implementation of {@link CoreApplication}
  * This class will implement specific behaviors that differs with core library
- *
+ * <p>
  * Created by Shahab on 5/12/2016.
  */
 @EApplication

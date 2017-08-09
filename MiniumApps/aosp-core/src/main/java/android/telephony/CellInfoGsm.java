@@ -31,14 +31,18 @@ public final class CellInfoGsm extends CellInfo implements Parcelable {
     private CellIdentityGsm mCellIdentityGsm;
     private CellSignalStrengthGsm mCellSignalStrengthGsm;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public CellInfoGsm() {
         super();
         mCellIdentityGsm = new CellIdentityGsm();
         mCellSignalStrengthGsm = new CellSignalStrengthGsm();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public CellInfoGsm(CellInfoGsm ci) {
         super(ci);
         this.mCellIdentityGsm = ci.mCellIdentityGsm.copy();
@@ -48,7 +52,10 @@ public final class CellInfoGsm extends CellInfo implements Parcelable {
     public CellIdentityGsm getCellIdentity() {
         return mCellIdentityGsm;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCellIdentity(CellIdentityGsm cid) {
         mCellIdentityGsm = cid;
     }
@@ -56,7 +63,10 @@ public final class CellInfoGsm extends CellInfo implements Parcelable {
     public CellSignalStrengthGsm getCellSignalStrength() {
         return mCellSignalStrengthGsm;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCellSignalStrength(CellSignalStrengthGsm css) {
         mCellSignalStrengthGsm = css;
     }
@@ -96,13 +106,17 @@ public final class CellInfoGsm extends CellInfo implements Parcelable {
         return sb.toString();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags, TYPE_GSM);
@@ -120,7 +134,9 @@ public final class CellInfoGsm extends CellInfo implements Parcelable {
         mCellSignalStrengthGsm = CellSignalStrengthGsm.CREATOR.createFromParcel(in);
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static final Creator<CellInfoGsm> CREATOR = new Creator<CellInfoGsm>() {
         @Override
         public CellInfoGsm createFromParcel(Parcel in) {
@@ -134,7 +150,9 @@ public final class CellInfoGsm extends CellInfo implements Parcelable {
         }
     };
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected static CellInfoGsm createFromParcelBody(Parcel in) {
         return new CellInfoGsm(in);
     }

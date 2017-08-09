@@ -16,14 +16,14 @@
 
 package android.net;
 
-import java.io.IOException;
 import java.io.FileDescriptor;
+import java.io.IOException;
 
 /**
  * non-standard class for creating inbound UNIX-domain socket
  * on the Android platform, this is created in the Linux non-filesystem
  * namespace.
- *
+ * <p>
  * On simulator platforms, this may be created in a temporary directory on
  * the filesystem
  */
@@ -31,19 +31,20 @@ public class LocalServerSocket {
     private final LocalSocketImpl impl;
     private final LocalSocketAddress localAddress;
 
-    /** 50 seems a bit much, but it's what was here */
+    /**
+     * 50 seems a bit much, but it's what was here
+     */
     private static final int LISTEN_BACKLOG = 50;
 
     /**
      * Crewates a new server socket listening at specified name.
      * On the Android platform, the name is created in the Linux
      * abstract namespace (instead of on the filesystem).
-     * 
+     *
      * @param name address for socket
      * @throws IOException
      */
-    public LocalServerSocket(String name) throws IOException
-    {
+    public LocalServerSocket(String name) throws IOException {
         impl = new LocalSocketImpl();
 
         impl.create(LocalSocket.SOCKET_STREAM);
@@ -63,8 +64,7 @@ public class LocalServerSocket {
      * @param fd bound file descriptor
      * @throws IOException
      */
-    public LocalServerSocket(FileDescriptor fd) throws IOException
-    {
+    public LocalServerSocket(FileDescriptor fd) throws IOException {
         impl = new LocalSocketImpl(fd);
         impl.listen(LISTEN_BACKLOG);
         localAddress = impl.getSockAddress();
@@ -75,8 +75,7 @@ public class LocalServerSocket {
      *
      * @return local address
      */
-    public LocalSocketAddress getLocalSocketAddress()
-    {
+    public LocalSocketAddress getLocalSocketAddress() {
         return localAddress;
     }
 
@@ -87,11 +86,10 @@ public class LocalServerSocket {
      * @return a socket representing the new connection.
      * @throws IOException
      */
-    public LocalSocket accept() throws IOException
-    {
+    public LocalSocket accept() throws IOException {
         LocalSocketImpl acceptedImpl = new LocalSocketImpl();
 
-        impl.accept (acceptedImpl);
+        impl.accept(acceptedImpl);
 
         return new LocalSocket(acceptedImpl, LocalSocket.SOCKET_UNKNOWN);
     }
@@ -107,11 +105,10 @@ public class LocalServerSocket {
 
     /**
      * Closes server socket.
-     * 
+     *
      * @throws IOException
      */
-    public void close() throws IOException
-    {
+    public void close() throws IOException {
         impl.close();
     }
 }

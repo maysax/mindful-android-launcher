@@ -24,7 +24,7 @@ import android.net.Uri;
 /**
  * A specialized loader for the Join Contacts UI.  It executes two queries:
  * join suggestions and (optionally) the full contact list.
- *
+ * <p>
  * This loader also loads the "suggestion" cursor, which can be accessed with:
  * {@code ((JoinContactLoaderResult) result).suggestionCursor }
  */
@@ -37,7 +37,7 @@ public class JoinContactLoader extends CursorLoader {
      * Actual returned class.  It's guaranteed that this loader always returns an instance of this
      * class.  This class is needed to tie the lifecycle of the second cursor to that of the
      * primary one.
-     *
+     * <p>
      * Note we can't change the result type of this loader itself, because CursorLoader
      * extends AsyncTaskLoader<Cursor>, not AsyncTaskLoader<? extends Cursor>
      */

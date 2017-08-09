@@ -7,6 +7,7 @@ package co.siempo.phone.notification;
 public class NotificationContactModel {
     private String name;
     private String image;
+
     public String getName() {
         return name;
     }

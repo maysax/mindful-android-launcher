@@ -4,14 +4,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.provider.Telephony;
-
-import java.util.Locale;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -20,7 +15,6 @@ import co.siempo.phone.applist.AppOpenEvent;
 import co.siempo.phone.applist.AppOpenHandler;
 import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
-import co.siempo.phone.ui.UpdateActivity_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -189,6 +183,7 @@ public class ActivityHelper {
             UIUtils.alert(context, "No email application found in your phone");
         }
     }
+
     public void openGMape(String packageName) {
         try {
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);

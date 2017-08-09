@@ -35,8 +35,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.ContactsUtils;
+import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType.EditField;
 import com.android.contacts.common.model.dataitem.DataKind;
@@ -75,7 +75,9 @@ public class TextFieldsEditorView extends LabeledEditorView {
         super(context, attrs, defStyle);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -127,7 +129,7 @@ public class TextFieldsEditorView extends LabeledEditorView {
 
         // Show the soft-keyboard.
         InputMethodManager imm =
-                (InputMethodManager)getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             if (!imm.showSoftInput(editor, InputMethodManager.SHOW_IMPLICIT)) {
                 Log.w(TAG, "Failed to show soft input method.");
@@ -187,7 +189,7 @@ public class TextFieldsEditorView extends LabeledEditorView {
 
     @Override
     public void setValues(DataKind kind, ValuesDelta entry, RawContactDelta state, boolean readOnly,
-            ViewIdGenerator vig) {
+                          ViewIdGenerator vig) {
         super.setValues(kind, entry, state, readOnly, vig);
         // Remove edit texts that we currently have
         if (mFieldEditTexts != null) {
@@ -311,7 +313,7 @@ public class TextFieldsEditorView extends LabeledEditorView {
      */
     public void acquireEditorBounds(Rect bounds) {
         if (mFieldEditTexts != null) {
-            for (int i = mFieldEditTexts.length; --i >= 0;) {
+            for (int i = mFieldEditTexts.length; --i >= 0; ) {
                 EditText editText = mFieldEditTexts[i];
                 if (editText.getVisibility() == View.VISIBLE) {
                     bounds.set(editText.getLeft(), editText.getTop(), editText.getRight(),
@@ -378,7 +380,7 @@ public class TextFieldsEditorView extends LabeledEditorView {
             out.writeIntArray(mVisibilities);
         }
 
-        @SuppressWarnings({"unused", "hiding" })
+        @SuppressWarnings({"unused", "hiding"})
         public static final Parcelable.Creator<SavedState> CREATOR
                 = new Parcelable.Creator<SavedState>() {
             @Override

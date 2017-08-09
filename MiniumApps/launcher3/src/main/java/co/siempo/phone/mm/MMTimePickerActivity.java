@@ -15,8 +15,8 @@ public class MMTimePickerActivity extends CoreActivity {
 
 
     @AfterViews
-    public void afterViews(){
+    public void afterViews() {
         loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
-        loadFragment(new MMTimePickerFragment_(),R.id.mainView,"Main");
+        loadFragment(new MMTimePickerFragment_(), R.id.mainView, "Main");
     }
 }

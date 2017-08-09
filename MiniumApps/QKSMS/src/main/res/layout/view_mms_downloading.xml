@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
 /*
  * Copyright (C) 2008 The Android Open Source Project
  *
@@ -18,29 +17,18 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/mms_download_controls"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/mms_download_controls"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <Button android:id="@+id/btn_download_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:text="@string/download"
-        android:visibility="gone" />
+    <Button android:id="@+id/btn_download_msg" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_gravity="center_vertical"
+        android:text="@string/download" android:visibility="gone" />
 
-    <com.moez.QKSMS.ui.view.QKTextView
-        android:id="@+id/label_downloading"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:gravity="center"
-        android:text="@string/downloading" 
-        android:visibility="gone"
-        app:type="primary" />
+    <com.moez.QKSMS.ui.view.QKTextView android:id="@+id/label_downloading"
+        android:layout_width="wrap_content" android:layout_height="match_parent"
+        android:layout_marginLeft="5dp" android:layout_marginRight="5dp" android:gravity="center"
+        android:text="@string/downloading" android:visibility="gone" app:type="primary" />
 
 </LinearLayout>
 

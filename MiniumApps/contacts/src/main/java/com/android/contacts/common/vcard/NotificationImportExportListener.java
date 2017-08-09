@@ -35,7 +35,9 @@ import minium.co.contacts.R;
 
 public class NotificationImportExportListener implements VCardImportExportListener,
         Handler.Callback {
-    /** The tag used by vCard-related notifications. */
+    /**
+     * The tag used by vCard-related notifications.
+     */
     /* package */ static final String DEFAULT_NOTIFICATION_TAG = "VCardServiceProgress";
     /**
      * The tag used by vCard-related failure notifications.
@@ -92,7 +94,7 @@ public class NotificationImportExportListener implements VCardImportExportListen
 
     @Override
     public void onImportParsed(ImportRequest request, int jobId, VCardEntry entry, int currentCount,
-            int totalCount) {
+                               int totalCount) {
         if (entry.isIgnorable()) {
             return;
         }
@@ -128,7 +130,7 @@ public class NotificationImportExportListener implements VCardImportExportListen
         }
         final Notification notification =
                 NotificationImportExportListener.constructFinishNotification(mContext,
-                description, null, intent);
+                        description, null, intent);
         mNotificationManager.notify(NotificationImportExportListener.DEFAULT_NOTIFICATION_TAG,
                 jobId, notification);
     }
@@ -184,17 +186,18 @@ public class NotificationImportExportListener implements VCardImportExportListen
      * Users can cancel the process with the Notification.
      *
      * @param context
-     * @param type import/export
-     * @param description Content of the Notification.
+     * @param type         import/export
+     * @param description  Content of the Notification.
      * @param tickerText
      * @param jobId
-     * @param displayName Name to be shown to the Notification (e.g. "finished importing XXXX").
-     * Typycally a file name.
-     * @param totalCount The number of vCard entries to be imported. Used to show progress bar.
-     * -1 lets the system show the progress bar with "indeterminate" state.
+     * @param displayName  Name to be shown to the Notification (e.g. "finished importing XXXX").
+     *                     Typycally a file name.
+     * @param totalCount   The number of vCard entries to be imported. Used to show progress bar.
+     *                     -1 lets the system show the progress bar with "indeterminate" state.
      * @param currentCount The index of current vCard. Used to show progress bar.
      */
-    /* package */ static Notification constructProgressNotification(
+    /* package */
+    static Notification constructProgressNotification(
             Context context, int type, String description, String tickerText,
             int jobId, String displayName, int totalCount, int currentCount) {
         // Note: We cannot use extra values here (like setIntExtra()), as PendingIntent doesn't
@@ -216,7 +219,7 @@ public class NotificationImportExportListener implements VCardImportExportListen
 
         final Notification.Builder builder = new Notification.Builder(context);
         builder.setOngoing(true)
-                .setProgress(totalCount, currentCount, totalCount == - 1)
+                .setProgress(totalCount, currentCount, totalCount == -1)
                 .setTicker(tickerText)
                 .setContentTitle(description)
                 .setSmallIcon(type == VCardService.TYPE_IMPORT
@@ -236,7 +239,8 @@ public class NotificationImportExportListener implements VCardImportExportListen
      * @param context
      * @param description Content of the Notification
      */
-    /* package */ static Notification constructCancelNotification(
+    /* package */
+    static Notification constructCancelNotification(
             Context context, String description) {
         return new Notification.Builder(context)
                 .setAutoCancel(true)
@@ -252,9 +256,10 @@ public class NotificationImportExportListener implements VCardImportExportListen
      *
      * @param context
      * @param description Content of the Notification
-     * @param intent Intent to be launched when the Notification is clicked. Can be null.
+     * @param intent      Intent to be launched when the Notification is clicked. Can be null.
      */
-    /* package */ static Notification constructFinishNotification(
+    /* package */
+    static Notification constructFinishNotification(
             Context context, String title, String description, Intent intent) {
         return new Notification.Builder(context)
                 .setAutoCancel(true)
@@ -270,9 +275,10 @@ public class NotificationImportExportListener implements VCardImportExportListen
      * Constructs a Notification telling the vCard import has failed.
      *
      * @param context
-     * @param reason The reason why the import has failed. Shown in description field.
+     * @param reason  The reason why the import has failed. Shown in description field.
      */
-    /* package */ static Notification constructImportFailureNotification(
+    /* package */
+    static Notification constructImportFailureNotification(
             Context context, String reason) {
         return new Notification.Builder(context)
                 .setAutoCancel(true)

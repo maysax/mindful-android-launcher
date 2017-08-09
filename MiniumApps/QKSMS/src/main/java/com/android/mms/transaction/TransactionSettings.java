@@ -22,6 +22,7 @@ import android.content.Context;
 import android.net.NetworkUtils;
 import android.text.TextUtils;
 import android.util.Log;
+
 import com.moez.QKSMS.MmsConfig;
 import com.moez.QKSMS.mmssms.Transaction;
 import com.moez.QKSMS.mmssms.Utils;
@@ -48,10 +49,10 @@ public class TransactionSettings {
             "mmsproxy",        // 2
             "mmsport"          // 3
     };
-    private static final int COLUMN_TYPE         = 0;
-    private static final int COLUMN_MMSC         = 1;
-    private static final int COLUMN_MMSPROXY     = 2;
-    private static final int COLUMN_MMSPORT      = 3;
+    private static final int COLUMN_TYPE = 0;
+    private static final int COLUMN_MMSC = 1;
+    private static final int COLUMN_MMSPROXY = 2;
+    private static final int COLUMN_MMSPORT = 3;
 
     /**
      * Constructor that uses the default settings of the MMS Client.
@@ -83,39 +84,39 @@ public class TransactionSettings {
 //
 //        if (cursor == null) {
 //            Log.e(TAG, "Apn is not found in Database!");
-            if (Transaction.settings == null) {
-                Transaction.settings = Utils.getDefaultSendSettings(context);
-            }
+        if (Transaction.settings == null) {
+            Transaction.settings = Utils.getDefaultSendSettings(context);
+        }
 
-            mServiceCenter = NetworkUtils.trimV4AddrZeros(Transaction.settings.getMmsc());
-            mProxyAddress = NetworkUtils.trimV4AddrZeros(Transaction.settings.getProxy());
+        mServiceCenter = NetworkUtils.trimV4AddrZeros(Transaction.settings.getMmsc());
+        mProxyAddress = NetworkUtils.trimV4AddrZeros(Transaction.settings.getProxy());
 
-            // Set up the agent, profile url and tag name to be used in the mms request if they are attached in settings
-            String agent = Transaction.settings.getAgent();
-            if (agent != null && !agent.trim().equals("")) {
-                MmsConfig.setUserAgent(agent);
-                if (LOCAL_LOGV) Log.v(TAG, "set user agent");
-            }
+        // Set up the agent, profile url and tag name to be used in the mms request if they are attached in settings
+        String agent = Transaction.settings.getAgent();
+        if (agent != null && !agent.trim().equals("")) {
+            MmsConfig.setUserAgent(agent);
+            if (LOCAL_LOGV) Log.v(TAG, "set user agent");
+        }
 
-            String uaProfUrl = Transaction.settings.getUserProfileUrl();
-            if (uaProfUrl != null && !uaProfUrl.trim().equals("")) {
-                MmsConfig.setUaProfUrl(uaProfUrl);
-                if (LOCAL_LOGV) Log.v(TAG, "set user agent profile url");
-            }
+        String uaProfUrl = Transaction.settings.getUserProfileUrl();
+        if (uaProfUrl != null && !uaProfUrl.trim().equals("")) {
+            MmsConfig.setUaProfUrl(uaProfUrl);
+            if (LOCAL_LOGV) Log.v(TAG, "set user agent profile url");
+        }
 
-            String uaProfTagName = Transaction.settings.getUaProfTagName();
-            if (uaProfTagName != null && !uaProfTagName.trim().equals("")) {
-                MmsConfig.setUaProfTagName(uaProfTagName);
-                if (LOCAL_LOGV) Log.v(TAG, "set user agent profile tag name");
-            }
+        String uaProfTagName = Transaction.settings.getUaProfTagName();
+        if (uaProfTagName != null && !uaProfTagName.trim().equals("")) {
+            MmsConfig.setUaProfTagName(uaProfTagName);
+            if (LOCAL_LOGV) Log.v(TAG, "set user agent profile tag name");
+        }
 
-            if (isProxySet()) {
-                try {
-                    mProxyPort = Integer.parseInt(Transaction.settings.getPort());
-                } catch (NumberFormatException e) {
-                    Log.e(TAG, "could not get proxy: " + Transaction.settings.getPort(), e);
-                }
+        if (isProxySet()) {
+            try {
+                mProxyPort = Integer.parseInt(Transaction.settings.getPort());
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "could not get proxy: " + Transaction.settings.getPort(), e);
             }
+        }
 //        }
 
 //        boolean sawValidApn = false;
@@ -161,11 +162,11 @@ public class TransactionSettings {
     /**
      * Constructor that overrides the default settings of the MMS Client.
      *
-     * @param mmscUrl The MMSC URL
+     * @param mmscUrl   The MMSC URL
      * @param proxyAddr The proxy address
      * @param proxyPort The port used by the proxy address
-     * immediately start a SendTransaction upon completion of a NotificationTransaction,
-     * false otherwise.
+     *                  immediately start a SendTransaction upon completion of a NotificationTransaction,
+     *                  false otherwise.
      */
     public TransactionSettings(String mmscUrl, String proxyAddr, int proxyPort) {
         mServiceCenter = mmscUrl != null ? mmscUrl.trim() : null;
@@ -173,9 +174,9 @@ public class TransactionSettings {
         mProxyPort = proxyPort;
 
         if (LOCAL_LOGV) Log.v(TAG, "TransactionSettings: " + mServiceCenter +
-                    " proxyAddress: " + mProxyAddress +
-                    " proxyPort: " + mProxyPort);
-   }
+                " proxyAddress: " + mProxyAddress +
+                " proxyPort: " + mProxyPort);
+    }
 
     public String getMmscUrl() {
         return mServiceCenter;

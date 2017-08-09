@@ -72,7 +72,7 @@ public class SmsReceiver extends BroadcastReceiver {
         synchronized (mStartingServiceSync) {
             if (mStartingService == null) {
                 PowerManager pm =
-                    (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+                        (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 mStartingService = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                         "StartingAlertService");
                 mStartingService.setReferenceCounted(false);

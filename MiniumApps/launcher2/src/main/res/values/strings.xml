@@ -43,7 +43,9 @@
     <string name="title_welcome_siempo">Welcome to Siempo</string>
     <string name="title_welcome_siempo2">New Experience</string>
     <string name="title_welcome_siempo3">Distraction Free</string>
-    <string name="msg_siempo_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="msg_siempo_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    </string>
 
     <string-array name="socialNetworks">
         <item>Twitter</item>

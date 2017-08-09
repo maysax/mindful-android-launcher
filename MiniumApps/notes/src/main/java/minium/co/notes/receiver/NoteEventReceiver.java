@@ -94,18 +94,18 @@ public class NoteEventReceiver extends BroadcastReceiver {
         String ret = "";
 
         if (splits.length > 0) {
-            ret += splits [0];
+            ret += splits[0];
             ret += " ";
         }
 
         if (splits.length > 1) {
-            ret += splits [1];
+            ret += splits[1];
             ret += " ";
         }
 
 
         if (splits.length > 2) {
-            ret += splits [2];
+            ret += splits[2];
         }
 
         return ret;

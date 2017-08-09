@@ -29,6 +29,7 @@ public class TempFileProvider extends ContentProvider {
 
     private static final int MMS_SCRAP_SPACE = 1;
     private static final UriMatcher sURLMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
     static {
         sURLMatcher.addURI("mms_temp_file", "scrapSpace", MMS_SCRAP_SPACE);
     }
@@ -40,7 +41,7 @@ public class TempFileProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection,
-            String selection, String[] selectionArgs, String sortOrder) {
+                        String selection, String[] selectionArgs, String sortOrder) {
         return null;
     }
 
@@ -56,7 +57,7 @@ public class TempFileProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values,
-            String selection, String[] selectionArgs) {
+                      String selection, String[] selectionArgs) {
         return 0;
     }
 
@@ -80,8 +81,8 @@ public class TempFileProvider extends ContentProvider {
                 modeFlags = ParcelFileDescriptor.MODE_READ_ONLY;
             } else {
                 modeFlags = ParcelFileDescriptor.MODE_READ_WRITE
-                            | ParcelFileDescriptor.MODE_CREATE
-                            | ParcelFileDescriptor.MODE_TRUNCATE;
+                        | ParcelFileDescriptor.MODE_CREATE
+                        | ParcelFileDescriptor.MODE_TRUNCATE;
             }
             pfd = ParcelFileDescriptor.open(file, modeFlags);
         } catch (Exception ex) {
@@ -135,13 +136,14 @@ public class TempFileProvider extends ContentProvider {
     /**
      * renameScrapFile renames the single scrap file to a new name so newer uses of the scrap
      * file won't overwrite the previously captured data.
-     * @param fileExtension file extension for the temp file, typically ".jpg" or ".3gp"
+     *
+     * @param fileExtension    file extension for the temp file, typically ".jpg" or ".3gp"
      * @param uniqueIdentifier a separator to add to the file to make it unique,
-     *        such as the slide number. This parameter can be empty or null.
+     *                         such as the slide number. This parameter can be empty or null.
      * @return uri of renamed file. If there's an error renaming, null will be returned
      */
     public static Uri renameScrapFile(String fileExtension, String uniqueIdentifier,
-            Context context) {
+                                      Context context) {
         String filePath = getScrapPath(context);
         // There's only a single scrap file, but there can be several slides. We rename
         // the scrap file to a new scrap file with the slide number as part of the filename.
@@ -165,6 +167,7 @@ public class TempFileProvider extends ContentProvider {
     /**
      * Pass in a path to a file and this function will return true if it thinks the path
      * points to one of its scrap files.
+     *
      * @param path full path of a file
      * @return true if path is a scrap file path
      */

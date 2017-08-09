@@ -53,7 +53,7 @@ import java.util.ArrayList;
  * <p>
  * Structure of results output is up to implementor of
  * {@link PerformanceResultsWriter }.
- *
+ * <p>
  * {@hide} Pending approval for public API.
  */
 public class PerformanceCollector {
@@ -79,8 +79,8 @@ public class PerformanceCollector {
          * for reporting performance data collected in the snapshot.
          *
          * @param results memory and runtime metrics stored as key/value pairs,
-         *        in the same structure as returned by
-         *        PerformanceCollector#endSnapshot()
+         *                in the same structure as returned by
+         *                PerformanceCollector#endSnapshot()
          * @see PerformanceCollector#endSnapshot()
          */
         public void writeEndSnapshot(Bundle results);
@@ -313,38 +313,38 @@ public class PerformanceCollector {
      * Bundle object.
      *
      * @return Memory and runtime metrics stored as key/value pairs. Values are
-     *         of type long, and keys include:
-     *         <ul>
-     *         <li>{@link #METRIC_KEY_CPU_TIME cpu_time}
-     *         <li>{@link #METRIC_KEY_EXECUTION_TIME execution_time}
-     *         <li>{@link #METRIC_KEY_PRE_RECEIVED_TRANSACTIONS
-     *         pre_received_transactions}
-     *         <li>{@link #METRIC_KEY_PRE_SENT_TRANSACTIONS
-     *         pre_sent_transactions}
-     *         <li>{@link #METRIC_KEY_RECEIVED_TRANSACTIONS
-     *         received_transactions}
-     *         <li>{@link #METRIC_KEY_SENT_TRANSACTIONS sent_transactions}
-     *         <li>{@link #METRIC_KEY_GC_INVOCATION_COUNT gc_invocation_count}
-     *         <li>{@link #METRIC_KEY_JAVA_ALLOCATED java_allocated}
-     *         <li>{@link #METRIC_KEY_JAVA_FREE java_free}
-     *         <li>{@link #METRIC_KEY_JAVA_PRIVATE_DIRTY java_private_dirty}
-     *         <li>{@link #METRIC_KEY_JAVA_PSS java_pss}
-     *         <li>{@link #METRIC_KEY_JAVA_SHARED_DIRTY java_shared_dirty}
-     *         <li>{@link #METRIC_KEY_JAVA_SIZE java_size}
-     *         <li>{@link #METRIC_KEY_NATIVE_ALLOCATED native_allocated}
-     *         <li>{@link #METRIC_KEY_NATIVE_FREE native_free}
-     *         <li>{@link #METRIC_KEY_NATIVE_PRIVATE_DIRTY native_private_dirty}
-     *         <li>{@link #METRIC_KEY_NATIVE_PSS native_pss}
-     *         <li>{@link #METRIC_KEY_NATIVE_SHARED_DIRTY native_shared_dirty}
-     *         <li>{@link #METRIC_KEY_NATIVE_SIZE native_size}
-     *         <li>{@link #METRIC_KEY_GLOBAL_ALLOC_COUNT global_alloc_count}
-     *         <li>{@link #METRIC_KEY_GLOBAL_ALLOC_SIZE global_alloc_size}
-     *         <li>{@link #METRIC_KEY_GLOBAL_FREED_COUNT global_freed_count}
-     *         <li>{@link #METRIC_KEY_GLOBAL_FREED_SIZE global_freed_size}
-     *         <li>{@link #METRIC_KEY_OTHER_PRIVATE_DIRTY other_private_dirty}
-     *         <li>{@link #METRIC_KEY_OTHER_PSS other_pss}
-     *         <li>{@link #METRIC_KEY_OTHER_SHARED_DIRTY other_shared_dirty}
-     *         </ul>
+     * of type long, and keys include:
+     * <ul>
+     * <li>{@link #METRIC_KEY_CPU_TIME cpu_time}
+     * <li>{@link #METRIC_KEY_EXECUTION_TIME execution_time}
+     * <li>{@link #METRIC_KEY_PRE_RECEIVED_TRANSACTIONS
+     * pre_received_transactions}
+     * <li>{@link #METRIC_KEY_PRE_SENT_TRANSACTIONS
+     * pre_sent_transactions}
+     * <li>{@link #METRIC_KEY_RECEIVED_TRANSACTIONS
+     * received_transactions}
+     * <li>{@link #METRIC_KEY_SENT_TRANSACTIONS sent_transactions}
+     * <li>{@link #METRIC_KEY_GC_INVOCATION_COUNT gc_invocation_count}
+     * <li>{@link #METRIC_KEY_JAVA_ALLOCATED java_allocated}
+     * <li>{@link #METRIC_KEY_JAVA_FREE java_free}
+     * <li>{@link #METRIC_KEY_JAVA_PRIVATE_DIRTY java_private_dirty}
+     * <li>{@link #METRIC_KEY_JAVA_PSS java_pss}
+     * <li>{@link #METRIC_KEY_JAVA_SHARED_DIRTY java_shared_dirty}
+     * <li>{@link #METRIC_KEY_JAVA_SIZE java_size}
+     * <li>{@link #METRIC_KEY_NATIVE_ALLOCATED native_allocated}
+     * <li>{@link #METRIC_KEY_NATIVE_FREE native_free}
+     * <li>{@link #METRIC_KEY_NATIVE_PRIVATE_DIRTY native_private_dirty}
+     * <li>{@link #METRIC_KEY_NATIVE_PSS native_pss}
+     * <li>{@link #METRIC_KEY_NATIVE_SHARED_DIRTY native_shared_dirty}
+     * <li>{@link #METRIC_KEY_NATIVE_SIZE native_size}
+     * <li>{@link #METRIC_KEY_GLOBAL_ALLOC_COUNT global_alloc_count}
+     * <li>{@link #METRIC_KEY_GLOBAL_ALLOC_SIZE global_alloc_size}
+     * <li>{@link #METRIC_KEY_GLOBAL_FREED_COUNT global_freed_count}
+     * <li>{@link #METRIC_KEY_GLOBAL_FREED_SIZE global_freed_size}
+     * <li>{@link #METRIC_KEY_OTHER_PRIVATE_DIRTY other_private_dirty}
+     * <li>{@link #METRIC_KEY_OTHER_PSS other_pss}
+     * <li>{@link #METRIC_KEY_OTHER_SHARED_DIRTY other_shared_dirty}
+     * </ul>
      */
     public Bundle endSnapshot() {
         endPerformanceSnapshot();
@@ -357,7 +357,7 @@ public class PerformanceCollector {
      * Start measurement of user and cpu time.
      *
      * @param label description of code block between startTiming and
-     *        stopTiming, used to label output
+     *              stopTiming, used to label output
      */
     public void startTiming(String label) {
         if (mPerfWriter != null)
@@ -377,12 +377,12 @@ public class PerformanceCollector {
      *              addIteration, and between two calls to addIteration, used
      *              to label output
      * @return Runtime metrics stored as key/value pairs. Values are of type
-     *         long, and keys include:
-     *         <ul>
-     *         <li>{@link #METRIC_KEY_LABEL label}
-     *         <li>{@link #METRIC_KEY_CPU_TIME cpu_time}
-     *         <li>{@link #METRIC_KEY_EXECUTION_TIME execution_time}
-     *         </ul>
+     * long, and keys include:
+     * <ul>
+     * <li>{@link #METRIC_KEY_LABEL label}
+     * <li>{@link #METRIC_KEY_CPU_TIME cpu_time}
+     * <li>{@link #METRIC_KEY_EXECUTION_TIME execution_time}
+     * </ul>
      */
     public Bundle addIteration(String label) {
         mCpuTime = Process.getElapsedCpuTime() - mCpuTime;
@@ -405,8 +405,8 @@ public class PerformanceCollector {
      * @param label description of code block between addIteration or
      *              startTiming and stopTiming, used to label output
      * @return Runtime metrics stored in a bundle, including all iterations
-     *         between calls to startTiming and stopTiming. List of iterations
-     *         is keyed by {@link #METRIC_KEY_ITERATIONS iterations}.
+     * between calls to startTiming and stopTiming. List of iterations
+     * is keyed by {@link #METRIC_KEY_ITERATIONS iterations}.
      */
     public Bundle stopTiming(String label) {
         addIteration(label);

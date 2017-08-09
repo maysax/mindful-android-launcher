@@ -30,65 +30,66 @@ import java.util.SortedMap;
  */
 class DefaultMapStorage extends PhonePrefixMapStorageStrategy {
 
-  public DefaultMapStorage() {}
+    public DefaultMapStorage() {
+    }
 
-  private int[] phoneNumberPrefixes;
-  private String[] descriptions;
+    private int[] phoneNumberPrefixes;
+    private String[] descriptions;
 
-  @Override
-  public int getPrefix(int index) {
-    return phoneNumberPrefixes[index];
-  }
+    @Override
+    public int getPrefix(int index) {
+        return phoneNumberPrefixes[index];
+    }
 
-  @Override
-  public String getDescription(int index) {
-    return descriptions[index];
-  }
+    @Override
+    public String getDescription(int index) {
+        return descriptions[index];
+    }
 
-  @Override
-  public void readFromSortedMap(SortedMap<Integer, String> sortedPhonePrefixMap) {
-    numOfEntries = sortedPhonePrefixMap.size();
-    phoneNumberPrefixes = new int[numOfEntries];
-    descriptions = new String[numOfEntries];
-    int index = 0;
-    for (int prefix : sortedPhonePrefixMap.keySet()) {
-      phoneNumberPrefixes[index++] = prefix;
-      possibleLengths.add((int) Math.log10(prefix) + 1);
+    @Override
+    public void readFromSortedMap(SortedMap<Integer, String> sortedPhonePrefixMap) {
+        numOfEntries = sortedPhonePrefixMap.size();
+        phoneNumberPrefixes = new int[numOfEntries];
+        descriptions = new String[numOfEntries];
+        int index = 0;
+        for (int prefix : sortedPhonePrefixMap.keySet()) {
+            phoneNumberPrefixes[index++] = prefix;
+            possibleLengths.add((int) Math.log10(prefix) + 1);
+        }
+        sortedPhonePrefixMap.values().toArray(descriptions);
     }
-    sortedPhonePrefixMap.values().toArray(descriptions);
-  }
 
-  @Override
-  public void readExternal(ObjectInput objectInput) throws IOException {
-    numOfEntries = objectInput.readInt();
-    if (phoneNumberPrefixes == null || phoneNumberPrefixes.length < numOfEntries) {
-      phoneNumberPrefixes = new int[numOfEntries];
+    @Override
+    public void readExternal(ObjectInput objectInput) throws IOException {
+        numOfEntries = objectInput.readInt();
+        if (phoneNumberPrefixes == null || phoneNumberPrefixes.length < numOfEntries) {
+            phoneNumberPrefixes = new int[numOfEntries];
+        }
+        if (descriptions == null || descriptions.length < numOfEntries) {
+            descriptions = new String[numOfEntries];
+        }
+        for (int i = 0; i < numOfEntries; i++) {
+            phoneNumberPrefixes[i] = objectInput.readInt();
+            descriptions[i] = objectInput.readUTF();
+        }
+        int sizeOfLengths = objectInput.readInt();
+        possibleLengths.clear();
+        for (int i = 0; i < sizeOfLengths; i++) {
+            possibleLengths.add(objectInput.readInt());
+        }
     }
-    if (descriptions == null || descriptions.length < numOfEntries) {
-      descriptions = new String[numOfEntries];
-    }
-    for (int i = 0; i < numOfEntries; i++) {
-      phoneNumberPrefixes[i] = objectInput.readInt();
-      descriptions[i] = objectInput.readUTF();
-    }
-    int sizeOfLengths = objectInput.readInt();
-    possibleLengths.clear();
-    for (int i = 0; i < sizeOfLengths; i++) {
-      possibleLengths.add(objectInput.readInt());
-    }
-  }
 
-  @Override
-  public void writeExternal(ObjectOutput objectOutput) throws IOException {
-    objectOutput.writeInt(numOfEntries);
-    for (int i = 0; i < numOfEntries; i++) {
-      objectOutput.writeInt(phoneNumberPrefixes[i]);
-      objectOutput.writeUTF(descriptions[i]);
+    @Override
+    public void writeExternal(ObjectOutput objectOutput) throws IOException {
+        objectOutput.writeInt(numOfEntries);
+        for (int i = 0; i < numOfEntries; i++) {
+            objectOutput.writeInt(phoneNumberPrefixes[i]);
+            objectOutput.writeUTF(descriptions[i]);
+        }
+        int sizeOfLengths = possibleLengths.size();
+        objectOutput.writeInt(sizeOfLengths);
+        for (Integer length : possibleLengths) {
+            objectOutput.writeInt(length);
+        }
     }
-    int sizeOfLengths = possibleLengths.size();
-    objectOutput.writeInt(sizeOfLengths);
-    for (Integer length : possibleLengths) {
-      objectOutput.writeInt(length);
-    }
-  }
 }

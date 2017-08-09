@@ -33,14 +33,13 @@ import android.os.Messenger;
 import android.text.TextUtils;
 import android.util.Log;
 
-
 import java.io.File;
 
 import minium.co.contacts.R;
 
 /**
  * Shows a dialog confirming the export and asks actual vCard export to {@link VCardService}
- *
+ * <p>
  * This Activity first connects to VCardService and ask an available file name and shows it to
  * a user. After the user's confirmation, it send export request with the file name, assuming the
  * file name is not reserved yet.
@@ -61,44 +60,44 @@ public class ExportVCardActivity extends Activity implements ServiceConnection,
             if (msg.arg1 != 0) {
                 Log.i(LOG_TAG, "Message returned from vCard server contains error code.");
                 if (msg.obj != null) {
-                    mErrorReason = (String)msg.obj;
+                    mErrorReason = (String) msg.obj;
                 }
                 showDialog(msg.arg1);
                 return;
             }
 
             switch (msg.what) {
-            case VCardService.MSG_SET_AVAILABLE_EXPORT_DESTINATION:
-                if (msg.obj == null) {
-                    Log.w(LOG_TAG, "Message returned from vCard server doesn't contain valid path");
-                    mErrorReason = getString(R.string.fail_reason_unknown);
-                    showDialog(R.id.dialog_fail_to_export_with_reason);
-                } else {
-                    mTargetFileName = (String)msg.obj;
-                    if (TextUtils.isEmpty(mTargetFileName)) {
-                        Log.w(LOG_TAG, "Destination file name coming from vCard service is empty.");
+                case VCardService.MSG_SET_AVAILABLE_EXPORT_DESTINATION:
+                    if (msg.obj == null) {
+                        Log.w(LOG_TAG, "Message returned from vCard server doesn't contain valid path");
                         mErrorReason = getString(R.string.fail_reason_unknown);
                         showDialog(R.id.dialog_fail_to_export_with_reason);
                     } else {
-                        if (DEBUG) {
-                            Log.d(LOG_TAG,
-                                    String.format("Target file name is set (%s). " +
-                                            "Show confirmation dialog", mTargetFileName));
+                        mTargetFileName = (String) msg.obj;
+                        if (TextUtils.isEmpty(mTargetFileName)) {
+                            Log.w(LOG_TAG, "Destination file name coming from vCard service is empty.");
+                            mErrorReason = getString(R.string.fail_reason_unknown);
+                            showDialog(R.id.dialog_fail_to_export_with_reason);
+                        } else {
+                            if (DEBUG) {
+                                Log.d(LOG_TAG,
+                                        String.format("Target file name is set (%s). " +
+                                                "Show confirmation dialog", mTargetFileName));
+                            }
+                            showDialog(R.id.dialog_export_confirmation);
                         }
-                        showDialog(R.id.dialog_export_confirmation);
                     }
-                }
-                break;
-            default:
-                Log.w(LOG_TAG, "Unknown message type: " + msg.what);
-                super.handleMessage(msg);
+                    break;
+                default:
+                    Log.w(LOG_TAG, "Unknown message type: " + msg.what);
+                    super.handleMessage(msg);
             }
         }
     }
 
     /**
      * True when this Activity is connected to {@link VCardService}.
-     *
+     * <p>
      * Should be touched inside synchronized block.
      */
     private boolean mConnected;
@@ -256,9 +255,9 @@ public class ExportVCardActivity extends Activity implements ServiceConnection,
     @Override
     protected void onPrepareDialog(int id, Dialog dialog, Bundle args) {
         if (id == R.id.dialog_fail_to_export_with_reason) {
-            ((AlertDialog)dialog).setMessage(mErrorReason);
+            ((AlertDialog) dialog).setMessage(mErrorReason);
         } else if (id == R.id.dialog_export_confirmation) {
-            ((AlertDialog)dialog).setMessage(
+            ((AlertDialog) dialog).setMessage(
                     getString(R.string.confirm_export_message, mTargetFileName));
         } else {
             super.onPrepareDialog(id, dialog, args);

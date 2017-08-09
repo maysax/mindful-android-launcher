@@ -34,7 +34,7 @@ public class VCardConfig {
     /* package */ static final int LOG_LEVEL_PERFORMANCE_MEASUREMENT = 0x1;
     /* package */ static final int LOG_LEVEL_SHOW_WARNING = 0x2;
     /* package */ static final int LOG_LEVEL_VERBOSE =
-        LOG_LEVEL_PERFORMANCE_MEASUREMENT | LOG_LEVEL_SHOW_WARNING;
+            LOG_LEVEL_PERFORMANCE_MEASUREMENT | LOG_LEVEL_SHOW_WARNING;
 
     /* package */ static final int LOG_LEVEL = LOG_LEVEL_NONE;
 
@@ -160,6 +160,7 @@ public class VCardConfig {
      * In vCard 3.0, Quoted-Printable is explicitly "prohibitted", so we don't need to care this
      * kind of problem (hopefully).
      * </p>
+     *
      * @hide
      */
     public static final int FLAG_REFRAIN_QP_TO_NAME_PROPERTIES = 0x10000000;
@@ -238,9 +239,10 @@ public class VCardConfig {
     public static final int FLAG_REFRAIN_PHONE_NUMBER_FORMATTING = 0x02000000;
 
     /**
-     * <P>
+     * <p>
      * The flag asking exporter to refrain image export.
      * </P>
+     *
      * @hide will be deleted in the near future.
      */
     public static final int FLAG_REFRAIN_IMAGE_EXPORT = 0x00800000;
@@ -275,7 +277,7 @@ public class VCardConfig {
      * </p>
      */
     public static final int VCARD_TYPE_V21_GENERIC =
-        (VERSION_21 | NAME_ORDER_DEFAULT | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
+            (VERSION_21 | NAME_ORDER_DEFAULT | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
 
     /* package */ static String VCARD_TYPE_V21_GENERIC_STR = "v21_generic";
 
@@ -288,16 +290,17 @@ public class VCardConfig {
      * </p>
      */
     public static final int VCARD_TYPE_V30_GENERIC =
-        (VERSION_30 | NAME_ORDER_DEFAULT | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
+            (VERSION_30 | NAME_ORDER_DEFAULT | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
 
     /* package */ static final String VCARD_TYPE_V30_GENERIC_STR = "v30_generic";
 
     /**
      * General vCard format with the version 4.0.
+     *
      * @hide vCard 4.0 is not published yet.
      */
     public static final int VCARD_TYPE_V40_GENERIC =
-        (VERSION_40 | NAME_ORDER_DEFAULT | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
+            (VERSION_40 | NAME_ORDER_DEFAULT | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
 
     /* package */ static final String VCARD_TYPE_V40_GENERIC_STR = "v40_generic";
 
@@ -308,7 +311,7 @@ public class VCardConfig {
      * </p>
      */
     public static final int VCARD_TYPE_V21_EUROPE =
-        (VERSION_21 | NAME_ORDER_EUROPE | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
+            (VERSION_21 | NAME_ORDER_EUROPE | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
 
     /* package */ static final String VCARD_TYPE_V21_EUROPE_STR = "v21_europe";
 
@@ -321,7 +324,7 @@ public class VCardConfig {
      * </p>
      */
     public static final int VCARD_TYPE_V30_EUROPE =
-        (VERSION_30 | NAME_ORDER_EUROPE | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
+            (VERSION_30 | NAME_ORDER_EUROPE | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
 
     /* package */ static final String VCARD_TYPE_V30_EUROPE_STR = "v30_europe";
 
@@ -334,7 +337,7 @@ public class VCardConfig {
      * </p>
      */
     public static final int VCARD_TYPE_V21_JAPANESE =
-        (VERSION_21 | NAME_ORDER_JAPANESE | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
+            (VERSION_21 | NAME_ORDER_JAPANESE | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
 
     /* package */ static final String VCARD_TYPE_V21_JAPANESE_STR = "v21_japanese_utf8";
 
@@ -347,7 +350,7 @@ public class VCardConfig {
      * </p>
      */
     public static final int VCARD_TYPE_V30_JAPANESE =
-        (VERSION_30 | NAME_ORDER_JAPANESE | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
+            (VERSION_30 | NAME_ORDER_JAPANESE | FLAG_USE_DEFACT_PROPERTY | FLAG_USE_ANDROID_PROPERTY);
 
     /* package */ static final String VCARD_TYPE_V30_JAPANESE_STR = "v30_japanese_utf8";
 
@@ -358,11 +361,12 @@ public class VCardConfig {
      * possible, etc. It would be better to use Shift_JIS as a charset for maximum
      * compatibility.
      * </p>
+     *
      * @hide Should not be available world wide.
      */
     public static final int VCARD_TYPE_V21_JAPANESE_MOBILE =
-        (VERSION_21 | NAME_ORDER_JAPANESE |
-                FLAG_CONVERT_PHONETIC_NAME_STRINGS | FLAG_REFRAIN_QP_TO_NAME_PROPERTIES);
+            (VERSION_21 | NAME_ORDER_JAPANESE |
+                    FLAG_CONVERT_PHONETIC_NAME_STRINGS | FLAG_REFRAIN_QP_TO_NAME_PROPERTIES);
 
     /* package */ static final String VCARD_TYPE_V21_JAPANESE_MOBILE_STR = "v21_japanese_mobile";
 
@@ -375,10 +379,11 @@ public class VCardConfig {
      * No Android-specific property nor defact property is included. The "Primary" properties
      * are NOT encoded to Quoted-Printable.
      * </p>
+     *
      * @hide Should not be available world wide.
      */
     public static final int VCARD_TYPE_DOCOMO =
-        (VCARD_TYPE_V21_JAPANESE_MOBILE | FLAG_DOCOMO);
+            (VCARD_TYPE_V21_JAPANESE_MOBILE | FLAG_DOCOMO);
 
     /* package */ static final String VCARD_TYPE_DOCOMO_STR = "docomo";
 
@@ -450,8 +455,8 @@ public class VCardConfig {
     }
 
     public static boolean shouldRefrainQPToNameProperties(final int vcardType) {
-       return (!shouldUseQuotedPrintable(vcardType) ||
-               ((vcardType & FLAG_REFRAIN_QP_TO_NAME_PROPERTIES) != 0));
+        return (!shouldUseQuotedPrintable(vcardType) ||
+                ((vcardType & FLAG_REFRAIN_QP_TO_NAME_PROPERTIES) != 0));
     }
 
     public static boolean appendTypeParamName(final int vcardType) {
@@ -469,7 +474,8 @@ public class VCardConfig {
         return sJapaneseMobileTypeSet.contains(vcardType);
     }
 
-    /* package */ static boolean refrainPhoneNumberFormatting(final int vcardType) {
+    /* package */
+    static boolean refrainPhoneNumberFormatting(final int vcardType) {
         return ((vcardType & FLAG_REFRAIN_PHONE_NUMBER_FORMATTING) != 0);
     }
 

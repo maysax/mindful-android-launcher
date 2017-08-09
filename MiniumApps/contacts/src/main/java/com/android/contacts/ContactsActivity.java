@@ -32,8 +32,7 @@ import com.android.contacts.common.testing.InjectedServices;
  * A common superclass for Contacts activities that handles application-wide services.
  */
 public abstract class ContactsActivity extends TransactionSafeActivity
-    implements ContactSaveService.Listener
-{
+        implements ContactSaveService.Listener {
 
     private ContentResolver mContentResolver;
 
@@ -97,7 +96,7 @@ public abstract class ContactsActivity extends TransactionSafeActivity
      */
     @SuppressWarnings("unchecked")
     public <T extends Fragment> T getFragment(int id) {
-        T result = (T)getFragmentManager().findFragmentById(id);
+        T result = (T) getFragmentManager().findFragmentById(id);
         if (result == null) {
             throw new IllegalArgumentException("fragment 0x" + Integer.toHexString(id)
                     + " doesn't exist");
@@ -111,7 +110,7 @@ public abstract class ContactsActivity extends TransactionSafeActivity
      */
     @SuppressWarnings("unchecked")
     public <T extends View> T getView(int id) {
-        T result = (T)findViewById(id);
+        T result = (T) findViewById(id);
         if (result == null) {
             throw new IllegalArgumentException("view 0x" + Integer.toHexString(id)
                     + " doesn't exist");

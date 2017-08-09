@@ -15,8 +15,6 @@
  */
 package com.android.contacts.interactions;
 
-import com.android.contacts.common.util.BitmapUtil;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -29,17 +27,19 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.text.BidiFormatter;
 import android.text.TextDirectionHeuristics;
 
+import com.android.contacts.common.util.BitmapUtil;
+
 import minium.co.contacts.R;
 
 /**
  * Represents a call log event interaction, wrapping the columns in
  * {@link android.provider.CallLog.Calls}.
- *
+ * <p>
  * This class does not return log entries related to voicemail or SIP calls. Additionally,
  * this class ignores number presentation. Number presentation affects how to identify phone
  * numbers. Since, we already know the identity of the phone number owner we can ignore number
  * presentation.
- *
+ * <p>
  * As a result of ignoring voicemail and number presentation, we don't need to worry about API
  * version.
  */
@@ -164,7 +164,7 @@ public class CallLogInteraction implements ContactInteraction {
     public String getNumber() {
         final String number = mValues.getAsString(Calls.NUMBER);
         return number == null ? null :
-            sBidiFormatter.unicodeWrap(number, TextDirectionHeuristics.LTR);
+                sBidiFormatter.unicodeWrap(number, TextDirectionHeuristics.LTR);
     }
 
     public Integer getNumberPresentation() {

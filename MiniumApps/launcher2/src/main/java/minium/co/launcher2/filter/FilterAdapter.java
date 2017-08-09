@@ -90,7 +90,7 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MainListItem.ItemType itemViewType = MainListItem.ItemType.values() [getItemViewType(position)];
+        MainListItem.ItemType itemViewType = MainListItem.ItemType.values()[getItemViewType(position)];
 
         switch (itemViewType) {
 
@@ -128,9 +128,9 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             holder.icon.setText(item.getOptionsListItem().getIconName());
-            holder.icon.setTextColor(item.isEnabled() ?  ThemeUtils.getPrimaryColor(getContext()) : getContext().getResources().getColor(R.color.material_core_grey));
+            holder.icon.setTextColor(item.isEnabled() ? ThemeUtils.getPrimaryColor(getContext()) : getContext().getResources().getColor(R.color.material_core_grey));
             holder.text.setText(item.getOptionsListItem().getText());
-            holder.text.setTextColor(item.isEnabled() ?  ThemeUtils.getPrimaryColor(getContext()) : getContext().getResources().getColor(R.color.material_core_grey));
+            holder.text.setTextColor(item.isEnabled() ? ThemeUtils.getPrimaryColor(getContext()) : getContext().getResources().getColor(R.color.material_core_grey));
         }
 
         return view;
@@ -242,7 +242,7 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
                         buildData.add(originalData.get(i));
                 } else {
                     String filterableString;
-                    String [] splits;
+                    String[] splits;
 
                     switch (originalData.get(i).getType()) {
 
@@ -250,7 +250,7 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
                             filterableString = originalData.get(i).getActionListItem().getText();
                             splits = filterableString.split(" ");
 
-                            for (String str: splits) {
+                            for (String str : splits) {
                                 if (str.toLowerCase().startsWith(searchString)) {
                                     buildData.add(originalData.get(i));
                                     break;
@@ -262,7 +262,7 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
                             splits = filterableString.split(" ");
                             boolean isAdded = false;
 
-                            for (String str: splits) {
+                            for (String str : splits) {
                                 if (str.toLowerCase().startsWith(searchString)) {
                                     buildData.add(originalData.get(i));
                                     isAdded = true;

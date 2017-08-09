@@ -19,18 +19,13 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/slideshow_padding_top">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="vertical" android:paddingTop="@dimen/slideshow_padding_top">
 
         <include layout="@layout/view_toolbar" />
 
-        <com.moez.QKSMS.ui.mms.SlideView
-            android:id="@+id/slide_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <com.moez.QKSMS.ui.mms.SlideView android:id="@+id/slide_view"
+            android:layout_width="match_parent" android:layout_height="match_parent"
             android:gravity="center" />
 
     </LinearLayout>

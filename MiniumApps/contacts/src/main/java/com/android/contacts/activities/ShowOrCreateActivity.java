@@ -33,8 +33,8 @@ import android.provider.ContactsContract.RawContacts;
 import android.telecom.PhoneAccount;
 import android.util.Log;
 
-import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.ContactsActivity;
+import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.util.NotifyingAsyncQueryHandler;
 
 import minium.co.contacts.R;
@@ -59,14 +59,14 @@ public final class ShowOrCreateActivity extends ContactsActivity
     static final String TAG = "ShowOrCreateActivity";
     static final boolean LOGD = false;
 
-    static final String[] PHONES_PROJECTION = new String[] {
-        PhoneLookup._ID,
-        PhoneLookup.LOOKUP_KEY,
+    static final String[] PHONES_PROJECTION = new String[]{
+            PhoneLookup._ID,
+            PhoneLookup.LOOKUP_KEY,
     };
 
-    static final String[] CONTACTS_PROJECTION = new String[] {
-        Email.CONTACT_ID,
-        Email.LOOKUP_KEY,
+    static final String[] CONTACTS_PROJECTION = new String[]{
+            Email.CONTACT_ID,
+            Email.LOOKUP_KEY,
     };
 
     static final int CONTACT_ID_INDEX = 0;
@@ -147,7 +147,9 @@ public final class ShowOrCreateActivity extends ContactsActivity
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
         if (cursor == null) {
             // Bail when problem running query in background
@@ -204,8 +206,8 @@ public final class ShowOrCreateActivity extends ContactsActivity
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        switch(id) {
-	    case CREATE_CONTACT_DIALOG:
+        switch (id) {
+            case CREATE_CONTACT_DIALOG:
                 // Prompt user to insert or edit contact
                 final Intent createIntent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
                 createIntent.putExtras(mCreateExtras);
@@ -221,13 +223,14 @@ public final class ShowOrCreateActivity extends ContactsActivity
                         .setNegativeButton(android.R.string.cancel,
                                 new IntentClickListener(this, null))
                         .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialog) {
-                                    finish(); // Close the activity.
-                                }})
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                finish(); // Close the activity.
+                            }
+                        })
                         .create();
         }
-	return super.onCreateDialog(id);
+        return super.onCreateDialog(id);
     }
 
     /**

@@ -81,12 +81,12 @@ public final class VCardParser_V21 extends VCardParser {
      * </p>
      */
     /* package */ static final Set<String> sAvailableEncoding =
-        Collections.unmodifiableSet(new HashSet<String>(
-                Arrays.asList(VCardConstants.PARAM_ENCODING_7BIT,
-                        VCardConstants.PARAM_ENCODING_8BIT,
-                        VCardConstants.PARAM_ENCODING_QP,
-                        VCardConstants.PARAM_ENCODING_BASE64,
-                        VCardConstants.PARAM_ENCODING_B)));
+            Collections.unmodifiableSet(new HashSet<String>(
+                    Arrays.asList(VCardConstants.PARAM_ENCODING_7BIT,
+                            VCardConstants.PARAM_ENCODING_8BIT,
+                            VCardConstants.PARAM_ENCODING_QP,
+                            VCardConstants.PARAM_ENCODING_BASE64,
+                            VCardConstants.PARAM_ENCODING_B)));
 
     private final VCardParserImpl_V21 mVCardParserImpl;
 

@@ -25,9 +25,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.ContactsUtils;
+import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.util.ContactPhotoUtils;
@@ -69,7 +69,9 @@ public class PhotoEditorView extends LinearLayout implements Editor {
         // you can only change the picture in an existing editor.
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -86,16 +88,20 @@ public class PhotoEditorView extends LinearLayout implements Editor {
         });
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onFieldChanged(String column, String value) {
         throw new UnsupportedOperationException("Photos don't support direct field changes");
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setValues(DataKind kind, ValuesDelta values, RawContactDelta state, boolean readOnly,
-            ViewIdGenerator vig) {
+                          ViewIdGenerator vig) {
         mEntry = values;
         mReadOnly = readOnly;
 
@@ -134,7 +140,7 @@ public class PhotoEditorView extends LinearLayout implements Editor {
     public void setPhotoBitmap(Bitmap photo) {
         if (photo == null) {
             // Clear any existing photo and return
-            mEntry.put(Photo.PHOTO, (byte[])null);
+            mEntry.put(Photo.PHOTO, (byte[]) null);
             resetDefault();
             return;
         }
@@ -175,7 +181,9 @@ public class PhotoEditorView extends LinearLayout implements Editor {
         mEntry.setFromTemplate(true);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setEditorListener(EditorListener listener) {
         mListener = listener;

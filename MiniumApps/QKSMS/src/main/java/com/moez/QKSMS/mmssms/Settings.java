@@ -61,6 +61,7 @@ public class Settings {
 
     /**
      * Copy constuctor
+     *
      * @param s is the Settings object to copy from
      */
     public Settings(Settings s) {
@@ -178,21 +179,27 @@ public class Settings {
      *
      * @param agent is the agent to send http request with
      */
-    public void setAgent(String agent) { this.userAgent = agent; }
+    public void setAgent(String agent) {
+        this.userAgent = agent;
+    }
 
     /**
      * Sets the user agent profile url
      *
      * @param userProfileUrl is the user agent profile url
      */
-    public void setUserProfileUrl(String userProfileUrl) { this.uaProfUrl = userProfileUrl; }
+    public void setUserProfileUrl(String userProfileUrl) {
+        this.uaProfUrl = userProfileUrl;
+    }
 
     /**
      * Sets the user agent profile tag name
      *
      * @param tagName the tag name to use
      */
-    public void setUaProfTagName(String tagName) { this.uaProfTagName = tagName; }
+    public void setUaProfTagName(String tagName) {
+        this.uaProfTagName = tagName;
+    }
 
     /**
      * Sets group MMS messages
@@ -206,7 +213,7 @@ public class Settings {
     /**
      * Sets the max attachment size
      *
-     * @param maxAttachmentSize  is a long specifying the maximum number of bytes that an MMS attachment can be, or -1 if no maximum
+     * @param maxAttachmentSize is a long specifying the maximum number of bytes that an MMS attachment can be, or -1 if no maximum
      */
     public void setMaxAttachmentSize(long maxAttachmentSize) {
         this.maxAttachmentSize = maxAttachmentSize;
@@ -326,17 +333,23 @@ public class Settings {
     /**
      * @return the user agent to send mms with
      */
-    public String getAgent() { return this.userAgent; }
+    public String getAgent() {
+        return this.userAgent;
+    }
 
     /**
      * @return the user agent profile url to send mms with
      */
-    public String getUserProfileUrl() { return this.uaProfUrl; }
+    public String getUserProfileUrl() {
+        return this.uaProfUrl;
+    }
 
     /**
      * @return the user agent profile tag name
      */
-    public String getUaProfTagName() { return this.uaProfTagName; }
+    public String getUaProfTagName() {
+        return this.uaProfTagName;
+    }
 
     /**
      * @return whether or not to send Group MMS or multiple SMS/Voice messages

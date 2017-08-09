@@ -27,33 +27,37 @@ import android.provider.ContactsContract.DisplayNameSources;
 import com.android.contacts.common.GroupMetaData;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.util.DataStatus;
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * A Contact represents a single person or logical entity as perceived by the user.  The information
  * about a contact can come from multiple data sources, which are each represented by a RawContact
  * object.  Thus, a Contact is associated with a collection of RawContact objects.
- *
+ * <p>
  * The aggregation of raw contacts into a single contact is performed automatically, and it is
  * also possible for users to manually split and join raw contacts into various contacts.
- *
+ * <p>
  * Only the {@link ContactLoader} class can create a Contact object with various flags to allow
  * partial loading of contact data.  Thus, an instance of this class should be treated as
  * a read-only object.
  */
 public class Contact {
     private enum Status {
-        /** Contact is successfully loaded */
+        /**
+         * Contact is successfully loaded
+         */
         LOADED,
-        /** There was an error loading the contact */
+        /**
+         * There was an error loading the contact
+         */
         ERROR,
-        /** Contact is not found */
+        /**
+         * Contact is not found
+         */
         NOT_FOUND,
     }
 
@@ -73,7 +77,7 @@ public class Contact {
     private final boolean mStarred;
     private final Integer mPresence;
     private ImmutableList<RawContact> mRawContacts;
-    private ImmutableMap<Long,DataStatus> mStatuses;
+    private ImmutableMap<Long, DataStatus> mStatuses;
     private ImmutableList<AccountType> mInvitableAccountTypes;
 
     private String mDirectoryDisplayName;
@@ -141,10 +145,10 @@ public class Contact {
      * Constructor to call when contact was found
      */
     public Contact(Uri requestedUri, Uri uri, Uri lookupUri, long directoryId, String lookupKey,
-            long id, long nameRawContactId, int displayNameSource, long photoId,
-            String photoUri, String displayName, String altDisplayName, String phoneticName,
-            boolean starred, Integer presence, boolean sendToVoicemail, String customRingtone,
-            boolean isUserProfile) {
+                   long id, long nameRawContactId, int displayNameSource, long photoId,
+                   String photoUri, String displayName, String altDisplayName, String phoneticName,
+                   boolean starred, Integer presence, boolean sendToVoicemail, String customRingtone,
+                   boolean isUserProfile) {
         mStatus = Status.LOADED;
         mException = null;
         mRequestedUri = requestedUri;
@@ -211,7 +215,7 @@ public class Contact {
      * @param exportSupport See {@link Directory#EXPORT_SUPPORT}.
      */
     public void setDirectoryMetaData(String displayName, String directoryType,
-            String accountType, String accountName, int exportSupport) {
+                                     String accountType, String accountName, int exportSupport) {
         mDirectoryDisplayName = displayName;
         mDirectoryType = directoryType;
         mDirectoryAccountType = accountType;
@@ -274,10 +278,10 @@ public class Contact {
 
     /**
      * @return true when an exception happened during loading, in which case
-     *     {@link #getException} returns the actual exception object.
-     *     Note {@link #isNotFound()} and {@link #isError()} are mutually exclusive; If
-     *     {@link #isError()} is {@code true}, {@link #isNotFound()} is always {@code false},
-     *     and vice versa.
+     * {@link #getException} returns the actual exception object.
+     * Note {@link #isNotFound()} and {@link #isError()} are mutually exclusive; If
+     * {@link #isError()} is {@code true}, {@link #isNotFound()} is always {@code false},
+     * and vice versa.
      */
     public boolean isError() {
         return mStatus == Status.ERROR;
@@ -289,9 +293,9 @@ public class Contact {
 
     /**
      * @return true when the specified contact is not found.
-     *     Note {@link #isNotFound()} and {@link #isError()} are mutually exclusive; If
-     *     {@link #isError()} is {@code true}, {@link #isNotFound()} is always {@code false},
-     *     and vice versa.
+     * Note {@link #isNotFound()} and {@link #isError()} are mutually exclusive; If
+     * {@link #isError()} is {@code true}, {@link #isNotFound()} is always {@code false},
+     * and vice versa.
      */
     public boolean isNotFound() {
         return mStatus == Status.NOT_FOUND;
@@ -299,7 +303,7 @@ public class Contact {
 
     /**
      * @return true if the specified contact is successfully loaded.
-     *     i.e. neither {@link #isError()} nor {@link #isNotFound()}.
+     * i.e. neither {@link #isError()} nor {@link #isNotFound()}.
      */
     public boolean isLoaded() {
         return mStatus == Status.LOADED;
@@ -352,6 +356,7 @@ public class Contact {
     /**
      * This can return non-null invitable account types only if the {@link ContactLoader} was
      * configured to load invitable account types in its constructor.
+     *
      * @return
      */
     public ImmutableList<AccountType> getInvitableAccountTypes() {
@@ -377,7 +382,7 @@ public class Contact {
 
     /**
      * @return true if this is a contact (not group, etc.) with at least one
-     *         writable raw-contact, and false otherwise.
+     * writable raw-contact, and false otherwise.
      */
     public boolean isWritableContact(final Context context) {
         return getFirstWritableRawContactId(context) != -1;
@@ -454,6 +459,7 @@ public class Contact {
     /**
      * This can return non-null group meta-data only if the {@link ContactLoader} was configured to
      * load group metadata in its constructor.
+     *
      * @return
      */
     public ImmutableList<GroupMetaData> getGroupMetaData() {

@@ -24,13 +24,11 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.DroidPrefs;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
@@ -53,7 +51,6 @@ import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.flow.SiempoNotificationService;
 import minium.co.launcher2.flow.SiempoNotificationService_;
 import minium.co.launcher2.helper.ActionRouter;
-import minium.co.launcher2.intro.SiempoIntroActivity;
 import minium.co.launcher2.intro.SiempoIntroActivity_;
 import minium.co.launcher2.messages.SmsObserver;
 import minium.co.launcher2.model.ActionItem;
@@ -134,7 +131,9 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         loadViews();
     }
 
-    /** @return True if {@link SiempoNotificationService} is enabled. */
+    /**
+     * @return True if {@link SiempoNotificationService} is enabled.
+     */
     public static boolean isEnabled(Context mContext) {
         return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationService_.class);
     }
@@ -247,7 +246,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
         if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT) {
             manager.getCurrent().setActionText(contactName).setExtra(String.valueOf(contactId)).setCompleted(true);
             manager.add(new ActionItem(ActionItem.ActionItemType.CONTACT_NUMBER));
-        } else if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER){
+        } else if (manager.getCurrent().getType() == ActionItem.ActionItemType.CONTACT_NUMBER) {
             manager.getPrevious().setActionText(contactName).setExtra(String.valueOf(contactId)).setCompleted(true);
         } else {
             manager.setCurrent(new ActionItem(ActionItem.ActionItemType.CONTACT));
@@ -261,7 +260,7 @@ public class MainActivity extends CoreActivity implements OnContactSelectedListe
     @Override
     public void onSmsSent(int threadId) {
         Intent defineIntent = new Intent(Intent.ACTION_VIEW);
-        defineIntent.setData(Uri.parse("content://mms-sms/conversations/"+threadId));
+        defineIntent.setData(Uri.parse("content://mms-sms/conversations/" + threadId));
         try {
             startActivity(defineIntent);
             manager.clear();

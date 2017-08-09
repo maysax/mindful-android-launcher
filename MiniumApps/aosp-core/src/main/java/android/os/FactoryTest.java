@@ -18,10 +18,10 @@ package android.os;
 
 /**
  * Provides support for in-place factory test functions.
- *
+ * <p>
  * This class provides a few properties that alter the normal operation of the system
  * during factory testing.
- *
+ * <p>
  * {@hide}
  */
 public final class FactoryTest {

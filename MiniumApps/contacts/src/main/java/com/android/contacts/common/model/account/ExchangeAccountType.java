@@ -31,7 +31,6 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
 import android.util.Log;
 
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.common.util.CommonDateUtils;
 import com.google.common.collect.Lists;
@@ -219,7 +218,7 @@ public class ExchangeAccountType extends BaseAccountType {
         final DataKind kind = super.addDataKindStructuredPostal(context);
 
         final boolean useJapaneseOrder =
-            Locale.JAPANESE.getLanguage().equals(Locale.getDefault().getLanguage());
+                Locale.JAPANESE.getLanguage().equals(Locale.getDefault().getLanguage());
         kind.typeColumn = StructuredPostal.TYPE;
         kind.typeList = Lists.newArrayList();
         kind.typeList.add(buildPostalType(StructuredPostal.TYPE_WORK).setSpecificMax(1));
@@ -235,14 +234,14 @@ public class ExchangeAccountType extends BaseAccountType {
             kind.fieldList.add(new EditField(StructuredPostal.REGION,
                     R.string.postal_region, FLAGS_POSTAL));
             kind.fieldList.add(new EditField(StructuredPostal.CITY,
-                    R.string.postal_city,FLAGS_POSTAL));
+                    R.string.postal_city, FLAGS_POSTAL));
             kind.fieldList.add(new EditField(StructuredPostal.STREET,
                     R.string.postal_street, FLAGS_POSTAL));
         } else {
             kind.fieldList.add(new EditField(StructuredPostal.STREET,
                     R.string.postal_street, FLAGS_POSTAL));
             kind.fieldList.add(new EditField(StructuredPostal.CITY,
-                    R.string.postal_city,FLAGS_POSTAL));
+                    R.string.postal_city, FLAGS_POSTAL));
             kind.fieldList.add(new EditField(StructuredPostal.REGION,
                     R.string.postal_region, FLAGS_POSTAL));
             kind.fieldList.add(new EditField(StructuredPostal.POSTCODE,

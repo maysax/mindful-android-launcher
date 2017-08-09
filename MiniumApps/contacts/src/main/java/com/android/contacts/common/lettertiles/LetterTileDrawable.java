@@ -28,10 +28,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
-
-
-import com.android.contacts.common.util.BitmapUtil;
 
 import junit.framework.Assert;
 
@@ -47,7 +43,9 @@ public class LetterTileDrawable extends Drawable {
 
     private final Paint mPaint;
 
-    /** Letter tile */
+    /**
+     * Letter tile
+     */
     private static TypedArray sColors;
     private static int sDefaultColor;
     private static int sTileFontColor;
@@ -56,12 +54,16 @@ public class LetterTileDrawable extends Drawable {
     private static Bitmap DEFAULT_BUSINESS_AVATAR;
     private static Bitmap DEFAULT_VOICEMAIL_AVATAR;
 
-    /** Reusable components to avoid new allocations */
+    /**
+     * Reusable components to avoid new allocations
+     */
     private static final Paint sPaint = new Paint();
     private static final Rect sRect = new Rect();
     private static final char[] sFirstChar = new char[1];
 
-    /** Contact type constants */
+    /**
+     * Contact type constants
+     */
     public static final int TYPE_PERSON = 1;
     public static final int TYPE_BUSINESS = 2;
     public static final int TYPE_VOICEMAIL = 3;
@@ -111,7 +113,7 @@ public class LetterTileDrawable extends Drawable {
      * Draw the bitmap onto the canvas at the current bounds taking into account the current scale.
      */
     private void drawBitmap(final Bitmap bitmap, final int width, final int height,
-            final Canvas canvas) {
+                            final Canvas canvas) {
         // The bitmap should be drawn in the middle of the canvas without changing its width to
         // height ratio.
         final Rect destRect = copyBounds();
@@ -222,7 +224,7 @@ public class LetterTileDrawable extends Drawable {
      * Scale the drawn letter tile to a ratio of its default size
      *
      * @param scale The ratio the letter tile should be scaled to as a percentage of its default
-     * size, from a scale of 0 to 2.0f. The default is 1.0f.
+     *              size, from a scale of 0 to 2.0f. The default is 1.0f.
      */
     public void setScale(float scale) {
         mScale = scale;
@@ -232,13 +234,13 @@ public class LetterTileDrawable extends Drawable {
      * Assigns the vertical offset of the position of the letter tile to the ContactDrawable
      *
      * @param offset The provided offset must be within the range of -0.5f to 0.5f.
-     * If set to -0.5f, the letter will be shifted upwards by 0.5 times the height of the canvas
-     * it is being drawn on, which means it will be drawn with the center of the letter starting
-     * at the top edge of the canvas.
-     * If set to 0.5f, the letter will be shifted downwards by 0.5 times the height of the canvas
-     * it is being drawn on, which means it will be drawn with the center of the letter starting
-     * at the bottom edge of the canvas.
-     * The default is 0.0f.
+     *               If set to -0.5f, the letter will be shifted upwards by 0.5 times the height of the canvas
+     *               it is being drawn on, which means it will be drawn with the center of the letter starting
+     *               at the top edge of the canvas.
+     *               If set to 0.5f, the letter will be shifted downwards by 0.5 times the height of the canvas
+     *               it is being drawn on, which means it will be drawn with the center of the letter starting
+     *               at the bottom edge of the canvas.
+     *               The default is 0.0f.
      */
     public void setOffset(float offset) {
         Assert.assertTrue(offset >= -0.5f && offset <= 0.5f);

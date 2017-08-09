@@ -36,7 +36,7 @@ public class GroupDeletionDialogFragment extends DialogFragment {
     private static final String ARG_SHOULD_END_ACTIVITY = "endActivity";
 
     public static void show(FragmentManager fragmentManager, long groupId, String label,
-            boolean endActivity) {
+                            boolean endActivity) {
         GroupDeletionDialogFragment dialog = new GroupDeletionDialogFragment();
         Bundle args = new Bundle();
         args.putLong(ARG_GROUP_ID, groupId);
@@ -55,12 +55,12 @@ public class GroupDeletionDialogFragment extends DialogFragment {
                 .setIconAttribute(android.R.attr.alertDialogIcon)
                 .setMessage(message)
                 .setPositiveButton(android.R.string.ok,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            deleteGroup();
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                deleteGroup();
+                            }
                         }
-                    }
                 )
                 .setNegativeButton(android.R.string.cancel, null)
                 .create();

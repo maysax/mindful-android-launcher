@@ -39,7 +39,9 @@ import minium.co.contacts.R;
 
 public class JoinContactListAdapter extends ContactListAdapter {
 
-    /** Maximum number of suggestions shown for joining aggregates */
+    /**
+     * Maximum number of suggestions shown for joining aggregates
+     */
     private static final int MAX_SUGGESTIONS = 4;
 
     public static final int PARTITION_SUGGESTIONS = 0;
@@ -90,19 +92,19 @@ public class JoinContactListAdapter extends ContactListAdapter {
         final Uri allContactsUri;
         if (!TextUtils.isEmpty(filter)) {
             allContactsUri = buildSectionIndexerUri(Contacts.CONTENT_FILTER_URI).buildUpon()
-                .appendEncodedPath(Uri.encode(filter))
-                .appendQueryParameter(
-                        ContactsContract.DIRECTORY_PARAM_KEY, String.valueOf(Directory.DEFAULT))
-                .build();
+                    .appendEncodedPath(Uri.encode(filter))
+                    .appendQueryParameter(
+                            ContactsContract.DIRECTORY_PARAM_KEY, String.valueOf(Directory.DEFAULT))
+                    .build();
         } else {
             allContactsUri = buildSectionIndexerUri(Contacts.CONTENT_URI).buildUpon()
-                .appendQueryParameter(
-                        ContactsContract.DIRECTORY_PARAM_KEY, String.valueOf(Directory.DEFAULT))
-                .build();
+                    .appendQueryParameter(
+                            ContactsContract.DIRECTORY_PARAM_KEY, String.valueOf(Directory.DEFAULT))
+                    .build();
         }
         loader.setUri(allContactsUri);
         loader.setSelection(Contacts._ID + "!=?");
-        loader.setSelectionArgs(new String[]{ String.valueOf(mTargetContactId) });
+        loader.setSelectionArgs(new String[]{String.valueOf(mTargetContactId)});
         if (getSortOrder() == ContactsPreferences.SORT_ORDER_PRIMARY) {
             loader.setSortOrder(Contacts.SORT_KEY_PRIMARY);
         } else {
@@ -126,7 +128,7 @@ public class JoinContactListAdapter extends ContactListAdapter {
 
     @Override
     public void configureDefaultPartition(boolean showIfEmpty, boolean hasHeader) {
-         // Don't change default partition parameters from these defaults
+        // Don't change default partition parameters from these defaults
         super.configureDefaultPartition(false, true);
     }
 
@@ -142,7 +144,7 @@ public class JoinContactListAdapter extends ContactListAdapter {
 
     @Override
     protected View newHeaderView(Context context, int partition, Cursor cursor,
-            ViewGroup parent) {
+                                 ViewGroup parent) {
         switch (partition) {
             case PARTITION_SUGGESTIONS: {
                 View view = inflate(R.layout.join_contact_picker_section_header, parent);

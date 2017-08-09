@@ -65,6 +65,8 @@
 //
 package com.android.mms.util;
 
+import android.util.Log;
+
 import com.android.mms.LogTag;
 
 import java.io.Closeable;
@@ -75,8 +77,6 @@ import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.zip.Adler32;
-
-import android.util.Log;
 
 public class BlobCache implements Closeable {
     private static final String TAG = LogTag.TAG;
@@ -137,7 +137,7 @@ public class BlobCache implements Closeable {
     }
 
     public BlobCache(String path, int maxEntries, int maxBytes, boolean reset,
-            int version) throws IOException {
+                     int version) throws IOException {
         mIndexFile = new RandomAccessFile(path + ".idx", "rw");
         mDataFile0 = new RandomAccessFile(path + ".0", "rw");
         mDataFile1 = new RandomAccessFile(path + ".1", "rw");
@@ -352,7 +352,7 @@ public class BlobCache implements Closeable {
     private void clearHash(int hashStart) {
         byte[] zero = new byte[1024];
         mIndexBuffer.position(hashStart);
-        for (int count = mMaxEntries * 12; count > 0;) {
+        for (int count = mMaxEntries * 12; count > 0; ) {
             int todo = Math.min(count, 1024);
             mIndexBuffer.put(zero, 0, todo);
             count -= todo;
@@ -410,6 +410,7 @@ public class BlobCache implements Closeable {
     // This method is for one-off lookup. For repeated lookup, use the version
     // accepting LookupRequest to avoid repeated memory allocation.
     private LookupRequest mLookupRequest = new LookupRequest();
+
     public byte[] lookup(long key) throws IOException {
         mLookupRequest.key = key;
         mLookupRequest.buffer = null;
@@ -449,7 +450,7 @@ public class BlobCache implements Closeable {
                 // If we don't have enough space to insert this blob into
                 // the active file, just return it.
                 if (mActiveBytes + BLOB_HEADER_SIZE + req.length > mMaxBytes
-                    || mActiveEntries * 2 >= mMaxEntries) {
+                        || mActiveEntries * 2 >= mMaxEntries) {
                     return true;
                 }
                 // Otherwise copy it over.
@@ -477,7 +478,7 @@ public class BlobCache implements Closeable {
     // not sync with the data file, or one of them is corrupted). The length
     // of the blob is stored in the req.length variable.
     private boolean getBlob(RandomAccessFile file, int offset,
-            LookupRequest req) throws IOException {
+                            LookupRequest req) throws IOException {
         byte[] header = mBlobHeader;
         long oldPosition = file.getFilePointer();
         try {
@@ -518,7 +519,7 @@ public class BlobCache implements Closeable {
                 return false;
             }
             return true;
-        } catch (Throwable t)  {
+        } catch (Throwable t) {
             Log.e(TAG, "getBlob failed.", t);
             return false;
         } finally {
@@ -535,6 +536,7 @@ public class BlobCache implements Closeable {
     // mFileOffset.
     private int mSlotOffset;
     private int mFileOffset;
+
     private boolean lookupInternal(long key, int hashStart) {
         int slot = (int) (key % mMaxEntries);
         if (slot < 0) slot += mMaxEntries;

@@ -13,9 +13,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.db.DaysOfWeekWhichWasSetAlarmDao;
-import co.siempo.phone.mm.AlarmReciever;
 import co.siempo.phone.db.DaysOfWeekWhichWasSetAlarm;
+import co.siempo.phone.db.DaysOfWeekWhichWasSetAlarmDao;
 import co.siempo.phone.mm.AlarmReciever_;
 
 /**
@@ -25,24 +24,24 @@ import co.siempo.phone.mm.AlarmReciever_;
 public class AlarmController {
 
 
-    public static void setAlarm(Context context, Calendar calendar){
+    public static void setAlarm(Context context, Calendar calendar) {
 
 
         Intent intentAlarm = new Intent(context, AlarmReciever_.class);
 
         // create the object
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Log.e("TKB cal: ",calendar.getTimeInMillis()+" mili: "+(new GregorianCalendar().getTimeInMillis()+1*1000));
+        Log.e("TKB cal: ", calendar.getTimeInMillis() + " mili: " + (new GregorianCalendar().getTimeInMillis() + 1 * 1000));
         //set the alarm for particular time
         List<DaysOfWeekWhichWasSetAlarm> daysOfWeekWhichWasSetAlarm = DBUtility.getAlarmDaysDao().queryBuilder().where(DaysOfWeekWhichWasSetAlarmDao.Properties.IsChecked.eq(true)).list();
 
-        if (daysOfWeekWhichWasSetAlarm!=null && daysOfWeekWhichWasSetAlarm.size()>0){
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24*60*60*1000, PendingIntent.getBroadcast(context,1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
-        }else {
-            alarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), PendingIntent.getBroadcast(context,1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        if (daysOfWeekWhichWasSetAlarm != null && daysOfWeekWhichWasSetAlarm.size() > 0) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 24 * 60 * 60 * 1000, PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), PendingIntent.getBroadcast(context, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
         }
 
-        Toast.makeText(context, "Alarm Set on "+ SimpleDateFormat.getDateTimeInstance().format(calendar.getTime()), Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Alarm Set on " + SimpleDateFormat.getDateTimeInstance().format(calendar.getTime()), Toast.LENGTH_LONG).show();
 
     }
 

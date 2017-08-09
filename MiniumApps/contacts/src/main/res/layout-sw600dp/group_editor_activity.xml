@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,24 +13,16 @@
      limitations under the License.
 -->
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ex="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ex="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <com.android.contacts.widget.InterpolatingLayout
-        android:layout_width="match_parent"
+    <com.android.contacts.widget.InterpolatingLayout android:layout_width="match_parent"
         android:layout_height="match_parent">
         <fragment class="com.android.contacts.group.GroupEditorFragment"
-            android:id="@+id/group_editor_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            ex:layout_wideParentWidth="1280dip"
-            ex:layout_wideMarginLeft="160dip"
-            ex:layout_wideMarginRight="160dip"
-            ex:layout_narrowParentWidth="800dip"
-            ex:layout_narrowMarginLeft="0dip"
-            ex:layout_narrowMarginRight="0dip"
-         />
+            android:id="@+id/group_editor_fragment" android:layout_width="match_parent"
+            android:layout_height="match_parent" ex:layout_wideParentWidth="1280dip"
+            ex:layout_wideMarginLeft="160dip" ex:layout_wideMarginRight="160dip"
+            ex:layout_narrowParentWidth="800dip" ex:layout_narrowMarginLeft="0dip"
+            ex:layout_narrowMarginRight="0dip" />
     </com.android.contacts.widget.InterpolatingLayout>
 </FrameLayout>

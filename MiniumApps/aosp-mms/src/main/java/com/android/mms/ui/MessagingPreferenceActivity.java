@@ -46,7 +46,6 @@ import android.view.MenuItem;
 
 import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.telephony.TelephonyIntents;
-
 import com.android.mms.MmsApp;
 import com.android.mms.MmsConfig;
 import com.android.mms.R;
@@ -58,24 +57,24 @@ import com.android.mms.util.Recycler;
  * can access and manipulate SMS messages stored on the SIM.
  */
 public class MessagingPreferenceActivity extends PreferenceActivity
-            implements OnPreferenceChangeListener {
+        implements OnPreferenceChangeListener {
     // Symbolic names for the keys used for preference lookup
     public static final String MMS_DELIVERY_REPORT_MODE = "pref_key_mms_delivery_reports";
-    public static final String EXPIRY_TIME              = "pref_key_mms_expiry";
-    public static final String PRIORITY                 = "pref_key_mms_priority";
-    public static final String READ_REPORT_MODE         = "pref_key_mms_read_reports";
+    public static final String EXPIRY_TIME = "pref_key_mms_expiry";
+    public static final String PRIORITY = "pref_key_mms_priority";
+    public static final String READ_REPORT_MODE = "pref_key_mms_read_reports";
     public static final String SMS_DELIVERY_REPORT_MODE = "pref_key_sms_delivery_reports";
-    public static final String NOTIFICATION_ENABLED     = "pref_key_enable_notifications";
-    public static final String NOTIFICATION_VIBRATE     = "pref_key_vibrate";
-    public static final String NOTIFICATION_VIBRATE_WHEN= "pref_key_vibrateWhen";
-    public static final String NOTIFICATION_RINGTONE    = "pref_key_ringtone";
-    public static final String AUTO_RETRIEVAL           = "pref_key_mms_auto_retrieval";
+    public static final String NOTIFICATION_ENABLED = "pref_key_enable_notifications";
+    public static final String NOTIFICATION_VIBRATE = "pref_key_vibrate";
+    public static final String NOTIFICATION_VIBRATE_WHEN = "pref_key_vibrateWhen";
+    public static final String NOTIFICATION_RINGTONE = "pref_key_ringtone";
+    public static final String AUTO_RETRIEVAL = "pref_key_mms_auto_retrieval";
     public static final String RETRIEVAL_DURING_ROAMING = "pref_key_mms_retrieval_during_roaming";
-    public static final String AUTO_DELETE              = "pref_key_auto_delete";
-    public static final String GROUP_MMS_MODE           = "pref_key_mms_group_mms";
+    public static final String AUTO_DELETE = "pref_key_auto_delete";
+    public static final String GROUP_MMS_MODE = "pref_key_mms_group_mms";
 
     // Menu entries
-    private static final int MENU_RESTORE_DEFAULTS    = 1;
+    private static final int MENU_RESTORE_DEFAULTS = 1;
 
     // Preferences for enabling and disabling SMS
     private Preference mSmsDisabledPref;
@@ -114,7 +113,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
                 if (stateExtra != null
                         && IccCardConstants.INTENT_VALUE_ICC_ABSENT.equals(stateExtra)) {
                     PreferenceCategory smsCategory =
-                            (PreferenceCategory)findPreference("pref_key_sms_settings");
+                            (PreferenceCategory) findPreference("pref_key_sms_settings");
                     if (smsCategory != null) {
                         smsCategory.removePreference(mManageSimPref);
                     }
@@ -151,7 +150,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
 
     private void updateSmsEnabledState() {
         // Show the right pref (SMS Disabled or SMS Enabled)
-        PreferenceScreen prefRoot = (PreferenceScreen)findPreference("pref_key_root");
+        PreferenceScreen prefRoot = (PreferenceScreen) findPreference("pref_key_root");
         if (!mIsSmsEnabled) {
             prefRoot.addPreference(mSmsDisabledPref);
             prefRoot.removePreference(mSmsEnabledPref);
@@ -179,11 +178,11 @@ public class MessagingPreferenceActivity extends PreferenceActivity
         mSmsDisabledPref = findPreference("pref_key_sms_disabled");
         mSmsEnabledPref = findPreference("pref_key_sms_enabled");
 
-        mStoragePrefCategory = (PreferenceCategory)findPreference("pref_key_storage_settings");
-        mSmsPrefCategory = (PreferenceCategory)findPreference("pref_key_sms_settings");
-        mMmsPrefCategory = (PreferenceCategory)findPreference("pref_key_mms_settings");
+        mStoragePrefCategory = (PreferenceCategory) findPreference("pref_key_storage_settings");
+        mSmsPrefCategory = (PreferenceCategory) findPreference("pref_key_sms_settings");
+        mMmsPrefCategory = (PreferenceCategory) findPreference("pref_key_mms_settings");
         mNotificationPrefCategory =
-                (PreferenceCategory)findPreference("pref_key_notification_settings");
+                (PreferenceCategory) findPreference("pref_key_notification_settings");
 
         mManageSimPref = findPreference("pref_key_manage_sim_messages");
         mSmsLimitPref = findPreference("pref_key_sms_delete_limit");
@@ -332,7 +331,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-            Preference preference) {
+                                         Preference preference) {
         if (preference == mSmsLimitPref) {
             new NumberPickerDialog(this,
                     mSmsLimitListener,
@@ -373,41 +372,41 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     }
 
     NumberPickerDialog.OnNumberSetListener mSmsLimitListener =
-        new NumberPickerDialog.OnNumberSetListener() {
-            public void onNumberSet(int limit) {
-                mSmsRecycler.setMessageLimit(MessagingPreferenceActivity.this, limit);
-                setSmsDisplayLimit();
-            }
-    };
+            new NumberPickerDialog.OnNumberSetListener() {
+                public void onNumberSet(int limit) {
+                    mSmsRecycler.setMessageLimit(MessagingPreferenceActivity.this, limit);
+                    setSmsDisplayLimit();
+                }
+            };
 
     NumberPickerDialog.OnNumberSetListener mMmsLimitListener =
-        new NumberPickerDialog.OnNumberSetListener() {
-            public void onNumberSet(int limit) {
-                mMmsRecycler.setMessageLimit(MessagingPreferenceActivity.this, limit);
-                setMmsDisplayLimit();
-            }
-    };
+            new NumberPickerDialog.OnNumberSetListener() {
+                public void onNumberSet(int limit) {
+                    mMmsRecycler.setMessageLimit(MessagingPreferenceActivity.this, limit);
+                    setMmsDisplayLimit();
+                }
+            };
 
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case CONFIRM_CLEAR_SEARCH_HISTORY_DIALOG:
                 return new AlertDialog.Builder(MessagingPreferenceActivity.this)
-                    .setTitle(R.string.confirm_clear_search_title)
-                    .setMessage(R.string.confirm_clear_search_text)
-                    .setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            SearchRecentSuggestions recent =
-                                ((MmsApp)getApplication()).getRecentSuggestions();
-                            if (recent != null) {
-                                recent.clearHistory();
+                        .setTitle(R.string.confirm_clear_search_title)
+                        .setMessage(R.string.confirm_clear_search_text)
+                        .setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                SearchRecentSuggestions recent =
+                                        ((MmsApp) getApplication()).getRecentSuggestions();
+                                if (recent != null) {
+                                    recent.clearHistory();
+                                }
+                                dialog.dismiss();
                             }
-                            dialog.dismiss();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .create();
+                        })
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setIconAttribute(android.R.attr.alertDialogIcon)
+                        .create();
         }
         return super.onCreateDialog(id);
     }
@@ -415,14 +414,14 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public static boolean getNotificationEnabled(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean notificationsEnabled =
-            prefs.getBoolean(MessagingPreferenceActivity.NOTIFICATION_ENABLED, true);
+                prefs.getBoolean(MessagingPreferenceActivity.NOTIFICATION_ENABLED, true);
         return notificationsEnabled;
     }
 
     public static void enableNotifications(boolean enabled, Context context) {
         // Store the value of notifications in SharedPreferences
         SharedPreferences.Editor editor =
-            PreferenceManager.getDefaultSharedPreferences(context).edit();
+                PreferenceManager.getDefaultSharedPreferences(context).edit();
 
         editor.putBoolean(MessagingPreferenceActivity.NOTIFICATION_ENABLED, enabled);
 
@@ -439,7 +438,7 @@ public class MessagingPreferenceActivity extends PreferenceActivity
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         boolean result = false;
         if (preference == mRingtonePref) {
-            setRingtoneSummary((String)newValue);
+            setRingtoneSummary((String) newValue);
             result = true;
         }
         return result;

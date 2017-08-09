@@ -48,7 +48,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Track the state of mobile data connectivity. This is done by
  * receiving broadcast intents from the Phone process whenever
  * the state of data connectivity changes.
- *
+ * <p>
  * {@hide}
  */
 public class MobileDataStateTracker extends BaseNetworkStateTracker {
@@ -87,8 +87,9 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
 
     /**
      * Create a new MobileDataStateTracker
+     *
      * @param netType the ConnectivityManager network type
-     * @param tag the name of this network
+     * @param tag     the name of this network
      */
     public MobileDataStateTracker(int netType, String tag) {
         mNetworkInfo = new NetworkInfo(netType,
@@ -101,7 +102,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
      * Begin monitoring data connectivity.
      *
      * @param context is the current Android context
-     * @param target is the Hander to which to return the events.
+     * @param target  is the Hander to which to return the events.
      */
     public void startMonitoring(Context context, Handler target) {
         mTarget = target;
@@ -117,7 +118,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
         mContext.registerReceiver(new MobileDataStateReceiver(), filter);
         mMobileDataState = PhoneConstants.DataState.DISCONNECTED;
 
-        TelephonyManager tm = (TelephonyManager)mContext.getSystemService(
+        TelephonyManager tm = (TelephonyManager) mContext.getSystemService(
                 Context.TELEPHONY_SERVICE);
         tm.listen(mPhoneStateListener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
     }
@@ -235,8 +236,8 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
                 String apnType = intent.getStringExtra(PhoneConstants.DATA_APN_TYPE_KEY);
                 if (VDBG) {
                     log(String.format("Broadcast received: ACTION_ANY_DATA_CONNECTION_STATE_CHANGED"
-                        + "mApnType=%s %s received apnType=%s", mApnType,
-                        TextUtils.equals(apnType, mApnType) ? "==" : "!=", apnType));
+                                    + "mApnType=%s %s received apnType=%s", mApnType,
+                            TextUtils.equals(apnType, mApnType) ? "==" : "!=", apnType));
                 }
                 if (!TextUtils.equals(apnType, mApnType)) {
                     return;
@@ -253,7 +254,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
                 mNetworkInfo.setSubtype(newSubType, subTypeName);
                 if (newSubType != oldSubtype && mNetworkInfo.isConnected()) {
                     Message msg = mTarget.obtainMessage(EVENT_NETWORK_SUBTYPE_CHANGED,
-                                                        oldSubtype, 0, mNetworkInfo);
+                            oldSubtype, 0, mNetworkInfo);
                     msg.sendToTarget();
                 }
 
@@ -265,20 +266,20 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
                         PhoneConstants.DATA_NETWORK_ROAMING_KEY, false));
                 if (VDBG) {
                     log(mApnType + " setting isAvailable to " +
-                            intent.getBooleanExtra(PhoneConstants.NETWORK_UNAVAILABLE_KEY,false));
+                            intent.getBooleanExtra(PhoneConstants.NETWORK_UNAVAILABLE_KEY, false));
                 }
                 mNetworkInfo.setIsAvailable(!intent.getBooleanExtra(
                         PhoneConstants.NETWORK_UNAVAILABLE_KEY, false));
 
                 if (DBG) {
                     log("Received state=" + state + ", old=" + mMobileDataState +
-                        ", reason=" + (reason == null ? "(unspecified)" : reason));
+                            ", reason=" + (reason == null ? "(unspecified)" : reason));
                 }
                 if (mMobileDataState != state) {
                     mMobileDataState = state;
                     switch (state) {
                         case DISCONNECTED:
-                            if(isTeardownRequested()) {
+                            if (isTeardownRequested()) {
                                 setTeardownRequested(false);
                             }
 
@@ -312,13 +313,13 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
                         if (mLinkProperties != null) {
                             Slog.d(TAG, "LinkProperties = " + mLinkProperties);
                         } else {
-                            Slog.d(TAG, "LinkProperties = " );
+                            Slog.d(TAG, "LinkProperties = ");
                         }
 
                         if (mNetworkCapabilities != null) {
                             Slog.d(TAG, mNetworkCapabilities.toString());
                         } else {
-                            Slog.d(TAG, "NetworkCapabilities = " );
+                            Slog.d(TAG, "NetworkCapabilities = ");
                         }
                     }
 
@@ -336,9 +337,9 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
                         }
                         // Just update reason field in this NetworkInfo
                         mNetworkInfo.setDetailedState(mNetworkInfo.getDetailedState(), reason,
-                                                      mNetworkInfo.getExtraInfo());
+                                mNetworkInfo.getExtraInfo());
                         Message msg = mTarget.obtainMessage(EVENT_CONFIGURATION_CHANGED,
-                                                            mNetworkInfo);
+                                mNetworkInfo);
                         msg.sendToTarget();
                     }
                 }
@@ -349,7 +350,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
                     if (DBG) {
                         log(String.format(
                                 "Broadcast received: ACTION_ANY_DATA_CONNECTION_FAILED ignore, " +
-                                "mApnType=%s != received apnType=%s", mApnType, apnType));
+                                        "mApnType=%s != received apnType=%s", mApnType, apnType));
                     }
                     return;
                 }
@@ -359,7 +360,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
                 String apnName = intent.getStringExtra(PhoneConstants.DATA_APN_KEY);
                 if (DBG) {
                     log("Broadcast received: " + intent.getAction() +
-                                " reason=" + reason == null ? "null" : reason);
+                            " reason=" + reason == null ? "null" : reason);
                 }
                 setDetailedState(DetailedState.FAILED, reason, apnName);
             } else {
@@ -389,54 +390,54 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
         String networkTypeStr = "unknown";
         TelephonyManager tm = new TelephonyManager(mContext);
         //TODO We have to edit the parameter for getNetworkType regarding CDMA
-        switch(tm.getNetworkType()) {
-        case TelephonyManager.NETWORK_TYPE_GPRS:
-            networkTypeStr = "gprs";
-            break;
-        case TelephonyManager.NETWORK_TYPE_EDGE:
-            networkTypeStr = "edge";
-            break;
-        case TelephonyManager.NETWORK_TYPE_UMTS:
-            networkTypeStr = "umts";
-            break;
-        case TelephonyManager.NETWORK_TYPE_HSDPA:
-            networkTypeStr = "hsdpa";
-            break;
-        case TelephonyManager.NETWORK_TYPE_HSUPA:
-            networkTypeStr = "hsupa";
-            break;
-        case TelephonyManager.NETWORK_TYPE_HSPA:
-            networkTypeStr = "hspa";
-            break;
-        case TelephonyManager.NETWORK_TYPE_HSPAP:
-            networkTypeStr = "hspap";
-            break;
-        case TelephonyManager.NETWORK_TYPE_CDMA:
-            networkTypeStr = "cdma";
-            break;
-        case TelephonyManager.NETWORK_TYPE_1xRTT:
-            networkTypeStr = "1xrtt";
-            break;
-        case TelephonyManager.NETWORK_TYPE_EVDO_0:
-            networkTypeStr = "evdo";
-            break;
-        case TelephonyManager.NETWORK_TYPE_EVDO_A:
-            networkTypeStr = "evdo";
-            break;
-        case TelephonyManager.NETWORK_TYPE_EVDO_B:
-            networkTypeStr = "evdo";
-            break;
-        case TelephonyManager.NETWORK_TYPE_IDEN:
-            networkTypeStr = "iden";
-            break;
-        case TelephonyManager.NETWORK_TYPE_LTE:
-            networkTypeStr = "lte";
-            break;
-        case TelephonyManager.NETWORK_TYPE_EHRPD:
-            networkTypeStr = "ehrpd";
-            break;
-        default:
-            loge("unknown network type: " + tm.getNetworkType());
+        switch (tm.getNetworkType()) {
+            case TelephonyManager.NETWORK_TYPE_GPRS:
+                networkTypeStr = "gprs";
+                break;
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+                networkTypeStr = "edge";
+                break;
+            case TelephonyManager.NETWORK_TYPE_UMTS:
+                networkTypeStr = "umts";
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSDPA:
+                networkTypeStr = "hsdpa";
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSUPA:
+                networkTypeStr = "hsupa";
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSPA:
+                networkTypeStr = "hspa";
+                break;
+            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                networkTypeStr = "hspap";
+                break;
+            case TelephonyManager.NETWORK_TYPE_CDMA:
+                networkTypeStr = "cdma";
+                break;
+            case TelephonyManager.NETWORK_TYPE_1xRTT:
+                networkTypeStr = "1xrtt";
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                networkTypeStr = "evdo";
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                networkTypeStr = "evdo";
+                break;
+            case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                networkTypeStr = "evdo";
+                break;
+            case TelephonyManager.NETWORK_TYPE_IDEN:
+                networkTypeStr = "iden";
+                break;
+            case TelephonyManager.NETWORK_TYPE_LTE:
+                networkTypeStr = "lte";
+                break;
+            case TelephonyManager.NETWORK_TYPE_EHRPD:
+                networkTypeStr = "ehrpd";
+                break;
+            default:
+                loge("unknown network type: " + tm.getNetworkType());
         }
         return "net.tcp.buffersize." + networkTypeStr;
     }
@@ -471,13 +472,14 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
      * Record the detailed state of a network, and if it is a
      * change from the previous state, send a notification to
      * any listeners.
-     * @param state the new {@code DetailedState}
-     * @param reason a {@code String} indicating a reason for the state change,
-     * if one was supplied. May be {@code null}.
+     *
+     * @param state     the new {@code DetailedState}
+     * @param reason    a {@code String} indicating a reason for the state change,
+     *                  if one was supplied. May be {@code null}.
      * @param extraInfo optional {@code String} providing extra information about the state change
      */
     private void setDetailedState(NetworkInfo.DetailedState state, String reason,
-            String extraInfo) {
+                                  String extraInfo) {
         if (DBG) log("setDetailed state, old ="
                 + mNetworkInfo.getDetailedState() + " and new state=" + state);
         if (state != mNetworkInfo.getDetailedState()) {
@@ -535,6 +537,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
     /**
      * Turn on or off the mobile radio. No connectivity will be possible while the
      * radio is off. The operation is a no-op if the radio is already in the desired state.
+     *
      * @param turnOn {@code true} if the radio should be turned on, {@code false} if
      */
     public boolean setRadio(boolean turnOn) {
@@ -609,6 +612,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
 
     /**
      * carrier dependency is met/unmet
+     *
      * @param met
      */
     public void setDependencyMet(boolean met) {
@@ -627,7 +631,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
     }
 
     /**
-     *  Inform DCT mobile provisioning has started, it ends when provisioning completes.
+     * Inform DCT mobile provisioning has started, it ends when provisioning completes.
      */
     public void enableMobileProvisioning(String url) {
         if (DBG) log("enableMobileProvisioning(url=" + url + ")");
@@ -642,6 +646,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
 
     /**
      * Return if this network is the provisioning network. Valid only if connected.
+     *
      * @param met
      */
     public boolean isProvisioningNetwork() {
@@ -674,17 +679,21 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
     public String toString() {
         final CharArrayWriter writer = new CharArrayWriter();
         final PrintWriter pw = new PrintWriter(writer);
-        pw.print("Mobile data state: "); pw.println(mMobileDataState);
-        pw.print("Data enabled: user="); pw.print(mUserDataEnabled);
-        pw.print(", policy="); pw.println(mPolicyDataEnabled);
+        pw.print("Mobile data state: ");
+        pw.println(mMobileDataState);
+        pw.print("Data enabled: user=");
+        pw.print(mUserDataEnabled);
+        pw.print(", policy=");
+        pw.println(mPolicyDataEnabled);
         return writer.toString();
     }
 
     /**
      * Internal method supporting the ENABLE_MMS feature.
+     *
      * @param apnType the type of APN to be enabled or disabled (e.g., mms)
-     * @param enable {@code true} to enable the specified APN type,
-     * {@code false} to disable it.
+     * @param enable  {@code true} to enable the specified APN type,
+     *                {@code false} to disable it.
      * @return an integer value representing the outcome of the request.
      */
     private int setEnableApn(String apnType, boolean enable) {
@@ -715,7 +724,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
     }
 
     public static String networkTypeToApnType(int netType) {
-        switch(netType) {
+        switch (netType) {
             case ConnectivityManager.TYPE_MOBILE:
                 return PhoneConstants.APN_TYPE_DEFAULT;  // TODO - use just one of these
             case ConnectivityManager.TYPE_MOBILE_MMS:
@@ -842,21 +851,21 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
         }
     }
 
-    private static NetworkDataEntry [] mTheoreticalBWTable = new NetworkDataEntry[] {
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EDGE,      237,     118, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_GPRS,       48,      40, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_UMTS,      384,      64, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_HSDPA,   14400, UNKNOWN, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_HSUPA,   14400,    5760, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_HSPA,    14400,    5760, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_HSPAP,   21000,    5760, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_CDMA,  UNKNOWN, UNKNOWN, UNKNOWN),
+    private static NetworkDataEntry[] mTheoreticalBWTable = new NetworkDataEntry[]{
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EDGE, 237, 118, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_GPRS, 48, 40, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_UMTS, 384, 64, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_HSDPA, 14400, UNKNOWN, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_HSUPA, 14400, 5760, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_HSPA, 14400, 5760, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_HSPAP, 21000, 5760, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_CDMA, UNKNOWN, UNKNOWN, UNKNOWN),
             new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_1xRTT, UNKNOWN, UNKNOWN, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EVDO_0,   2468,     153, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EVDO_A,   3072,    1800, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EVDO_B,  14700,    1800, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_IDEN,  UNKNOWN, UNKNOWN, UNKNOWN),
-            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_LTE,    100000,   50000, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EVDO_0, 2468, 153, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EVDO_A, 3072, 1800, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EVDO_B, 14700, 1800, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_IDEN, UNKNOWN, UNKNOWN, UNKNOWN),
+            new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_LTE, 100000, 50000, UNKNOWN),
             new NetworkDataEntry(TelephonyManager.NETWORK_TYPE_EHRPD, UNKNOWN, UNKNOWN, UNKNOWN),
     };
 
@@ -875,7 +884,7 @@ public class MobileDataStateTracker extends BaseNetworkStateTracker {
 
         int level;
 
-        switch(networkType) {
+        switch (networkType) {
             case TelephonyManager.NETWORK_TYPE_EDGE:
             case TelephonyManager.NETWORK_TYPE_GPRS:
             case TelephonyManager.NETWORK_TYPE_UMTS:

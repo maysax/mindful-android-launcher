@@ -18,13 +18,13 @@ package android.location;
 
 /**
  * The API for detecting the country where the user is.
- *
+ * <p>
  * {@hide}
  */
-interface ICountryDetector
-{
+interface ICountryDetector {
     /**
      * Start detecting the country that the user is in.
+     *
      * @return the country if it is available immediately, otherwise null will be returned.
      */
     Country detectCountry();

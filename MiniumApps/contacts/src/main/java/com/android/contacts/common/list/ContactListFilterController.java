@@ -55,10 +55,10 @@ public abstract class ContactListFilterController {
     public abstract ContactListFilter getFilter();
 
     /**
-     * @param filter the filter
+     * @param filter     the filter
      * @param persistent True when the given filter should be saved soon. False when the filter
-     * should not be saved. The latter case may happen when some Intent requires a certain type of
-     * UI (e.g. single contact) temporarily.
+     *                   should not be saved. The latter case may happen when some Intent requires a certain type of
+     *                   UI (e.g. single contact) temporarily.
      */
     public abstract void setContactListFilter(ContactListFilter filter, boolean persistent);
 
@@ -115,7 +115,7 @@ class ContactListFilterControllerImpl extends ContactListFilterController {
     }
 
     private void setContactListFilter(ContactListFilter filter, boolean persistent,
-            boolean notifyListeners) {
+                                      boolean notifyListeners) {
         if (!filter.equals(mFilter)) {
             mFilter = filter;
             if (persistent) {

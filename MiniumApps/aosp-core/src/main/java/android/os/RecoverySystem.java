@@ -23,6 +23,12 @@ import android.os.UserManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.apache.harmony.security.asn1.BerInputStream;
+import org.apache.harmony.security.pkcs7.ContentInfo;
+import org.apache.harmony.security.pkcs7.SignedData;
+import org.apache.harmony.security.pkcs7.SignerInfo;
+import org.apache.harmony.security.x509.Certificate;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,12 +50,6 @@ import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.harmony.security.asn1.BerInputStream;
-import org.apache.harmony.security.pkcs7.ContentInfo;
-import org.apache.harmony.security.pkcs7.SignedData;
-import org.apache.harmony.security.pkcs7.SignerInfo;
-import org.apache.harmony.security.x509.Certificate;
-
 /**
  * RecoverySystem contains methods for interacting with the Android
  * recovery system (the separate partition that can be used to install
@@ -63,12 +63,16 @@ public class RecoverySystem {
      * certs) authorized to sign OTA updates.
      */
     private static final File DEFAULT_KEYSTORE =
-        new File("/system/etc/security/otacerts.zip");
+            new File("/system/etc/security/otacerts.zip");
 
-    /** Send progress to listeners no more often than this (in ms). */
+    /**
+     * Send progress to listeners no more often than this (in ms).
+     */
     private static final long PUBLISH_PROGRESS_INTERVAL_MS = 500;
 
-    /** Used to communicate with recovery.  See bootable/recovery/recovery.c. */
+    /**
+     * Used to communicate with recovery.  See bootable/recovery/recovery.c.
+     */
     private static File RECOVERY_DIR = new File("/cache/recovery");
     private static File COMMAND_FILE = new File(RECOVERY_DIR, "command");
     private static File LOG_FILE = new File(RECOVERY_DIR, "log");
@@ -85,16 +89,18 @@ public class RecoverySystem {
         /**
          * Called periodically as the verification progresses.
          *
-         * @param progress  the approximate percentage of the
-         *        verification that has been completed, ranging from 0
-         *        to 100 (inclusive).
+         * @param progress the approximate percentage of the
+         *                 verification that has been completed, ranging from 0
+         *                 to 100 (inclusive).
          */
         public void onProgress(int progress);
     }
 
-    /** @return the set of certs that can be used to sign an OTA package. */
+    /**
+     * @return the set of certs that can be used to sign an OTA package.
+     */
     private static HashSet<X509Certificate> getTrustedCerts(File keystore)
-        throws IOException, GeneralSecurityException {
+            throws IOException, GeneralSecurityException {
         HashSet<X509Certificate> trusted = new HashSet<X509Certificate>();
         if (keystore == null) {
             keystore = DEFAULT_KEYSTORE;
@@ -125,30 +131,29 @@ public class RecoverySystem {
      * the recovery system.  This function will return only if the
      * package was successfully verified; otherwise it will throw an
      * exception.
-     *
+     * <p>
      * Verification of a package can take significant time, so this
      * function should not be called from a UI thread.  Interrupting
      * the thread while this function is in progress will result in a
      * SecurityException being thrown (and the thread's interrupt flag
      * will be cleared).
      *
-     * @param packageFile  the package to be verified
-     * @param listener     an object to receive periodic progress
-     * updates as verification proceeds.  May be null.
-     * @param deviceCertsZipFile  the zip file of certificates whose
-     * public keys we will accept.  Verification succeeds if the
-     * package is signed by the private key corresponding to any
-     * public key in this file.  May be null to use the system default
-     * file (currently "/system/etc/security/otacerts.zip").
-     *
-     * @throws IOException if there were any errors reading the
-     * package or certs files.
+     * @param packageFile        the package to be verified
+     * @param listener           an object to receive periodic progress
+     *                           updates as verification proceeds.  May be null.
+     * @param deviceCertsZipFile the zip file of certificates whose
+     *                           public keys we will accept.  Verification succeeds if the
+     *                           package is signed by the private key corresponding to any
+     *                           public key in this file.  May be null to use the system default
+     *                           file (currently "/system/etc/security/otacerts.zip").
+     * @throws IOException              if there were any errors reading the
+     *                                  package or certs files.
      * @throws GeneralSecurityException if verification failed
      */
     public static void verifyPackage(File packageFile,
                                      ProgressListener listener,
                                      File deviceCertsZipFile)
-        throws IOException, GeneralSecurityException {
+            throws IOException, GeneralSecurityException {
         long fileLen = packageFile.length();
 
         RandomAccessFile raf = new RandomAccessFile(packageFile, "r");
@@ -163,7 +168,7 @@ public class RecoverySystem {
             byte[] footer = new byte[6];
             raf.readFully(footer);
 
-            if (footer[2] != (byte)0xff || footer[3] != (byte)0xff) {
+            if (footer[2] != (byte) 0xff || footer[3] != (byte) 0xff) {
                 throw new SignatureException("no signature in file (no footer)");
             }
 
@@ -176,14 +181,14 @@ public class RecoverySystem {
 
             // Check that we have found the start of the
             // end-of-central-directory record.
-            if (eocd[0] != (byte)0x50 || eocd[1] != (byte)0x4b ||
-                eocd[2] != (byte)0x05 || eocd[3] != (byte)0x06) {
+            if (eocd[0] != (byte) 0x50 || eocd[1] != (byte) 0x4b ||
+                    eocd[2] != (byte) 0x05 || eocd[3] != (byte) 0x06) {
                 throw new SignatureException("no signature in file (bad footer)");
             }
 
-            for (int i = 4; i < eocd.length-3; ++i) {
-                if (eocd[i  ] == (byte)0x50 && eocd[i+1] == (byte)0x4b &&
-                    eocd[i+2] == (byte)0x05 && eocd[i+3] == (byte)0x06) {
+            for (int i = 4; i < eocd.length - 3; ++i) {
+                if (eocd[i] == (byte) 0x50 && eocd[i + 1] == (byte) 0x4b &&
+                        eocd[i + 2] == (byte) 0x05 && eocd[i + 3] == (byte) 0x06) {
                     throw new SignatureException("EOCD marker found after start of EOCD");
                 }
             }
@@ -195,8 +200,8 @@ public class RecoverySystem {
             // compute its message digest.
 
             BerInputStream bis = new BerInputStream(
-                new ByteArrayInputStream(eocd, commentSize+22-signatureStart, signatureStart));
-            ContentInfo info = (ContentInfo)ContentInfo.ASN1.decode(bis);
+                    new ByteArrayInputStream(eocd, commentSize + 22 - signatureStart, signatureStart));
+            ContentInfo info = (ContentInfo) ContentInfo.ASN1.decode(bis);
             SignedData signedData = info.getSignedData();
             if (signedData == null) {
                 throw new IOException("signedData is null");
@@ -220,7 +225,7 @@ public class RecoverySystem {
             List<SignerInfo> sigInfos = signedData.getSignerInfos();
             SignerInfo sigInfo;
             if (!sigInfos.isEmpty()) {
-                sigInfo = (SignerInfo)sigInfos.get(0);
+                sigInfo = (SignerInfo) sigInfos.get(0);
             } else {
                 throw new IOException("no signer infos!");
             }
@@ -229,7 +234,7 @@ public class RecoverySystem {
             // in the package equals one of our trusted public keys.
 
             HashSet<X509Certificate> trusted = getTrustedCerts(
-                deviceCertsZipFile == null ? DEFAULT_KEYSTORE : deviceCertsZipFile);
+                    deviceCertsZipFile == null ? DEFAULT_KEYSTORE : deviceCertsZipFile);
 
             PublicKey signatureKey = cert.getPublicKey();
             boolean verified = false;
@@ -283,7 +288,7 @@ public class RecoverySystem {
                 if (interrupted) break;
                 int size = buffer.length;
                 if (soFar + size > toRead) {
-                    size = (int)(toRead - soFar);
+                    size = (int) (toRead - soFar);
                 }
                 int read = raf.read(buffer, 0, size);
                 sig.update(buffer, 0, read);
@@ -291,9 +296,9 @@ public class RecoverySystem {
 
                 if (listener != null) {
                     long now = System.currentTimeMillis();
-                    int p = (int)(soFar * 100 / toRead);
+                    int p = (int) (soFar * 100 / toRead);
                     if (p > lastPercent &&
-                        now - lastPublishTime > PUBLISH_PROGRESS_INTERVAL_MS) {
+                            now - lastPublishTime > PUBLISH_PROGRESS_INTERVAL_MS) {
                         lastPercent = p;
                         lastPublishTime = now;
                         listener.onProgress(lastPercent);
@@ -321,17 +326,16 @@ public class RecoverySystem {
      * package.
      * Requires the {@link android.Manifest.permission#REBOOT} permission.
      *
-     * @param context      the Context to use
-     * @param packageFile  the update package to install.  Must be on
-     * a partition mountable by recovery.  (The set of partitions
-     * known to recovery may vary from device to device.  Generally,
-     * /cache and /data are safe.)
-     *
-     * @throws IOException  if writing the recovery command file
-     * fails, or if the reboot itself fails.
+     * @param context     the Context to use
+     * @param packageFile the update package to install.  Must be on
+     *                    a partition mountable by recovery.  (The set of partitions
+     *                    known to recovery may vary from device to device.  Generally,
+     *                    /cache and /data are safe.)
+     * @throws IOException if writing the recovery command file
+     *                     fails, or if the reboot itself fails.
      */
     public static void installPackage(Context context, File packageFile)
-        throws IOException {
+            throws IOException {
         String filename = packageFile.getCanonicalPath();
         Log.w(TAG, "!!! REBOOTING TO INSTALL " + filename + " !!!");
 
@@ -347,22 +351,25 @@ public class RecoverySystem {
      * restored to its factory state.  Requires the
      * {@link android.Manifest.permission#REBOOT} permission.
      *
-     * @param context  the Context to use
-     *
-     * @throws IOException  if writing the recovery command file
-     * fails, or if the reboot itself fails.
+     * @param context the Context to use
+     * @throws IOException       if writing the recovery command file
+     *                           fails, or if the reboot itself fails.
      * @throws SecurityException if the current user is not allowed to wipe data.
      */
     public static void rebootWipeUserData(Context context) throws IOException {
         rebootWipeUserData(context, false, context.getPackageName());
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static void rebootWipeUserData(Context context, String reason) throws IOException {
         rebootWipeUserData(context, false, reason);
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static void rebootWipeUserData(Context context, boolean shutdown)
             throws IOException {
         rebootWipeUserData(context, shutdown, context.getPackageName());
@@ -375,15 +382,13 @@ public class RecoverySystem {
      * restored to its factory state.  Requires the
      * {@link android.Manifest.permission#REBOOT} permission.
      *
-     * @param context   the Context to use
-     * @param shutdown  if true, the device will be powered down after
-     *                  the wipe completes, rather than being rebooted
-     *                  back to the regular system.
-     *
-     * @throws IOException  if writing the recovery command file
-     * fails, or if the reboot itself fails.
+     * @param context  the Context to use
+     * @param shutdown if true, the device will be powered down after
+     *                 the wipe completes, rather than being rebooted
+     *                 back to the regular system.
+     * @throws IOException       if writing the recovery command file
+     *                           fails, or if the reboot itself fails.
      * @throws SecurityException if the current user is not allowed to wipe data.
-     *
      * @hide
      */
     public static void rebootWipeUserData(Context context, boolean shutdown, String reason)
@@ -424,13 +429,16 @@ public class RecoverySystem {
 
     /**
      * Reboot into the recovery system to wipe the /cache partition.
+     *
      * @throws IOException if something goes wrong.
      */
     public static void rebootWipeCache(Context context) throws IOException {
         rebootWipeCache(context, context.getPackageName());
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static void rebootWipeCache(Context context, String reason) throws IOException {
         String reasonArg = null;
         if (!TextUtils.isEmpty(reason)) {
@@ -443,6 +451,7 @@ public class RecoverySystem {
 
     /**
      * Reboot into the recovery system with the supplied argument.
+     *
      * @param args to pass to the recovery utility.
      * @throws IOException if something goes wrong.
      */
@@ -472,8 +481,8 @@ public class RecoverySystem {
 
     /**
      * Called after booting to process and remove recovery-related files.
-     * @return the log file from recovery, or null if none was found.
      *
+     * @return the log file from recovery, or null if none was found.
      * @hide
      */
     public static String handleAftermath() {
@@ -513,5 +522,6 @@ public class RecoverySystem {
         return arg;
     }
 
-    private void RecoverySystem() { }  // Do not instantiate
+    private void RecoverySystem() {
+    }  // Do not instantiate
 }

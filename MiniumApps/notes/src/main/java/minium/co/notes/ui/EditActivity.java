@@ -69,7 +69,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         if (Build.VERSION.SDK_INT >= 18)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
 
-        // Android version < 18 -> set orientation fullSensor
+            // Android version < 18 -> set orientation fullSensor
         else
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
@@ -80,17 +80,17 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         for (int i = 0; i < colourArr.length; i++)
             colourArrResId[i] = Color.parseColor(colourArr[i]);
 
-        fontSizeArr = new int[] {14, 18, 22}; // 0 for small, 1 for medium, 2 for large
+        fontSizeArr = new int[]{14, 18, 22}; // 0 for small, 1 for medium, 2 for large
         fontSizeNameArr = getResources().getStringArray(R.array.fontSizeNames);
 
         setContentView(R.layout.activity_edit);
 
         // Init layout components
-        toolbar = (Toolbar)findViewById(R.id.toolbarEdit);
-        titleEdit = (EditText)findViewById(R.id.titleEdit);
-        bodyEdit = (EditText)findViewById(R.id.bodyEdit);
-        relativeLayoutEdit = (RelativeLayout)findViewById(R.id.relativeLayoutEdit);
-        ScrollView scrollView = (ScrollView)findViewById(R.id.scrollView);
+        toolbar = (Toolbar) findViewById(R.id.toolbarEdit);
+        titleEdit = (EditText) findViewById(R.id.titleEdit);
+        bodyEdit = (EditText) findViewById(R.id.bodyEdit);
+        relativeLayoutEdit = (RelativeLayout) findViewById(R.id.relativeLayoutEdit);
+        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
 
         imm = (InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE);
 
@@ -179,6 +179,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     /**
      * Implementation of AlertDialogs such as
      * - colorPickerDialog, fontDialog and saveChangesDialog -
+     *
      * @param context The Activity context of the dialogs; in this case EditActivity context
      */
     protected void initDialogs(Context context) {
@@ -266,6 +267,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
     /**
      * Check if current device has tablet screen size or not
+     *
      * @param context current application context
      * @return true if device is tablet, false otherwise
      */
@@ -277,6 +279,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
     /**
      * Item clicked in Toolbar menu callback method
+     *
      * @param item Item clicked
      * @return true if click detected and logic finished, false otherwise
      */
@@ -361,7 +364,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         if (bundle.getInt(NOTE_REQUEST_CODE) == NEW_NOTE_REQUEST)
             saveChangesDialog.show();
 
-        // Existing note
+            // Existing note
         else {
             /*
              * If title is not empty -> Check if note changed
@@ -370,15 +373,13 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
              */
             if (!isEmpty(titleEdit)) {
                 if (!(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE))) ||
-                    !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY))) ||
-                    !(colour.equals(bundle.getString(NOTE_COLOUR))) ||
-                    fontSize != bundle.getInt(NOTE_FONT_SIZE) ||
-                    hideBody != bundle.getBoolean(NOTE_HIDE_BODY)) {
+                        !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY))) ||
+                        !(colour.equals(bundle.getString(NOTE_COLOUR))) ||
+                        fontSize != bundle.getInt(NOTE_FONT_SIZE) ||
+                        hideBody != bundle.getBoolean(NOTE_HIDE_BODY)) {
 
                     saveChanges();
-                }
-
-                else {
+                } else {
                     imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
 
                     finish();
@@ -395,6 +396,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
     /**
      * Check if passed EditText text is empty or not
+     *
      * @param editText The EditText widget to check
      * @return true if empty, false otherwise
      */
@@ -415,6 +417,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
     /**
      * If current window loses focus -> hide keyboard
+     *
      * @param hasFocus parameter passed by system; true if focus changed, false otherwise
      */
     @Override
@@ -430,6 +433,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     /**
      * Orientation changed callback method
      * If orientation changed -> If any AlertDialog is showing -> dismiss it to prevent WindowLeaks
+     *
      * @param newConfig Configuration passed by system
      */
     @Override

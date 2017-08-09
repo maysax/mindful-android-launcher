@@ -101,10 +101,10 @@ public class SmilHelper {
      */
     private static PduPart findSmilPart(PduBody body) {
         int partNum = body.getPartsNum();
-        for(int i = 0; i < partNum; i++) {
+        for (int i = 0; i < partNum; i++) {
             PduPart part = body.getPart(i);
             if (Arrays.equals(part.getContentType(),
-                            ContentType.APP_SMIL.getBytes())) {
+                    ContentType.APP_SMIL.getBytes())) {
                 // Sure only one SMIL part.
                 return part;
             }
@@ -162,11 +162,11 @@ public class SmilHelper {
     }
 
     static public String escapeXML(String str) {
-        return str.replaceAll("&","&amp;")
-                  .replaceAll("<", "&lt;")
-                  .replaceAll(">", "&gt;")
-                  .replaceAll("\"", "&quot;")
-                  .replaceAll("'", "&apos;");
+        return str.replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&apos;");
     }
 
     private static SMILDocument createSmilDocument(PduBody pb) {
@@ -324,24 +324,24 @@ public class SmilHelper {
                     }
                     sme = SmilHelper.createMediaElement(SmilHelper.ELEMENT_TAG_TEXT, document, src);
                     txtRegionPresentInLayout = setRegion((SMILRegionMediaElement) sme,
-                                                         smilRegions,
-                                                         layoutElement,
-                                                         LayoutModel.TEXT_REGION_ID,
-                                                         txtRegionPresentInLayout);
+                            smilRegions,
+                            layoutElement,
+                            LayoutModel.TEXT_REGION_ID,
+                            txtRegionPresentInLayout);
                 } else if (media instanceof ImageModel) {
                     sme = SmilHelper.createMediaElement(SmilHelper.ELEMENT_TAG_IMAGE, document, src);
                     imgRegionPresentInLayout = setRegion((SMILRegionMediaElement) sme,
-                                                         smilRegions,
-                                                         layoutElement,
-                                                         LayoutModel.IMAGE_REGION_ID,
-                                                         imgRegionPresentInLayout);
+                            smilRegions,
+                            layoutElement,
+                            LayoutModel.IMAGE_REGION_ID,
+                            imgRegionPresentInLayout);
                 } else if (media instanceof VideoModel) {
                     sme = SmilHelper.createMediaElement(SmilHelper.ELEMENT_TAG_VIDEO, document, src);
                     imgRegionPresentInLayout = setRegion((SMILRegionMediaElement) sme,
-                                                         smilRegions,
-                                                         layoutElement,
-                                                         LayoutModel.IMAGE_REGION_ID,
-                                                         imgRegionPresentInLayout);
+                            smilRegions,
+                            layoutElement,
+                            LayoutModel.IMAGE_REGION_ID,
+                            imgRegionPresentInLayout);
                 } else if (media instanceof AudioModel) {
                     sme = SmilHelper.createMediaElement(SmilHelper.ELEMENT_TAG_AUDIO, document, src);
                 } else {

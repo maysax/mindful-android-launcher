@@ -24,13 +24,16 @@ import android.os.Parcelable;
  * Represents a {@code KeySet} that has been declared in the AndroidManifest.xml
  * file for the application.  A {@code KeySet} can be used explicitly to
  * represent a trust relationship with other applications on the device.
+ *
  * @hide
  */
 public class KeySet implements Parcelable {
 
     private IBinder token;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public KeySet(IBinder token) {
         if (token == null) {
             throw new NullPointerException("null value for KeySet IBinder token");
@@ -38,12 +41,16 @@ public class KeySet implements Parcelable {
         this.token = token;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public IBinder getToken() {
         return token;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @Override
     public boolean equals(Object o) {
         if (o instanceof KeySet) {
@@ -53,7 +60,9 @@ public class KeySet implements Parcelable {
         return false;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @Override
     public int hashCode() {
         return token.hashCode();
@@ -61,6 +70,7 @@ public class KeySet implements Parcelable {
 
     /**
      * Implement Parcelable
+     *
      * @hide
      */
     public static final Parcelable.Creator<KeySet> CREATOR

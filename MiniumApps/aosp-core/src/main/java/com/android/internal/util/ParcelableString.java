@@ -21,6 +21,7 @@ import android.os.Parcelable;
 
 /**
  * Helper class to adapt a simple String to cases where a Parcelable is expected.
+ *
  * @hide
  */
 public class ParcelableString implements Parcelable {
@@ -44,9 +45,10 @@ public class ParcelableString implements Parcelable {
                     ret.string = in.readString();
                     return ret;
                 }
+
                 @Override
                 public ParcelableString[] newArray(int size) {
                     return new ParcelableString[size];
                 }
-    };
+            };
 }

@@ -39,7 +39,7 @@ public class NameConverter {
     /**
      * The array of fields that comprise a structured name.
      */
-    public static final String[] STRUCTURED_NAME_FIELDS = new String[] {
+    public static final String[] STRUCTURED_NAME_FIELDS = new String[]{
             StructuredName.PREFIX,
             StructuredName.GIVEN_NAME,
             StructuredName.MIDDLE_NAME,
@@ -54,12 +54,13 @@ public class NameConverter {
      * Note that this operates via a call back to the ContactProvider, but it does not access the
      * database, so it should be safe to call from the UI thread.  See
      * ContactsProvider2.completeName() for the underlying method call.
-     * @param context Activity context.
+     *
+     * @param context        Activity context.
      * @param structuredName The structured name map to convert.
      * @return The display name computed from the structured name map.
      */
     public static String structuredNameToDisplayName(Context context,
-            Map<String, String> structuredName) {
+                                                     Map<String, String> structuredName) {
         Builder builder = ContactsContract.AUTHORITY_URI.buildUpon().appendPath("complete_name");
         for (String key : STRUCTURED_NAME_FIELDS) {
             if (structuredName.containsKey(key)) {
@@ -71,8 +72,9 @@ public class NameConverter {
 
     /**
      * Converts the given structured name (provided as ContentValues) into a display name string.
+     *
      * @param context Activity context.
-     * @param values The content values containing values comprising the structured name.
+     * @param values  The content values containing values comprising the structured name.
      * @return
      */
     public static String structuredNameToDisplayName(Context context, ContentValues values) {
@@ -112,12 +114,13 @@ public class NameConverter {
      * <p>
      * Note that this operates via a call back to the ContactProvider, but it does not access the
      * database, so it should be safe to call from the UI thread.
-     * @param context Activity context.
+     *
+     * @param context     Activity context.
      * @param displayName The display name to convert.
      * @return The structured name map computed from the display name.
      */
     public static Map<String, String> displayNameToStructuredName(Context context,
-            String displayName) {
+                                                                  String displayName) {
         Map<String, String> structuredName = new TreeMap<String, String>();
         Builder builder = ContactsContract.AUTHORITY_URI.buildUpon().appendPath("complete_name");
 
@@ -145,15 +148,16 @@ public class NameConverter {
      * <p>
      * Note that this operates via a call back to the ContactProvider, but it does not access the
      * database, so it should be safe to call from the UI thread.
-     * @param context Activity context.
-     * @param displayName The display name to convert.
+     *
+     * @param context       Activity context.
+     * @param displayName   The display name to convert.
      * @param contentValues The content values object to place the structured name values into.  If
-     *     null, a new one will be created and returned.
+     *                      null, a new one will be created and returned.
      * @return The ContentValues object containing the structured name fields derived from the
-     *     display name.
+     * display name.
      */
     public static ContentValues displayNameToStructuredName(Context context, String displayName,
-            ContentValues contentValues) {
+                                                            ContentValues contentValues) {
         if (contentValues == null) {
             contentValues = new ContentValues();
         }
@@ -178,12 +182,12 @@ public class NameConverter {
      * If this method cannot parse given phoneticName, null values will be stored.
      *
      * @param phoneticName Phonetic name to be parsed
-     * @param values ContentValues to be used for storing data. If null, new instance will be
-     * created.
+     * @param values       ContentValues to be used for storing data. If null, new instance will be
+     *                     created.
      * @return ContentValues with parsed data. Those data can be null.
      */
     public static StructuredNameDataItem parsePhoneticName(String phoneticName,
-            StructuredNameDataItem item) {
+                                                           StructuredNameDataItem item) {
         String family = null;
         String middle = null;
         String given = null;

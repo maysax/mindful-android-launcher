@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -20,36 +19,23 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dip"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+    <TextView android:id="@+id/text" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:padding="15dip"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:background="?android:attr/listDivider"/>
+    <View android:layout_width="match_parent" android:layout_height="1dip"
+        android:background="?android:attr/listDivider" />
 
-    <ListView android:id="@+id/account_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:fadingEdge="none"/>
+    <ListView android:id="@+id/account_list" android:layout_width="match_parent"
+        android:layout_height="0dip" android:layout_weight="1" android:fadingEdge="none" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:background="?android:attr/listDivider"/>
+    <View android:layout_width="match_parent" android:layout_height="1dip"
+        android:background="?android:attr/listDivider" />
 
-    <Button
-        android:id="@+id/add_account_button"
-        style="?android:attr/buttonBarButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <Button android:id="@+id/add_account_button" style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
 
 </LinearLayout>

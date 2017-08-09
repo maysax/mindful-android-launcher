@@ -29,9 +29,9 @@ public class ContactPresenceIconUtil {
      *
      * @return null means don't show the status icon.
      */
-    public static Drawable getPresenceIcon (Context context, int status) {
+    public static Drawable getPresenceIcon(Context context, int status) {
         // We don't show the offline status in Contacts
-        switch(status) {
+        switch (status) {
             case StatusUpdates.AVAILABLE:
             case StatusUpdates.IDLE:
             case StatusUpdates.AWAY:
@@ -40,7 +40,7 @@ public class ContactPresenceIconUtil {
                 return context.getResources().getDrawable(
                         StatusUpdates.getPresenceIconResourceId(status));
             case StatusUpdates.OFFLINE:
-            // The undefined status is treated as OFFLINE in getPresenceIconResourceId();
+                // The undefined status is treated as OFFLINE in getPresenceIconResourceId();
             default:
                 return null;
         }

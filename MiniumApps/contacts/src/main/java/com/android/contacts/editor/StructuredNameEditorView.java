@@ -29,8 +29,8 @@ import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.dataitem.DataItem;
 import com.android.contacts.common.model.dataitem.DataKind;
-import com.android.contacts.common.util.NameConverter;
 import com.android.contacts.common.model.dataitem.StructuredNameDataItem;
+import com.android.contacts.common.util.NameConverter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +64,7 @@ public class StructuredNameEditorView extends TextFieldsEditorView {
 
     @Override
     public void setValues(DataKind kind, ValuesDelta entry, RawContactDelta state, boolean readOnly,
-            ViewIdGenerator vig) {
+                          ViewIdGenerator vig) {
         super.setValues(kind, entry, state, readOnly, vig);
         if (mSnapshot == null) {
             mSnapshot = (StructuredNameDataItem) DataItem.createFrom(

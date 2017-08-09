@@ -20,7 +20,7 @@ import android.net.Uri;
 /**
  * Action callbacks that can be sent by a contact list.
  */
-public interface OnContactBrowserActionListener  {
+public interface OnContactBrowserActionListener {
 
     /**
      * Notification of selection change, invoked when the selection of activated

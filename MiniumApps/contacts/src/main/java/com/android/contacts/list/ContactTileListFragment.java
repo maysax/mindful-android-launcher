@@ -32,19 +32,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.ContactTileLoaderFactory;
 import com.android.contacts.common.list.ContactTileAdapter;
 import com.android.contacts.common.list.ContactTileAdapter.DisplayType;
 import com.android.contacts.common.list.ContactTileView;
 import com.android.contacts.common.util.ContactListViewUtils;
-import com.android.contacts.common.util.SchedulingUtils;
 
 import minium.co.contacts.R;
 
 /**
  * Fragment containing a list of starred contacts followed by a list of frequently contacted.
- *
+ * <p>
  * TODO: Make this an abstract class so that the favorites, frequent, and group list functionality
  * can be separated out. This will make it easier to customize any of those lists if necessary
  * (i.e. adding header views to the ListViews in the fragment). This work was started
@@ -55,6 +55,7 @@ public class ContactTileListFragment extends Fragment {
 
     public interface Listener {
         void onContactSelected(Uri contactUri, Rect targetRect);
+
         void onCallNumberDirectly(String phoneNumber);
     }
 
@@ -80,13 +81,13 @@ public class ContactTileListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         return inflateAndSetupView(inflater, container, savedInstanceState,
                 R.layout.contact_tile_list);
     }
 
     protected View inflateAndSetupView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState, int layoutResourceId) {
+                                       Bundle savedInstanceState, int layoutResourceId) {
         View listLayout = inflater.inflate(layoutResourceId, container, false);
 
         mEmptyView = (TextView) listLayout.findViewById(R.id.contact_tile_list_empty);
@@ -159,38 +160,39 @@ public class ContactTileListFragment extends Fragment {
     private final LoaderManager.LoaderCallbacks<Cursor> mContactTileLoaderListener =
             new LoaderCallbacks<Cursor>() {
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            switch (mDisplayType) {
-              case STARRED_ONLY:
-                  return ContactTileLoaderFactory.createStarredLoader(getActivity());
-              case STREQUENT:
-                  return ContactTileLoaderFactory.createStrequentLoader(getActivity());
-              case FREQUENT_ONLY:
-                  return ContactTileLoaderFactory.createFrequentLoader(getActivity());
-              default:
-                  throw new IllegalStateException(
-                      "Unrecognized DisplayType " + mDisplayType);
-            }
-        }
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    switch (mDisplayType) {
+                        case STARRED_ONLY:
+                            return ContactTileLoaderFactory.createStarredLoader(getActivity());
+                        case STREQUENT:
+                            return ContactTileLoaderFactory.createStrequentLoader(getActivity());
+                        case FREQUENT_ONLY:
+                            return ContactTileLoaderFactory.createFrequentLoader(getActivity());
+                        default:
+                            throw new IllegalStateException(
+                                    "Unrecognized DisplayType " + mDisplayType);
+                    }
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (data == null || data.isClosed()) {
-                Log.e(TAG, "Failed to load contacts");
-                return;
-            }
-            mAdapter.setContactCursor(data);
-            mEmptyView.setText(getEmptyStateText());
-            mListView.setEmptyView(mEmptyView);
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    if (data == null || data.isClosed()) {
+                        Log.e(TAG, "Failed to load contacts");
+                        return;
+                    }
+                    mAdapter.setContactCursor(data);
+                    mEmptyView.setText(getEmptyStateText());
+                    mListView.setEmptyView(mEmptyView);
 
-            // invalidate the menu options if needed
-            invalidateOptionsMenuIfNeeded();
-        }
+                    // invalidate the menu options if needed
+                    invalidateOptionsMenuIfNeeded();
+                }
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {}
-    };
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {
+                }
+            };
 
     private boolean isOptionsMenuChanged() {
         return mOptionsMenuHasFrequents != internalHasFrequents();
@@ -225,23 +227,23 @@ public class ContactTileListFragment extends Fragment {
 
     private ContactTileView.Listener mAdapterListener =
             new ContactTileView.Listener() {
-        @Override
-        public void onContactSelected(Uri contactUri, Rect targetRect) {
-            if (mListener != null) {
-                mListener.onContactSelected(contactUri, targetRect);
-            }
-        }
+                @Override
+                public void onContactSelected(Uri contactUri, Rect targetRect) {
+                    if (mListener != null) {
+                        mListener.onContactSelected(contactUri, targetRect);
+                    }
+                }
 
-        @Override
-        public void onCallNumberDirectly(String phoneNumber) {
-            if (mListener != null) {
-                mListener.onCallNumberDirectly(phoneNumber);
-            }
-        }
+                @Override
+                public void onCallNumberDirectly(String phoneNumber) {
+                    if (mListener != null) {
+                        mListener.onCallNumberDirectly(phoneNumber);
+                    }
+                }
 
-        @Override
-        public int getApproximateTileWidth() {
-            return getView().getWidth() / mAdapter.getColumnCount();
-        }
-    };
+                @Override
+                public int getApproximateTileWidth() {
+                    return getView().getWidth() / mAdapter.getColumnCount();
+                }
+            };
 }

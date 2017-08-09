@@ -25,13 +25,19 @@ import android.os.UserHandle;
  * application package.
  */
 public class PackageStats implements Parcelable {
-    /** Name of the package to which this stats applies. */
+    /**
+     * Name of the package to which this stats applies.
+     */
     public String packageName;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int userHandle;
 
-    /** Size of the code (e.g., APK) */
+    /**
+     * Size of the code (e.g., APK)
+     */
     public long codeSize;
 
     /**
@@ -40,7 +46,9 @@ public class PackageStats implements Parcelable {
      */
     public long dataSize;
 
-    /** Size of cache used by the application. (e.g., /data/data/<app>/cache) */
+    /**
+     * Size of cache used by the application. (e.g., /data/data/<app>/cache)
+     */
     public long cacheSize;
 
     /**
@@ -62,10 +70,14 @@ public class PackageStats implements Parcelable {
      */
     public long externalCacheSize;
 
-    /** Size of the external media size used by the application. */
+    /**
+     * Size of the external media size used by the application.
+     */
     public long externalMediaSize;
 
-    /** Size of the package's OBBs placed on external media. */
+    /**
+     * Size of the package's OBBs placed on external media.
+     */
     public long externalObbSize;
 
     public static final Parcelable.Creator<PackageStats> CREATOR
@@ -125,7 +137,9 @@ public class PackageStats implements Parcelable {
         userHandle = UserHandle.myUserId();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public PackageStats(String pkgName, int userHandle) {
         this.packageName = pkgName;
         this.userHandle = userHandle;
@@ -161,7 +175,7 @@ public class PackageStats implements Parcelable {
         return 0;
     }
 
-    public void writeToParcel(Parcel dest, int parcelableFlags){
+    public void writeToParcel(Parcel dest, int parcelableFlags) {
         dest.writeString(packageName);
         dest.writeInt(userHandle);
         dest.writeLong(codeSize);

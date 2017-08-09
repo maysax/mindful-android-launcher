@@ -33,6 +33,7 @@ import java.util.Set;
  * {@link VCardParser_V30} does not inherit {@link VCardParser_V21}, while
  * {@link VCardParserImpl_V30} inherits {@link VCardParserImpl_V21}.
  * </p>
+ *
  * @hide
  */
 /* package */ class VCardParserImpl_V30 extends VCardParserImpl_V21 {
@@ -304,9 +305,9 @@ import java.util.Set;
 
     /**
      * ESCAPED-CHAR = "\\" / "\;" / "\," / "\n" / "\N")
-     *              ; \\ encodes \, \n or \N encodes newline
-     *              ; \; encodes ;, \, encodes ,
-     *
+     * ; \\ encodes \, \n or \N encodes newline
+     * ; \; encodes ;, \, encodes ,
+     * <p>
      * Note: Apple escapes ':' into '\:' while does not escape '\'
      */
     @Override

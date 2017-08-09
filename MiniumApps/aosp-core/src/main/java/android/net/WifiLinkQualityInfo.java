@@ -19,19 +19,20 @@ package android.net;
 import android.os.Parcel;
 
 /**
- *  Class that represents useful attributes of wifi network links
- *  such as the upload/download throughput or error rate etc.
- *  @hide
+ * Class that represents useful attributes of wifi network links
+ * such as the upload/download throughput or error rate etc.
+ *
+ * @hide
  */
 public class WifiLinkQualityInfo extends LinkQualityInfo {
 
     /* Indicates Wifi network type such as b/g etc*/
-    private int  mType = UNKNOWN_INT;
+    private int mType = UNKNOWN_INT;
 
     private String mBssid;
 
     /* Rssi found by scans */
-    private int  mRssi = UNKNOWN_INT;
+    private int mRssi = UNKNOWN_INT;
 
     /* packet statistics */
     private long mTxGood = UNKNOWN_LONG;
@@ -39,6 +40,7 @@ public class WifiLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * Implement the Parcelable interface.
+     *
      * @hide
      */
     @Override
@@ -54,6 +56,7 @@ public class WifiLinkQualityInfo extends LinkQualityInfo {
     }
 
     /* Un-parceling helper */
+
     /**
      * @hide
      */
@@ -62,18 +65,19 @@ public class WifiLinkQualityInfo extends LinkQualityInfo {
 
         li.initializeFromParcel(in);
 
-        li.mType =  in.readInt();
-        li.mRssi =  in.readInt();
-        li.mTxGood =  in.readLong();
-        li.mTxBad =  in.readLong();
+        li.mType = in.readInt();
+        li.mRssi = in.readInt();
+        li.mTxGood = in.readLong();
+        li.mTxBad = in.readLong();
 
-        li.mBssid =  in.readString();
+        li.mBssid = in.readString();
 
         return li;
     }
 
     /**
      * returns Wifi network type
+     *
      * @return network type or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getType() {
@@ -89,6 +93,7 @@ public class WifiLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns BSSID of the access point
+     *
      * @return the BSSID, in the form of a six-byte MAC address: {@code XX:XX:XX:XX:XX:XX} or null
      */
     public String getBssid() {
@@ -104,6 +109,7 @@ public class WifiLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns RSSI of the network in raw form
+     *
      * @return un-normalized RSSI or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getRssi() {
@@ -119,6 +125,7 @@ public class WifiLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns number of packets transmitted without error
+     *
      * @return number of packets or {@link android.net.LinkQualityInfo#UNKNOWN_LONG}
      */
     public long getTxGood() {
@@ -134,6 +141,7 @@ public class WifiLinkQualityInfo extends LinkQualityInfo {
 
     /**
      * returns number of transmitted packets that encountered errors
+     *
      * @return number of packets or {@link android.net.LinkQualityInfo#UNKNOWN_LONG}
      */
     public long getTxBad() {

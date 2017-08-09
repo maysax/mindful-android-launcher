@@ -76,31 +76,31 @@ public class SlideEditorActivity extends Activity {
     public static final String SLIDE_INDEX = "slide_index";
 
     // Menu ids.
-    private final static int MENU_REMOVE_TEXT       = 0;
-    private final static int MENU_ADD_PICTURE       = 1;
-    private final static int MENU_TAKE_PICTURE      = 2;
-    private final static int MENU_DEL_PICTURE       = 3;
-    private final static int MENU_ADD_AUDIO         = 4;
-    private final static int MENU_DEL_AUDIO         = 5;
-    private final static int MENU_ADD_VIDEO         = 6;
-    private final static int MENU_ADD_SLIDE         = 7;
-    private final static int MENU_DEL_VIDEO         = 8;
-    private final static int MENU_LAYOUT            = 9;
-    private final static int MENU_DURATION          = 10;
+    private final static int MENU_REMOVE_TEXT = 0;
+    private final static int MENU_ADD_PICTURE = 1;
+    private final static int MENU_TAKE_PICTURE = 2;
+    private final static int MENU_DEL_PICTURE = 3;
+    private final static int MENU_ADD_AUDIO = 4;
+    private final static int MENU_DEL_AUDIO = 5;
+    private final static int MENU_ADD_VIDEO = 6;
+    private final static int MENU_ADD_SLIDE = 7;
+    private final static int MENU_DEL_VIDEO = 8;
+    private final static int MENU_LAYOUT = 9;
+    private final static int MENU_DURATION = 10;
     private final static int MENU_PREVIEW_SLIDESHOW = 11;
-    private final static int MENU_RECORD_SOUND      = 12;
-    private final static int MENU_SUB_AUDIO         = 13;
-    private final static int MENU_TAKE_VIDEO        = 14;
+    private final static int MENU_RECORD_SOUND = 12;
+    private final static int MENU_SUB_AUDIO = 13;
+    private final static int MENU_TAKE_VIDEO = 14;
 
     // Request code.
-    private final static int REQUEST_CODE_EDIT_TEXT          = 0;
-    private final static int REQUEST_CODE_CHANGE_PICTURE     = 1;
-    private final static int REQUEST_CODE_TAKE_PICTURE       = 2;
-    private final static int REQUEST_CODE_CHANGE_MUSIC       = 3;
-    private final static int REQUEST_CODE_RECORD_SOUND       = 4;
-    private final static int REQUEST_CODE_CHANGE_VIDEO       = 5;
-    private final static int REQUEST_CODE_CHANGE_DURATION    = 6;
-    private final static int REQUEST_CODE_TAKE_VIDEO         = 7;
+    private final static int REQUEST_CODE_EDIT_TEXT = 0;
+    private final static int REQUEST_CODE_CHANGE_PICTURE = 1;
+    private final static int REQUEST_CODE_TAKE_PICTURE = 2;
+    private final static int REQUEST_CODE_CHANGE_MUSIC = 3;
+    private final static int REQUEST_CODE_RECORD_SOUND = 4;
+    private final static int REQUEST_CODE_CHANGE_VIDEO = 5;
+    private final static int REQUEST_CODE_CHANGE_DURATION = 6;
+    private final static int REQUEST_CODE_TAKE_VIDEO = 7;
 
     // number of items in the duration selector dialog that directly map from
     // item index to duration in seconds (duration = index + 1)
@@ -150,7 +150,7 @@ public class SlideEditorActivity extends Activity {
         mRemoveSlide.setOnClickListener(mOnRemoveSlide);
 
         mTextEditor = (EditText) findViewById(R.id.text_message);
-        mTextEditor.setFilters(new InputFilter[] {
+        mTextEditor.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.getMaxTextLimit())});
 
         mDone = (Button) findViewById(R.id.done_button);
@@ -206,7 +206,7 @@ public class SlideEditorActivity extends Activity {
     }
 
     @Override
-    protected void onPause()  {
+    protected void onPause() {
         super.onPause();
 
         // remove any callback to display a progress spinner
@@ -220,7 +220,7 @@ public class SlideEditorActivity extends Activity {
                     PduBody pb = mSlideshowModel.toPduBody();
                     PduPersister.getPduPersister(this).updateParts(mUri, pb, null);
                     mSlideshowModel.sync(pb);
-                }  catch (MmsException e) {
+                } catch (MmsException e) {
                     Log.e(TAG, "Cannot update the message: " + mUri, e);
                 }
             }
@@ -238,14 +238,14 @@ public class SlideEditorActivity extends Activity {
     }
 
     private final IModelChangedObserver mModelChangedObserver =
-        new IModelChangedObserver() {
-            public void onModelChanged(Model model, boolean dataChanged) {
-                synchronized (SlideEditorActivity.this) {
-                    mDirty = true;
+            new IModelChangedObserver() {
+                public void onModelChanged(Model model, boolean dataChanged) {
+                    synchronized (SlideEditorActivity.this) {
+                        mDirty = true;
+                    }
+                    setResult(RESULT_OK);
                 }
-                setResult(RESULT_OK);
-            }
-        };
+            };
 
     private final OnClickListener mOnRemoveSlide = new OnClickListener() {
         public void onClick(View v) {
@@ -297,7 +297,7 @@ public class SlideEditorActivity extends Activity {
     private final OnClickListener mOnNavigateBackward = new OnClickListener() {
         public void onClick(View v) {
             if (mPosition > 0) {
-                mPosition --;
+                mPosition--;
                 showCurrentSlide();
             }
         }
@@ -306,7 +306,7 @@ public class SlideEditorActivity extends Activity {
     private final OnClickListener mOnNavigateForward = new OnClickListener() {
         public void onClick(View v) {
             if (mPosition < mSlideshowModel.size() - 1) {
-                mPosition ++;
+                mPosition++;
                 showCurrentSlide();
             }
         }
@@ -379,12 +379,12 @@ public class SlideEditorActivity extends Activity {
         } else if (!slide.hasVideo()) {
             if (MmsConfig.getAllowAttachAudio()) {
                 SubMenu subMenu = menu.addSubMenu(0, MENU_SUB_AUDIO, 0, R.string.add_music)
-                    .setIcon(R.drawable.ic_menu_add_sound);
+                        .setIcon(R.drawable.ic_menu_add_sound);
                 subMenu.add(0, MENU_ADD_AUDIO, 0, R.string.attach_sound);
                 subMenu.add(0, MENU_RECORD_SOUND, 0, R.string.attach_record_sound);
             } else {
                 menu.add(0, MENU_RECORD_SOUND, 0, R.string.attach_record_sound)
-                    .setIcon(R.drawable.ic_menu_add_sound);
+                        .setIcon(R.drawable.ic_menu_add_sound);
             }
         }
 
@@ -395,7 +395,7 @@ public class SlideEditorActivity extends Activity {
         } else if (!slide.hasAudio() && !slide.hasImage()) {
             menu.add(0, MENU_ADD_VIDEO, 0, R.string.add_video).setIcon(R.drawable.ic_menu_movie);
             menu.add(0, MENU_TAKE_VIDEO, 0, R.string.attach_record_video)
-                .setIcon(R.drawable.ic_menu_movie);
+                    .setIcon(R.drawable.ic_menu_movie);
         }
 
         // Add slide
@@ -406,7 +406,7 @@ public class SlideEditorActivity extends Activity {
         String duration = getResources().getString(R.string.duration_sec);
         menu.add(0, MENU_DURATION, 0,
                 duration.replace("%s", String.valueOf(slide.getDuration() / 1000))).setIcon(
-                        R.drawable.ic_menu_duration);
+                R.drawable.ic_menu_duration);
 
         // Slide layout
         int resId;
@@ -492,7 +492,7 @@ public class SlideEditorActivity extends Activity {
 
             case MENU_ADD_SLIDE:
                 mPosition++;
-                if ( mSlideshowEditor.addNewSlide(mPosition) ) {
+                if (mSlideshowEditor.addNewSlide(mPosition)) {
                     // add successfully
                     showCurrentSlide();
                 } else {
@@ -527,23 +527,23 @@ public class SlideEditorActivity extends Activity {
 
         builder.setItems(R.array.select_dialog_items,
                 new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                if ((which >= 0) && (which < NUM_DIRECT_DURATIONS)) {
-                    mSlideshowEditor.changeDuration(
-                            mPosition, (which + 1) * 1000);
-                } else {
-                    Intent intent = new Intent(SlideEditorActivity.this,
-                            EditSlideDurationActivity.class);
-                    intent.putExtra(EditSlideDurationActivity.SLIDE_INDEX, mPosition);
-                    intent.putExtra(EditSlideDurationActivity.SLIDE_TOTAL,
-                            mSlideshowModel.size());
-                    intent.putExtra(EditSlideDurationActivity.SLIDE_DUR,
-                            mSlideshowModel.get(mPosition).getDuration() / 1000); // in seconds
-                    startActivityForResult(intent, REQUEST_CODE_CHANGE_DURATION);
-                }
-                dialog.dismiss();
-            }
-        });
+                    public void onClick(DialogInterface dialog, int which) {
+                        if ((which >= 0) && (which < NUM_DIRECT_DURATIONS)) {
+                            mSlideshowEditor.changeDuration(
+                                    mPosition, (which + 1) * 1000);
+                        } else {
+                            Intent intent = new Intent(SlideEditorActivity.this,
+                                    EditSlideDurationActivity.class);
+                            intent.putExtra(EditSlideDurationActivity.SLIDE_INDEX, mPosition);
+                            intent.putExtra(EditSlideDurationActivity.SLIDE_TOTAL,
+                                    mSlideshowModel.size());
+                            intent.putExtra(EditSlideDurationActivity.SLIDE_DUR,
+                                    mSlideshowModel.get(mPosition).getDuration() / 1000); // in seconds
+                            startActivityForResult(intent, REQUEST_CODE_CHANGE_DURATION);
+                        }
+                        dialog.dismiss();
+                    }
+                });
 
         builder.show();
     }
@@ -579,7 +579,7 @@ public class SlideEditorActivity extends Activity {
             return;
         }
 
-        switch(requestCode) {
+        switch (requestCode) {
             case REQUEST_CODE_EDIT_TEXT:
                 // XXX where does this come from?  Action is probably not the
                 // right place to have the text...
@@ -722,7 +722,7 @@ public class SlideEditorActivity extends Activity {
 
             case REQUEST_CODE_CHANGE_DURATION:
                 mSlideshowEditor.changeDuration(mPosition,
-                    Integer.valueOf(data.getAction()) * 1000);
+                        Integer.valueOf(data.getAction()) * 1000);
                 break;
         }
     }

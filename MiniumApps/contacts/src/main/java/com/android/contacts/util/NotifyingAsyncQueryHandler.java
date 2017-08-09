@@ -53,7 +53,9 @@ public class NotifyingAsyncQueryHandler extends AsyncQueryHandler {
         mListener = new WeakReference<AsyncQueryListener>(listener);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
         final AsyncQueryListener listener = mListener.get();

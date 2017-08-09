@@ -117,14 +117,14 @@ public class ContactsPickerAdapter extends ArrayAdapter<ContactListItem> {
                     buildData.add(originalData.get(i));
                 } else {
                     String filterableString;
-                    String [] splits;
+                    String[] splits;
 
 
                     filterableString = originalData.get(i).getContactName();
                     splits = filterableString.split(" ");
                     boolean isAdded = false;
 
-                    for (String str: splits) {
+                    for (String str : splits) {
                         if (str.toLowerCase().startsWith(searchString)) {
                             buildData.add(originalData.get(i));
                             isAdded = true;

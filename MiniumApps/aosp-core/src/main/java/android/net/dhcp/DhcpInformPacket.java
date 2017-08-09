@@ -44,7 +44,7 @@ class DhcpInformPacket extends DhcpPacket {
         ByteBuffer result = ByteBuffer.allocate(MAX_LENGTH);
 
         fillInPacket(encap, mClientIp, mYourIp, destUdp, srcUdp, result,
-            DHCP_BOOTREQUEST, false);
+                DHCP_BOOTREQUEST, false);
         result.flip();
         return result;
     }
@@ -69,8 +69,8 @@ class DhcpInformPacket extends DhcpPacket {
      */
     public void doNextOp(DhcpStateMachine machine) {
         InetAddress clientRequest =
-            mRequestedIp == null ? mClientIp : mRequestedIp;
+                mRequestedIp == null ? mClientIp : mRequestedIp;
         machine.onInformReceived(mTransId, mClientMac, clientRequest,
-            mRequestedParams);
+                mRequestedParams);
     }
 }

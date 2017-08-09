@@ -26,7 +26,7 @@ import java.util.Map;
  * of {@link SoftReference SoftReferences}.
  * <p>
  * The interface of this class is a subset of {@link Map}.
- *
+ * <p>
  * from Peter Balwin and books app.
  */
 public class SimpleCache<K, V> {
@@ -78,15 +78,15 @@ public class SimpleCache<K, V> {
      * Constructor.
      *
      * @param initialCapacity the initial capacity for the cache.
-     * @param maxCapacity the maximum capacity for the
-     *            cache (this value may be large if soft references are used because
-     *            {@link SoftReference SoftReferences} don't consume much memory compared to the
-     *            larger data they typically contain).
-     * @param loadFactor the initial load balancing factor for the internal
-     *            {@link LinkedHashMap}
+     * @param maxCapacity     the maximum capacity for the
+     *                        cache (this value may be large if soft references are used because
+     *                        {@link SoftReference SoftReferences} don't consume much memory compared to the
+     *                        larger data they typically contain).
+     * @param loadFactor      the initial load balancing factor for the internal
+     *                        {@link LinkedHashMap}
      */
     public SimpleCache(int initialCapacity, int maxCapacity, float loadFactor,
-            boolean useHardReferences) {
+                       boolean useHardReferences) {
         if (useHardReferences) {
             mSoftReferences = null;
             mHardReferences = new HardReferenceMap(initialCapacity, maxCapacity, loadFactor);

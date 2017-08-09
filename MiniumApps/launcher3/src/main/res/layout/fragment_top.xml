@@ -70,7 +70,7 @@
         android:textSize="@dimen/text.size.large"
         android:fontFamily="sans-serif"
         android:textColor="#b3000000"
-        tools:text="SELECT"/>
+        tools:text="SELECT" />
 
 
 </RelativeLayout>

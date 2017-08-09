@@ -2,29 +2,31 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="@string/personal_settings_key"
     android:summary="@string/personal_settings_summary"
-    android:title="@string/personal_settings_title" >
+    android:title="@string/personal_settings_title">
 
-    <Preference android:title="@string/pref_location"
+    <Preference
+        android:title="@string/pref_location"
         android:key="@string/location_key"
         android:summary="@string/location_settings_summary">
-        <intent android:action="android.settings.LOCATION_SOURCE_SETTINGS"/>
+        <intent android:action="android.settings.LOCATION_SOURCE_SETTINGS" />
     </Preference>
 
     <Preference android:title="@string/pref_security">
-        <intent android:action="android.settings.SECURITY_SETTINGS"/>
+        <intent android:action="android.settings.SECURITY_SETTINGS" />
     </Preference>
 
     <Preference android:title="@string/pref_accounts">
-        <intent android:action="android.settings.SYNC_SETTINGS"/>
+        <intent android:action="android.settings.SYNC_SETTINGS" />
     </Preference>
 
-    <Preference android:title="@string/pref_language_input"
+    <Preference
+        android:title="@string/pref_language_input"
         android:key="@string/pref_language_key">
         <!--<intent android:action="android.settings.INPUT_METHOD_SETTINGS"/>-->
     </Preference>
 
     <Preference android:title="@string/pref_backup_reset">
-        <intent android:action="android.settings.BACKUP_AND_RESET_SETTINGS"/>
+        <intent android:action="android.settings.BACKUP_AND_RESET_SETTINGS" />
     </Preference>
 
 </PreferenceScreen>

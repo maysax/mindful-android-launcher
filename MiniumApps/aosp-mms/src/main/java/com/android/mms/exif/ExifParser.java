@@ -16,9 +16,9 @@
 
 package com.android.mms.exif;
 
-import com.android.mms.LogTag;
-
 import android.util.Log;
+
+import com.android.mms.LogTag;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +34,7 @@ import java.util.TreeMap;
  * <p>
  * Below is an example of getting EXIF data from IFD 0 and EXIF IFD using the
  * parser.
- *
+ * <p>
  * <pre>
  * void parse() {
  *     ExifParser parser = ExifParser.parse(mImageInputStream,
@@ -235,8 +235,8 @@ public class ExifParser {
     /**
      * Parses the the given InputStream with the given options
      *
-     * @exception IOException
-     * @exception ExifInvalidFormatException
+     * @throws IOException
+     * @throws ExifInvalidFormatException
      */
     protected static ExifParser parse(InputStream inputStream, int options, ExifInterface iRef)
             throws IOException, ExifInvalidFormatException {
@@ -247,8 +247,8 @@ public class ExifParser {
      * Parses the the given InputStream with default options; that is, every IFD
      * and thumbnaill will be parsed.
      *
-     * @exception IOException
-     * @exception ExifInvalidFormatException
+     * @throws IOException
+     * @throws ExifInvalidFormatException
      * @see #parse(InputStream, int)
      */
     protected static ExifParser parse(InputStream inputStream, ExifInterface iRef)
@@ -261,8 +261,8 @@ public class ExifParser {
     /**
      * Moves the parser forward and returns the next parsing event
      *
-     * @exception IOException
-     * @exception ExifInvalidFormatException
+     * @throws IOException
+     * @throws ExifInvalidFormatException
      * @see #EVENT_START_OF_IFD
      * @see #EVENT_NEW_TAG
      * @see #EVENT_VALUE_OF_REGISTERED_TAG
@@ -631,7 +631,7 @@ public class ExifParser {
             }
         } else if (tid == TAG_STRIP_BYTE_COUNTS
                 && checkAllowed(ifd, ExifInterface.TAG_STRIP_BYTE_COUNTS)
-                &&isThumbnailRequested() && tag.hasValue()) {
+                && isThumbnailRequested() && tag.hasValue()) {
             mStripSizeTag = tag;
         }
     }
@@ -685,7 +685,7 @@ public class ExifParser {
                 read(buf);
                 tag.setValue(buf);
             }
-                break;
+            break;
             case ExifTag.TYPE_ASCII:
                 tag.setValue(readString(tag.getComponentCount()));
                 break;
@@ -696,7 +696,7 @@ public class ExifParser {
                 }
                 tag.setValue(value);
             }
-                break;
+            break;
             case ExifTag.TYPE_UNSIGNED_RATIONAL: {
                 Rational value[] = new Rational[tag.getComponentCount()];
                 for (int i = 0, n = value.length; i < n; i++) {
@@ -704,7 +704,7 @@ public class ExifParser {
                 }
                 tag.setValue(value);
             }
-                break;
+            break;
             case ExifTag.TYPE_UNSIGNED_SHORT: {
                 int value[] = new int[tag.getComponentCount()];
                 for (int i = 0, n = value.length; i < n; i++) {
@@ -712,7 +712,7 @@ public class ExifParser {
                 }
                 tag.setValue(value);
             }
-                break;
+            break;
             case ExifTag.TYPE_LONG: {
                 int value[] = new int[tag.getComponentCount()];
                 for (int i = 0, n = value.length; i < n; i++) {
@@ -720,7 +720,7 @@ public class ExifParser {
                 }
                 tag.setValue(value);
             }
-                break;
+            break;
             case ExifTag.TYPE_RATIONAL: {
                 Rational value[] = new Rational[tag.getComponentCount()];
                 for (int i = 0, n = value.length; i < n; i++) {
@@ -728,7 +728,7 @@ public class ExifParser {
                 }
                 tag.setValue(value);
             }
-                break;
+            break;
         }
         if (LOGV) {
             Log.v(TAG, "\n" + tag.toString());

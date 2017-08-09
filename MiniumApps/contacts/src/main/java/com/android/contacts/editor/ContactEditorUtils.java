@@ -26,10 +26,10 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.android.contacts.common.testing.NeededForTesting;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountWithDataSet;
+import com.android.contacts.common.testing.NeededForTesting;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -100,7 +100,7 @@ public class ContactEditorUtils {
 
     /**
      * @return true if it's the first launch and {@link #saveDefaultAndAllAccounts} has never
-     *     been called.
+     * been called.
      */
     private boolean isFirstLaunch() {
         return !mPrefs.getBoolean(KEY_ANYTHING_SAVED, false);
@@ -109,11 +109,11 @@ public class ContactEditorUtils {
     /**
      * Saves all writable accounts and the default account, which can later be obtained
      * with {@link #getDefaultAccount}.
-     *
+     * <p>
      * This should be called when saving a newly created contact.
      *
      * @param defaultAccount the account used to save a newly created contact.  Or pass {@code null}
-     *     If the user selected "local only".
+     *                       If the user selected "local only".
      */
     public void saveDefaultAndAllAccounts(AccountWithDataSet defaultAccount) {
         final SharedPreferences.Editor editor = mPrefs.edit()
@@ -136,11 +136,11 @@ public class ContactEditorUtils {
 
     /**
      * @return the default account saved with {@link #saveDefaultAndAllAccounts}.
-     *
+     * <p>
      * Note the {@code null} return value can mean either {@link #saveDefaultAndAllAccounts} has
      * never been called, or {@code null} was passed to {@link #saveDefaultAndAllAccounts} --
      * i.e. the user selected "local only".
-     *
+     * <p>
      * Also note that the returned account may have been removed already.
      */
     public AccountWithDataSet getDefaultAccount() {
@@ -161,7 +161,7 @@ public class ContactEditorUtils {
 
     /**
      * @return true if an account still exists.  {@code null} is considered "local only" here,
-     *    so it's valid too.
+     * so it's valid too.
      */
     @VisibleForTesting
     boolean isValidAccount(AccountWithDataSet account) {
@@ -197,7 +197,7 @@ public class ContactEditorUtils {
      * - Or, if an account has been added.
      * - Or, if the default account has been removed.
      * (And some extra sanity check)
-     *
+     * <p>
      * Note if this method returns {@code false}, the caller can safely assume that
      * {@link #getDefaultAccount} will return a valid account.  (Either an account which still
      * exists, or {@code null} which should be interpreted as "local only".)
@@ -249,7 +249,7 @@ public class ContactEditorUtils {
     /**
      * Create an {@link Intent} to start "add new account" setup wizard.  Selectable account
      * types will be limited to ones that supports editing contacts.
-     *
+     * <p>
      * Use {@link Activity#startActivityForResult} or
      * {@link android.app.Fragment#startActivityForResult} to start the wizard, and
      * {@link Activity#onActivityResult} or {@link android.app.Fragment#onActivityResult} to
@@ -265,7 +265,7 @@ public class ContactEditorUtils {
                 null, // addAccountAuthTokenType
                 null, // addAccountRequiredFeatures
                 null // addAccountOptions
-                );
+        );
     }
 
     /**
@@ -273,7 +273,7 @@ public class ContactEditorUtils {
      * {@link Account}, or null if the user has canceled the wizard.  Pass the {@code resultCode}
      * and {@code data} parameters passed to {@link Activity#onActivityResult} or
      * {@link android.app.Fragment#onActivityResult}.
-     *
+     * <p>
      * Note although the return type is {@link AccountWithDataSet}, return values from this method
      * will never have {@link AccountWithDataSet#dataSet} set, as there's no way to create an
      * extension package account from setup wizard.

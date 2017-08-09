@@ -80,7 +80,7 @@ import minium.co.contacts.R;
 /**
  * The class letting users to import vCard. This includes the UI part for letting them select
  * an Account and posssibly a file if there's no Uri is given from its caller Activity.
- *
+ * <p>
  * Note that this Activity assumes that the instance is a "one-shot Activity", which will be
  * finished (with the method {@link Activity#finish()}) after the import and never reuse
  * any Dialog in the instance. So this code is careless about the management around managed
@@ -155,13 +155,16 @@ public class ImportVCardActivity extends Activity {
     // Runs on the UI thread.
     private class DialogDisplayer implements Runnable {
         private final int mResId;
+
         public DialogDisplayer(int resId) {
             mResId = resId;
         }
+
         public DialogDisplayer(String errorMessage) {
             mResId = R.id.dialog_error_with_message;
             mErrorMessage = errorMessage;
         }
+
         @Override
         public void run() {
             if (!isFinishing()) {
@@ -171,11 +174,12 @@ public class ImportVCardActivity extends Activity {
     }
 
     private class CancelListener
-        implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
+            implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             finish();
         }
+
         @Override
         public void onCancel(DialogInterface dialog) {
             finish();
@@ -210,7 +214,7 @@ public class ImportVCardActivity extends Activity {
     /**
      * Caches given vCard files into a local directory, and sends actual import request to
      * {@link VCardService}.
-     *
+     * <p>
      * We need to cache given files into local storage. One of reasons is that some data (as Uri)
      * may have special permissions. Callers may allow only this Activity to access that content,
      * not what this Activity launched (like {@link VCardService}).
@@ -229,10 +233,10 @@ public class ImportVCardActivity extends Activity {
             mSource = null;
             final Context context = ImportVCardActivity.this;
             final PowerManager powerManager =
-                    (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+                    (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             mWakeLock = powerManager.newWakeLock(
                     PowerManager.SCREEN_DIM_WAKE_LOCK |
-                    PowerManager.ON_AFTER_RELEASE, LOG_TAG);
+                            PowerManager.ON_AFTER_RELEASE, LOG_TAG);
             mDisplayName = null;
         }
 
@@ -312,7 +316,7 @@ public class ImportVCardActivity extends Activity {
                         // pick up the last part of the Uri.
                         try {
                             cursor = resolver.query(sourceUri,
-                                    new String[] { OpenableColumns.DISPLAY_NAME },
+                                    new String[]{OpenableColumns.DISPLAY_NAME},
                                     null, null, null);
                             if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
                                 if (cursor.getCount() > 1) {
@@ -329,7 +333,7 @@ public class ImportVCardActivity extends Activity {
                                 cursor.close();
                             }
                         }
-                        if (TextUtils.isEmpty(displayName)){
+                        if (TextUtils.isEmpty(displayName)) {
                             displayName = sourceUri.getLastPathSegment();
                         }
 
@@ -416,7 +420,7 @@ public class ImportVCardActivity extends Activity {
                 if (outputChannel != null) {
                     try {
                         outputChannel.close();
-                    } catch(IOException e) {
+                    } catch (IOException e) {
                         Log.w(LOG_TAG, "Failed to close outputChannel");
                     }
                 }
@@ -435,7 +439,7 @@ public class ImportVCardActivity extends Activity {
          * {@link ImportRequest#displayName}.
          */
         private ImportRequest constructImportRequest(final byte[] data,
-                final Uri localDataUri, final String displayName)
+                                                     final Uri localDataUri, final String displayName)
                 throws IOException, VCardException {
             final ContentResolver resolver = ImportVCardActivity.this.getContentResolver();
             VCardEntryCounter counter = null;
@@ -530,15 +534,15 @@ public class ImportVCardActivity extends Activity {
         public void onClick(DialogInterface dialog, int which) {
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 switch (mCurrentIndex) {
-                case IMPORT_ALL:
-                    importVCardFromSDCard(mAllVCardFileList);
-                    break;
-                case IMPORT_MULTIPLE:
-                    showDialog(R.id.dialog_select_multiple_vcard);
-                    break;
-                default:
-                    showDialog(R.id.dialog_select_one_vcard);
-                    break;
+                    case IMPORT_ALL:
+                        importVCardFromSDCard(mAllVCardFileList);
+                        break;
+                    case IMPORT_MULTIPLE:
+                        showDialog(R.id.dialog_select_multiple_vcard);
+                        break;
+                    default:
+                        showDialog(R.id.dialog_select_one_vcard);
+                        break;
                 }
             } else if (which == DialogInterface.BUTTON_NEGATIVE) {
                 finish();
@@ -621,11 +625,11 @@ public class ImportVCardActivity extends Activity {
             mGotIOException = false;
             mRootDirectory = sdcardDirectory;
             mCheckedPaths = new HashSet<String>();
-            PowerManager powerManager = (PowerManager)ImportVCardActivity.this.getSystemService(
+            PowerManager powerManager = (PowerManager) ImportVCardActivity.this.getSystemService(
                     Context.POWER_SERVICE);
             mWakeLock = powerManager.newWakeLock(
                     PowerManager.SCREEN_DIM_WAKE_LOCK |
-                    PowerManager.ON_AFTER_RELEASE, LOG_TAG);
+                            PowerManager.ON_AFTER_RELEASE, LOG_TAG);
         }
 
         @Override
@@ -695,7 +699,7 @@ public class ImportVCardActivity extends Activity {
                 if (file.isDirectory()) {
                     getVCardFileRecursively(file);
                 } else if (canonicalPath.toLowerCase().endsWith(".vcf") &&
-                        file.canRead()){
+                        file.canRead()) {
                     String fileName = file.getName();
                     VCardFile vcardFile = new VCardFile(
                             fileName, canonicalPath, file.lastModified());
@@ -739,11 +743,11 @@ public class ImportVCardActivity extends Activity {
     }
 
     private void importVCardFromSDCard(final VCardFile vcardFile) {
-        importVCard(new Uri[] {Uri.parse("file://" + vcardFile.getCanonicalPath())});
+        importVCard(new Uri[]{Uri.parse("file://" + vcardFile.getCanonicalPath())});
     }
 
     private void importVCard(final Uri uri) {
-        importVCard(new Uri[] {uri});
+        importVCard(new Uri[]{uri});
     }
 
     private void importVCard(final String[] uriStrings) {
@@ -809,14 +813,14 @@ public class ImportVCardActivity extends Activity {
             // The value set to RelativeSizeSpan is arbitrary. You can change it to any other
             // value (but the value bigger than 1.0f would not make nice appearance :)
             stringBuilder.append(
-                        "(" + dateFormat.format(new Date(vcardFile.getLastModified())) + ")");
+                    "(" + dateFormat.format(new Date(vcardFile.getLastModified())) + ")");
             stringBuilder.setSpan(
                     new RelativeSizeSpan(0.7f), indexToBeSpanned, stringBuilder.length(),
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             items[i] = stringBuilder;
         }
         if (multipleSelect) {
-            builder.setMultiChoiceItems(items, (boolean[])null, listener);
+            builder.setMultiChoiceItems(items, (boolean[]) null, listener);
         } else {
             builder.setSingleChoiceItems(items, 0, listener);
         }
@@ -904,7 +908,7 @@ public class ImportVCardActivity extends Activity {
                 if (mProgressDialogForScanVCard == null) {
                     String message = getString(R.string.searching_vcard_message);
                     mProgressDialogForScanVCard =
-                        ProgressDialog.show(this, "", message, true, false);
+                            ProgressDialog.show(this, "", message, true, false);
                     mProgressDialogForScanVCard.setOnCancelListener(mVCardScanThread);
                     mVCardScanThread.start();
                 }
@@ -912,10 +916,10 @@ public class ImportVCardActivity extends Activity {
             }
             case R.id.dialog_sdcard_not_found: {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setMessage(R.string.no_sdcard_message)
-                    .setOnCancelListener(mCancelListener)
-                    .setPositiveButton(android.R.string.ok, mCancelListener);
+                        .setIconAttribute(android.R.attr.alertDialogIcon)
+                        .setMessage(R.string.no_sdcard_message)
+                        .setOnCancelListener(mCancelListener)
+                        .setPositiveButton(android.R.string.ok, mCancelListener);
                 return builder.create();
             }
             case R.id.dialog_vcard_not_found: {
@@ -952,10 +956,10 @@ public class ImportVCardActivity extends Activity {
                 String message = (getString(R.string.scanning_sdcard_failed_message,
                         getString(R.string.fail_reason_io_error)));
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setMessage(message)
-                    .setOnCancelListener(mCancelListener)
-                    .setPositiveButton(android.R.string.ok, mCancelListener);
+                        .setIconAttribute(android.R.attr.alertDialogIcon)
+                        .setMessage(message)
+                        .setOnCancelListener(mCancelListener)
+                        .setPositiveButton(android.R.string.ok, mCancelListener);
                 return builder.create();
             }
             case R.id.dialog_error_with_message: {
@@ -965,11 +969,11 @@ public class ImportVCardActivity extends Activity {
                     message = getString(R.string.fail_reason_unknown);
                 }
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.reading_vcard_failed_title))
-                    .setIconAttribute(android.R.attr.alertDialogIcon)
-                    .setMessage(message)
-                    .setOnCancelListener(mCancelListener)
-                    .setPositiveButton(android.R.string.ok, mCancelListener);
+                        .setTitle(getString(R.string.reading_vcard_failed_title))
+                        .setIconAttribute(android.R.attr.alertDialogIcon)
+                        .setMessage(message)
+                        .setOnCancelListener(mCancelListener)
+                        .setPositiveButton(android.R.string.ok, mCancelListener);
                 return builder.create();
             }
         }
@@ -1015,7 +1019,7 @@ public class ImportVCardActivity extends Activity {
 
     /* package */ void showFailureNotification(int reasonId) {
         final NotificationManager notificationManager =
-                (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         final Notification notification =
                 NotificationImportExportListener.constructImportFailureNotification(
                         ImportVCardActivity.this,

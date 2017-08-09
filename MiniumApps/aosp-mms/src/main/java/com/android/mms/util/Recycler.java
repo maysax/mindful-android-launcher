@@ -44,7 +44,7 @@ public abstract class Recycler {
     private static final String TAG = LogTag.TAG;
 
     // Default preference values
-    private static final boolean DEFAULT_AUTO_DELETE  = false;
+    private static final boolean DEFAULT_AUTO_DELETE = false;
 
     private static SmsRecycler sSmsRecycler;
     private static MmsRecycler sMmsRecycler;
@@ -132,34 +132,34 @@ public abstract class Recycler {
 
     public static class SmsRecycler extends Recycler {
         private static final String[] ALL_SMS_THREADS_PROJECTION = {
-            Telephony.Sms.Conversations.THREAD_ID,
-            Telephony.Sms.Conversations.MESSAGE_COUNT
+                Telephony.Sms.Conversations.THREAD_ID,
+                Telephony.Sms.Conversations.MESSAGE_COUNT
         };
 
-        private static final int ID             = 0;
-        private static final int MESSAGE_COUNT  = 1;
+        private static final int ID = 0;
+        private static final int MESSAGE_COUNT = 1;
 
-        static private final String[] SMS_MESSAGE_PROJECTION = new String[] {
-            BaseColumns._ID,
-            Conversations.THREAD_ID,
-            Sms.ADDRESS,
-            Sms.BODY,
-            Sms.DATE,
-            Sms.READ,
-            Sms.TYPE,
-            Sms.STATUS,
+        static private final String[] SMS_MESSAGE_PROJECTION = new String[]{
+                BaseColumns._ID,
+                Conversations.THREAD_ID,
+                Sms.ADDRESS,
+                Sms.BODY,
+                Sms.DATE,
+                Sms.READ,
+                Sms.TYPE,
+                Sms.STATUS,
         };
 
         // The indexes of the default columns which must be consistent
         // with above PROJECTION.
-        static private final int COLUMN_ID                  = 0;
-        static private final int COLUMN_THREAD_ID           = 1;
-        static private final int COLUMN_SMS_ADDRESS         = 2;
-        static private final int COLUMN_SMS_BODY            = 3;
-        static private final int COLUMN_SMS_DATE            = 4;
-        static private final int COLUMN_SMS_READ            = 5;
-        static private final int COLUMN_SMS_TYPE            = 6;
-        static private final int COLUMN_SMS_STATUS          = 7;
+        static private final int COLUMN_ID = 0;
+        static private final int COLUMN_THREAD_ID = 1;
+        static private final int COLUMN_SMS_ADDRESS = 2;
+        static private final int COLUMN_SMS_BODY = 3;
+        static private final int COLUMN_SMS_DATE = 4;
+        static private final int COLUMN_SMS_READ = 5;
+        static private final int COLUMN_SMS_TYPE = 6;
+        static private final int COLUMN_SMS_STATUS = 7;
 
         private final String MAX_SMS_MESSAGES_PER_THREAD = "MaxSmsMessagesPerThread";
 
@@ -171,7 +171,7 @@ public abstract class Recycler {
 
         public void setMessageLimit(Context context, int limit) {
             SharedPreferences.Editor editPrefs =
-                PreferenceManager.getDefaultSharedPreferences(context).edit();
+                    PreferenceManager.getDefaultSharedPreferences(context).edit();
             editPrefs.putInt(MAX_SMS_MESSAGES_PER_THREAD, limit);
             editPrefs.apply();
         }
@@ -215,7 +215,7 @@ public abstract class Recycler {
                 if (numberToDelete <= 0) {
                     return;
                 }
-               // Move to the keep limit and then delete everything older than that one.
+                // Move to the keep limit and then delete everything older than that one.
                 cursor.move(keep);
                 long latestDate = cursor.getLong(COLUMN_SMS_DATE);
 
@@ -282,24 +282,24 @@ public abstract class Recycler {
 
     public static class MmsRecycler extends Recycler {
         private static final String[] ALL_MMS_THREADS_PROJECTION = {
-            "thread_id", "count(*) as msg_count"
+                "thread_id", "count(*) as msg_count"
         };
 
-        private static final int ID             = 0;
-        private static final int MESSAGE_COUNT  = 1;
+        private static final int ID = 0;
+        private static final int MESSAGE_COUNT = 1;
 
-        static private final String[] MMS_MESSAGE_PROJECTION = new String[] {
-            BaseColumns._ID,
-            Conversations.THREAD_ID,
-            Mms.DATE,
+        static private final String[] MMS_MESSAGE_PROJECTION = new String[]{
+                BaseColumns._ID,
+                Conversations.THREAD_ID,
+                Mms.DATE,
         };
 
         // The indexes of the default columns which must be consistent
         // with above PROJECTION.
-        static private final int COLUMN_ID                  = 0;
-        static private final int COLUMN_THREAD_ID           = 1;
-        static private final int COLUMN_MMS_DATE            = 2;
-        static private final int COLUMN_MMS_READ            = 3;
+        static private final int COLUMN_ID = 0;
+        static private final int COLUMN_THREAD_ID = 1;
+        static private final int COLUMN_MMS_DATE = 2;
+        static private final int COLUMN_MMS_READ = 3;
 
         private final String MAX_MMS_MESSAGES_PER_THREAD = "MaxMmsMessagesPerThread";
 
@@ -311,7 +311,7 @@ public abstract class Recycler {
 
         public void setMessageLimit(Context context, int limit) {
             SharedPreferences.Editor editPrefs =
-                PreferenceManager.getDefaultSharedPreferences(context).edit();
+                    PreferenceManager.getDefaultSharedPreferences(context).edit();
             editPrefs.putInt(MAX_MMS_MESSAGES_PER_THREAD, limit);
             editPrefs.apply();
         }
@@ -346,7 +346,7 @@ public abstract class Recycler {
                         Telephony.Mms.CONTENT_URI,
                         MMS_MESSAGE_PROJECTION,
                         "thread_id in (select thread_id from pdu where _id=" + msgId +
-                            ") AND locked=0",
+                                ") AND locked=0",
                         null, "date DESC");     // get in newest to oldest order
                 if (cursor == null) {
                     Log.e(TAG, "MMS: deleteOldMessagesInSameThreadAsMessage got back null cursor");
@@ -421,7 +421,7 @@ public abstract class Recycler {
         }
 
         private void deleteMessagesOlderThanDate(Context context, long threadId,
-                long latestDate) {
+                                                 long latestDate) {
             long cntDeleted = SqliteWrapper.delete(context, context.getContentResolver(),
                     Telephony.Mms.CONTENT_URI,
                     "thread_id=" + threadId + " AND locked=0 AND date<" + latestDate,

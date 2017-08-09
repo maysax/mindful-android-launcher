@@ -64,23 +64,23 @@ public class GpsMeasurement implements Parcelable {
     // The following enumerations must be in sync with the values declared in gps.h
 
     private static final int HAS_NO_FLAGS = 0;
-    private static final int HAS_SNR = (1<<0);
-    private static final int HAS_ELEVATION = (1<<1);
-    private static final int HAS_ELEVATION_UNCERTAINTY = (1<<2);
-    private static final int HAS_AZIMUTH = (1<<3);
-    private static final int HAS_AZIMUTH_UNCERTAINTY = (1<<4);
-    private static final int HAS_PSEUDORANGE = (1<<5);
-    private static final int HAS_PSEUDORANGE_UNCERTAINTY = (1<<6);
-    private static final int HAS_CODE_PHASE = (1<<7);
-    private static final int HAS_CODE_PHASE_UNCERTAINTY = (1<<8);
-    private static final int HAS_CARRIER_FREQUENCY = (1<<9);
-    private static final int HAS_CARRIER_CYCLES = (1<<10);
-    private static final int HAS_CARRIER_PHASE = (1<<11);
-    private static final int HAS_CARRIER_PHASE_UNCERTAINTY = (1<<12);
-    private static final int HAS_BIT_NUMBER = (1<<13);
-    private static final int HAS_TIME_FROM_LAST_BIT = (1<<14);
-    private static final int HAS_DOPPLER_SHIFT = (1<<15);
-    private static final int HAS_DOPPLER_SHIFT_UNCERTAINTY = (1<<16);
+    private static final int HAS_SNR = (1 << 0);
+    private static final int HAS_ELEVATION = (1 << 1);
+    private static final int HAS_ELEVATION_UNCERTAINTY = (1 << 2);
+    private static final int HAS_AZIMUTH = (1 << 3);
+    private static final int HAS_AZIMUTH_UNCERTAINTY = (1 << 4);
+    private static final int HAS_PSEUDORANGE = (1 << 5);
+    private static final int HAS_PSEUDORANGE_UNCERTAINTY = (1 << 6);
+    private static final int HAS_CODE_PHASE = (1 << 7);
+    private static final int HAS_CODE_PHASE_UNCERTAINTY = (1 << 8);
+    private static final int HAS_CARRIER_FREQUENCY = (1 << 9);
+    private static final int HAS_CARRIER_CYCLES = (1 << 10);
+    private static final int HAS_CARRIER_PHASE = (1 << 11);
+    private static final int HAS_CARRIER_PHASE_UNCERTAINTY = (1 << 12);
+    private static final int HAS_BIT_NUMBER = (1 << 13);
+    private static final int HAS_TIME_FROM_LAST_BIT = (1 << 14);
+    private static final int HAS_DOPPLER_SHIFT = (1 << 15);
+    private static final int HAS_DOPPLER_SHIFT_UNCERTAINTY = (1 << 16);
 
     /**
      * The indicator is not available or it is unknown.
@@ -120,22 +120,22 @@ public class GpsMeasurement implements Parcelable {
     /**
      * The state of the GPS receiver is ranging code lock.
      */
-    public static final short STATE_CODE_LOCK = (1<<0);
+    public static final short STATE_CODE_LOCK = (1 << 0);
 
     /**
      * The state of the GPS receiver is in bit sync.
      */
-    public static final short STATE_BIT_SYNC = (1<<1);
+    public static final short STATE_BIT_SYNC = (1 << 1);
 
     /**
-     *The state of the GPS receiver is in sub-frame sync.
+     * The state of the GPS receiver is in sub-frame sync.
      */
-    public static final short STATE_SUBFRAME_SYNC = (1<<2);
+    public static final short STATE_SUBFRAME_SYNC = (1 << 2);
 
     /**
      * The state of the GPS receiver has TOW decoded.
      */
-    public static final short STATE_TOW_DECODED = (1<<3);
+    public static final short STATE_TOW_DECODED = (1 << 3);
 
     /**
      * The state of the 'Accumulated Delta Range' is invalid or unknown.
@@ -145,17 +145,17 @@ public class GpsMeasurement implements Parcelable {
     /**
      * The state of the 'Accumulated Delta Range' is valid.
      */
-    public static final short ADR_STATE_VALID = (1<<0);
+    public static final short ADR_STATE_VALID = (1 << 0);
 
     /**
      * The state of the 'Accumulated Delta Range' has detected a reset.
      */
-    public static final short ADR_STATE_RESET = (1<<1);
+    public static final short ADR_STATE_RESET = (1 << 1);
 
     /**
      * The state of the 'Accumulated Delta Range' has a cycle slip detected.
      */
-    public static final short ADR_STATE_CYCLE_SLIP = (1<<2);
+    public static final short ADR_STATE_CYCLE_SLIP = (1 << 2);
 
     // End enumerations in sync with gps.h
 
@@ -229,10 +229,10 @@ public class GpsMeasurement implements Parcelable {
      * Gets the time offset at which the measurement was taken in nanoseconds.
      * The reference receiver's time is specified by {@link GpsClock#getTimeInNs()} and should be
      * interpreted in the same way as indicated by {@link GpsClock#getType()}.
-     *
+     * <p>
      * The sign of this value is given by the following equation:
-     *      measurement time = time_ns + time_offset_ns
-     *
+     * measurement time = time_ns + time_offset_ns
+     * <p>
      * The value provides an individual time-stamp for the measurement, and allows sub-nanosecond
      * accuracy.
      */
@@ -250,7 +250,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets per-satellite sync state.
      * It represents the current sync state for the associated satellite.
-     *
+     * <p>
      * This value helps interpret {@link #getReceivedGpsTowInNs()}.
      */
     public short getState() {
@@ -300,13 +300,13 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the received GPS Time-of-Week at the measurement time, in nanoseconds.
      * The value is relative to the beginning of the current GPS week.
-     *
+     * <p>
      * Given {@link #getState()} of the GPS receiver, the range of this field can be:
-     *      Searching           : [ 0           ]   : {@link #STATE_UNKNOWN} is set
-     *      Ranging code lock   : [ 0    1 ms   ]   : {@link #STATE_CODE_LOCK} is set
-     *      Bit sync            : [ 0   20 ms   ]   : {@link #STATE_BIT_SYNC} is set
-     *      Subframe sync       : [ 0    6 ms   ]   : {@link #STATE_SUBFRAME_SYNC} is set
-     *      TOW decoded         : [ 0    1 week ]   : {@link #STATE_TOW_DECODED} is set
+     * Searching           : [ 0           ]   : {@link #STATE_UNKNOWN} is set
+     * Ranging code lock   : [ 0    1 ms   ]   : {@link #STATE_CODE_LOCK} is set
+     * Bit sync            : [ 0   20 ms   ]   : {@link #STATE_BIT_SYNC} is set
+     * Subframe sync       : [ 0    6 ms   ]   : {@link #STATE_SUBFRAME_SYNC} is set
+     * TOW decoded         : [ 0    1 week ]   : {@link #STATE_TOW_DECODED} is set
      */
     public long getReceivedGpsTowInNs() {
         return mReceivedGpsTowInNs;
@@ -336,7 +336,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the Carrier-to-noise density in dB-Hz.
      * Range: [0, 63].
-     *
+     * <p>
      * The value contains the measured C/N0 for the signal at the antenna input.
      */
     public double getCn0InDbHz() {
@@ -429,7 +429,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the accumulated delta range since the last channel reset, in meters.
      * The reported value includes {@link #getAccumulatedDeltaRangeUncertaintyInMeters()}.
-     *
+     * <p>
      * The availability of the value is represented by {@link #getAccumulatedDeltaRangeState()}.
      */
     public double getAccumulatedDeltaRangeInMeters() {
@@ -453,7 +453,7 @@ public class GpsMeasurement implements Parcelable {
 
     /**
      * Sets the accumulated delta range's uncertainty (1-sigma) in meters.
-     *
+     * <p>
      * The availability of the value is represented by {@link #getAccumulatedDeltaRangeState()}.
      */
     public void setAccumulatedDeltaRangeUncertaintyInMeters(double value) {
@@ -470,7 +470,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the best derived pseudorange by the chipset, in meters.
      * The reported pseudorange includes {@link #getPseudorangeUncertaintyInMeters()}.
-     *
+     * <p>
      * The value is only available if {@link #hasPseudorangeInMeters()} is true.
      */
     public double getPseudorangeInMeters() {
@@ -504,7 +504,7 @@ public class GpsMeasurement implements Parcelable {
      * Gets the pseudorange's uncertainty (1-Sigma) in meters.
      * The value contains the 'pseudorange' and 'clock' uncertainty in it.
      * The uncertainty is represented as an absolute (single sided) value.
-     *
+     * <p>
      * The value is only available if {@link #hasPseudorangeUncertaintyInMeters()} is true.
      */
     public double getPseudorangeUncertaintyInMeters() {
@@ -539,7 +539,7 @@ public class GpsMeasurement implements Parcelable {
      * Range: [0, 1023]
      * The reference frequency is given by the value of {@link #getCarrierFrequencyInHz()}.
      * The reported code-phase includes {@link #getCodePhaseUncertaintyInChips()}.
-     *
+     * <p>
      * The value is only available if {@link #hasCodePhaseInChips()} is true.
      */
     public double getCodePhaseInChips() {
@@ -572,7 +572,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the code-phase's uncertainty (1-Sigma) as a fraction of chips.
      * The uncertainty is represented as an absolute (single sided) value.
-     *
+     * <p>
      * The value is only available if {@link #hasCodePhaseUncertaintyInChips()} is true.
      */
     public double getCodePhaseUncertaintyInChips() {
@@ -605,7 +605,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the carrier frequency at which codes and messages are modulated, it can be L1 or L2.
      * If the field is not set, the carrier frequency corresponds to L1.
-     *
+     * <p>
      * The value is only available if {@link #hasCarrierFrequencyInHz()} is true.
      */
     public float getCarrierFrequencyInHz() {
@@ -638,7 +638,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * The number of full carrier cycles between the satellite and the receiver.
      * The reference frequency is given by the value of {@link #getCarrierFrequencyInHz()}.
-     *
+     * <p>
      * The value is only available if {@link #hasCarrierCycles()} is true.
      */
     public long getCarrierCycles() {
@@ -672,10 +672,10 @@ public class GpsMeasurement implements Parcelable {
      * Gets the RF phase detected by the receiver.
      * Range: [0.0, 1.0].
      * This is usually the fractional part of the complete carrier phase measurement.
-     *
+     * <p>
      * The reference frequency is given by the value of {@link #getCarrierFrequencyInHz()}.
      * The reported carrier-phase includes {@link #getCarrierPhaseUncertainty()}.
-     *
+     * <p>
      * The value is only available if {@link #hasCarrierPhase()} is true.
      */
     public double getCarrierPhase() {
@@ -708,7 +708,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the carrier-phase's uncertainty (1-Sigma).
      * The uncertainty is represented as an absolute (single sided) value.
-     *
+     * <p>
      * The value is only available if {@link #hasCarrierPhaseUncertainty()} is true.
      */
     public double getCarrierPhaseUncertainty() {
@@ -781,7 +781,7 @@ public class GpsMeasurement implements Parcelable {
 
     /**
      * Gets the number of GPS bits transmitted since Sat-Sun midnight (GPS week).
-     *
+     * <p>
      * The value is only available if {@link #hasBitNumber()} is true.
      */
     public int getBitNumber() {
@@ -814,7 +814,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the elapsed time since the last received bit in milliseconds.
      * Range: [0, 20].
-     *
+     * <p>
      * The value is only available if {@link #hasTimeFromLastBitInMs()} is true.
      */
     public short getTimeFromLastBitInMs() {
@@ -847,10 +847,10 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the Doppler Shift in Hz.
      * A positive value indicates that the SV is moving toward the receiver.
-     *
+     * <p>
      * The reference frequency is given by the value of {@link #getCarrierFrequencyInHz()}.
      * The reported doppler shift includes {@link #getDopplerShiftUncertaintyInHz()}.
-     *
+     * <p>
      * The value is only available if {@link #hasDopplerShiftInHz()} is true.
      */
     public double getDopplerShiftInHz() {
@@ -883,7 +883,7 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the Doppler's Shift uncertainty (1-Sigma) in Hz.
      * The uncertainty is represented as an absolute (single sided) value.
-     *
+     * <p>
      * The value is only available if {@link #hasDopplerShiftUncertaintyInHz()} is true.
      */
     public double getDopplerShiftUncertaintyInHz() {
@@ -935,7 +935,7 @@ public class GpsMeasurement implements Parcelable {
      * For internal and logging use only.
      */
     private String getMultipathIndicatorString() {
-        switch(mMultipathIndicator) {
+        switch (mMultipathIndicator) {
             case MULTIPATH_INDICATOR_UNKNOWN:
                 return "Unknown";
             case MULTIPATH_INDICATOR_DETECTED:
@@ -956,7 +956,7 @@ public class GpsMeasurement implements Parcelable {
 
     /**
      * Gets the Signal-to-Noise ratio (SNR) in dB.
-     *
+     * <p>
      * The value is only available if {@link #hasSnrInDb()} is true.
      */
     public double getSnrInDb() {
@@ -990,7 +990,7 @@ public class GpsMeasurement implements Parcelable {
      * Gets the Elevation in degrees.
      * Range: [-90, 90]
      * The reported elevation includes {@link #getElevationUncertaintyInDeg()}.
-     *
+     * <p>
      * The value is only available if {@link #hasElevationInDeg()} is true.
      */
     public double getElevationInDeg() {
@@ -1023,9 +1023,9 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the elevation's uncertainty (1-Sigma) in degrees.
      * Range: [0, 90]
-     *
+     * <p>
      * The uncertainty is represented as an absolute (single sided) value.
-     *
+     * <p>
      * The value is only available if {@link #hasElevationUncertaintyInDeg()} is true.
      */
     public double getElevationUncertaintyInDeg() {
@@ -1058,9 +1058,9 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the azimuth in degrees.
      * Range: [0, 360).
-     *
+     * <p>
      * The reported azimuth includes {@link #getAzimuthUncertaintyInDeg()}.
-     *
+     * <p>
      * The value is only available if {@link #hasAzimuthInDeg()} is true.
      */
     public double getAzimuthInDeg() {
@@ -1093,9 +1093,9 @@ public class GpsMeasurement implements Parcelable {
     /**
      * Gets the azimuth's uncertainty (1-Sigma) in degrees.
      * Range: [0, 180].
-     *
+     * <p>
      * The uncertainty is represented as an absolute (single sided) value.
-     *
+     * <p>
      * The value is only available if {@link #hasAzimuthUncertaintyInDeg()} is true.
      */
     public double getAzimuthUncertaintyInDeg() {

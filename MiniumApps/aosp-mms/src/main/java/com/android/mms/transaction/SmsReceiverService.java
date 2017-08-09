@@ -17,12 +17,6 @@
 
 package com.android.mms.transaction;
 
-import static android.content.Intent.ACTION_BOOT_COMPLETED;
-import static android.provider.Telephony.Sms.Intents.SMS_DELIVER_ACTION;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import android.app.Activity;
 import android.app.Service;
 import android.content.ContentResolver;
@@ -63,6 +57,12 @@ import com.android.mms.util.SendingProgressTokenManager;
 import com.android.mms.widget.MmsWidgetProvider;
 import com.google.android.mms.MmsException;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import static android.content.Intent.ACTION_BOOT_COMPLETED;
+import static android.provider.Telephony.Sms.Intents.SMS_DELIVER_ACTION;
+
 /**
  * This service essentially plays the role of a "worker thread", allowing us to store
  * incoming messages to the database, update notifications, etc. without blocking the
@@ -76,10 +76,10 @@ public class SmsReceiverService extends Service {
     private boolean mSending;
 
     public static final String MESSAGE_SENT_ACTION =
-        "com.android.mms.transaction.MESSAGE_SENT";
+            "com.android.mms.transaction.MESSAGE_SENT";
 
     // Indicates next message can be picked up and sent out.
-    public static final String EXTRA_MESSAGE_SENT_SEND_NEXT ="SendNextMsg";
+    public static final String EXTRA_MESSAGE_SENT_SEND_NEXT = "SendNextMsg";
 
     public static final String ACTION_SEND_MESSAGE =
             "com.android.mms.transaction.SEND_MESSAGE";
@@ -87,23 +87,23 @@ public class SmsReceiverService extends Service {
             "com.android.mms.transaction.SEND_INACTIVE_MESSAGE";
 
     // This must match the column IDs below.
-    private static final String[] SEND_PROJECTION = new String[] {
-        Sms._ID,        //0
-        Sms.THREAD_ID,  //1
-        Sms.ADDRESS,    //2
-        Sms.BODY,       //3
-        Sms.STATUS,     //4
+    private static final String[] SEND_PROJECTION = new String[]{
+            Sms._ID,        //0
+            Sms.THREAD_ID,  //1
+            Sms.ADDRESS,    //2
+            Sms.BODY,       //3
+            Sms.STATUS,     //4
 
     };
 
     public Handler mToastHandler = new Handler();
 
     // This must match SEND_PROJECTION.
-    private static final int SEND_COLUMN_ID         = 0;
-    private static final int SEND_COLUMN_THREAD_ID  = 1;
-    private static final int SEND_COLUMN_ADDRESS    = 2;
-    private static final int SEND_COLUMN_BODY       = 3;
-    private static final int SEND_COLUMN_STATUS     = 4;
+    private static final int SEND_COLUMN_ID = 0;
+    private static final int SEND_COLUMN_THREAD_ID = 1;
+    private static final int SEND_COLUMN_ADDRESS = 2;
+    private static final int SEND_COLUMN_BODY = 3;
+    private static final int SEND_COLUMN_STATUS = 4;
 
     private int mResultCode;
 
@@ -189,7 +189,7 @@ public class SmsReceiverService extends Service {
         @Override
         public void handleMessage(Message msg) {
             int serviceId = msg.arg1;
-            Intent intent = (Intent)msg.obj;
+            Intent intent = (Intent) msg.obj;
             if (Log.isLoggable(LogTag.TRANSACTION, Log.VERBOSE)) {
                 Log.v(TAG, "handleMessage serviceId: " + serviceId + " intent: " + intent);
             }
@@ -248,9 +248,9 @@ public class SmsReceiverService extends Service {
         final Uri uri = Uri.parse("content://sms/queued");
         ContentResolver resolver = getContentResolver();
         Cursor c = SqliteWrapper.query(this, resolver, uri,
-                        SEND_PROJECTION, null, null, "date ASC");   // date ASC so we send out in
-                                                                    // same order the user tried
-                                                                    // to send messages.
+                SEND_PROJECTION, null, null, "date ASC");   // date ASC so we send out in
+        // same order the user tried
+        // to send messages.
         if (c != null) {
             try {
                 if (c.moveToFirst()) {
@@ -275,7 +275,8 @@ public class SmsReceiverService extends Service {
                     }
 
                     try {
-                        sender.sendMessage(SendingProgressTokenManager.NO_TOKEN);;
+                        sender.sendMessage(SendingProgressTokenManager.NO_TOKEN);
+                        ;
                         mSending = true;
                     } catch (MmsException e) {
                         Log.e(TAG, "sendFirstQueuedMessage: failed to send message " + msgUri
@@ -407,6 +408,7 @@ public class SmsReceiverService extends Service {
 
     /**
      * Move all messages that are in the outbox to the queued state
+     *
      * @return The number of messages that were actually moved
      */
     private int moveOutboxMessagesToQueuedBox() {
@@ -425,6 +427,7 @@ public class SmsReceiverService extends Service {
 
     /**
      * Move all messages that are in the outbox to the failed state and set them to unread.
+     *
      * @return The number of messages that were actually moved
      */
     private int moveOutboxMessagesToFailedBox() {
@@ -446,10 +449,10 @@ public class SmsReceiverService extends Service {
     public static final String CLASS_ZERO_BODY_KEY = "CLASS_ZERO_BODY";
 
     // This must match the column IDs below.
-    private final static String[] REPLACE_PROJECTION = new String[] {
-        Sms._ID,
-        Sms.ADDRESS,
-        Sms.PROTOCOL
+    private final static String[] REPLACE_PROJECTION = new String[]{
+            Sms._ID,
+            Sms.ADDRESS,
+            Sms.PROTOCOL
     };
 
     // This must match REPLACE_PROJECTION.
@@ -482,7 +485,7 @@ public class SmsReceiverService extends Service {
      * message's originating address and protocol identifier.  If
      * there is one, we replace its fields with those of the new
      * message.  Otherwise, we store the new message as usual.
-     *
+     * <p>
      * See TS 23.040 9.2.3.9.
      */
     private Uri replaceMessage(Context context, SmsMessage[] msgs, int error) {
@@ -511,13 +514,13 @@ public class SmsReceiverService extends Service {
         int protocolIdentifier = sms.getProtocolIdentifier();
         String selection =
                 Sms.ADDRESS + " = ? AND " +
-                Sms.PROTOCOL + " = ?";
-        String[] selectionArgs = new String[] {
-            originatingAddress, Integer.toString(protocolIdentifier)
+                        Sms.PROTOCOL + " = ?";
+        String[] selectionArgs = new String[]{
+                originatingAddress, Integer.toString(protocolIdentifier)
         };
 
         Cursor cursor = SqliteWrapper.query(context, resolver, Inbox.CONTENT_URI,
-                            REPLACE_PROJECTION, selection, selectionArgs, null);
+                REPLACE_PROJECTION, selection, selectionArgs, null);
 
         if (cursor != null) {
             try {
@@ -527,7 +530,7 @@ public class SmsReceiverService extends Service {
                             Sms.CONTENT_URI, messageId);
 
                     SqliteWrapper.update(context, resolver, messageUri,
-                                        values, null, null);
+                            values, null, null);
                     return messageUri;
                 }
             } finally {
@@ -586,7 +589,7 @@ public class SmsReceiverService extends Service {
 //        }
 
         if (!TextUtils.isEmpty(address)) {
-            Contact cacheContact = Contact.get(address,true);
+            Contact cacheContact = Contact.get(address, true);
             if (cacheContact != null) {
                 address = cacheContact.getNumber();
             }
@@ -653,7 +656,6 @@ public class SmsReceiverService extends Service {
      * Displays a class-zero message immediately in a pop-up window
      * with the number from where it received the Notification with
      * the body of the message
-     *
      */
     private void displayClassZeroMessage(Context context, SmsMessage sms, String format) {
         // Using NEW_TASK here is necessary because we're calling
@@ -662,7 +664,7 @@ public class SmsReceiverService extends Service {
                 .putExtra("pdu", sms.getPdu())
                 .putExtra("format", format)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                          | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
 
         context.startActivity(smsDialogIntent);
     }

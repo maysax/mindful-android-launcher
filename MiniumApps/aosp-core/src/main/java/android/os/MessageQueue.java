@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * Low-level class holding the list of messages to be dispatched by a
  * {@link Looper}.  Messages are not added directly to a MessageQueue,
  * but rather through {@link Handler} objects associated with the Looper.
- * 
+ * <p>
  * <p>You can retrieve the MessageQueue for the current thread with
  * {@link Looper#myQueue() Looper.myQueue()}.
  */
@@ -49,9 +49,13 @@ public final class MessageQueue {
     private int mNextBarrierToken;
 
     private native static long nativeInit();
+
     private native static void nativeDestroy(long ptr);
+
     private native static void nativePollOnce(long ptr, int timeoutMillis);
+
     private native static void nativeWake(long ptr);
+
     private native static boolean nativeIsIdling(long ptr);
 
     /**
@@ -74,9 +78,9 @@ public final class MessageQueue {
      * removed automatically for you by returning false from
      * {@link IdleHandler#queueIdle IdleHandler.queueIdle()} when it is
      * invoked, or explicitly removing it with {@link #removeIdleHandler}.
-     * 
+     * <p>
      * <p>This method is safe to call from any thread.
-     * 
+     *
      * @param handler The IdleHandler to be added.
      */
     public void addIdleHandler(IdleHandler handler) {
@@ -92,7 +96,7 @@ public final class MessageQueue {
      * Remove an {@link IdleHandler} from the queue that was previously added
      * with {@link #addIdleHandler}.  If the given object is not currently
      * in the idle list, nothing is done.
-     * 
+     *
      * @param handler The IdleHandler to be removed.
      */
     public void removeIdleHandler(IdleHandler handler) {
@@ -135,7 +139,7 @@ public final class MessageQueue {
 
         int pendingIdleHandlerCount = -1; // -1 only during first iteration
         int nextPollTimeoutMillis = 0;
-        for (;;) {
+        for (; ; ) {
             if (nextPollTimeoutMillis != 0) {
                 Binder.flushPendingCommands();
             }
@@ -344,7 +348,7 @@ public final class MessageQueue {
                 // and the message is the earliest asynchronous message in the queue.
                 needWake = mBlocked && p.target == null && msg.isAsynchronous();
                 Message prev;
-                for (;;) {
+                for (; ; ) {
                     prev = p;
                     p = p.next;
                     if (p == null || when < p.when) {
@@ -410,7 +414,7 @@ public final class MessageQueue {
         // If the loop is quitting then it must not be idling.
         // We can assume mPtr != 0 when mQuitting is false.
         return !mQuitting && nativeIsIdling(mPtr);
-     }
+    }
 
     void removeMessages(Handler h, int what, Object object) {
         if (h == null) {
@@ -422,7 +426,7 @@ public final class MessageQueue {
 
             // Remove all messages at front.
             while (p != null && p.target == h && p.what == what
-                   && (object == null || p.obj == object)) {
+                    && (object == null || p.obj == object)) {
                 Message n = p.next;
                 mMessages = n;
                 p.recycleUnchecked();
@@ -434,7 +438,7 @@ public final class MessageQueue {
                 Message n = p.next;
                 if (n != null) {
                     if (n.target == h && n.what == what
-                        && (object == null || n.obj == object)) {
+                            && (object == null || n.obj == object)) {
                         Message nn = n.next;
                         n.recycleUnchecked();
                         p.next = nn;
@@ -456,7 +460,7 @@ public final class MessageQueue {
 
             // Remove all messages at front.
             while (p != null && p.target == h && p.callback == r
-                   && (object == null || p.obj == object)) {
+                    && (object == null || p.obj == object)) {
                 Message n = p.next;
                 mMessages = n;
                 p.recycleUnchecked();
@@ -468,7 +472,7 @@ public final class MessageQueue {
                 Message n = p.next;
                 if (n != null) {
                     if (n.target == h && n.callback == r
-                        && (object == null || n.obj == object)) {
+                            && (object == null || n.obj == object)) {
                         Message nn = n.next;
                         n.recycleUnchecked();
                         p.next = nn;
@@ -531,7 +535,7 @@ public final class MessageQueue {
                 removeAllMessagesLocked();
             } else {
                 Message n;
-                for (;;) {
+                for (; ; ) {
                     n = p.next;
                     if (n == null) {
                         return;

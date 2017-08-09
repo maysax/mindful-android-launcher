@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-          >
+            >
 
             <ImageButton
                 android:id="@+id/crossActionBar"
@@ -40,7 +40,7 @@
                 android:textColor="#de000000"
                 android:textStyle="bold"
                 android:layout_centerInParent="true"
-                android:text="Preference"/>
+                android:text="Preference" />
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -50,6 +50,5 @@
         android:layout_width="match_parent"
         android:layout_marginTop="63dp"
 
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 </FrameLayout>

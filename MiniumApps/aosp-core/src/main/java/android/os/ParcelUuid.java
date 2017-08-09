@@ -40,13 +40,10 @@ public final class ParcelUuid implements Parcelable {
     /**
      * Creates a new ParcelUuid from a string representation of {@link UUID}.
      *
-     * @param uuid
-     *            the UUID string to parse.
+     * @param uuid the UUID string to parse.
      * @return a ParcelUuid instance.
-     * @throws NullPointerException
-     *             if {@code uuid} is {@code null}.
-     * @throws IllegalArgumentException
-     *             if {@code uuid} is not formatted correctly.
+     * @throws NullPointerException     if {@code uuid} is {@code null}.
+     * @throws IllegalArgumentException if {@code uuid} is not formatted correctly.
      */
     public static ParcelUuid fromString(String uuid) {
         return new ParcelUuid(UUID.fromString(uuid));
@@ -73,53 +70,52 @@ public final class ParcelUuid implements Parcelable {
     }
 
 
-   @Override
-   public int hashCode() {
-       return mUuid.hashCode();
-   }
+    @Override
+    public int hashCode() {
+        return mUuid.hashCode();
+    }
 
-   /**
-    * Compares this ParcelUuid to another object for equality. If {@code object}
-    * is not {@code null}, is a ParcelUuid instance, and all bits are equal, then
-    * {@code true} is returned.
-    *
-    * @param object
-    *            the {@code Object} to compare to.
-    * @return {@code true} if this ParcelUuid is equal to {@code object}
-    *         or {@code false} if not.
-    */
-   @Override
-   public boolean equals(Object object) {
-       if (object == null) {
-           return false;
-       }
-
-       if (this == object) {
-           return true;
-       }
-
-       if (!(object instanceof ParcelUuid)) {
-           return false;
-       }
-
-       ParcelUuid that = (ParcelUuid) object;
-
-       return (this.mUuid.equals(that.mUuid));
-   }
-
-   public static final Parcelable.Creator<ParcelUuid> CREATOR =
-               new Parcelable.Creator<ParcelUuid>() {
-        public ParcelUuid createFromParcel(Parcel source) {
-            long mostSigBits = source.readLong();
-            long leastSigBits = source.readLong();
-            UUID uuid = new UUID(mostSigBits, leastSigBits);
-            return new ParcelUuid(uuid);
+    /**
+     * Compares this ParcelUuid to another object for equality. If {@code object}
+     * is not {@code null}, is a ParcelUuid instance, and all bits are equal, then
+     * {@code true} is returned.
+     *
+     * @param object the {@code Object} to compare to.
+     * @return {@code true} if this ParcelUuid is equal to {@code object}
+     * or {@code false} if not.
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (object == null) {
+            return false;
         }
 
-        public ParcelUuid[] newArray(int size) {
-            return new ParcelUuid[size];
+        if (this == object) {
+            return true;
         }
-    };
+
+        if (!(object instanceof ParcelUuid)) {
+            return false;
+        }
+
+        ParcelUuid that = (ParcelUuid) object;
+
+        return (this.mUuid.equals(that.mUuid));
+    }
+
+    public static final Parcelable.Creator<ParcelUuid> CREATOR =
+            new Parcelable.Creator<ParcelUuid>() {
+                public ParcelUuid createFromParcel(Parcel source) {
+                    long mostSigBits = source.readLong();
+                    long leastSigBits = source.readLong();
+                    UUID uuid = new UUID(mostSigBits, leastSigBits);
+                    return new ParcelUuid(uuid);
+                }
+
+                public ParcelUuid[] newArray(int size) {
+                    return new ParcelUuid[size];
+                }
+            };
 
     public int describeContents() {
         return 0;

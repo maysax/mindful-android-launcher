@@ -19,8 +19,6 @@ package android.net;
 import android.content.Context;
 import android.net.IEthernetManager;
 import android.net.IpConfiguration;
-import android.net.IpConfiguration.IpAssignment;
-import android.net.IpConfiguration.ProxySettings;
 import android.os.RemoteException;
 
 /**
@@ -47,6 +45,7 @@ public class EthernetManager {
 
     /**
      * Get Ethernet configuration.
+     *
      * @return the Ethernet Configuration, contained in {@link IpConfiguration}.
      */
     public IpConfiguration getConfiguration() {

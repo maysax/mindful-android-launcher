@@ -84,7 +84,7 @@ public class VerifierDeviceIdentity implements Parcelable {
      *
      * @param rng random number generator to retrieve the next long from
      * @return verifier device identity based on the input from the provided
-     *         random number generator
+     * random number generator
      */
     static VerifierDeviceIdentity generate(Random rng) {
         long identity = rng.nextLong();
@@ -92,10 +92,10 @@ public class VerifierDeviceIdentity implements Parcelable {
     }
 
     private static final char ENCODE[] = {
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
-        'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
-        'Y', 'Z', '2', '3', '4', '5', '6', '7',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+            'Y', 'Z', '2', '3', '4', '5', '6', '7',
     };
 
     private static final char SEPARATOR = '-';

@@ -35,7 +35,6 @@ import minium.co.core.util.UIUtils;
  * Expects the <code>RecyclerView.Adapter</code> to listen for {@link
  * ItemTouchHelperAdapter} callbacks and the <code>RecyclerView.ViewHolder</code> to implement
  * {@link ItemTouchHelperViewHolder}.
- *
  */
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
@@ -103,11 +102,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
             Drawable d = ContextCompat.getDrawable(mContext, R.drawable.ic_check);
 
-            int r = UIUtils.dpToPx(mContext,24);
-            int left = itemView.getLeft()+ itemView.getWidth()/2-r;
-            int right = itemView.getRight()- itemView.getWidth()/2+r;
-            int top = itemView.getTop()+ itemView.getHeight()/2-r;
-            int bottom  = itemView.getBottom()- itemView.getHeight()/2+r;
+            int r = UIUtils.dpToPx(mContext, 24);
+            int left = itemView.getLeft() + itemView.getWidth() / 2 - r;
+            int right = itemView.getRight() - itemView.getWidth() / 2 + r;
+            int top = itemView.getTop() + itemView.getHeight() / 2 - r;
+            int bottom = itemView.getBottom() - itemView.getHeight() / 2 + r;
 
 //          d.setBounds(itemView.getLeft(), itemView.getTop(), (int) dx, itemView.getBottom());
             d.setBounds(left, top, right, bottom);

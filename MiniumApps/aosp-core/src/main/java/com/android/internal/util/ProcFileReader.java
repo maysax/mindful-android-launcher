@@ -35,9 +35,13 @@ public class ProcFileReader implements Closeable {
     private final InputStream mStream;
     private final byte[] mBuffer;
 
-    /** Write pointer in {@link #mBuffer}. */
+    /**
+     * Write pointer in {@link #mBuffer}.
+     */
     private int mTail;
-    /** Flag when last read token finished current line. */
+    /**
+     * Flag when last read token finished current line.
+     */
     private boolean mLineFinished;
 
     public ProcFileReader(InputStream stream) throws IOException {
@@ -87,7 +91,7 @@ public class ProcFileReader implements Closeable {
      * Fills buffer as needed.
      *
      * @return Index of next delimeter, otherwise -1 if no tokens remain on
-     *         current line.
+     * current line.
      */
     private int nextTokenIndex() throws IOException {
         if (mLineFinished) {

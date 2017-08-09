@@ -46,11 +46,11 @@ public class LauncherActivityInfo {
      * Create a launchable activity object for a given ResolveInfo and user.
      *
      * @param context The context for fetching resources.
-     * @param info ResolveInfo from which to create the LauncherActivityInfo.
-     * @param user The UserHandle of the profile to which this activity belongs.
+     * @param info    ResolveInfo from which to create the LauncherActivityInfo.
+     * @param user    The UserHandle of the profile to which this activity belongs.
      */
     LauncherActivityInfo(Context context, ResolveInfo info, UserHandle user,
-            long firstInstallTime) {
+                         long firstInstallTime) {
         this(context);
         mActivityInfo = info.activityInfo;
         mComponentName = LauncherApps.getComponentName(info);
@@ -77,10 +77,9 @@ public class LauncherActivityInfo {
      * serial number from UserManager. You can convert the serial number back to a UserHandle
      * for later use.
      *
+     * @return The UserHandle of the profile.
      * @see UserManager#getSerialNumberForUser(UserHandle)
      * @see UserManager#getUserForSerialNumber(long)
-     *
-     * @return The UserHandle of the profile.
      */
     public UserHandle getUser() {
         return mUser;
@@ -97,11 +96,12 @@ public class LauncherActivityInfo {
 
     /**
      * Returns the icon for this activity, without any badging for the profile.
+     *
      * @param density The preferred density of the icon, zero for default density. Use
-     * density DPI values from {@link DisplayMetrics}.
+     *                density DPI values from {@link DisplayMetrics}.
+     * @return The drawable associated with the activity
      * @see #getBadgedIcon(int)
      * @see DisplayMetrics
-     * @return The drawable associated with the activity
      */
     public Drawable getIcon(int density) {
         // TODO: Use density
@@ -120,6 +120,7 @@ public class LauncherActivityInfo {
 
     /**
      * Returns the application info for the appliction this activity belongs to.
+     *
      * @return
      */
     public ApplicationInfo getApplicationInfo() {
@@ -137,6 +138,7 @@ public class LauncherActivityInfo {
 
     /**
      * Returns the name for the acitivty from  android:name in the manifest.
+     *
      * @return the name from android:name for the acitivity.
      */
     public String getName() {
@@ -145,10 +147,11 @@ public class LauncherActivityInfo {
 
     /**
      * Returns the activity icon with badging appropriate for the profile.
+     *
      * @param density Optional density for the icon, or 0 to use the default density. Use
-     * {@link DisplayMetrics} for DPI values.
-     * @see DisplayMetrics
+     *                {@link DisplayMetrics} for DPI values.
      * @return A badged icon for the activity.
+     * @see DisplayMetrics
      */
     public Drawable getBadgedIcon(int density) {
         int iconRes = mActivityInfo.getIconResource();

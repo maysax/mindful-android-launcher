@@ -26,10 +26,10 @@ import android.os.ServiceManager;
 
 import com.android.server.NetworkManagementSocketTagger;
 
-import dalvik.system.SocketTagger;
-
 import java.net.Socket;
 import java.net.SocketException;
+
+import dalvik.system.SocketTagger;
 
 /**
  * Class that provides network traffic statistics.  These statistics include
@@ -45,11 +45,17 @@ public class TrafficStats {
      */
     public final static int UNSUPPORTED = -1;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long KB_IN_BYTES = 1024;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long MB_IN_BYTES = KB_IN_BYTES * 1024;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long GB_IN_BYTES = MB_IN_BYTES * 1024;
 
     /**
@@ -130,6 +136,7 @@ public class TrafficStats {
     /**
      * System API for backup-related support components to tag network traffic
      * appropriately.
+     *
      * @hide
      */
     @SystemApi
@@ -176,7 +183,9 @@ public class TrafficStats {
         NetworkManagementSocketTagger.setThreadSocketStatsUid(uid);
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     @SystemApi
     public static void clearThreadStatsUid() {
         NetworkManagementSocketTagger.setThreadSocketStatsUid(-1);
@@ -223,7 +232,7 @@ public class TrafficStats {
      * Stop profiling data usage for current UID.
      *
      * @return Detailed {@link NetworkStats} of data that occurred since last
-     *         {@link #startDataProfiling(Context)} call.
+     * {@link #startDataProfiling(Context)} call.
      * @hide
      */
     public static NetworkStats stopDataProfiling(Context context) {
@@ -257,7 +266,7 @@ public class TrafficStats {
      * Increment count of network operations performed under the given
      * accounting tag. This can be used to derive bytes-per-operation.
      *
-     * @param tag Accounting tag used in {@link #setThreadStatsTag(int)}.
+     * @param tag            Accounting tag used in {@link #setThreadStatsTag(int)}.
      * @param operationCount Number of operations to increment count by.
      */
     public static void incrementOperationCount(int tag, int operationCount) {
@@ -269,7 +278,9 @@ public class TrafficStats {
         }
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static void closeQuietly(INetworkStatsSession session) {
         // TODO: move to NetworkStatsService once it exists
         if (session != null) {
@@ -350,7 +361,9 @@ public class TrafficStats {
         return total;
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static long getMobileTcpRxPackets() {
         long total = 0;
         for (String iface : getMobileIfaces()) {
@@ -362,7 +375,9 @@ public class TrafficStats {
         return total;
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static long getMobileTcpTxPackets() {
         long total = 0;
         for (String iface : getMobileIfaces()) {
@@ -374,22 +389,30 @@ public class TrafficStats {
         return total;
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static long getTxPackets(String iface) {
         return nativeGetIfaceStat(iface, TYPE_TX_PACKETS);
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static long getRxPackets(String iface) {
         return nativeGetIfaceStat(iface, TYPE_RX_PACKETS);
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static long getTxBytes(String iface) {
         return nativeGetIfaceStat(iface, TYPE_TX_BYTES);
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static long getRxBytes(String iface) {
         return nativeGetIfaceStat(iface, TYPE_RX_BYTES);
     }
@@ -511,10 +534,10 @@ public class TrafficStats {
     }
 
     /**
-     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
-     *             transport layer statistics are no longer available, and will
-     *             always return {@link #UNSUPPORTED}.
      * @see #getUidTxBytes(int)
+     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
+     * transport layer statistics are no longer available, and will
+     * always return {@link #UNSUPPORTED}.
      */
     @Deprecated
     public static long getUidTcpTxBytes(int uid) {
@@ -522,10 +545,10 @@ public class TrafficStats {
     }
 
     /**
-     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
-     *             transport layer statistics are no longer available, and will
-     *             always return {@link #UNSUPPORTED}.
      * @see #getUidRxBytes(int)
+     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
+     * transport layer statistics are no longer available, and will
+     * always return {@link #UNSUPPORTED}.
      */
     @Deprecated
     public static long getUidTcpRxBytes(int uid) {
@@ -533,10 +556,10 @@ public class TrafficStats {
     }
 
     /**
-     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
-     *             transport layer statistics are no longer available, and will
-     *             always return {@link #UNSUPPORTED}.
      * @see #getUidTxBytes(int)
+     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
+     * transport layer statistics are no longer available, and will
+     * always return {@link #UNSUPPORTED}.
      */
     @Deprecated
     public static long getUidUdpTxBytes(int uid) {
@@ -544,10 +567,10 @@ public class TrafficStats {
     }
 
     /**
-     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
-     *             transport layer statistics are no longer available, and will
-     *             always return {@link #UNSUPPORTED}.
      * @see #getUidRxBytes(int)
+     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
+     * transport layer statistics are no longer available, and will
+     * always return {@link #UNSUPPORTED}.
      */
     @Deprecated
     public static long getUidUdpRxBytes(int uid) {
@@ -555,10 +578,10 @@ public class TrafficStats {
     }
 
     /**
-     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
-     *             transport layer statistics are no longer available, and will
-     *             always return {@link #UNSUPPORTED}.
      * @see #getUidTxPackets(int)
+     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
+     * transport layer statistics are no longer available, and will
+     * always return {@link #UNSUPPORTED}.
      */
     @Deprecated
     public static long getUidTcpTxSegments(int uid) {
@@ -566,10 +589,10 @@ public class TrafficStats {
     }
 
     /**
-     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
-     *             transport layer statistics are no longer available, and will
-     *             always return {@link #UNSUPPORTED}.
      * @see #getUidRxPackets(int)
+     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
+     * transport layer statistics are no longer available, and will
+     * always return {@link #UNSUPPORTED}.
      */
     @Deprecated
     public static long getUidTcpRxSegments(int uid) {
@@ -577,10 +600,10 @@ public class TrafficStats {
     }
 
     /**
-     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
-     *             transport layer statistics are no longer available, and will
-     *             always return {@link #UNSUPPORTED}.
      * @see #getUidTxPackets(int)
+     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
+     * transport layer statistics are no longer available, and will
+     * always return {@link #UNSUPPORTED}.
      */
     @Deprecated
     public static long getUidUdpTxPackets(int uid) {
@@ -588,10 +611,10 @@ public class TrafficStats {
     }
 
     /**
-     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
-     *             transport layer statistics are no longer available, and will
-     *             always return {@link #UNSUPPORTED}.
      * @see #getUidRxPackets(int)
+     * @deprecated Starting in {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2},
+     * transport layer statistics are no longer available, and will
+     * always return {@link #UNSUPPORTED}.
      */
     @Deprecated
     public static long getUidUdpRxPackets(int uid) {
@@ -634,6 +657,8 @@ public class TrafficStats {
     private static final int TYPE_TCP_TX_PACKETS = 5;
 
     private static native long nativeGetTotalStat(int type);
+
     private static native long nativeGetIfaceStat(String iface, int type);
+
     private static native long nativeGetUidStat(int uid, int type);
 }

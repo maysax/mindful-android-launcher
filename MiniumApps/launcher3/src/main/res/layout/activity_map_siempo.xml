@@ -9,14 +9,14 @@
         android:id="@+id/mWebView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scrollbars="none"/>
+        android:scrollbars="none" />
 
     <!--<ImageView-->
-        <!--android:id="@+id/imgLogo"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/bg_siempo"-->
-        <!--android:layout_centerInParent="true"/>-->
+    <!--android:id="@+id/imgLogo"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@drawable/bg_siempo"-->
+    <!--android:layout_centerInParent="true"/>-->
 
     <ProgressBar
         android:id="@+id/pBar"

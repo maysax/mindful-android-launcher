@@ -41,7 +41,7 @@ import java.util.List;
  * It has specialized getters/setters for raw contact
  * items, and also contains a collection of DataItem objects.  A RawContact contains the information
  * from a single account.
- *
+ * <p>
  * This allows RawContact objects to be thought of as a class with raw contact
  * fields (like account type, name, data set, sync state, etc.) and a list of
  * DataItem objects that represent contact information elements (like phone

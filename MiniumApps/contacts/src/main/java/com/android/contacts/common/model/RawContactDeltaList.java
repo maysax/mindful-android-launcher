@@ -58,7 +58,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
      * finished, so it doesn't subscribe to updates.
      */
     public static RawContactDeltaList fromQuery(Uri entityUri, ContentResolver resolver,
-            String selection, String[] selectionArgs, String sortOrder) {
+                                                String selection, String[] selectionArgs, String sortOrder) {
         final EntityIterator iterator = RawContacts.newEntityIterator(
                 resolver.query(entityUri, null, selection, selectionArgs, sortOrder));
         try {
@@ -98,7 +98,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
      * edits onto an updated {@link RawContactDeltaList}.
      */
     public static RawContactDeltaList mergeAfter(RawContactDeltaList local,
-            RawContactDeltaList remote) {
+                                                 RawContactDeltaList remote) {
         if (local == null) local = new RawContactDeltaList();
 
         // For each entity in the remote set, try matching over existing
@@ -235,7 +235,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
      * separate contacts.
      */
     private void buildSplitContactDiff(final ArrayList<ContentProviderOperation> diff,
-            int[] backRefs) {
+                                       int[] backRefs) {
         int count = size();
         for (int i = 0; i < count; i++) {
             for (int j = 0; j < count; j++) {
@@ -250,7 +250,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
      * Construct a {@link AggregationExceptions#TYPE_KEEP_SEPARATE}.
      */
     private void buildSplitContactDiff(ArrayList<ContentProviderOperation> diff, int index1,
-            int index2, int[] backRefs) {
+                                       int index2, int[] backRefs) {
         Builder builder =
                 ContentProviderOperation.newUpdate(AggregationExceptions.CONTENT_URI);
         builder.withValue(AggregationExceptions.TYPE, AggregationExceptions.TYPE_KEEP_SEPARATE);
@@ -332,7 +332,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
 
     /**
      * Return the index of the first RawContactDelta corresponding to a writable raw-contact, or -1.
-     * */
+     */
     public int indexOfFirstWritableRawContact(Context context) {
         // Find the first writable entity.
         int entityIndex = 0;
@@ -343,7 +343,9 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
         return -1;
     }
 
-    /**  Return the first RawContactDelta corresponding to a writable raw-contact, or null. */
+    /**
+     * Return the first RawContactDelta corresponding to a writable raw-contact, or null.
+     */
     public RawContactDelta getFirstWritableRawContact(Context context) {
         final int index = indexOfFirstWritableRawContact(context);
         return (index == -1) ? null : get(index);
@@ -392,14 +394,18 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
         return mJoinWithRawContactIds != null && mJoinWithRawContactIds.length > 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int describeContents() {
         // Nothing special about this parcel
         return 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         final int size = this.size();
@@ -416,7 +422,7 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
         final ClassLoader loader = getClass().getClassLoader();
         final int size = source.readInt();
         for (int i = 0; i < size; i++) {
-            this.add(source.<RawContactDelta> readParcelable(loader));
+            this.add(source.<RawContactDelta>readParcelable(loader));
         }
         mJoinWithRawContactIds = source.createLongArray();
         mSplitRawContacts = source.readInt() != 0;
@@ -424,18 +430,18 @@ public class RawContactDeltaList extends ArrayList<RawContactDelta> implements P
 
     public static final Parcelable.Creator<RawContactDeltaList> CREATOR =
             new Parcelable.Creator<RawContactDeltaList>() {
-        @Override
-        public RawContactDeltaList createFromParcel(Parcel in) {
-            final RawContactDeltaList state = new RawContactDeltaList();
-            state.readFromParcel(in);
-            return state;
-        }
+                @Override
+                public RawContactDeltaList createFromParcel(Parcel in) {
+                    final RawContactDeltaList state = new RawContactDeltaList();
+                    state.readFromParcel(in);
+                    return state;
+                }
 
-        @Override
-        public RawContactDeltaList[] newArray(int size) {
-            return new RawContactDeltaList[size];
-        }
-    };
+                @Override
+                public RawContactDeltaList[] newArray(int size) {
+                    return new RawContactDeltaList[size];
+                }
+            };
 
     @Override
     public String toString() {

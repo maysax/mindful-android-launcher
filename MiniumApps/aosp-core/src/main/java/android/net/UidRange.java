@@ -16,12 +16,10 @@
 
 package android.net;
 
-import static android.os.UserHandle.PER_USER_RANGE;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.lang.IllegalArgumentException;
+import static android.os.UserHandle.PER_USER_RANGE;
 
 /**
  * An inclusive range of UIDs.
@@ -37,7 +35,7 @@ public final class UidRange implements Parcelable {
         if (stopUid < 0) throw new IllegalArgumentException("Invalid stop UID.");
         if (startUid > stopUid) throw new IllegalArgumentException("Invalid UID range.");
         start = startUid;
-        stop  = stopUid;
+        stop = stopUid;
     }
 
     public static UidRange createForUser(int userId) {
@@ -86,17 +84,18 @@ public final class UidRange implements Parcelable {
     }
 
     public static final Creator<UidRange> CREATOR =
-        new Creator<UidRange>() {
-            @Override
-            public UidRange createFromParcel(Parcel in) {
-                int start = in.readInt();
-                int stop = in.readInt();
+            new Creator<UidRange>() {
+                @Override
+                public UidRange createFromParcel(Parcel in) {
+                    int start = in.readInt();
+                    int stop = in.readInt();
 
-                return new UidRange(start, stop);
-            }
-            @Override
-            public UidRange[] newArray(int size) {
-                return new UidRange[size];
-            }
-    };
+                    return new UidRange(start, stop);
+                }
+
+                @Override
+                public UidRange[] newArray(int size) {
+                    return new UidRange[size];
+                }
+            };
 }

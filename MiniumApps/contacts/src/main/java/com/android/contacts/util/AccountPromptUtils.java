@@ -42,7 +42,9 @@ public class AccountPromptUtils {
 
     private static final String TAG = AccountPromptUtils.class.getSimpleName();
 
-    /** {@link SharedPreferences} key for whether or not the "no account" prompt should be shown. */
+    /**
+     * {@link SharedPreferences} key for whether or not the "no account" prompt should be shown.
+     */
     private static final String KEY_SHOW_ACCOUNT_PROMPT = "settings.showAccountPrompt";
 
     /**

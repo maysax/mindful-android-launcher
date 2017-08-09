@@ -1,35 +1,24 @@
 package co.siempo.phone.mm;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Vibrator;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.util.VibrationUtils;
-import co.siempo.phone.util.VibrationUtils_;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
@@ -47,7 +36,7 @@ public class MindfulMorningFragment extends CoreFragment {
     @Bean
     VibrationUtils vibrationUtils;
     @ViewById
-    TextView txtAlarmTime,txtAmPm;
+    TextView txtAlarmTime, txtAmPm;
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
@@ -59,7 +48,7 @@ public class MindfulMorningFragment extends CoreFragment {
 
         vibrationUtils.cancel();
         //((CoreActivity) getActivity()).loadChildFragment(new MindfulMorningList_(), R.id.mainView);
-        ((CoreActivity) getActivity()).loadFragment(new MindfulMorningList_(), R.id.mainView,"Main");
+        ((CoreActivity) getActivity()).loadFragment(new MindfulMorningList_(), R.id.mainView, "Main");
 
     }
 
@@ -72,15 +61,15 @@ public class MindfulMorningFragment extends CoreFragment {
     public void afterViews() {
 
         String SavedTime = launcherPrefs.time().get();
-        String [] timeArray = SavedTime.split(":");
-        String totalTime="";
+        String[] timeArray = SavedTime.split(":");
+        String totalTime = "";
 
-        totalTime = timeArray[0]+":"+timeArray[1];
+        totalTime = timeArray[0] + ":" + timeArray[1];
         txtAlarmTime.setText(totalTime);
 
-        if (timeArray[2].equals("0")){
+        if (timeArray[2].equals("0")) {
             txtAmPm.setText(" AM");
-        }else{
+        } else {
             txtAmPm.setText(" PM");
         }
 

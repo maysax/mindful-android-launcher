@@ -38,7 +38,6 @@ android {
     }
 }
 
-
 // SONATYPE DEPLOYMENT
 // in order to deploy, run: gradle uploadArchives
 

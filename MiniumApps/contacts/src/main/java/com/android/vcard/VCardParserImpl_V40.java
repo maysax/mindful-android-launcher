@@ -25,6 +25,7 @@ import java.util.Set;
  * <p>
  * vCard 4.0 is not published yet. Also this implementation is premature.
  * </p>
+ *
  * @hide
  */
 /* package */ class VCardParserImpl_V40 extends VCardParserImpl_V30 {

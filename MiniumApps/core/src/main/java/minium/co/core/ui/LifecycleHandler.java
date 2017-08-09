@@ -8,7 +8,7 @@ import minium.co.core.log.Tracer;
 
 /**
  * http://stackoverflow.com/questions/3667022/checking-if-an-android-application-is-running-in-the-background/
- *
+ * <p>
  * Added by Shahab on 4/1/2016.
  */
 public class LifecycleHandler implements Application.ActivityLifecycleCallbacks {

@@ -16,15 +16,6 @@
 
 package android.net.http;
 
-import java.io.EOFException;
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.zip.GZIPInputStream;
-
-import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -34,38 +25,58 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
 import org.apache.http.ProtocolVersion;
-
 import org.apache.http.StatusLine;
-import org.apache.http.message.BasicHttpRequest;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.protocol.RequestContent;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Represents an HTTP request for a given host.
- * 
+ * <p>
  * {@hide}
  */
 
 class Request {
 
-    /** The eventhandler to call as the request progresses */
+    /**
+     * The eventhandler to call as the request progresses
+     */
     EventHandler mEventHandler;
 
     private Connection mConnection;
 
-    /** The Apache http request */
+    /**
+     * The Apache http request
+     */
     BasicHttpRequest mHttpRequest;
 
-    /** The path component of this request */
+    /**
+     * The path component of this request
+     */
     String mPath;
 
-    /** Host serving this request */
+    /**
+     * Host serving this request
+     */
     HttpHost mHost;
 
-    /** Set if I'm using a proxy server */
+    /**
+     * Set if I'm using a proxy server
+     */
     HttpHost mProxyHost;
 
-    /** True if request has been cancelled */
+    /**
+     * True if request has been cancelled
+     */
     volatile boolean mCancelled = false;
 
     int mFailCount = 0;
@@ -84,7 +95,9 @@ class Request {
     /* Used to synchronize waitUntilComplete() requests */
     private final Object mClientResource = new Object();
 
-    /** True if loading should be paused **/
+    /**
+     * True if loading should be paused
+     **/
     private boolean mLoadingPaused = false;
 
     /**
@@ -96,14 +109,15 @@ class Request {
 
     /**
      * Instantiates a new Request.
-     * @param method GET/POST/PUT
-     * @param host The server that will handle this request
-     * @param path path part of URI
+     *
+     * @param method       GET/POST/PUT
+     * @param host         The server that will handle this request
+     * @param path         path part of URI
      * @param bodyProvider InputStream providing HTTP body, null if none
-     * @param bodyLength length of body, must be 0 if bodyProvider is null
+     * @param bodyLength   length of body, must be 0 if bodyProvider is null
      * @param eventHandler request will make progress callbacks on
-     * this interface
-     * @param headers reqeust headers
+     *                     this interface
+     * @param headers      reqeust headers
      */
     Request(String method, HttpHost host, HttpHost proxyHost, String path,
             InputStream bodyProvider, int bodyLength,
@@ -163,7 +177,8 @@ class Request {
     /**
      * Add header represented by given pair to request.  Header will
      * be formatted in request as "name: value\r\n".
-     * @param name of header
+     *
+     * @param name  of header
      * @param value of header
      */
     void addHeader(String name, String value) {
@@ -211,14 +226,14 @@ class Request {
             if (false) {
                 Iterator i = mHttpRequest.headerIterator();
                 while (i.hasNext()) {
-                    Header header = (Header)i.next();
+                    Header header = (Header) i.next();
                     HttpLog.v(header.getName() + ": " + header.getValue());
                 }
             }
         }
 
         requestContentProcessor.process(mHttpRequest,
-                                        mConnection.getHttpContext());
+                mConnection.getHttpContext());
         httpClientConnection.sendRequestHeader(mHttpRequest);
         if (mHttpRequest instanceof HttpEntityEnclosingRequest) {
             httpClientConnection.sendRequestEntity(
@@ -253,7 +268,7 @@ class Request {
         } while (statusCode < HttpStatus.SC_OK);
         if (HttpLog.LOGV) HttpLog.v(
                 "Request.readResponseStatus() " +
-                statusLine.toString().length() + " " + statusLine);
+                        statusLine.toString().length() + " " + statusLine);
 
         ProtocolVersion v = statusLine.getProtocolVersion();
         mEventHandler.status(v.getMajor(), v.getMinor(),
@@ -280,7 +295,7 @@ class Request {
             int count = 0;
             try {
                 if (contentEncoding != null &&
-                    contentEncoding.getValue().equals("gzip")) {
+                        contentEncoding.getValue().equals("gzip")) {
                     nis = new GZIPInputStream(is);
                 } else {
                     nis = is;
@@ -292,7 +307,7 @@ class Request {
                 int len = 0;
                 int lowWater = buf.length / 2;
                 while (len != -1) {
-                    synchronized(this) {
+                    synchronized (this) {
                         while (mLoadingPaused) {
                             // Put this (network loading) thread to sleep if WebCore
                             // has asked us to. This can happen with plugins for
@@ -302,8 +317,8 @@ class Request {
                                 wait();
                             } catch (InterruptedException e) {
                                 HttpLog.e("Interrupted exception whilst "
-                                    + "network thread paused at WebCore's request."
-                                    + " " + e.getMessage());
+                                        + "network thread paused at WebCore's request."
+                                        + " " + e.getMessage());
                             }
                         }
                     }
@@ -328,8 +343,8 @@ class Request {
                     // if there is uncommited content, we should commit them
                     mEventHandler.data(buf, count);
                 }
-                if (HttpLog.LOGV) HttpLog.v( "readResponse() handling " + e);
-            } catch(IOException e) {
+                if (HttpLog.LOGV) HttpLog.v("readResponse() handling " + e);
+            } catch (IOException e) {
                 // don't throw if we have a non-OK status code
                 if (statusCode == HttpStatus.SC_OK
                         || statusCode == HttpStatus.SC_PARTIAL_CONTENT) {
@@ -352,13 +367,13 @@ class Request {
         complete();
 
         if (HttpLog.LOGV) HttpLog.v("Request.readResponse(): done " +
-                                    mHost.getSchemeName() + "://" + getHostPort() + mPath);
+                mHost.getSchemeName() + "://" + getHostPort() + mPath);
     }
 
     /**
      * Data will not be sent to or received from server after cancel()
      * call.  Does not close connection--use close() below for that.
-     *
+     * <p>
      * Called by RequestHandle from non-network thread
      */
     synchronized void cancel() {
@@ -383,7 +398,7 @@ class Request {
 
         // Only send port when we must... many servers can't deal with it
         if (myPort != 80 && myScheme.equals("http") ||
-            myPort != 443 && myScheme.equals("https")) {
+                myPort != 443 && myScheme.equals("https")) {
             return mHost.toHostString();
         } else {
             return mHost.getHostName();
@@ -392,7 +407,7 @@ class Request {
 
     String getUri() {
         if (mProxyHost == null ||
-            mHost.getSchemeName().equals("https")) {
+                mHost.getSchemeName().equals("https")) {
             return mPath;
         }
         return mHost.getSchemeName() + "://" + getHostPort() + mPath;
@@ -420,7 +435,7 @@ class Request {
             } catch (IOException ex) {
                 if (HttpLog.LOGV) HttpLog.v(
                         "failed to reset body provider " +
-                        getUri());
+                                getUri());
             }
             setBodyProvider(mBodyProvider, mBodyLength);
         }
@@ -465,8 +480,8 @@ class Request {
      * Derived executors can override this method to handle
      * methods and response codes not specified in RFC 2616.
      *
-     * @param request   the request, to obtain the executed method
-     * @param response  the response, to obtain the status code
+     * @param request  the request, to obtain the executed method
+     * @param response the response, to obtain the status code
      */
 
     private static boolean canResponseHaveBody(final HttpRequest request,
@@ -476,8 +491,8 @@ class Request {
             return false;
         }
         return status >= HttpStatus.SC_OK
-            && status != HttpStatus.SC_NO_CONTENT
-            && status != HttpStatus.SC_NOT_MODIFIED;
+                && status != HttpStatus.SC_NO_CONTENT
+                && status != HttpStatus.SC_NOT_MODIFIED;
     }
 
     /**
@@ -496,7 +511,7 @@ class Request {
         // Mark beginning of stream
         bodyProvider.mark(Integer.MAX_VALUE);
 
-        ((BasicHttpEntityEnclosingRequest)mHttpRequest).setEntity(
+        ((BasicHttpEntityEnclosingRequest) mHttpRequest).setEntity(
                 new InputStreamEntity(bodyProvider, bodyLength));
     }
 
@@ -506,7 +521,7 @@ class Request {
      * has already provided their feedback).
      */
     public void handleSslErrorResponse(boolean proceed) {
-        HttpsConnection connection = (HttpsConnection)(mConnection);
+        HttpsConnection connection = (HttpsConnection) (mConnection);
         if (connection != null) {
             connection.restartConnection(proceed);
         }

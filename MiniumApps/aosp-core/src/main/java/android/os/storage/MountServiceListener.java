@@ -19,6 +19,7 @@ package android.os.storage;
 /**
  * Callback class for receiving progress reports during a restore operation.  These
  * methods will all be called on your application's main thread.
+ *
  * @hide
  */
 public abstract class MountServiceListener {
@@ -31,12 +32,11 @@ public abstract class MountServiceListener {
     }
 
     /**
-     *  Storage state has changed.
+     * Storage state has changed.
      *
-     * @param path The volume mount path.
+     * @param path     The volume mount path.
      * @param oldState The old state of the volume.
      * @param newState The new state of the volume.
-     *
      * @Note: State is one of the values returned by Environment.getExternalStorageState()
      */
     void onStorageStateChange(String path, String oldState, String newState) {

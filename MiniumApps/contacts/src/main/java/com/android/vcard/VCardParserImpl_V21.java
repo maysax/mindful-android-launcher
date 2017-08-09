@@ -40,6 +40,7 @@ import java.util.Set;
  * <p>
  * Basic implementation achieving vCard parsing. Based on vCard 2.1.
  * </p>
+ *
  * @hide
  */
 /* package */ class VCardParserImpl_V21 {
@@ -158,7 +159,7 @@ import java.util.Set;
     }
 
     public VCardParserImpl_V21(int vcardType) {
-        mIntermediateCharset =  VCardConfig.DEFAULT_INTERMEDIATE_CHARSET;
+        mIntermediateCharset = VCardConfig.DEFAULT_INTERMEDIATE_CHARSET;
     }
 
     /**
@@ -206,9 +207,10 @@ import java.util.Set;
     /**
      * <code>
      * vcard = "BEGIN" [ws] ":" [ws] "VCARD" [ws] 1*CRLF
-     *         items *CRLF
-     *         "END" [ws] ":" [ws] "VCARD"
+     * items *CRLF
+     * "END" [ws] ":" [ws] "VCARD"
      * </code>
+     *
      * @return False when reaching end of file.
      */
     private boolean parseOneVCard() throws IOException, VCardException {
@@ -380,7 +382,7 @@ import java.util.Set;
                     if (ch == ':') {  // End of a property name.
                         final String propertyName = line.substring(nameIndex, i);
                         propertyData.setName(propertyName);
-                        propertyData.setRawValue( i < length - 1 ? line.substring(i + 1) : "");
+                        propertyData.setRawValue(i < length - 1 ? line.substring(i + 1) : "");
                         return propertyData;
                     } else if (ch == '.') {  // Each group is followed by the dot.
                         final String groupName = line.substring(nameIndex, i);
@@ -696,7 +698,7 @@ import java.util.Set;
     }
 
     private void handleAdrOrgN(VCardProperty property, String propertyRawValue,
-            String sourceCharset, String targetCharset) throws VCardException, IOException {
+                               String sourceCharset, String targetCharset) throws VCardException, IOException {
         List<String> encodedValueList = new ArrayList<String>();
 
         // vCard 2.1 does not allow QUOTED-PRINTABLE here, but some softwares/devices emit
@@ -741,11 +743,11 @@ import java.util.Set;
      * </p>
      *
      * @param firstString The string following a parameter name and attributes.
-     *            Example: "string" in
-     *            "ADR:ENCODING=QUOTED-PRINTABLE:string\n\r".
+     *                    Example: "string" in
+     *                    "ADR:ENCODING=QUOTED-PRINTABLE:string\n\r".
      * @return whole Quoted-Printable string, including a given argument and
-     *         following lines. Excludes the last empty line following to Quoted
-     *         Printable lines.
+     * following lines. Excludes the last empty line following to Quoted
+     * Printable lines.
      * @throws IOException
      * @throws VCardException
      */
@@ -877,9 +879,9 @@ import java.util.Set;
      * Properties must contain a colon.
      * <p>
      * E.g.
-     *      TEL;TYPE=WORK:+5555555  // returns "TEL"
-     *      END:VCARD // returns "END"
-     *      TEL; // returns null
+     * TEL;TYPE=WORK:+5555555  // returns "TEL"
+     * END:VCARD // returns "END"
+     * TEL; // returns null
      *
      * @param line The vCard line.
      * @return The property name portion. {@literal null} if no property name found.
@@ -939,7 +941,8 @@ import java.util.Set;
         return unescapeCharacter(ch);
     }
 
-    /* package */ static String unescapeCharacter(final char ch) {
+    /* package */
+    static String unescapeCharacter(final char ch) {
         // Original vCard 2.1 specification does not allow transformation
         // "\:" -> ":", "\," -> ",", and "\\" -> "\", but previous
         // implementation of

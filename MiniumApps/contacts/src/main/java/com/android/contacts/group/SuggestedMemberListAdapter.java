@@ -52,22 +52,22 @@ import minium.co.contacts.R;
  */
 public class SuggestedMemberListAdapter extends ArrayAdapter<SuggestedMember> {
 
-    private static final String[] PROJECTION_FILTERED_MEMBERS = new String[] {
-        RawContacts._ID,                        // 0
-        RawContacts.CONTACT_ID,                 // 1
-        RawContacts.DISPLAY_NAME_PRIMARY        // 2
+    private static final String[] PROJECTION_FILTERED_MEMBERS = new String[]{
+            RawContacts._ID,                        // 0
+            RawContacts.CONTACT_ID,                 // 1
+            RawContacts.DISPLAY_NAME_PRIMARY        // 2
     };
 
     private static final int RAW_CONTACT_ID_COLUMN_INDEX = 0;
     private static final int CONTACT_ID_COLUMN_INDEX = 1;
     private static final int DISPLAY_NAME_PRIMARY_COLUMN_INDEX = 2;
 
-    private static final String[] PROJECTION_MEMBER_DATA = new String[] {
-        RawContacts._ID,                        // 0
-        RawContacts.CONTACT_ID,                 // 1
-        Data.MIMETYPE,                          // 2
-        Data.DATA1,                             // 3
-        Photo.PHOTO,                            // 4
+    private static final String[] PROJECTION_MEMBER_DATA = new String[]{
+            RawContacts._ID,                        // 0
+            RawContacts.CONTACT_ID,                 // 1
+            Data.MIMETYPE,                          // 2
+            Data.DATA1,                             // 3
+            Photo.PHOTO,                            // 4
     };
 
     private static final int MIMETYPE_COLUMN_INDEX = 2;
@@ -191,10 +191,10 @@ public class SuggestedMemberListAdapter extends ArrayAdapter<SuggestedMember> {
             String[] args;
             if (mDataSet == null) {
                 accountClause += " AND " + RawContacts.DATA_SET + " IS NULL";
-                args = new String[] {mAccountName, mAccountType, searchQuery, searchQuery};
+                args = new String[]{mAccountName, mAccountType, searchQuery, searchQuery};
             } else {
                 accountClause += " AND " + RawContacts.DATA_SET + "=?";
-                args = new String[] {
+                args = new String[]{
                         mAccountName, mAccountType, mDataSet, searchQuery, searchQuery
                 };
             }
@@ -202,8 +202,8 @@ public class SuggestedMemberListAdapter extends ArrayAdapter<SuggestedMember> {
             Cursor cursor = mContentResolver.query(
                     RawContacts.CONTENT_URI, PROJECTION_FILTERED_MEMBERS,
                     accountClause + " AND (" +
-                    RawContacts.DISPLAY_NAME_PRIMARY + " LIKE ? OR " +
-                    RawContacts.DISPLAY_NAME_ALTERNATIVE + " LIKE ? )",
+                            RawContacts.DISPLAY_NAME_PRIMARY + " LIKE ? OR " +
+                            RawContacts.DISPLAY_NAME_ALTERNATIVE + " LIKE ? )",
                     args, RawContacts.DISPLAY_NAME_PRIMARY + " COLLATE LOCALIZED ASC");
 
             if (cursor == null) {
@@ -263,7 +263,7 @@ public class SuggestedMemberListAdapter extends ArrayAdapter<SuggestedMember> {
             Cursor memberDataCursor = mContentResolver.query(
                     RawContactsEntity.CONTENT_URI, PROJECTION_MEMBER_DATA,
                     "(" + Data.MIMETYPE + "=? OR " + Data.MIMETYPE + "=? OR " + Data.MIMETYPE +
-                    "=?) AND " + rawContactIdSelectionBuilder.toString(),
+                            "=?) AND " + rawContactIdSelectionBuilder.toString(),
                     selectionArgs.toArray(new String[0]), null);
 
             if (memberDataCursor != null) {

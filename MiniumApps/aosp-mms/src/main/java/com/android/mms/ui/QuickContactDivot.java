@@ -26,7 +26,7 @@ import android.widget.QuickContactBadge;
 
 import com.android.mms.R;
 
-public class QuickContactDivot extends QuickContactBadge implements Divot{
+public class QuickContactDivot extends QuickContactBadge implements Divot {
     private Drawable mDrawable;
     private int mDrawableIntrinsicWidth;
     private int mDrawableIntrinsicHeight;
@@ -157,10 +157,10 @@ public class QuickContactDivot extends QuickContactBadge implements Divot{
             case BOTTOM_MIDDLE:
                 int halfWidth = mDrawableIntrinsicWidth / 2;
                 mDrawable.setBounds(
-                        (int)(middle - halfWidth),
-                        (int)(bottom - mDrawableIntrinsicHeight),
-                        (int)(middle + halfWidth),
-                        (int)(bottom));
+                        (int) (middle - halfWidth),
+                        (int) (bottom - mDrawableIntrinsicHeight),
+                        (int) (middle + halfWidth),
+                        (int) (bottom));
 
                 break;
         }

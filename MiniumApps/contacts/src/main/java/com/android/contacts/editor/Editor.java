@@ -61,7 +61,7 @@ public interface Editor {
      * written back to that same object.
      */
     public void setValues(DataKind kind, ValuesDelta values, RawContactDelta state, boolean readOnly,
-            ViewIdGenerator vig);
+                          ViewIdGenerator vig);
 
     public void setDeletable(boolean deletable);
 

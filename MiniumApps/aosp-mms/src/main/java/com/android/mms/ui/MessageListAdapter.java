@@ -17,8 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Handler;
@@ -42,6 +40,8 @@ import com.android.mms.LogTag;
 import com.android.mms.R;
 import com.google.android.mms.MmsException;
 
+import java.util.regex.Pattern;
+
 /**
  * The back-end data adapter of a message list.
  */
@@ -49,66 +49,66 @@ public class MessageListAdapter extends CursorAdapter {
     private static final String TAG = LogTag.TAG;
     private static final boolean LOCAL_LOGV = false;
 
-    static final String[] PROJECTION = new String[] {
-        // TODO: should move this symbol into com.android.mms.telephony.Telephony.
-        MmsSms.TYPE_DISCRIMINATOR_COLUMN,
-        BaseColumns._ID,
-        Conversations.THREAD_ID,
-        // For SMS
-        Sms.ADDRESS,
-        Sms.BODY,
-        Sms.DATE,
-        Sms.DATE_SENT,
-        Sms.READ,
-        Sms.TYPE,
-        Sms.STATUS,
-        Sms.LOCKED,
-        Sms.ERROR_CODE,
-        // For MMS
-        Mms.SUBJECT,
-        Mms.SUBJECT_CHARSET,
-        Mms.DATE,
-        Mms.DATE_SENT,
-        Mms.READ,
-        Mms.MESSAGE_TYPE,
-        Mms.MESSAGE_BOX,
-        Mms.DELIVERY_REPORT,
-        Mms.READ_REPORT,
-        PendingMessages.ERROR_TYPE,
-        Mms.LOCKED,
-        Mms.STATUS,
-        Mms.TEXT_ONLY
+    static final String[] PROJECTION = new String[]{
+            // TODO: should move this symbol into com.android.mms.telephony.Telephony.
+            MmsSms.TYPE_DISCRIMINATOR_COLUMN,
+            BaseColumns._ID,
+            Conversations.THREAD_ID,
+            // For SMS
+            Sms.ADDRESS,
+            Sms.BODY,
+            Sms.DATE,
+            Sms.DATE_SENT,
+            Sms.READ,
+            Sms.TYPE,
+            Sms.STATUS,
+            Sms.LOCKED,
+            Sms.ERROR_CODE,
+            // For MMS
+            Mms.SUBJECT,
+            Mms.SUBJECT_CHARSET,
+            Mms.DATE,
+            Mms.DATE_SENT,
+            Mms.READ,
+            Mms.MESSAGE_TYPE,
+            Mms.MESSAGE_BOX,
+            Mms.DELIVERY_REPORT,
+            Mms.READ_REPORT,
+            PendingMessages.ERROR_TYPE,
+            Mms.LOCKED,
+            Mms.STATUS,
+            Mms.TEXT_ONLY
     };
 
     // The indexes of the default columns which must be consistent
     // with above PROJECTION.
-    static final int COLUMN_MSG_TYPE            = 0;
-    static final int COLUMN_ID                  = 1;
-    static final int COLUMN_THREAD_ID           = 2;
-    static final int COLUMN_SMS_ADDRESS         = 3;
-    static final int COLUMN_SMS_BODY            = 4;
-    static final int COLUMN_SMS_DATE            = 5;
-    static final int COLUMN_SMS_DATE_SENT       = 6;
-    static final int COLUMN_SMS_READ            = 7;
-    static final int COLUMN_SMS_TYPE            = 8;
-    static final int COLUMN_SMS_STATUS          = 9;
-    static final int COLUMN_SMS_LOCKED          = 10;
-    static final int COLUMN_SMS_ERROR_CODE      = 11;
-    static final int COLUMN_MMS_SUBJECT         = 12;
+    static final int COLUMN_MSG_TYPE = 0;
+    static final int COLUMN_ID = 1;
+    static final int COLUMN_THREAD_ID = 2;
+    static final int COLUMN_SMS_ADDRESS = 3;
+    static final int COLUMN_SMS_BODY = 4;
+    static final int COLUMN_SMS_DATE = 5;
+    static final int COLUMN_SMS_DATE_SENT = 6;
+    static final int COLUMN_SMS_READ = 7;
+    static final int COLUMN_SMS_TYPE = 8;
+    static final int COLUMN_SMS_STATUS = 9;
+    static final int COLUMN_SMS_LOCKED = 10;
+    static final int COLUMN_SMS_ERROR_CODE = 11;
+    static final int COLUMN_MMS_SUBJECT = 12;
     static final int COLUMN_MMS_SUBJECT_CHARSET = 13;
-    static final int COLUMN_MMS_DATE            = 14;
-    static final int COLUMN_MMS_DATE_SENT       = 15;
-    static final int COLUMN_MMS_READ            = 16;
-    static final int COLUMN_MMS_MESSAGE_TYPE    = 17;
-    static final int COLUMN_MMS_MESSAGE_BOX     = 18;
+    static final int COLUMN_MMS_DATE = 14;
+    static final int COLUMN_MMS_DATE_SENT = 15;
+    static final int COLUMN_MMS_READ = 16;
+    static final int COLUMN_MMS_MESSAGE_TYPE = 17;
+    static final int COLUMN_MMS_MESSAGE_BOX = 18;
     static final int COLUMN_MMS_DELIVERY_REPORT = 19;
-    static final int COLUMN_MMS_READ_REPORT     = 20;
-    static final int COLUMN_MMS_ERROR_TYPE      = 21;
-    static final int COLUMN_MMS_LOCKED          = 22;
-    static final int COLUMN_MMS_STATUS          = 23;
-    static final int COLUMN_MMS_TEXT_ONLY       = 24;
+    static final int COLUMN_MMS_READ_REPORT = 20;
+    static final int COLUMN_MMS_ERROR_TYPE = 21;
+    static final int COLUMN_MMS_LOCKED = 22;
+    static final int COLUMN_MMS_STATUS = 23;
+    static final int COLUMN_MMS_TEXT_ONLY = 24;
 
-    private static final int CACHE_SIZE         = 50;
+    private static final int CACHE_SIZE = 50;
 
     public static final int INCOMING_ITEM_TYPE_SMS = 0;
     public static final int OUTGOING_ITEM_TYPE_SMS = 1;
@@ -171,6 +171,7 @@ public class MessageListAdapter extends CursorAdapter {
 
     public interface OnDataSetChangedListener {
         void onDataSetChanged(MessageListAdapter adapter);
+
         void onContentChanged(MessageListAdapter adapter);
     }
 
@@ -188,8 +189,8 @@ public class MessageListAdapter extends CursorAdapter {
 
     public void cancelBackgroundLoading() {
         mMessageItemCache.evictAll();   // causes entryRemoved to be called for each MessageItem
-                                        // in the cache which causes us to cancel loading of
-                                        // background pdu's and images.
+        // in the cache which causes us to cancel loading of
+        // background pdu's and images.
     }
 
     @Override
@@ -219,9 +220,9 @@ public class MessageListAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         int boxType = getItemViewType(cursor);
         View view = mInflater.inflate((boxType == INCOMING_ITEM_TYPE_SMS ||
-                boxType == INCOMING_ITEM_TYPE_MMS) ?
+                        boxType == INCOMING_ITEM_TYPE_MMS) ?
                         R.layout.message_list_item_recv : R.layout.message_list_item_send,
-                        parent, false);
+                parent, false);
         if (boxType == INCOMING_ITEM_TYPE_MMS || boxType == OUTGOING_ITEM_TYPE_MMS) {
             // We've got an mms item, pre-inflate the mms portion of the view
             view.findViewById(R.id.mms_layout_view_stub).setVisibility(View.VISIBLE);
@@ -279,7 +280,7 @@ public class MessageListAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        Cursor cursor = (Cursor)getItem(position);
+        Cursor cursor = (Cursor) getItem(position);
         return getItemViewType(cursor);
     }
 
@@ -343,26 +344,26 @@ public class MessageListAdapter extends CursorAdapter {
         public int mColumnMmsTextOnly;
 
         public ColumnsMap() {
-            mColumnMsgType            = COLUMN_MSG_TYPE;
-            mColumnMsgId              = COLUMN_ID;
-            mColumnSmsAddress         = COLUMN_SMS_ADDRESS;
-            mColumnSmsBody            = COLUMN_SMS_BODY;
-            mColumnSmsDate            = COLUMN_SMS_DATE;
-            mColumnSmsDateSent        = COLUMN_SMS_DATE_SENT;
-            mColumnSmsType            = COLUMN_SMS_TYPE;
-            mColumnSmsStatus          = COLUMN_SMS_STATUS;
-            mColumnSmsLocked          = COLUMN_SMS_LOCKED;
-            mColumnSmsErrorCode       = COLUMN_SMS_ERROR_CODE;
-            mColumnMmsSubject         = COLUMN_MMS_SUBJECT;
-            mColumnMmsSubjectCharset  = COLUMN_MMS_SUBJECT_CHARSET;
-            mColumnMmsMessageType     = COLUMN_MMS_MESSAGE_TYPE;
-            mColumnMmsMessageBox      = COLUMN_MMS_MESSAGE_BOX;
-            mColumnMmsDeliveryReport  = COLUMN_MMS_DELIVERY_REPORT;
-            mColumnMmsReadReport      = COLUMN_MMS_READ_REPORT;
-            mColumnMmsErrorType       = COLUMN_MMS_ERROR_TYPE;
-            mColumnMmsLocked          = COLUMN_MMS_LOCKED;
-            mColumnMmsStatus          = COLUMN_MMS_STATUS;
-            mColumnMmsTextOnly        = COLUMN_MMS_TEXT_ONLY;
+            mColumnMsgType = COLUMN_MSG_TYPE;
+            mColumnMsgId = COLUMN_ID;
+            mColumnSmsAddress = COLUMN_SMS_ADDRESS;
+            mColumnSmsBody = COLUMN_SMS_BODY;
+            mColumnSmsDate = COLUMN_SMS_DATE;
+            mColumnSmsDateSent = COLUMN_SMS_DATE_SENT;
+            mColumnSmsType = COLUMN_SMS_TYPE;
+            mColumnSmsStatus = COLUMN_SMS_STATUS;
+            mColumnSmsLocked = COLUMN_SMS_LOCKED;
+            mColumnSmsErrorCode = COLUMN_SMS_ERROR_CODE;
+            mColumnMmsSubject = COLUMN_MMS_SUBJECT;
+            mColumnMmsSubjectCharset = COLUMN_MMS_SUBJECT_CHARSET;
+            mColumnMmsMessageType = COLUMN_MMS_MESSAGE_TYPE;
+            mColumnMmsMessageBox = COLUMN_MMS_MESSAGE_BOX;
+            mColumnMmsDeliveryReport = COLUMN_MMS_DELIVERY_REPORT;
+            mColumnMmsReadReport = COLUMN_MMS_READ_REPORT;
+            mColumnMmsErrorType = COLUMN_MMS_ERROR_TYPE;
+            mColumnMmsLocked = COLUMN_MMS_LOCKED;
+            mColumnMmsStatus = COLUMN_MMS_STATUS;
+            mColumnMmsTextOnly = COLUMN_MMS_TEXT_ONLY;
         }
 
         public ColumnsMap(Cursor cursor) {
@@ -498,7 +499,7 @@ public class MessageListAdapter extends CursorAdapter {
 
         @Override
         protected void entryRemoved(boolean evicted, Long key,
-                MessageItem oldValue, MessageItem newValue) {
+                                    MessageItem oldValue, MessageItem newValue) {
             oldValue.cancelPduLoading();
         }
     }

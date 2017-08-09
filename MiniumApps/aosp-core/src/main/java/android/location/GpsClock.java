@@ -48,13 +48,13 @@ public class GpsClock implements Parcelable {
     public static final byte TYPE_GPS_TIME = 2;
 
     private static final short HAS_NO_FLAGS = 0;
-    private static final short HAS_LEAP_SECOND = (1<<0);
-    private static final short HAS_TIME_UNCERTAINTY = (1<<1);
-    private static final short HAS_FULL_BIAS = (1<<2);
-    private static final short HAS_BIAS = (1<<3);
-    private static final short HAS_BIAS_UNCERTAINTY = (1<<4);
-    private static final short HAS_DRIFT = (1<<5);
-    private static final short HAS_DRIFT_UNCERTAINTY = (1<<6);
+    private static final short HAS_LEAP_SECOND = (1 << 0);
+    private static final short HAS_TIME_UNCERTAINTY = (1 << 1);
+    private static final short HAS_FULL_BIAS = (1 << 2);
+    private static final short HAS_BIAS = (1 << 3);
+    private static final short HAS_BIAS_UNCERTAINTY = (1 << 4);
+    private static final short HAS_DRIFT = (1 << 5);
+    private static final short HAS_DRIFT_UNCERTAINTY = (1 << 6);
 
     // End enumerations in sync with gps.h
 
@@ -147,8 +147,8 @@ public class GpsClock implements Parcelable {
     /**
      * Gets the leap second associated with the clock's time.
      * The sign of the value is defined by the following equation:
-     *      utc_time_ns = time_ns + (full_bias_ns + bias_ns) - leap_second * 1,000,000,000
-     *
+     * utc_time_ns = time_ns + (full_bias_ns + bias_ns) - leap_second * 1,000,000,000
+     * <p>
      * The value is only available if {@link #hasLeapSecond()} is true.
      */
     public short getLeapSecond() {
@@ -176,15 +176,15 @@ public class GpsClock implements Parcelable {
      * This can be either the 'local hardware clock' value ({@link #TYPE_LOCAL_HW_TIME}), or the
      * current GPS time derived inside GPS receiver ({@link #TYPE_GPS_TIME}).
      * {@link #getType()} defines the time reported.
-     *
+     * <p>
      * For 'local hardware clock' this value is expected to be monotonically increasing during the
      * reporting session. The real GPS time can be derived by compensating
      * {@link #getFullBiasInNs()} (when it is available) from this value.
-     *
+     * <p>
      * For 'GPS time' this value is expected to be the best estimation of current GPS time that GPS
      * receiver can achieve. {@link #getTimeUncertaintyInNs()} should be available when GPS time is
      * specified.
-     *
+     * <p>
      * Sub-nanosecond accuracy can be provided by means of {@link #getBiasInNs()}.
      * The reported time includes {@link #getTimeUncertaintyInNs()}.
      */
@@ -209,7 +209,7 @@ public class GpsClock implements Parcelable {
     /**
      * Gets the clock's time Uncertainty (1-Sigma) in nanoseconds.
      * The uncertainty is represented as an absolute (single sided) value.
-     *
+     * <p>
      * The value is only available if {@link #hasTimeUncertaintyInNs()} is true.
      */
     public double getTimeUncertaintyInNs() {
@@ -242,14 +242,14 @@ public class GpsClock implements Parcelable {
     /**
      * Gets the difference between hardware clock ({@link #getTimeInNs()}) inside GPS receiver and
      * the true GPS time since 0000Z, January 6, 1980, in nanoseconds.
-     *
+     * <p>
      * This value is available if {@link #TYPE_LOCAL_HW_TIME} is set, and GPS receiver has solved
      * the clock for GPS time.
      * {@link #getBiasUncertaintyInNs()} should be used for quality check.
-     *
+     * <p>
      * The sign of the value is defined by the following equation:
-     *      true time (GPS time) = time_ns + (full_bias_ns + bias_ns)
-     *
+     * true time (GPS time) = time_ns + (full_bias_ns + bias_ns)
+     * <p>
      * The reported full bias includes {@link #getBiasUncertaintyInNs()}.
      * The value is onl available if {@link #hasFullBiasInNs()} is true.
      */
@@ -283,7 +283,7 @@ public class GpsClock implements Parcelable {
     /**
      * Gets the clock's sub-nanosecond bias.
      * The reported bias includes {@link #getBiasUncertaintyInNs()}.
-     *
+     * <p>
      * The value is only available if {@link #hasBiasInNs()} is true.
      */
     public double getBiasInNs() {
@@ -315,7 +315,7 @@ public class GpsClock implements Parcelable {
 
     /**
      * Gets the clock's Bias Uncertainty (1-Sigma) in nanoseconds.
-     *
+     * <p>
      * The value is only available if {@link #hasBiasUncertaintyInNs()} is true.
      */
     public double getBiasUncertaintyInNs() {
@@ -349,7 +349,7 @@ public class GpsClock implements Parcelable {
      * Gets the clock's Drift in nanoseconds per second.
      * A positive value indicates that the frequency is higher than the nominal frequency.
      * The reported drift includes {@link #getDriftUncertaintyInNsPerSec()}.
-     *
+     * <p>
      * The value is only available if {@link #hasDriftInNsPerSec()} is true.
      */
     public double getDriftInNsPerSec() {
@@ -381,7 +381,7 @@ public class GpsClock implements Parcelable {
 
     /**
      * Gets the clock's Drift Uncertainty (1-Sigma) in nanoseconds per second.
-     *
+     * <p>
      * The value is only available if {@link #hasDriftUncertaintyInNsPerSec()} is true.
      */
     public double getDriftUncertaintyInNsPerSec() {

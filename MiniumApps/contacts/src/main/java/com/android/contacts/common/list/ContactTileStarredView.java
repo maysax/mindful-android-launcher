@@ -15,11 +15,11 @@
  */
 package com.android.contacts.common.list;
 
-import com.android.contacts.common.ContactPhotoManager;
-import com.android.contacts.common.ContactPhotoManager.DefaultImageRequest;
-
 import android.content.Context;
 import android.util.AttributeSet;
+
+import com.android.contacts.common.ContactPhotoManager;
+import com.android.contacts.common.ContactPhotoManager.DefaultImageRequest;
 
 /**
  * A {@link ContactTileStarredView} displays the contact's picture overlayed with their name

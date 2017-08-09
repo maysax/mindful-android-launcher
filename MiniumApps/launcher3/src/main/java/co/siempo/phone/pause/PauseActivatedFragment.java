@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.util.AudioUtils;
+import co.siempo.phone.util.VibrationUtils_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
@@ -123,7 +125,7 @@ public class PauseActivatedFragment extends CoreFragment {
                 atMillis += 1000;
 
                 if (atMillis >= maxMillis) {
-                    stopPause();
+                    stopPause(false);
                 } else {
                     Tracer.v("Now : " + atMillis + " seekbar value: " + atMillis / (1000 * 60.0f));
                     seekbar.setValue(atMillis / (1000 * 60.0f));
@@ -137,12 +139,16 @@ public class PauseActivatedFragment extends CoreFragment {
         }
     };
 
-    public void stopPause() {
+    public void stopPause(boolean isStopByUser) {
         seekbar.setValue(0);
         seekbar.setShowTitle(false);
         handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
         getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
+        if (!isStopByUser) {
+//            VibrationUtils_.getInstance_(getActivity()).vibrate();
+//            AudioUtils.playnotification(getActivity());
+        }
         getActivity().finish();
     }
 }

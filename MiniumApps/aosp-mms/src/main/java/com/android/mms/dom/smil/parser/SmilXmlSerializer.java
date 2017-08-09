@@ -17,18 +17,18 @@
 
 package com.android.mms.dom.smil.parser;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.smil.SMILDocument;
+import org.w3c.dom.smil.SMILElement;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.smil.SMILDocument;
-import org.w3c.dom.smil.SMILElement;
 
 public class SmilXmlSerializer {
     public static void serialize(SMILDocument smilDoc, OutputStream out) {
@@ -52,7 +52,7 @@ public class SmilXmlSerializer {
         if (element.hasAttributes()) {
             NamedNodeMap attributes = element.getAttributes();
             for (int i = 0; i < attributes.getLength(); i++) {
-                Attr attribute = (Attr)attributes.item(i);
+                Attr attribute = (Attr) attributes.item(i);
                 writer.write(" " + attribute.getName());
                 writer.write("=\"" + attribute.getValue() + "\"");
             }

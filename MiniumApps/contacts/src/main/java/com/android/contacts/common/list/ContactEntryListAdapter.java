@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
-import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.Directory;
 import android.text.TextUtils;
 import android.util.Log;
@@ -94,7 +93,9 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
     private ContactListFilter mFilter;
     private boolean mDarkTheme = false;
 
-    /** Resource used to provide header-text for default filter. */
+    /**
+     * Resource used to provide header-text for default filter.
+     */
     private CharSequence mDefaultFilterHeaderText;
 
     public ContactEntryListAdapter(Context context) {
@@ -105,7 +106,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
 
     /**
      * @param fragmentRootView Root view of the fragment. This is used to restrict the scope of
-     * image loading requests that get cancelled on cursor changes.
+     *                         image loading requests that get cancelled on cursor changes.
      */
     protected void setFragmentRootView(View fragmentRootView) {
         mFragmentRootView = fragmentRootView;
@@ -158,7 +159,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
      * Remove all directories after the default directory. This is typically used when contacts
      * list screens are asked to exit the search mode and thus need to remove all remote directory
      * results for the search.
-     *
+     * <p>
      * This code assumes that the default directory and directories before that should not be
      * deleted (e.g. Join screen has "suggested contacts" directory before the default director,
      * and we should not remove the directory).
@@ -181,7 +182,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
         for (int i = 0; i < count; i++) {
             Partition partition = getPartition(i);
             if (partition instanceof DirectoryPartition) {
-                if (((DirectoryPartition)partition).getDirectoryId() == id) {
+                if (((DirectoryPartition) partition).getDirectoryId() == id) {
                     return i;
                 }
             }
@@ -204,6 +205,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
     }
 
     public abstract String getContactDisplayName(int position);
+
     public abstract void configureLoader(CursorLoader loader, long directoryId);
 
     /**
@@ -215,7 +217,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
         for (int i = 0; i < count; i++) {
             Partition partition = getPartition(i);
             if (partition instanceof DirectoryPartition) {
-                DirectoryPartition directoryPartition = (DirectoryPartition)partition;
+                DirectoryPartition directoryPartition = (DirectoryPartition) partition;
                 if (!directoryPartition.isLoading()) {
                     notify = true;
                 }
@@ -233,7 +235,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
         for (int i = 0; i < count; i++) {
             Partition partition = getPartition(i);
             if (partition instanceof DirectoryPartition) {
-                DirectoryPartition directoryPartition = (DirectoryPartition)partition;
+                DirectoryPartition directoryPartition = (DirectoryPartition) partition;
                 directoryPartition.setStatus(DirectoryPartition.STATUS_NOT_LOADED);
             }
         }
@@ -258,7 +260,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
             mUpperCaseQueryString = null;
         } else {
             mUpperCaseQueryString = SearchUtil
-                    .cleanStartAndEndOfSearchQuery(queryString.toUpperCase()) ;
+                    .cleanStartAndEndOfSearchQuery(queryString.toUpperCase());
         }
     }
 
@@ -434,7 +436,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
         for (int i = count; --i >= 0; ) {
             Partition partition = getPartition(i);
             if (partition instanceof DirectoryPartition) {
-                long id = ((DirectoryPartition)partition).getDirectoryId();
+                long id = ((DirectoryPartition) partition).getDirectoryId();
                 if (!directoryIds.contains(id)) {
                     removePartition(i);
                 }
@@ -454,7 +456,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
 
         Partition partition = getPartition(partitionIndex);
         if (partition instanceof DirectoryPartition) {
-            ((DirectoryPartition)partition).setStatus(DirectoryPartition.STATUS_LOADED);
+            ((DirectoryPartition) partition).setStatus(DirectoryPartition.STATUS_LOADED);
         }
 
         if (mDisplayPhotos && mPhotoLoader != null && isPhotoSupported(partitionIndex)) {
@@ -582,7 +584,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
         for (int i = 0; i < count; i++) {
             Partition partition = getPartition(i);
             if (partition instanceof DirectoryPartition &&
-                    ((DirectoryPartition)partition).getDirectoryId() == Directory.DEFAULT) {
+                    ((DirectoryPartition) partition).getDirectoryId() == Directory.DEFAULT) {
                 defaultPartitionIndex = i;
                 break;
             }
@@ -595,7 +597,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
 
     @Override
     protected View newHeaderView(Context context, int partition, Cursor cursor,
-            ViewGroup parent) {
+                                 ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.directory_header, parent, false);
         if (!getPinnedPartitionHeadersEnabled()) {
@@ -615,10 +617,10 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
             return;
         }
 
-        DirectoryPartition directoryPartition = (DirectoryPartition)partition;
+        DirectoryPartition directoryPartition = (DirectoryPartition) partition;
         long directoryId = directoryPartition.getDirectoryId();
-        TextView labelTextView = (TextView)view.findViewById(R.id.label);
-        TextView displayNameTextView = (TextView)view.findViewById(R.id.display_name);
+        TextView labelTextView = (TextView) view.findViewById(R.id.label);
+        TextView displayNameTextView = (TextView) view.findViewById(R.id.display_name);
         labelTextView.setText(directoryPartition.getLabel());
         if (!isRemoteDirectory(directoryId)) {
             displayNameTextView.setText(null);
@@ -631,7 +633,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
         }
 
         final Resources res = getContext().getResources();
-        final int headerPaddingTop = partitionIndex == 1 && getPartition(0).isEmpty()?
+        final int headerPaddingTop = partitionIndex == 1 && getPartition(0).isEmpty() ?
                 0 : res.getDimensionPixelOffset(R.dimen.directory_header_extra_top_padding);
         // There should be no extra padding at the top of the first directory header
         view.setPaddingRelative(view.getPaddingStart(), headerPaddingTop, view.getPaddingEnd(),
@@ -706,15 +708,16 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
 
     /**
      * Loads the photo for the quick contact view and assigns the contact uri.
-     * @param photoIdColumn Index of the photo id column
-     * @param photoUriColumn Index of the photo uri column. Optional: Can be -1
-     * @param contactIdColumn Index of the contact id column
-     * @param lookUpKeyColumn Index of the lookup key column
+     *
+     * @param photoIdColumn     Index of the photo id column
+     * @param photoUriColumn    Index of the photo uri column. Optional: Can be -1
+     * @param contactIdColumn   Index of the contact id column
+     * @param lookUpKeyColumn   Index of the lookup key column
      * @param displayNameColumn Index of the display name column
      */
     protected void bindQuickContact(final ContactListItemView view, int partitionIndex,
-            Cursor cursor, int photoIdColumn, int photoUriColumn, int contactIdColumn,
-            int lookUpKeyColumn, int displayNameColumn) {
+                                    Cursor cursor, int photoIdColumn, int photoUriColumn, int contactIdColumn,
+                                    int lookUpKeyColumn, int displayNameColumn) {
         long photoId = 0;
         if (!cursor.isNull(photoIdColumn)) {
             photoId = cursor.getLong(photoIdColumn);
@@ -758,10 +761,10 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
     }
 
     protected Uri getContactUri(int partitionIndex, Cursor cursor,
-            int contactIdColumn, int lookUpKeyColumn) {
+                                int contactIdColumn, int lookUpKeyColumn) {
         long contactId = cursor.getLong(contactIdColumn);
         String lookupKey = cursor.getString(lookUpKeyColumn);
-        long directoryId = ((DirectoryPartition)getPartition(partitionIndex)).getDirectoryId();
+        long directoryId = ((DirectoryPartition) getPartition(partitionIndex)).getDirectoryId();
         // Remote directories must have a lookup key or we don't have
         // a working contact URI
         if (TextUtils.isEmpty(lookupKey) && isRemoteDirectory(directoryId)) {
@@ -784,14 +787,14 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
      * Retrieves the lookup key and display name from a cursor, and returns a
      * {@link DefaultImageRequest} containing these contact details
      *
-     * @param cursor Contacts cursor positioned at the current row to retrieve contact details for
+     * @param cursor            Contacts cursor positioned at the current row to retrieve contact details for
      * @param displayNameColumn Column index of the display name
-     * @param lookupKeyColumn Column index of the lookup key
+     * @param lookupKeyColumn   Column index of the lookup key
      * @return {@link DefaultImageRequest} with the displayName and identifier fields set to the
      * display name and lookup key of the contact.
      */
     public DefaultImageRequest getDefaultImageRequestFromCursor(Cursor cursor,
-            int displayNameColumn, int lookupKeyColumn) {
+                                                                int displayNameColumn, int lookupKeyColumn) {
         final String displayName = cursor.getString(displayNameColumn);
         final String lookupKey = cursor.getString(lookupKeyColumn);
         return new DefaultImageRequest(displayName, lookupKey, mCircularPhotos);

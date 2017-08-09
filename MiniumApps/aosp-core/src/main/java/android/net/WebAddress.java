@@ -16,27 +16,26 @@
 
 package android.net;
 
-import static android.util.Patterns.GOOD_IRI_CHAR;
-
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.util.Patterns.GOOD_IRI_CHAR;
+
 /**
  * {@hide}
- *
+ * <p>
  * Web Address Parser
- *
+ * <p>
  * This is called WebAddress, rather than URL or URI, because it
  * attempts to parse the stuff that a user will actually type into a
  * browser address widget.
- *
+ * <p>
  * Unlike java.net.uri, this parser will not choke on URIs missing
  * schemes.  It will only throw a ParseException if the input is
  * really hosed.
- *
+ * <p>
  * If given an https scheme but no port, fills in port
- *
  */
 public class WebAddress {
 
@@ -60,7 +59,9 @@ public class WebAddress {
             /* path      */ "(\\/?[^#]*)?" +
             /* anchor    */ ".*", Pattern.CASE_INSENSITIVE);
 
-    /** parses given uriString. */
+    /**
+     * parses given uriString.
+     */
     public WebAddress(String address) throws ParseException {
         if (address == null) {
             throw new NullPointerException();
@@ -125,7 +126,7 @@ public class WebAddress {
     public String toString() {
         String port = "";
         if ((mPort != 443 && mScheme.equals("https")) ||
-            (mPort != 80 && mScheme.equals("http"))) {
+                (mPort != 80 && mScheme.equals("http"))) {
             port = ":" + Integer.toString(mPort);
         }
         String authInfo = "";
@@ -137,42 +138,42 @@ public class WebAddress {
     }
 
     public void setScheme(String scheme) {
-      mScheme = scheme;
+        mScheme = scheme;
     }
 
     public String getScheme() {
-      return mScheme;
+        return mScheme;
     }
 
     public void setHost(String host) {
-      mHost = host;
+        mHost = host;
     }
 
     public String getHost() {
-      return mHost;
+        return mHost;
     }
 
     public void setPort(int port) {
-      mPort = port;
+        mPort = port;
     }
 
     public int getPort() {
-      return mPort;
+        return mPort;
     }
 
     public void setPath(String path) {
-      mPath = path;
+        mPath = path;
     }
 
     public String getPath() {
-      return mPath;
+        return mPath;
     }
 
     public void setAuthInfo(String authInfo) {
-      mAuthInfo = authInfo;
+        mAuthInfo = authInfo;
     }
 
     public String getAuthInfo() {
-      return mAuthInfo;
+        return mAuthInfo;
     }
 }

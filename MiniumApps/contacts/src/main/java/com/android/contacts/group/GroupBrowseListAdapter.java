@@ -28,8 +28,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.contacts.GroupListLoader;
-import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.AccountTypeManager;
+import com.android.contacts.common.model.account.AccountType;
 import com.google.common.base.Objects;
 
 import minium.co.contacts.R;
@@ -79,7 +79,7 @@ public class GroupBrowseListAdapter extends BaseAdapter {
             long groupId = mCursor.getLong(GroupListLoader.GROUP_ID);
             Uri uri = getGroupUriFromId(groupId);
             if (mSelectedGroupUri.equals(uri)) {
-                  return index;
+                return index;
             }
             index++;
         }

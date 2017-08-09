@@ -24,7 +24,7 @@ public class CharSequences {
     /**
      * Adapts {@link CharSequence} to an array of ASCII (7-bits per character)
      * bytes.
-     * 
+     *
      * @param bytes ASCII bytes
      */
     public static CharSequence forAsciiBytes(final byte[] bytes) {
@@ -53,13 +53,12 @@ public class CharSequences {
      *
      * @param bytes ASCII bytes
      * @param start index, inclusive
-     * @param end index, exclusive
-     *
+     * @param end   index, exclusive
      * @throws IndexOutOfBoundsException if start or end are negative, if end
-     *  is greater than length(), or if start is greater than end
+     *                                   is greater than length(), or if start is greater than end
      */
     public static CharSequence forAsciiBytes(final byte[] bytes,
-            final int start, final int end) {
+                                             final int start, final int end) {
         validate(start, end, bytes.length);
         return new CharSequence() {
             public char charAt(int index) {
@@ -106,11 +105,11 @@ public class CharSequences {
         }
         return true;
     }
-    
+
     /**
      * Compares two character sequences with API like {@link Comparable#compareTo}.
-     * 
-     * @param me The CharSequence that receives the compareTo call.
+     *
+     * @param me      The CharSequence that receives the compareTo call.
      * @param another The other CharSequence.
      * @return See {@link Comparable#compareTo}.
      */

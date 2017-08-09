@@ -44,7 +44,7 @@ import libcore.net.UriCodec;
  * component of the URI following a '#'. Builds and parses URI references
  * which conform to
  * <a href="http://www.faqs.org/rfcs/rfc2396.html">RFC 2396</a>.
- *
+ * <p>
  * <p>In the interest of performance, this class performs little to no
  * validation. Behavior is undefined for invalid input. This class is very
  * forgiving--in the face of invalid input, it will return garbage
@@ -109,13 +109,15 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
     */
 
-    /** Log tag. */
+    /**
+     * Log tag.
+     */
     private static final String LOG = Uri.class.getSimpleName();
 
     /**
      * NOTE: EMPTY accesses this field during its own initialization, so this
      * field *must* be initialized first, or else EMPTY will see a null value!
-     *
+     * <p>
      * Placeholder for strings which haven't been cached. This enables us
      * to cache null. We intentionally create a new String instance so we can
      * compare its identity and there is no chance we will confuse it with
@@ -133,7 +135,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
     /**
      * Prevents external subclassing.
      */
-    private Uri() {}
+    private Uri() {
+    }
 
     /**
      * Returns true if this URI is hierarchical like "http://google.com".
@@ -179,7 +182,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Gets the scheme-specific part of this URI, i.e.&nbsp;everything between
      * the scheme separator ':' and the fragment separator '#'. If this is a
      * relative URI, this method returns the entire URI. Decodes escaped octets.
-     *
+     * <p>
      * <p>Example: "//www.google.com/search?q=android"
      *
      * @return the decoded scheme-specific-part
@@ -191,7 +194,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * the scheme separator ':' and the fragment separator '#'. If this is a
      * relative URI, this method returns the entire URI. Leaves escaped octets
      * intact.
-     *
+     * <p>
      * <p>Example: "//www.google.com/search?q=android"
      *
      * @return the decoded scheme-specific-part
@@ -202,7 +205,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Gets the decoded authority part of this URI. For
      * server addresses, the authority is structured as follows:
      * {@code [ userinfo '@' ] host [ ':' port ]}
-     *
+     * <p>
      * <p>Examples: "google.com", "bob@google.com:80"
      *
      * @return the authority for this URI or null if not present
@@ -213,7 +216,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Gets the encoded authority part of this URI. For
      * server addresses, the authority is structured as follows:
      * {@code [ userinfo '@' ] host [ ':' port ]}
-     *
+     * <p>
      * <p>Examples: "google.com", "bob@google.com:80"
      *
      * @return the authority for this URI or null if not present
@@ -361,6 +364,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
     /**
      * Return a string representation of the URI that is safe to print
      * to logs and other places where PII should be avoided.
+     *
      * @hide
      */
     public String toSafeString() {
@@ -374,7 +378,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
                 builder.append(scheme);
                 builder.append(':');
                 if (ssp != null) {
-                    for (int i=0; i<ssp.length(); i++) {
+                    for (int i = 0; i < ssp.length(); i++) {
                         char c = ssp.charAt(i);
                         if (c == '-' || c == '@' || c == '.') {
                             builder.append(c);
@@ -405,10 +409,14 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      */
     public abstract Builder buildUpon();
 
-    /** Index of a component which was not found. */
+    /**
+     * Index of a component which was not found.
+     */
     private final static int NOT_FOUND = -1;
 
-    /** Placeholder value for an index which hasn't been calculated yet. */
+    /**
+     * Placeholder value for an index which hasn't been calculated yet.
+     */
     private final static int NOT_CALCULATED = -2;
 
     /**
@@ -418,15 +426,17 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
     private static final String NOT_HIERARCHICAL
             = "This isn't a hierarchical URI.";
 
-    /** Default encoding. */
+    /**
+     * Default encoding.
+     */
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     /**
      * Creates a Uri which parses the given encoded URI string.
      *
      * @param uriString an RFC 2396-compliant, encoded URI
-     * @throws NullPointerException if uriString is null
      * @return Uri for this given uri string
+     * @throws NullPointerException if uriString is null
      */
     public static Uri parse(String uriString) {
         return new StringUri(uriString);
@@ -436,11 +446,11 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Creates a Uri from a file. The URI has the form
      * "file://<absolute path>". Encodes path characters with the exception of
      * '/'.
-     *
+     * <p>
      * <p>Example: "file:///tmp/android.txt"
      *
-     * @throws NullPointerException if file is null
      * @return a Uri for the given file
+     * @throws NullPointerException if file is null
      */
     public static Uri fromFile(File file) {
         if (file == null) {
@@ -459,10 +469,14 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      */
     private static class StringUri extends AbstractHierarchicalUri {
 
-        /** Used in parcelling. */
+        /**
+         * Used in parcelling.
+         */
         static final int TYPE_ID = 1;
 
-        /** URI string representation. */
+        /**
+         * URI string representation.
+         */
         private final String uriString;
 
         private StringUri(String uriString) {
@@ -486,20 +500,28 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
             parcel.writeString(uriString);
         }
 
-        /** Cached scheme separator index. */
+        /**
+         * Cached scheme separator index.
+         */
         private volatile int cachedSsi = NOT_CALCULATED;
 
-        /** Finds the first ':'. Returns -1 if none found. */
+        /**
+         * Finds the first ':'. Returns -1 if none found.
+         */
         private int findSchemeSeparator() {
             return cachedSsi == NOT_CALCULATED
                     ? cachedSsi = uriString.indexOf(':')
                     : cachedSsi;
         }
 
-        /** Cached fragment separator index. */
+        /**
+         * Cached fragment separator index.
+         */
         private volatile int cachedFsi = NOT_CALCULATED;
 
-        /** Finds the first '#'. Returns -1 if none found. */
+        /**
+         * Finds the first '#'. Returns -1 if none found.
+         */
         private int findFragmentSeparator() {
             return cachedFsi == NOT_CALCULATED
                     ? cachedFsi = uriString.indexOf('#', findSchemeSeparator())
@@ -695,8 +717,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
          * Parses an authority out of the given URI string.
          *
          * @param uriString URI string
-         * @param ssi scheme separator index, -1 for a relative URI
-         *
+         * @param ssi       scheme separator index, -1 for a relative URI
          * @return the authority or null if none is found
          */
         static String parseAuthority(String uriString, int ssi) {
@@ -711,7 +732,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
                 // Look for the start of the path, query, or fragment, or the
                 // end of the string.
                 int end = ssi + 3;
-                LOOP: while (end < length) {
+                LOOP:
+                while (end < length) {
                     switch (uriString.charAt(end)) {
                         case '/': // Start of path
                         case '?': // Start of query
@@ -732,8 +754,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
          * Parses a path out of this given URI string.
          *
          * @param uriString URI string
-         * @param ssi scheme separator index, -1 for a relative URI
-         *
+         * @param ssi       scheme separator index, -1 for a relative URI
          * @return the path
          */
         static String parsePath(String uriString, int ssi) {
@@ -746,7 +767,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
                     && uriString.charAt(ssi + 2) == '/') {
                 // Skip over authority to path.
                 pathStart = ssi + 3;
-                LOOP: while (pathStart < length) {
+                LOOP:
+                while (pathStart < length) {
                     switch (uriString.charAt(pathStart)) {
                         case '?': // Start of query
                         case '#': // Start of fragment
@@ -763,7 +785,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
             // Find end of path.
             int pathEnd = pathStart;
-            LOOP: while (pathEnd < length) {
+            LOOP:
+            while (pathEnd < length) {
                 switch (uriString.charAt(pathEnd)) {
                     case '?': // Start of query
                     case '#': // Start of fragment
@@ -796,20 +819,18 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Creates an opaque Uri from the given components. Encodes the ssp
      * which means this method cannot be used to create hierarchical URIs.
      *
-     * @param scheme of the URI
-     * @param ssp scheme-specific-part, everything between the
-     *  scheme separator (':') and the fragment separator ('#'), which will
-     *  get encoded
+     * @param scheme   of the URI
+     * @param ssp      scheme-specific-part, everything between the
+     *                 scheme separator (':') and the fragment separator ('#'), which will
+     *                 get encoded
      * @param fragment fragment, everything after the '#', null if undefined,
-     *  will get encoded
-     *
-     * @throws NullPointerException if scheme or ssp is null
+     *                 will get encoded
      * @return Uri composed of the given scheme, ssp, and fragment
-     *
+     * @throws NullPointerException if scheme or ssp is null
      * @see Builder if you don't want the ssp and fragment to be encoded
      */
     public static Uri fromParts(String scheme, String ssp,
-            String fragment) {
+                                String fragment) {
         if (scheme == null) {
             throw new NullPointerException("scheme");
         }
@@ -826,7 +847,9 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      */
     private static class OpaqueUri extends Uri {
 
-        /** Used in parcelling. */
+        /**
+         * Used in parcelling.
+         */
         static final int TYPE_ID = 2;
 
         private final String scheme;
@@ -841,9 +864,9 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
         static Uri readFrom(Parcel parcel) {
             return new OpaqueUri(
-                parcel.readString(),
-                Part.readFrom(parcel),
-                Part.readFrom(parcel)
+                    parcel.readString(),
+                    Part.readFrom(parcel),
+                    Part.readFrom(parcel)
             );
         }
 
@@ -1132,7 +1155,9 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      */
     private static class HierarchicalUri extends AbstractHierarchicalUri {
 
-        /** Used in parcelling. */
+        /**
+         * Used in parcelling.
+         */
         static final int TYPE_ID = 3;
 
         private final String scheme; // can be null
@@ -1142,7 +1167,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
         private final Part fragment;
 
         private HierarchicalUri(String scheme, Part authority, PathPart path,
-                Part query, Part fragment) {
+                                Part query, Part fragment) {
             this.scheme = scheme;
             this.authority = Part.nonNull(authority);
             this.path = path == null ? PathPart.NULL : path;
@@ -1152,11 +1177,11 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
         static Uri readFrom(Parcel parcel) {
             return new HierarchicalUri(
-                parcel.readString(),
-                Part.readFrom(parcel),
-                PathPart.readFrom(parcel),
-                Part.readFrom(parcel),
-                Part.readFrom(parcel)
+                    parcel.readString(),
+                    Part.readFrom(parcel),
+                    PathPart.readFrom(parcel),
+                    Part.readFrom(parcel),
+                    Part.readFrom(parcel)
             );
         }
 
@@ -1301,17 +1326,17 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
     /**
      * Helper class for building or manipulating URI references. Not safe for
      * concurrent use.
-     *
+     * <p>
      * <p>An absolute hierarchical URI reference follows the pattern:
      * {@code <scheme>://<authority><absolute path>?<query>#<fragment>}
-     *
+     * <p>
      * <p>Relative URI references (which are always hierarchical) follow one
      * of two patterns: {@code <relative or absolute path>?<query>#<fragment>}
      * or {@code //<authority><absolute path>?<query>#<fragment>}
-     *
+     * <p>
      * <p>An opaque URI follows this pattern:
      * {@code <scheme>:<opaque part>#<fragment>}
-     *
+     * <p>
      * <p>Use {@link Uri#buildUpon()} to obtain a builder representing an existing URI.
      */
     public static final class Builder {
@@ -1326,7 +1351,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
         /**
          * Constructs a new Builder.
          */
-        public Builder() {}
+        public Builder() {
+        }
 
         /**
          * Sets the scheme.
@@ -1394,7 +1420,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
         /**
          * Sets the path. Leaves '/' characters intact but encodes others as
          * necessary.
-         *
+         * <p>
          * <p>If the path is not null and doesn't start with a '/', and if
          * you specify a scheme and/or authority, the builder will prepend the
          * given path with a '/'.
@@ -1405,7 +1431,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
         /**
          * Sets the previously encoded path.
-         *
+         * <p>
          * <p>If the path is not null and doesn't start with a '/', and if
          * you specify a scheme and/or authority, the builder will prepend the
          * given path with a '/'.
@@ -1473,7 +1499,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
          * Encodes the key and value and then appends the parameter to the
          * query string.
          *
-         * @param key which will be encoded
+         * @param key   which will be encoded
          * @param value which will be encoded
          */
         public Builder appendQueryParameter(String key, String value) {
@@ -1502,14 +1528,14 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
          * Clears the the previously set query.
          */
         public Builder clearQuery() {
-          return query((Part) null);
+            return query((Part) null);
         }
 
         /**
          * Constructs a Uri with the current attributes.
          *
          * @throws UnsupportedOperationException if the URI is opaque and the
-         *  scheme is null
+         *                                       scheme is null
          */
         public Uri build() {
             if (opaquePart != null) {
@@ -1553,9 +1579,8 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Returns a set of the unique names of all query parameters. Iterating
      * over the set will return the names in order of their first occurrence.
      *
-     * @throws UnsupportedOperationException if this isn't a hierarchical URI
-     *
      * @return a set of decoded names
+     * @throws UnsupportedOperationException if this isn't a hierarchical URI
      */
     public Set<String> getQueryParameterNames() {
         if (isOpaque()) {
@@ -1592,17 +1617,16 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Searches the query string for parameter values with the given key.
      *
      * @param key which will be encoded
-     *
-     * @throws UnsupportedOperationException if this isn't a hierarchical URI
-     * @throws NullPointerException if key is null
      * @return a list of decoded values
+     * @throws UnsupportedOperationException if this isn't a hierarchical URI
+     * @throws NullPointerException          if key is null
      */
     public List<String> getQueryParameters(String key) {
         if (isOpaque()) {
             throw new UnsupportedOperationException(NOT_HIERARCHICAL);
         }
         if (key == null) {
-          throw new NullPointerException("key");
+            throw new NullPointerException("key");
         }
 
         String query = getEncodedQuery();
@@ -1632,9 +1656,9 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
             if (separator - start == encodedKey.length()
                     && query.regionMatches(start, encodedKey, 0, encodedKey.length())) {
                 if (separator == end) {
-                  values.add("");
+                    values.add("");
                 } else {
-                  values.add(decode(query.substring(separator + 1, end)));
+                    values.add(decode(query.substring(separator + 1, end)));
                 }
             }
 
@@ -1651,14 +1675,14 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
 
     /**
      * Searches the query string for the first value with the given key.
-     *
+     * <p>
      * <p><strong>Warning:</strong> Prior to Ice Cream Sandwich, this decoded
      * the '+' character as '+' rather than ' '.
      *
      * @param key which will be encoded
-     * @throws UnsupportedOperationException if this isn't a hierarchical URI
-     * @throws NullPointerException if key is null
      * @return the decoded value or null if no parameter is found
+     * @throws UnsupportedOperationException if this isn't a hierarchical URI
+     * @throws NullPointerException          if key is null
      */
     public String getQueryParameter(String key) {
         if (isOpaque()) {
@@ -1710,7 +1734,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * as a boolean value. "false" and "0" are interpreted as <code>false</code>, everything
      * else is interpreted as <code>true</code>.
      *
-     * @param key which will be decoded
+     * @param key          which will be decoded
      * @param defaultValue the default value to return if there is no query parameter for key
      * @return the boolean interpretation of the query parameter key
      */
@@ -1727,14 +1751,14 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Return an equivalent URI with a lowercase scheme component.
      * This aligns the Uri with Android best practices for
      * intent filtering.
-     *
+     * <p>
      * <p>For example, "HTTP://www.android.com" becomes
      * "http://www.android.com"
-     *
+     * <p>
      * <p>All URIs received from outside Android (such as user input,
      * or external sources like Bluetooth, NFC, or the Internet) should
      * be normalized before they are used to create an Intent.
-     *
+     * <p>
      * <p class="note">This method does <em>not</em> validate bad URI's,
      * or 'fix' poorly formatted URI's - so do not use it for input validation.
      * A Uri will always be returned, even if the Uri is badly formatted to
@@ -1753,7 +1777,9 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
         return buildUpon().scheme(lowerScheme).build();
     }
 
-    /** Identifies a null parcelled Uri. */
+    /**
+     * Identifies a null parcelled Uri.
+     */
     private static final int NULL_TYPE_ID = 0;
 
     /**
@@ -1764,9 +1790,12 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
         public Uri createFromParcel(Parcel in) {
             int type = in.readInt();
             switch (type) {
-                case NULL_TYPE_ID: return null;
-                case StringUri.TYPE_ID: return StringUri.readFrom(in);
-                case OpaqueUri.TYPE_ID: return OpaqueUri.readFrom(in);
+                case NULL_TYPE_ID:
+                    return null;
+                case StringUri.TYPE_ID:
+                    return StringUri.readFrom(in);
+                case OpaqueUri.TYPE_ID:
+                    return OpaqueUri.readFrom(in);
                 case HierarchicalUri.TYPE_ID:
                     return HierarchicalUri.readFrom(in);
             }
@@ -1803,7 +1832,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      *
      * @param s string to encode
      * @return an encoded version of s suitable for use as a URI component,
-     *  or null if s is null
+     * or null if s is null
      */
     public static String encode(String s) {
         return encode(s, null);
@@ -1816,11 +1845,11 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * all other characters with the exception of those specified in the
      * allow argument.
      *
-     * @param s string to encode
+     * @param s     string to encode
      * @param allow set of additional characters to allow in the encoded form,
-     *  null if no characters should be skipped
+     *              null if no characters should be skipped
      * @return an encoded version of s suitable for use as a URI component,
-     *  or null if s is null
+     * or null if s is null
      */
     public static String encode(String s, String allow) {
         if (s == null) {
@@ -1904,10 +1933,10 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
     /**
      * Returns true if the given character is allowed.
      *
-     * @param c character to check
+     * @param c     character to check
      * @param allow characters to allow
      * @return true if the character is allowed or false if it should be
-     *  encoded
+     * encoded
      */
     private static boolean isAllowed(char c, String allow) {
         return (c >= 'A' && c <= 'Z')
@@ -1924,7 +1953,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      *
      * @param s encoded string to decode
      * @return the given string with escaped octets decoded, or null if
-     *  s is null
+     * s is null
      */
     public static String decode(String s) {
         if (s == null) {
@@ -1992,10 +2021,14 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      */
     static class Part extends AbstractPart {
 
-        /** A part with null values. */
+        /**
+         * A part with null values.
+         */
         static final Part NULL = new EmptyPart(null);
 
-        /** A part with empty strings for values. */
+        /**
+         * A part with empty strings for values.
+         */
         static final Part EMPTY = new EmptyPart("");
 
         private Part(String encoded, String decoded) {
@@ -2072,7 +2105,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
             if (decoded == null) {
                 return NULL;
             }
-            if (decoded .length() == 0) {
+            if (decoded.length() == 0) {
                 return EMPTY;
             }
 
@@ -2097,10 +2130,14 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      */
     static class PathPart extends AbstractPart {
 
-        /** A part with null values. */
+        /**
+         * A part with null values.
+         */
         static final PathPart NULL = new PathPart(null, null);
 
-        /** A part with empty strings for values. */
+        /**
+         * A part with empty strings for values.
+         */
         static final PathPart EMPTY = new PathPart("", "");
 
         private PathPart(String encoded, String decoded) {
@@ -2125,7 +2162,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
          * Gets the individual path segments. Parses them if necessary.
          *
          * @return parsed path segments or null if this isn't a hierarchical
-         *  URI
+         * URI
          */
         PathSegments getPathSegments() {
             if (pathSegments != null) {
@@ -2161,7 +2198,7 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
         }
 
         static PathPart appendEncodedSegment(PathPart oldPart,
-                String newSegment) {
+                                             String newSegment) {
             // If there is no old path, should we make the new path relative
             // or absolute? I pick absolute.
 
@@ -2283,10 +2320,10 @@ public abstract class Uri implements Parcelable, Comparable<Uri> {
      * Creates a new Uri by appending an already-encoded path segment to a
      * base Uri.
      *
-     * @param baseUri Uri to append path segment to
+     * @param baseUri     Uri to append path segment to
      * @param pathSegment encoded path segment to append
      * @return a new Uri based on baseUri with the given segment appended to
-     *  the path
+     * the path
      * @throws NullPointerException if baseUri is null
      */
     public static Uri withAppendedPath(Uri baseUri, String pathSegment) {

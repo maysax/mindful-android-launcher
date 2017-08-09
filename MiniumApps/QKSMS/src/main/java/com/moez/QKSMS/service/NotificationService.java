@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+
 import com.moez.QKSMS.common.ConversationPrefsHelper;
 import com.moez.QKSMS.common.LifecycleHandler;
 import com.moez.QKSMS.data.ContactHelper;

@@ -42,8 +42,8 @@ public class LayoutManager {
     private void initLayoutParameters(Configuration configuration) {
         mLayoutParams = getLayoutParameters(
                 configuration.orientation == Configuration.ORIENTATION_PORTRAIT
-                ? LayoutParameters.HVGA_PORTRAIT
-                : LayoutParameters.HVGA_LANDSCAPE);
+                        ? LayoutParameters.HVGA_PORTRAIT
+                        : LayoutParameters.HVGA_LANDSCAPE);
 
         if (LOCAL_LOGV) {
             Log.v(TAG, "LayoutParameters: " + mLayoutParams.getTypeDescription()

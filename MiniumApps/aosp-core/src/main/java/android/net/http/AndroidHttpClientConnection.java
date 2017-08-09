@@ -16,8 +16,8 @@
 
 package android.net.http;
 
-import org.apache.http.HttpConnection;
 import org.apache.http.HttpClientConnection;
+import org.apache.http.HttpConnection;
 import org.apache.http.HttpConnectionMetrics;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -26,6 +26,7 @@ import org.apache.http.HttpInetConnection;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NoHttpResponseException;
+import org.apache.http.ParseException;
 import org.apache.http.StatusLine;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentLengthStrategy;
@@ -46,7 +47,6 @@ import org.apache.http.message.ParserCursor;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.ParseException;
 import org.apache.http.util.CharArrayBuffer;
 
 import java.io.IOException;
@@ -57,7 +57,7 @@ import java.net.SocketException;
 /**
  * A alternate class for (@link DefaultHttpClientConnection).
  * It has better performance than DefaultHttpClientConnection
- * 
+ * <p>
  * {@hide}
  */
 public class AndroidHttpClientConnection
@@ -77,16 +77,17 @@ public class AndroidHttpClientConnection
     private Socket socket = null;
 
     public AndroidHttpClientConnection() {
-        this.entityserializer =  new EntitySerializer(
+        this.entityserializer = new EntitySerializer(
                 new StrictContentLengthStrategy());
     }
 
     /**
      * Bind socket and set HttpParams to AndroidHttpClientConnection
+     *
      * @param socket outgoing socket
      * @param params HttpParams
      * @throws IOException
-      */
+     */
     public void bind(
             final Socket socket,
             final HttpParams params) throws IOException {
@@ -243,6 +244,7 @@ public class AndroidHttpClientConnection
 
     /**
      * Sends the request line and all headers over the connection.
+     *
      * @param request the request whose headers to send.
      * @throws HttpException
      * @throws IOException
@@ -259,6 +261,7 @@ public class AndroidHttpClientConnection
 
     /**
      * Sends the request entity over the connection.
+     *
      * @param request the request whose entity to send.
      * @throws HttpException
      * @throws IOException
@@ -290,11 +293,12 @@ public class AndroidHttpClientConnection
     /**
      * Parses the response headers and adds them to the
      * given {@code headers} object, and returns the response StatusLine
+     *
      * @param headers store parsed header to headers.
-     * @throws IOException
      * @return StatusLine
+     * @throws IOException
      * @see HttpClientConnection#receiveResponseHeader()
-      */
+     */
     public StatusLine parseResponseHeader(Headers headers)
             throws IOException, ParseException {
         assertOpen();
@@ -308,14 +312,14 @@ public class AndroidHttpClientConnection
         // Create the status line from the status string
         StatusLine statusline = BasicLineParser.DEFAULT.parseStatusLine(
                 current, new ParserCursor(0, current.length()));
-        
+
         if (HttpLog.LOGV) HttpLog.v("read: " + statusline);
         int statusCode = statusline.getStatusCode();
 
         // Parse header body
         CharArrayBuffer previous = null;
         int headerNumber = 0;
-        while(true) {
+        while (true) {
             if (current == null) {
                 current = new CharArrayBuffer(64);
             } else {
@@ -345,7 +349,7 @@ public class AndroidHttpClientConnection
                 }
                 if (maxLineLength > 0 &&
                         previous.length() + 1 + current.length() - start >
-                            maxLineLength) {
+                                maxLineLength) {
                     throw new IOException("Maximum line length limit exceeded");
                 }
                 previous.append(' ');
@@ -375,6 +379,7 @@ public class AndroidHttpClientConnection
 
     /**
      * Return the next response entity.
+     *
      * @param headers contains values for parsing entity
      * @see HttpClientConnection#receiveResponseEntity(HttpResponse response)
      */
@@ -406,7 +411,7 @@ public class AndroidHttpClientConnection
             entity.setContentEncoding(contentEncodingHeader);
         }
 
-       return entity;
+        return entity;
     }
 
     private long determineLength(final Headers headers) {
@@ -436,9 +441,9 @@ public class AndroidHttpClientConnection
      * method may block for a small amount of time before returning a result.
      * It is therefore an <i>expensive</i> operation.
      *
-     * @return  <code>true</code> if attempts to use this connection are
-     *          likely to succeed, or <code>false</code> if they are likely
-     *          to fail and this connection should be closed
+     * @return <code>true</code> if attempts to use this connection are
+     * likely to succeed, or <code>false</code> if they are likely
+     * to fail and this connection should be closed
      */
     public boolean isStale() {
         assertOpen();
@@ -452,6 +457,7 @@ public class AndroidHttpClientConnection
 
     /**
      * Returns a collection of connection metrcis
+     *
      * @return HttpConnectionMetrics
      */
     public HttpConnectionMetrics getMetrics() {

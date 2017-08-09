@@ -32,11 +32,7 @@ import android.util.Slog;
 import android.view.IWindowManager;
 
 import com.android.internal.os.RuntimeInit;
-
 import com.android.internal.util.FastPrintWriter;
-import dalvik.system.BlockGuard;
-import dalvik.system.CloseGuard;
-import dalvik.system.VMDebug;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -46,11 +42,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import dalvik.system.BlockGuard;
+import dalvik.system.CloseGuard;
+import dalvik.system.VMDebug;
+
 /**
  * <p>StrictMode is a developer tool which detects things you might be
  * doing by accident and brings them to your attention so you can fix
  * them.
- *
+ * <p>
  * <p>StrictMode is most commonly used to catch accidental disk or
  * network access on the application's main thread, where UI
  * operations are received and animations take place.  Keeping disk
@@ -59,7 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * responsive, you also prevent
  * <a href="{@docRoot}guide/practices/design/responsiveness.html">ANR dialogs</a>
  * from being shown to users.
- *
+ * <p>
  * <p class="note">Note that even though an Android device's disk is
  * often on flash memory, many devices run a filesystem on top of that
  * memory with very limited concurrency.  It's often the case that
@@ -67,12 +67,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  * dramatically slower when certain I/O is happening in the background
  * from other processes.  If possible, it's best to assume that such
  * things are not fast.</p>
- *
+ * <p>
  * <p>Example code to enable from early in your
  * {@link android.app.Application}, {@link android.app.Activity}, or
  * other application component's
  * {@link android.app.Application#onCreate} method:
- *
+ * <p>
  * <pre>
  * public void onCreate() {
  *     if (DEVELOPER_MODE) {
@@ -92,12 +92,12 @@ import java.util.concurrent.atomic.AtomicInteger;
  *     super.onCreate();
  * }
  * </pre>
- *
+ * <p>
  * <p>You can decide what should happen when a violation is detected.
  * For example, using {@link ThreadPolicy.Builder#penaltyLog} you can
  * watch the output of <code>adb logcat</code> while you use your
  * application to see the violations as they happen.
- *
+ * <p>
  * <p>If you find violations that you feel are problematic, there are
  * a variety of tools to help solve them: threads, {@link android.os.Handler},
  * {@link android.os.AsyncTask}, {@link android.app.IntentService}, etc.
@@ -105,7 +105,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * many cases of disk access are often necessary during the normal activity lifecycle.  Use
  * StrictMode to find things you did by accident.  Network requests on the UI thread
  * are almost always a problem, though.
- *
+ * <p>
  * <p class="note">StrictMode is not a security mechanism and is not
  * guaranteed to find all disk or network accesses.  While it does
  * propagate its state across process boundaries when doing
@@ -126,6 +126,7 @@ public final class StrictMode {
      * Boolean system property to disable strict mode checks outright.
      * Set this to 'true' to force disable; 'false' has no effect on other
      * enable/disable policy.
+     *
      * @hide
      */
     public static final String DISABLE_PROPERTY = "persist.sys.strictmode.disable";
@@ -158,7 +159,7 @@ public final class StrictMode {
     public static final int DETECT_DISK_WRITE = 0x01;  // for ThreadPolicy
 
     /**
-      * @hide
+     * @hide
      */
     public static final int DETECT_DISK_READ = 0x02;  // for ThreadPolicy
 
@@ -181,18 +182,21 @@ public final class StrictMode {
 
     /**
      * Note, a "VM_" bit, not thread.
+     *
      * @hide
      */
     public static final int DETECT_VM_CURSOR_LEAKS = 0x200;  // for VmPolicy
 
     /**
      * Note, a "VM_" bit, not thread.
+     *
      * @hide
      */
     public static final int DETECT_VM_CLOSABLE_LEAKS = 0x400;  // for VmPolicy
 
     /**
      * Note, a "VM_" bit, not thread.
+     *
      * @hide
      */
     public static final int DETECT_VM_ACTIVITY_LEAKS = 0x800;  // for VmPolicy
@@ -214,8 +218,8 @@ public final class StrictMode {
 
     private static final int ALL_VM_DETECT_BITS =
             DETECT_VM_CURSOR_LEAKS | DETECT_VM_CLOSABLE_LEAKS |
-            DETECT_VM_ACTIVITY_LEAKS | DETECT_VM_INSTANCE_LEAKS |
-            DETECT_VM_REGISTRATION_LEAKS | DETECT_VM_FILE_URI_EXPOSURE;
+                    DETECT_VM_ACTIVITY_LEAKS | DETECT_VM_INSTANCE_LEAKS |
+                    DETECT_VM_REGISTRATION_LEAKS | DETECT_VM_FILE_URI_EXPOSURE;
 
     /**
      * @hide
@@ -261,7 +265,7 @@ public final class StrictMode {
      * ignore the other penalty bits and instead serialize back all
      * our offending stack traces to the caller to ultimately handle
      * in the originating process.
-     *
+     * <p>
      * This must be kept in sync with the constant in libs/binder/Parcel.cpp
      *
      * @hide
@@ -273,7 +277,7 @@ public final class StrictMode {
      */
     private static final int THREAD_PENALTY_MASK =
             PENALTY_LOG | PENALTY_DIALOG | PENALTY_DEATH | PENALTY_DROPBOX | PENALTY_GATHER |
-            PENALTY_DEATH_ON_NETWORK | PENALTY_FLASH;
+                    PENALTY_DEATH_ON_NETWORK | PENALTY_FLASH;
 
 
     /**
@@ -289,7 +293,7 @@ public final class StrictMode {
 
     /**
      * The current VmPolicy in effect.
-     *
+     * <p>
      * TODO: these are redundant (mask is in VmPolicy).  Should remove sVmPolicyMask.
      */
     private static volatile int sVmPolicyMask = 0;
@@ -301,14 +305,15 @@ public final class StrictMode {
      */
     private static final AtomicInteger sDropboxCallsInFlight = new AtomicInteger(0);
 
-    private StrictMode() {}
+    private StrictMode() {
+    }
 
     /**
      * {@link StrictMode} policy applied to a certain thread.
-     *
+     * <p>
      * <p>The policy is enabled by {@link #setThreadPolicy}.  The current policy
      * can be retrieved with {@link #getThreadPolicy}.
-     *
+     * <p>
      * <p>Note that multiple penalties may be provided and they're run
      * in order from least to most severe (logging before process
      * death, for example).  There's currently no mechanism to choose
@@ -336,11 +341,11 @@ public final class StrictMode {
          * with {@code detect} specify what problems we should look
          * for.  Methods whose names start with {@code penalty} specify what
          * we should do when we detect a problem.
-         *
+         * <p>
          * <p>You can call as many {@code detect} and {@code penalty}
          * methods as you like. Currently order is insignificant: all
          * penalties apply to all detected problems.
-         *
+         * <p>
          * <p>For example, detect everything and log anything that's found:
          * <pre>
          * StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -372,7 +377,7 @@ public final class StrictMode {
 
             /**
              * Detect everything that's potentially suspect.
-             *
+             * <p>
              * <p>As of the Gingerbread release this includes network and
              * disk operations but will likely expand in future releases.
              */
@@ -455,7 +460,7 @@ public final class StrictMode {
              * Crash the whole process on violation.  This penalty runs at
              * the end of all enabled penalties so you'll still get
              * see logging or other violations before the process dies.
-             *
+             * <p>
              * <p>Unlike {@link #penaltyDeathOnNetwork}, this applies
              * to disk reads, disk writes, and network usage if their
              * corresponding detect flags are set.
@@ -469,7 +474,7 @@ public final class StrictMode {
              * {@link #penaltyDeath}, this penalty runs
              * <em>before</em> anything else.  You must still have
              * called {@link #detectNetwork} to enable this.
-             *
+             * <p>
              * <p>In the Honeycomb or later SDKs, this is on by default.
              */
             public Builder penaltyDeathOnNetwork() {
@@ -512,7 +517,7 @@ public final class StrictMode {
 
             /**
              * Construct the ThreadPolicy instance.
-             *
+             * <p>
              * <p>Note: if no penalties are enabled before calling
              * <code>build</code>, {@link #penaltyLog} is implicitly
              * set.
@@ -521,8 +526,8 @@ public final class StrictMode {
                 // If there are detection bits set but no violation bits
                 // set, enable simple logging.
                 if (mMask != 0 &&
-                    (mMask & (PENALTY_DEATH | PENALTY_LOG |
-                              PENALTY_DROPBOX | PENALTY_DIALOG)) == 0) {
+                        (mMask & (PENALTY_DEATH | PENALTY_LOG |
+                                PENALTY_DROPBOX | PENALTY_DIALOG)) == 0) {
                     penaltyLog();
                 }
                 return new ThreadPolicy(mMask);
@@ -532,7 +537,7 @@ public final class StrictMode {
 
     /**
      * {@link StrictMode} policy applied to all threads in the virtual machine's process.
-     *
+     * <p>
      * <p>The policy is enabled by {@link #setVmPolicy}.
      */
     public static final class VmPolicy {
@@ -564,11 +569,11 @@ public final class StrictMode {
          * with {@code detect} specify what problems we should look
          * for.  Methods whose names start with {@code penalty} specify what
          * we should do when we detect a problem.
-         *
+         * <p>
          * <p>You can call as many {@code detect} and {@code penalty}
          * methods as you like. Currently order is insignificant: all
          * penalties apply to all detected problems.
-         *
+         * <p>
          * <p>For example, detect everything and log anything that's found:
          * <pre>
          * StrictMode.VmPolicy policy = new StrictMode.VmPolicy.Builder()
@@ -607,7 +612,7 @@ public final class StrictMode {
                 }
                 if (mClassInstanceLimitNeedCow) {
                     if (mClassInstanceLimit.containsKey(klass) &&
-                        mClassInstanceLimit.get(klass) == instanceLimit) {
+                            mClassInstanceLimit.get(klass) == instanceLimit) {
                         // no-op; don't break COW
                         return this;
                     }
@@ -630,7 +635,7 @@ public final class StrictMode {
 
             /**
              * Detect everything that's potentially suspect.
-             *
+             * <p>
              * <p>In the Honeycomb release this includes leaks of
              * SQLite cursors, Activities, and other closable objects
              * but will likely expand in future releases.
@@ -645,7 +650,7 @@ public final class StrictMode {
              * Detect when an
              * {@link android.database.sqlite.SQLiteCursor} or other
              * SQLite object is finalized without having been closed.
-             *
+             * <p>
              * <p>You always want to explicitly close your SQLite
              * cursors to avoid unnecessary database contention and
              * temporary memory leaks.
@@ -658,7 +663,7 @@ public final class StrictMode {
              * Detect when an {@link java.io.Closeable} or other
              * object with a explict termination method is finalized
              * without having been closed.
-             *
+             * <p>
              * <p>You always want to explicitly close such objects to
              * avoid unnecessary resources leaks.
              */
@@ -718,7 +723,7 @@ public final class StrictMode {
 
             /**
              * Construct the VmPolicy instance.
-             *
+             * <p>
              * <p>Note: if no penalties are enabled before calling
              * <code>build</code>, {@link #penaltyLog} is implicitly
              * set.
@@ -727,8 +732,8 @@ public final class StrictMode {
                 // If there are detection bits set but no violation bits
                 // set, enable simple logging.
                 if (mMask != 0 &&
-                    (mMask & (PENALTY_DEATH | PENALTY_LOG |
-                              PENALTY_DROPBOX | PENALTY_DIALOG)) == 0) {
+                        (mMask & (PENALTY_DEATH | PENALTY_LOG |
+                                PENALTY_DROPBOX | PENALTY_DIALOG)) == 0) {
                     penaltyLog();
                 }
                 return new VmPolicy(mMask,
@@ -745,18 +750,19 @@ public final class StrictMode {
      */
     private static final ThreadLocal<ArrayList<ViolationInfo>> gatheredViolations =
             new ThreadLocal<ArrayList<ViolationInfo>>() {
-        @Override protected ArrayList<ViolationInfo> initialValue() {
-            // Starts null to avoid unnecessary allocations when
-            // checking whether there are any violations or not in
-            // hasGatheredViolations() below.
-            return null;
-        }
-    };
+                @Override
+                protected ArrayList<ViolationInfo> initialValue() {
+                    // Starts null to avoid unnecessary allocations when
+                    // checking whether there are any violations or not in
+                    // hasGatheredViolations() below.
+                    return null;
+                }
+            };
 
     /**
      * Sets the policy for what actions on the current thread should
      * be detected, as well as the penalty if such actions occur.
-     *
+     * <p>
      * <p>Internally this sets a thread-local variable which is
      * propagated across cross-process IPC calls, meaning you can
      * catch violations when a system service or another process
@@ -832,10 +838,10 @@ public final class StrictMode {
         }
     }
 
-     /**
+    /**
      * @hide
      */
-   private static class StrictModeDiskWriteViolation extends StrictModeViolation {
+    private static class StrictModeDiskWriteViolation extends StrictModeViolation {
         public StrictModeDiskWriteViolation(int policyMask) {
             super(policyMask, DETECT_DISK_WRITE, null);
         }
@@ -854,7 +860,6 @@ public final class StrictMode {
      * Returns the bitmask of the current thread's policy.
      *
      * @return the bitmask of all the DETECT_* and PENALTY_* bits currently enabled
-     *
      * @hide
      */
     public static int getThreadPolicyMask() {
@@ -880,7 +885,7 @@ public final class StrictMode {
      * can restore it at the end of a block.
      *
      * @return the old policy, to be passed to {@link #setThreadPolicy} to
-     *         restore the policy at the end of a block
+     * restore the policy at the end of a block
      */
     public static ThreadPolicy allowThreadDiskWrites() {
         int oldPolicyMask = getThreadPolicyMask();
@@ -899,7 +904,7 @@ public final class StrictMode {
      * can restore it at the end of a block.
      *
      * @return the old policy, to be passed to setThreadPolicy to
-     *         restore the policy.
+     * restore the policy.
      */
     public static ThreadPolicy allowThreadDiskReads() {
         int oldPolicyMask = getThreadPolicyMask();
@@ -1002,11 +1007,11 @@ public final class StrictMode {
      * Parses the BlockGuard policy mask out from the Exception's
      * getMessage() String value.  Kinda gross, but least
      * invasive.  :/
-     *
+     * <p>
      * Input is of the following forms:
-     *     "policy=137 violation=64"
-     *     "policy=137 violation=64 msg=Arbitrary text"
-     *
+     * "policy=137 violation=64"
+     * "policy=137 violation=64 msg=Arbitrary text"
+     * <p>
      * Returns 0 on failure, which is a valid policy, but not a
      * valid policy during a violation (else there must've been
      * some policy in effect to violate).
@@ -1053,14 +1058,16 @@ public final class StrictMode {
 
     private static final ThreadLocal<ArrayList<ViolationInfo>> violationsBeingTimed =
             new ThreadLocal<ArrayList<ViolationInfo>>() {
-        @Override protected ArrayList<ViolationInfo> initialValue() {
-            return new ArrayList<ViolationInfo>();
-        }
-    };
+                @Override
+                protected ArrayList<ViolationInfo> initialValue() {
+                    return new ArrayList<ViolationInfo>();
+                }
+            };
 
     // Note: only access this once verifying the thread has a Looper.
     private static final ThreadLocal<Handler> threadHandler = new ThreadLocal<Handler>() {
-        @Override protected Handler initialValue() {
+        @Override
+        protected Handler initialValue() {
             return new Handler();
         }
     };
@@ -1194,7 +1201,7 @@ public final class StrictMode {
             // TODO: if in gather mode, ignore Looper.myLooper() and always
             //       go into this immediate mode?
             if (looper == null ||
-                (info.policy & THREAD_PENALTY_MASK) == PENALTY_DEATH) {
+                    (info.policy & THREAD_PENALTY_MASK) == PENALTY_DEATH) {
                 info.durationMillis = -1;  // unknown (redundant, already set)
                 handleViolation(info);
                 return;
@@ -1232,30 +1239,30 @@ public final class StrictMode {
             // invalidates, _not_ by posting frame updates every 16
             // milliseconds.
             threadHandler.get().postAtFrontOfQueue(new Runnable() {
-                    public void run() {
-                        long loopFinishTime = SystemClock.uptimeMillis();
+                public void run() {
+                    long loopFinishTime = SystemClock.uptimeMillis();
 
-                        // Note: we do this early, before handling the
-                        // violation below, as handling the violation
-                        // may include PENALTY_DEATH and we don't want
-                        // to keep the red border on.
-                        if (windowManager != null) {
-                            try {
-                                windowManager.showStrictModeViolation(false);
-                            } catch (RemoteException unused) {
-                            }
+                    // Note: we do this early, before handling the
+                    // violation below, as handling the violation
+                    // may include PENALTY_DEATH and we don't want
+                    // to keep the red border on.
+                    if (windowManager != null) {
+                        try {
+                            windowManager.showStrictModeViolation(false);
+                        } catch (RemoteException unused) {
                         }
-
-                        for (int n = 0; n < records.size(); ++n) {
-                            ViolationInfo v = records.get(n);
-                            v.violationNumThisLoop = n + 1;
-                            v.durationMillis =
-                                    (int) (loopFinishTime - v.violationUptimeMillis);
-                            handleViolation(v);
-                        }
-                        records.clear();
                     }
-                });
+
+                    for (int n = 0; n < records.size(); ++n) {
+                        ViolationInfo v = records.get(n);
+                        v.violationNumThisLoop = n + 1;
+                        v.durationMillis =
+                                (int) (loopFinishTime - v.violationUptimeMillis);
+                        handleViolation(v);
+                    }
+                    records.clear();
+                }
+            });
         }
 
         // Note: It's possible (even quite likely) that the
@@ -1307,10 +1314,10 @@ public final class StrictMode {
                     Long.MAX_VALUE : (now - lastViolationTime);
 
             if ((info.policy & PENALTY_LOG) != 0 &&
-                timeSinceLastViolationMillis > MIN_LOG_INTERVAL_MS) {
+                    timeSinceLastViolationMillis > MIN_LOG_INTERVAL_MS) {
                 if (info.durationMillis != -1) {
                     Log.d(TAG, "StrictMode policy violation; ~duration=" +
-                          info.durationMillis + " ms: " + info.crashInfo.stackTrace);
+                            info.durationMillis + " ms: " + info.crashInfo.stackTrace);
                 } else {
                     Log.d(TAG, "StrictMode policy violation: " + info.crashInfo.stackTrace);
                 }
@@ -1323,7 +1330,7 @@ public final class StrictMode {
             int violationMaskSubset = 0;
 
             if ((info.policy & PENALTY_DIALOG) != 0 &&
-                timeSinceLastViolationMillis > MIN_DIALOG_INTERVAL_MS) {
+                    timeSinceLastViolationMillis > MIN_DIALOG_INTERVAL_MS) {
                 violationMaskSubset |= PENALTY_DIALOG;
             }
 
@@ -1357,9 +1364,9 @@ public final class StrictMode {
                     setThreadPolicyMask(0);
 
                     ActivityManagerNative.getDefault().handleApplicationStrictModeViolation(
-                        RuntimeInit.getApplicationObject(),
-                        violationMaskSubset,
-                        info);
+                            RuntimeInit.getApplicationObject(),
+                            violationMaskSubset,
+                            info);
                 } catch (RemoteException e) {
                     Log.e(TAG, "RemoteException trying to handle StrictMode violation", e);
                 } finally {
@@ -1408,9 +1415,9 @@ public final class StrictMode {
                         Log.d(TAG, "No activity manager; failed to Dropbox violation.");
                     } else {
                         am.handleApplicationStrictModeViolation(
-                            RuntimeInit.getApplicationObject(),
-                            violationMaskSubset,
-                            info);
+                                RuntimeInit.getApplicationObject(),
+                                violationMaskSubset,
+                                info);
                     }
                 } catch (RemoteException e) {
                     Log.e(TAG, "RemoteException handling StrictMode violation", e);
@@ -1422,7 +1429,7 @@ public final class StrictMode {
     }
 
     private static class AndroidCloseGuardReporter implements CloseGuard.Reporter {
-        public void report (String message, Throwable allocationSite) {
+        public void report(String message, Throwable allocationSite) {
             onVmPolicyViolation(message, allocationSite);
         }
     }
@@ -1430,7 +1437,8 @@ public final class StrictMode {
     /**
      * Called from Parcel.writeNoException()
      */
-    /* package */ static boolean hasGatheredViolations() {
+    /* package */
+    static boolean hasGatheredViolations() {
         return gatheredViolations.get() != null;
     }
 
@@ -1439,7 +1447,8 @@ public final class StrictMode {
      * don't incorrectly attribute it to the wrong caller on the next
      * Binder call on this thread.
      */
-    /* package */ static void clearGatheredViolations() {
+    /* package */
+    static void clearGatheredViolations() {
         gatheredViolations.set(null);
     }
 
@@ -1500,7 +1509,7 @@ public final class StrictMode {
             if (looper != null) {
                 MessageQueue mq = looper.mQueue;
                 if (policy.classInstanceLimit.size() == 0 ||
-                    (sVmPolicyMask & VM_PENALTY_MASK) == 0) {
+                        (sVmPolicyMask & VM_PENALTY_MASK) == 0) {
                     mq.removeIdleHandler(sProcessIdleHandler);
                     sIsIdlerRegistered = false;
                 } else if (!sIsIdlerRegistered) {
@@ -1522,7 +1531,7 @@ public final class StrictMode {
 
     /**
      * Enable the recommended StrictMode defaults, with violations just being logged.
-     *
+     * <p>
      * <p>This catches disk and network access on the main thread, as
      * well as leaked SQLite cursors and unclosed resources.  This is
      * simply a wrapper around {@link #setVmPolicy} and {@link
@@ -1530,13 +1539,13 @@ public final class StrictMode {
      */
     public static void enableDefaults() {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                                   .detectAll()
-                                   .penaltyLog()
-                                   .build());
+                .detectAll()
+                .penaltyLog()
+                .build());
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                               .detectAll()
-                               .penaltyLog()
-                               .build());
+                .detectAll()
+                .penaltyLog()
+                .build());
     }
 
     /**
@@ -1662,9 +1671,9 @@ public final class StrictMode {
                 setThreadPolicyMask(0);
 
                 ActivityManagerNative.getDefault().handleApplicationStrictModeViolation(
-                    RuntimeInit.getApplicationObject(),
-                    violationMaskSubset,
-                    info);
+                        RuntimeInit.getApplicationObject(),
+                        violationMaskSubset,
+                        info);
             } catch (RemoteException e) {
                 Log.e(TAG, "RemoteException trying to handle StrictMode violation", e);
             } finally {
@@ -1683,7 +1692,8 @@ public final class StrictMode {
     /**
      * Called from Parcel.writeNoException()
      */
-    /* package */ static void writeGatheredViolationsToParcel(Parcel p) {
+    /* package */
+    static void writeGatheredViolationsToParcel(Parcel p) {
         ArrayList<ViolationInfo> violations = gatheredViolations.get();
         if (violations == null) {
             p.writeInt(0);
@@ -1692,10 +1702,10 @@ public final class StrictMode {
             for (int i = 0; i < violations.size(); ++i) {
                 int start = p.dataPosition();
                 violations.get(i).writeToParcel(p, 0 /* unused flags? */);
-                int size = p.dataPosition()-start;
-                if (size > 10*1024) {
+                int size = p.dataPosition() - start;
+                if (size > 10 * 1024) {
                     Slog.d(TAG, "Wrote violation #" + i + " of " + violations.size() + ": "
-                            + (p.dataPosition()-start) + " bytes");
+                            + (p.dataPosition() - start) + " bytes");
                 }
             }
             if (LOG_V) Log.d(TAG, "wrote violations to response parcel; num=" + violations.size());
@@ -1704,13 +1714,15 @@ public final class StrictMode {
         gatheredViolations.set(null);
     }
 
-    private static class LogStackTrace extends Exception {}
+    private static class LogStackTrace extends Exception {
+    }
 
     /**
      * Called from Parcel.readException() when the exception is EX_STRICT_MODE_VIOLATIONS,
      * we here read back all the encoded violations.
      */
-    /* package */ static void readAndHandleBinderCallViolations(Parcel p) {
+    /* package */
+    static void readAndHandleBinderCallViolations(Parcel p) {
         // Our own stack trace to append
         StringWriter sw = new StringWriter();
         PrintWriter pw = new FastPrintWriter(sw, false, 256);
@@ -1768,7 +1780,7 @@ public final class StrictMode {
 
     /**
      * A tracked, critical time span.  (e.g. during an animation.)
-     *
+     * <p>
      * The object itself is a linked list node, to avoid any allocations
      * during rapid span entries and exits.
      *
@@ -1841,14 +1853,14 @@ public final class StrictMode {
 
     // The no-op span that's used in user builds.
     private static final Span NO_OP_SPAN = new Span() {
-            public void finish() {
-                // Do nothing.
-            }
-        };
+        public void finish() {
+            // Do nothing.
+        }
+    };
 
     /**
      * Linked lists of active spans and a freelist.
-     *
+     * <p>
      * Locking notes: there's one of these structures per thread and
      * all members of this structure (as well as the Span nodes under
      * it) are guarded by the ThreadSpanState object instance.  While
@@ -1866,10 +1878,11 @@ public final class StrictMode {
 
     private static final ThreadLocal<ThreadSpanState> sThisThreadSpanState =
             new ThreadLocal<ThreadSpanState>() {
-        @Override protected ThreadSpanState initialValue() {
-            return new ThreadSpanState();
-        }
-    };
+                @Override
+                protected ThreadSpanState initialValue() {
+                    return new ThreadSpanState();
+                }
+            };
 
     private static Singleton<IWindowManager> sWindowManager = new Singleton<IWindowManager>() {
         protected IWindowManager create() {
@@ -1879,15 +1892,15 @@ public final class StrictMode {
 
     /**
      * Enter a named critical span (e.g. an animation)
-     *
+     * <p>
      * <p>The name is an arbitary label (or tag) that will be applied
      * to any strictmode violation that happens while this span is
      * active.  You must call finish() on the span when done.
-     *
+     * <p>
      * <p>This will never return null, but on devices without debugging
      * enabled, this may return a dummy object on which the finish()
      * method is a no-op.
-     *
+     * <p>
      * <p>TODO: add CloseGuard to this, verifying callers call finish.
      *
      * @hide
@@ -1973,6 +1986,7 @@ public final class StrictMode {
     /**
      * Returns an object that is used to track instances of activites.
      * The activity should store a reference to the tracker object in one of its fields.
+     *
      * @hide
      */
     public static Object trackActivity(Object instance) {
@@ -2181,7 +2195,7 @@ public final class StrictMode {
          * Create an instance of ViolationInfo initialized from a Parcel.
          *
          * @param unsetGatheringBit if true, the caller is the root caller
-         *   and the gathering penalty should be removed.
+         *                          and the gathering penalty should be removed.
          */
         public ViolationInfo(Parcel in, boolean unsetGatheringBit) {
             crashInfo = new ApplicationErrorReport.CrashInfo(in);
@@ -2214,8 +2228,8 @@ public final class StrictMode {
             dest.writeLong(numInstances);
             dest.writeString(broadcastIntentAction);
             dest.writeStringArray(tags);
-            int total = dest.dataPosition()-start;
-            if (total > 10*1024) {
+            int total = dest.dataPosition() - start;
+            if (total > 10 * 1024) {
                 Slog.d(TAG, "VIO: policy=" + policy + " dur=" + durationMillis
                         + " numLoop=" + violationNumThisLoop
                         + " anim=" + numAnimationsRunning
@@ -2223,7 +2237,7 @@ public final class StrictMode {
                         + " numInst=" + numInstances);
                 Slog.d(TAG, "VIO: action=" + broadcastIntentAction);
                 Slog.d(TAG, "VIO: tags=" + Arrays.toString(tags));
-                Slog.d(TAG, "VIO: TOTAL BYTES WRITTEN: " + (dest.dataPosition()-start));
+                Slog.d(TAG, "VIO: TOTAL BYTES WRITTEN: " + (dest.dataPosition() - start));
             }
         }
 
@@ -2270,8 +2284,8 @@ public final class StrictMode {
         final int mLimit;
 
         private static final StackTraceElement[] FAKE_STACK = {
-            new StackTraceElement("android.os.StrictMode", "setClassInstanceLimit",
-                                  "StrictMode.java", 1)
+                new StackTraceElement("android.os.StrictMode", "setClassInstanceLimit",
+                        "StrictMode.java", 1)
         };
 
         public InstanceCountViolation(Class klass, long instances, int limit) {

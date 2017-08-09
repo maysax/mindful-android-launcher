@@ -63,7 +63,7 @@ public class ColorPickerDialog extends DialogFragment implements OnColorSelected
     }
 
     public static ColorPickerDialog newInstance(int titleResId, int[] colors, int selectedColor,
-            int columns, int size) {
+                                                int columns, int size) {
         ColorPickerDialog ret = new ColorPickerDialog();
         ret.initialize(titleResId, colors, selectedColor, columns, size);
         return ret;
@@ -118,9 +118,9 @@ public class ColorPickerDialog extends DialogFragment implements OnColorSelected
         }
 
         mAlertDialog = new AlertDialog.Builder(activity)
-            .setTitle(mTitleResId)
-            .setView(view)
-            .create();
+                .setTitle(mTitleResId)
+                .setView(view)
+                .create();
         mAlertDialog.setCanceledOnTouchOutside(true);
         return mAlertDialog;
     }

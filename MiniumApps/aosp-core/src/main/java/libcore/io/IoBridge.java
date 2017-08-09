@@ -23,6 +23,7 @@ import android.system.StructLinger;
 import android.system.StructPollfd;
 import android.system.StructTimeval;
 import android.util.MutableInt;
+
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -42,6 +43,7 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+
 import static android.system.OsConstants.*;
 
 /**
@@ -187,7 +189,7 @@ public final class IoBridge {
      * Closes the supplied file descriptor and sends a signal to any threads are currently blocking.
      * In order for the signal to be sent the blocked threads must have registered with
      * the AsynchronousCloseMonitor before they entered the blocking operation.
-     *
+     * <p>
      * <p>This method is a no-op if passed a {@code null} or already-closed file descriptor.
      */
     public static void closeAndSignalBlockedThreads(FileDescriptor fd) throws IOException {
@@ -209,7 +211,7 @@ public final class IoBridge {
     public static boolean isConnected(FileDescriptor fd, InetAddress inetAddress, int port, int timeoutMs, int remainingTimeoutMs) throws IOException {
         ErrnoException cause;
         try {
-            StructPollfd[] pollFds = new StructPollfd[] { new StructPollfd() };
+            StructPollfd[] pollFds = new StructPollfd[]{new StructPollfd()};
             pollFds[0].fd = fd;
             pollFds[0].events = (short) POLLOUT;
             int rc = Libcore.os.poll(pollFds, remainingTimeoutMs);
@@ -261,48 +263,48 @@ public final class IoBridge {
 
     private static Object getSocketOptionErrno(FileDescriptor fd, int option) throws ErrnoException, SocketException {
         switch (option) {
-        case SocketOptions.IP_MULTICAST_IF:
-            // This is IPv4-only.
-            return Libcore.os.getsockoptInAddr(fd, IPPROTO_IP, IP_MULTICAST_IF);
-        case SocketOptions.IP_MULTICAST_IF2:
-            // This is IPv6-only.
-            return Libcore.os.getsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_IF);
-        case SocketOptions.IP_MULTICAST_LOOP:
-            // Since setting this from java.net always sets IPv4 and IPv6 to the same value,
-            // it doesn't matter which we return.
-            return booleanFromInt(Libcore.os.getsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP));
-        case IoBridge.JAVA_IP_MULTICAST_TTL:
-            // Since setting this from java.net always sets IPv4 and IPv6 to the same value,
-            // it doesn't matter which we return.
-            return Libcore.os.getsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS);
-        case SocketOptions.IP_TOS:
-            // Since setting this from java.net always sets IPv4 and IPv6 to the same value,
-            // it doesn't matter which we return.
-            return Libcore.os.getsockoptInt(fd, IPPROTO_IPV6, IPV6_TCLASS);
-        case SocketOptions.SO_BROADCAST:
-            return booleanFromInt(Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_BROADCAST));
-        case SocketOptions.SO_KEEPALIVE:
-            return booleanFromInt(Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_KEEPALIVE));
-        case SocketOptions.SO_LINGER:
-            StructLinger linger = Libcore.os.getsockoptLinger(fd, SOL_SOCKET, SO_LINGER);
-            if (!linger.isOn()) {
-                return false;
-            }
-            return linger.l_linger;
-        case SocketOptions.SO_OOBINLINE:
-            return booleanFromInt(Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_OOBINLINE));
-        case SocketOptions.SO_RCVBUF:
-            return Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_RCVBUF);
-        case SocketOptions.SO_REUSEADDR:
-            return booleanFromInt(Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_REUSEADDR));
-        case SocketOptions.SO_SNDBUF:
-            return Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_SNDBUF);
-        case SocketOptions.SO_TIMEOUT:
-            return (int) Libcore.os.getsockoptTimeval(fd, SOL_SOCKET, SO_RCVTIMEO).toMillis();
-        case SocketOptions.TCP_NODELAY:
-            return booleanFromInt(Libcore.os.getsockoptInt(fd, IPPROTO_TCP, TCP_NODELAY));
-        default:
-            throw new SocketException("Unknown socket option: " + option);
+            case SocketOptions.IP_MULTICAST_IF:
+                // This is IPv4-only.
+                return Libcore.os.getsockoptInAddr(fd, IPPROTO_IP, IP_MULTICAST_IF);
+            case SocketOptions.IP_MULTICAST_IF2:
+                // This is IPv6-only.
+                return Libcore.os.getsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_IF);
+            case SocketOptions.IP_MULTICAST_LOOP:
+                // Since setting this from java.net always sets IPv4 and IPv6 to the same value,
+                // it doesn't matter which we return.
+                return booleanFromInt(Libcore.os.getsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP));
+            case IoBridge.JAVA_IP_MULTICAST_TTL:
+                // Since setting this from java.net always sets IPv4 and IPv6 to the same value,
+                // it doesn't matter which we return.
+                return Libcore.os.getsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS);
+            case SocketOptions.IP_TOS:
+                // Since setting this from java.net always sets IPv4 and IPv6 to the same value,
+                // it doesn't matter which we return.
+                return Libcore.os.getsockoptInt(fd, IPPROTO_IPV6, IPV6_TCLASS);
+            case SocketOptions.SO_BROADCAST:
+                return booleanFromInt(Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_BROADCAST));
+            case SocketOptions.SO_KEEPALIVE:
+                return booleanFromInt(Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_KEEPALIVE));
+            case SocketOptions.SO_LINGER:
+                StructLinger linger = Libcore.os.getsockoptLinger(fd, SOL_SOCKET, SO_LINGER);
+                if (!linger.isOn()) {
+                    return false;
+                }
+                return linger.l_linger;
+            case SocketOptions.SO_OOBINLINE:
+                return booleanFromInt(Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_OOBINLINE));
+            case SocketOptions.SO_RCVBUF:
+                return Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_RCVBUF);
+            case SocketOptions.SO_REUSEADDR:
+                return booleanFromInt(Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_REUSEADDR));
+            case SocketOptions.SO_SNDBUF:
+                return Libcore.os.getsockoptInt(fd, SOL_SOCKET, SO_SNDBUF);
+            case SocketOptions.SO_TIMEOUT:
+                return (int) Libcore.os.getsockoptTimeval(fd, SOL_SOCKET, SO_RCVTIMEO).toMillis();
+            case SocketOptions.TCP_NODELAY:
+                return booleanFromInt(Libcore.os.getsockoptInt(fd, IPPROTO_TCP, TCP_NODELAY));
+            default:
+                throw new SocketException("Unknown socket option: " + option);
         }
     }
 
@@ -328,87 +330,85 @@ public final class IoBridge {
 
     private static void setSocketOptionErrno(FileDescriptor fd, int option, Object value) throws ErrnoException, SocketException {
         switch (option) {
-        case SocketOptions.IP_MULTICAST_IF:
-            throw new UnsupportedOperationException("Use IP_MULTICAST_IF2 on Android");
-        case SocketOptions.IP_MULTICAST_IF2:
-            // Although IPv6 was cleaned up to use int, IPv4 uses an ip_mreqn containing an int.
-            Libcore.os.setsockoptIpMreqn(fd, IPPROTO_IP, IP_MULTICAST_IF, (Integer) value);
-            Libcore.os.setsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_IF, (Integer) value);
-            return;
-        case SocketOptions.IP_MULTICAST_LOOP:
-            // Although IPv6 was cleaned up to use int, IPv4 multicast loopback uses a byte.
-            Libcore.os.setsockoptByte(fd, IPPROTO_IP, IP_MULTICAST_LOOP, booleanToInt((Boolean) value));
-            Libcore.os.setsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, booleanToInt((Boolean) value));
-            return;
-        case IoBridge.JAVA_IP_MULTICAST_TTL:
-            // Although IPv6 was cleaned up to use int, and IPv4 non-multicast TTL uses int,
-            // IPv4 multicast TTL uses a byte.
-            Libcore.os.setsockoptByte(fd, IPPROTO_IP, IP_MULTICAST_TTL, (Integer) value);
-            Libcore.os.setsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, (Integer) value);
-            return;
-        case SocketOptions.IP_TOS:
-            Libcore.os.setsockoptInt(fd, IPPROTO_IP, IP_TOS, (Integer) value);
-            Libcore.os.setsockoptInt(fd, IPPROTO_IPV6, IPV6_TCLASS, (Integer) value);
-            return;
-        case SocketOptions.SO_BROADCAST:
-            Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_BROADCAST, booleanToInt((Boolean) value));
-            return;
-        case SocketOptions.SO_KEEPALIVE:
-            Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_KEEPALIVE, booleanToInt((Boolean) value));
-            return;
-        case SocketOptions.SO_LINGER:
-            boolean on = false;
-            int seconds = 0;
-            if (value instanceof Integer) {
-                on = true;
-                seconds = Math.min((Integer) value, 65535);
+            case SocketOptions.IP_MULTICAST_IF:
+                throw new UnsupportedOperationException("Use IP_MULTICAST_IF2 on Android");
+            case SocketOptions.IP_MULTICAST_IF2:
+                // Although IPv6 was cleaned up to use int, IPv4 uses an ip_mreqn containing an int.
+                Libcore.os.setsockoptIpMreqn(fd, IPPROTO_IP, IP_MULTICAST_IF, (Integer) value);
+                Libcore.os.setsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_IF, (Integer) value);
+                return;
+            case SocketOptions.IP_MULTICAST_LOOP:
+                // Although IPv6 was cleaned up to use int, IPv4 multicast loopback uses a byte.
+                Libcore.os.setsockoptByte(fd, IPPROTO_IP, IP_MULTICAST_LOOP, booleanToInt((Boolean) value));
+                Libcore.os.setsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, booleanToInt((Boolean) value));
+                return;
+            case IoBridge.JAVA_IP_MULTICAST_TTL:
+                // Although IPv6 was cleaned up to use int, and IPv4 non-multicast TTL uses int,
+                // IPv4 multicast TTL uses a byte.
+                Libcore.os.setsockoptByte(fd, IPPROTO_IP, IP_MULTICAST_TTL, (Integer) value);
+                Libcore.os.setsockoptInt(fd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, (Integer) value);
+                return;
+            case SocketOptions.IP_TOS:
+                Libcore.os.setsockoptInt(fd, IPPROTO_IP, IP_TOS, (Integer) value);
+                Libcore.os.setsockoptInt(fd, IPPROTO_IPV6, IPV6_TCLASS, (Integer) value);
+                return;
+            case SocketOptions.SO_BROADCAST:
+                Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_BROADCAST, booleanToInt((Boolean) value));
+                return;
+            case SocketOptions.SO_KEEPALIVE:
+                Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_KEEPALIVE, booleanToInt((Boolean) value));
+                return;
+            case SocketOptions.SO_LINGER:
+                boolean on = false;
+                int seconds = 0;
+                if (value instanceof Integer) {
+                    on = true;
+                    seconds = Math.min((Integer) value, 65535);
+                }
+                StructLinger linger = new StructLinger(booleanToInt(on), seconds);
+                Libcore.os.setsockoptLinger(fd, SOL_SOCKET, SO_LINGER, linger);
+                return;
+            case SocketOptions.SO_OOBINLINE:
+                Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_OOBINLINE, booleanToInt((Boolean) value));
+                return;
+            case SocketOptions.SO_RCVBUF:
+                Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_RCVBUF, (Integer) value);
+                return;
+            case SocketOptions.SO_REUSEADDR:
+                Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_REUSEADDR, booleanToInt((Boolean) value));
+                return;
+            case SocketOptions.SO_SNDBUF:
+                Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_SNDBUF, (Integer) value);
+                return;
+            case SocketOptions.SO_TIMEOUT:
+                int millis = (Integer) value;
+                StructTimeval tv = StructTimeval.fromMillis(millis);
+                Libcore.os.setsockoptTimeval(fd, SOL_SOCKET, SO_RCVTIMEO, tv);
+                return;
+            case SocketOptions.TCP_NODELAY:
+                Libcore.os.setsockoptInt(fd, IPPROTO_TCP, TCP_NODELAY, booleanToInt((Boolean) value));
+                return;
+            case IoBridge.JAVA_MCAST_JOIN_GROUP:
+            case IoBridge.JAVA_MCAST_LEAVE_GROUP: {
+                StructGroupReq groupReq = (StructGroupReq) value;
+                int level = (groupReq.gr_group instanceof Inet4Address) ? IPPROTO_IP : IPPROTO_IPV6;
+                int op = (option == JAVA_MCAST_JOIN_GROUP) ? MCAST_JOIN_GROUP : MCAST_LEAVE_GROUP;
+                Libcore.os.setsockoptGroupReq(fd, level, op, groupReq);
+                return;
             }
-            StructLinger linger = new StructLinger(booleanToInt(on), seconds);
-            Libcore.os.setsockoptLinger(fd, SOL_SOCKET, SO_LINGER, linger);
-            return;
-        case SocketOptions.SO_OOBINLINE:
-            Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_OOBINLINE, booleanToInt((Boolean) value));
-            return;
-        case SocketOptions.SO_RCVBUF:
-            Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_RCVBUF, (Integer) value);
-            return;
-        case SocketOptions.SO_REUSEADDR:
-            Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_REUSEADDR, booleanToInt((Boolean) value));
-            return;
-        case SocketOptions.SO_SNDBUF:
-            Libcore.os.setsockoptInt(fd, SOL_SOCKET, SO_SNDBUF, (Integer) value);
-            return;
-        case SocketOptions.SO_TIMEOUT:
-            int millis = (Integer) value;
-            StructTimeval tv = StructTimeval.fromMillis(millis);
-            Libcore.os.setsockoptTimeval(fd, SOL_SOCKET, SO_RCVTIMEO, tv);
-            return;
-        case SocketOptions.TCP_NODELAY:
-            Libcore.os.setsockoptInt(fd, IPPROTO_TCP, TCP_NODELAY, booleanToInt((Boolean) value));
-            return;
-        case IoBridge.JAVA_MCAST_JOIN_GROUP:
-        case IoBridge.JAVA_MCAST_LEAVE_GROUP:
-        {
-            StructGroupReq groupReq = (StructGroupReq) value;
-            int level = (groupReq.gr_group instanceof Inet4Address) ? IPPROTO_IP : IPPROTO_IPV6;
-            int op = (option == JAVA_MCAST_JOIN_GROUP) ? MCAST_JOIN_GROUP : MCAST_LEAVE_GROUP;
-            Libcore.os.setsockoptGroupReq(fd, level, op, groupReq);
-            return;
-        }
-        case IoBridge.JAVA_MCAST_JOIN_SOURCE_GROUP:
-        case IoBridge.JAVA_MCAST_LEAVE_SOURCE_GROUP:
-        case IoBridge.JAVA_MCAST_BLOCK_SOURCE:
-        case IoBridge.JAVA_MCAST_UNBLOCK_SOURCE:
-        {
-            StructGroupSourceReq groupSourceReq = (StructGroupSourceReq) value;
-            int level = (groupSourceReq.gsr_group instanceof Inet4Address)
-                ? IPPROTO_IP : IPPROTO_IPV6;
-            int op = getGroupSourceReqOp(option);
-            Libcore.os.setsockoptGroupSourceReq(fd, level, op, groupSourceReq);
-            return;
-        }
-        default:
-            throw new SocketException("Unknown socket option: " + option);
+            case IoBridge.JAVA_MCAST_JOIN_SOURCE_GROUP:
+            case IoBridge.JAVA_MCAST_LEAVE_SOURCE_GROUP:
+            case IoBridge.JAVA_MCAST_BLOCK_SOURCE:
+            case IoBridge.JAVA_MCAST_UNBLOCK_SOURCE: {
+                StructGroupSourceReq groupSourceReq = (StructGroupSourceReq) value;
+                int level = (groupSourceReq.gsr_group instanceof Inet4Address)
+                        ? IPPROTO_IP : IPPROTO_IPV6;
+                int op = getGroupSourceReqOp(option);
+                Libcore.os.setsockoptGroupSourceReq(fd, level, op, groupSourceReq);
+                return;
+            }
+            default:
+                throw new SocketException("Unknown socket option: " + option);
         }
     }
 

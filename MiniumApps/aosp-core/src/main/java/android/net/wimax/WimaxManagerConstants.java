@@ -3,8 +3,7 @@ package android.net.wimax;
 /**
  * {@hide}
  */
-public class WimaxManagerConstants
-{
+public class WimaxManagerConstants {
 
     /**
      * Used by android.net.wimax.WimaxManager for handling management of
@@ -18,7 +17,7 @@ public class WimaxManagerConstants
      * Another extra provides the previous state, if available.
      */
     public static final String NET_4G_STATE_CHANGED_ACTION =
-        "android.net.fourG.NET_4G_STATE_CHANGED";
+            "android.net.fourG.NET_4G_STATE_CHANGED";
 
     /**
      * The lookup key for an int that indicates whether Wimax is enabled,
@@ -32,15 +31,15 @@ public class WimaxManagerConstants
      * initializing, initialized, unknown and ready. One extra provides this state as an int.
      * Another extra provides the previous state, if available.
      */
-    public static final String  WIMAX_NETWORK_STATE_CHANGED_ACTION =
-        "android.net.fourG.wimax.WIMAX_NETWORK_STATE_CHANGED";
+    public static final String WIMAX_NETWORK_STATE_CHANGED_ACTION =
+            "android.net.fourG.wimax.WIMAX_NETWORK_STATE_CHANGED";
 
     /**
      * Broadcast intent action indicating that Wimax signal level has been changed.
      * Level varies from 0 to 3.
      */
     public static final String SIGNAL_LEVEL_CHANGED_ACTION =
-        "android.net.wimax.SIGNAL_LEVEL_CHANGED";
+            "android.net.wimax.SIGNAL_LEVEL_CHANGED";
 
     /**
      * The lookup key for an int that indicates whether Wimax state is

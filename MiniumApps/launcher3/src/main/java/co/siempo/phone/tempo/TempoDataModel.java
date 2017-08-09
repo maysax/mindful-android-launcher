@@ -35,11 +35,11 @@ public class TempoDataModel {
         this.id = id;
     }
 
-    public ArrayList<TempoDataModel> getDefaultTempoDataModel(){
+    public ArrayList<TempoDataModel> getDefaultTempoDataModel() {
         String[] subjects =
-                {"Allow favorites","Allow calls"};
-        ArrayList<TempoDataModel>tempoList = new ArrayList<>();
-        for (int i= 0 ; i<subjects.length; i++){
+                {"Allow favorites", "Allow calls"};
+        ArrayList<TempoDataModel> tempoList = new ArrayList<>();
+        for (int i = 0; i < subjects.length; i++) {
             TempoDataModel tempoDataModel = new TempoDataModel();
             tempoDataModel.setId(i);
             tempoDataModel.setName(subjects[i]);
@@ -49,16 +49,16 @@ public class TempoDataModel {
         return tempoList;
     }
 
-    public ArrayList<TempoDataModel> getTempoDataModel(boolean b, boolean b1){
+    public ArrayList<TempoDataModel> getTempoDataModel(boolean b, boolean b1) {
         String[] subjects =
-                {"Allow favorites","Allow calls"};
-        boolean [] bools = {b, b1};
-        ArrayList<TempoDataModel>tempoList = new ArrayList<>();
-        for (int i= 0 ; i<subjects.length; i++){
+                {"Allow favorites", "Allow calls"};
+        boolean[] bools = {b, b1};
+        ArrayList<TempoDataModel> tempoList = new ArrayList<>();
+        for (int i = 0; i < subjects.length; i++) {
             TempoDataModel tempoDataModel = new TempoDataModel();
             tempoDataModel.setId(i);
             tempoDataModel.setName(subjects[i]);
-            tempoDataModel.setStatus(bools [i]);
+            tempoDataModel.setStatus(bools[i]);
             tempoList.add(tempoDataModel);
         }
         return tempoList;

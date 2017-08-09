@@ -29,7 +29,7 @@ public final class GroupListItem {
     private final int mMemberCount;
 
     public GroupListItem(String accountName, String accountType, String dataSet, long groupId,
-            String title, boolean isFirstGroupInAccount, int memberCount) {
+                         String title, boolean isFirstGroupInAccount, int memberCount) {
         mAccountName = accountName;
         mAccountType = accountType;
         mDataSet = dataSet;

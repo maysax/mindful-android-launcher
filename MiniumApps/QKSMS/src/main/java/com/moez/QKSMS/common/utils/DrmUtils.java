@@ -29,7 +29,9 @@ import minium.co.core.app.CoreApplication;
 public class DrmUtils {
     private static final String TAG = "DrmUtils";
 
-    /** The MIME type of special DRM files */
+    /**
+     * The MIME type of special DRM files
+     */
     private static final String EXTENSION_ANDROID_FWDL = ".fl";
 
     private DrmUtils() {

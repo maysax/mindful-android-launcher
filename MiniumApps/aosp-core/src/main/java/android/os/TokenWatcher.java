@@ -16,31 +16,29 @@
 
 package android.os;
 
+import android.util.Log;
+
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.WeakHashMap;
 import java.util.Set;
-import android.util.Log;
+import java.util.WeakHashMap;
 
 /**
  * Helper class that helps you use IBinder objects as reference counted
  * tokens.  IBinders make good tokens because we find out when they are
  * removed
- *
  */
-public abstract class TokenWatcher
-{
+public abstract class TokenWatcher {
     /**
      * Construct the TokenWatcher
      *
-     * @param h A handler to call {@link #acquired} and {@link #released}
-     * on.  If you don't care, just call it like this, although your thread
-     * will have to be a Looper thread.
-     * <code>new TokenWatcher(new Handler())</code>
+     * @param h   A handler to call {@link #acquired} and {@link #released}
+     *            on.  If you don't care, just call it like this, although your thread
+     *            will have to be a Looper thread.
+     *            <code>new TokenWatcher(new Handler())</code>
      * @param tag A debugging tag for this TokenWatcher
      */
-    public TokenWatcher(Handler h, String tag)
-    {
+    public TokenWatcher(Handler h, String tag) {
         mHandler = h;
         mTag = tag != null ? tag : "TokenWatcher";
     }
@@ -59,14 +57,13 @@ public abstract class TokenWatcher
      * Record that this token has been acquired.  When acquire is called, and
      * the current count is 0, the acquired method is called on the given
      * handler.
-     * 
+     *
      * @param token An IBinder object.  If this token has already been acquired,
      *              no action is taken.
      * @param tag   A string used by the {@link #dump} method for debugging,
      *              to see who has references.
      */
-    public void acquire(IBinder token, String tag)
-    {
+    public void acquire(IBinder token, String tag) {
         synchronized (mTokens) {
             // explicitly checked to avoid bogus sendNotification calls because
             // of the WeakHashMap and the GC
@@ -87,8 +84,7 @@ public abstract class TokenWatcher
         }
     }
 
-    public void cleanup(IBinder token, boolean unlink)
-    {
+    public void cleanup(IBinder token, boolean unlink) {
         synchronized (mTokens) {
             Death d = mTokens.remove(token);
             if (unlink && d != null) {
@@ -103,20 +99,17 @@ public abstract class TokenWatcher
         }
     }
 
-    public void release(IBinder token)
-    {
+    public void release(IBinder token) {
         cleanup(token, true);
     }
 
-    public boolean isAcquired()
-    {
+    public boolean isAcquired() {
         synchronized (mTokens) {
             return mAcquired;
         }
     }
 
-    public void dump()
-    {
+    public void dump() {
         ArrayList<String> a = dumpInternal();
         for (String s : a) {
             Log.i(mTag, s);
@@ -136,7 +129,7 @@ public abstract class TokenWatcher
             Set<IBinder> keys = mTokens.keySet();
             a.add("Token count: " + mTokens.size());
             int i = 0;
-            for (IBinder b: keys) {
+            for (IBinder b : keys) {
                 a.add("[" + i + "] " + mTokens.get(b).tag + " - " + b);
                 i++;
             }
@@ -145,8 +138,7 @@ public abstract class TokenWatcher
     }
 
     private Runnable mNotificationTask = new Runnable() {
-        public void run()
-        {
+        public void run() {
             int value;
             synchronized (mTokens) {
                 value = mNotificationQueue;
@@ -154,22 +146,19 @@ public abstract class TokenWatcher
             }
             if (value == 1) {
                 acquired();
-            }
-            else if (value == 0) {
+            } else if (value == 0) {
                 released();
             }
         }
     };
 
-    private void sendNotificationLocked(boolean on)
-    {
+    private void sendNotificationLocked(boolean on) {
         int value = on ? 1 : 0;
         if (mNotificationQueue == -1) {
             // empty
             mNotificationQueue = value;
             mHandler.post(mNotificationTask);
-        }
-        else if (mNotificationQueue != value) {
+        } else if (mNotificationQueue != value) {
             // it's a pair, so cancel it
             mNotificationQueue = -1;
             mHandler.removeCallbacks(mNotificationTask);
@@ -177,37 +166,32 @@ public abstract class TokenWatcher
         // else, same so do nothing -- maybe we should warn?
     }
 
-    private class Death implements IBinder.DeathRecipient
-    {
+    private class Death implements IBinder.DeathRecipient {
         IBinder token;
         String tag;
 
-        Death(IBinder token, String tag)
-        {
+        Death(IBinder token, String tag) {
             this.token = token;
             this.tag = tag;
         }
 
-        public void binderDied()
-        {
+        public void binderDied() {
             cleanup(token, false);
         }
 
-        protected void finalize() throws Throwable
-        {
+        protected void finalize() throws Throwable {
             try {
                 if (token != null) {
                     Log.w(mTag, "cleaning up leaked reference: " + tag);
                     release(token);
                 }
-            }
-            finally {
+            } finally {
                 super.finalize();
             }
         }
     }
 
-    private WeakHashMap<IBinder,Death> mTokens = new WeakHashMap<IBinder,Death>();
+    private WeakHashMap<IBinder, Death> mTokens = new WeakHashMap<IBinder, Death>();
     private Handler mHandler;
     private String mTag;
     private int mNotificationQueue = -1;

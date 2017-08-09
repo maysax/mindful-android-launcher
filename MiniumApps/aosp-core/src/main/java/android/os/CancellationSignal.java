@@ -92,15 +92,15 @@ public final class CancellationSignal {
 
     /**
      * Sets the cancellation listener to be called when canceled.
-     *
+     * <p>
      * This method is intended to be used by the recipient of a cancellation signal
      * such as a database or a content provider to handle cancellation requests
      * while performing a long-running operation.  This method is not intended to be
      * used by applications themselves.
-     *
+     * <p>
      * If {@link CancellationSignal#cancel} has already been called, then the provided
      * listener is invoked immediately.
-     *
+     * <p>
      * This method is guaranteed that the listener will not be called after it
      * has been removed.
      *
@@ -123,15 +123,14 @@ public final class CancellationSignal {
 
     /**
      * Sets the remote transport.
-     *
+     * <p>
      * If {@link CancellationSignal#cancel} has already been called, then the provided
      * remote transport is canceled immediately.
-     *
+     * <p>
      * This method is guaranteed that the remote transport will not be called after it
      * has been removed.
      *
      * @param remote The remote transport, or null to remove.
-     *
      * @hide
      */
     public void setRemote(ICancellationSignal remote) {
@@ -166,7 +165,6 @@ public final class CancellationSignal {
      * a Binder function and subsequently used to dispatch a cancellation signal.
      *
      * @return The new cancellation signal transport.
-     *
      * @hide
      */
     public static ICancellationSignal createTransport() {
@@ -178,12 +176,11 @@ public final class CancellationSignal {
      *
      * @param transport The locally created transport, or null if none.
      * @return The associated cancellation signal, or null if none.
-     *
      * @hide
      */
     public static CancellationSignal fromTransport(ICancellationSignal transport) {
         if (transport instanceof Transport) {
-            return ((Transport)transport).mCancellationSignal;
+            return ((Transport) transport).mCancellationSignal;
         }
         return null;
     }

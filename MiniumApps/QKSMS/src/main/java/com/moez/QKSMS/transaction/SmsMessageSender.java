@@ -47,15 +47,15 @@ public class SmsMessageSender implements MessageSender {
     private static final String TAG = "SmsMessageSender";
 
     // Default preference values
-    private static final boolean DEFAULT_DELIVERY_REPORT_MODE  = false;
+    private static final boolean DEFAULT_DELIVERY_REPORT_MODE = false;
 
-    private static final String[] SERVICE_CENTER_PROJECTION = new String[] {
-        Sms.Conversations.REPLY_PATH_PRESENT,
-        Sms.Conversations.SERVICE_CENTER,
+    private static final String[] SERVICE_CENTER_PROJECTION = new String[]{
+            Sms.Conversations.REPLY_PATH_PRESENT,
+            Sms.Conversations.SERVICE_CENTER,
     };
 
     private static final int COLUMN_REPLY_PATH_PRESENT = 0;
-    private static final int COLUMN_SERVICE_CENTER     = 1;
+    private static final int COLUMN_SERVICE_CENTER = 1;
 
     public SmsMessageSender(Context context, String[] dests, String msgText, long threadId) {
         mContext = context;
@@ -108,12 +108,12 @@ public class SmsMessageSender implements MessageSender {
 
     /**
      * Get the service center to use for a reply.
-     *
+     * <p>
      * The rule from TS 23.040 D.6 is that we send reply messages to
      * the service center of the message to which we're replying, but
      * only if we haven't already replied to that message and only if
      * <code>TP-Reply-Path</code> was set in that message.
-     *
+     * <p>
      * Therefore, return the service center from the most recent
      * message in the conversation, but only if it is a message from
      * the other party, and only if <code>TP-Reply-Path</code> is set.
@@ -125,8 +125,8 @@ public class SmsMessageSender implements MessageSender {
 
         try {
             cursor = SqliteWrapper.query(mContext, mContext.getContentResolver(),
-                            Inbox.CONTENT_URI, SERVICE_CENTER_PROJECTION,
-                            "thread_id = " + threadId, null, "date DESC");
+                    Inbox.CONTENT_URI, SERVICE_CENTER_PROJECTION,
+                    "thread_id = " + threadId, null, "date DESC");
 
             if ((cursor == null) || !cursor.moveToFirst()) {
                 return null;

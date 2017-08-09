@@ -23,6 +23,7 @@ public class CloseGuard {
     private static Method m_open;
     private static Method m_close;
     private static Method m_warnIfOpen;
+
     static {
         try {
             Class<?> c_closeGuard = Class.forName("dalvik.system.CloseGuard");
