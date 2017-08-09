@@ -128,6 +128,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         linSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                linSecond.setClickable(false);
                 animateOut();
             }
         });
@@ -328,6 +329,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             @Override
             public void onAnimationEnd(Animation animation) {
                 try {
+                    linSecond.setClickable(true);
                     EventBus.getDefault().post(new NotificationTrayEvent(false));
                     getActivity().getFragmentManager().popBackStack();
                     getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
