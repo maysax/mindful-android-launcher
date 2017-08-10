@@ -17,8 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.Map;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,6 +33,8 @@ import android.widget.TextView;
 
 import com.android.mms.LogTag;
 import com.android.mms.R;
+
+import java.util.Map;
 
 /**
  * This is a basic view to show and edit a slide.
@@ -66,12 +66,12 @@ public class BasicSlideEditorView extends LinearLayout implements
         mEditText = (EditText) findViewById(R.id.text_message);
         mEditText.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count,
-                    int after) {
+                                          int after) {
                 // TODO Auto-generated method stub
             }
 
             public void onTextChanged(CharSequence s, int start, int before,
-                    int count) {
+                                      int count) {
                 if (mOnTextChangedListenerEnabled && (mOnTextChangedListener != null)) {
                     mOnTextChangedListener.onTextChanged(s.toString());
                 }

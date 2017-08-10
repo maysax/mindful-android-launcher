@@ -13,6 +13,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 
 public class ShouldIAnswerService extends Service {
@@ -43,7 +44,7 @@ public class ShouldIAnswerService extends Service {
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 if (msg.what == 919) {
-                    boolean enabled=msg.getData().getBoolean("enabled");
+                    boolean enabled = msg.getData().getBoolean("enabled");
                     prefs.edit().putBoolean(SettingsFragment.SHOULD_I_ANSWER, enabled).commit();
                 }
 

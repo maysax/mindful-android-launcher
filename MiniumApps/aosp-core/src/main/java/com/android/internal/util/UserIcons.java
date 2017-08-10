@@ -31,14 +31,14 @@ import com.android.internal.R;
 public class UserIcons {
 
     private static final int[] USER_ICON_COLORS = {
-        R.color.user_icon_1,
-        R.color.user_icon_2,
-        R.color.user_icon_3,
-        R.color.user_icon_4,
-        R.color.user_icon_5,
-        R.color.user_icon_6,
-        R.color.user_icon_7,
-        R.color.user_icon_8
+            R.color.user_icon_1,
+            R.color.user_icon_2,
+            R.color.user_icon_3,
+            R.color.user_icon_4,
+            R.color.user_icon_5,
+            R.color.user_icon_6,
+            R.color.user_icon_7,
+            R.color.user_icon_8
     };
 
     /**
@@ -56,10 +56,11 @@ public class UserIcons {
 
     /**
      * Returns a default user icon for the given user.
-     *
+     * <p>
      * Note that for guest users, you should pass in {@code UserHandle.USER_NULL}.
+     *
      * @param userId the user id or {@code UserHandle.USER_NULL} for a non-user specific icon
-     * @param light whether we want a light icon (suitable for a dark background)
+     * @param light  whether we want a light icon (suitable for a dark background)
      */
     public static Drawable getDefaultUserIcon(int userId, boolean light) {
         int colorResId = light ? R.color.user_icon_default_white : R.color.user_icon_default_gray;

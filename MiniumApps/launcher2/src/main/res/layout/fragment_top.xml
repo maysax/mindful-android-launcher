@@ -1,41 +1,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="@dimen/margin.1"
-    android:paddingRight="@dimen/margin.1"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:orientation="horizontal"
+    android:paddingLeft="@dimen/margin.1" android:paddingRight="@dimen/margin.1"
     tools:context=".ui.TopFragment">
 
-    <com.joanzapata.iconify.widget.IconTextView
-        android:id="@+id/iTxt1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:drawablePadding="@dimen/margin.2"
-        android:paddingLeft="@dimen/margin.1"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text.size.regular"
-        tools:text="CALL"/>
+    <com.joanzapata.iconify.widget.IconTextView android:id="@+id/iTxt1" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_weight="1"
+        android:drawablePadding="@dimen/margin.2" android:paddingLeft="@dimen/margin.1"
+        android:textColor="@color/white" android:textSize="@dimen/text.size.regular"
+        tools:text="CALL" />
 
-    <TextClock
-        android:id="@+id/iTxt2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text.size.regular"
-        tools:text="SELECT"/>
+    <TextClock android:id="@+id/iTxt2" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:gravity="center"
+        android:textColor="@color/white" android:textSize="@dimen/text.size.regular"
+        tools:text="SELECT" />
 
-    <com.joanzapata.iconify.widget.IconTextView
-        android:id="@+id/iTxt3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:drawablePadding="@dimen/margin.2"
-        android:paddingRight="@dimen/margin.1"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text.size.regular"
-        android:gravity="end"/>
+    <com.joanzapata.iconify.widget.IconTextView android:id="@+id/iTxt3" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_weight="1"
+        android:drawablePadding="@dimen/margin.2" android:paddingRight="@dimen/margin.1"
+        android:textColor="@color/white" android:textSize="@dimen/text.size.regular"
+        android:gravity="end" />
 
 </LinearLayout>

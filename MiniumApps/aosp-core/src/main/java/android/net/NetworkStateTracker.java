@@ -27,10 +27,10 @@ import static com.android.internal.util.Protocol.BASE_NETWORK_STATE_TRACKER;
  * with three services. Events to the ConnectivityService when
  * changes occur, an API for controlling the network and storage
  * for network specific information.
- *
+ * <p>
  * The Connectivity will call startMonitoring before any other
  * method is called.
- *
+ * <p>
  * {@hide}
  */
 public interface NetworkStateTracker {
@@ -47,7 +47,7 @@ public interface NetworkStateTracker {
     /**
      * The network state has changed and the NetworkInfo object
      * contains the new state.
-     *
+     * <p>
      * msg.what = EVENT_STATE_CHANGED
      * msg.obj = NetworkInfo object
      */
@@ -90,11 +90,11 @@ public interface NetworkStateTracker {
      */
     /**
      * Begin monitoring data connectivity.
-     *
+     * <p>
      * This is the first method called when this interface is used.
      *
      * @param context is the current Android context
-     * @param target is the Hander to which to return the events.
+     * @param target  is the Hander to which to return the events.
      */
     public void startMonitoring(Context context, Handler target);
 
@@ -117,6 +117,7 @@ public interface NetworkStateTracker {
 
     /**
      * Get interesting information about this network link
+     *
      * @return a copy of link information, null if not available
      */
     public LinkQualityInfo getLinkQualityInfo();
@@ -129,6 +130,7 @@ public interface NetworkStateTracker {
 
     /**
      * Disable connectivity to a network
+     *
      * @return {@code true} if a teardown occurred, {@code false} if the
      * teardown did not occur.
      */
@@ -136,6 +138,7 @@ public interface NetworkStateTracker {
 
     /**
      * Reenable connectivity to a network after a {@link #teardown()}.
+     *
      * @return {@code true} if we're connected or expect to be connected
      */
     public boolean reconnect();
@@ -147,6 +150,7 @@ public interface NetworkStateTracker {
 
     /**
      * Turn the wireless radio off for a network.
+     *
      * @param turnOn {@code true} to turn the radio on, {@code false}
      */
     public boolean setRadio(boolean turnOn);
@@ -155,7 +159,7 @@ public interface NetworkStateTracker {
      * Returns an indication of whether this network is available for
      * connections. A value of {@code false} means that some quasi-permanent
      * condition prevents connectivity to this network.
-     *
+     * <p>
      * NOTE that this is broken on multi-connection devices.  Should be fixed in J release
      * TODO - fix on multi-pdp devices
      */

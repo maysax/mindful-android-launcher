@@ -17,17 +17,17 @@
 
 package com.android.mms.model;
 
-import java.io.UnsupportedEncodingException;
-
-import org.w3c.dom.events.Event;
-import org.w3c.dom.smil.ElementTime;
-
 import android.content.Context;
 import android.util.Log;
 
 import com.android.mms.LogTag;
 import com.android.mms.dom.smil.SmilMediaElementImpl;
 import com.google.android.mms.pdu.CharacterSets;
+
+import org.w3c.dom.events.Event;
+import org.w3c.dom.smil.ElementTime;
+
+import java.io.UnsupportedEncodingException;
 
 public class TextModel extends RegionMediaModel {
     private static final String TAG = LogTag.TAG;
@@ -40,7 +40,7 @@ public class TextModel extends RegionMediaModel {
     }
 
     public TextModel(Context context, String contentType, String src,
-            int charset, byte[] data, RegionModel region) {
+                     int charset, byte[] data, RegionModel region) {
         super(context, SmilHelper.ELEMENT_TAG_TEXT, contentType, src,
                 data != null ? data : new byte[0], region);
 

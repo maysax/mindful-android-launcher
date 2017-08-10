@@ -20,7 +20,6 @@ import android.net.Uri;
 
 /**
  * Interface for querying the state of a pending item loading request.
- *
  */
 public interface ItemLoadedFuture {
     /**

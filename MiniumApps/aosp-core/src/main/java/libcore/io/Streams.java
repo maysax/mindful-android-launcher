@@ -29,7 +29,8 @@ import java.util.concurrent.atomic.AtomicReference;
 public final class Streams {
     private static AtomicReference<byte[]> skipBuffer = new AtomicReference<byte[]>();
 
-    private Streams() {}
+    private Streams() {
+    }
 
     /**
      * Implements InputStream.read(int) in terms of InputStream.read(byte[], int, int).
@@ -63,7 +64,7 @@ public final class Streams {
     /**
      * Reads exactly 'byteCount' bytes from 'in' (into 'dst' at offset 'offset'), and throws
      * EOFException if insufficient bytes are available.
-     *
+     * <p>
      * Used to implement {@link java.io.DataInputStream#readFully(byte[], int, int)}.
      */
     public static void readFully(InputStream in, byte[] dst, int offset, int byteCount) throws IOException {
@@ -138,7 +139,7 @@ public final class Streams {
      * Skip <b>at most</b> {@code byteCount} bytes from {@code in} by calling read
      * repeatedly until either the stream is exhausted or we read fewer bytes than
      * we ask for.
-     *
+     * <p>
      * <p>This method reuses the skip buffer but is careful to never use it at
      * the same time that another stream is using it. Otherwise streams that use
      * the caller's buffer for consistency checks like CRC could be clobbered by
@@ -192,7 +193,7 @@ public final class Streams {
      * "\n".
      *
      * @throws java.io.EOFException if the stream is exhausted before the next newline
-     *     character.
+     *                              character.
      */
     public static String readAsciiLine(InputStream in) throws IOException {
         // TODO: support UTF-8 here instead

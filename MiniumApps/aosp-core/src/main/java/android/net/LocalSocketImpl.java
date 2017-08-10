@@ -16,36 +16,43 @@
 
 package android.net;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.FileDescriptor;
-import java.net.SocketOptions;
-
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
+
+import java.io.FileDescriptor;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.SocketOptions;
 
 /**
  * Socket implementation used for android.net.LocalSocket and
  * android.net.LocalServerSocket. Supports only AF_LOCAL sockets.
  */
-class LocalSocketImpl
-{
+class LocalSocketImpl {
     private SocketInputStream fis;
     private SocketOutputStream fos;
     private Object readMonitor = new Object();
     private Object writeMonitor = new Object();
 
-    /** null if closed or not yet created */
+    /**
+     * null if closed or not yet created
+     */
     private FileDescriptor fd;
-    /** whether fd is created internally */
+    /**
+     * whether fd is created internally
+     */
     private boolean mFdCreatedInternally;
 
     // These fields are accessed by native code;
-    /** file descriptor array received during a previous read */
+    /**
+     * file descriptor array received during a previous read
+     */
     FileDescriptor[] inboundFileDescriptors;
-    /** file descriptor array that should be written during next write */
+    /**
+     * file descriptor array that should be written during next write
+     */
     FileDescriptor[] outboundFileDescriptors;
 
     /**
@@ -53,7 +60,9 @@ class LocalSocketImpl
      * need to read ancillary data.
      */
     class SocketInputStream extends InputStream {
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int available() throws IOException {
             FileDescriptor myFd = fd;
@@ -62,13 +71,17 @@ class LocalSocketImpl
             return available_native(myFd);
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void close() throws IOException {
             LocalSocketImpl.this.close();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int read() throws IOException {
             int ret;
@@ -81,20 +94,24 @@ class LocalSocketImpl
             }
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int read(byte[] b) throws IOException {
             return read(b, 0, b.length);
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
             synchronized (readMonitor) {
                 FileDescriptor myFd = fd;
                 if (myFd == null) throw new IOException("socket closed");
 
-                if (off < 0 || len < 0 || (off + len) > b.length ) {
+                if (off < 0 || len < 0 || (off + len) > b.length) {
                     throw new ArrayIndexOutOfBoundsException();
                 }
 
@@ -110,35 +127,43 @@ class LocalSocketImpl
      * need to read ancillary data.
      */
     class SocketOutputStream extends OutputStream {
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void close() throws IOException {
             LocalSocketImpl.this.close();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void write (byte[] b) throws IOException {
+        public void write(byte[] b) throws IOException {
             write(b, 0, b.length);
         }
-        
-        /** {@inheritDoc} */
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void write (byte[] b, int off, int len) throws IOException {
+        public void write(byte[] b, int off, int len) throws IOException {
             synchronized (writeMonitor) {
                 FileDescriptor myFd = fd;
                 if (myFd == null) throw new IOException("socket closed");
 
-                if (off < 0 || len < 0 || (off + len) > b.length ) {
+                if (off < 0 || len < 0 || (off + len) > b.length) {
                     throw new ArrayIndexOutOfBoundsException();
                 }
                 writeba_native(b, off, len, myFd);
             }
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void write (int b) throws IOException {
+        public void write(int b) throws IOException {
             synchronized (writeMonitor) {
                 FileDescriptor myFd = fd;
                 if (myFd == null) throw new IOException("socket closed");
@@ -149,14 +174,14 @@ class LocalSocketImpl
         /**
          * Wait until the data in sending queue is emptied. A polling version
          * for flush implementation.
-         * @throws IOException
-         *             if an i/o error occurs.
+         *
+         * @throws IOException if an i/o error occurs.
          */
         @Override
         public void flush() throws IOException {
             FileDescriptor myFd = fd;
             if (myFd == null) throw new IOException("socket closed");
-            while(pending_native(myFd) > 0) {
+            while (pending_native(myFd) > 0) {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException ie) {
@@ -167,27 +192,39 @@ class LocalSocketImpl
     }
 
     private native int pending_native(FileDescriptor fd) throws IOException;
+
     private native int available_native(FileDescriptor fd) throws IOException;
+
     private native int read_native(FileDescriptor fd) throws IOException;
+
     private native int readba_native(byte[] b, int off, int len,
-            FileDescriptor fd) throws IOException;
+                                     FileDescriptor fd) throws IOException;
+
     private native void writeba_native(byte[] b, int off, int len,
-            FileDescriptor fd) throws IOException;
+                                       FileDescriptor fd) throws IOException;
+
     private native void write_native(int b, FileDescriptor fd)
             throws IOException;
+
     private native void connectLocal(FileDescriptor fd, String name,
-            int namespace) throws IOException;
+                                     int namespace) throws IOException;
+
     private native void bindLocal(FileDescriptor fd, String name, int namespace)
             throws IOException;
+
     private native void listen_native(FileDescriptor fd, int backlog)
             throws IOException;
+
     private native void shutdown(FileDescriptor fd, boolean shutdownInput);
+
     private native Credentials getPeerCredentials_native(
             FileDescriptor fd) throws IOException;
+
     private native int getOption_native(FileDescriptor fd, int optID)
             throws IOException;
+
     private native void setOption_native(FileDescriptor fd, int optID,
-            int b, int value) throws IOException;
+                                         int b, int value) throws IOException;
 
 //    private native LocalSocketAddress getSockName_native
 //            (FileDescriptor fd) throws IOException;
@@ -196,28 +233,26 @@ class LocalSocketImpl
      * Accepts a connection on a server socket.
      *
      * @param fd file descriptor of server socket
-     * @param s socket implementation that will become the new socket
+     * @param s  socket implementation that will become the new socket
      * @return file descriptor of new socket
      */
     private native FileDescriptor accept
-            (FileDescriptor fd, LocalSocketImpl s) throws IOException;
+    (FileDescriptor fd, LocalSocketImpl s) throws IOException;
 
     /**
      * Create a new instance.
      */
-    /*package*/ LocalSocketImpl()
-    {
+    /*package*/ LocalSocketImpl() {
     }
 
     /**
      * Create a new instance from a file descriptor representing
      * a bound socket. The state of the file descriptor is not checked here
-     *  but the caller can verify socket state by calling listen().
+     * but the caller can verify socket state by calling listen().
      *
      * @param fd non-null; bound file descriptor
      */
-    /*package*/ LocalSocketImpl(FileDescriptor fd) throws IOException
-    {
+    /*package*/ LocalSocketImpl(FileDescriptor fd) throws IOException {
         this.fd = fd;
     }
 
@@ -229,10 +264,10 @@ class LocalSocketImpl
      * Creates a socket in the underlying OS.
      *
      * @param sockType either {@link LocalSocket#SOCKET_DGRAM}, {@link LocalSocket#SOCKET_STREAM}
-     * or {@link LocalSocket#SOCKET_SEQPACKET}
+     *                 or {@link LocalSocket#SOCKET_SEQPACKET}
      * @throws IOException
      */
-    public void create (int sockType) throws IOException {
+    public void create(int sockType) throws IOException {
         // no error if socket already created
         // need this for LocalServerSocket.accept()
         if (fd == null) {
@@ -279,10 +314,11 @@ class LocalSocketImpl
         }
     }
 
-    /** note timeout presently ignored */
+    /**
+     * note timeout presently ignored
+     */
     protected void connect(LocalSocketAddress address, int timeout)
-                        throws IOException
-    {        
+            throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -297,8 +333,7 @@ class LocalSocketImpl
      * @param endpoint endpoint address
      * @throws IOException
      */
-    public void bind(LocalSocketAddress endpoint) throws IOException
-    {
+    public void bind(LocalSocketAddress endpoint) throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -306,8 +341,7 @@ class LocalSocketImpl
         bindLocal(fd, endpoint.getName(), endpoint.getNamespace().getId());
     }
 
-    protected void listen(int backlog) throws IOException
-    {
+    protected void listen(int backlog) throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -322,8 +356,7 @@ class LocalSocketImpl
      * @param s a socket that will be used to represent the new connection.
      * @throws IOException
      */
-    protected void accept(LocalSocketImpl s) throws IOException
-    {
+    protected void accept(LocalSocketImpl s) throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -338,8 +371,7 @@ class LocalSocketImpl
      * @return input stream
      * @throws IOException if socket has been closed or cannot be created.
      */
-    protected InputStream getInputStream() throws IOException
-    {
+    protected InputStream getInputStream() throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -359,8 +391,7 @@ class LocalSocketImpl
      * @return output stream
      * @throws IOException if socket has been closed or cannot be created.
      */
-    protected OutputStream getOutputStream() throws IOException
-    { 
+    protected OutputStream getOutputStream() throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -380,8 +411,7 @@ class LocalSocketImpl
      * @return >= 0 count bytes available
      * @throws IOException
      */
-    protected int available() throws IOException
-    {
+    protected int available() throws IOException {
         return getInputStream().available();
     }
 
@@ -390,8 +420,7 @@ class LocalSocketImpl
      *
      * @throws IOException
      */
-    protected void shutdownInput() throws IOException
-    {
+    protected void shutdownInput() throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -404,8 +433,7 @@ class LocalSocketImpl
      *
      * @throws IOException
      */
-    protected void shutdownOutput() throws IOException
-    {
+    protected void shutdownOutput() throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -413,23 +441,19 @@ class LocalSocketImpl
         shutdown(fd, false);
     }
 
-    protected FileDescriptor getFileDescriptor()
-    {
+    protected FileDescriptor getFileDescriptor() {
         return fd;
     }
 
-    protected boolean supportsUrgentData()
-    {
+    protected boolean supportsUrgentData() {
         return false;
     }
 
-    protected void sendUrgentData(int data) throws IOException
-    {
-        throw new RuntimeException ("not impled");
+    protected void sendUrgentData(int data) throws IOException {
+        throw new RuntimeException("not impled");
     }
 
-    public Object getOption(int optID) throws IOException
-    {
+    public Object getOption(int optID) throws IOException {
         if (fd == null) {
             throw new IOException("socket not created");
         }
@@ -437,10 +461,9 @@ class LocalSocketImpl
         if (optID == SocketOptions.SO_TIMEOUT) {
             return 0;
         }
-        
+
         int value = getOption_native(fd, optID);
-        switch (optID)
-        {
+        switch (optID) {
             case SocketOptions.SO_RCVBUF:
             case SocketOptions.SO_SNDBUF:
                 return value;
@@ -466,9 +489,9 @@ class LocalSocketImpl
         }
 
         if (value instanceof Integer) {
-            intValue = (Integer)value;
+            intValue = (Integer) value;
         } else if (value instanceof Boolean) {
-            boolValue = ((Boolean) value)? 1 : 0;
+            boolValue = ((Boolean) value) ? 1 : 0;
         } else {
             throw new IOException("bad value: " + value);
         }
@@ -486,7 +509,7 @@ class LocalSocketImpl
      * @throws IOException
      */
     public void setFileDescriptorsForSend(FileDescriptor[] fds) {
-        synchronized(writeMonitor) {
+        synchronized (writeMonitor) {
             outboundFileDescriptors = fds;
         }
     }
@@ -502,7 +525,7 @@ class LocalSocketImpl
      * @throws IOException
      */
     public FileDescriptor[] getAncillaryFileDescriptors() throws IOException {
-        synchronized(readMonitor) {
+        synchronized (readMonitor) {
             FileDescriptor[] result = inboundFileDescriptors;
 
             inboundFileDescriptors = null;
@@ -517,8 +540,7 @@ class LocalSocketImpl
      * @return non-null; peer credentials
      * @throws IOException
      */
-    public Credentials getPeerCredentials() throws IOException
-    {
+    public Credentials getPeerCredentials() throws IOException {
         return getPeerCredentials_native(fd);
     }
 
@@ -528,8 +550,7 @@ class LocalSocketImpl
      * @return non-null; socket name
      * @throws IOException on failure
      */
-    public LocalSocketAddress getSockAddress() throws IOException
-    {
+    public LocalSocketAddress getSockAddress() throws IOException {
         return null;
         //TODO implement this
         //return getSockName_native(fd);

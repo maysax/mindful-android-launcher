@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.utils.KeyboardUtils;
 import com.moez.QKSMS.data.Contact;

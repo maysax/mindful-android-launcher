@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,32 +13,22 @@
      limitations under the License.
 -->
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     android:paddingBottom="?attr/favorites_padding_bottom"
     android:background="@color/background_primary">
 
-    <include layout="@layout/contact_list_card"/>
+    <include layout="@layout/contact_list_card" />
 
-    <ListView
-        android:id="@+id/contact_tile_list"
-        android:layout_width="match_parent"
+    <ListView android:id="@+id/contact_tile_list" android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/contact_tile_list_padding_top"
-        android:clipToPadding="false"
-        android:fadingEdge="none"
-        android:divider="@null"
-        android:scrollbarStyle="outsideOverlay"/>
+        android:paddingTop="@dimen/contact_tile_list_padding_top" android:clipToPadding="false"
+        android:fadingEdge="none" android:divider="@null" android:scrollbarStyle="outsideOverlay" />
 
-    <TextView
-        android:id="@+id/contact_tile_list_empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
+    <TextView android:id="@+id/contact_tile_list_empty" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:gravity="center_horizontal"
         android:layout_marginTop="@dimen/empty_message_top_margin"
         android:textColor="?android:attr/textColorSecondary"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </FrameLayout>

@@ -82,18 +82,19 @@ public class FileRotator {
      */
     public interface Rewriter extends Reader, Writer {
         public void reset();
+
         public boolean shouldWrite();
     }
 
     /**
      * Create a file rotator.
      *
-     * @param basePath Directory under which all files will be placed.
-     * @param prefix Filename prefix used to identify this rotator.
+     * @param basePath        Directory under which all files will be placed.
+     * @param prefix          Filename prefix used to identify this rotator.
      * @param rotateAgeMillis Age in milliseconds beyond which an active file
-     *            may be rotated into a historical file.
+     *                        may be rotated into a historical file.
      * @param deleteAgeMillis Age in milliseconds beyond which a rotated file
-     *            may be deleted.
+     *                        may be deleted.
      */
     public FileRotator(File basePath, String prefix, long rotateAgeMillis, long deleteAgeMillis) {
         mBasePath = Preconditions.checkNotNull(basePath);

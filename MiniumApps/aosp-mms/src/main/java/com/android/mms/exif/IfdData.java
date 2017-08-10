@@ -34,6 +34,7 @@ class IfdData {
             IfdId.TYPE_IFD_0, IfdId.TYPE_IFD_1, IfdId.TYPE_IFD_EXIF,
             IfdId.TYPE_IFD_INTEROPERABILITY, IfdId.TYPE_IFD_GPS
     };
+
     /**
      * Creates an IfdData with given IFD ID.
      *

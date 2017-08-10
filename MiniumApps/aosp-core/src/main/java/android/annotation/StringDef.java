@@ -46,6 +46,8 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
 @Retention(CLASS)
 @Target({ANNOTATION_TYPE})
 public @interface StringDef {
-    /** Defines the allowed constants for this element */
+    /**
+     * Defines the allowed constants for this element
+     */
     String[] value() default {};
 }

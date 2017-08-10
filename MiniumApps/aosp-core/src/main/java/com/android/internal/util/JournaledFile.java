@@ -38,9 +38,10 @@ public class JournaledFile {
         mTemp = temp;
     }
 
-    /** Returns the file for you to read.
-     * @more
-     * Prefers the real file.  If it doesn't exist, uses the temp one, and then copies
+    /**
+     * Returns the file for you to read.
+     *
+     * @more Prefers the real file.  If it doesn't exist, uses the temp one, and then copies
      * it to the real one.  If there is both a real file and a temp one, assumes that the
      * temp one isn't fully written and deletes it.
      */
@@ -62,8 +63,8 @@ public class JournaledFile {
 
     /**
      * Returns a file for you to write.
-     * @more
-     * If a write is already happening, throws.  In other words, you must provide your
+     *
+     * @more If a write is already happening, throws.  In other words, you must provide your
      * own locking.
      * <p>
      * Call {@link #commit} to commit the changes, or {@link #rollback} to forget the changes.

@@ -1,23 +1,20 @@
- /*
- * Copyright (C) 2009 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/*
+* Copyright (C) 2009 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 package com.android.mms.util;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -27,6 +24,9 @@ import android.provider.Telephony.Sms.Conversations;
 import android.util.Log;
 
 import com.android.mms.LogTag;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Cache for information about draft messages on conversations.
@@ -39,7 +39,7 @@ public class DraftCache {
     private final Context mContext;
 
     private boolean mSavingDraft;   // true when we're in the process of saving a draft. Check this
-                                    // before deleting any empty threads from the db.
+    // before deleting any empty threads from the db.
     private final Object mSavingDraftLock = new Object();
 
     private HashSet<Long> mDraftSet = new HashSet<Long>(4);
@@ -61,14 +61,15 @@ public class DraftCache {
         refresh();
     }
 
-    static final String[] DRAFT_PROJECTION = new String[] {
-        Conversations.THREAD_ID           // 0
+    static final String[] DRAFT_PROJECTION = new String[]{
+            Conversations.THREAD_ID           // 0
     };
 
     static final int COLUMN_DRAFT_THREAD_ID = 0;
 
-    /** To be called whenever the draft state might have changed.
-     *  Dispatches work to a thread and returns immediately.
+    /**
+     * To be called whenever the draft state might have changed.
+     * Dispatches work to a thread and returns immediately.
      */
     public void refresh() {
         if (Log.isLoggable(LogTag.APP, Log.DEBUG)) {
@@ -85,7 +86,8 @@ public class DraftCache {
         thread.start();
     }
 
-    /** Does the actual work of rebuilding the draft cache.
+    /**
+     * Does the actual work of rebuilding the draft cache.
      */
     private void rebuildCache() {
         if (Log.isLoggable(LogTag.APP, Log.DEBUG)) {
@@ -154,9 +156,10 @@ public class DraftCache {
         }
     }
 
-    /** Updates the has-draft status of a particular thread on
-     *  a piecemeal basis, to be called when a draft has appeared
-     *  or disappeared.
+    /**
+     * Updates the has-draft status of a particular thread on
+     * a piecemeal basis, to be called when a draft has appeared
+     * or disappeared.
      */
     public void setDraftState(long threadId, boolean hasDraft) {
         if (threadId <= 0) {
@@ -190,8 +193,9 @@ public class DraftCache {
         }
     }
 
-    /** Returns true if the given thread ID has a draft associated
-     *  with it, false if not.
+    /**
+     * Returns true if the given thread ID has a draft associated
+     * with it, false if not.
      */
     public boolean hasDraft(long threadId) {
         synchronized (mDraftSetLock) {

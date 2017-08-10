@@ -45,7 +45,7 @@ public class EmailAddressPickerFragment extends ContactEntryListFragment<Contact
 
     @Override
     protected void onItemClick(int position, long id) {
-        EmailAddressListAdapter adapter = (EmailAddressListAdapter)getAdapter();
+        EmailAddressListAdapter adapter = (EmailAddressListAdapter) getAdapter();
         if (getAdapter().getItem(position) == null) {
             return;
         }

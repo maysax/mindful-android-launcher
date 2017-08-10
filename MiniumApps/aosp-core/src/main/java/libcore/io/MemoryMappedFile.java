@@ -17,14 +17,12 @@
 package libcore.io;
 
 import android.system.ErrnoException;
+
 import java.io.FileDescriptor;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
-import java.nio.channels.FileChannel;
-import java.nio.NioUtils;
+
 import libcore.io.Libcore;
-import libcore.io.Memory;
+
 import static android.system.OsConstants.*;
 
 /**
@@ -59,7 +57,7 @@ public final class MemoryMappedFile implements AutoCloseable {
      * Unmaps this memory-mapped file using munmap(2). This is a no-op if close has already been
      * called. Note that this class does <i>not</i> use finalization; you must call {@code close}
      * yourself.
-     *
+     * <p>
      * Calling this method invalidates any iterators over this {@code MemoryMappedFile}. It is an
      * error to use such an iterator after calling {@code close}.
      */

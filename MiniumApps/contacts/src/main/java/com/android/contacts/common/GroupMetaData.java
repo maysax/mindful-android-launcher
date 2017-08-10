@@ -29,7 +29,7 @@ public final class GroupMetaData {
     private boolean mFavorites;
 
     public GroupMetaData(String accountName, String accountType, String dataSet, long groupId,
-            String title, boolean defaultGroup, boolean favorites) {
+                         String title, boolean defaultGroup, boolean favorites) {
         this.mAccountName = accountName;
         this.mAccountType = accountType;
         this.mDataSet = dataSet;

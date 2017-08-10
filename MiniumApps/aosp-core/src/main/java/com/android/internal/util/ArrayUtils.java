@@ -18,55 +18,53 @@ package com.android.internal.util;
 
 import android.util.ArraySet;
 
-import dalvik.system.VMRuntime;
-
-import libcore.util.EmptyArray;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import dalvik.system.VMRuntime;
+import libcore.util.EmptyArray;
 
 /**
  * ArrayUtils contains some methods that you can call to find out
  * the most efficient increments by which to grow arrays.
  */
-public class ArrayUtils
-{
+public class ArrayUtils {
     private static final int CACHE_SIZE = 73;
     private static Object[] sCache = new Object[CACHE_SIZE];
 
     private ArrayUtils() { /* cannot be instantiated */ }
 
     public static byte[] newUnpaddedByteArray(int minLen) {
-        return (byte[])VMRuntime.getRuntime().newUnpaddedArray(byte.class, minLen);
+        return (byte[]) VMRuntime.getRuntime().newUnpaddedArray(byte.class, minLen);
     }
 
     public static char[] newUnpaddedCharArray(int minLen) {
-        return (char[])VMRuntime.getRuntime().newUnpaddedArray(char.class, minLen);
+        return (char[]) VMRuntime.getRuntime().newUnpaddedArray(char.class, minLen);
     }
 
     public static int[] newUnpaddedIntArray(int minLen) {
-        return (int[])VMRuntime.getRuntime().newUnpaddedArray(int.class, minLen);
+        return (int[]) VMRuntime.getRuntime().newUnpaddedArray(int.class, minLen);
     }
 
     public static boolean[] newUnpaddedBooleanArray(int minLen) {
-        return (boolean[])VMRuntime.getRuntime().newUnpaddedArray(boolean.class, minLen);
+        return (boolean[]) VMRuntime.getRuntime().newUnpaddedArray(boolean.class, minLen);
     }
 
     public static long[] newUnpaddedLongArray(int minLen) {
-        return (long[])VMRuntime.getRuntime().newUnpaddedArray(long.class, minLen);
+        return (long[]) VMRuntime.getRuntime().newUnpaddedArray(long.class, minLen);
     }
 
     public static float[] newUnpaddedFloatArray(int minLen) {
-        return (float[])VMRuntime.getRuntime().newUnpaddedArray(float.class, minLen);
+        return (float[]) VMRuntime.getRuntime().newUnpaddedArray(float.class, minLen);
     }
 
     public static Object[] newUnpaddedObjectArray(int minLen) {
-        return (Object[])VMRuntime.getRuntime().newUnpaddedArray(Object.class, minLen);
+        return (Object[]) VMRuntime.getRuntime().newUnpaddedArray(Object.class, minLen);
     }
 
     @SuppressWarnings("unchecked")
     public static <T> T[] newUnpaddedArray(Class<T> clazz, int minLen) {
-        return (T[])VMRuntime.getRuntime().newUnpaddedArray(clazz, minLen);
+        return (T[]) VMRuntime.getRuntime().newUnpaddedArray(clazz, minLen);
     }
 
     /**
@@ -129,6 +127,7 @@ public class ArrayUtils
 
     /**
      * Checks that value is present as at least one of the elements of the array.
+     *
      * @param array the array to check in
      * @param value the value to check for
      * @return true if the value is present in the array
@@ -195,7 +194,8 @@ public class ArrayUtils
 
     /**
      * Appends an element to a copy of the array and returns the copy.
-     * @param array The original array, or null to represent an empty array.
+     *
+     * @param array   The original array, or null to represent an empty array.
      * @param element The element to add.
      * @return A new array that contains all of the elements of the original array
      * with the specified element added at the end.
@@ -206,11 +206,11 @@ public class ArrayUtils
         final int end;
         if (array != null) {
             end = array.length;
-            result = (T[])Array.newInstance(kind, end + 1);
+            result = (T[]) Array.newInstance(kind, end + 1);
             System.arraycopy(array, 0, result, 0, end);
         } else {
             end = 0;
-            result = (T[])Array.newInstance(kind, 1);
+            result = (T[]) Array.newInstance(kind, 1);
         }
         result[end] = element;
         return result;
@@ -219,7 +219,8 @@ public class ArrayUtils
     /**
      * Removes an element from a copy of the array and returns the copy.
      * If the element is not present, then the original array is returned unmodified.
-     * @param array The original array, or null to represent an empty array.
+     *
+     * @param array   The original array, or null to represent an empty array.
      * @param element The element to remove.
      * @return A new array that contains all of the elements of the original array
      * except the first copy of the specified element removed.  If the specified element
@@ -235,7 +236,7 @@ public class ArrayUtils
                     if (length == 1) {
                         return null;
                     }
-                    T[] result = (T[])Array.newInstance(kind, length - 1);
+                    T[] result = (T[]) Array.newInstance(kind, length - 1);
                     System.arraycopy(array, 0, result, 0, i);
                     System.arraycopy(array, i + 1, result, i, length - i - 1);
                     return result;
@@ -248,6 +249,7 @@ public class ArrayUtils
     /**
      * Appends a new value to a copy of the array and returns the copy.  If
      * the value is already present, the original array is returned
+     *
      * @param cur The original array, or null to represent an empty array.
      * @param val The value to add.
      * @return A new array that contains all of the values of the original array
@@ -255,7 +257,7 @@ public class ArrayUtils
      */
     public static int[] appendInt(int[] cur, int val) {
         if (cur == null) {
-            return new int[] { val };
+            return new int[]{val};
         }
         final int N = cur.length;
         for (int i = 0; i < N; i++) {
@@ -292,6 +294,7 @@ public class ArrayUtils
     /**
      * Appends a new value to a copy of the array and returns the copy.  If
      * the value is already present, the original array is returned
+     *
      * @param cur The original array, or null to represent an empty array.
      * @param val The value to add.
      * @return A new array that contains all of the values of the original array
@@ -299,7 +302,7 @@ public class ArrayUtils
      */
     public static long[] appendLong(long[] cur, long val) {
         if (cur == null) {
-            return new long[] { val };
+            return new long[]{val};
         }
         final int N = cur.length;
         for (int i = 0; i < N; i++) {

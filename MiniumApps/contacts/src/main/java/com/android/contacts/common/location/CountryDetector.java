@@ -26,18 +26,18 @@ import java.util.Locale;
  * <li>SIM's country</li>
  * <li>User's default locale</li>
  * </ul>
- *
+ * <p>
  * As far as possible this class tries to replicate the behavior of the system's country detector
  * service:
  * 1) Order in priority of sources of country location
  * 2) Mobile network information provided by CDMA phones is ignored
  * 3) Location information is updated every 12 hours (instead of 24 hours in the system)
  * 4) Location updates only uses the {@link LocationManager#PASSIVE_PROVIDER} to avoid active use
- *    of the GPS
+ * of the GPS
  * 5) If a location is successfully obtained and geocoded, we never fall back to use of the
- *    SIM's country (for the system, the fallback never happens without a reboot)
+ * SIM's country (for the system, the fallback never happens without a reboot)
  * 6) Location is not used if the device does not implement a {@link android.location.Geocoder}
-*/
+ */
 public class CountryDetector {
     private static final String TAG = "CountryDetector";
 
@@ -74,13 +74,13 @@ public class CountryDetector {
     }
 
     private CountryDetector(Context context) {
-        this (context, (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE),
+        this(context, (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE),
                 (LocationManager) context.getSystemService(Context.LOCATION_SERVICE),
                 new LocaleProvider());
     }
 
     private CountryDetector(Context context, TelephonyManager telephonyManager,
-            LocationManager locationManager, LocaleProvider localeProvider) {
+                            LocationManager locationManager, LocaleProvider localeProvider) {
         mTelephonyManager = telephonyManager;
         mLocationManager = locationManager;
         mLocaleProvider = localeProvider;
@@ -90,7 +90,7 @@ public class CountryDetector {
     }
 
     public static void registerForLocationUpdates(Context context,
-            LocationManager locationManager) {
+                                                  LocationManager locationManager) {
         if (!Geocoder.isPresent()) {
             // Certain devices do not have an implementation of a geocoder - in that case there is
             // no point trying to get location updates because we cannot retrieve the country based
@@ -110,7 +110,7 @@ public class CountryDetector {
      */
     @NeededForTesting
     public CountryDetector getInstanceForTest(Context context, TelephonyManager telephonyManager,
-            LocationManager locationManager, LocaleProvider localeProvider, Geocoder geocoder) {
+                                              LocationManager locationManager, LocaleProvider localeProvider, Geocoder geocoder) {
         return new CountryDetector(context, telephonyManager, locationManager, localeProvider);
     }
 
@@ -198,7 +198,7 @@ public class CountryDetector {
                 return;
             }
 
-            final Location location = (Location)intent.getExtras().get(
+            final Location location = (Location) intent.getExtras().get(
                     LocationManager.KEY_LOCATION_CHANGED);
 
             UpdateCountryService.updateCountry(context, location);

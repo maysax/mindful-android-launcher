@@ -31,14 +31,18 @@ public final class CellInfoCdma extends CellInfo implements Parcelable {
     private CellIdentityCdma mCellIdentityCdma;
     private CellSignalStrengthCdma mCellSignalStrengthCdma;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public CellInfoCdma() {
         super();
         mCellIdentityCdma = new CellIdentityCdma();
         mCellSignalStrengthCdma = new CellSignalStrengthCdma();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public CellInfoCdma(CellInfoCdma ci) {
         super(ci);
         this.mCellIdentityCdma = ci.mCellIdentityCdma.copy();
@@ -48,7 +52,10 @@ public final class CellInfoCdma extends CellInfo implements Parcelable {
     public CellIdentityCdma getCellIdentity() {
         return mCellIdentityCdma;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCellIdentity(CellIdentityCdma cid) {
         mCellIdentityCdma = cid;
     }
@@ -56,7 +63,10 @@ public final class CellInfoCdma extends CellInfo implements Parcelable {
     public CellSignalStrengthCdma getCellSignalStrength() {
         return mCellSignalStrengthCdma;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setCellSignalStrength(CellSignalStrengthCdma css) {
         mCellSignalStrengthCdma = css;
     }
@@ -96,13 +106,17 @@ public final class CellInfoCdma extends CellInfo implements Parcelable {
         return sb.toString();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags, TYPE_CDMA);
@@ -121,7 +135,9 @@ public final class CellInfoCdma extends CellInfo implements Parcelable {
         if (DBG) log("CellInfoCdma(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static final Creator<CellInfoCdma> CREATOR = new Creator<CellInfoCdma>() {
         @Override
         public CellInfoCdma createFromParcel(Parcel in) {
@@ -135,7 +151,9 @@ public final class CellInfoCdma extends CellInfo implements Parcelable {
         }
     };
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected static CellInfoCdma createFromParcelBody(Parcel in) {
         return new CellInfoCdma(in);
     }

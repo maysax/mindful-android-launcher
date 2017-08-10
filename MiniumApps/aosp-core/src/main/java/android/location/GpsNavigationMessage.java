@@ -207,28 +207,28 @@ public class GpsNavigationMessage implements Parcelable {
 
     public static final Creator<GpsNavigationMessage> CREATOR =
             new Creator<GpsNavigationMessage>() {
-        @Override
-        public GpsNavigationMessage createFromParcel(Parcel parcel) {
-            GpsNavigationMessage navigationMessage = new GpsNavigationMessage();
+                @Override
+                public GpsNavigationMessage createFromParcel(Parcel parcel) {
+                    GpsNavigationMessage navigationMessage = new GpsNavigationMessage();
 
-            navigationMessage.setType(parcel.readByte());
-            navigationMessage.setPrn(parcel.readByte());
-            navigationMessage.setMessageId((short) parcel.readInt());
-            navigationMessage.setSubmessageId((short) parcel.readInt());
+                    navigationMessage.setType(parcel.readByte());
+                    navigationMessage.setPrn(parcel.readByte());
+                    navigationMessage.setMessageId((short) parcel.readInt());
+                    navigationMessage.setSubmessageId((short) parcel.readInt());
 
-            int dataLength = parcel.readInt();
-            byte[] data = new byte[dataLength];
-            parcel.readByteArray(data);
-            navigationMessage.setData(data);
+                    int dataLength = parcel.readInt();
+                    byte[] data = new byte[dataLength];
+                    parcel.readByteArray(data);
+                    navigationMessage.setData(data);
 
-            return navigationMessage;
-        }
+                    return navigationMessage;
+                }
 
-        @Override
-        public GpsNavigationMessage[] newArray(int size) {
-            return new GpsNavigationMessage[size];
-        }
-    };
+                @Override
+                public GpsNavigationMessage[] newArray(int size) {
+                    return new GpsNavigationMessage[size];
+                }
+            };
 
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeByte(mType);
@@ -256,7 +256,7 @@ public class GpsNavigationMessage implements Parcelable {
 
         builder.append(String.format(format, "Data", "{"));
         String prefix = "        ";
-        for(byte value : mData) {
+        for (byte value : mData) {
             builder.append(prefix);
             builder.append(value);
             prefix = ", ";

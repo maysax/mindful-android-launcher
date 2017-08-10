@@ -15,6 +15,7 @@
  */
 
 package android.os;
+
 import android.util.AndroidException;
 
 /**
@@ -29,7 +30,9 @@ public class RemoteException extends AndroidException {
         super(message);
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public RuntimeException rethrowAsRuntimeException() {
         throw new RuntimeException(this);
     }

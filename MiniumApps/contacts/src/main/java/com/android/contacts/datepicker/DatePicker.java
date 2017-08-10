@@ -21,7 +21,6 @@ package com.android.contacts.datepicker;
 
 import android.animation.LayoutTransition;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.format.DateFormat;
@@ -38,21 +37,23 @@ import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
 
 import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+
 import minium.co.contacts.R;
 
 /**
  * A view for selecting a month / year / day based on a calendar like layout.
- *
+ * <p>
  * <p>See the <a href="{@docRoot}resources/tutorials/views/hello-datepicker.html">Date Picker
  * tutorial</a>.</p>
- *
+ * <p>
  * For a dialog using this view, see {@link android.app.DatePickerDialog}.
  */
 public class DatePicker extends FrameLayout {
-    /** Magic year that represents "no year" */
+    /**
+     * Magic year that represents "no year"
+     */
     public static int NO_YEAR = 0;
 
     private static final int DEFAULT_START_YEAR = 1900;
@@ -82,11 +83,11 @@ public class DatePicker extends FrameLayout {
     public interface OnDateChangedListener {
 
         /**
-         * @param view The view associated with this listener.
-         * @param year The year that was set or {@link DatePicker#NO_YEAR} if no year was set
+         * @param view        The view associated with this listener.
+         * @param year        The year that was set or {@link DatePicker#NO_YEAR} if no year was set
          * @param monthOfYear The month that was set (0-11) for compatibility
-         *  with {@link java.util.Calendar}.
-         * @param dayOfMonth The day of the month that was set.
+         *                    with {@link java.util.Calendar}.
+         * @param dayOfMonth  The day of the month that was set.
          */
         void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth);
     }
@@ -253,7 +254,7 @@ public class DatePicker extends FrameLayout {
          * Constructor called from {@link DatePicker#onSaveInstanceState()}
          */
         private SavedState(Parcelable superState, int year, int month, int day, boolean hasYear,
-                boolean yearOptional) {
+                           boolean yearOptional) {
             super(superState);
             mYear = year;
             mMonth = month;
@@ -350,26 +351,28 @@ public class DatePicker extends FrameLayout {
 
     /**
      * Initialize the state.
-     * @param year The initial year.
-     * @param monthOfYear The initial month.
-     * @param dayOfMonth The initial day of the month.
+     *
+     * @param year                  The initial year.
+     * @param monthOfYear           The initial month.
+     * @param dayOfMonth            The initial day of the month.
      * @param onDateChangedListener How user is notified date is changed by user, can be null.
      */
     public void init(int year, int monthOfYear, int dayOfMonth,
-            OnDateChangedListener onDateChangedListener) {
+                     OnDateChangedListener onDateChangedListener) {
         init(year, monthOfYear, dayOfMonth, false, onDateChangedListener);
     }
 
     /**
      * Initialize the state.
-     * @param year The initial year or {@link #NO_YEAR} if no year has been specified
-     * @param monthOfYear The initial month.
-     * @param dayOfMonth The initial day of the month.
-     * @param yearOptional True if the user can toggle the year
+     *
+     * @param year                  The initial year or {@link #NO_YEAR} if no year has been specified
+     * @param monthOfYear           The initial month.
+     * @param dayOfMonth            The initial day of the month.
+     * @param yearOptional          True if the user can toggle the year
      * @param onDateChangedListener How user is notified date is changed by user, can be null.
      */
     public void init(int year, int monthOfYear, int dayOfMonth, boolean yearOptional,
-            OnDateChangedListener onDateChangedListener) {
+                     OnDateChangedListener onDateChangedListener) {
         mYear = (yearOptional && year == NO_YEAR) ? getCurrentYear() : year;
         mMonth = monthOfYear;
         mDay = dayOfMonth;
@@ -418,7 +421,7 @@ public class DatePicker extends FrameLayout {
         return mDay;
     }
 
-    private void adjustMaxDay(){
+    private void adjustMaxDay() {
         Calendar cal = Calendar.getInstance();
         // if year was not set, use 2000 as it was a leap year
         cal.set(Calendar.YEAR, mHasYear ? mYear : 2000);

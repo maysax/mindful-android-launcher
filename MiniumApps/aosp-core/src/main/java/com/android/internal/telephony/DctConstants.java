@@ -25,17 +25,17 @@ public class DctConstants {
      * IDLE: ready to start data connection setup, default state
      * CONNECTING: state of issued startPppd() but not finish yet
      * SCANNING: data connection fails with one apn but other apns are available
-     *           ready to start data connection on other apns (before INITING)
+     * ready to start data connection on other apns (before INITING)
      * CONNECTED: IP connection is setup
      * DISCONNECTING: Connection.disconnect() has been called, but PDP
-     *                context is not yet deactivated
+     * context is not yet deactivated
      * FAILED: data connection fail for all apns settings
      * RETRYING: data connection failed but we're going to retry.
-     *
+     * <p>
      * getDataConnectionState() maps State to DataState
-     *      FAILED or IDLE : DISCONNECTED
-     *      RETRYING or CONNECTING or SCANNING: CONNECTING
-     *      CONNECTED : CONNECTED or DISCONNECTING
+     * FAILED or IDLE : DISCONNECTED
+     * RETRYING or CONNECTING or SCANNING: CONNECTING
+     * CONNECTED : CONNECTED or DISCONNECTING
      */
     public enum State {
         IDLE,

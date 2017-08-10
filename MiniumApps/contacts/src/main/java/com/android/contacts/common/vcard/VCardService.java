@@ -31,7 +31,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,7 +44,7 @@ import minium.co.contacts.R;
 
 /**
  * The class responsible for handling vCard import/export requests.
- *
+ * <p>
  * This Service creates one ImportRequest/ExportRequest object (as Runnable) per request and push
  * it to {@link ExecutorService} with single thread executor. The executor handles each request
  * one by one, and notifies users when needed.
@@ -88,13 +87,17 @@ public class VCardService extends Service {
 
         @Override
         public void onMediaScannerConnected() {
-            if (DEBUG) { Log.d(LOG_TAG, "Connected to MediaScanner. Start scanning."); }
+            if (DEBUG) {
+                Log.d(LOG_TAG, "Connected to MediaScanner. Start scanning.");
+            }
             mConnection.scanFile(mPath, null);
         }
 
         @Override
         public void onScanCompleted(String path, Uri uri) {
-            if (DEBUG) { Log.d(LOG_TAG, "scan completed: " + path); }
+            if (DEBUG) {
+                Log.d(LOG_TAG, "scan completed: " + path);
+            }
             mConnection.disconnect();
             removeConnectionClient(this);
         }
@@ -141,7 +144,7 @@ public class VCardService extends Service {
         }
     }
 
-   @Override
+    @Override
     public void onCreate() {
         super.onCreate();
         mBinder = new MyBinder();
@@ -159,7 +162,7 @@ public class VCardService extends Service {
         mExtensionsToConsider.add(mFileNameExtension);
 
         final String additionalExtensions =
-            getString(R.string.config_export_extensions_to_consider);
+                getString(R.string.config_export_extensions_to_consider);
         if (!TextUtils.isEmpty(additionalExtensions)) {
             for (String extension : additionalExtensions.split(",")) {
                 String trimed = extension.trim();
@@ -199,7 +202,7 @@ public class VCardService extends Service {
     }
 
     public synchronized void handleImportRequest(List<ImportRequest> requests,
-            VCardImportExportListener listener) {
+                                                 VCardImportExportListener listener) {
         if (DEBUG) {
             final ArrayList<String> uris = new ArrayList<String>();
             final ArrayList<String> displayNames = new ArrayList<String>();
@@ -231,7 +234,7 @@ public class VCardService extends Service {
     }
 
     public synchronized void handleExportRequest(ExportRequest request,
-            VCardImportExportListener listener) {
+                                                 VCardImportExportListener listener) {
         if (tryExecute(new ExportProcessor(this, request, mCurrentJobId, mCallingActivity))) {
             final String path = request.destUri.getEncodedPath();
             if (DEBUG) Log.d(LOG_TAG, "Reserve the path " + path);
@@ -258,6 +261,7 @@ public class VCardService extends Service {
 
     /**
      * Tries to call {@link ExecutorService#execute(Runnable)} toward a given processor.
+     *
      * @return true when successful.
      */
     private synchronized boolean tryExecute(ProcessorBase processor) {
@@ -276,7 +280,7 @@ public class VCardService extends Service {
     }
 
     public synchronized void handleCancelRequest(CancelRequest request,
-            VCardImportExportListener listener) {
+                                                 VCardImportExportListener listener) {
         final int jobId = request.jobId;
         if (DEBUG) Log.d(LOG_TAG, String.format("Received cancel request. (id: %d)", jobId));
 
@@ -291,7 +295,7 @@ public class VCardService extends Service {
             }
             if (type == TYPE_EXPORT) {
                 final String path =
-                        ((ExportProcessor)processor).getRequest().destUri.getEncodedPath();
+                        ((ExportProcessor) processor).getRequest().destUri.getEncodedPath();
                 Log.i(LOG_TAG,
                         String.format("Cancel reservation for the path %s if appropriate", path));
                 if (!mReservedDestination.remove(path)) {
@@ -373,7 +377,8 @@ public class VCardService extends Service {
         stopSelf();
     }
 
-    /* package */ synchronized void updateMediaScanner(String path) {
+    /* package */
+    synchronized void updateMediaScanner(String path) {
         if (DEBUG) {
             Log.d(LOG_TAG, "MediaScanner is being updated: " + path);
         }
@@ -398,7 +403,8 @@ public class VCardService extends Service {
         stopServiceIfAppropriate();
     }
 
-    /* package */ synchronized void handleFinishImportNotification(
+    /* package */
+    synchronized void handleFinishImportNotification(
             int jobId, boolean successful) {
         if (DEBUG) {
             Log.d(LOG_TAG, String.format("Received vCard import finish notification (id: %d). "
@@ -408,7 +414,8 @@ public class VCardService extends Service {
         stopServiceIfAppropriate();
     }
 
-    /* package */ synchronized void handleFinishExportNotification(
+    /* package */
+    synchronized void handleFinishExportNotification(
             int jobId, boolean successful) {
         if (DEBUG) {
             Log.d(LOG_TAG, String.format("Received vCard export finish notification (id: %d). "
@@ -422,7 +429,7 @@ public class VCardService extends Service {
             Log.w(LOG_TAG,
                     String.format("Removed job (id: %s) isn't ExportProcessor", jobId));
         } else {
-            final String path = ((ExportProcessor)job).getRequest().destUri.getEncodedPath();
+            final String path = ((ExportProcessor) job).getRequest().destUri.getEncodedPath();
             if (DEBUG) Log.d(LOG_TAG, "Remove reserved path " + path);
             mReservedDestination.remove(path);
         }
@@ -433,7 +440,7 @@ public class VCardService extends Service {
     /**
      * Cancels all the import/export requests and calls {@link ExecutorService#shutdown()}, which
      * means this Service becomes no longer ready for import/export requests.
-     *
+     * <p>
      * Mainly called from onDestroy().
      */
     private synchronized void cancelAllRequestsAndShutdown() {
@@ -487,7 +494,7 @@ public class VCardService extends Service {
             // Calling Math.Log10() is costly.
             int tmp;
             for (fileIndexDigit = 0, tmp = mFileIndexMaximum; tmp > 0;
-                fileIndexDigit++, tmp /= 10) {
+                 fileIndexDigit++, tmp /= 10) {
             }
         }
 

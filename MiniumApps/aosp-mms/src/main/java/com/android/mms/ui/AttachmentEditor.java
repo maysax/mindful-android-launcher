@@ -41,15 +41,15 @@ import com.android.mms.model.SlideshowModel;
 public class AttachmentEditor extends LinearLayout {
     private static final String TAG = LogTag.TAG;
 
-    static final int MSG_EDIT_SLIDESHOW   = 1;
-    static final int MSG_SEND_SLIDESHOW   = 2;
-    static final int MSG_PLAY_SLIDESHOW   = 3;
-    static final int MSG_REPLACE_IMAGE    = 4;
-    static final int MSG_REPLACE_VIDEO    = 5;
-    static final int MSG_REPLACE_AUDIO    = 6;
-    static final int MSG_PLAY_VIDEO       = 7;
-    static final int MSG_PLAY_AUDIO       = 8;
-    static final int MSG_VIEW_IMAGE       = 9;
+    static final int MSG_EDIT_SLIDESHOW = 1;
+    static final int MSG_SEND_SLIDESHOW = 2;
+    static final int MSG_PLAY_SLIDESHOW = 3;
+    static final int MSG_REPLACE_IMAGE = 4;
+    static final int MSG_REPLACE_VIDEO = 5;
+    static final int MSG_REPLACE_AUDIO = 6;
+    static final int MSG_PLAY_VIDEO = 7;
+    static final int MSG_PLAY_AUDIO = 8;
+    static final int MSG_VIEW_IMAGE = 9;
     static final int MSG_REMOVE_ATTACHMENT = 10;
 
     private final Context mContext;
@@ -114,7 +114,7 @@ public class AttachmentEditor extends LinearLayout {
 
     public void hideView() {
         if (mView != null) {
-            ((View)mView).setVisibility(View.GONE);
+            ((View) mView).setVisibility(View.GONE);
         }
     }
 
@@ -183,7 +183,7 @@ public class AttachmentEditor extends LinearLayout {
             int stub_view_id, int real_view_id,
             int view_button_id, int replace_button_id, int remove_button_id,
             int view_message, int replace_message, int remove_message) {
-        LinearLayout view = (LinearLayout)getStubView(stub_view_id, real_view_id);
+        LinearLayout view = (LinearLayout) getStubView(stub_view_id, real_view_id);
         view.setVisibility(View.VISIBLE);
 
         Button viewButton = (Button) view.findViewById(view_button_id);
@@ -198,7 +198,7 @@ public class AttachmentEditor extends LinearLayout {
     }
 
     private SlideViewInterface createSlideshowView(boolean inPortrait) {
-        LinearLayout view =(LinearLayout) getStubView(
+        LinearLayout view = (LinearLayout) getStubView(
                 R.id.slideshow_attachment_view_stub,
                 R.id.slideshow_attachment_view);
         view.setVisibility(View.VISIBLE);

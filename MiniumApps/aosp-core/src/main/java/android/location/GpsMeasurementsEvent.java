@@ -75,24 +75,24 @@ public class GpsMeasurementsEvent implements Parcelable {
 
     public static final Creator<GpsMeasurementsEvent> CREATOR =
             new Creator<GpsMeasurementsEvent>() {
-        @Override
-        public GpsMeasurementsEvent createFromParcel(Parcel in) {
-            ClassLoader classLoader = getClass().getClassLoader();
+                @Override
+                public GpsMeasurementsEvent createFromParcel(Parcel in) {
+                    ClassLoader classLoader = getClass().getClassLoader();
 
-            GpsClock clock = in.readParcelable(classLoader);
+                    GpsClock clock = in.readParcelable(classLoader);
 
-            int measurementsLength = in.readInt();
-            GpsMeasurement[] measurementsArray = new GpsMeasurement[measurementsLength];
-            in.readTypedArray(measurementsArray, GpsMeasurement.CREATOR);
+                    int measurementsLength = in.readInt();
+                    GpsMeasurement[] measurementsArray = new GpsMeasurement[measurementsLength];
+                    in.readTypedArray(measurementsArray, GpsMeasurement.CREATOR);
 
-            return new GpsMeasurementsEvent(clock, measurementsArray);
-        }
+                    return new GpsMeasurementsEvent(clock, measurementsArray);
+                }
 
-        @Override
-        public GpsMeasurementsEvent[] newArray(int size) {
-            return new GpsMeasurementsEvent[size];
-        }
-    };
+                @Override
+                public GpsMeasurementsEvent[] newArray(int size) {
+                    return new GpsMeasurementsEvent[size];
+                }
+            };
 
     @Override
     public int describeContents() {

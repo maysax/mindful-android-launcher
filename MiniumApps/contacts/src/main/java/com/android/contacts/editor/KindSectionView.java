@@ -26,12 +26,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.android.contacts.editor.Editor.EditorListener;
-import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.common.model.RawContactDelta;
+import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.dataitem.DataKind;
+import com.android.contacts.editor.Editor.EditorListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +89,9 @@ public class KindSectionView extends LinearLayout implements EditorListener {
         return mReadOnly;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onFinishInflate() {
         setDrawingCacheEnabled(true);
@@ -194,8 +195,8 @@ public class KindSectionView extends LinearLayout implements EditorListener {
         } catch (Exception e) {
             throw new RuntimeException(
                     "Cannot allocate editor with layout resource ID " +
-                    layoutResId + " for MIME type " + mKind.mimeType +
-                    " with error " + e.toString());
+                            layoutResId + " for MIME type " + mKind.mimeType +
+                            " with error " + e.toString());
         }
 
         view.setEnabled(isEnabled());
@@ -312,7 +313,7 @@ public class KindSectionView extends LinearLayout implements EditorListener {
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
         if (hasWindowFocus) {
-            for (Runnable r: mRunWhenWindowFocused) {
+            for (Runnable r : mRunWhenWindowFocused) {
                 r.run();
             }
             mRunWhenWindowFocused.clear();
@@ -370,7 +371,7 @@ public class KindSectionView extends LinearLayout implements EditorListener {
                 @Override
                 public void run() {
                     newField.requestFocus();
-                    ((Editor)newField).editNewlyAddedField();
+                    ((Editor) newField).editNewlyAddedField();
                 }
             });
         }

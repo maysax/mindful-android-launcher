@@ -66,7 +66,7 @@ public class IndeterminateProgressDialog extends DialogFragment {
      * does not flash in and out to quickly.
      */
     public static IndeterminateProgressDialog show(FragmentManager fragmentManager,
-            CharSequence title, CharSequence message, long minDisplayTime) {
+                                                   CharSequence title, CharSequence message, long minDisplayTime) {
         IndeterminateProgressDialog dialogFragment = new IndeterminateProgressDialog();
         dialogFragment.mTitle = title;
         dialogFragment.mMessage = message;

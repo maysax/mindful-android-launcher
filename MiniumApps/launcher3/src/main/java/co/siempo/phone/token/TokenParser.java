@@ -3,9 +3,6 @@ package co.siempo.phone.token;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
-import co.siempo.phone.event.AtFoundEvent;
-import de.greenrobot.event.EventBus;
-
 /**
  * Created by shahab on 2/16/17.
  */
@@ -29,8 +26,11 @@ public class TokenParser {
                     str = str.substring(item.getTitle().length() + 1);
                 }
             }
+            if (str.endsWith("@")) {
+                return;
+            }
 
-            if (str.endsWith("@")  && !manager.hasCompleted(TokenItemType.CONTACT)) {
+            if (str.endsWith("@") && !manager.hasCompleted(TokenItemType.CONTACT)) {
                 router.add(new TokenItem(TokenItemType.CONTACT));
             } else {
                 manager.getCurrent().setTitle(str);

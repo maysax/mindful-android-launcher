@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 * Copyright (C) 2011 - 2015 by Ngewi Fet <ngewif@gmail.com>
 *
@@ -24,39 +23,21 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout1"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    style="@style/ListItem">
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/linearLayout1"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:gravity="center_vertical" style="@style/ListItem">
 
-    <TextView
-        android:id="@+id/label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="Mobile"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textColor="@color/text.primary"
+    <TextView android:id="@+id/label" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" tools:text="Mobile" android:singleLine="true"
+        android:ellipsize="end" android:textColor="@color/text.primary"
         android:textSize="@dimen/text.size.regular" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_weight="1"/>
+    <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/phoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:padding="8dp"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textSize="@dimen/text.size.medium"
-        android:textStyle="bold"
-        android:textColor="@color/text.secondary"
+    <TextView android:id="@+id/phoneNumber" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:gravity="end" android:padding="8dp"
+        android:singleLine="true" android:ellipsize="end" android:textSize="@dimen/text.size.medium"
+        android:textStyle="bold" android:textColor="@color/text.secondary"
         tools:text="+1-555-12345" />
 
 </LinearLayout>

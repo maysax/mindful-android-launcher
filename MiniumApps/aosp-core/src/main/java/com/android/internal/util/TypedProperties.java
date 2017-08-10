@@ -105,7 +105,7 @@ public class TypedProperties extends HashMap<String, Object> {
      *
      * @param typeName the type name to convert
      * @return the type constant that corresponds to {@code typeName},
-     *         or {@code TYPE_ERROR} if the type is unknown
+     * or {@code TYPE_ERROR} if the type is unknown
      */
     static int interpretType(String typeName) {
         if ("unset".equals(typeName)) {
@@ -133,10 +133,10 @@ public class TypedProperties extends HashMap<String, Object> {
     /**
      * Parses the data in the reader.
      *
-     * @param r The {@code Reader} containing input data to parse
+     * @param r   The {@code Reader} containing input data to parse
      * @param map The {@code Map} to insert parameter values into
      * @throws ParseException if the input data is malformed
-     * @throws IOException if there is a problem reading from the {@code Reader}
+     * @throws IOException    if there is a problem reading from the {@code Reader}
      */
     static void parse(Reader r, Map<String, Object> map) throws ParseException, IOException {
         final StreamTokenizer st = initTokenizer(r);
@@ -146,7 +146,7 @@ public class TypedProperties extends HashMap<String, Object> {
          */
         final String identifierPattern = "[a-zA-Z_$][0-9a-zA-Z_$]*";
         final Pattern propertyNamePattern =
-            Pattern.compile("(" + identifierPattern + "\\.)*" + identifierPattern);
+                Pattern.compile("(" + identifierPattern + "\\.)*" + identifierPattern);
 
 
         while (true) {
@@ -207,7 +207,7 @@ public class TypedProperties extends HashMap<String, Object> {
                     //       the same property is defined with a different type.
                     if (value.getClass() != oldValue.getClass()) {
                         throw new ParseException(st,
-                            "(property previously declared as a different type)");
+                                "(property previously declared as a different type)");
                     }
                 }
                 map.put(propertyName, value);
@@ -224,10 +224,10 @@ public class TypedProperties extends HashMap<String, Object> {
     /**
      * Parses the next token in the StreamTokenizer as the specified type.
      *
-     * @param st The token source
+     * @param st   The token source
      * @param type The type to interpret next token as
      * @return a Boolean, Number subclass, or String representing the value.
-     *         Null strings are represented by the String instance NULL_STRING
+     * Null strings are represented by the String instance NULL_STRING
      * @throws IOException if there is a problem reading from the {@code StreamTokenizer}
      */
     static Object parseValue(StreamTokenizer st, final int type) throws IOException {
@@ -264,29 +264,29 @@ public class TypedProperties extends HashMap<String, Object> {
             // Ensure that the type can hold this value, and return.
             int width = (type >> 8) & 0xff;
             switch (width) {
-            case 1:
-                if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE) {
-                    throw new ParseException(st, "8-bit integer constant");
-                }
-                return new Byte((byte)value);
-            case 2:
-                if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {
-                    throw new ParseException(st, "16-bit integer constant");
-                }
-                return new Short((short)value);
-            case 4:
-                if (value < Integer.MIN_VALUE || value > Integer.MAX_VALUE) {
-                    throw new ParseException(st, "32-bit integer constant");
-                }
-                return new Integer((int)value);
-            case 8:
-                if (value < Long.MIN_VALUE || value > Long.MAX_VALUE) {
-                    throw new ParseException(st, "64-bit integer constant");
-                }
-                return new Long(value);
-            default:
-                throw new IllegalStateException(
-                    "Internal error; unexpected integer type width " + width);
+                case 1:
+                    if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE) {
+                        throw new ParseException(st, "8-bit integer constant");
+                    }
+                    return new Byte((byte) value);
+                case 2:
+                    if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {
+                        throw new ParseException(st, "16-bit integer constant");
+                    }
+                    return new Short((short) value);
+                case 4:
+                    if (value < Integer.MIN_VALUE || value > Integer.MAX_VALUE) {
+                        throw new ParseException(st, "32-bit integer constant");
+                    }
+                    return new Integer((int) value);
+                case 8:
+                    if (value < Long.MIN_VALUE || value > Long.MAX_VALUE) {
+                        throw new ParseException(st, "64-bit integer constant");
+                    }
+                    return new Long(value);
+                default:
+                    throw new IllegalStateException(
+                            "Internal error; unexpected integer type width " + width);
             }
         } else if ((type & 0xff) == 'F') {
             if (token != StreamTokenizer.TT_WORD) {
@@ -317,7 +317,7 @@ public class TypedProperties extends HashMap<String, Object> {
                         throw new ParseException(st, "32-bit float constant");
                     }
                 }
-                return new Float((float)value);
+                return new Float((float) value);
             } else {
                 // This property is a double; no need to truncate.
                 return new Double(value);
@@ -351,47 +351,47 @@ public class TypedProperties extends HashMap<String, Object> {
      * <p>
      * File syntax:
      * <blockquote>
-     *     <tt>
-     *     &lt;type&gt; &lt;property-name&gt; = &lt;value&gt; ;
-     *     <br />
-     *     unset ( &lt;property-name&gt; ) ;
-     *     </tt>
-     *     <p>
-     *     "//" comments everything until the end of the line.
-     *     "/&#2a;" comments everything until the next appearance of "&#2a;/".
-     *     <p>
-     *     Blank lines are ignored.
-     *     <p>
-     *     The only required whitespace is between the type and
-     *     the property name.
-     *     <p>
-     *     &lt;type&gt; is one of {boolean, byte, short, int, long,
-     *     float, double, String}, and is case-sensitive.
-     *     <p>
-     *     &lt;property-name&gt; is a valid fully-qualified class name
-     *     (one or more valid identifiers separated by dot characters).
-     *     <p>
-     *     &lt;value&gt; depends on the type:
-     *     <ul>
-     *     <li> boolean: one of {true, false} (case-sensitive)
-     *     <li> byte, short, int, long: a valid Java integer constant
-     *          (including non-base-10 constants like 0xabc and 074)
-     *          whose value does not overflow the type.  NOTE: these are
-     *          interpreted as Java integer values, so they are all signed.
-     *     <li> float, double: a valid Java floating-point constant.
-     *          If the type is float, the value must fit in 32 bits.
-     *     <li> String: a double-quoted string value, or the word {@code null}.
-     *          NOTE: the contents of the string must be 7-bit clean ASCII;
-     *          C-style octal escapes are recognized, but Unicode escapes are not.
-     *     </ul>
-     *     <p>
-     *     Passing a property-name to {@code unset()} will unset the property,
-     *     removing its value and type information, as if it had never been
-     *     defined.
+     * <tt>
+     * &lt;type&gt; &lt;property-name&gt; = &lt;value&gt; ;
+     * <br />
+     * unset ( &lt;property-name&gt; ) ;
+     * </tt>
+     * <p>
+     * "//" comments everything until the end of the line.
+     * "/&#2a;" comments everything until the next appearance of "&#2a;/".
+     * <p>
+     * Blank lines are ignored.
+     * <p>
+     * The only required whitespace is between the type and
+     * the property name.
+     * <p>
+     * &lt;type&gt; is one of {boolean, byte, short, int, long,
+     * float, double, String}, and is case-sensitive.
+     * <p>
+     * &lt;property-name&gt; is a valid fully-qualified class name
+     * (one or more valid identifiers separated by dot characters).
+     * <p>
+     * &lt;value&gt; depends on the type:
+     * <ul>
+     * <li> boolean: one of {true, false} (case-sensitive)
+     * <li> byte, short, int, long: a valid Java integer constant
+     * (including non-base-10 constants like 0xabc and 074)
+     * whose value does not overflow the type.  NOTE: these are
+     * interpreted as Java integer values, so they are all signed.
+     * <li> float, double: a valid Java floating-point constant.
+     * If the type is float, the value must fit in 32 bits.
+     * <li> String: a double-quoted string value, or the word {@code null}.
+     * NOTE: the contents of the string must be 7-bit clean ASCII;
+     * C-style octal escapes are recognized, but Unicode escapes are not.
+     * </ul>
+     * <p>
+     * Passing a property-name to {@code unset()} will unset the property,
+     * removing its value and type information, as if it had never been
+     * defined.
      * </blockquote>
      *
      * @param r The Reader to load properties from
-     * @throws IOException if an error occurs when reading the data
+     * @throws IOException              if an error occurs when reading the data
      * @throws IllegalArgumentException if the data is malformed
      */
     public void load(Reader r) throws IOException {
@@ -418,7 +418,7 @@ public class TypedProperties extends HashMap<String, Object> {
     public static class TypeException extends IllegalArgumentException {
         TypeException(String property, Object value, String requestedType) {
             super(property + " has type " + value.getClass().getName() +
-                ", not " + requestedType);
+                    ", not " + requestedType);
         }
     }
 
@@ -427,7 +427,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * has not been defined.
      *
      * @param property The name of the property to return
-     * @param def The default value to return if the property is not set
+     * @param def      The default value to return if the property is not set
      * @return the value of the property
      * @throws TypeException if the property is set and is not a boolean
      */
@@ -437,7 +437,7 @@ public class TypedProperties extends HashMap<String, Object> {
             return def;
         }
         if (value instanceof Boolean) {
-            return ((Boolean)value).booleanValue();
+            return ((Boolean) value).booleanValue();
         }
         throw new TypeException(property, value, "boolean");
     }
@@ -447,7 +447,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * has not been defined.
      *
      * @param property The name of the property to return
-     * @param def The default value to return if the property is not set
+     * @param def      The default value to return if the property is not set
      * @return the value of the property
      * @throws TypeException if the property is set and is not a byte
      */
@@ -457,7 +457,7 @@ public class TypedProperties extends HashMap<String, Object> {
             return def;
         }
         if (value instanceof Byte) {
-            return ((Byte)value).byteValue();
+            return ((Byte) value).byteValue();
         }
         throw new TypeException(property, value, "byte");
     }
@@ -467,7 +467,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * has not been defined.
      *
      * @param property The name of the property to return
-     * @param def The default value to return if the property is not set
+     * @param def      The default value to return if the property is not set
      * @return the value of the property
      * @throws TypeException if the property is set and is not a short
      */
@@ -477,7 +477,7 @@ public class TypedProperties extends HashMap<String, Object> {
             return def;
         }
         if (value instanceof Short) {
-            return ((Short)value).shortValue();
+            return ((Short) value).shortValue();
         }
         throw new TypeException(property, value, "short");
     }
@@ -487,7 +487,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * has not been defined.
      *
      * @param property The name of the property to return
-     * @param def The default value to return if the property is not set
+     * @param def      The default value to return if the property is not set
      * @return the value of the property
      * @throws TypeException if the property is set and is not an integer
      */
@@ -497,7 +497,7 @@ public class TypedProperties extends HashMap<String, Object> {
             return def;
         }
         if (value instanceof Integer) {
-            return ((Integer)value).intValue();
+            return ((Integer) value).intValue();
         }
         throw new TypeException(property, value, "int");
     }
@@ -507,7 +507,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * has not been defined.
      *
      * @param property The name of the property to return
-     * @param def The default value to return if the property is not set
+     * @param def      The default value to return if the property is not set
      * @return the value of the property
      * @throws TypeException if the property is set and is not a long
      */
@@ -517,7 +517,7 @@ public class TypedProperties extends HashMap<String, Object> {
             return def;
         }
         if (value instanceof Long) {
-            return ((Long)value).longValue();
+            return ((Long) value).longValue();
         }
         throw new TypeException(property, value, "long");
     }
@@ -527,7 +527,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * has not been defined.
      *
      * @param property The name of the property to return
-     * @param def The default value to return if the property is not set
+     * @param def      The default value to return if the property is not set
      * @return the value of the property
      * @throws TypeException if the property is set and is not a float
      */
@@ -537,7 +537,7 @@ public class TypedProperties extends HashMap<String, Object> {
             return def;
         }
         if (value instanceof Float) {
-            return ((Float)value).floatValue();
+            return ((Float) value).floatValue();
         }
         throw new TypeException(property, value, "float");
     }
@@ -547,7 +547,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * has not been defined.
      *
      * @param property The name of the property to return
-     * @param def The default value to return if the property is not set
+     * @param def      The default value to return if the property is not set
      * @return the value of the property
      * @throws TypeException if the property is set and is not a double
      */
@@ -557,7 +557,7 @@ public class TypedProperties extends HashMap<String, Object> {
             return def;
         }
         if (value instanceof Double) {
-            return ((Double)value).doubleValue();
+            return ((Double) value).doubleValue();
         }
         throw new TypeException(property, value, "double");
     }
@@ -567,7 +567,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * has not been defined.
      *
      * @param property The name of the property to return
-     * @param def The default value to return if the property is not set
+     * @param def      The default value to return if the property is not set
      * @return the value of the property
      * @throws TypeException if the property is set and is not a string
      */
@@ -579,7 +579,7 @@ public class TypedProperties extends HashMap<String, Object> {
         if (value == NULL_STRING) {
             return null;
         } else if (value instanceof String) {
-            return (String)value;
+            return (String) value;
         }
         throw new TypeException(property, value, "string");
     }
@@ -609,7 +609,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * @throws TypeException if the property is set and is not a byte
      */
     public byte getByte(String property) {
-        return getByte(property, (byte)0);
+        return getByte(property, (byte) 0);
     }
 
     /**
@@ -621,7 +621,7 @@ public class TypedProperties extends HashMap<String, Object> {
      * @throws TypeException if the property is set and is not a short
      */
     public short getShort(String property) {
-        return getShort(property, (short)0);
+        return getShort(property, (short) 0);
     }
 
     /**
@@ -695,9 +695,9 @@ public class TypedProperties extends HashMap<String, Object> {
      *
      * @param property the property to check
      * @return STRING_SET if the property is a string and is non-null.
-     *         STRING_NULL if the property is a string and is null.
-     *         STRING_NOT_SET if the property is not set (no type or value).
-     *         STRING_TYPE_MISMATCH if the property is set but is not a string.
+     * STRING_NULL if the property is a string and is null.
+     * STRING_NOT_SET if the property is not set (no type or value).
+     * STRING_TYPE_MISMATCH if the property is set but is not a string.
      */
     public int getStringInfo(String property) {
         Object value = super.get(property);

@@ -2,8 +2,6 @@ package co.siempo.phone.pause;
 
 import java.util.ArrayList;
 
-import co.siempo.phone.tempo.TempoDataModel;
-
 /**
  * Created by tkb on 2017-04-05.
  */
@@ -37,11 +35,11 @@ public class PauseDataModel {
         this.id = id;
     }
 
-    public ArrayList<PauseDataModel> getDefaultPauseDataModel(){
+    public ArrayList<PauseDataModel> getDefaultPauseDataModel() {
         String[] subjects =
-                {"Allow favorites","Allow calls"};
-        ArrayList<PauseDataModel>tempoList = new ArrayList<>();
-        for (int i= 0 ; i<subjects.length; i++){
+                {"Allow favorites", "Allow calls"};
+        ArrayList<PauseDataModel> tempoList = new ArrayList<>();
+        for (int i = 0; i < subjects.length; i++) {
             PauseDataModel pauseDataModel = new PauseDataModel();
             pauseDataModel.setName(subjects[i]);
             pauseDataModel.setId(i);
@@ -51,16 +49,16 @@ public class PauseDataModel {
         return tempoList;
     }
 
-    public ArrayList<PauseDataModel> getPauseDataModel(boolean b, boolean b1){
+    public ArrayList<PauseDataModel> getPauseDataModel(boolean b, boolean b1) {
         String[] subjects =
-                {"Allow favorites","Allow calls"};
-        boolean [] bools = {b, b1};
-        ArrayList<PauseDataModel>tempoList = new ArrayList<>();
-        for (int i= 0 ; i<subjects.length; i++){
+                {"Allow favorites", "Allow calls"};
+        boolean[] bools = {b, b1};
+        ArrayList<PauseDataModel> tempoList = new ArrayList<>();
+        for (int i = 0; i < subjects.length; i++) {
             PauseDataModel tempoDataModel = new PauseDataModel();
             tempoDataModel.setId(i);
             tempoDataModel.setName(subjects[i]);
-            tempoDataModel.setStatus(bools [i]);
+            tempoDataModel.setStatus(bools[i]);
             tempoList.add(tempoDataModel);
         }
         return tempoList;

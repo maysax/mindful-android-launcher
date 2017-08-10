@@ -57,6 +57,7 @@ public class VCardUtils {
      */
     private static class QuotedPrintableCodecPort {
         private static byte ESCAPE_CHAR = '=';
+
         public static final byte[] decodeQuotedPrintable(byte[] bytes)
                 throws DecoderException {
             if (bytes == null) {
@@ -189,7 +190,7 @@ public class VCardUtils {
      * when not, which should be set to label.
      */
     public static Object getPhoneTypeFromStrings(Collection<String> types,
-            String number) {
+                                                 String number) {
         if (number == null) {
             number = "";
         }
@@ -290,7 +291,7 @@ public class VCardUtils {
     }
 
     public static String[] sortNameElements(final int nameOrder,
-            final String familyName, final String middleName, final String givenName) {
+                                            final String familyName, final String middleName, final String givenName) {
         final String[] list = new String[3];
         final int nameOrderType = VCardConfig.getNameOrderType(nameOrder);
         switch (nameOrderType) {
@@ -332,14 +333,14 @@ public class VCardUtils {
     }
 
     public static String constructNameFromElements(final int nameOrder,
-            final String familyName, final String middleName, final String givenName) {
+                                                   final String familyName, final String middleName, final String givenName) {
         return constructNameFromElements(nameOrder, familyName, middleName, givenName,
                 null, null);
     }
 
     public static String constructNameFromElements(final int nameOrder,
-            final String familyName, final String middleName, final String givenName,
-            final String prefix, final String suffix) {
+                                                   final String familyName, final String middleName, final String givenName,
+                                                   final String prefix, final String suffix) {
         final StringBuilder builder = new StringBuilder();
         final String[] nameList = sortNameElements(nameOrder, familyName, middleName, givenName);
         boolean first = true;
@@ -368,11 +369,11 @@ public class VCardUtils {
 
     /**
      * Splits the given value into pieces using the delimiter ';' inside it.
-     *
+     * <p>
      * Escaped characters in those values are automatically unescaped into original form.
      */
     public static List<String> constructListFromValue(final String value,
-            final int vcardType) {
+                                                      final int vcardType) {
         final List<String> list = new ArrayList<String>();
         StringBuilder builder = new StringBuilder();
         final int length = value.length();
@@ -410,7 +411,7 @@ public class VCardUtils {
         return list;
     }
 
-    public static boolean containsOnlyPrintableAscii(final String...values) {
+    public static boolean containsOnlyPrintableAscii(final String... values) {
         if (values == null) {
             return true;
         }
@@ -441,7 +442,7 @@ public class VCardUtils {
      * See the definition of "7bit" in vCard 2.1 spec for more information.
      * </p>
      */
-    public static boolean containsOnlyNonCrLfPrintableAscii(final String...values) {
+    public static boolean containsOnlyNonCrLfPrintableAscii(final String... values) {
         if (values == null) {
             return true;
         }
@@ -470,7 +471,7 @@ public class VCardUtils {
     }
 
     private static final Set<Character> sUnAcceptableAsciiInV21WordSet =
-        new HashSet<Character>(Arrays.asList('[', ']', '=', ':', '.', ',', ' '));
+            new HashSet<Character>(Arrays.asList('[', ']', '=', ':', '.', ',', ' '));
 
     /**
      * <p>
@@ -479,12 +480,12 @@ public class VCardUtils {
      * </p>
      * <p>
      * Note: It is already known some devices (wrongly) outputs properties with characters
-     *       which should not be in the field. One example is "X-GOOGLE TALK". We accept
-     *       such kind of input but must never output it unless the target is very specific
-     *       to the device which is able to parse the malformed input.
+     * which should not be in the field. One example is "X-GOOGLE TALK". We accept
+     * such kind of input but must never output it unless the target is very specific
+     * to the device which is able to parse the malformed input.
      * </p>
      */
-    public static boolean containsOnlyAlphaDigitHyphen(final String...values) {
+    public static boolean containsOnlyAlphaDigitHyphen(final String... values) {
         if (values == null) {
             return true;
         }
@@ -510,9 +511,9 @@ public class VCardUtils {
             for (int i = 0; i < length; i = str.offsetByCodePoints(i, 1)) {
                 int codepoint = str.codePointAt(i);
                 if (!((lowerAlphabetFirst <= codepoint && codepoint < lowerAlphabetAfterLast) ||
-                    (upperAlphabetFirst <= codepoint && codepoint < upperAlphabetAfterLast) ||
-                    (digitFirst <= codepoint && codepoint < digitAfterLast) ||
-                    (codepoint == hyphen))) {
+                        (upperAlphabetFirst <= codepoint && codepoint < upperAlphabetAfterLast) ||
+                        (digitFirst <= codepoint && codepoint < digitAfterLast) ||
+                        (codepoint == hyphen))) {
                     return false;
                 }
             }
@@ -520,7 +521,7 @@ public class VCardUtils {
         return true;
     }
 
-    public static boolean containsOnlyWhiteSpaces(final String...values) {
+    public static boolean containsOnlyWhiteSpaces(final String... values) {
         if (values == null) {
             return true;
         }
@@ -564,7 +565,7 @@ public class VCardUtils {
         for (int i = 0; i < length; i = value.offsetByCodePoints(i, 1)) {
             final int c = value.codePointAt(i);
             if (!(asciiFirst <= c && c <= asciiLast) ||
-                    sUnAcceptableAsciiInV21WordSet.contains((char)c)) {
+                    sUnAcceptableAsciiInV21WordSet.contains((char) c)) {
                 return false;
             }
         }
@@ -572,23 +573,23 @@ public class VCardUtils {
     }
 
     private static final int[] sEscapeIndicatorsV30 = new int[]{
-        ':', ';', ',', ' '
+            ':', ';', ',', ' '
     };
 
     private static final int[] sEscapeIndicatorsV40 = new int[]{
-        ';', ':'
+            ';', ':'
     };
 
     /**
-     * <P>
+     * <p>
      * Returns String available as parameter value in vCard 3.0.
      * </P>
-     * <P>
+     * <p>
      * RFC 2426 requires vCard composer to quote parameter values when it contains
      * semi-colon, for example (See RFC 2426 for more information).
      * This method checks whether the given String can be used without quotes.
      * </P>
-     * <P>
+     * <p>
      * Note: We remove DQUOTE inside the given value silently for now.
      * </P>
      */
@@ -655,6 +656,7 @@ public class VCardUtils {
      * Guesses the format of input image. Currently just the first few bytes are used.
      * The type "GIF", "PNG", or "JPEG" is returned when possible. Returns null when
      * the guess failed.
+     *
      * @param input Image as byte array.
      * @return The image type or null when the type cannot be determined.
      */
@@ -681,7 +683,7 @@ public class VCardUtils {
     /**
      * @return True when all the given values are null or empty Strings.
      */
-    public static boolean areAllEmpty(final String...values) {
+    public static boolean areAllEmpty(final String... values) {
         if (values == null) {
             return true;
         }
@@ -696,7 +698,7 @@ public class VCardUtils {
 
     /**
      * Checks to see if a string looks like it could be an android generated quoted printable.
-     *
+     * <p>
      * Identification of quoted printable is not 100% reliable since it's just ascii.  But given
      * the high number and exact location of generated = signs, there is a high likely-hood that
      * it would be.

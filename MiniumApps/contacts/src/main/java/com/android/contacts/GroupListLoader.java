@@ -28,13 +28,13 @@ import android.provider.ContactsContract.Groups;
  */
 public final class GroupListLoader extends CursorLoader {
 
-    private final static String[] COLUMNS = new String[] {
-        Groups.ACCOUNT_NAME,
-        Groups.ACCOUNT_TYPE,
-        Groups.DATA_SET,
-        Groups._ID,
-        Groups.TITLE,
-        Groups.SUMMARY_COUNT,
+    private final static String[] COLUMNS = new String[]{
+            Groups.ACCOUNT_NAME,
+            Groups.ACCOUNT_TYPE,
+            Groups.DATA_SET,
+            Groups._ID,
+            Groups.TITLE,
+            Groups.SUMMARY_COUNT,
     };
 
     public final static int ACCOUNT_NAME = 0;
@@ -48,9 +48,9 @@ public final class GroupListLoader extends CursorLoader {
 
     public GroupListLoader(Context context) {
         super(context, GROUP_LIST_URI, COLUMNS, Groups.ACCOUNT_TYPE + " NOT NULL AND "
-                + Groups.ACCOUNT_NAME + " NOT NULL AND " + Groups.AUTO_ADD + "=0 AND " +
-                Groups.FAVORITES + "=0 AND " + Groups.DELETED + "=0", null,
+                        + Groups.ACCOUNT_NAME + " NOT NULL AND " + Groups.AUTO_ADD + "=0 AND " +
+                        Groups.FAVORITES + "=0 AND " + Groups.DELETED + "=0", null,
                 Groups.ACCOUNT_TYPE + ", " + Groups.ACCOUNT_NAME + ", " + Groups.DATA_SET + ", " +
-                Groups.TITLE + " COLLATE LOCALIZED ASC");
+                        Groups.TITLE + " COLLATE LOCALIZED ASC");
     }
 }

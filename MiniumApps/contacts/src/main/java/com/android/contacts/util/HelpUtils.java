@@ -49,20 +49,23 @@ public class HelpUtils {
      */
     private static String sCachedVersionCode = null;
 
-    /** Static helper that is not instantiable*/
-    private HelpUtils() { }
+    /**
+     * Static helper that is not instantiable
+     */
+    private HelpUtils() {
+    }
 
     /**
      * Prepares the help menu item by doing the following.
      * - If the string corresponding to the helpUrlResourceId is empty or null, then the help menu
-     *   item is made invisible.
+     * item is made invisible.
      * - Otherwise, this makes the help menu item visible and sets the intent for the help menu
-     *   item to view the URL.
+     * item to view the URL.
      *
      * @return returns whether the help menu item has been made visible.
      */
     public static boolean prepareHelpMenuItem(Context context, MenuItem helpMenuItem,
-            int helpUrlResourceId) {
+                                              int helpUrlResourceId) {
         String helpUrlString = context.getResources().getString(helpUrlResourceId);
         return prepareHelpMenuItem(context, helpMenuItem, helpUrlString);
     }
@@ -71,12 +74,12 @@ public class HelpUtils {
      * Prepares the help menu item by doing the following.
      * - If the helpUrlString is empty or null, the help menu item is made invisible.
      * - Otherwise, this makes the help menu item visible and sets the intent for the help menu
-     *   item to view the URL.
+     * item to view the URL.
      *
      * @return returns whether the help menu item has been made visible.
      */
     public static boolean prepareHelpMenuItem(Context context, MenuItem helpMenuItem,
-            String helpUrlString) {
+                                              String helpUrlString) {
         if (TextUtils.isEmpty(helpUrlString)) {
             // The help url string is empty or null, so set the help menu item to be invisible.
             helpMenuItem.setVisible(false);
@@ -107,6 +110,7 @@ public class HelpUtils {
     /**
      * Adds two query parameters into the Uri, namely the language code and the version code
      * of the app's package as gotten via the context.
+     *
      * @return the uri with added query parameters
      */
     private static Uri uriWithAddedParameters(Context context, Uri baseUri) {

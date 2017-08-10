@@ -38,7 +38,9 @@ import minium.co.contacts.R;
  */
 public abstract class GroupNameDialogFragment extends DialogFragment {
     protected abstract int getTitleResourceId();
+
     protected abstract void initializeGroupLabelEditText(EditText editText);
+
     protected abstract void onCompleted(String groupLabel);
 
     @Override
@@ -59,7 +61,7 @@ public abstract class GroupNameDialogFragment extends DialogFragment {
                         onCompleted(editText.getText().toString().trim());
                     }
                 }
-            );
+        );
 
         builder.setNegativeButton(android.R.string.cancel, null);
         final AlertDialog dialog = builder.create();

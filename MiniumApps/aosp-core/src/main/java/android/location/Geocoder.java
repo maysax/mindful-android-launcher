@@ -18,15 +18,15 @@ package android.location;
 
 import android.content.Context;
 import android.location.Address;
-import android.os.RemoteException;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A class for handling geocoding and reverse geocoding.  Geocoding is
@@ -37,7 +37,7 @@ import java.util.List;
  * reverse geocoded location description may vary, for example one
  * might contain the full street address of the closest building, while
  * another might contain only a city name and postal code.
- *
+ * <p>
  * The Geocoder class requires a backend service that is not included in
  * the core android framework.  The Geocoder query methods will return an
  * empty list if there no backend service in the platform.  Use the
@@ -72,8 +72,7 @@ public final class Geocoder {
      * given Locale.
      *
      * @param context the Context of the calling Activity
-     * @param locale the desired Locale for the query results
-     *
+     * @param locale  the desired Locale for the query results
      * @throws NullPointerException if Locale is null
      */
     public Geocoder(Context context, Locale locale) {
@@ -100,28 +99,26 @@ public final class Geocoder {
      * area immediately surrounding the given latitude and longitude.
      * The returned addresses will be localized for the locale
      * provided to this class's constructor.
-     *
+     * <p>
      * <p> The returned values may be obtained by means of a network lookup.
      * The results are a best guess and are not guaranteed to be meaningful or
      * correct. It may be useful to call this method from a thread separate from your
      * primary UI thread.
      *
-     * @param latitude the latitude a point for the search
-     * @param longitude the longitude a point for the search
+     * @param latitude   the latitude a point for the search
+     * @param longitude  the longitude a point for the search
      * @param maxResults max number of addresses to return. Smaller numbers (1 to 5) are recommended
-     *
      * @return a list of Address objects. Returns null or empty list if no matches were
      * found or there is no backend service available.
-     *
      * @throws IllegalArgumentException if latitude is
-     * less than -90 or greater than 90
+     *                                  less than -90 or greater than 90
      * @throws IllegalArgumentException if longitude is
-     * less than -180 or greater than 180
-     * @throws IOException if the network is unavailable or any other
-     * I/O problem occurs
+     *                                  less than -180 or greater than 180
+     * @throws IOException              if the network is unavailable or any other
+     *                                  I/O problem occurs
      */
     public List<Address> getFromLocation(double latitude, double longitude, int maxResults)
-        throws IOException {
+            throws IOException {
         if (latitude < -90.0 || latitude > 90.0) {
             throw new IllegalArgumentException("latitude == " + latitude);
         }
@@ -130,8 +127,8 @@ public final class Geocoder {
         }
         try {
             List<Address> results = new ArrayList<Address>();
-            String ex =  mService.getFromLocation(latitude, longitude, maxResults,
-                mParams, results);
+            String ex = mService.getFromLocation(latitude, longitude, maxResults,
+                    mParams, results);
             if (ex != null) {
                 throw new IOException(ex);
             } else {
@@ -150,21 +147,19 @@ public final class Geocoder {
      * Mountain View, CA", an airport code such as "SFO", etc..  The
      * returned addresses will be localized for the locale provided to
      * this class's constructor.
-     *
+     * <p>
      * <p> The query will block and returned values will be obtained by means of a network lookup.
      * The results are a best guess and are not guaranteed to be meaningful or
      * correct. It may be useful to call this method from a thread separate from your
      * primary UI thread.
      *
      * @param locationName a user-supplied description of a location
-     * @param maxResults max number of results to return. Smaller numbers (1 to 5) are recommended
-     *
+     * @param maxResults   max number of results to return. Smaller numbers (1 to 5) are recommended
      * @return a list of Address objects. Returns null or empty list if no matches were
      * found or there is no backend service available.
-     *
      * @throws IllegalArgumentException if locationName is null
-     * @throws IOException if the network is unavailable or any other
-     * I/O problem occurs
+     * @throws IOException              if the network is unavailable or any other
+     *                                  I/O problem occurs
      */
     public List<Address> getFromLocationName(String locationName, int maxResults) throws IOException {
         if (locationName == null) {
@@ -173,7 +168,7 @@ public final class Geocoder {
         try {
             List<Address> results = new ArrayList<Address>();
             String ex = mService.getFromLocationName(locationName,
-                0, 0, 0, 0, maxResults, mParams, results);
+                    0, 0, 0, 0, maxResults, mParams, results);
             if (ex != null) {
                 throw new IOException(ex);
             } else {
@@ -192,61 +187,59 @@ public final class Geocoder {
      * Mountain View, CA", an airport code such as "SFO", etc..  The
      * returned addresses will be localized for the locale provided to
      * this class's constructor.
-     *
+     * <p>
      * <p> You may specify a bounding box for the search results by including
      * the Latitude and Longitude of the Lower Left point and Upper Right
      * point of the box.
-     *
+     * <p>
      * <p> The query will block and returned values will be obtained by means of a network lookup.
      * The results are a best guess and are not guaranteed to be meaningful or
      * correct. It may be useful to call this method from a thread separate from your
      * primary UI thread.
      *
-     * @param locationName a user-supplied description of a location
-     * @param maxResults max number of addresses to return. Smaller numbers (1 to 5) are recommended
-     * @param lowerLeftLatitude the latitude of the lower left corner of the bounding box
-     * @param lowerLeftLongitude the longitude of the lower left corner of the bounding box
-     * @param upperRightLatitude the latitude of the upper right corner of the bounding box
+     * @param locationName        a user-supplied description of a location
+     * @param maxResults          max number of addresses to return. Smaller numbers (1 to 5) are recommended
+     * @param lowerLeftLatitude   the latitude of the lower left corner of the bounding box
+     * @param lowerLeftLongitude  the longitude of the lower left corner of the bounding box
+     * @param upperRightLatitude  the latitude of the upper right corner of the bounding box
      * @param upperRightLongitude the longitude of the upper right corner of the bounding box
-     *
      * @return a list of Address objects. Returns null or empty list if no matches were
      * found or there is no backend service available.
-     *
      * @throws IllegalArgumentException if locationName is null
      * @throws IllegalArgumentException if any latitude is
-     * less than -90 or greater than 90
+     *                                  less than -90 or greater than 90
      * @throws IllegalArgumentException if any longitude is
-     * less than -180 or greater than 180
-     * @throws IOException if the network is unavailable or any other
-     * I/O problem occurs
+     *                                  less than -180 or greater than 180
+     * @throws IOException              if the network is unavailable or any other
+     *                                  I/O problem occurs
      */
     public List<Address> getFromLocationName(String locationName, int maxResults,
-        double lowerLeftLatitude, double lowerLeftLongitude,
-        double upperRightLatitude, double upperRightLongitude) throws IOException {
+                                             double lowerLeftLatitude, double lowerLeftLongitude,
+                                             double upperRightLatitude, double upperRightLongitude) throws IOException {
         if (locationName == null) {
             throw new IllegalArgumentException("locationName == null");
         }
         if (lowerLeftLatitude < -90.0 || lowerLeftLatitude > 90.0) {
             throw new IllegalArgumentException("lowerLeftLatitude == "
-                + lowerLeftLatitude);
+                    + lowerLeftLatitude);
         }
         if (lowerLeftLongitude < -180.0 || lowerLeftLongitude > 180.0) {
             throw new IllegalArgumentException("lowerLeftLongitude == "
-                + lowerLeftLongitude);
+                    + lowerLeftLongitude);
         }
         if (upperRightLatitude < -90.0 || upperRightLatitude > 90.0) {
             throw new IllegalArgumentException("upperRightLatitude == "
-                + upperRightLatitude);
+                    + upperRightLatitude);
         }
         if (upperRightLongitude < -180.0 || upperRightLongitude > 180.0) {
             throw new IllegalArgumentException("upperRightLongitude == "
-                + upperRightLongitude);
+                    + upperRightLongitude);
         }
         try {
             ArrayList<Address> result = new ArrayList<Address>();
-            String ex =  mService.getFromLocationName(locationName,
-                lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude,
-                maxResults, mParams, result);
+            String ex = mService.getFromLocationName(locationName,
+                    lowerLeftLatitude, lowerLeftLongitude, upperRightLatitude, upperRightLongitude,
+                    maxResults, mParams, result);
             if (ex != null) {
                 throw new IOException(ex);
             } else {

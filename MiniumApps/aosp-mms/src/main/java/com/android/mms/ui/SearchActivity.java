@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2009, Google Inc.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,10 +15,6 @@
  */
 
 package com.android.mms.ui;
-
-import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import android.app.ActionBar;
 import android.app.ListActivity;
@@ -49,6 +45,10 @@ import com.android.mms.MmsApp;
 import com.android.mms.R;
 import com.android.mms.data.Contact;
 
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /***
  * Presents a List of search results.  Each item in the list represents a thread which
  * matches.  The item contains the contact (or phone number) as the "title" and a
@@ -57,8 +57,7 @@ import com.android.mms.data.Contact;
  * snippet is highlighted.
  */
 
-public class SearchActivity extends ListActivity
-{
+public class SearchActivity extends ListActivity {
     private AsyncQueryHandler mQueryHandler;
 
     // Track which TextView's show which Contact objects so that we can update
@@ -235,7 +234,7 @@ public class SearchActivity extends ListActivity
             searchStringParameter = getIntent().getStringExtra("intent_extra_data_key" /*SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA*/);
         }
         final String searchString =
-            searchStringParameter != null ? searchStringParameter.trim() : searchStringParameter;
+                searchStringParameter != null ? searchStringParameter.trim() : searchStringParameter;
 
         // If we're being launched with a source_id then just go to that particular thread.
         // Work around the fact that suggestions can only launch the search activity, not some
@@ -287,16 +286,16 @@ public class SearchActivity extends ListActivity
             protected void onQueryComplete(int token, Object cookie, Cursor c) {
                 if (c == null) {
                     setTitle(getResources().getQuantityString(
-                        R.plurals.search_results_title,
-                        0,
-                        0,
-                        searchString));
+                            R.plurals.search_results_title,
+                            0,
+                            0,
+                            searchString));
                     return;
                 }
                 final int threadIdPos = c.getColumnIndex("thread_id");
-                final int addressPos  = c.getColumnIndex("address");
-                final int bodyPos     = c.getColumnIndex("body");
-                final int rowidPos    = c.getColumnIndex("_id");
+                final int addressPos = c.getColumnIndex("address");
+                final int bodyPos = c.getColumnIndex("body");
+                final int rowidPos = c.getColumnIndex("_id");
 
                 int cursorCount = c.getCount();
                 setTitle(getResources().getQuantityString(
@@ -312,8 +311,8 @@ public class SearchActivity extends ListActivity
                         c, false /* no auto-requery */) {
                     @Override
                     public void bindView(View view, Context context, Cursor cursor) {
-                        final TextView title = (TextView)(view.findViewById(R.id.title));
-                        final TextViewSnippet snippet = (TextViewSnippet)(view.findViewById(R.id.subtitle));
+                        final TextView title = (TextView) (view.findViewById(R.id.title));
+                        final TextViewSnippet snippet = (TextViewSnippet) (view.findViewById(R.id.subtitle));
 
                         String address = cursor.getString(addressPos);
                         Contact contact = address != null ? Contact.get(address, false) : null;
@@ -359,7 +358,7 @@ public class SearchActivity extends ListActivity
 
                 // Remember the query if there are actual results
                 if (cursorCount > 0) {
-                    SearchRecentSuggestions recent = ((MmsApp)getApplication()).getRecentSuggestions();
+                    SearchRecentSuggestions recent = ((MmsApp) getApplication()).getRecentSuggestions();
                     if (recent != null) {
                         recent.saveRecentQuery(
                                 searchString,
@@ -372,7 +371,7 @@ public class SearchActivity extends ListActivity
 
         // don't pass a projection since the search uri ignores it
         Uri uri = Telephony.MmsSms.SEARCH_URI.buildUpon()
-                    .appendQueryParameter("pattern", searchString).build();
+                .appendQueryParameter("pattern", searchString).build();
 
         // kick off a query for the threads which match the search string
         mQueryHandler.startQuery(0, null, uri, null, null, null, null);

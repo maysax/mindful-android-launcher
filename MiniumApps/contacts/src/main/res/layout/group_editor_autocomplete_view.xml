@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,14 +15,10 @@
 
 <!-- Autocomplete text input field for adding new members to a group in the group editor -->
 
-<AutoCompleteTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:textColor="?android:attr/textColorPrimary"
-    android:imeOptions="flagNoExtractUi|flagNoFullscreen"
-    android:hint="@string/enter_contact_name"
-    android:minHeight="48dip"
-    android:paddingLeft="@dimen/group_editor_autocomplete_left_padding"
-    android:paddingStart="@dimen/group_editor_autocomplete_left_padding"/>
+    android:imeOptions="flagNoExtractUi|flagNoFullscreen" android:hint="@string/enter_contact_name"
+    android:minHeight="48dip" android:paddingLeft="@dimen/group_editor_autocomplete_left_padding"
+    android:paddingStart="@dimen/group_editor_autocomplete_left_padding" />

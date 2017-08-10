@@ -32,9 +32,9 @@ import java.util.ArrayList;
 
 /**
  * A singleton that keeps track of the last known provider status.
- *
+ * <p>
  * All methods must be called on the UI thread unless noted otherwise.
- *
+ * <p>
  * All members must be set on the UI thread unless noted otherwise.
  */
 public class ProviderStatusWatcher extends ContentObserver {
@@ -49,10 +49,14 @@ public class ProviderStatusWatcher extends ContentObserver {
     }
 
     public static class Status {
-        /** See {@link ProviderStatus#STATUS} */
+        /**
+         * See {@link ProviderStatus#STATUS}
+         */
         public final int status;
 
-        /** See {@link ProviderStatus#DATA1} */
+        /**
+         * See {@link ProviderStatus#DATA1}
+         */
         public final String data;
 
         public Status(int status, String data) {
@@ -61,7 +65,7 @@ public class ProviderStatusWatcher extends ContentObserver {
         }
     }
 
-    private static final String[] PROJECTION = new String[] {
+    private static final String[] PROJECTION = new String[]{
             ProviderStatus.STATUS,
             "data1"
     };
@@ -82,7 +86,9 @@ public class ProviderStatusWatcher extends ContentObserver {
 
     private LoaderTask mLoaderTask;
 
-    /** Last known provider status.  This can be changed on a worker thread. */
+    /**
+     * Last known provider status.  This can be changed on a worker thread.
+     */
     private Status mProviderStatus;
 
     private final ArrayList<ProviderStatusListener> mListeners = Lists.newArrayList();
@@ -109,12 +115,16 @@ public class ProviderStatusWatcher extends ContentObserver {
         mContext = context;
     }
 
-    /** Add a listener. */
+    /**
+     * Add a listener.
+     */
     public void addListener(ProviderStatusListener listener) {
         mListeners.add(listener);
     }
 
-    /** Remove a listener */
+    /**
+     * Remove a listener
+     */
     public void removeListener(ProviderStatusListener listener) {
         mListeners.remove(listener);
     }
@@ -141,7 +151,7 @@ public class ProviderStatusWatcher extends ContentObserver {
     public void start() {
         if (++mStartRequestedCount == 1) {
             mContext.getContentResolver()
-                .registerContentObserver(ProviderStatus.CONTENT_URI, false, this);
+                    .registerContentObserver(ProviderStatus.CONTENT_URI, false, this);
             startLoading();
 
             if (DEBUG) {
@@ -171,15 +181,15 @@ public class ProviderStatusWatcher extends ContentObserver {
 
     /**
      * @return last known provider status.
-     *
+     * <p>
      * If this method is called when we haven't started the status query or the query is still in
      * progress, it will start a query in a worker thread if necessary, and *wait for the result*.
-     *
+     * <p>
      * This means this method is essentially a blocking {@link ProviderStatus#CONTENT_URI} query.
      * This URI is not backed by the file system, so is usually fast enough to perform on the main
      * thread, but in extreme cases (when the system takes a while to bring up the contacts
      * provider?) this may still cause ANRs.
-     *
+     * <p>
      * In order to avoid that, if we can't load the status within {@link #LOAD_WAIT_TIMEOUT_MS},
      * we'll give up and just returns {@link ProviderStatus#STATUS_UPGRADING} in order to unblock
      * the UI thread.  The actual result will be delivered later via {@link ProviderStatusListener}.
@@ -271,7 +281,7 @@ public class ProviderStatusWatcher extends ContentObserver {
 
     /**
      * Called when provider status may has changed.
-     *
+     * <p>
      * This method will be called on a worker thread by the framework.
      */
     @Override

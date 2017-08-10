@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -44,7 +43,6 @@ import minium.co.contacts.R;
 
 /**
  * Utilities related to loading/saving contact photos.
- *
  */
 public class ContactPhotoUtils {
     private static final String TAG = "ContactPhotoUtils";
@@ -55,17 +53,17 @@ public class ContactPhotoUtils {
      * Generate a new, unique file to be used as an out-of-band communication
      * channel, since hi-res Bitmaps are too big to serialize into a Bundle.
      * This file will be passed (as a uri) to other activities (such as the gallery/camera/
-     *  cropper/etc.), and read by us once they are finished writing it.
+     * cropper/etc.), and read by us once they are finished writing it.
      */
     public static Uri generateTempImageUri(Context context) {
-        final String  fileProviderAuthority = context.getResources().getString(
+        final String fileProviderAuthority = context.getResources().getString(
                 R.string.photo_file_provider_authority);
         return FileProvider.getUriForFile(context, fileProviderAuthority,
                 new File(pathForTempPhoto(context, generateTempPhotoFileName())));
     }
 
     public static Uri generateTempCroppedImageUri(Context context) {
-        final String  fileProviderAuthority = context.getResources().getString(
+        final String fileProviderAuthority = context.getResources().getString(
                 R.string.photo_file_provider_authority);
         return FileProvider.getUriForFile(context, fileProviderAuthority,
                 new File(pathForTempPhoto(context, generateTempCroppedPhotoFileName())));
@@ -92,6 +90,7 @@ public class ContactPhotoUtils {
 
     /**
      * Given a uri pointing to a bitmap, reads it into a bitmap and returns it.
+     *
      * @throws FileNotFoundException
      */
     public static Bitmap getBitmapFromUri(Context context, Uri uri) throws FileNotFoundException {
@@ -134,7 +133,7 @@ public class ContactPhotoUtils {
     /**
      * Adds common extras to gallery intents.
      *
-     * @param intent The intent to add extras to.
+     * @param intent   The intent to add extras to.
      * @param photoUri The uri of the file to save the image to.
      */
     public static void addPhotoPickerExtras(Intent intent, Uri photoUri) {
@@ -148,7 +147,7 @@ public class ContactPhotoUtils {
      * Given an input photo stored in a uri, save it to a destination uri
      */
     public static boolean savePhotoFromUriToUri(Context context, Uri inputUri, Uri outputUri,
-            boolean deleteAfterSave) {
+                                                boolean deleteAfterSave) {
         FileOutputStream outputStream = null;
         InputStream inputStream = null;
         try {

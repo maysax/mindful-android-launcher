@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2010 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2010 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -16,28 +15,21 @@
 
 <com.android.contacts.editor.GroupMembershipView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/group_membership_view"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:id="@+id/group_membership_view" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:orientation="vertical">
 
-    <include
-        layout="@layout/edit_kind_title" />
+    <include layout="@layout/edit_kind_title" />
 
-    <Button
-        style="@style/SpinnerButtonStyle"
-        android:id="@+id/group_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <Button style="@style/SpinnerButtonStyle" android:id="@+id/group_list"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
         android:minHeight="@dimen/editor_min_line_item_height"
         android:layout_marginLeft="@dimen/editor_field_left_padding"
         android:layout_marginRight="@dimen/editor_field_left_padding"
         android:layout_marginStart="@dimen/editor_field_left_padding"
         android:layout_marginEnd="@dimen/editor_field_left_padding"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="start|center_vertical"
-        android:focusable="true"
+        android:gravity="start|center_vertical" android:focusable="true"
         android:paddingStart="12dip"
-        android:paddingEnd="@dimen/editor_spinner_end_padding_workaround"/>
+        android:paddingEnd="@dimen/editor_spinner_end_padding_workaround" />
 
 </com.android.contacts.editor.GroupMembershipView>

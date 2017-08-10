@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:showDividers="none">
+
     <TableRow
         android:layout_width="fill_parent"
         android:layout_marginLeft="18dp"
@@ -19,16 +20,15 @@
             android:textSize="14sp"
             android:fontFamily="sans-serif"
             android:textColor="#de000000"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
+
         <CheckBox
             android:id="@+id/check_day"
             android:layout_width="wrap_content"
             android:gravity="right"
             android:paddingRight="10dp"
             android:buttonTint="#705c7f"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
 
     </TableRow>

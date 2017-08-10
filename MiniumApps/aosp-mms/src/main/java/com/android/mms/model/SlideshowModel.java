@@ -18,27 +18,6 @@
 package com.android.mms.model;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-
-import org.w3c.dom.NodeList;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.smil.SMILDocument;
-import org.w3c.dom.smil.SMILElement;
-import org.w3c.dom.smil.SMILLayoutElement;
-import org.w3c.dom.smil.SMILMediaElement;
-import org.w3c.dom.smil.SMILParElement;
-import org.w3c.dom.smil.SMILRegionElement;
-import org.w3c.dom.smil.SMILRootLayoutElement;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -50,6 +29,7 @@ import com.android.mms.ContentRestrictionException;
 import com.android.mms.ExceedMessageSizeException;
 import com.android.mms.LogTag;
 import com.android.mms.MmsConfig;
+import com.android.mms.UnsupportContentTypeException;
 import com.android.mms.dom.smil.parser.SmilXmlSerializer;
 import com.android.mms.layout.LayoutManager;
 import com.google.android.mms.ContentType;
@@ -60,7 +40,27 @@ import com.google.android.mms.pdu.PduBody;
 import com.google.android.mms.pdu.PduHeaders;
 import com.google.android.mms.pdu.PduPart;
 import com.google.android.mms.pdu.PduPersister;
-import com.android.mms.UnsupportContentTypeException;
+
+import org.w3c.dom.NodeList;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.smil.SMILDocument;
+import org.w3c.dom.smil.SMILElement;
+import org.w3c.dom.smil.SMILLayoutElement;
+import org.w3c.dom.smil.SMILMediaElement;
+import org.w3c.dom.smil.SMILParElement;
+import org.w3c.dom.smil.SMILRegionElement;
+import org.w3c.dom.smil.SMILRootLayoutElement;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class SlideshowModel extends Model
         implements List<SlideModel>, IModelChangedObserver {
@@ -71,7 +71,7 @@ public class SlideshowModel extends Model
     private SMILDocument mDocumentCache;
     private PduBody mPduBodyCache;
     private int mCurrentMessageSize;    // This is the current message size, not including
-                                        // attachments that can be resized (such as photos)
+    // attachments that can be resized (such as photos)
     private int mTotalMessageSize;      // This is the computed total message size
     private Context mContext;
 
@@ -84,7 +84,7 @@ public class SlideshowModel extends Model
         mContext = context;
     }
 
-    private SlideshowModel (
+    private SlideshowModel(
             LayoutModel layouts, ArrayList<SlideModel> slides,
             SMILDocument documentCache, PduBody pbCache,
             Context context) {
@@ -175,19 +175,19 @@ public class SlideshowModel extends Model
                             media.setDuration(mediadur);
                         }
 
-                        if ((int)mediadur / 1000 != dur) {
+                        if ((int) mediadur / 1000 != dur) {
                             String tag = sme.getTagName();
 
                             if (ContentType.isVideoType(media.mContentType)
-                              || tag.equals(SmilHelper.ELEMENT_TAG_VIDEO)
-                              || ContentType.isAudioType(media.mContentType)
-                              || tag.equals(SmilHelper.ELEMENT_TAG_AUDIO)) {
+                                    || tag.equals(SmilHelper.ELEMENT_TAG_VIDEO)
+                                    || ContentType.isAudioType(media.mContentType)
+                                    || tag.equals(SmilHelper.ELEMENT_TAG_AUDIO)) {
                                 /*
                                 * add 1 sec to release and close audio/video
                                 * for guaranteeing the audio/video playing.
                                 * because the mmsc does not support the slide duration.
                                 */
-                                par.setDur((float)mediadur / 1000 + 1);
+                                par.setDur((float) mediadur / 1000 + 1);
                             } else {
                                 /*
                                 * If a slide has an image and an audio/video element
@@ -195,13 +195,13 @@ public class SlideshowModel extends Model
                                 * The Image disappear before the slide play done. so have to match
                                 * an image duration to the slide duration.
                                 */
-                                if ((int)mediadur / 1000 < dur) {
-                                    media.setDuration((int)dur * 1000);
+                                if ((int) mediadur / 1000 < dur) {
+                                    media.setDuration((int) dur * 1000);
                                 } else {
-                                    if ((int)dur != 0) {
-                                        media.setDuration((int)dur * 1000);
+                                    if ((int) dur != 0) {
+                                        media.setDuration((int) dur * 1000);
                                     } else {
-                                        par.setDur((float)mediadur / 1000);
+                                        par.setDur((float) mediadur / 1000);
                                     }
                                 }
                             }
@@ -277,8 +277,7 @@ public class SlideshowModel extends Model
                 if (startWithContentId) {
                     //Keep the original Content-Id.
                     part.setContentId(location.getBytes());
-                }
-                else {
+                } else {
                     int index = location.lastIndexOf(".");
                     String contentId = (index == -1) ? location
                             : location.substring(0, index);
@@ -498,7 +497,7 @@ public class SlideshowModel extends Model
     }
 
     public boolean addAll(int location,
-            Collection<? extends SlideModel> collection) {
+                          Collection<? extends SlideModel> collection) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
@@ -548,7 +547,7 @@ public class SlideshowModel extends Model
             }
         }
 
-        slide =  mSlides.set(location, object);
+        slide = mSlides.set(location, object);
         if (slide != null) {
             slide.unregisterAllModelChangedObservers();
         }
@@ -626,7 +625,7 @@ public class SlideshowModel extends Model
      * - Exactly one slide
      * - Exactly one multimedia attachment, but no audio
      * - It can optionally have a caption
-    */
+     */
     public boolean isSimple() {
         // There must be one (and only one) slide.
         if (size() != 1)

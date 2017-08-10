@@ -31,14 +31,30 @@ public class ActionRouter {
 
         switch (current.getType()) {
 
-            case CALL: handleCall(); break;
-            case TEXT: handleText(); break;
-            case NOTE: handleNote(); break;
-            case CONTACT: handleContacts(); break;
-            case CONTACT_NUMBER: handleContactNumber(); break;
-            case EMPTY: handleEmpty(); break;
-            case DATA: handleData(); break;
-            case END_OP: handleEndOp(); break;
+            case CALL:
+                handleCall();
+                break;
+            case TEXT:
+                handleText();
+                break;
+            case NOTE:
+                handleNote();
+                break;
+            case CONTACT:
+                handleContacts();
+                break;
+            case CONTACT_NUMBER:
+                handleContactNumber();
+                break;
+            case EMPTY:
+                handleEmpty();
+                break;
+            case DATA:
+                handleData();
+                break;
+            case END_OP:
+                handleEndOp();
+                break;
         }
     }
 
@@ -53,7 +69,7 @@ public class ActionRouter {
             new SmsObserver(activity, phoneNumber, message).start();
 
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNumber, null, message , null, null);
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
             UIUtils.toast(activity, "The message will not get sent.");

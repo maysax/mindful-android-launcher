@@ -17,16 +17,16 @@
 
 package com.android.mms.dom.smil.parser;
 
+import android.util.Log;
+
+import com.android.mms.LogTag;
+import com.android.mms.dom.smil.SmilDocumentImpl;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.smil.SMILDocument;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
-
-import android.util.Log;
-
-import com.android.mms.LogTag;
-import com.android.mms.dom.smil.SmilDocumentImpl;
 
 public class SmilContentHandler extends DefaultHandler {
     private static final String TAG = LogTag.TAG;
@@ -38,7 +38,6 @@ public class SmilContentHandler extends DefaultHandler {
 
     /**
      * Resets this handler.
-     *
      */
     public void reset() {
         mSmilDocument = new SmilDocumentImpl();
@@ -47,6 +46,7 @@ public class SmilContentHandler extends DefaultHandler {
 
     /**
      * Returns the SMILDocument.
+     *
      * @return The SMILDocument instance
      */
     public SMILDocument getSmilDocument() {
@@ -63,8 +63,8 @@ public class SmilContentHandler extends DefaultHandler {
             for (int i = 0; i < attributes.getLength(); i++) {
                 if (LOCAL_LOGV) {
                     Log.v(TAG, "Attribute " + i +
-                        " lname = " + attributes.getLocalName(i) +
-                        " value = " + attributes.getValue(i));
+                            " lname = " + attributes.getLocalName(i) +
+                            " value = " + attributes.getValue(i));
                 }
                 element.setAttribute(attributes.getLocalName(i),
                         attributes.getValue(i));

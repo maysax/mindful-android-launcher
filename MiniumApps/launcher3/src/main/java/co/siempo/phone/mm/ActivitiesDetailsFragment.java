@@ -51,7 +51,7 @@ public class ActivitiesDetailsFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        titleActionBar.setText(title+" Timer");
+        titleActionBar.setText(title + " Timer");
         activitiesStorage = DBUtility.getActivitySession()
                 .queryBuilder().where(ActivitiesStorageDao.Properties.Name.eq(title)).unique();
 

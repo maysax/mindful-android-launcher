@@ -1,14 +1,11 @@
 package co.siempo.phone.receiver;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
-
-import com.james.status.data.icon.NetworkIconData;
 
 import co.siempo.phone.event.ConnectivityEvent;
 import de.greenrobot.event.EventBus;

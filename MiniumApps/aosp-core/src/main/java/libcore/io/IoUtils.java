@@ -18,6 +18,7 @@ package libcore.io;
 
 import android.system.ErrnoException;
 import android.system.StructStat;
+
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -27,6 +28,7 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+
 import static android.system.OsConstants.*;
 
 public final class IoUtils {
@@ -118,7 +120,7 @@ public final class IoUtils {
 
     /**
      * Do not use. Use createTemporaryDirectory instead.
-     *
+     * <p>
      * Used by frameworks/base unit tests to clean up a temporary directory.
      * Deliberately ignores errors, on the assumption that test cleanup is only
      * supposed to be best-effort.
@@ -152,7 +154,7 @@ public final class IoUtils {
 
     /**
      * Do not use. This is for System.loadLibrary use only.
-     *
+     * <p>
      * Checks whether {@code path} can be opened read-only. Similar to File.exists, but doesn't
      * require read permission on the parent, so it'll work in more cases, and allow you to
      * remove read permission from more directories. Everyone else should just open(2) and then
@@ -183,11 +185,11 @@ public final class IoUtils {
      * A convenience class for reading the contents of a file into a {@code String}
      * or a {@code byte[]}. This class attempts to minimize the number of allocations
      * and copies required to read this data.
-     *
+     * <p>
      * For the case where we know the "true" length of a file (most ordinary files)
      * we allocate exactly one byte[] and copy data into that. Calls to
      * {@link #toByteArray} will then return the internal array and <b>not</b> a copy.
-     *
+     * <p>
      * <b>Note that an absolute path must be supplied. Expect your reads to fail
      * if one isn't.</b>
      */

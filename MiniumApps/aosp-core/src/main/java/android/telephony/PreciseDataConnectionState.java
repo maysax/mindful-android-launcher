@@ -16,26 +16,24 @@
 
 package android.telephony;
 
-import android.os.Bundle;
+import android.net.LinkProperties;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.telephony.Rlog;
 import android.telephony.TelephonyManager;
-import android.net.LinkProperties;
 
 /**
  * Contains precise data connection state.
- *
+ * <p>
  * The following data connection information is included in returned PreciseDataConnectionState:
- *
+ * <p>
  * <ul>
- *   <li>Data connection state.
- *   <li>Network type of the connection.
- *   <li>APN type.
- *   <li>APN.
- *   <li>Data connection change reason.
- *   <li>The properties of the network link.
- *   <li>Data connection fail cause.
+ * <li>Data connection state.
+ * <li>Network type of the connection.
+ * <li>APN type.
+ * <li>APN.
+ * <li>Data connection change reason.
+ * <li>The properties of the network link.
+ * <li>Data connection fail cause.
  * </ul>
  *
  * @hide
@@ -56,8 +54,8 @@ public class PreciseDataConnectionState implements Parcelable {
      * @hide
      */
     public PreciseDataConnectionState(int state, int networkType,
-            String apnType, String apn, String reason,
-            LinkProperties linkProperties, String failCause) {
+                                      String apnType, String apn, String reason,
+                                      LinkProperties linkProperties, String failCause) {
         mState = state;
         mNetworkType = networkType;
         mAPNType = apnType;
@@ -84,7 +82,7 @@ public class PreciseDataConnectionState implements Parcelable {
         mAPNType = in.readString();
         mAPN = in.readString();
         mReason = in.readString();
-        mLinkProperties = (LinkProperties)in.readParcelable(null);
+        mLinkProperties = (LinkProperties) in.readParcelable(null);
         mFailCause = in.readString();
     }
 

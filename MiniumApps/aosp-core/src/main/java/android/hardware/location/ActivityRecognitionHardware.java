@@ -209,18 +209,26 @@ public class ActivityRecognitionHardware extends IActivityRecognitionHardware.St
     }
 
     // native bindings
-    static { nativeClassInit(); }
+    static {
+        nativeClassInit();
+    }
 
     private static native void nativeClassInit();
+
     private static native boolean nativeIsSupported();
 
     private native void nativeInitialize();
+
     private native void nativeRelease();
+
     private native String[] nativeGetSupportedActivities();
+
     private native int nativeEnableActivityEvent(
             int activityType,
             int eventType,
             long reportLatenceNs);
+
     private native int nativeDisableActivityEvent(int activityType, int eventType);
+
     private native int nativeFlush();
 }

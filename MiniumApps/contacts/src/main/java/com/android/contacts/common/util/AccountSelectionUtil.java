@@ -30,7 +30,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountWithDataSet;
@@ -60,7 +59,7 @@ public class AccountSelectionUtil {
         final protected List<AccountWithDataSet> mAccountList;
 
         public AccountSelectedListener(Context context, List<AccountWithDataSet> accountList,
-                int resId) {
+                                       int resId) {
             if (accountList == null || accountList.size() == 0) {
                 Log.e(LOG_TAG, "The size of Account list is 0.");
             }
@@ -80,7 +79,7 @@ public class AccountSelectionUtil {
     }
 
     public static Dialog getSelectAccountDialog(Context context, int resId,
-            DialogInterface.OnClickListener onClickListener) {
+                                                DialogInterface.OnClickListener onClickListener) {
         return getSelectAccountDialog(context, resId, onClickListener, null);
     }
 
@@ -89,8 +88,8 @@ public class AccountSelectionUtil {
      * The default OnCancelListener just closes itself with {@link Dialog#dismiss()}.
      */
     public static Dialog getSelectAccountDialog(Context context, int resId,
-            DialogInterface.OnClickListener onClickListener,
-            DialogInterface.OnCancelListener onCancelListener) {
+                                                DialogInterface.OnClickListener onClickListener,
+                                                DialogInterface.OnCancelListener onCancelListener) {
         final AccountTypeManager accountTypes = AccountTypeManager.getInstance(context);
         final List<AccountWithDataSet> writableAccountList = accountTypes.getAccounts(true);
 
@@ -101,41 +100,41 @@ public class AccountSelectionUtil {
         // Wrap our context to inflate list items using correct theme
         final Context dialogContext = new ContextThemeWrapper(
                 context, android.R.style.Theme_Light);
-        final LayoutInflater dialogInflater = (LayoutInflater)dialogContext
+        final LayoutInflater dialogInflater = (LayoutInflater) dialogContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final ArrayAdapter<AccountWithDataSet> accountAdapter =
-            new ArrayAdapter<AccountWithDataSet>(context, android.R.layout.simple_list_item_2,
-                    writableAccountList) {
+                new ArrayAdapter<AccountWithDataSet>(context, android.R.layout.simple_list_item_2,
+                        writableAccountList) {
 
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                if (convertView == null) {
-                    convertView = dialogInflater.inflate(
-                            android.R.layout.simple_list_item_2,
-                            parent, false);
-                }
+                    @Override
+                    public View getView(int position, View convertView, ViewGroup parent) {
+                        if (convertView == null) {
+                            convertView = dialogInflater.inflate(
+                                    android.R.layout.simple_list_item_2,
+                                    parent, false);
+                        }
 
-                // TODO: show icon along with title
-                final TextView text1 =
-                        (TextView)convertView.findViewById(android.R.id.text1);
-                final TextView text2 =
-                        (TextView)convertView.findViewById(android.R.id.text2);
+                        // TODO: show icon along with title
+                        final TextView text1 =
+                                (TextView) convertView.findViewById(android.R.id.text1);
+                        final TextView text2 =
+                                (TextView) convertView.findViewById(android.R.id.text2);
 
-                final AccountWithDataSet account = this.getItem(position);
-                final AccountType accountType = accountTypes.getAccountType(
-                        account.type, account.dataSet);
-                final Context context = getContext();
+                        final AccountWithDataSet account = this.getItem(position);
+                        final AccountType accountType = accountTypes.getAccountType(
+                                account.type, account.dataSet);
+                        final Context context = getContext();
 
-                text1.setText(account.name);
-                text2.setText(accountType.getDisplayLabel(context));
+                        text1.setText(account.name);
+                        text2.setText(accountType.getDisplayLabel(context));
 
-                return convertView;
-            }
-        };
+                        return convertView;
+                    }
+                };
 
         if (onClickListener == null) {
             AccountSelectedListener accountSelectedListener =
-                new AccountSelectedListener(context, writableAccountList, resId);
+                    new AccountSelectedListener(context, writableAccountList, resId);
             onClickListener = accountSelectedListener;
         }
         if (onCancelListener == null) {
@@ -146,10 +145,10 @@ public class AccountSelectionUtil {
             };
         }
         return new AlertDialog.Builder(context)
-            .setTitle(R.string.dialog_new_contact_account)
-            .setSingleChoiceItems(accountAdapter, 0, onClickListener)
-            .setOnCancelListener(onCancelListener)
-            .create();
+                .setTitle(R.string.dialog_new_contact_account)
+                .setSingleChoiceItems(accountAdapter, 0, onClickListener)
+                .setOnCancelListener(onCancelListener)
+                .create();
     }
 
     public static void doImport(Context context, int resId, AccountWithDataSet account) {

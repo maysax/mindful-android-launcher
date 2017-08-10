@@ -49,20 +49,20 @@ public class ActivityRecognitionEvent implements Parcelable {
 
     public static final Creator<ActivityRecognitionEvent> CREATOR =
             new Creator<ActivityRecognitionEvent>() {
-        @Override
-        public ActivityRecognitionEvent createFromParcel(Parcel source) {
-            String activity = source.readString();
-            int eventType = source.readInt();
-            long timestampNs = source.readLong();
+                @Override
+                public ActivityRecognitionEvent createFromParcel(Parcel source) {
+                    String activity = source.readString();
+                    int eventType = source.readInt();
+                    long timestampNs = source.readLong();
 
-            return new ActivityRecognitionEvent(activity, eventType, timestampNs);
-        }
+                    return new ActivityRecognitionEvent(activity, eventType, timestampNs);
+                }
 
-        @Override
-        public ActivityRecognitionEvent[] newArray(int size) {
-            return new ActivityRecognitionEvent[size];
-        }
-    };
+                @Override
+                public ActivityRecognitionEvent[] newArray(int size) {
+                    return new ActivityRecognitionEvent[size];
+                }
+            };
 
     @Override
     public int describeContents() {

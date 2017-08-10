@@ -8,15 +8,12 @@ import android.content.Intent;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.greenrobot.greendao.query.CountQuery;
 
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.util.AudioUtils;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 3/30/2017.

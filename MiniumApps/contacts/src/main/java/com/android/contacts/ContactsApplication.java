@@ -16,7 +16,6 @@
 
 package com.android.contacts;
 
-import android.app.Application;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.ContentResolver;
@@ -29,14 +28,14 @@ import android.preference.PreferenceManager;
 import android.provider.ContactsContract.Contacts;
 import android.util.Log;
 
-import minium.co.core.app.CoreApplication;
-
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.list.ContactListFilterController;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.testing.InjectedServices;
 import com.android.contacts.common.util.Constants;
 import com.google.common.annotations.VisibleForTesting;
+
+import minium.co.core.app.CoreApplication;
 
 public abstract class ContactsApplication extends CoreApplication {
     private static final boolean ENABLE_LOADER_LOG = false; // Don't submit with true

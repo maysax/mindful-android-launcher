@@ -25,9 +25,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 
-import com.android.contacts.datepicker.DatePicker;
-import com.android.contacts.datepicker.DatePickerDialog;
-import com.android.contacts.datepicker.DatePickerDialog.OnDateSetListener;
 import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType.EditField;
@@ -35,6 +32,9 @@ import com.android.contacts.common.model.account.AccountType.EventEditType;
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.common.util.CommonDateUtils;
 import com.android.contacts.common.util.DateUtils;
+import com.android.contacts.datepicker.DatePicker;
+import com.android.contacts.datepicker.DatePickerDialog;
+import com.android.contacts.datepicker.DatePickerDialog.OnDateSetListener;
 
 import java.text.ParsePosition;
 import java.util.Calendar;
@@ -69,7 +69,9 @@ public class EventFieldEditorView extends LabeledEditorView {
         super(context, attrs, defStyle);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -107,7 +109,7 @@ public class EventFieldEditorView extends LabeledEditorView {
 
     @Override
     public void setValues(DataKind kind, ValuesDelta entry, RawContactDelta state, boolean readOnly,
-            ViewIdGenerator vig) {
+                          ViewIdGenerator vig) {
         if (kind.fieldList.size() != 1) throw new IllegalStateException("kind must have 1 field");
         super.setValues(kind, entry, state, readOnly, vig);
 

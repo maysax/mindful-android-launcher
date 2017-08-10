@@ -22,26 +22,32 @@ import java.util.ArrayList;
 /**
  * Gives access to the system properties store.  The system properties
  * store contains a list of string key-value pairs.
- *
+ * <p>
  * {@hide}
  */
-public class SystemProperties
-{
+public class SystemProperties {
     public static final int PROP_NAME_MAX = 31;
     public static final int PROP_VALUE_MAX = 91;
 
     private static final ArrayList<Runnable> sChangeCallbacks = new ArrayList<Runnable>();
 
     private static native String native_get(String key);
+
     private static native String native_get(String key, String def);
+
     private static native int native_get_int(String key, int def);
+
     private static native long native_get_long(String key, long def);
+
     private static native boolean native_get_boolean(String key, boolean def);
+
     private static native void native_set(String key, String def);
+
     private static native void native_add_change_callback();
 
     /**
      * Get the value for the given key.
+     *
      * @return an empty string if the key isn't found
      * @throws IllegalArgumentException if the key exceeds 32 characters
      */
@@ -54,6 +60,7 @@ public class SystemProperties
 
     /**
      * Get the value for the given key.
+     *
      * @return if the key isn't found, return def if it isn't null, or an empty string otherwise
      * @throws IllegalArgumentException if the key exceeds 32 characters
      */
@@ -66,10 +73,11 @@ public class SystemProperties
 
     /**
      * Get the value for the given key, and return as an integer.
+     *
      * @param key the key to lookup
      * @param def a default value to return
      * @return the key parsed as an integer, or def if the key isn't found or
-     *         cannot be parsed
+     * cannot be parsed
      * @throws IllegalArgumentException if the key exceeds 32 characters
      */
     public static int getInt(String key, int def) {
@@ -81,10 +89,11 @@ public class SystemProperties
 
     /**
      * Get the value for the given key, and return as a long.
+     *
      * @param key the key to lookup
      * @param def a default value to return
      * @return the key parsed as a long, or def if the key isn't found or
-     *         cannot be parsed
+     * cannot be parsed
      * @throws IllegalArgumentException if the key exceeds 32 characters
      */
     public static long getLong(String key, long def) {
@@ -101,10 +110,11 @@ public class SystemProperties
      * (case sensitive).
      * If the key does not exist, or has any other value, then the default
      * result is returned.
+     *
      * @param key the key to lookup
      * @param def a default value to return
      * @return the key parsed as a boolean, or def if the key isn't found or is
-     *         not able to be parsed as a boolean.
+     * not able to be parsed as a boolean.
      * @throws IllegalArgumentException if the key exceeds 32 characters
      */
     public static boolean getBoolean(String key, boolean def) {
@@ -116,6 +126,7 @@ public class SystemProperties
 
     /**
      * Set the value for the given key.
+     *
      * @throws IllegalArgumentException if the key exceeds 32 characters
      * @throws IllegalArgumentException if the value exceeds 92 characters
      */
@@ -125,7 +136,7 @@ public class SystemProperties
         }
         if (val != null && val.length() > PROP_VALUE_MAX) {
             throw new IllegalArgumentException("val.length > " +
-                PROP_VALUE_MAX);
+                    PROP_VALUE_MAX);
         }
         native_set(key, val);
     }
@@ -146,7 +157,7 @@ public class SystemProperties
                 return;
             }
             ArrayList<Runnable> callbacks = new ArrayList<Runnable>(sChangeCallbacks);
-            for (int i=0; i<callbacks.size(); i++) {
+            for (int i = 0; i < callbacks.size(); i++) {
                 callbacks.get(i).run();
             }
         }

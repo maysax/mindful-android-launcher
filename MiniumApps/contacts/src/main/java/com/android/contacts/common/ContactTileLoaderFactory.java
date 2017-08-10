@@ -15,14 +15,14 @@
  */
 package com.android.contacts.common;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import android.content.Context;
 import android.content.CursorLoader;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Contacts;
+
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Used to create {@link CursorLoader}s to load different groups of
@@ -49,14 +49,14 @@ public final class ContactTileLoaderFactory {
     // contact id for strequent items, we thus have to use Phone.contact_id instead.
     public final static int CONTACT_ID_FOR_DATA = 10;
 
-    private static final String[] COLUMNS = new String[] {
-        Contacts._ID, // ..........................................0
-        Contacts.DISPLAY_NAME, // .................................1
-        Contacts.STARRED, // ......................................2
-        Contacts.PHOTO_URI, // ....................................3
-        Contacts.LOOKUP_KEY, // ...................................4
-        Contacts.CONTACT_PRESENCE, // .............................5
-        Contacts.CONTACT_STATUS, // ...............................6
+    private static final String[] COLUMNS = new String[]{
+            Contacts._ID, // ..........................................0
+            Contacts.DISPLAY_NAME, // .................................1
+            Contacts.STARRED, // ......................................2
+            Contacts.PHOTO_URI, // ....................................3
+            Contacts.LOOKUP_KEY, // ...................................4
+            Contacts.CONTACT_PRESENCE, // .............................5
+            Contacts.CONTACT_STATUS, // ...............................6
     };
 
     /**
@@ -66,21 +66,21 @@ public final class ContactTileLoaderFactory {
      * and status data and the addition of phone number and label.
      */
     @VisibleForTesting
-    public static final String[] COLUMNS_PHONE_ONLY = new String[] {
-        Contacts._ID, // ..........................................0
-        Contacts.DISPLAY_NAME, // .................................1
-        Contacts.STARRED, // ......................................2
-        Contacts.PHOTO_URI, // ....................................3
-        Contacts.LOOKUP_KEY, // ...................................4
-        Phone.NUMBER, // ..........................................5
-        Phone.TYPE, // ............................................6
-        Phone.LABEL, // ...........................................7
-        Phone.IS_SUPER_PRIMARY, //.................................8
-        Contacts.PINNED, // .......................................9
-        Phone.CONTACT_ID //........................................10
+    public static final String[] COLUMNS_PHONE_ONLY = new String[]{
+            Contacts._ID, // ..........................................0
+            Contacts.DISPLAY_NAME, // .................................1
+            Contacts.STARRED, // ......................................2
+            Contacts.PHOTO_URI, // ....................................3
+            Contacts.LOOKUP_KEY, // ...................................4
+            Phone.NUMBER, // ..........................................5
+            Phone.TYPE, // ............................................6
+            Phone.LABEL, // ...........................................7
+            Phone.IS_SUPER_PRIMARY, //.................................8
+            Contacts.PINNED, // .......................................9
+            Phone.CONTACT_ID //........................................10
     };
 
-    private static final String STARRED_ORDER = Contacts.DISPLAY_NAME+" COLLATE NOCASE ASC";
+    private static final String STARRED_ORDER = Contacts.DISPLAY_NAME + " COLLATE NOCASE ASC";
 
     public static CursorLoader createStrequentLoader(Context context) {
         return new CursorLoader(context, Contacts.CONTENT_STREQUENT_URI, COLUMNS, null, null,
@@ -96,11 +96,11 @@ public final class ContactTileLoaderFactory {
 
     public static CursorLoader createStarredLoader(Context context) {
         return new CursorLoader(context, Contacts.CONTENT_URI, COLUMNS, Contacts.STARRED + "=?",
-                new String[]{"1"},  STARRED_ORDER);
+                new String[]{"1"}, STARRED_ORDER);
     }
 
     public static CursorLoader createFrequentLoader(Context context) {
         return new CursorLoader(context, Contacts.CONTENT_FREQUENT_URI, COLUMNS,
-                 Contacts.STARRED + "=?", new String[]{"0"}, null);
+                Contacts.STARRED + "=?", new String[]{"0"}, null);
     }
 }

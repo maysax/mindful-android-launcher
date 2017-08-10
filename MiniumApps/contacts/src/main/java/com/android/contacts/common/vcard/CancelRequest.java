@@ -25,6 +25,7 @@ public class CancelRequest {
      * Must not be used to do some actual operations.
      */
     public final String displayName;
+
     public CancelRequest(int jobId, String displayName) {
         this.jobId = jobId;
         this.displayName = displayName;

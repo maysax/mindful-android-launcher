@@ -36,7 +36,7 @@ public class ContactsSectionIndexer implements SectionIndexer {
      * Constructor.
      *
      * @param sections a non-null array
-     * @param counts a non-null array of the same size as <code>sections</code>
+     * @param counts   a non-null array of the same size as <code>sections</code>
      */
     public ContactsSectionIndexer(String[] sections, int[] counts) {
         if (sections == null || counts == null) {

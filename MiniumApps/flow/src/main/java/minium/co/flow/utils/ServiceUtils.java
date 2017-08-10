@@ -11,7 +11,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import minium.co.core.log.Tracer;
-import minium.co.flow.NotificationListener;
 
 /**
  * Created by Shahab on 5/17/2016.
@@ -22,7 +21,9 @@ public class ServiceUtils {
 
     private static final TextUtils.SimpleStringSplitter COLON_SPLITTER = new TextUtils.SimpleStringSplitter(':');
 
-    /** @return True if a given {@link android.service.notification.NotificationListenerService} is enabled. */
+    /**
+     * @return True if a given {@link android.service.notification.NotificationListenerService} is enabled.
+     */
     public static <T extends NotificationListenerService> boolean isNotificationListenerServiceRunning(Context context, Class<T> clazz) {
         return isSettingsServiceEnabled(context, getEnabledNotificationListeners(), getServiceComponentNames(clazz));
     }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -15,12 +14,8 @@
 -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/menu_edit_group"
-        android:title="@string/menu_editGroup"
+    <item android:id="@+id/menu_edit_group" android:title="@string/menu_editGroup"
         android:alphabeticShortcut="e" />
 
-    <item
-        android:id="@+id/menu_delete_group"
-        android:title="@string/menu_deleteGroup" />
+    <item android:id="@+id/menu_delete_group" android:title="@string/menu_deleteGroup" />
 </menu>

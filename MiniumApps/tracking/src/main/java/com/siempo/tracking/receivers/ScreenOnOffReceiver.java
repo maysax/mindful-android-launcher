@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-
 import com.siempo.tracking.model.LogEvent;
 import com.siempo.tracking.util.TrackingLogger;
 

@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ChangeModel implements Comparator<Long> {
-    @SerializedName("version_name") private String mVersion;
-    @SerializedName("release_date") private String mDate;
-    @SerializedName("changes") private ArrayList<String> mChanges;
+    @SerializedName("version_name")
+    private String mVersion;
+    @SerializedName("release_date")
+    private String mDate;
+    @SerializedName("changes")
+    private ArrayList<String> mChanges;
 
     long mDateLong = 0;
 

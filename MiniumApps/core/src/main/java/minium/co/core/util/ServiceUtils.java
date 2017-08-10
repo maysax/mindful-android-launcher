@@ -3,8 +3,6 @@ package minium.co.core.util;
 import android.accessibilityservice.AccessibilityService;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.text.TextUtils;
@@ -23,7 +21,9 @@ public class ServiceUtils {
 
     private static final TextUtils.SimpleStringSplitter COLON_SPLITTER = new TextUtils.SimpleStringSplitter(':');
 
-    /** @return True if a given {@link NotificationListenerService} is enabled. */
+    /**
+     * @return True if a given {@link NotificationListenerService} is enabled.
+     */
     public static <T extends NotificationListenerService> boolean isNotificationListenerServiceRunning(Context context, Class<T> clazz) {
         return isSettingsServiceEnabled(context, getEnabledNotificationListeners(), getServiceComponentNames(clazz));
     }
@@ -32,7 +32,7 @@ public class ServiceUtils {
         return new String[]{
                 clazz.getPackage().getName() + '/' + clazz.getName(),
                 clazz.getPackage().getName() + "/." + clazz.getSimpleName(),
-        clazz.getSimpleName()};
+                clazz.getSimpleName()};
     }
 
     /**
@@ -61,7 +61,8 @@ public class ServiceUtils {
     private static boolean contains(String service, String... ids) {
         try {
             for (String id : ids) {
-                if (service.substring(service.lastIndexOf(".")).equals(id.substring(id.lastIndexOf(".")))) return true;
+                if (service.substring(service.lastIndexOf(".")).equals(id.substring(id.lastIndexOf("."))))
+                    return true;
             }
         } catch (Exception e) {
             e.printStackTrace();

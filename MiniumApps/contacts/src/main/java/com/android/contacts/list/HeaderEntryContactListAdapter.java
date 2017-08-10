@@ -15,20 +15,20 @@
  */
 package com.android.contacts.list;
 
-import com.android.contacts.common.list.ContactListItemView;
-import com.android.contacts.common.list.DefaultContactListAdapter;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.android.contacts.common.list.ContactListItemView;
+import com.android.contacts.common.list.DefaultContactListAdapter;
 
 import minium.co.contacts.R;
 
 /**
  * Equivalent to DefaultContactListAdapter, except with an optional header entry that has the same
  * formatting as the other entries in the list.
- *
+ * <p>
  * This header entry is hidden when in search mode. Should not be used with lists that contain a
  * "Me" contact.
  */
@@ -65,7 +65,7 @@ public class HeaderEntryContactListAdapter extends DefaultContactListAdapter {
                 // Pass the cursor down. Don't worry, it isn't used.
                 itemView = newView(getContext(), 0, getCursor(0), 0, parent);
             } else {
-                itemView = (ContactListItemView ) convertView;
+                itemView = (ContactListItemView) convertView;
             }
             itemView.setDrawableResource(R.drawable.search_shortcut_background,
                     R.drawable.ic_search_add_contact);

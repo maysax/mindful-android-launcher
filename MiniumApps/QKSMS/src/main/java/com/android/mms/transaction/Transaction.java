@@ -46,18 +46,18 @@ public abstract class Transaction extends Observable {
     /**
      * Identifies deferred retrieve requests.
      */
-    public static final int RETRIEVE_TRANSACTION     = 1;
+    public static final int RETRIEVE_TRANSACTION = 1;
     /**
      * Identifies send multimedia message requests.
      */
-    public static final int SEND_TRANSACTION         = 2;
+    public static final int SEND_TRANSACTION = 2;
     /**
      * Identifies send read report requests.
      */
-    public static final int READREC_TRANSACTION      = 3;
+    public static final int READREC_TRANSACTION = 3;
 
     public Transaction(Context context, int serviceId,
-            TransactionSettings settings) {
+                       TransactionSettings settings) {
         mContext = context;
         mTransactionState = new TransactionState();
         mServiceId = serviceId;
@@ -92,6 +92,7 @@ public abstract class Transaction extends Observable {
 
     /**
      * Get the service-id of this transaction which was assigned by the framework.
+     *
      * @return the service-id of the transaction
      */
     public int getServiceId() {
@@ -101,6 +102,7 @@ public abstract class Transaction extends Observable {
     public TransactionSettings getConnectionSettings() {
         return mTransactionSettings;
     }
+
     public void setConnectionSettings(TransactionSettings settings) {
         mTransactionSettings = settings;
     }
@@ -110,10 +112,10 @@ public abstract class Transaction extends Observable {
      *
      * @param pdu A byte array which contains the data of the PDU.
      * @return A byte array which contains the response data.
-     *         If an HTTP error code is returned, an IOException will be thrown.
+     * If an HTTP error code is returned, an IOException will be thrown.
      * @throws java.io.IOException if any error occurred on network interface or
-     *         an HTTP error code(>=400) returned from the server.
-     * @throws MmsException if pdu is null.
+     *                             an HTTP error code(>=400) returned from the server.
+     * @throws MmsException        if pdu is null.
      */
     protected byte[] sendPdu(byte[] pdu) throws IOException, MmsException {
         return sendPdu(SendingProgressTokenManager.NO_TOKEN, pdu,
@@ -123,13 +125,13 @@ public abstract class Transaction extends Observable {
     /**
      * A common method to send a PDU to MMSC.
      *
-     * @param pdu A byte array which contains the data of the PDU.
+     * @param pdu     A byte array which contains the data of the PDU.
      * @param mmscUrl Url of the recipient MMSC.
      * @return A byte array which contains the response data.
-     *         If an HTTP error code is returned, an IOException will be thrown.
+     * If an HTTP error code is returned, an IOException will be thrown.
      * @throws java.io.IOException if any error occurred on network interface or
-     *         an HTTP error code(>=400) returned from the server.
-     * @throws MmsException if pdu is null.
+     *                             an HTTP error code(>=400) returned from the server.
+     * @throws MmsException        if pdu is null.
      */
     protected byte[] sendPdu(byte[] pdu, String mmscUrl) throws IOException, MmsException {
         return sendPdu(SendingProgressTokenManager.NO_TOKEN, pdu, mmscUrl);
@@ -139,12 +141,12 @@ public abstract class Transaction extends Observable {
      * A common method to send a PDU to MMSC.
      *
      * @param token The token to identify the sending progress.
-     * @param pdu A byte array which contains the data of the PDU.
+     * @param pdu   A byte array which contains the data of the PDU.
      * @return A byte array which contains the response data.
-     *         If an HTTP error code is returned, an IOException will be thrown.
+     * If an HTTP error code is returned, an IOException will be thrown.
      * @throws java.io.IOException if any error occurred on network interface or
-     *         an HTTP error code(>=400) returned from the server.
-     * @throws MmsException if pdu is null.
+     *                             an HTTP error code(>=400) returned from the server.
+     * @throws MmsException        if pdu is null.
      */
     protected byte[] sendPdu(long token, byte[] pdu) throws IOException, MmsException {
         return sendPdu(token, pdu, mTransactionSettings.getMmscUrl());
@@ -153,17 +155,17 @@ public abstract class Transaction extends Observable {
     /**
      * A common method to send a PDU to MMSC.
      *
-     * @param token The token to identify the sending progress.
-     * @param pdu A byte array which contains the data of the PDU.
+     * @param token   The token to identify the sending progress.
+     * @param pdu     A byte array which contains the data of the PDU.
      * @param mmscUrl Url of the recipient MMSC.
      * @return A byte array which contains the response data.
-     *         If an HTTP error code is returned, an IOException will be thrown.
+     * If an HTTP error code is returned, an IOException will be thrown.
      * @throws java.io.IOException if any error occurred on network interface or
-     *         an HTTP error code(>=400) returned from the server.
-     * @throws MmsException if pdu is null.
+     *                             an HTTP error code(>=400) returned from the server.
+     * @throws MmsException        if pdu is null.
      */
     protected byte[] sendPdu(long token, byte[] pdu,
-            String mmscUrl) throws IOException, MmsException {
+                             String mmscUrl) throws IOException, MmsException {
         if (pdu == null) {
             throw new MmsException();
         }
@@ -183,9 +185,9 @@ public abstract class Transaction extends Observable {
      *
      * @param url The URL of the message which we are going to retrieve.
      * @return A byte array which contains the data of the PDU.
-     *         If the status code is not correct, an IOException will be thrown.
+     * If the status code is not correct, an IOException will be thrown.
      * @throws java.io.IOException if any error occurred on network interface or
-     *         an HTTP error code(>=400) returned from the server.
+     *                             an HTTP error code(>=400) returned from the server.
      */
     protected byte[] getPdu(String url) throws IOException {
         Utils.ensureRouteToHost(mContext, url, mTransactionSettings.getProxyAddress());

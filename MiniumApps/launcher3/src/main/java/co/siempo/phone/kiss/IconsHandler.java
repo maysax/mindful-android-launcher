@@ -185,20 +185,20 @@ public class IconsHandler {
     }
 
 
-	public Drawable getDefaultAppDrawable(ComponentName componentName, UserHandle userHandle) {
-		try {
-			if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-				LauncherApps launcher = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
-				LauncherActivityInfo info = launcher.getActivityList(componentName.getPackageName(), userHandle.getRealHandle()).get(0);
-				return info.getBadgedIcon(0);
-			} else {
-				return pm.getActivityIcon(componentName);
-			}
-		} catch (NameNotFoundException | IndexOutOfBoundsException e) {
-			Log.e(TAG, "Unable to found component " + componentName.toString() + e);
-			return null;
-		}
-	}
+    public Drawable getDefaultAppDrawable(ComponentName componentName, UserHandle userHandle) {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                LauncherApps launcher = (LauncherApps) ctx.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+                LauncherActivityInfo info = launcher.getActivityList(componentName.getPackageName(), userHandle.getRealHandle()).get(0);
+                return info.getBadgedIcon(0);
+            } else {
+                return pm.getActivityIcon(componentName);
+            }
+        } catch (NameNotFoundException | IndexOutOfBoundsException e) {
+            Log.e(TAG, "Unable to found component " + componentName.toString() + e);
+            return null;
+        }
+    }
 
     private Drawable getDefaultAppDrawable(String packageName) {
         try {

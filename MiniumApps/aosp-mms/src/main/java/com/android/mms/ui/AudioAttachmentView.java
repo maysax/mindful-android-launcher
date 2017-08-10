@@ -17,8 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.Map;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -34,6 +32,8 @@ import android.widget.TextView;
 
 import com.android.mms.LogTag;
 import com.android.mms.R;
+
+import java.util.Map;
 
 /**
  * This class provides an embedded editor/viewer of audio attachment.

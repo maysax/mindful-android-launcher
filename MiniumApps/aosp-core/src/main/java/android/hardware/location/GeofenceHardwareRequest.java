@@ -20,7 +20,7 @@ import android.annotation.SystemApi;
 
 /**
  * This class represents the characteristics of the geofence.
- *
+ * <p>
  * <p> Use this in conjunction with {@link GeofenceHardware} APIs.
  *
  * @hide
@@ -35,7 +35,7 @@ public final class GeofenceHardwareRequest {
     private int mLastTransition = GeofenceHardware.GEOFENCE_UNCERTAIN;
     private int mUnknownTimer = 30000; // 30 secs
     private int mMonitorTransitions = GeofenceHardware.GEOFENCE_UNCERTAIN |
-        GeofenceHardware.GEOFENCE_ENTERED | GeofenceHardware.GEOFENCE_EXITED;
+            GeofenceHardware.GEOFENCE_ENTERED | GeofenceHardware.GEOFENCE_EXITED;
     private int mNotificationResponsiveness = 5000; // 5 secs
     private int mSourceTechnologies = GeofenceHardware.SOURCE_TECHNOLOGY_GNSS;
 
@@ -43,18 +43,18 @@ public final class GeofenceHardwareRequest {
         mLatitude = latitude;
         mLongitude = longitude;
         mRadius = radius;
-        mType  = GEOFENCE_TYPE_CIRCLE;
+        mType = GEOFENCE_TYPE_CIRCLE;
     }
 
     /**
      * Create a circular geofence.
      *
-     * @param latitude Latitude of the geofence
+     * @param latitude  Latitude of the geofence
      * @param longitude Longitude of the geofence
-     * @param radius Radius of the geofence (in meters)
+     * @param radius    Radius of the geofence (in meters)
      */
     public static GeofenceHardwareRequest createCircularGeofence(double latitude,
-            double longitude, double radius) {
+                                                                 double longitude, double radius) {
         GeofenceHardwareRequest geofenceRequest = new GeofenceHardwareRequest();
         geofenceRequest.setCircularGeofence(latitude, longitude, radius);
         return geofenceRequest;
@@ -64,8 +64,8 @@ public final class GeofenceHardwareRequest {
      * Set the last known transition of the geofence.
      *
      * @param lastTransition The current state of the geofence. Can be one of
-     *        {@link GeofenceHardware#GEOFENCE_ENTERED}, {@link GeofenceHardware#GEOFENCE_EXITED},
-     *        {@link GeofenceHardware#GEOFENCE_UNCERTAIN}.
+     *                       {@link GeofenceHardware#GEOFENCE_ENTERED}, {@link GeofenceHardware#GEOFENCE_EXITED},
+     *                       {@link GeofenceHardware#GEOFENCE_UNCERTAIN}.
      */
     public void setLastTransition(int lastTransition) {
         mLastTransition = lastTransition;
@@ -74,9 +74,9 @@ public final class GeofenceHardwareRequest {
     /**
      * Set the unknown timer for this geofence.
      *
-     * @param unknownTimer  The time limit after which the
-     *        {@link GeofenceHardware#GEOFENCE_UNCERTAIN} transition
-     *        should be triggered. This paramter is defined in milliseconds.
+     * @param unknownTimer The time limit after which the
+     *                     {@link GeofenceHardware#GEOFENCE_UNCERTAIN} transition
+     *                     should be triggered. This paramter is defined in milliseconds.
      */
     public void setUnknownTimer(int unknownTimer) {
         mUnknownTimer = unknownTimer;
@@ -86,7 +86,7 @@ public final class GeofenceHardwareRequest {
      * Set the transitions to be monitored.
      *
      * @param monitorTransitions Bitwise OR of {@link GeofenceHardware#GEOFENCE_ENTERED},
-     *        {@link GeofenceHardware#GEOFENCE_EXITED}, {@link GeofenceHardware#GEOFENCE_UNCERTAIN}
+     *                           {@link GeofenceHardware#GEOFENCE_EXITED}, {@link GeofenceHardware#GEOFENCE_UNCERTAIN}
      */
     public void setMonitorTransitions(int monitorTransitions) {
         mMonitorTransitions = monitorTransitions;
@@ -96,14 +96,14 @@ public final class GeofenceHardwareRequest {
      * Set the notification responsiveness of the geofence.
      *
      * @param notificationResponsiveness (milliseconds) Defines the best-effort description
-     *        of how soon should the callback be called when the transition
-     *        associated with the Geofence is triggered. For instance, if
-     *        set to 1000 millseconds with {@link GeofenceHardware#GEOFENCE_ENTERED},
-     *        the callback will be called 1000 milliseconds within entering
-     *        the geofence.
+     *                                   of how soon should the callback be called when the transition
+     *                                   associated with the Geofence is triggered. For instance, if
+     *                                   set to 1000 millseconds with {@link GeofenceHardware#GEOFENCE_ENTERED},
+     *                                   the callback will be called 1000 milliseconds within entering
+     *                                   the geofence.
      */
     public void setNotificationResponsiveness(int notificationResponsiveness) {
-       mNotificationResponsiveness = notificationResponsiveness;
+        mNotificationResponsiveness = notificationResponsiveness;
     }
 
     /**

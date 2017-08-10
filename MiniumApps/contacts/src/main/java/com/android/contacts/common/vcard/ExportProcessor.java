@@ -59,11 +59,11 @@ public class ExportProcessor extends ProcessorBase {
     private volatile boolean mDone;
 
     public ExportProcessor(VCardService service, ExportRequest exportRequest, int jobId,
-            String callingActivity) {
+                           String callingActivity) {
         mService = service;
         mResolver = service.getContentResolver();
         mNotificationManager =
-                (NotificationManager)mService.getSystemService(Context.NOTIFICATION_SERVICE);
+                (NotificationManager) mService.getSystemService(Context.NOTIFICATION_SERVICE);
         mExportRequest = exportRequest;
         mJobId = jobId;
         mCallingActivity = callingActivity;
@@ -116,8 +116,8 @@ public class ExportProcessor extends ProcessorBase {
                 // Need concise title.
 
                 final String errorReason =
-                    mService.getString(R.string.fail_reason_could_not_open_file,
-                            uri, e.getMessage());
+                        mService.getString(R.string.fail_reason_could_not_open_file,
+                                uri, e.getMessage());
                 doFinishNotification(errorReason, null);
                 return;
             }
@@ -141,7 +141,7 @@ public class ExportProcessor extends ProcessorBase {
             writer = new BufferedWriter(new OutputStreamWriter(outputStream));
             final Uri contentUriForRawContactsEntity = RawContactsEntity.CONTENT_URI;
             // TODO: should provide better selection.
-            if (!composer.init(Contacts.CONTENT_URI, new String[] {Contacts._ID},
+            if (!composer.init(Contacts.CONTENT_URI, new String[]{Contacts._ID},
                     null, null,
                     null, contentUriForRawContactsEntity)) {
                 final String errorReason = composer.getErrorReason();

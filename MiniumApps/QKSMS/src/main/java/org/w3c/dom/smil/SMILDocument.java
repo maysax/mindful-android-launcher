@@ -20,7 +20,7 @@ package org.w3c.dom.smil;
 import org.w3c.dom.Document;
 
 /**
- *  A SMIL document is the root of the SMIL Hierarchy and holds the entire
+ * A SMIL document is the root of the SMIL Hierarchy and holds the entire
  * content. Beside providing access to the hierarchy, it also provides some
  * convenience methods for accessing certain sets of information from the
  * document.  Cover document timing, document locking?, linking modality and

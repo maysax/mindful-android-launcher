@@ -326,7 +326,7 @@ public class DataAction implements Action {
             Log.e(TAG, "t must be DataAction");
             return false;
         }
-        DataAction that = (DataAction)t;
+        DataAction that = (DataAction) t;
         if (!MoreContactUtils.shouldCollapse(mMimeType, mBody, that.mMimeType, that.mBody)) {
             return false;
         }

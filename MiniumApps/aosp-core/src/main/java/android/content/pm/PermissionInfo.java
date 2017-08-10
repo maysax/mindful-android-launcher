@@ -106,7 +106,7 @@ public class PermissionInfo extends PackageItemInfo implements Parcelable {
      * Flag for {@link #flags}, corresponding to <code>costsMoney</code>
      * value of {@link android.R.attr#permissionFlags}.
      */
-    public static final int FLAG_COSTS_MONEY = 1<<0;
+    public static final int FLAG_COSTS_MONEY = 1 << 0;
 
     /**
      * Additional flags about this permission as given by
@@ -129,7 +129,9 @@ public class PermissionInfo extends PackageItemInfo implements Parcelable {
      */
     public CharSequence nonLocalizedDescription;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static int fixProtectionLevel(int level) {
         if (level == PROTECTION_SIGNATURE_OR_SYSTEM) {
             level = PROTECTION_SIGNATURE | PROTECTION_FLAG_SYSTEM;
@@ -137,10 +139,12 @@ public class PermissionInfo extends PackageItemInfo implements Parcelable {
         return level;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static String protectionToString(int level) {
         String protLevel = "????";
-        switch (level&PROTECTION_MASK_BASE) {
+        switch (level & PROTECTION_MASK_BASE) {
             case PermissionInfo.PROTECTION_DANGEROUS:
                 protLevel = "dangerous";
                 break;
@@ -154,13 +158,13 @@ public class PermissionInfo extends PackageItemInfo implements Parcelable {
                 protLevel = "signatureOrSystem";
                 break;
         }
-        if ((level&PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
+        if ((level & PermissionInfo.PROTECTION_FLAG_SYSTEM) != 0) {
             protLevel += "|system";
         }
-        if ((level&PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+        if ((level & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
             protLevel += "|development";
         }
-        if ((level&PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
+        if ((level & PermissionInfo.PROTECTION_FLAG_APPOP) != 0) {
             protLevel += "|appop";
         }
         return protLevel;
@@ -184,8 +188,7 @@ public class PermissionInfo extends PackageItemInfo implements Parcelable {
      * the application.
      *
      * @param pm A PackageManager from which the label can be loaded; usually
-     * the PackageManager from which you originally retrieved this item.
-     *
+     *           the PackageManager from which you originally retrieved this item.
      * @return Returns a CharSequence containing the permission's description.
      * If there is no description, null is returned.
      */
@@ -204,8 +207,8 @@ public class PermissionInfo extends PackageItemInfo implements Parcelable {
 
     public String toString() {
         return "PermissionInfo{"
-            + Integer.toHexString(System.identityHashCode(this))
-            + " " + name + "}";
+                + Integer.toHexString(System.identityHashCode(this))
+                + " " + name + "}";
     }
 
     public int describeContents() {
@@ -222,14 +225,15 @@ public class PermissionInfo extends PackageItemInfo implements Parcelable {
     }
 
     public static final Creator<PermissionInfo> CREATOR =
-        new Creator<PermissionInfo>() {
-        public PermissionInfo createFromParcel(Parcel source) {
-            return new PermissionInfo(source);
-        }
-        public PermissionInfo[] newArray(int size) {
-            return new PermissionInfo[size];
-        }
-    };
+            new Creator<PermissionInfo>() {
+                public PermissionInfo createFromParcel(Parcel source) {
+                    return new PermissionInfo(source);
+                }
+
+                public PermissionInfo[] newArray(int size) {
+                    return new PermissionInfo[size];
+                }
+            };
 
     private PermissionInfo(Parcel source) {
         super(source);

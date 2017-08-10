@@ -21,7 +21,6 @@
 package android.net.http;
 
 import android.os.SystemClock;
-
 import android.util.Log;
 
 /**

@@ -125,16 +125,16 @@ public class ContactPickerFragment extends ContactEntryListFragment<ContactEntry
     protected void onItemClick(int position, long id) {
         Uri uri;
         if (isLegacyCompatibilityMode()) {
-            uri = ((LegacyContactListAdapter)getAdapter()).getPersonUri(position);
+            uri = ((LegacyContactListAdapter) getAdapter()).getPersonUri(position);
         } else {
-            uri = ((ContactListAdapter)getAdapter()).getContactUri(position);
+            uri = ((ContactListAdapter) getAdapter()).getContactUri(position);
         }
         if (uri == null) {
             return;
         }
         if (mEditMode) {
             editContact(uri);
-        } else  if (mShortcutRequested) {
+        } else if (mShortcutRequested) {
             ShortcutIntentBuilder builder = new ShortcutIntentBuilder(getActivity(), this);
             builder.createContactShortcutIntent(uri);
         } else {

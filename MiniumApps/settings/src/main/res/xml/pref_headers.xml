@@ -23,10 +23,10 @@
         android:title="@string/pref_system" />
 
 
-<!--    <header android:icon="@drawable/ic_sync_black_24dp" android:title="@string/wifi_setting_summary">
-&lt;!&ndash;        <intent android:targetPackage="com.itc.siempompo"
-        android:targetClass="android.settings.WIFI_DISPLAY_SETTINGS" />&ndash;&gt;
-    </header>-->
+    <!--    <header android:icon="@drawable/ic_sync_black_24dp" android:title="@string/wifi_setting_summary">
+    &lt;!&ndash;        <intent android:targetPackage="com.itc.siempompo"
+            android:targetClass="android.settings.WIFI_DISPLAY_SETTINGS" />&ndash;&gt;
+        </header>-->
 
 
 </preference-headers>

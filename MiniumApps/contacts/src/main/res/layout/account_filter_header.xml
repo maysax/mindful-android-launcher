@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -19,24 +18,18 @@
      which is the header of all contact lists. -->
 
 <!-- Solely used to set a background color -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
     android:background="@color/background_primary">
     <!-- Used to show the touch feedback -->
-    <FrameLayout
-        android:id="@+id/account_filter_header_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <FrameLayout android:id="@+id/account_filter_header_container"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
         android:paddingTop="@dimen/list_header_extra_top_padding"
         android:layout_marginStart="@dimen/contact_browser_list_header_left_margin"
         android:layout_marginEnd="@dimen/contact_browser_list_header_right_margin"
-        android:background="?android:attr/selectableItemBackground"
-        android:visibility="gone">
+        android:background="?android:attr/selectableItemBackground" android:visibility="gone">
         <!-- Shows the text and underlining -->
-        <TextView
-            android:id="@+id/account_filter_header"
+        <TextView android:id="@+id/account_filter_header"
             style="@style/ContactListSeparatorTextViewStyle"
             android:paddingLeft="@dimen/contact_browser_list_item_text_indent"
             android:paddingStart="@dimen/contact_browser_list_item_text_indent" />

@@ -16,8 +16,6 @@
 
 package com.android.mms;
 
-import java.util.ArrayList;
-
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -32,6 +30,8 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+
+import java.util.ArrayList;
 
 /**
  * Suggestions provider for mms.  Queries the "words" table to provide possible word suggestions.
@@ -67,7 +67,7 @@ public class SuggestionsProvider extends android.content.ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
-            String[] selectionArgs, String sortOrder) {
+                        String[] selectionArgs, String sortOrder) {
         Uri u = Uri.parse(String.format(
                 "content://mms-sms/searchSuggest?pattern=%s",
                 selectionArgs[0]));
@@ -120,6 +120,7 @@ public class SuggestionsProvider extends android.content.ContentProvider {
                 mSnippet = snippet.trim();
                 mRowNumber = row;
             }
+
             public String getSnippet() {
                 return mSnippet;
             }
@@ -146,11 +147,11 @@ public class SuggestionsProvider extends android.content.ContentProvider {
             }
         }
 
-        private int [] computeOffsets(String offsetsString) {
-            String [] vals = offsetsString.split(" ");
+        private int[] computeOffsets(String offsetsString) {
+            String[] vals = offsetsString.split(" ");
 
-            int [] retvals = new int[vals.length];
-            for (int i = retvals.length-1; i >= 0; i--) {
+            int[] retvals = new int[vals.length];
+            for (int i = retvals.length - 1; i >= 0; i--) {
                 retvals[i] = Integer.parseInt(vals[i]);
             }
             return retvals;
@@ -187,7 +188,7 @@ public class SuggestionsProvider extends android.content.ContentProvider {
                     ++pos;
                 }
                 moveToPosition(oldpos);
-            } catch (IllegalStateException e){
+            } catch (IllegalStateException e) {
                 // simply ignore it
             } finally {
                 window.releaseReference();
@@ -199,7 +200,7 @@ public class SuggestionsProvider extends android.content.ContentProvider {
         }
 
         public boolean onMove(int oldPosition, int newPosition) {
-            return ((CrossProcessCursor)mDatabaseCursor).onMove(oldPosition, newPosition);
+            return ((CrossProcessCursor) mDatabaseCursor).onMove(oldPosition, newPosition);
         }
 
         /*
@@ -208,12 +209,12 @@ public class SuggestionsProvider extends android.content.ContentProvider {
          * a "word" by taking the substring of the full row text in the words table
          * using the provided offsets.
          */
-        private String [] mVirtualColumns = new String [] {
+        private String[] mVirtualColumns = new String[]{
                 SearchManager.SUGGEST_COLUMN_INTENT_DATA,
                 SearchManager.SUGGEST_COLUMN_INTENT_ACTION,
                 SearchManager.SUGGEST_COLUMN_INTENT_EXTRA_DATA,
                 SearchManager.SUGGEST_COLUMN_TEXT_1,
-            };
+        };
 
         // Cursor column offsets for the above virtual columns.
         // These columns exist after the natural columns in the
@@ -238,9 +239,9 @@ public class SuggestionsProvider extends android.content.ContentProvider {
             return mDatabaseCursor.getColumnIndex(columnName);
         }
 
-        public String [] getColumnNames() {
-            String [] x = mDatabaseCursor.getColumnNames();
-            String [] y = new String [x.length + mVirtualColumns.length];
+        public String[] getColumnNames() {
+            String[] x = mDatabaseCursor.getColumnNames();
+            String[] y = new String[x.length + mVirtualColumns.length];
 
             for (int i = 0; i < x.length; i++) {
                 y[i] = x[i];

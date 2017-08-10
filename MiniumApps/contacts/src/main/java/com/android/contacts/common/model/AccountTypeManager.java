@@ -132,14 +132,14 @@ public abstract class AccountTypeManager {
     /**
      * @return Unmodifiable map from {@link AccountTypeWithDataSet}s to {@link AccountType}s
      * which support the "invite" feature and have one or more account.
-     *
+     * <p>
      * This is a filtered down and more "usable" list compared to
      * {@link #getAllInvitableAccountTypes}, where usable is defined as:
      * (1) making sure that the app that contributed the account type is not disabled
      * (in order to avoid presenting the user with an option that does nothing), and
      * (2) that there is at least one raw contact with that account type in the database
      * (assuming that the user probably doesn't use that account type).
-     *
+     * <p>
      * Warning: Don't use on the UI thread because this can scan the database.
      */
     public abstract Map<AccountTypeWithDataSet, AccountType> getUsableInvitableAccountTypes();
@@ -223,7 +223,7 @@ class AccountTypeManagerImpl extends AccountTypeManager
     private Handler mListenerHandler;
 
     private final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
-    private final Runnable mCheckFilterValidityRunnable = new Runnable () {
+    private final Runnable mCheckFilterValidityRunnable = new Runnable() {
         @Override
         public void run() {
             ContactListFilterController.getInstance(mContext).checkFilterValidity(true);
@@ -449,7 +449,7 @@ class AccountTypeManagerImpl extends AccountTypeManager
             Log.d(TAG, "Registering " + extensionPackages.size() + " extension packages");
             for (String extensionPackage : extensionPackages) {
                 ExternalAccountType accountType =
-                    new ExternalAccountType(mContext, extensionPackage, true);
+                        new ExternalAccountType(mContext, extensionPackage, true);
                 if (!accountType.isInitialized()) {
                     // Skip external account types that couldn't be initialized.
                     continue;
@@ -478,7 +478,7 @@ class AccountTypeManagerImpl extends AccountTypeManager
         Account[] accounts = mAccountManager.getAccounts();
         for (Account account : accounts) {
             boolean syncable =
-                ContentResolver.getIsSyncable(account, ContactsContract.AUTHORITY) > 0;
+                    ContentResolver.getIsSyncable(account, ContactsContract.AUTHORITY) > 0;
 
             if (syncable) {
                 List<AccountType> accountTypes = accountTypesByType.get(account.type);
@@ -538,8 +538,8 @@ class AccountTypeManagerImpl extends AccountTypeManager
 
     // Bookkeeping method for tracking the known account types in the given maps.
     private void addAccountType(AccountType accountType,
-            Map<AccountTypeWithDataSet, AccountType> accountTypesByTypeAndDataSet,
-            Map<String, List<AccountType>> accountTypesByType) {
+                                Map<AccountTypeWithDataSet, AccountType> accountTypesByTypeAndDataSet,
+                                Map<String, List<AccountType>> accountTypesByType) {
         accountTypesByTypeAndDataSet.put(accountType.getAccountTypeAndDataSet(), accountType);
         List<AccountType> accountsForType = accountTypesByType.get(accountType.accountType);
         if (accountsForType == null) {
@@ -554,7 +554,7 @@ class AccountTypeManagerImpl extends AccountTypeManager
      * that matches the given account type.
      */
     protected static AuthenticatorDescription findAuthenticator(AuthenticatorDescription[] auths,
-            String accountType) {
+                                                                String accountType) {
         for (AuthenticatorDescription auth : auths) {
             if (accountType.equals(auth.type)) {
                 return auth;
@@ -669,8 +669,8 @@ class AccountTypeManagerImpl extends AccountTypeManager
      */
     @VisibleForTesting
     static Map<AccountTypeWithDataSet, AccountType> findAllInvitableAccountTypes(Context context,
-            Collection<AccountWithDataSet> accounts,
-            Map<AccountTypeWithDataSet, AccountType> accountTypesByTypeAndDataSet) {
+                                                                                 Collection<AccountWithDataSet> accounts,
+                                                                                 Map<AccountTypeWithDataSet, AccountType> accountTypesByTypeAndDataSet) {
         HashMap<AccountTypeWithDataSet, AccountType> result = Maps.newHashMap();
         for (AccountWithDataSet account : accounts) {
             AccountTypeWithDataSet accountTypeWithDataSet = account.getAccountTypeWithDataSet();
@@ -695,7 +695,7 @@ class AccountTypeManagerImpl extends AccountTypeManager
      * {@link #getAllInvitableAccountTypes}). A usable invitable account type means:
      * (1) there is at least 1 raw contact in the database with that account type, and
      * (2) the app contributing the account type is not disabled.
-     *
+     * <p>
      * Warning: Don't use on the UI thread because this can scan the database.
      */
     private Map<AccountTypeWithDataSet, AccountType> findUsableInvitableAccountTypes(
@@ -795,7 +795,7 @@ class AccountTypeManagerImpl extends AccountTypeManager
          * otherwise.
          */
         public boolean isExpired() {
-             return SystemClock.elapsedRealtime() - mTimeLastSet > TIME_TO_LIVE;
+            return SystemClock.elapsedRealtime() - mTimeLastSet > TIME_TO_LIVE;
         }
 
         /**

@@ -16,14 +16,16 @@
 
 package android.os;
 
-import com.android.internal.os.BinderInternal;
-
 import android.util.Log;
+
+import com.android.internal.os.BinderInternal;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/** @hide */
+/**
+ * @hide
+ */
 public final class ServiceManager {
     private static final String TAG = "ServiceManager";
 
@@ -42,7 +44,7 @@ public final class ServiceManager {
 
     /**
      * Returns a reference to a service with the given name.
-     * 
+     *
      * @param name the name of the service to get
      * @return a reference to the service, or <code>null</code> if the service doesn't exist
      */
@@ -63,8 +65,8 @@ public final class ServiceManager {
     /**
      * Place a new @a service called @a name into the service
      * manager.
-     * 
-     * @param name the name of the new service
+     *
+     * @param name    the name of the new service
      * @param service the service object
      */
     public static void addService(String name, IBinder service) {
@@ -78,11 +80,11 @@ public final class ServiceManager {
     /**
      * Place a new @a service called @a name into the service
      * manager.
-     * 
-     * @param name the name of the new service
-     * @param service the service object
+     *
+     * @param name          the name of the new service
+     * @param service       the service object
      * @param allowIsolated set to true to allow isolated sandboxed processes
-     * to access this service
+     *                      to access this service
      */
     public static void addService(String name, IBinder service, boolean allowIsolated) {
         try {
@@ -91,7 +93,7 @@ public final class ServiceManager {
             Log.e(TAG, "error in addService", e);
         }
     }
-    
+
     /**
      * Retrieve an existing service called @a name from the
      * service manager.  Non-blocking.
@@ -126,7 +128,7 @@ public final class ServiceManager {
      * This is only intended to be called when the process is first being brought
      * up and bound by the activity manager. There is only one thread in the process
      * at that time, so no locking is done.
-     * 
+     *
      * @param cache the cache of service references
      * @hide
      */

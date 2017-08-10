@@ -1,13 +1,5 @@
 package com.android.mms.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.concurrent.GuardedBy;
-import javax.annotation.concurrent.ThreadSafe;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -21,6 +13,14 @@ import android.util.Log;
 
 import com.android.mms.LogTag;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.concurrent.GuardedBy;
+import javax.annotation.concurrent.ThreadSafe;
+
 @ThreadSafe
 public class RecipientIdCache {
     private static final boolean LOCAL_DEBUG = false;
@@ -33,7 +33,10 @@ public class RecipientIdCache {
             Uri.parse("content://mms-sms/canonical-address");
 
     private static RecipientIdCache sInstance;
-    static RecipientIdCache getInstance() { return sInstance; }
+
+    static RecipientIdCache getInstance() {
+        return sInstance;
+    }
 
     @GuardedBy("this")
     private final Map<Long, String> mCache;
@@ -48,7 +51,9 @@ public class RecipientIdCache {
             this.id = id;
             this.number = number;
         }
-    };
+    }
+
+    ;
 
     static void init(Context context) {
         sInstance = new RecipientIdCache(context);
@@ -234,12 +239,13 @@ public class RecipientIdCache {
     /**
      * getSingleNumberFromCanonicalAddresses looks up the recipientId in the canonical_addresses
      * table and returns the associated number or email address.
-     * @param context needed for the ContentResolver
+     *
+     * @param context     needed for the ContentResolver
      * @param recipientId of the contact to look up
      * @return phone number or email address of the recipientId
      */
     public static String getSingleAddressFromCanonicalAddressInDb(final Context context,
-            final String recipientId) {
+                                                                  final String recipientId) {
         Cursor c = SqliteWrapper.query(context, context.getContentResolver(),
                 ContentUris.withAppendedId(sSingleCanonicalAddressUri, Long.parseLong(recipientId)),
                 null, null, null, null);

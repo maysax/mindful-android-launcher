@@ -25,47 +25,53 @@ import java.util.Objects;
 
 /**
  * A curve defining the network score over a range of RSSI values.
- *
+ * <p>
  * <p>For each RSSI bucket, the score may be any byte. Scores have no absolute meaning and are only
  * considered relative to other scores assigned by the same scorer. Networks with no score are all
  * considered equivalent and ranked below any network with a score.
- *
+ * <p>
  * <p>For example, consider a curve starting at -110 dBm with a bucket width of 10 and the
  * following buckets: {@code [-20, -10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120]}.
  * This represents a linear curve between -110 dBm and 30 dBm. It scores progressively higher at
  * stronger signal strengths.
- *
+ * <p>
  * <p>A network can be assigned a fixed score independent of RSSI by setting
  * {@link #rssiBuckets} to a one-byte array whose element is the fixed score. {@link #start}
  * should be set to the lowest RSSI value at which this fixed score should apply, and
  * {@link #bucketWidth} should be set such that {@code start + bucketWidth} is equal to the
  * highest RSSI value at which this fixed score should apply.
- *
+ * <p>
  * <p>Note that RSSI values below -110 dBm or above 30 dBm are unlikely to cause any difference
  * in connectivity behavior from those endpoints. That is, the connectivity framework will treat
  * a network with a -120 dBm signal exactly as it would treat one with a -110 dBm signal.
  * Therefore, graphs which specify scores outside this range may be truncated to this range by
  * the system.
  *
- * @see ScoredNetwork
  * @hide
+ * @see ScoredNetwork
  */
 @SystemApi
 public class RssiCurve implements Parcelable {
 
-    /** The starting dBm of the curve. */
+    /**
+     * The starting dBm of the curve.
+     */
     public final int start;
 
-    /** The width of each RSSI bucket, in dBm. */
+    /**
+     * The width of each RSSI bucket, in dBm.
+     */
     public final int bucketWidth;
 
-    /** The score for each RSSI bucket. */
+    /**
+     * The score for each RSSI bucket.
+     */
     public final byte[] rssiBuckets;
 
     /**
      * Construct a new {@link RssiCurve}.
      *
-     * @param start the starting dBm of the curve.
+     * @param start       the starting dBm of the curve.
      * @param bucketWidth the width of each RSSI bucket, in dBm.
      * @param rssiBuckets the score for each RSSI bucket.
      */
@@ -103,8 +109,8 @@ public class RssiCurve implements Parcelable {
      * Lookup the score for a given RSSI value.
      *
      * @param rssi The RSSI to lookup. If the RSSI falls below the start of the curve, the score at
-     *         the start of the curve will be returned. If it falls after the end of the curve, the
-     *         score at the end of the curve will be returned.
+     *             the start of the curve will be returned. If it falls after the end of the curve, the
+     *             score at the end of the curve will be returned.
      * @return the score for the given RSSI.
      */
     public byte lookupScore(int rssi) {
@@ -122,7 +128,7 @@ public class RssiCurve implements Parcelable {
 
     /**
      * Determine if two RSSI curves are defined in the same way.
-     *
+     * <p>
      * <p>Note that two curves can be equivalent but defined differently, e.g. if one bucket in one
      * curve is split into two buckets in another. For the purpose of this method, these curves are
      * not considered equal to each other.

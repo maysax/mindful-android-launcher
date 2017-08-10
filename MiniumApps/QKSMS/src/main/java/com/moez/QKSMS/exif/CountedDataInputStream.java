@@ -75,7 +75,7 @@ class CountedDataInputStream extends FilterInputStream {
     public void skipTo(long target) throws IOException {
         long cur = mCount;
         long diff = target - cur;
-        assert(diff >= 0);
+        assert (diff >= 0);
         skipOrThrow(diff);
     }
 
@@ -97,7 +97,7 @@ class CountedDataInputStream extends FilterInputStream {
     }
 
     public short readShort() throws IOException {
-        readOrThrow(mByteArray, 0 ,2);
+        readOrThrow(mByteArray, 0, 2);
         mByteBuffer.rewind();
         return mByteBuffer.getShort();
     }
@@ -107,7 +107,7 @@ class CountedDataInputStream extends FilterInputStream {
     }
 
     public int readInt() throws IOException {
-        readOrThrow(mByteArray, 0 , 4);
+        readOrThrow(mByteArray, 0, 4);
         mByteBuffer.rewind();
         return mByteBuffer.getInt();
     }
@@ -117,7 +117,7 @@ class CountedDataInputStream extends FilterInputStream {
     }
 
     public long readLong() throws IOException {
-        readOrThrow(mByteArray, 0 , 8);
+        readOrThrow(mByteArray, 0, 8);
         mByteBuffer.rewind();
         return mByteBuffer.getLong();
     }

@@ -15,7 +15,6 @@
  */
 package com.android.contacts.common.list;
 
-import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -59,7 +58,9 @@ public class PhoneNumberPickerFragment extends ContactEntryListFragment<ContactE
 
     private static final String KEY_FILTER = "filter";
 
-    /** true if the loader has started at least once. */
+    /**
+     * true if the loader has started at least once.
+     */
     private boolean mLoaderStarted;
 
     private boolean mUseCallableUri;
@@ -76,6 +77,7 @@ public class PhoneNumberPickerFragment extends ContactEntryListFragment<ContactE
                     mFilter);
         }
     }
+
     private OnClickListener mFilterHeaderClickListener = new FilterHeaderClickListener();
 
     public PhoneNumberPickerFragment() {
@@ -133,8 +135,8 @@ public class PhoneNumberPickerFragment extends ContactEntryListFragment<ContactE
         }
         final boolean shouldShowHeader =
                 !isSearchMode() &&
-                AccountFilterUtil.updateAccountFilterTitleForPhone(
-                        mAccountFilterHeader, filter, false);
+                        AccountFilterUtil.updateAccountFilterTitleForPhone(
+                                mAccountFilterHeader, filter, false);
         if (shouldShowHeader) {
             mPaddingView.setVisibility(View.GONE);
             mAccountFilterHeader.setVisibility(View.VISIBLE);
@@ -177,7 +179,7 @@ public class PhoneNumberPickerFragment extends ContactEntryListFragment<ContactE
 
     /**
      * @param shortcutAction either {@link Intent#ACTION_CALL} or
-     *            {@link Intent#ACTION_SENDTO} or null.
+     *                       {@link Intent#ACTION_SENDTO} or null.
      */
     public void setShortcutAction(String shortcutAction) {
         this.mShortcutAction = shortcutAction;

@@ -4,8 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions"/>
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>-->
     <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
@@ -32,8 +34,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.siempo.tracking.permission.PermissionActivity_"
-            android:label="Tracking permission"/>
+        <activity
+            android:name="com.siempo.tracking.permission.PermissionActivity_"
+            android:label="Tracking permission" />
 
         <service android:name="com.siempo.tracking.services.ScreenOnOffService_" />
         <service android:name="com.siempo.tracking.services.GlobalTouchService_" />
@@ -59,10 +62,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </receiver>
     </application>
 

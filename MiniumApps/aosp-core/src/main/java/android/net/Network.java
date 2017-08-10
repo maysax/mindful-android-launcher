@@ -17,9 +17,15 @@
 package android.net;
 
 import android.net.NetworkUtils;
-import android.os.Parcelable;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.system.ErrnoException;
+
+import com.android.okhttp.ConnectionPool;
+import com.android.okhttp.HostResolver;
+import com.android.okhttp.HttpHandler;
+import com.android.okhttp.HttpsHandler;
+import com.android.okhttp.OkHttpClient;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -28,18 +34,11 @@ import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLStreamHandler;
-import java.util.concurrent.atomic.AtomicReference;
-import javax.net.SocketFactory;
+import java.net.UnknownHostException;
 
-import com.android.okhttp.ConnectionPool;
-import com.android.okhttp.HostResolver;
-import com.android.okhttp.HttpHandler;
-import com.android.okhttp.HttpsHandler;
-import com.android.okhttp.OkHttpClient;
+import javax.net.SocketFactory;
 
 /**
  * Identifies a {@code Network}.  This is supplied to applications via
@@ -107,11 +106,9 @@ public class Network implements Parcelable {
      * Operates the same as {@code InetAddress.getByName} except that host
      * resolution is done on this network.
      *
-     * @param host
-     *            the hostName to be resolved to an address or {@code null}.
+     * @param host the hostName to be resolved to an address or {@code null}.
      * @return the {@code InetAddress} instance representing the host.
-     * @throws UnknownHostException
-     *             if the address lookup fails.
+     * @throws UnknownHostException if the address lookup fails.
      */
     public InetAddress getByName(String host) throws UnknownHostException {
         return InetAddress.getByNameOnNet(host, netId);
@@ -153,7 +150,7 @@ public class Network implements Parcelable {
 
         @Override
         public Socket createSocket(InetAddress address, int port, InetAddress localAddress,
-                int localPort) throws IOException {
+                                   int localPort) throws IOException {
             Socket socket = createSocket();
             socket.bind(new InetSocketAddress(localAddress, localPort));
             socket.connect(new InetSocketAddress(address, port));
@@ -187,7 +184,7 @@ public class Network implements Parcelable {
      * past or future will cease to work.
      *
      * @return a {@link SocketFactory} which produces {@link Socket} instances bound to this
-     *         {@code Network}.
+     * {@code Network}.
      */
     public SocketFactory getSocketFactory() {
         if (mNetworkBoundSocketFactory == null) {
@@ -238,7 +235,7 @@ public class Network implements Parcelable {
      *
      * @return a {@code URLConnection} to the resource referred to by this URL.
      * @throws MalformedURLException if the URL protocol is not HTTP or HTTPS.
-     * @throws IOException if an error occurs while opening the connection.
+     * @throws IOException           if an error occurs while opening the connection.
      * @see java.net.URL#openConnection()
      */
     public URLConnection openConnection(URL url) throws IOException {
@@ -287,27 +284,28 @@ public class Network implements Parcelable {
     public int describeContents() {
         return 0;
     }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(netId);
     }
 
     public static final Creator<Network> CREATOR =
-        new Creator<Network>() {
-            public Network createFromParcel(Parcel in) {
-                int netId = in.readInt();
+            new Creator<Network>() {
+                public Network createFromParcel(Parcel in) {
+                    int netId = in.readInt();
 
-                return new Network(netId);
-            }
+                    return new Network(netId);
+                }
 
-            public Network[] newArray(int size) {
-                return new Network[size];
-            }
-    };
+                public Network[] newArray(int size) {
+                    return new Network[size];
+                }
+            };
 
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Network == false) return false;
-        Network other = (Network)obj;
+        Network other = (Network) obj;
         return this.netId == other.netId;
     }
 

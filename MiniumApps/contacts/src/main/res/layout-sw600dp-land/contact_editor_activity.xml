@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,34 +13,23 @@
      limitations under the License.
 -->
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="horizontal" android:baselineAligned="false">
 
         <!-- Empty view to represent the left margin -->
-        <View
-            android:layout_height="match_parent"
-            android:layout_width="0dip"
+        <View android:layout_height="match_parent" android:layout_width="0dip"
             android:layout_weight="2" />
 
         <fragment class="com.android.contacts.editor.ContactEditorFragment"
-            android:id="@+id/contact_editor_fragment"
-            android:layout_width="0dip"
-            android:layout_weight="6"
-            android:layout_height="match_parent"/>
+            android:id="@+id/contact_editor_fragment" android:layout_width="0dip"
+            android:layout_weight="6" android:layout_height="match_parent" />
 
         <!-- Empty view to represent the right margin -->
-        <View
-            android:layout_height="match_parent"
-            android:layout_width="0dip"
+        <View android:layout_height="match_parent" android:layout_width="0dip"
             android:layout_weight="2" />
 
     </LinearLayout>

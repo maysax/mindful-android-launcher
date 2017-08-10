@@ -17,8 +17,6 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.notification.NotificationUtility;
-import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
-import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import co.siempo.phone.util.PackageUtil;
 import minium.co.core.log.Tracer;
 

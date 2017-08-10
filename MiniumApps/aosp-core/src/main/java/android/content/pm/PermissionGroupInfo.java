@@ -45,7 +45,7 @@ public class PermissionGroupInfo extends PackageItemInfo implements Parcelable {
      * Flag for {@link #flags}, corresponding to <code>personalInfo</code>
      * value of {@link android.R.attr#permissionGroupFlags}.
      */
-    public static final int FLAG_PERSONAL_INFO = 1<<0;
+    public static final int FLAG_PERSONAL_INFO = 1 << 0;
 
     /**
      * Additional flags about this group as given by
@@ -75,8 +75,7 @@ public class PermissionGroupInfo extends PackageItemInfo implements Parcelable {
      * the application.
      *
      * @param pm A PackageManager from which the label can be loaded; usually
-     * the PackageManager from which you originally retrieved this item.
-     *
+     *           the PackageManager from which you originally retrieved this item.
      * @return Returns a CharSequence containing the permission's description.
      * If there is no description, null is returned.
      */
@@ -95,8 +94,8 @@ public class PermissionGroupInfo extends PackageItemInfo implements Parcelable {
 
     public String toString() {
         return "PermissionGroupInfo{"
-            + Integer.toHexString(System.identityHashCode(this))
-            + " " + name + " flgs=0x" + Integer.toHexString(flags) + "}";
+                + Integer.toHexString(System.identityHashCode(this))
+                + " " + name + " flgs=0x" + Integer.toHexString(flags) + "}";
     }
 
     public int describeContents() {
@@ -113,13 +112,14 @@ public class PermissionGroupInfo extends PackageItemInfo implements Parcelable {
 
     public static final Creator<PermissionGroupInfo> CREATOR =
             new Creator<PermissionGroupInfo>() {
-        public PermissionGroupInfo createFromParcel(Parcel source) {
-            return new PermissionGroupInfo(source);
-        }
-        public PermissionGroupInfo[] newArray(int size) {
-            return new PermissionGroupInfo[size];
-        }
-    };
+                public PermissionGroupInfo createFromParcel(Parcel source) {
+                    return new PermissionGroupInfo(source);
+                }
+
+                public PermissionGroupInfo[] newArray(int size) {
+                    return new PermissionGroupInfo[size];
+                }
+            };
 
     private PermissionGroupInfo(Parcel source) {
         super(source);

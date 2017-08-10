@@ -21,7 +21,7 @@ import java.util.Locale;
 /**
  * HttpAuthHeader: a class to store HTTP authentication-header parameters.
  * For more information, see: RFC 2617: HTTP Authentication.
- * 
+ * <p>
  * {@hide}
  */
 public class HttpAuthHeader {
@@ -72,7 +72,7 @@ public class HttpAuthHeader {
 
     /**
      * A string of data, specified by the server, which should be returned
-     *  by the client unchanged in the Authorization header of subsequent
+     * by the client unchanged in the Authorization header of subsequent
      * requests with URIs in the same protection space.
      */
     private String mOpaque;
@@ -166,7 +166,7 @@ public class HttpAuthHeader {
     /**
      * @return True iff this is the  BASIC-authentication request.
      */
-    public boolean isBasic () {
+    public boolean isBasic() {
         return mScheme == BASIC;
     }
 
@@ -246,8 +246,8 @@ public class HttpAuthHeader {
             } else {
                 if (mScheme == DIGEST) {
                     return
-                        mAlgorithm.equals("md5") &&
-                        (mQop == null || mQop.equals("auth"));
+                            mAlgorithm.equals("md5") &&
+                                    (mQop == null || mQop.equals("auth"));
                 }
             }
         }
@@ -278,6 +278,7 @@ public class HttpAuthHeader {
     /**
      * Parses the authentication scheme name. If we have a Digest
      * scheme, sets the algorithm value to the default of MD5.
+     *
      * @return The authentication scheme parameters string to be
      * parsed later (if the scheme is supported) or null if failed
      * to parse the scheme (the header value is null?).
@@ -312,7 +313,7 @@ public class HttpAuthHeader {
     private void parseParameters(String parameters) {
         if (HttpLog.LOGV) {
             HttpLog.v("HttpAuthHeader.parseParameters():" +
-                      " parameters: " + parameters);
+                    " parameters: " + parameters);
         }
 
         if (parameters != null) {
@@ -341,12 +342,12 @@ public class HttpAuthHeader {
             if (i >= 0) {
                 String token = parameter.substring(0, i).trim();
                 String value =
-                    trimDoubleQuotesIfAny(parameter.substring(i + 1).trim());
+                        trimDoubleQuotesIfAny(parameter.substring(i + 1).trim());
 
                 if (HttpLog.LOGV) {
                     HttpLog.v("HttpAuthHeader.parseParameter():" +
-                              " token: " + token +
-                              " value: " + value);
+                            " token: " + token +
+                            " value: " + value);
                 }
 
                 if (token.equalsIgnoreCase(REALM_TOKEN)) {
@@ -407,6 +408,7 @@ public class HttpAuthHeader {
 
     /**
      * Trims double-quotes around a parameter value if there are any.
+     *
      * @return The string value without the outermost pair of double-
      * quotes or null if the original value is null.
      */
@@ -414,7 +416,7 @@ public class HttpAuthHeader {
         if (value != null) {
             int len = value.length();
             if (len > 2 &&
-                value.charAt(0) == '\"' && value.charAt(len - 1) == '\"') {
+                    value.charAt(0) == '\"' && value.charAt(len - 1) == '\"') {
                 return value.substring(1, len - 1);
             }
         }

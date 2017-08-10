@@ -17,23 +17,13 @@
 
 package com.android.mms.transaction;
 
-import static com.android.mms.transaction.TransactionState.FAILED;
-import static com.android.mms.transaction.TransactionState.INITIALIZED;
-import static com.android.mms.transaction.TransactionState.SUCCESS;
-import static com.google.android.mms.pdu.PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF;
-import static com.google.android.mms.pdu.PduHeaders.STATUS_DEFERRED;
-import static com.google.android.mms.pdu.PduHeaders.STATUS_RETRIEVED;
-import static com.google.android.mms.pdu.PduHeaders.STATUS_UNRECOGNIZED;
-
-import java.io.IOException;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SqliteWrapper;
 import android.net.Uri;
 import android.provider.Telephony.Mms;
-import android.provider.Telephony.Threads;
 import android.provider.Telephony.Mms.Inbox;
+import android.provider.Telephony.Threads;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -53,17 +43,27 @@ import com.google.android.mms.pdu.PduHeaders;
 import com.google.android.mms.pdu.PduParser;
 import com.google.android.mms.pdu.PduPersister;
 
+import java.io.IOException;
+
+import static com.android.mms.transaction.TransactionState.FAILED;
+import static com.android.mms.transaction.TransactionState.INITIALIZED;
+import static com.android.mms.transaction.TransactionState.SUCCESS;
+import static com.google.android.mms.pdu.PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF;
+import static com.google.android.mms.pdu.PduHeaders.STATUS_DEFERRED;
+import static com.google.android.mms.pdu.PduHeaders.STATUS_RETRIEVED;
+import static com.google.android.mms.pdu.PduHeaders.STATUS_UNRECOGNIZED;
+
 /**
  * The NotificationTransaction is responsible for handling multimedia
  * message notifications (M-Notification.ind).  It:
- *
+ * <p>
  * <ul>
  * <li>Composes the notification response (M-NotifyResp.ind).
  * <li>Sends the notification response to the MMSC server.
  * <li>Stores the notification indication.
  * <li>Notifies the TransactionService about succesful completion.
  * </ul>
- *
+ * <p>
  * NOTE: This MMS client handles all notifications with a <b>deferred
  * retrieval</b> response.  The transaction service, upon succesful
  * completion of this transaction, will trigger a retrieve transaction
@@ -112,8 +112,8 @@ public class NotificationTransaction extends Transaction implements Runnable {
             // Save the pdu. If we can start downloading the real pdu immediately, don't allow
             // persist() to create a thread for the notificationInd because it causes UI jank.
             mUri = PduPersister.getPduPersister(context).persist(
-                        ind, Inbox.CONTENT_URI, !allowAutoDownload(),
-                        MessagingPreferenceActivity.getIsGroupMmsEnabled(context), null);
+                    ind, Inbox.CONTENT_URI, !allowAutoDownload(),
+                    MessagingPreferenceActivity.getIsGroupMmsEnabled(context), null);
         } catch (MmsException e) {
             Log.e(TAG, "Failed to save NotificationInd in constructor.", e);
             throw new IllegalArgumentException();
@@ -196,7 +196,7 @@ public class NotificationTransaction extends Transaction implements Runnable {
                     // We have successfully downloaded the new MM. Delete the
                     // M-NotifyResp.ind from Inbox.
                     SqliteWrapper.delete(mContext, mContext.getContentResolver(),
-                                         mUri, null, null);
+                            mUri, null, null);
                     Log.v(TAG, "NotificationTransaction received new mms message: " + uri);
                     // Delete obsolete threads
                     SqliteWrapper.delete(mContext, mContext.getContentResolver(),
@@ -255,7 +255,7 @@ public class NotificationTransaction extends Transaction implements Runnable {
                 status);
 
         // Pack M-NotifyResp.ind and send it
-        if(MmsConfig.getNotifyWapMMSC()) {
+        if (MmsConfig.getNotifyWapMMSC()) {
             sendPdu(new PduComposer(mContext, notifyRespInd).make(), mContentLocation);
         } else {
             sendPdu(new PduComposer(mContext, notifyRespInd).make());

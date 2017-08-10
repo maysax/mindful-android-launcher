@@ -16,14 +16,11 @@
 
 package com.android.contacts.common.preference;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.database.ContentObserver;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 
@@ -186,7 +183,7 @@ public final class ContactsPreferences implements OnSharedPreferenceChangeListen
         if (!mPreferences.contains(SORT_ORDER_KEY)) {
             int sortOrder = getDefaultSortOrder();
             try {
-                 sortOrder = Settings.System.getInt(mContext.getContentResolver(),
+                sortOrder = Settings.System.getInt(mContext.getContentResolver(),
                         SORT_ORDER_KEY);
             } catch (SettingNotFoundException e) {
             }

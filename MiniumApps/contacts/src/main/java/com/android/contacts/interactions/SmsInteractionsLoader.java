@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * Loads the most recent sms between the passed in phone numbers.
- *
+ * <p>
  * This is a two part process. The first step is retrieving the threadIds for each of the phone
  * numbers using fuzzy matching. The next step is to run another query against these threadIds
  * to retrieve the actual sms.
@@ -47,7 +47,7 @@ public class SmsInteractionsLoader extends AsyncTaskLoader<List<ContactInteracti
      * Loads a list of SmsInteraction from the supplied phone numbers.
      */
     public SmsInteractionsLoader(Context context, String[] phoneNums,
-            int maxToRetrieve) {
+                                 int maxToRetrieve) {
         super(context);
         Log.v(TAG, "SmsInteractionsLoader");
         mPhoneNums = phoneNums;

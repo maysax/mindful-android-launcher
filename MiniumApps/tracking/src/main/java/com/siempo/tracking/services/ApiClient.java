@@ -35,7 +35,6 @@ public class ApiClient extends CoreAPIClient {
     private final String FTP_PASS = "C!55iL9p";
 
 
-
     public void uploadFileToFTP() {
         com.adeel.library.easyFTP ftp = new easyFTP();
         try {

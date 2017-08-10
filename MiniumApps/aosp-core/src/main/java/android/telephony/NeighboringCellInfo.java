@@ -18,22 +18,21 @@ package android.telephony;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import static android.telephony.TelephonyManager.NETWORK_TYPE_UNKNOWN;
+
 import static android.telephony.TelephonyManager.NETWORK_TYPE_EDGE;
 import static android.telephony.TelephonyManager.NETWORK_TYPE_GPRS;
-import static android.telephony.TelephonyManager.NETWORK_TYPE_UMTS;
 import static android.telephony.TelephonyManager.NETWORK_TYPE_HSDPA;
-import static android.telephony.TelephonyManager.NETWORK_TYPE_HSUPA;
 import static android.telephony.TelephonyManager.NETWORK_TYPE_HSPA;
-
+import static android.telephony.TelephonyManager.NETWORK_TYPE_HSUPA;
+import static android.telephony.TelephonyManager.NETWORK_TYPE_UMTS;
+import static android.telephony.TelephonyManager.NETWORK_TYPE_UNKNOWN;
 
 
 /**
  * Represents the neighboring cell information, including
  * Received Signal Strength and Cell ID location.
  */
-public class NeighboringCellInfo implements Parcelable
-{
+public class NeighboringCellInfo implements Parcelable {
     /**
      * Signal strength is not available
      */
@@ -69,7 +68,7 @@ public class NeighboringCellInfo implements Parcelable
 
     /**
      * Empty constructor.  Initializes the RSSI and CID.
-     *
+     * <p>
      * NeighboringCellInfo is one time shot for the neighboring cells based on
      * the radio network type at that moment. Its constructor needs radio network
      * type.
@@ -87,7 +86,7 @@ public class NeighboringCellInfo implements Parcelable
 
     /**
      * Initialize the object from rssi and cid.
-     *
+     * <p>
      * NeighboringCellInfo is one time shot for the neighboring cells based on
      * the radio network type at that moment. Its constructor needs radio network
      * type.
@@ -123,29 +122,29 @@ public class NeighboringCellInfo implements Parcelable
         int l = location.length();
         if (l > 8) return;
         if (l < 8) {
-            for (int i = 0; i < (8-l); i++) {
+            for (int i = 0; i < (8 - l); i++) {
                 location = "0" + location;
             }
         }
         // TODO - handle LTE and eHRPD (or find they can't be supported)
         try {// set LAC/CID or PSC based on radioType
             switch (radioType) {
-            case NETWORK_TYPE_GPRS:
-            case NETWORK_TYPE_EDGE:
-                mNetworkType = radioType;
-                // check if 0xFFFFFFFF for UNKNOWN_CID
-                if (!location.equalsIgnoreCase("FFFFFFFF")) {
-                    mCid = Integer.valueOf(location.substring(4), 16);
-                    mLac = Integer.valueOf(location.substring(0, 4), 16);
-                }
-                break;
-            case NETWORK_TYPE_UMTS:
-            case NETWORK_TYPE_HSDPA:
-            case NETWORK_TYPE_HSUPA:
-            case NETWORK_TYPE_HSPA:
-                mNetworkType = radioType;
-                mPsc = Integer.valueOf(location, 16);
-                break;
+                case NETWORK_TYPE_GPRS:
+                case NETWORK_TYPE_EDGE:
+                    mNetworkType = radioType;
+                    // check if 0xFFFFFFFF for UNKNOWN_CID
+                    if (!location.equalsIgnoreCase("FFFFFFFF")) {
+                        mCid = Integer.valueOf(location.substring(4), 16);
+                        mLac = Integer.valueOf(location.substring(0, 4), 16);
+                    }
+                    break;
+                case NETWORK_TYPE_UMTS:
+                case NETWORK_TYPE_HSDPA:
+                case NETWORK_TYPE_HSUPA:
+                case NETWORK_TYPE_HSPA:
+                    mNetworkType = radioType;
+                    mPsc = Integer.valueOf(location, 16);
+                    break;
             }
         } catch (NumberFormatException e) {
             // parsing location error
@@ -169,7 +168,7 @@ public class NeighboringCellInfo implements Parcelable
 
     /**
      * @return received signal strength or UNKNOWN_RSSI if unknown
-     *
+     * <p>
      * For GSM, it is in "asu" ranging from 0 to 31 (dBm = -113 + 2*asu)
      * 0 means "-113 dBm or less" and 31 means "-51 dBm or greater"
      * For UMTS, it is the Level index of CPICH RSCP defined in TS 25.125
@@ -180,7 +179,7 @@ public class NeighboringCellInfo implements Parcelable
 
     /**
      * @return LAC in GSM, 0xffff max legal value
-     *  UNKNOWN_CID if in UMTS or CMDA or unknown
+     * UNKNOWN_CID if in UMTS or CMDA or unknown
      */
     public int getLac() {
         return mLac;
@@ -188,7 +187,7 @@ public class NeighboringCellInfo implements Parcelable
 
     /**
      * @return cell id in GSM, 0xffff max legal value
-     *  UNKNOWN_CID if in UMTS or CDMA or unknown
+     * UNKNOWN_CID if in UMTS or CDMA or unknown
      */
     public int getCid() {
         return mCid;
@@ -196,7 +195,7 @@ public class NeighboringCellInfo implements Parcelable
 
     /**
      * @return Primary Scrambling Code in 9 bits format in UMTS, 0x1ff max value
-     *  UNKNOWN_CID if in GSM or CMDA or unknown
+     * UNKNOWN_CID if in GSM or CMDA or unknown
      */
     public int getPsc() {
         return mPsc;
@@ -204,17 +203,17 @@ public class NeighboringCellInfo implements Parcelable
 
     /**
      * @return Radio network type while neighboring cell location is stored.
-     *
+     * <p>
      * Return {@link TelephonyManager#NETWORK_TYPE_UNKNOWN TelephonyManager.NETWORK_TYPE_UNKNOWN}
      * means that the location information is unavailable.
-     *
+     * <p>
      * Return {@link TelephonyManager#NETWORK_TYPE_GPRS TelephonyManager.NETWORK_TYPE_GPRS} or
      * {@link TelephonyManager#NETWORK_TYPE_EDGE TelephonyManager.NETWORK_TYPE_EDGE}
      * means that Neighboring Cell information is stored for GSM network, in
      * which {@link NeighboringCellInfo#getLac NeighboringCellInfo.getLac} and
      * {@link NeighboringCellInfo#getCid NeighboringCellInfo.getCid} should be
      * called to access location.
-     *
+     * <p>
      * Return {@link TelephonyManager#NETWORK_TYPE_UMTS TelephonyManager.NETWORK_TYPE_UMTS},
      * {@link TelephonyManager#NETWORK_TYPE_HSDPA TelephonyManager.NETWORK_TYPE_HSDPA},
      * {@link TelephonyManager#NETWORK_TYPE_HSUPA TelephonyManager.NETWORK_TYPE_HSUPA},
@@ -226,15 +225,16 @@ public class NeighboringCellInfo implements Parcelable
     public int getNetworkType() {
         return mNetworkType;
     }
+
     /**
      * Set the cell id.
-     *
+     * <p>
      * NeighboringCellInfo is a one time shot for the neighboring cells based on
      * the radio network type at that moment. It shouldn't be changed after
      * creation.
      *
      * @deprecated cid value passed as in location parameter passed to constructor
-     *              {@link #NeighboringCellInfo(int, String, int)}
+     * {@link #NeighboringCellInfo(int, String, int)}
      */
     @Deprecated
     public void setCid(int cid) {
@@ -243,13 +243,13 @@ public class NeighboringCellInfo implements Parcelable
 
     /**
      * Set the signal strength of the cell.
-     *
+     * <p>
      * NeighboringCellInfo is a one time shot for the neighboring cells based on
      * the radio network type at that moment. It shouldn't be changed after
      * creation.
      *
      * @deprecated initial rssi value passed as parameter to constructor
-     *              {@link #NeighboringCellInfo(int, String, int)}
+     * {@link #NeighboringCellInfo(int, String, int)}
      */
     @Deprecated
     public void setRssi(int rssi) {
@@ -263,11 +263,11 @@ public class NeighboringCellInfo implements Parcelable
         sb.append("[");
         if (mPsc != UNKNOWN_CID) {
             sb.append(Integer.toHexString(mPsc))
-                    .append("@").append(((mRssi == UNKNOWN_RSSI)? "-" : mRssi));
-        } else if(mLac != UNKNOWN_CID && mCid != UNKNOWN_CID) {
+                    .append("@").append(((mRssi == UNKNOWN_RSSI) ? "-" : mRssi));
+        } else if (mLac != UNKNOWN_CID && mCid != UNKNOWN_CID) {
             sb.append(Integer.toHexString(mLac))
                     .append(Integer.toHexString(mCid))
-                    .append("@").append(((mRssi == UNKNOWN_RSSI)? "-" : mRssi));
+                    .append("@").append(((mRssi == UNKNOWN_RSSI) ? "-" : mRssi));
         }
         sb.append("]");
 
@@ -287,7 +287,7 @@ public class NeighboringCellInfo implements Parcelable
     }
 
     public static final Parcelable.Creator<NeighboringCellInfo> CREATOR
-    = new Parcelable.Creator<NeighboringCellInfo>() {
+            = new Parcelable.Creator<NeighboringCellInfo>() {
         public NeighboringCellInfo createFromParcel(Parcel in) {
             return new NeighboringCellInfo(in);
         }

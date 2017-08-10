@@ -38,7 +38,9 @@ public class ViewNotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
-        if (DEBUG) { Log.d(TAG, "onHandleIntent(). Intent: " + intent); }
+        if (DEBUG) {
+            Log.d(TAG, "onHandleIntent(). Intent: " + intent);
+        }
 
         // We simply need to start a Loader here. When its done, it will send out the
         // View-Notification automatically.

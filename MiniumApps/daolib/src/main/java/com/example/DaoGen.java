@@ -7,8 +7,8 @@ import org.greenrobot.greendao.generator.Schema;
 
 public class DaoGen {
 
-    public static void main (String [] args) throws Exception {
-        Schema schema = new Schema(1,"co.minium.launcher3.db");
+    public static void main(String[] args) throws Exception {
+        Schema schema = new Schema(1, "co.minium.launcher3.db");
 
         Entity entity = schema.addEntity("TableNotificationSms");
         entity.addIdProperty();
@@ -21,6 +21,6 @@ public class DaoGen {
         entity.addBooleanProperty("_is_read");//bool
 
         DaoGenerator DG = new DaoGenerator();
-        DG.generateAll(schema,"./launcher3/src/main/java");
+        DG.generateAll(schema, "./launcher3/src/main/java");
     }
 }

@@ -47,6 +47,7 @@ public abstract class WheelScroller {
 
         /**
          * Scrolling callback called when scrolling is performed.
+         *
          * @param distance the distance to scroll
          */
         void onScroll(int distance);
@@ -77,10 +78,14 @@ public abstract class WheelScroller {
         void onJustify();
     }
 
-    /** Scrolling duration */
+    /**
+     * Scrolling duration
+     */
     private static final int SCROLLING_DURATION = 400;
 
-    /** Minimum delta for scrolling */
+    /**
+     * Minimum delta for scrolling
+     */
     public static final int MIN_DELTA_FOR_SCROLLING = 1;
 
     // Listener
@@ -90,17 +95,18 @@ public abstract class WheelScroller {
     private Context context;
 
     // Scrolling
-    private   GestureDetector gestureDetector;
-    protected Scroller        scroller;
-    private   int             lastScrollPosition;
-    private   float           lastTouchedPosition;
-    private   boolean         isScrollingPerformed;
-    public static final int SCROLL_DIRECTION_UP   = 1;
+    private GestureDetector gestureDetector;
+    protected Scroller scroller;
+    private int lastScrollPosition;
+    private float lastTouchedPosition;
+    private boolean isScrollingPerformed;
+    public static final int SCROLL_DIRECTION_UP = 1;
     public static final int SCROLL_DIRECTION_DOWN = -1;
 
     /**
      * Constructor
-     * @param context the current context
+     *
+     * @param context  the current context
      * @param listener the scrolling listener
      */
     public WheelScroller(Context context, ScrollingListener listener) {
@@ -117,7 +123,7 @@ public abstract class WheelScroller {
                 scrollerFling(lastScrollPosition, (int) velocityX, (int) velocityY);
                 setNextMessage(MESSAGE_SCROLL);
                 WheelScroller.this.listener.onFling(
-                  velocityY < 0 ? SCROLL_DIRECTION_UP : SCROLL_DIRECTION_DOWN);
+                        velocityY < 0 ? SCROLL_DIRECTION_UP : SCROLL_DIRECTION_DOWN);
                 return true;
             }
 
@@ -133,6 +139,7 @@ public abstract class WheelScroller {
 
     /**
      * Set the the specified scrolling interpolator
+     *
      * @param interpolator the interpolator
      */
     public void setInterpolator(Interpolator interpolator) {
@@ -142,8 +149,9 @@ public abstract class WheelScroller {
 
     /**
      * Scroll the spinnerwheel
+     *
      * @param distance the scrolling distance
-     * @param time the scrolling duration
+     * @param time     the scrolling duration
      */
     public void scroll(int distance, int time) {
         scroller.forceFinished(true);
@@ -162,6 +170,7 @@ public abstract class WheelScroller {
 
     /**
      * Set the friction of the scroller. This function is available over Android 3.0 (API Level 11).
+     *
      * @param friction the amount of friction
      */
     public void setFriction(float friction) {
@@ -171,7 +180,8 @@ public abstract class WheelScroller {
     }
 
     /**
-     * Handles Touch event 
+     * Handles Touch event
+     *
      * @param event the motion event
      * @return
      */
@@ -210,7 +220,7 @@ public abstract class WheelScroller {
 
 
     // Messages
-    private final int MESSAGE_SCROLL  = 0;
+    private final int MESSAGE_SCROLL = 0;
     private final int MESSAGE_JUSTIFY = 1;
 
     /**

@@ -16,8 +16,8 @@
 
 package android.net.dhcp;
 
-import java.net.InetAddress;
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 /**
@@ -29,7 +29,7 @@ class DhcpDiscoverPacket extends DhcpPacket {
      */
     DhcpDiscoverPacket(int transId, byte[] clientMac, boolean broadcast) {
         super(transId, Inet4Address.ANY, Inet4Address.ANY, Inet4Address.ANY,
-            Inet4Address.ANY, clientMac, broadcast);
+                Inet4Address.ANY, clientMac, broadcast);
     }
 
     public String toString() {
@@ -46,7 +46,7 @@ class DhcpDiscoverPacket extends DhcpPacket {
         InetAddress destIp = Inet4Address.ALL;
 
         fillInPacket(encap, Inet4Address.ALL, Inet4Address.ANY, destUdp, srcUdp,
-            result, DHCP_BOOTREQUEST, true);
+                result, DHCP_BOOTREQUEST, true);
         result.flip();
         return result;
     }
@@ -66,6 +66,6 @@ class DhcpDiscoverPacket extends DhcpPacket {
     public void doNextOp(DhcpStateMachine machine) {
         // currently omitted: host name
         machine.onDiscoverReceived(mBroadcast, mTransId, mClientMac,
-            mRequestedParams);
+                mRequestedParams);
     }
 }

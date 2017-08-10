@@ -16,10 +16,6 @@
 
 package android.net;
 
-import com.android.internal.util.Protocol;
-import com.android.internal.util.State;
-import com.android.internal.util.StateMachine;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -33,17 +29,21 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.android.internal.util.Protocol;
+import com.android.internal.util.State;
+import com.android.internal.util.StateMachine;
+
 /**
  * StateMachine that interacts with the native DHCP client and can talk to
  * a controller that also needs to be a StateMachine
- *
+ * <p>
  * The Dhcp state machine provides the following features:
  * - Wakeup and renewal using the native DHCP client  (which will not renew
- *   on its own when the device is in suspend state and this can lead to device
- *   holding IP address beyond expiry)
+ * on its own when the device is in suspend state and this can lead to device
+ * holding IP address beyond expiry)
  * - A notification right before DHCP request or renewal is started. This
- *   can be used for any additional setup before DHCP. For example, wifi sets
- *   BT-Wifi coex settings right before DHCP is initiated
+ * can be used for any additional setup before DHCP. For example, wifi sets
+ * BT-Wifi coex settings right before DHCP is initiated
  *
  * @hide
  */
@@ -75,7 +75,9 @@ public class DhcpStateMachine extends StateMachine {
     private enum DhcpAction {
         START,
         RENEW
-    };
+    }
+
+    ;
 
     private final String mInterfaceName;
     private boolean mRegisteredForPreDhcpNotification = false;
@@ -83,21 +85,21 @@ public class DhcpStateMachine extends StateMachine {
     private static final int BASE = Protocol.BASE_DHCP;
 
     /* Commands from controller to start/stop DHCP */
-    public static final int CMD_START_DHCP                  = BASE + 1;
-    public static final int CMD_STOP_DHCP                   = BASE + 2;
-    public static final int CMD_RENEW_DHCP                  = BASE + 3;
+    public static final int CMD_START_DHCP = BASE + 1;
+    public static final int CMD_STOP_DHCP = BASE + 2;
+    public static final int CMD_RENEW_DHCP = BASE + 3;
 
     /* Notification from DHCP state machine prior to DHCP discovery/renewal */
-    public static final int CMD_PRE_DHCP_ACTION             = BASE + 4;
+    public static final int CMD_PRE_DHCP_ACTION = BASE + 4;
     /* Notification from DHCP state machine post DHCP discovery/renewal. Indicates
      * success/failure */
-    public static final int CMD_POST_DHCP_ACTION            = BASE + 5;
+    public static final int CMD_POST_DHCP_ACTION = BASE + 5;
     /* Notification from DHCP state machine before quitting */
-    public static final int CMD_ON_QUIT                     = BASE + 6;
+    public static final int CMD_ON_QUIT = BASE + 6;
 
     /* Command from controller to indicate DHCP discovery/renewal can continue
      * after pre DHCP action is complete */
-    public static final int CMD_PRE_DHCP_ACTION_COMPLETE    = BASE + 7;
+    public static final int CMD_PRE_DHCP_ACTION_COMPLETE = BASE + 7;
 
     /* Message.arg1 arguments to CMD_POST_DHCP notification */
     public static final int DHCP_SUCCESS = 1;
@@ -116,11 +118,11 @@ public class DhcpStateMachine extends StateMachine {
         mController = controller;
         mInterfaceName = intf;
 
-        mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+        mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Intent dhcpRenewalIntent = new Intent(ACTION_DHCP_RENEW, null);
         mDhcpRenewalIntent = PendingIntent.getBroadcast(mContext, DHCP_RENEW, dhcpRenewalIntent, 0);
 
-        PowerManager powerManager = (PowerManager)mContext.getSystemService(Context.POWER_SERVICE);
+        PowerManager powerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         mDhcpRenewWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKELOCK_TAG);
         mDhcpRenewWakeLock.setReferenceCounted(false);
 
@@ -137,16 +139,16 @@ public class DhcpStateMachine extends StateMachine {
         mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(ACTION_DHCP_RENEW));
 
         addState(mDefaultState);
-            addState(mStoppedState, mDefaultState);
-            addState(mWaitBeforeStartState, mDefaultState);
-            addState(mRunningState, mDefaultState);
-            addState(mWaitBeforeRenewalState, mDefaultState);
+        addState(mStoppedState, mDefaultState);
+        addState(mWaitBeforeStartState, mDefaultState);
+        addState(mRunningState, mDefaultState);
+        addState(mWaitBeforeRenewalState, mDefaultState);
 
         setInitialState(mStoppedState);
     }
 
     public static DhcpStateMachine makeDhcpStateMachine(Context context, StateMachine controller,
-            String intf) {
+                                                        String intf) {
         DhcpStateMachine dsm = new DhcpStateMachine(context, controller, intf);
         dsm.start();
         return dsm;
@@ -157,7 +159,7 @@ public class DhcpStateMachine extends StateMachine {
      * controller can do certain actions before DHCP packets are sent out.
      * When the controller is ready, it sends a CMD_PRE_DHCP_ACTION_COMPLETE message
      * to indicate DHCP can continue
-     *
+     * <p>
      * This is used by Wifi at this time for the purpose of doing BT-Wifi coex
      * handling during Dhcp
      */
@@ -183,6 +185,7 @@ public class DhcpStateMachine extends StateMachine {
         public void exit() {
             mContext.unregisterReceiver(mBroadcastReceiver);
         }
+
         @Override
         public boolean processMessage(Message message) {
             if (DBG) Log.d(TAG, getName() + message.toString() + "\n");
@@ -326,9 +329,9 @@ public class DhcpStateMachine extends StateMachine {
                     break;
                 case CMD_PRE_DHCP_ACTION_COMPLETE:
                     if (runDhcp(DhcpAction.RENEW)) {
-                       transitionTo(mRunningState);
+                        transitionTo(mRunningState);
                     } else {
-                       transitionTo(mStoppedState);
+                        transitionTo(mStoppedState);
                     }
                     break;
                 case CMD_START_DHCP:
@@ -340,6 +343,7 @@ public class DhcpStateMachine extends StateMachine {
             }
             return retValue;
         }
+
         @Override
         public void exit() {
             mDhcpRenewWakeLock.release();
@@ -376,7 +380,7 @@ public class DhcpStateMachine extends StateMachine {
                 //48% for one hour lease time = 29 minutes
                 mAlarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                         SystemClock.elapsedRealtime() +
-                        leaseDuration * 480, //in milliseconds
+                                leaseDuration * 480, //in milliseconds
                         mDhcpRenewalIntent);
             } else {
                 //infinite lease time, no renewal needed
@@ -384,13 +388,13 @@ public class DhcpStateMachine extends StateMachine {
 
             mDhcpResults = dhcpResults;
             mController.obtainMessage(CMD_POST_DHCP_ACTION, DHCP_SUCCESS, 0, dhcpResults)
-                .sendToTarget();
+                    .sendToTarget();
         } else {
             Log.e(TAG, "DHCP failed on " + mInterfaceName + ": " +
                     NetworkUtils.getDhcpError());
             NetworkUtils.stopDhcp(mInterfaceName);
             mController.obtainMessage(CMD_POST_DHCP_ACTION, DHCP_FAILURE, 0)
-                .sendToTarget();
+                    .sendToTarget();
         }
         return success;
     }

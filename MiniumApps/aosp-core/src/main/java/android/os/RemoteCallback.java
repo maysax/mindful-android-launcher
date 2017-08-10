@@ -19,71 +19,72 @@ package android.os;
 /**
  * TODO: Make this a public API?  Let's see how it goes with a few use
  * cases first.
+ *
  * @hide
  */
 public abstract class RemoteCallback implements Parcelable {
     final Handler mHandler;
     final IRemoteCallback mTarget;
-    
+
     class DeliverResult implements Runnable {
         final Bundle mResult;
-        
+
         DeliverResult(Bundle result) {
             mResult = result;
         }
-        
+
         public void run() {
             onResult(mResult);
         }
     }
-    
+
     class LocalCallback extends IRemoteCallback.Stub {
         public void sendResult(Bundle bundle) {
             mHandler.post(new DeliverResult(bundle));
         }
     }
-    
+
     static class RemoteCallbackProxy extends RemoteCallback {
         RemoteCallbackProxy(IRemoteCallback target) {
             super(target);
         }
-        
+
         protected void onResult(Bundle bundle) {
         }
     }
-    
+
     public RemoteCallback(Handler handler) {
         mHandler = handler;
         mTarget = new LocalCallback();
     }
-    
-     RemoteCallback(IRemoteCallback target) {
+
+    RemoteCallback(IRemoteCallback target) {
         mHandler = null;
         mTarget = target;
     }
-    
+
     public void sendResult(Bundle bundle) throws RemoteException {
         mTarget.sendResult(bundle);
     }
-    
+
     protected abstract void onResult(Bundle bundle);
-    
+
     public boolean equals(Object otherObj) {
         if (otherObj == null) {
             return false;
         }
         try {
-            return mTarget.asBinder().equals(((RemoteCallback)otherObj)
+            return mTarget.asBinder().equals(((RemoteCallback) otherObj)
                     .mTarget.asBinder());
         } catch (ClassCastException e) {
         }
         return false;
     }
-    
+
     public int hashCode() {
         return mTarget.asBinder().hashCode();
     }
-    
+
     public int describeContents() {
         return 0;
     }

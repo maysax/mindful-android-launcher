@@ -31,7 +31,7 @@ import com.android.mms.R;
  * This is the UI for telling the user about the storage limit setting.
  */
 public class WarnOfStorageLimitsActivity extends Activity implements DialogInterface,
-                    DialogInterface.OnClickListener {
+        DialogInterface.OnClickListener {
     /**
      * The model for the alert.
      *

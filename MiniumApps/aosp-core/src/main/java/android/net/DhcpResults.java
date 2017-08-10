@@ -17,19 +17,19 @@
 package android.net;
 
 import android.net.NetworkUtils;
-import android.os.Parcelable;
 import android.os.Parcel;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.net.InetAddress;
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.util.Objects;
 
 /**
  * A simple object for retrieving the results of a DHCP request.
  * Optimized (attempted) for that jni interface
  * TODO - remove when DhcpInfo is deprecated.  Move the remaining api to LinkProperties.
+ *
  * @hide
  */
 public class DhcpResults extends StaticIpConfiguration {
@@ -37,7 +37,9 @@ public class DhcpResults extends StaticIpConfiguration {
 
     public InetAddress serverAddress;
 
-    /** Vendor specific information (from RFC 2132). */
+    /**
+     * Vendor specific information (from RFC 2132).
+     */
     public String vendorInfo;
 
     public int leaseDuration;
@@ -50,7 +52,9 @@ public class DhcpResults extends StaticIpConfiguration {
         super(source);
     }
 
-    /** copy constructor */
+    /**
+     * copy constructor
+     */
     public DhcpResults(DhcpResults source) {
         super(source);
 
@@ -110,7 +114,7 @@ public class DhcpResults extends StaticIpConfiguration {
 
         if (!(obj instanceof DhcpResults)) return false;
 
-        DhcpResults target = (DhcpResults)obj;
+        DhcpResults target = (DhcpResults) obj;
 
         return super.equals((StaticIpConfiguration) obj) &&
                 Objects.equals(serverAddress, target.serverAddress) &&
@@ -118,21 +122,25 @@ public class DhcpResults extends StaticIpConfiguration {
                 leaseDuration == target.leaseDuration;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static final Creator<DhcpResults> CREATOR =
-        new Creator<DhcpResults>() {
-            public DhcpResults createFromParcel(Parcel in) {
-                DhcpResults dhcpResults = new DhcpResults();
-                readFromParcel(dhcpResults, in);
-                return dhcpResults;
-            }
+            new Creator<DhcpResults>() {
+                public DhcpResults createFromParcel(Parcel in) {
+                    DhcpResults dhcpResults = new DhcpResults();
+                    readFromParcel(dhcpResults, in);
+                    return dhcpResults;
+                }
 
-            public DhcpResults[] newArray(int size) {
-                return new DhcpResults[size];
-            }
-        };
+                public DhcpResults[] newArray(int size) {
+                    return new DhcpResults[size];
+                }
+            };
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeInt(leaseDuration);
@@ -153,7 +161,7 @@ public class DhcpResults extends StaticIpConfiguration {
         try {
             Inet4Address addr = (Inet4Address) NetworkUtils.numericToInetAddress(addrString);
             ipAddress = new LinkAddress(addr, prefixLength);
-        } catch (IllegalArgumentException|ClassCastException e) {
+        } catch (IllegalArgumentException | ClassCastException e) {
             Log.e(TAG, "setIpAddress failed with addrString " + addrString + "/" + prefixLength);
             return true;
         }

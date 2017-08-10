@@ -58,22 +58,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.contacts.editor.Editor;
-import com.android.contacts.editor.EditorUiUtils;
-import com.android.contacts.editor.ViewIdGenerator;
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.ContactPhotoManager.DefaultImageRequest;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.RawContact;
 import com.android.contacts.common.model.RawContactDelta;
-import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.RawContactDeltaList;
 import com.android.contacts.common.model.RawContactModifier;
+import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountWithDataSet;
 import com.android.contacts.common.model.dataitem.DataKind;
-import com.android.contacts.util.DialogManager;
 import com.android.contacts.common.util.EmptyService;
+import com.android.contacts.editor.Editor;
+import com.android.contacts.editor.EditorUiUtils;
+import com.android.contacts.editor.ViewIdGenerator;
+import com.android.contacts.util.DialogManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -90,11 +90,11 @@ import minium.co.contacts.R;
  * {@link android.provider.ContactsContract.Intents.Insert#PHONE_TYPE} or
  * {@link android.provider.ContactsContract.Intents.Insert#EMAIL} with type
  * {@link android.provider.ContactsContract.Intents.Insert#EMAIL_TYPE} intent keys.
- *
+ * <p>
  * If the selected contact doesn't contain editable raw_contacts, it'll create a new raw_contact
  * on the first editable account found, and the data will be added to this raw_contact.  The newly
  * created raw_contact will be joined with the selected contact with aggregation-exceptions.
- *
+ * <p>
  * TODO: Don't open this activity if there's no editable accounts.
  * If there's no editable accounts on the system, we'll set {@link #mIsReadOnly} and the dialog
  * just says "contact is not editable".  It's slightly misleading because this really means
@@ -129,10 +129,14 @@ public class ConfirmAddDetailActivity extends Activity implements
 
     private QueryHandler mQueryHandler;
 
-    /** {@link RawContactDeltaList} for the entire selected contact. */
+    /**
+     * {@link RawContactDeltaList} for the entire selected contact.
+     */
     private RawContactDeltaList mEntityDeltaList;
 
-    /** {@link RawContactDeltaList} for the editable account */
+    /**
+     * {@link RawContactDeltaList} for the editable account
+     */
     private RawContactDelta mRawContactDelta;
 
     private String mMimetype = Phone.CONTENT_ITEM_TYPE;
@@ -147,11 +151,11 @@ public class ConfirmAddDetailActivity extends Activity implements
      * ID of a contact.
      */
     private interface ContactQuery {
-        final String[] COLUMNS = new String[] {
-            Contacts._ID,
-            Contacts.LOOKUP_KEY,
-            Contacts.PHOTO_ID,
-            Contacts.DISPLAY_NAME,
+        final String[] COLUMNS = new String[]{
+                Contacts._ID,
+                Contacts.LOOKUP_KEY,
+                Contacts.PHOTO_ID,
+                Contacts.DISPLAY_NAME,
         };
         final int _ID = 0;
         final int LOOKUP_KEY = 1;
@@ -164,8 +168,8 @@ public class ConfirmAddDetailActivity extends Activity implements
      * the contact photo.
      */
     private interface PhotoQuery {
-        final String[] COLUMNS = new String[] {
-            Photo.PHOTO
+        final String[] COLUMNS = new String[]{
+                Photo.PHOTO
         };
 
         final int PHOTO = 0;
@@ -177,10 +181,10 @@ public class ConfirmAddDetailActivity extends Activity implements
      * this contact).
      */
     private interface ExtraInfoQuery {
-        final String[] COLUMNS = new String[] {
-            RawContacts.CONTACT_ID,
-            Data.MIMETYPE,
-            Data.DATA1,
+        final String[] COLUMNS = new String[]{
+                RawContacts.CONTACT_ID,
+                Data.MIMETYPE,
+                Data.DATA1,
         };
         final int CONTACT_ID = 0;
         final int MIMETYPE = 1;
@@ -192,9 +196,9 @@ public class ConfirmAddDetailActivity extends Activity implements
      * a disambiguation case. For example, if the contact does not have a
      * nickname, use the email field, and etc.
      */
-    private static final String[] MIME_TYPE_PRIORITY_LIST = new String[] {
+    private static final String[] MIME_TYPE_PRIORITY_LIST = new String[]{
             Nickname.CONTENT_ITEM_TYPE, Email.CONTENT_ITEM_TYPE, Im.CONTENT_ITEM_TYPE,
-            StructuredPostal.CONTENT_ITEM_TYPE, Phone.CONTENT_ITEM_TYPE };
+            StructuredPostal.CONTENT_ITEM_TYPE, Phone.CONTENT_ITEM_TYPE};
 
     private static final int TOKEN_CONTACT_INFO = 0;
     private static final int TOKEN_PHOTO_QUERY = 1;
@@ -319,7 +323,7 @@ public class ConfirmAddDetailActivity extends Activity implements
     /**
      * Internal method to query contact photo by photo id and uri.
      *
-     * @param photoId the photo id.
+     * @param photoId   the photo id.
      * @param lookupKey the lookup uri.
      */
     private void startPhotoQuery(long photoId, Uri lookupKey) {
@@ -345,15 +349,15 @@ public class ConfirmAddDetailActivity extends Activity implements
         final String[] selectionArgs;
         if (TextUtils.isEmpty(contactDisplayName)) {
             displayNameSelection = Contacts.DISPLAY_NAME_PRIMARY + " IS NULL";
-            selectionArgs = new String[] { String.valueOf(mContactId) };
+            selectionArgs = new String[]{String.valueOf(mContactId)};
         } else {
             displayNameSelection = Contacts.DISPLAY_NAME_PRIMARY + " = ?";
-            selectionArgs = new String[] { contactDisplayName, String.valueOf(mContactId) };
+            selectionArgs = new String[]{contactDisplayName, String.valueOf(mContactId)};
         }
         mQueryHandler.startQuery(TOKEN_DISAMBIGUATION_QUERY, null, uri,
-                new String[] { Contacts._ID } /* unused projection but a valid one was needed */,
+                new String[]{Contacts._ID} /* unused projection but a valid one was needed */,
                 displayNameSelection + " AND " + Contacts.PHOTO_ID + " IS NULL AND "
-                + Contacts._ID + " <> ?", selectionArgs, null);
+                        + Contacts._ID + " <> ?", selectionArgs, null);
     }
 
     /**
@@ -362,7 +366,7 @@ public class ConfirmAddDetailActivity extends Activity implements
     private void startExtraInfoQuery() {
         mQueryHandler.startQuery(TOKEN_EXTRA_INFO_QUERY, null, Data.CONTENT_URI,
                 ExtraInfoQuery.COLUMNS, RawContacts.CONTACT_ID + " = ?",
-                new String[] { String.valueOf(mContactId) }, null);
+                new String[]{String.valueOf(mContactId)}, null);
     }
 
     private static class QueryEntitiesTask extends AsyncTask<Intent, Void, RawContactDeltaList> {
@@ -410,7 +414,7 @@ public class ConfirmAddDetailActivity extends Activity implements
             // the user's profile, since the profile does not show up in the picker.
             return RawContactDeltaList.fromQuery(RawContactsEntity.CONTENT_URI,
                     activityTarget.getContentResolver(), mSelection,
-                    new String[] { selectionArg }, null);
+                    new String[]{selectionArg}, null);
         }
 
         private static long queryForContactId(ContentResolver resolver, long rawContactId) {
@@ -418,8 +422,8 @@ public class ConfirmAddDetailActivity extends Activity implements
             long contactId = -1;
             try {
                 contactIdCursor = resolver.query(RawContacts.CONTENT_URI,
-                        new String[] { RawContacts.CONTACT_ID },
-                        RawContacts._ID + "=?", new String[] { String.valueOf(rawContactId) },
+                        new String[]{RawContacts.CONTACT_ID},
+                        RawContacts._ID + "=?", new String[]{String.valueOf(rawContactId)},
                         null);
                 if (contactIdCursor != null && contactIdCursor.moveToFirst()) {
                     contactId = contactIdCursor.getLong(0);
@@ -626,7 +630,7 @@ public class ConfirmAddDetailActivity extends Activity implements
      * new one, if any of the read-only contacts has a name.
      */
     private static RawContactDelta addEditableRawContact(Context context,
-            RawContactDeltaList entityDeltaList) {
+                                                         RawContactDeltaList entityDeltaList) {
         // First, see if there's an editable account.
         final AccountTypeManager accounts = AccountTypeManager.getInstance(context);
         final List<AccountWithDataSet> editableAccounts = accounts.getAccounts(true);
@@ -830,7 +834,7 @@ public class ConfirmAddDetailActivity extends Activity implements
                     final ArrayList<ContentProviderOperation> diff = state.buildDiff();
                     ContentProviderResult[] results = null;
                     if (!diff.isEmpty()) {
-                         results = resolver.applyBatch(ContactsContract.AUTHORITY, diff);
+                        results = resolver.applyBatch(ContactsContract.AUTHORITY, diff);
                     }
 
                     result = (diff.size() > 0) ? RESULT_SUCCESS : RESULT_UNCHANGED;
@@ -851,7 +855,9 @@ public class ConfirmAddDetailActivity extends Activity implements
             return result;
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         @Override
         protected void onPostExecute(Integer result) {
             final Context context = activityTarget;
@@ -893,6 +899,7 @@ public class ConfirmAddDetailActivity extends Activity implements
      * This method is intended to be executed after the background task for saving edited info has
      * finished. The method sets the activity result (and intent if applicable) and finishes the
      * activity.
+     *
      * @param success is true if the save task completed successfully, or false otherwise.
      */
     private void onSaveCompleted(boolean success) {

@@ -26,7 +26,7 @@
                 android:padding="4dp"
                 android:src="@drawable/icon_close_app"
                 android:layout_marginStart="18dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null" />
 
             <TextView
                 android:id="@+id/titleActionBar"
@@ -37,7 +37,7 @@
                 android:textSize="20sp"
                 android:textColor="#de000000"
                 android:fontFamily="sans-serif-medium"
-                android:text="Mindful Morning"/>
+                android:text="Mindful Morning" />
 
             <ImageView
                 android:id="@+id/settingsActionBar"
@@ -47,7 +47,7 @@
                 android:src="@drawable/icon_settings"
                 android:layout_marginEnd="18dp"
                 android:visibility="invisible"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null" />
 
         </LinearLayout>
 
@@ -62,12 +62,13 @@
         android:layout_below="@+id/toolbar"
         android:id="@+id/wheel_layout"
         android:layout_alignParentStart="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-           >
+            android:gravity="center_vertical">
+
             <TextView
                 android:id="@+id/txt_time"
                 android:layout_width="wrap_content"
@@ -78,7 +79,8 @@
                 android:textColor="#80000000"
                 android:fontFamily="sans-serif-medium"
                 android:text="Time to rise:"
-                android:paddingBottom="12.3dp"/>
+                android:paddingBottom="12.3dp" />
+
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
@@ -90,7 +92,7 @@
                 android:textColor="#de000000"
                 android:fontFamily="sans-serif-medium"
                 android:text="  7:30 AM"
-                android:paddingBottom="12.3dp"/>
+                android:paddingBottom="12.3dp" />
         </LinearLayout>
 
         <antistatic.spinnerwheel.WheelHorizontalView
@@ -105,13 +107,14 @@
             android:id="@+id/mins"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:visibleItems="7"
-            />
+            app:visibleItems="7" />
+
         <antistatic.spinnerwheel.WheelHorizontalView
             android:id="@+id/ampm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
+
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_below="@+id/wheel_layout"
@@ -131,8 +134,8 @@
                 android:textSize="14sp"
                 android:fontFamily="sans-serif"
                 android:textColor="#de000000"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:text="message"
                 android:id="@+id/txt_away"
@@ -141,8 +144,8 @@
                 android:fontFamily="sans-serif"
                 android:textColor="#8b000000"
                 android:gravity="right"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <com.joanzapata.iconify.widget.IconTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -154,6 +157,7 @@
                 android:textSize="14sp" />
 
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
             android:layout_marginLeft="18dp"
@@ -168,8 +172,8 @@
                 android:textSize="14sp"
                 android:fontFamily="sans-serif"
                 android:textColor="#de000000"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <TextView
                 android:text="Activities"
                 android:id="@+id/txt_total_time"
@@ -178,8 +182,8 @@
                 android:gravity="right"
                 android:fontFamily="sans-serif"
                 android:textColor="#8b000000"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <com.joanzapata.iconify.widget.IconTextView
                 android:text="{fa-angle-right 27dp}"
                 android:layout_width="wrap_content"
@@ -188,10 +192,10 @@
                 android:fontFamily="sans-serif"
                 android:textColor="#8b000000"
                 android:gravity="right"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
             android:layout_marginLeft="18dp"
@@ -207,8 +211,7 @@
                 android:textSize="14sp"
                 android:fontFamily="sans-serif"
                 android:textColor="#de000000"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:text="Rain  {fa-angle-right 27dp}"
@@ -218,10 +221,10 @@
                 android:fontFamily="sans-serif"
                 android:textColor="#8b000000"
                 android:gravity="right"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
             android:layout_marginLeft="18dp"
@@ -236,8 +239,7 @@
                 android:textSize="14sp"
                 android:fontFamily="sans-serif"
                 android:textColor="#de000000"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:text="Monday"
@@ -247,8 +249,8 @@
                 android:gravity="right"
                 android:fontFamily="sans-serif"
                 android:textColor="#8b000000"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
+
             <com.joanzapata.iconify.widget.IconTextView
                 android:text="{fa-angle-right 27dp}"
                 android:layout_width="wrap_content"
@@ -257,10 +259,10 @@
                 android:fontFamily="sans-serif"
                 android:textColor="#8b000000"
                 android:gravity="right"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
         </TableRow>
+
         <TableRow
             android:layout_width="fill_parent"
             android:layout_marginLeft="18dp"
@@ -275,8 +277,7 @@
                 android:textSize="14sp"
                 android:fontFamily="sans-serif"
                 android:textColor="#de000000"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
             <com.joanzapata.iconify.widget.IconTextView
                 android:text="Start  {fa-angle-right 27dp}"
@@ -286,8 +287,7 @@
                 android:fontFamily="sans-serif"
                 android:textColor="#8b000000"
                 android:gravity="right"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
         </TableRow>
     </TableLayout>

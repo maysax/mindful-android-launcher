@@ -57,12 +57,12 @@ public class ContactDeletionInteraction extends Fragment
     public static final String ARG_CONTACT_URI = "contactUri";
     public static final int RESULT_CODE_DELETED = 3;
 
-    private static final String[] ENTITY_PROJECTION = new String[] {
-        Entity.RAW_CONTACT_ID, //0
-        Entity.ACCOUNT_TYPE, //1
-        Entity.DATA_SET, // 2
-        Entity.CONTACT_ID, // 3
-        Entity.LOOKUP_KEY, // 4
+    private static final String[] ENTITY_PROJECTION = new String[]{
+            Entity.RAW_CONTACT_ID, //0
+            Entity.ACCOUNT_TYPE, //1
+            Entity.DATA_SET, // 2
+            Entity.CONTACT_ID, // 3
+            Entity.LOOKUP_KEY, // 4
     };
 
     private static final int COLUMN_INDEX_RAW_CONTACT_ID = 0;
@@ -77,7 +77,9 @@ public class ContactDeletionInteraction extends Fragment
     private Context mContext;
     private AlertDialog mDialog;
 
-    /** This is a wrapper around the fragment's loader manager to be used only during testing. */
+    /**
+     * This is a wrapper around the fragment's loader manager to be used only during testing.
+     */
     private TestLoaderManager mTestLoaderManager;
 
     @VisibleForTesting
@@ -86,10 +88,10 @@ public class ContactDeletionInteraction extends Fragment
     /**
      * Starts the interaction.
      *
-     * @param activity the activity within which to start the interaction
-     * @param contactUri the URI of the contact to delete
+     * @param activity               the activity within which to start the interaction
+     * @param contactUri             the URI of the contact to delete
      * @param finishActivityWhenDone whether to finish the activity upon completion of the
-     *        interaction
+     *                               interaction
      * @return the newly created interaction
      */
     public static ContactDeletionInteraction start(
@@ -100,12 +102,12 @@ public class ContactDeletionInteraction extends Fragment
     /**
      * Starts the interaction and optionally set up a {@link TestLoaderManager}.
      *
-     * @param activity the activity within which to start the interaction
-     * @param contactUri the URI of the contact to delete
+     * @param activity               the activity within which to start the interaction
+     * @param contactUri             the URI of the contact to delete
      * @param finishActivityWhenDone whether to finish the activity upon completion of the
-     *        interaction
-     * @param testLoaderManager the {@link TestLoaderManager} to use to load the data, may be null
-     *        in which case the default {@link LoaderManager} is used
+     *                               interaction
+     * @param testLoaderManager      the {@link TestLoaderManager} to use to load the data, may be null
+     *                               in which case the default {@link LoaderManager} is used
      * @return the newly created interaction
      */
     @VisibleForTesting
@@ -147,7 +149,9 @@ public class ContactDeletionInteraction extends Fragment
         }
     }
 
-    /** Sets the TestLoaderManager that is used to wrap the actual LoaderManager in tests. */
+    /**
+     * Sets the TestLoaderManager that is used to wrap the actual LoaderManager in tests.
+     */
     private void setTestLoaderManager(TestLoaderManager mockLoaderManager) {
         mTestLoaderManager = mockLoaderManager;
     }
@@ -229,8 +233,8 @@ public class ContactDeletionInteraction extends Fragment
         String lookupKey = null;
 
         // This cursor may contain duplicate raw contacts, so we need to de-dupe them first
-        HashSet<Long>  readOnlyRawContacts = Sets.newHashSet();
-        HashSet<Long>  writableRawContacts = Sets.newHashSet();
+        HashSet<Long> readOnlyRawContacts = Sets.newHashSet();
+        HashSet<Long> writableRawContacts = Sets.newHashSet();
 
         AccountTypeManager accountTypes = AccountTypeManager.getInstance(getActivity());
         cursor.moveToPosition(-1);
@@ -279,12 +283,12 @@ public class ContactDeletionInteraction extends Fragment
                 .setMessage(messageId)
                 .setNegativeButton(android.R.string.cancel, null)
                 .setPositiveButton(android.R.string.ok,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            doDeleteContact(contactUri);
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                doDeleteContact(contactUri);
+                            }
                         }
-                    }
                 )
                 .create();
 

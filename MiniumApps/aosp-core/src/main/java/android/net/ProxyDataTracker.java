@@ -17,18 +17,14 @@
 package android.net;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.os.UserHandle;
 import android.util.Log;
 
 import java.net.InetAddress;
@@ -38,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A data tracker responsible for bringing up and tearing down the system proxy server.
- *
+ * <p>
  * {@hide}
  */
 public class ProxyDataTracker extends BaseNetworkStateTracker {
@@ -193,13 +189,14 @@ public class ProxyDataTracker extends BaseNetworkStateTracker {
      * Record the detailed state of a network, and if it is a
      * change from the previous state, send a notification to
      * any listeners.
-     * @param state the new @{code DetailedState}
-     * @param reason a {@code String} indicating a reason for the state change,
-     * if one was supplied. May be {@code null}.
+     *
+     * @param state     the new @{code DetailedState}
+     * @param reason    a {@code String} indicating a reason for the state change,
+     *                  if one was supplied. May be {@code null}.
      * @param extraInfo optional {@code String} providing extra information about the state change
      */
     private void setDetailedState(NetworkInfo.DetailedState state, String reason,
-            String extraInfo) {
+                                  String extraInfo) {
         mNetworkInfo.setDetailedState(state, reason, extraInfo);
         Message msg = mTarget.obtainMessage(EVENT_STATE_CHANGED, mNetworkInfo);
         msg.sendToTarget();

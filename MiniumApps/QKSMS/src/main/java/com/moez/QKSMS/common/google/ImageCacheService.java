@@ -50,6 +50,7 @@ public class ImageCacheService {
             mData = data;
             mOffset = offset;
         }
+
         private byte[] mData;
         private int mOffset;
 

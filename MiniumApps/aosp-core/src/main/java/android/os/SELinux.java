@@ -18,9 +18,9 @@ package android.os;
 
 import android.util.Slog;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.IOException;
 
 /**
  * This class provides access to the centralized jni bindings for
@@ -30,7 +30,9 @@ import java.io.FileDescriptor;
 public class SELinux {
     private static final String TAG = "SELinux";
 
-    /** Keep in sync with ./external/libselinux/include/selinux/android.h */
+    /**
+     * Keep in sync with ./external/libselinux/include/selinux/android.h
+     */
     private static final int SELINUX_ANDROID_RESTORECON_NOCHANGE = 1;
     private static final int SELINUX_ANDROID_RESTORECON_VERBOSE = 2;
     private static final int SELINUX_ANDROID_RESTORECON_RECURSE = 4;
@@ -39,18 +41,21 @@ public class SELinux {
 
     /**
      * Determine whether SELinux is disabled or enabled.
+     *
      * @return a boolean indicating whether SELinux is enabled.
      */
     public static final native boolean isSELinuxEnabled();
 
     /**
      * Determine whether SELinux is permissive or enforcing.
+     *
      * @return a boolean indicating whether SELinux is enforcing.
      */
     public static final native boolean isSELinuxEnforced();
 
     /**
      * Set whether SELinux is permissive or enforcing.
+     *
      * @param value representing whether to set SELinux to enforcing
      * @return a boolean representing whether the desired mode was set
      */
@@ -58,6 +63,7 @@ public class SELinux {
 
     /**
      * Sets the security context for newly created file objects.
+     *
      * @param context a security context given as a String.
      * @return a boolean indicating whether the operation succeeded.
      */
@@ -65,7 +71,8 @@ public class SELinux {
 
     /**
      * Change the security context of an existing file object.
-     * @param path representing the path of file object to relabel.
+     *
+     * @param path    representing the path of file object to relabel.
      * @param context new security context given as a String.
      * @return a boolean indicating whether the operation succeeded.
      */
@@ -73,6 +80,7 @@ public class SELinux {
 
     /**
      * Get the security context of a file object.
+     *
      * @param path the pathname of the file object.
      * @return a security context given as a String.
      */
@@ -80,6 +88,7 @@ public class SELinux {
 
     /**
      * Get the security context of a peer socket.
+     *
      * @param fd FileDescriptor class of the peer socket.
      * @return a String representing the peer socket security context.
      */
@@ -87,12 +96,14 @@ public class SELinux {
 
     /**
      * Gets the security context of the current process.
+     *
      * @return a String representing the security context of the current process.
      */
     public static final native String getContext();
 
     /**
      * Gets the security context of a given process id.
+     *
      * @param pid an int representing the process id to check.
      * @return a String representing the security context of the given pid.
      */
@@ -100,12 +111,14 @@ public class SELinux {
 
     /**
      * Gets a list of the SELinux boolean names.
+     *
      * @return an array of strings containing the SELinux boolean names.
      */
     public static final native String[] getBooleanNames();
 
     /**
      * Gets the value for the given SELinux boolean name.
+     *
      * @param name The name of the SELinux boolean.
      * @return a boolean indicating whether the SELinux boolean is set.
      */
@@ -113,7 +126,8 @@ public class SELinux {
 
     /**
      * Sets the value for the given SELinux boolean name.
-     * @param name The name of the SELinux boolean.
+     *
+     * @param name  The name of the SELinux boolean.
      * @param value The new value of the SELinux boolean.
      * @return a boolean indicating whether or not the operation succeeded.
      */
@@ -121,10 +135,11 @@ public class SELinux {
 
     /**
      * Check permissions between two security contexts.
-     * @param scon The source or subject security context.
-     * @param tcon The target or object security context.
+     *
+     * @param scon   The source or subject security context.
+     * @param tcon   The target or object security context.
      * @param tclass The object security class name.
-     * @param perm The permission name.
+     * @param perm   The permission name.
      * @return a boolean indicating whether permission was granted.
      */
     public static final native boolean checkSELinuxAccess(String scon, String tcon, String tclass, String perm);
@@ -138,10 +153,12 @@ public class SELinux {
      *
      * @param pathname The pathname of the file to be relabeled.
      * @return a boolean indicating whether the relabeling succeeded.
-     * @exception NullPointerException if the pathname is a null object.
+     * @throws NullPointerException if the pathname is a null object.
      */
     public static boolean restorecon(String pathname) throws NullPointerException {
-        if (pathname == null) { throw new NullPointerException(); }
+        if (pathname == null) {
+            throw new NullPointerException();
+        }
         return native_restorecon(pathname, 0);
     }
 
@@ -166,7 +183,7 @@ public class SELinux {
      *
      * @param file The File object representing the path to be relabeled.
      * @return a boolean indicating whether the relabeling succeeded.
-     * @exception NullPointerException if the file is a null object.
+     * @throws NullPointerException if the file is a null object.
      */
     public static boolean restorecon(File file) throws NullPointerException {
         try {

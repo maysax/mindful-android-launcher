@@ -16,17 +16,17 @@
 
 package com.android.contacts.editor;
 
-import static android.provider.ContactsContract.CommonDataKinds.Event;
-import static android.provider.ContactsContract.CommonDataKinds.GroupMembership;
-import static android.provider.ContactsContract.CommonDataKinds.Photo;
-import static android.provider.ContactsContract.CommonDataKinds.StructuredName;
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.google.common.collect.Maps;
 
 import java.util.HashMap;
 
 import minium.co.contacts.R;
+
+import static android.provider.ContactsContract.CommonDataKinds.Event;
+import static android.provider.ContactsContract.CommonDataKinds.GroupMembership;
+import static android.provider.ContactsContract.CommonDataKinds.Photo;
+import static android.provider.ContactsContract.CommonDataKinds.StructuredName;
 
 /**
  * Utility methods for creating contact editor.
@@ -35,6 +35,7 @@ public class EditorUiUtils {
 
     // Maps DataKind.mimeType to editor view layouts.
     private static final HashMap<String, Integer> mimetypeLayoutMap = Maps.newHashMap();
+
     static {
         // Generally there should be a layout mapped to each existing DataKind mimetype but lots of
         // them use the default text_fields_editor_view which we return as default so they don't

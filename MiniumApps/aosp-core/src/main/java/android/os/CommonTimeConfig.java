@@ -15,16 +15,17 @@
  */
 package android.os;
 
-import java.net.InetSocketAddress;
-import java.util.NoSuchElementException;
-
 import android.os.CommonTimeUtils;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 
+import java.net.InetSocketAddress;
+import java.util.NoSuchElementException;
+
 /**
  * Used for configuring and controlling the status of the android common time service.
+ *
  * @hide
  */
 public class CommonTimeConfig {
@@ -58,10 +59,11 @@ public class CommonTimeConfig {
 
     /**
      * Class constructor.
+     *
      * @throws android.os.RemoteException
      */
     public CommonTimeConfig()
-    throws RemoteException {
+            throws RemoteException {
         mRemote = ServiceManager.getService(SERVICE_NAME);
         if (null == mRemote)
             throw new RemoteException();
@@ -79,8 +81,7 @@ public class CommonTimeConfig {
 
         try {
             retVal = new CommonTimeConfig();
-        }
-        catch (RemoteException e) {
+        } catch (RemoteException e) {
             retVal = null;
         }
 
@@ -100,8 +101,8 @@ public class CommonTimeConfig {
         if (null != mRemote) {
             try {
                 mRemote.unlinkToDeath(mDeathHandler, 0);
+            } catch (NoSuchElementException e) {
             }
-            catch (NoSuchElementException e) { }
             mRemote = null;
         }
         mUtils = null;
@@ -115,16 +116,16 @@ public class CommonTimeConfig {
      * @throws android.os.RemoteException
      */
     public byte getMasterElectionPriority()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
-        return (byte)mUtils.transactGetInt(METHOD_GET_MASTER_ELECTION_PRIORITY, -1);
+        return (byte) mUtils.transactGetInt(METHOD_GET_MASTER_ELECTION_PRIORITY, -1);
     }
 
     /**
      * Sets the current priority of the common time service used in the master election protocol.
      *
      * @param priority priority of the common time service used in the master election protocol.
-     * Lower numbers are lower priority.
+     *                 Lower numbers are lower priority.
      * @return {@link #SUCCESS} in case of success,
      * {@link #ERROR} or {@link #ERROR_DEAD_OBJECT} in case of failure.
      */
@@ -142,7 +143,7 @@ public class CommonTimeConfig {
      * @throws android.os.RemoteException
      */
     public InetSocketAddress getMasterElectionEndpoint()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetSockaddr(METHOD_GET_MASTER_ELECTION_ENDPOINT);
     }
@@ -152,8 +153,8 @@ public class CommonTimeConfig {
      * protocol.
      *
      * @param ep The IP address and UDP port to be used by the common time service to participate in
-     * the master election protocol.  The supplied IP address must be either the broadcast or
-     * multicast address, unicast addresses are considered to be illegal values.
+     *           the master election protocol.  The supplied IP address must be either the broadcast or
+     *           multicast address, unicast addresses are considered to be illegal values.
      * @return {@link #SUCCESS} in case of success,
      * {@link #ERROR}, {@link #ERROR_BAD_VALUE} or {@link #ERROR_DEAD_OBJECT} in case of failure.
      */
@@ -170,7 +171,7 @@ public class CommonTimeConfig {
      * @throws android.os.RemoteException
      */
     public long getMasterElectionGroupId()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetLong(METHOD_GET_MASTER_ELECTION_GROUP_ID, INVALID_GROUP_ID);
     }
@@ -197,13 +198,13 @@ public class CommonTimeConfig {
      * @throws android.os.RemoteException
      */
     public String getInterfaceBinding()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
 
         String ifaceName = mUtils.transactGetString(METHOD_GET_INTERFACE_BINDING, null);
 
         if ((null != ifaceName) && (0 == ifaceName.length()))
-                return null;
+            return null;
 
         return ifaceName;
     }
@@ -213,8 +214,8 @@ public class CommonTimeConfig {
      * to.
      *
      * @param ifaceName The name of the network interface ("eth0", "wlan0", etc...) wich the common
-     * time service should attempt to bind to, or null to force the common time service to unbind
-     * from the network and run in networkless mode.
+     *                  time service should attempt to bind to, or null to force the common time service to unbind
+     *                  from the network and run in networkless mode.
      * @return {@link #SUCCESS} in case of success,
      * {@link #ERROR}, {@link #ERROR_BAD_VALUE} or {@link #ERROR_DEAD_OBJECT} in case of failure.
      */
@@ -223,7 +224,7 @@ public class CommonTimeConfig {
             return ERROR_DEAD_OBJECT;
 
         return mUtils.transactSetString(METHOD_SET_INTERFACE_BINDING,
-                                       (null == ifaceName) ? "" : ifaceName);
+                (null == ifaceName) ? "" : ifaceName);
     }
 
     /**
@@ -234,7 +235,7 @@ public class CommonTimeConfig {
      * @throws android.os.RemoteException
      */
     public int getMasterAnnounceInterval()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetInt(METHOD_GET_MASTER_ANNOUNCE_INTERVAL, -1);
     }
@@ -261,7 +262,7 @@ public class CommonTimeConfig {
      * @throws android.os.RemoteException
      */
     public int getClientSyncInterval()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetInt(METHOD_GET_CLIENT_SYNC_INTERVAL, -1);
     }
@@ -289,7 +290,7 @@ public class CommonTimeConfig {
      * @throws android.os.RemoteException
      */
     public int getPanicThreshold()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return mUtils.transactGetInt(METHOD_GET_PANIC_THRESHOLD, -1);
     }
@@ -300,7 +301,7 @@ public class CommonTimeConfig {
      * reset, causing a discontinuity in the currently synchronized timeline.
      *
      * @param threshold The threshold (in microseconds) past which the common time service will
-     * panic.
+     *                  panic.
      * @return {@link #SUCCESS} in case of success,
      * {@link #ERROR}, {@link #ERROR_BAD_VALUE} or {@link #ERROR_DEAD_OBJECT} in case of failure.
      */
@@ -317,7 +318,7 @@ public class CommonTimeConfig {
      * @throws android.os.RemoteException
      */
     public boolean getAutoDisable()
-    throws RemoteException {
+            throws RemoteException {
         throwOnDeadServer();
         return (1 == mUtils.transactGetInt(METHOD_GET_AUTO_DISABLE, 1));
     }
@@ -356,7 +357,7 @@ public class CommonTimeConfig {
      * {@link #ERROR} or {@link #ERROR_DEAD_OBJECT} in case of failure.
      */
     public int forceNetworklessMasterMode() {
-        android.os.Parcel data  = android.os.Parcel.obtain();
+        android.os.Parcel data = android.os.Parcel.obtain();
         android.os.Parcel reply = android.os.Parcel.obtain();
 
         try {
@@ -364,11 +365,9 @@ public class CommonTimeConfig {
             mRemote.transact(METHOD_FORCE_NETWORKLESS_MASTER_MODE, data, reply, 0);
 
             return reply.readInt();
-        }
-        catch (RemoteException e) {
+        } catch (RemoteException e) {
             return ERROR_DEAD_OBJECT;
-        }
-        finally {
+        } finally {
             reply.recycle();
             data.recycle();
         }
@@ -381,7 +380,7 @@ public class CommonTimeConfig {
      * need to be released and re-created.  The client application can implement this interface and
      * register the listener with the {@link #setServerDiedListener(OnServerDiedListener)} method.
      */
-    public interface OnServerDiedListener  {
+    public interface OnServerDiedListener {
         /**
          * Method called when the native common time service has died.  <p>If the native common time
          * service encounters a fatal error and needs to restart, the binder connection from the
@@ -400,7 +399,9 @@ public class CommonTimeConfig {
         }
     }
 
-    protected void finalize() throws Throwable { release(); }
+    protected void finalize() throws Throwable {
+        release();
+    }
 
     private boolean checkDeadServer() {
         return ((null == mRemote) || (null == mUtils));

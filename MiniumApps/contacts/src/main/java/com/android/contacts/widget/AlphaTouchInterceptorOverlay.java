@@ -27,7 +27,7 @@ import com.android.contacts.util.ThemeUtils;
  * A View that other Views can use to create a touch-interceptor layer above
  * their other sub-views. This layer can be enabled and disabled; when enabled,
  * clicks are intercepted and passed to a listener.
- *
+ * <p>
  * Also supports an alpha layer to dim the content underneath.  By default, the
  * alpha layer is the same View as the touch-interceptor layer.  However, for
  * some use-cases, you want a few Views to not be dimmed, but still have touches
@@ -35,7 +35,7 @@ import com.android.contacts.util.ThemeUtils;
  * layer).  In this case, you can specify the View to use as the alpha layer via
  * setAlphaLayer(); in this case you are responsible for managing the z-order of
  * the alpha-layer with respect to your other sub-views.
- *
+ * <p>
  * Typically, you would not use this class directly, but rather use another class
  * that uses it, for example {@link FrameLayoutWithOverlay}.
  */
@@ -72,7 +72,9 @@ public class AlphaTouchInterceptorOverlay extends FrameLayout {
         setAlphaLayerValue(mAlpha);
     }
 
-    /** Sets the alpha value on the alpha layer. */
+    /**
+     * Sets the alpha value on the alpha layer.
+     */
     public void setAlphaLayerValue(float alpha) {
         mAlpha = alpha;
         if (mAlphaLayer != null) {
@@ -80,12 +82,16 @@ public class AlphaTouchInterceptorOverlay extends FrameLayout {
         }
     }
 
-    /** Delegate to interceptor-layer. */
+    /**
+     * Delegate to interceptor-layer.
+     */
     public void setOverlayOnClickListener(OnClickListener listener) {
         mInterceptorLayer.setOnClickListener(listener);
     }
 
-    /** Delegate to interceptor-layer. */
+    /**
+     * Delegate to interceptor-layer.
+     */
     public void setOverlayClickable(boolean clickable) {
         mInterceptorLayer.setClickable(clickable);
     }

@@ -47,11 +47,11 @@ public class DirectoryListLoader extends AsyncTaskLoader<Cursor> {
         public static final String ORDER_BY = Directory._ID;
 
         public static final String[] PROJECTION = {
-            Directory._ID,
-            Directory.PACKAGE_NAME,
-            Directory.TYPE_RESOURCE_ID,
-            Directory.DISPLAY_NAME,
-            Directory.PHOTO_SUPPORT,
+                Directory._ID,
+                Directory.PACKAGE_NAME,
+                Directory.TYPE_RESOURCE_ID,
+                Directory.DISPLAY_NAME,
+                Directory.PHOTO_SUPPORT,
         };
 
         public static final int ID = 0;
@@ -65,10 +65,10 @@ public class DirectoryListLoader extends AsyncTaskLoader<Cursor> {
     public static final String DIRECTORY_TYPE = "directoryType";
 
     private static final String[] RESULT_PROJECTION = {
-        Directory._ID,
-        DIRECTORY_TYPE,
-        Directory.DISPLAY_NAME,
-        Directory.PHOTO_SUPPORT,
+            Directory._ID,
+            DIRECTORY_TYPE,
+            Directory.DISPLAY_NAME,
+            Directory.PHOTO_SUPPORT,
     };
 
     private final ContentObserver mObserver = new ContentObserver(new Handler()) {
@@ -130,7 +130,7 @@ public class DirectoryListLoader extends AsyncTaskLoader<Cursor> {
             case SEARCH_MODE_CONTACT_SHORTCUT:
                 selection = Directory.SHORTCUT_SUPPORT + "=" + Directory.SHORTCUT_SUPPORT_FULL
                         + (mLocalInvisibleDirectoryEnabled ? ""
-                                : (" AND " + Directory._ID + "!=" + Directory.LOCAL_INVISIBLE));
+                        : (" AND " + Directory._ID + "!=" + Directory.LOCAL_INVISIBLE));
                 break;
 
             case SEARCH_MODE_DATA_SHORTCUT:
@@ -138,7 +138,7 @@ public class DirectoryListLoader extends AsyncTaskLoader<Cursor> {
                         + Directory.SHORTCUT_SUPPORT_FULL + ", "
                         + Directory.SHORTCUT_SUPPORT_DATA_ITEMS_ONLY + ")"
                         + (mLocalInvisibleDirectoryEnabled ? ""
-                                : (" AND " + Directory._ID + "!=" + Directory.LOCAL_INVISIBLE));
+                        : (" AND " + Directory._ID + "!=" + Directory.LOCAL_INVISIBLE));
                 break;
 
             default:
@@ -152,7 +152,7 @@ public class DirectoryListLoader extends AsyncTaskLoader<Cursor> {
             return result;
         }
         try {
-            while(cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 long directoryId = cursor.getLong(DirectoryQuery.ID);
                 String directoryType = null;
 
@@ -180,12 +180,12 @@ public class DirectoryListLoader extends AsyncTaskLoader<Cursor> {
     private Cursor getDefaultDirectories() {
         if (mDefaultDirectoryList == null) {
             mDefaultDirectoryList = new MatrixCursor(RESULT_PROJECTION);
-            mDefaultDirectoryList.addRow(new Object[] {
+            mDefaultDirectoryList.addRow(new Object[]{
                     Directory.DEFAULT,
                     getContext().getString(R.string.contactsList),
                     null
             });
-            mDefaultDirectoryList.addRow(new Object[] {
+            mDefaultDirectoryList.addRow(new Object[]{
                     Directory.LOCAL_INVISIBLE,
                     getContext().getString(R.string.local_invisible_directory),
                     null

@@ -67,11 +67,11 @@ public class SmilPlayer implements Runnable {
     public static final String MEDIA_TIME_UPDATED_EVENT = "mediaTimeUpdated";
 
     private static final Comparator<TimelineEntry> sTimelineEntryComparator =
-        new Comparator<TimelineEntry>() {
-        public int compare(TimelineEntry o1, TimelineEntry o2) {
-            return Double.compare(o1.getOffsetTime(), o2.getOffsetTime());
-        }
-    };
+            new Comparator<TimelineEntry>() {
+                public int compare(TimelineEntry o1, TimelineEntry o2) {
+                    return Double.compare(o1.getOffsetTime(), o2.getOffsetTime());
+                }
+            };
 
     private static SmilPlayer sPlayer;
 
@@ -204,7 +204,7 @@ public class SmilPlayer implements Runnable {
     }
 
     private static ArrayList<TimelineEntry> getTimeline(ElementTime element,
-            double offset, double maxOffset) {
+                                                        double offset, double maxOffset) {
         if (element instanceof ElementParallelTimeContainer) {
             return getParTimeline((ElementParallelTimeContainer) element, offset, maxOffset);
         } else if (element instanceof ElementSequentialTimeContainer) {
@@ -289,11 +289,11 @@ public class SmilPlayer implements Runnable {
     }
 
     private synchronized boolean isNextAction() {
-      return mAction == SmilPlayerAction.NEXT;
+        return mAction == SmilPlayerAction.NEXT;
     }
 
     private synchronized boolean isPrevAction() {
-      return mAction == SmilPlayerAction.PREV;
+        return mAction == SmilPlayerAction.PREV;
     }
 
     public synchronized void init(ElementTime root) {
@@ -361,22 +361,22 @@ public class SmilPlayer implements Runnable {
     }
 
     public synchronized void next() {
-      if (isPlayingState() || isPausedState()) {
-        mAction = SmilPlayerAction.NEXT;
-        notifyAll();
-      }
+        if (isPlayingState() || isPausedState()) {
+            mAction = SmilPlayerAction.NEXT;
+            notifyAll();
+        }
     }
 
     public synchronized void prev() {
-      if (isPlayingState() || isPausedState()) {
-        mAction = SmilPlayerAction.PREV;
-        notifyAll();
-      }
+        if (isPlayingState() || isPausedState()) {
+            mAction = SmilPlayerAction.PREV;
+            notifyAll();
+        }
     }
 
     private synchronized boolean isBeginOfSlide(TimelineEntry entry) {
         return (TimelineEntry.ACTION_BEGIN == entry.getAction())
-                    && (entry.getElement() instanceof SmilParElementImpl);
+                && (entry.getElement() instanceof SmilParElementImpl);
     }
 
     private synchronized void reloadActiveSlide() {
@@ -414,8 +414,8 @@ public class SmilPlayer implements Runnable {
             double offset = getOffsetTime(element);
             if ((offset >= 0) && (offset <= mCurrentTime)) {
                 if (LOCAL_LOGV) Log.v(TAG, "[SEEK]  " + " at " + mCurrentTime
-                            + " " + element);
-                element.seekElement( (float) (mCurrentTime - offset) );
+                        + " " + element);
+                element.seekElement((float) (mCurrentTime - offset));
             }
         }
     }
@@ -438,7 +438,7 @@ public class SmilPlayer implements Runnable {
             }
 
             if (isStopAction() || isReloadAction() || isPauseAction() || isNextAction() ||
-                isPrevAction()) {
+                    isPrevAction()) {
                 return;
             }
 
@@ -450,10 +450,10 @@ public class SmilPlayer implements Runnable {
     }
 
     public synchronized int getDuration() {
-         if ((mAllEntries != null) && !mAllEntries.isEmpty()) {
-             return (int) mAllEntries.get(mAllEntries.size() - 1).mOffsetTime * 1000;
-         }
-         return 0;
+        if ((mAllEntries != null) && !mAllEntries.isEmpty()) {
+            return (int) mAllEntries.get(mAllEntries.size() - 1).mOffsetTime * 1000;
+        }
+        return 0;
     }
 
     public synchronized int getCurrentPosition() {
@@ -487,8 +487,8 @@ public class SmilPlayer implements Runnable {
 
     private synchronized void waitForWakeUp() {
         try {
-            while ( !(isStartAction() || isStopAction() || isReloadAction() ||
-                    isNextAction() || isPrevAction()) ) {
+            while (!(isStartAction() || isStopAction() || isReloadAction() ||
+                    isNextAction() || isPrevAction())) {
                 wait(TIMESLICE);
             }
             if (isStartAction()) {
@@ -504,13 +504,13 @@ public class SmilPlayer implements Runnable {
         switch (entry.getAction()) {
             case TimelineEntry.ACTION_BEGIN:
                 if (LOCAL_LOGV) Log.v(TAG, "[START] " + " at " + mCurrentTime + " "
-                            + entry.getElement());
+                        + entry.getElement());
                 entry.getElement().beginElement();
                 mActiveElements.add(entry.getElement());
                 break;
             case TimelineEntry.ACTION_END:
                 if (LOCAL_LOGV) Log.v(TAG, "[STOP]  " + " at " + mCurrentTime + " "
-                            + entry.getElement());
+                        + entry.getElement());
                 entry.getElement().endElement();
                 mActiveElements.remove(entry.getElement());
                 break;
@@ -542,7 +542,7 @@ public class SmilPlayer implements Runnable {
                 mCurrentElement = i;
                 break;
             } else if (action == TimelineEntry.ACTION_END && !skippedEntries.contains(entry)) {
-                    actionEntry(entry);
+                actionEntry(entry);
             } else if (action == TimelineEntry.ACTION_BEGIN) {
                 skippedEntries.add(entry);
             }
@@ -550,54 +550,54 @@ public class SmilPlayer implements Runnable {
     }
 
     private TimelineEntry loadNextSlide() {
-      TimelineEntry entry;
-      int totalEntries = mAllEntries.size();
-      for (int i = mCurrentElement; i < totalEntries; i++) {
-          entry = mAllEntries.get(i);
-          if (isBeginOfSlide(entry)) {
-              mCurrentElement = i;
-              mCurrentSlide = i;
-              mCurrentTime = (long)(entry.getOffsetTime() * 1000);
-              return entry;
-          }
-      }
-      // No slide, finish play back
-      mCurrentElement++;
-      entry = null;
-      if (mCurrentElement < totalEntries) {
-          entry = mAllEntries.get(mCurrentElement);
-          mCurrentTime = (long)(entry.getOffsetTime() * 1000);
-      }
-      return entry;
+        TimelineEntry entry;
+        int totalEntries = mAllEntries.size();
+        for (int i = mCurrentElement; i < totalEntries; i++) {
+            entry = mAllEntries.get(i);
+            if (isBeginOfSlide(entry)) {
+                mCurrentElement = i;
+                mCurrentSlide = i;
+                mCurrentTime = (long) (entry.getOffsetTime() * 1000);
+                return entry;
+            }
+        }
+        // No slide, finish play back
+        mCurrentElement++;
+        entry = null;
+        if (mCurrentElement < totalEntries) {
+            entry = mAllEntries.get(mCurrentElement);
+            mCurrentTime = (long) (entry.getOffsetTime() * 1000);
+        }
+        return entry;
     }
 
     private TimelineEntry loadPrevSlide() {
-      int skippedSlides = 1;
-      int latestBeginEntryIndex = -1;
-      for (int i = mCurrentSlide; i >= 0; i--) {
-        TimelineEntry entry = mAllEntries.get(i);
-        if (isBeginOfSlide(entry)) {
-            latestBeginEntryIndex = i;
-          if (0 == skippedSlides-- ) {
-            mCurrentElement = i;
-            mCurrentSlide = i;
-            mCurrentTime = (long)(entry.getOffsetTime() * 1000);
-            return entry;
-          }
+        int skippedSlides = 1;
+        int latestBeginEntryIndex = -1;
+        for (int i = mCurrentSlide; i >= 0; i--) {
+            TimelineEntry entry = mAllEntries.get(i);
+            if (isBeginOfSlide(entry)) {
+                latestBeginEntryIndex = i;
+                if (0 == skippedSlides--) {
+                    mCurrentElement = i;
+                    mCurrentSlide = i;
+                    mCurrentTime = (long) (entry.getOffsetTime() * 1000);
+                    return entry;
+                }
+            }
         }
-      }
-      if (latestBeginEntryIndex != -1) {
-          mCurrentElement = latestBeginEntryIndex;
-          mCurrentSlide = latestBeginEntryIndex;
-          return mAllEntries.get(mCurrentElement);
-      }
-      return null;
+        if (latestBeginEntryIndex != -1) {
+            mCurrentElement = latestBeginEntryIndex;
+            mCurrentSlide = latestBeginEntryIndex;
+            return mAllEntries.get(mCurrentElement);
+        }
+        return null;
     }
 
     private synchronized TimelineEntry actionNext() {
         stopCurrentSlide();
         return loadNextSlide();
-   }
+    }
 
     private synchronized TimelineEntry actionPrev() {
         stopCurrentSlide();
@@ -647,7 +647,7 @@ public class SmilPlayer implements Runnable {
                 }
 
                 while (isPauseAction() || isStopAction() || isReloadAction() || isNextAction() ||
-                    isPrevAction()) {
+                        isPrevAction()) {
                     if (isPauseAction()) {
                         actionPause();
                         waitForWakeUp();
@@ -706,7 +706,7 @@ public class SmilPlayer implements Runnable {
 
     private static final class TimelineEntry {
         final static int ACTION_BEGIN = 0;
-        final static int ACTION_END   = 1;
+        final static int ACTION_END = 1;
 
         private final double mOffsetTime;
         private final ElementTime mElement;
@@ -715,7 +715,7 @@ public class SmilPlayer implements Runnable {
         public TimelineEntry(double offsetTime, ElementTime element, int action) {
             mOffsetTime = offsetTime;
             mElement = element;
-            mAction  = action;
+            mAction = action;
         }
 
         public double getOffsetTime() {
@@ -737,7 +737,7 @@ public class SmilPlayer implements Runnable {
 
     private void dumpAllEntries() {
         for (TimelineEntry entry : mAllEntries) {
-            if (LOCAL_LOGV) Log.v(TAG, "[Entry] "+ entry);
+            if (LOCAL_LOGV) Log.v(TAG, "[Entry] " + entry);
             else break;
         }
     }

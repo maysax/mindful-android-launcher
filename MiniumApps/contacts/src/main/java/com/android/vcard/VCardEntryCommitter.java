@@ -27,10 +27,10 @@ import android.util.Log;
 import java.util.ArrayList;
 
 /**
- * <P>
+ * <p>
  * {@link VCardEntryHandler} implementation which commits the entry to ContentResolver.
  * </P>
- * <P>
+ * <p>
  * Note:<BR />
  * Each vCard may contain big photo images encoded by BASE64,
  * If we store all vCard entries in memory, OutOfMemoryError may be thrown.
@@ -87,7 +87,7 @@ public class VCardEntryCommitter implements VCardEntryHandler {
             // that it can be found later. do null checking for badly behaving
             // ContentResolvers
             return ((results == null || results.length == 0 || results[0] == null)
-                            ? null : results[0].uri);
+                    ? null : results[0].uri);
         } catch (RemoteException e) {
             Log.e(LOG_TAG, String.format("%s: %s", e.toString(), e.getMessage()));
             return null;
@@ -101,7 +101,7 @@ public class VCardEntryCommitter implements VCardEntryHandler {
      * Returns the list of created Uris. This list should not be modified by the caller as it is
      * not a clone.
      */
-   public ArrayList<Uri> getCreatedUris() {
+    public ArrayList<Uri> getCreatedUris() {
         return mCreatedUris;
     }
 }

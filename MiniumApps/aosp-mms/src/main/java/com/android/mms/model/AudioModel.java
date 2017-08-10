@@ -17,11 +17,6 @@
 
 package com.android.mms.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.w3c.dom.events.Event;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -36,6 +31,11 @@ import com.android.mms.ContentRestrictionException;
 import com.android.mms.dom.events.EventImpl;
 import com.android.mms.dom.smil.SmilMediaElementImpl;
 import com.google.android.mms.MmsException;
+
+import org.w3c.dom.events.Event;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AudioModel extends MediaModel {
     private static final String TAG = MediaModel.TAG;

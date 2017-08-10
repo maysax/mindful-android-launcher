@@ -16,8 +16,6 @@
  */
 package com.android.mms.ui;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +24,8 @@ import android.widget.ArrayAdapter;
 
 import com.android.mms.LogTag;
 import com.android.mms.R;
+
+import java.util.List;
 
 /**
  * The back-end data adapter for DeliveryReportActivity.

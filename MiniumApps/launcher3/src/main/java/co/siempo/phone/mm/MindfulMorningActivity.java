@@ -6,7 +6,6 @@ import org.androidannotations.annotations.Fullscreen;
 
 import co.siempo.phone.R;
 import co.siempo.phone.event.MindfulMorgingEventStart;
-import co.siempo.phone.pause.PauseActivatedFragment_;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.ui.CoreActivity;
 
@@ -19,9 +18,9 @@ import minium.co.core.ui.CoreActivity;
 public class MindfulMorningActivity extends CoreActivity {
 
     @AfterViews
-    public void afterViews(){
+    public void afterViews() {
 
-        loadFragment(new MindfulMorningFragment_(),R.id.mainView,"Main");
+        loadFragment(new MindfulMorningFragment_(), R.id.mainView, "Main");
 
     }
 

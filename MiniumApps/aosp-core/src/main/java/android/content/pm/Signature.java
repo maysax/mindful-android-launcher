@@ -98,7 +98,7 @@ public class Signature implements Parcelable {
         final byte[] sig = new byte[N / 2];
         int sigIndex = 0;
 
-        for (int i = 0; i < N;) {
+        for (int i = 0; i < N; ) {
             final int hi = parseHexDigit(input[i++]);
             final int lo = parseHexDigit(input[i++]);
             sig[sigIndex++] = (byte) ((hi << 4) | lo);
@@ -118,8 +118,8 @@ public class Signature implements Parcelable {
      * Encode the Signature as ASCII text in to an existing array.
      *
      * @param existingArray Existing char array or null.
-     * @param outLen Output parameter for the number of characters written in
-     * to the array.
+     * @param outLen        Output parameter for the number of characters written in
+     *                      to the array.
      * @return Returns either <var>existingArray</var> if it was large enough
      * to hold the ASCII representation, or a newly created char[] array if
      * needed.
@@ -127,15 +127,15 @@ public class Signature implements Parcelable {
     public char[] toChars(char[] existingArray, int[] outLen) {
         byte[] sig = mSignature;
         final int N = sig.length;
-        final int N2 = N*2;
+        final int N2 = N * 2;
         char[] text = existingArray == null || N2 > existingArray.length
                 ? new char[N2] : existingArray;
-        for (int j=0; j<N; j++) {
+        for (int j = 0; j < N; j++) {
             byte v = sig[j];
-            int d = (v>>4)&0xf;
-            text[j*2] = (char)(d >= 10 ? ('a' + d - 10) : ('0' + d));
-            d = v&0xf;
-            text[j*2+1] = (char)(d >= 10 ? ('a' + d - 10) : ('0' + d));
+            int d = (v >> 4) & 0xf;
+            text[j * 2] = (char) (d >= 10 ? ('a' + d - 10) : ('0' + d));
+            d = v & 0xf;
+            text[j * 2 + 1] = (char) (d >= 10 ? ('a' + d - 10) : ('0' + d));
         }
         if (outLen != null) outLen[0] = N;
         return text;
@@ -167,7 +167,7 @@ public class Signature implements Parcelable {
      * Returns the public key for this signature.
      *
      * @throws CertificateException when Signature isn't a valid X.509
-     *             certificate; shouldn't happen.
+     *                              certificate; shouldn't happen.
      * @hide
      */
     public PublicKey getPublicKey() throws CertificateException {
@@ -186,7 +186,7 @@ public class Signature implements Parcelable {
      */
     public Signature[] getChainSignatures() throws CertificateEncodingException {
         if (mCertificateChain == null) {
-            return new Signature[] { this };
+            return new Signature[]{this};
         }
 
         Signature[] chain = new Signature[1 + mCertificateChain.length];
@@ -204,7 +204,7 @@ public class Signature implements Parcelable {
     public boolean equals(Object obj) {
         try {
             if (obj != null) {
-                Signature other = (Signature)obj;
+                Signature other = (Signature) obj;
                 return this == other || Arrays.equals(mSignature, other.mSignature);
             }
         } catch (ClassCastException e) {
@@ -265,7 +265,7 @@ public class Signature implements Parcelable {
      * surface area, we only allow a byte size delta of a few bytes.
      *
      * @throws CertificateException if the before/after length differs
-     *             substantially, usually a signal of something fishy going on.
+     *                              substantially, usually a signal of something fishy going on.
      * @hide
      */
     public static boolean areEffectiveMatch(Signature[] a, Signature[] b)
@@ -288,7 +288,7 @@ public class Signature implements Parcelable {
      * Bounce the given {@link Signature} through a decode/encode cycle.
      *
      * @throws CertificateException if the before/after length differs
-     *             substantially, usually a signal of something fishy going on.
+     *                              substantially, usually a signal of something fishy going on.
      * @hide
      */
     public static Signature bounce(CertificateFactory cf, Signature s) throws CertificateException {

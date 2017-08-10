@@ -17,6 +17,7 @@
 package libcore.io;
 
 import java.nio.ByteOrder;
+
 import libcore.io.Memory;
 
 /**

@@ -51,16 +51,14 @@ public final class CellIdentityLte implements Parcelable {
     }
 
     /**
-     *
      * @param mcc 3-digit Mobile Country Code, 0..999
      * @param mnc 2 or 3-digit Mobile Network Code, 0..999
-     * @param ci 28-bit Cell Identity
+     * @param ci  28-bit Cell Identity
      * @param pci Physical Cell Id 0..503
      * @param tac 16-bit Tracking Area Code
-     *
      * @hide
      */
-    public CellIdentityLte (int mcc, int mnc, int ci, int pci, int tac) {
+    public CellIdentityLte(int mcc, int mnc, int ci, int pci, int tac) {
         mMcc = mcc;
         mMnc = mnc;
         mCi = ci;
@@ -126,7 +124,7 @@ public final class CellIdentityLte implements Parcelable {
     public boolean equals(Object other) {
         if (super.equals(other)) {
             try {
-                CellIdentityLte o = (CellIdentityLte)other;
+                CellIdentityLte o = (CellIdentityLte) other;
                 return mMcc == o.mMcc &&
                         mMnc == o.mMnc &&
                         mCi == o.mCi &&
@@ -143,23 +141,32 @@ public final class CellIdentityLte implements Parcelable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("CellIdentityLte:{");
-        sb.append(" mMcc="); sb.append(mMcc);
-        sb.append(" mMnc="); sb.append(mMnc);
-        sb.append(" mCi="); sb.append(mCi);
-        sb.append(" mPci="); sb.append(mPci);
-        sb.append(" mTac="); sb.append(mTac);
+        sb.append(" mMcc=");
+        sb.append(mMcc);
+        sb.append(" mMnc=");
+        sb.append(mMnc);
+        sb.append(" mCi=");
+        sb.append(mCi);
+        sb.append(" mPci=");
+        sb.append(mPci);
+        sb.append(" mTac=");
+        sb.append(mTac);
         sb.append("}");
 
         return sb.toString();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (DBG) log("writeToParcel(Parcel, int): " + toString());
@@ -170,7 +177,9 @@ public final class CellIdentityLte implements Parcelable {
         dest.writeInt(mTac);
     }
 
-    /** Construct from Parcel, type has already been processed */
+    /**
+     * Construct from Parcel, type has already been processed
+     */
     private CellIdentityLte(Parcel in) {
         mMcc = in.readInt();
         mMnc = in.readInt();
@@ -180,20 +189,22 @@ public final class CellIdentityLte implements Parcelable {
         if (DBG) log("CellIdentityLte(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @SuppressWarnings("hiding")
     public static final Creator<CellIdentityLte> CREATOR =
             new Creator<CellIdentityLte>() {
-        @Override
-        public CellIdentityLte createFromParcel(Parcel in) {
-            return new CellIdentityLte(in);
-        }
+                @Override
+                public CellIdentityLte createFromParcel(Parcel in) {
+                    return new CellIdentityLte(in);
+                }
 
-        @Override
-        public CellIdentityLte[] newArray(int size) {
-            return new CellIdentityLte[size];
-        }
-    };
+                @Override
+                public CellIdentityLte[] newArray(int size) {
+                    return new CellIdentityLte[size];
+                }
+            };
 
     /**
      * log

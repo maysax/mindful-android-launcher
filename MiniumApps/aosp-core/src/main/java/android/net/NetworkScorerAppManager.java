@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * Internal class for managing the primary network scorer application.
- *
+ * <p>
  * TODO: Rename this to something more generic.
  *
  * @hide
@@ -47,14 +47,21 @@ public final class NetworkScorerAppManager {
     private static final Intent SCORE_INTENT =
             new Intent(NetworkScoreManager.ACTION_SCORE_NETWORKS);
 
-    /** This class cannot be instantiated. */
-    private NetworkScorerAppManager() {}
+    /**
+     * This class cannot be instantiated.
+     */
+    private NetworkScorerAppManager() {
+    }
 
     public static class NetworkScorerAppData {
-        /** Package name of this scorer app. */
+        /**
+         * Package name of this scorer app.
+         */
         public final String mPackageName;
 
-        /** Name of this scorer app for display. */
+        /**
+         * Name of this scorer app for display.
+         */
         public final CharSequence mScorerName;
 
         /**
@@ -65,7 +72,7 @@ public final class NetworkScorerAppManager {
         public final String mConfigurationActivityClassName;
 
         public NetworkScorerAppData(String packageName, CharSequence scorerName,
-                @Nullable String configurationActivityClassName) {
+                                    @Nullable String configurationActivityClassName) {
             mScorerName = scorerName;
             mPackageName = packageName;
             mConfigurationActivityClassName = configurationActivityClassName;
@@ -74,12 +81,12 @@ public final class NetworkScorerAppManager {
 
     /**
      * Returns the list of available scorer apps.
-     *
+     * <p>
      * <p>A network scorer is any application which:
      * <ul>
      * <li>Declares the {@link android.Manifest.permission#SCORE_NETWORKS} permission.
      * <li>Includes a receiver for {@link NetworkScoreManager#ACTION_SCORE_NETWORKS} guarded by the
-     *     {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission.
+     * {@link android.Manifest.permission#BROADCAST_SCORE_NETWORKS} permission.
      * </ul>
      *
      * @return the list of scorers, or the empty list if there are no valid scorers.
@@ -135,8 +142,8 @@ public final class NetworkScorerAppManager {
      * Get the application to use for scoring networks.
      *
      * @return the scorer app info or null if scoring is disabled (including if no scorer was ever
-     *     selected) or if the previously-set scorer is no longer a valid scorer app (e.g. because
-     *     it was disabled or uninstalled).
+     * selected) or if the previously-set scorer is no longer a valid scorer app (e.g. because
+     * it was disabled or uninstalled).
      */
     public static NetworkScorerAppData getActiveScorer(Context context) {
         String scorerPackage = Settings.Global.getString(context.getContentResolver(),
@@ -146,12 +153,12 @@ public final class NetworkScorerAppManager {
 
     /**
      * Set the specified package as the default scorer application.
-     *
+     * <p>
      * <p>The caller must have permission to write to {@link android.provider.Settings.Global}.
      *
-     * @param context the context of the calling application
+     * @param context     the context of the calling application
      * @param packageName the packageName of the new scorer to use. If null, scoring will be
-     *     disabled. Otherwise, the scorer will only be set if it is a valid scorer application.
+     *                    disabled. Otherwise, the scorer will only be set if it is a valid scorer application.
      * @return true if the scorer was changed, or false if the package is not a valid scorer.
      */
     public static boolean setActiveScorer(Context context, String packageName) {
@@ -181,7 +188,9 @@ public final class NetworkScorerAppManager {
         }
     }
 
-    /** Determine whether the application with the given UID is the enabled scorer. */
+    /**
+     * Determine whether the application with the given UID is the enabled scorer.
+     */
     public static boolean isCallerActiveScorer(Context context, int callingUid) {
         NetworkScorerAppData defaultApp = getActiveScorer(context);
         if (defaultApp == null) {
@@ -200,7 +209,9 @@ public final class NetworkScorerAppManager {
                 PackageManager.PERMISSION_GRANTED;
     }
 
-    /** Returns the {@link NetworkScorerAppData} for the given app, or null if it's not a scorer. */
+    /**
+     * Returns the {@link NetworkScorerAppData} for the given app, or null if it's not a scorer.
+     */
     public static NetworkScorerAppData getScorer(Context context, String packageName) {
         if (TextUtils.isEmpty(packageName)) {
             return null;

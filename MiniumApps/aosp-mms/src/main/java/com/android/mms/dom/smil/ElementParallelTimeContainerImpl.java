@@ -17,7 +17,7 @@
 
 package com.android.mms.dom.smil;
 
-import java.util.ArrayList;
+import com.android.mms.dom.NodeListImpl;
 
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
@@ -28,14 +28,14 @@ import org.w3c.dom.smil.SMILElement;
 import org.w3c.dom.smil.Time;
 import org.w3c.dom.smil.TimeList;
 
-import com.android.mms.dom.NodeListImpl;
+import java.util.ArrayList;
 
 public abstract class ElementParallelTimeContainerImpl extends ElementTimeContainerImpl
         implements ElementParallelTimeContainer {
     private final static String ENDSYNC_ATTRIBUTE_NAME = "endsync";
     private final static String ENDSYNC_FIRST = "first";
-    private final static String ENDSYNC_LAST  = "last";
-    private final static String ENDSYNC_ALL   = "all";
+    private final static String ENDSYNC_LAST = "last";
+    private final static String ENDSYNC_ALL = "all";
     private final static String ENDSYNC_MEDIA = "media";
 
     /*
@@ -96,7 +96,7 @@ public abstract class ElementParallelTimeContainerImpl extends ElementTimeContai
                         return -1.0F;
                     }
                     if (endTime.getResolved()) {
-                        float end = (float)endTime.getResolvedOffset();
+                        float end = (float) endTime.getResolvedOffset();
                         dur = (end > dur) ? end : dur;
                     }
                 }

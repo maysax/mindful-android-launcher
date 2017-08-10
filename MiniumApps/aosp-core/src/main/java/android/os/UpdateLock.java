@@ -31,6 +31,7 @@ public class UpdateLock {
     private static final String TAG = "UpdateLock";
 
     private static IUpdateLock sService;
+
     private static void checkService() {
         if (sService == null) {
             sService = IUpdateLock.Stub.asInterface(
@@ -70,6 +71,7 @@ public class UpdateLock {
 
     /**
      * Construct an UpdateLock instance.
+     *
      * @param tag An arbitrary string used to identify this lock instance in dump output.
      */
     public UpdateLock(String tag) {

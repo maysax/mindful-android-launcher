@@ -8,32 +8,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.service.notification.NotificationListenerService;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.KeyUp;
-import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
-import java.util.Random;
 
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 import minium.co.flow.NotificationListener;
 import minium.co.flow.NotificationListener_;
-import minium.co.flow.R;
 import minium.co.flow.utils.ServiceUtils;
 
 @EActivity(resName = "activity_main")
@@ -82,8 +73,7 @@ public class MainActivity extends CoreActivity {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
                 @Override
-                public void onCompletion(MediaPlayer mp)
-                {
+                public void onCompletion(MediaPlayer mp) {
                     mp.release();
                 }
             });
@@ -112,7 +102,9 @@ public class MainActivity extends CoreActivity {
         }
     }
 
-    /** @return True if {@link NotificationListener} is enabled. */
+    /**
+     * @return True if {@link NotificationListener} is enabled.
+     */
     public static boolean isEnabled(Context mContext) {
         return ServiceUtils.isNotificationListenerServiceRunning(mContext, NotificationListener_.class);
     }
@@ -133,10 +125,12 @@ public class MainActivity extends CoreActivity {
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {}
+            public void onAnimationCancel(Animator animation) {
+            }
 
             @Override
-            public void onAnimationRepeat(Animator animation) {}
+            public void onAnimationRepeat(Animator animation) {
+            }
         });
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.start();
@@ -163,8 +157,7 @@ public class MainActivity extends CoreActivity {
         if (isServiceRunning) {
             Tracer.d("onKeyUp: Back");
             return true;
-        }
-        else
+        } else
             return super.onKeyUp(keyCode, keyEvent);
     }
 
@@ -176,8 +169,7 @@ public class MainActivity extends CoreActivity {
 //                onVolumeUpKeyPressed();
 //                return true;
 //            }
-            case KeyEvent.KEYCODE_BACK:
-            {
+            case KeyEvent.KEYCODE_BACK: {
                 return onBackKeyPressed(keyCode, keyEvent);
             }
         }

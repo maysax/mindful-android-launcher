@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 
-
 import com.android.contacts.list.ContactsRequest;
 
 /**
@@ -43,13 +42,13 @@ public class ContactsSearchManager {
     }
 
     public static void startSearchForResult(Activity context, String initialQuery,
-            int requestCode, ContactsRequest originalRequest) {
+                                            int requestCode, ContactsRequest originalRequest) {
         context.startActivityForResult(
                 buildIntent(context, initialQuery, originalRequest), requestCode);
     }
 
     public static void startSearch(Activity context, String initialQuery,
-            ContactsRequest originalRequest) {
+                                   ContactsRequest originalRequest) {
         context.startActivity(buildIntent(context, initialQuery, originalRequest));
     }
 

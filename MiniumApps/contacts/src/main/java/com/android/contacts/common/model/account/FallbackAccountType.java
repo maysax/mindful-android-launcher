@@ -19,7 +19,6 @@ package com.android.contacts.common.model.account;
 import android.content.Context;
 import android.util.Log;
 
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.android.contacts.common.testing.NeededForTesting;
 

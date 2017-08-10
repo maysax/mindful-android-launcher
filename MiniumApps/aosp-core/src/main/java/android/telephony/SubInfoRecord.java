@@ -21,6 +21,7 @@ import android.os.Parcelable;
 
 /**
  * A Parcelable class for Subscription Information.
+ *
  * @hide - to be unhidden
  */
 public class SubInfoRecord implements Parcelable {
@@ -30,7 +31,9 @@ public class SubInfoRecord implements Parcelable {
      * and not an index into an array
      */
     public long subId;
-    /** The GID for a SIM that maybe associated with this subscription, empty if unknown */
+    /**
+     * The GID for a SIM that maybe associated with this subscription, empty if unknown
+     */
     public String iccId;
     /**
      * The slot identifier for that currently contains the subscription
@@ -92,8 +95,8 @@ public class SubInfoRecord implements Parcelable {
     }
 
     public SubInfoRecord(long subId, String iccId, int slotId, String displayName, int nameSource,
-            int color, String number, int displayFormat, int roaming, int[] iconRes,
-            int mcc, int mnc) {
+                         int color, String number, int displayFormat, int roaming, int[] iconRes,
+                         int mcc, int mnc) {
         this.subId = subId;
         this.iccId = iccId;
         this.slotId = slotId;
@@ -126,7 +129,7 @@ public class SubInfoRecord implements Parcelable {
             int mnc = source.readInt();
 
             return new SubInfoRecord(subId, iccId, slotId, displayName, nameSource, color, number,
-                displayNumberFormat, dataRoaming, iconRes, mcc, mnc);
+                    displayNumberFormat, dataRoaming, iconRes, mcc, mnc);
         }
 
         @Override

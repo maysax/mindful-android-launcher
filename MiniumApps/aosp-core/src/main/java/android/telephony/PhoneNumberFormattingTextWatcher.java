@@ -16,13 +16,13 @@
 
 package android.telephony;
 
-import com.android.i18n.phonenumbers.AsYouTypeFormatter;
-import com.android.i18n.phonenumbers.PhoneNumberUtil;
-
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+
+import com.android.i18n.phonenumbers.AsYouTypeFormatter;
+import com.android.i18n.phonenumbers.PhoneNumberUtil;
 
 import java.util.Locale;
 
@@ -64,7 +64,7 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
      * The formatting is based on the given <code>countryCode</code>.
      *
      * @param countryCode the ISO 3166-1 two-letter country code that indicates the country/region
-     * where the phone number is being entered.
+     *                    where the phone number is being entered.
      */
     public PhoneNumberFormattingTextWatcher(String countryCode) {
         if (countryCode == null) throw new IllegalArgumentException();
@@ -73,7 +73,7 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count,
-            int after) {
+                                  int after) {
         if (mSelfChange || mStopFormatting) {
             return;
         }

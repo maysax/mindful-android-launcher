@@ -21,10 +21,8 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.Loader.OnLoadCompleteListener;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds.Photo;
@@ -35,17 +33,16 @@ import android.widget.Toast;
 
 import com.android.contacts.ContactSaveService;
 import com.android.contacts.ContactsActivity;
+import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.common.model.Contact;
 import com.android.contacts.common.model.ContactLoader;
 import com.android.contacts.common.model.RawContactDelta;
 import com.android.contacts.common.model.RawContactDeltaList;
 import com.android.contacts.common.model.RawContactModifier;
-import com.android.contacts.common.ContactsUtils;
-import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.ValuesDelta;
+import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.util.ContactPhotoUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 
 import minium.co.contacts.R;
@@ -194,8 +191,7 @@ public class AttachPhotoActivity extends ContactsActivity {
                     Loader<Contact> loader, Contact contact) {
                 try {
                     loader.reset();
-                }
-                catch (RuntimeException e) {
+                } catch (RuntimeException e) {
                     Log.e(TAG, "Error resetting loader", e);
                 }
                 listener.onContactLoaded(contact);
@@ -273,7 +269,7 @@ public class AttachPhotoActivity extends ContactsActivity {
                 null, null,
                 raw.getRawContactId(),
                 mCroppedPhotoUri
-                );
+        );
         startService(intent);
         finish();
     }

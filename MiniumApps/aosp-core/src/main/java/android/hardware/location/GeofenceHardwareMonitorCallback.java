@@ -32,13 +32,12 @@ public abstract class GeofenceHardwareMonitorCallback {
      * {@link GeofenceHardware#MONITORING_TYPE_GPS_HARDWARE} is an example of a
      * monitoring system.
      *
+     * @param monitoringType The type of the monitoring system.
+     * @param available      Indicates whether the system is currently available or not.
+     * @param location       The last known location according to the monitoring system.
      * @deprecated use {@link #onMonitoringSystemChange(GeofenceHardwareMonitorEvent)} instead.
      * NOTE: this API is will remain to be called on Android API 21 and above for backwards
      * compatibility. But clients must stop implementing it when updating their code.
-     *
-     * @param monitoringType The type of the monitoring system.
-     * @param available Indicates whether the system is currently available or not.
-     * @param location The last known location according to the monitoring system.
      */
     @Deprecated
     public void onMonitoringSystemChange(int monitoringType, boolean available, Location location) {
@@ -49,13 +48,14 @@ public abstract class GeofenceHardwareMonitorCallback {
      * {@link GeofenceHardware#MONITORING_TYPE_GPS_HARDWARE} is an example of a monitoring system.
      * {@link GeofenceHardware#MONITOR_CURRENTLY_AVAILABLE} is an example of a monitoring status.
      * {@link GeofenceHardware#SOURCE_TECHNOLOGY_GNSS} is an example of a source.
-     *
+     * <p>
      * This callback must be used instead of
      * {@link #onMonitoringSystemChange(int, boolean, android.location.Location)}.
-     *
+     * <p>
      * NOTE: this API is only called on Android API 21 and above.
      *
      * @param event An object representing the monitoring system change event.
      */
-    public void onMonitoringSystemChange(GeofenceHardwareMonitorEvent event) {}
+    public void onMonitoringSystemChange(GeofenceHardwareMonitorEvent event) {
+    }
 }

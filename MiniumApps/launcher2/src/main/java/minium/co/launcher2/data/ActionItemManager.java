@@ -100,8 +100,7 @@ public class ActionItemManager {
                         getCurrent().getType() == ActionItem.ActionItemType.CALL ||
                         getCurrent().getType() == ActionItem.ActionItemType.NOTE) {
                     removeLast();
-                }
-                else {
+                } else {
                     getCurrent().setActionText("").setCompleted(false);
                 }
 

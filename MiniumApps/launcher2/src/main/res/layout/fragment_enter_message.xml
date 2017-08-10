@@ -1,34 +1,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:gravity="top"
-    android:layout_marginTop="156dp"
-    tools:context="minium.co.launcher2.ui.EnterMessageFragment">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="horizontal" android:gravity="top"
+    android:layout_marginTop="156dp" tools:context="minium.co.launcher2.ui.EnterMessageFragment">
 
-    <EditText
-        android:id="@+id/composeReplyText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="-4dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center_vertical"
-        android:hint="Enter your message"
-        android:imeOptions="flagNoExtractUi"
-        android:inputType="textShortMessage|textMultiLine|textCapSentences"
-        android:maxLines="3"
+    <EditText android:id="@+id/composeReplyText" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_weight="1"
+        android:layout_marginLeft="8dp" android:layout_marginRight="-4dp"
+        android:layout_marginTop="16dp" android:gravity="center_vertical"
+        android:hint="Enter your message" android:imeOptions="flagNoExtractUi"
+        android:inputType="textShortMessage|textMultiLine|textCapSentences" android:maxLines="3"
         android:minHeight="40dp" />
 
-    <com.joanzapata.iconify.widget.IconTextView
-        android:id="@+id/btnSendText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="{fa-paper-plane 24dp}"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="24dp"/>
+    <com.joanzapata.iconify.widget.IconTextView android:id="@+id/btnSendText"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:text="{fa-paper-plane 24dp}" android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp" android:layout_marginTop="24dp" />
 
 </LinearLayout>

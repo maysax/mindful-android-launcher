@@ -30,12 +30,14 @@ import java.util.Objects;
 @SystemApi
 public class ScoredNetwork implements Parcelable {
 
-    /** A {@link NetworkKey} uniquely identifying this network. */
+    /**
+     * A {@link NetworkKey} uniquely identifying this network.
+     */
     public final NetworkKey networkKey;
 
     /**
      * The {@link RssiCurve} representing the scores for this network based on the RSSI.
-     *
+     * <p>
      * <p>This field is optional and may be set to null to indicate that no score is available for
      * this network at this time. Such networks, along with networks for which the scorer has not
      * responded, are always prioritized below scored networks, regardless of the score.
@@ -46,12 +48,12 @@ public class ScoredNetwork implements Parcelable {
      * Construct a new {@link ScoredNetwork}.
      *
      * @param networkKey the {@link NetworkKey} uniquely identifying this network.
-     * @param rssiCurve the {@link RssiCurve} representing the scores for this network based on the
-     *     RSSI. This field is optional, and may be skipped to represent a network which the scorer
-     *     has opted not to score at this time. Passing a null value here is strongly preferred to
-     *     not returning any {@link ScoredNetwork} for a given {@link NetworkKey} because it
-     *     indicates to the system not to request scores for this network in the future, although
-     *     the scorer may choose to issue an out-of-band update at any time.
+     * @param rssiCurve  the {@link RssiCurve} representing the scores for this network based on the
+     *                   RSSI. This field is optional, and may be skipped to represent a network which the scorer
+     *                   has opted not to score at this time. Passing a null value here is strongly preferred to
+     *                   not returning any {@link ScoredNetwork} for a given {@link NetworkKey} because it
+     *                   indicates to the system not to request scores for this network in the future, although
+     *                   the scorer may choose to issue an out-of-band update at any time.
      */
     public ScoredNetwork(NetworkKey networkKey, RssiCurve rssiCurve) {
         this.networkKey = networkKey;

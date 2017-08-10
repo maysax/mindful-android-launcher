@@ -13,6 +13,7 @@ public class GreenDaoOpenHelper extends co.siempo.phone.db.DaoMaster.OpenHelper 
     public GreenDaoOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {
         super(context, name, factory);
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // MigrationHelper.migrate(db,TableNotificationSmsDao.class);

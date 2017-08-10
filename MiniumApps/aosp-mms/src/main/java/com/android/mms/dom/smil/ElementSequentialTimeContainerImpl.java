@@ -17,7 +17,7 @@
 
 package com.android.mms.dom.smil;
 
-import java.util.ArrayList;
+import com.android.mms.dom.NodeListImpl;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -25,7 +25,7 @@ import org.w3c.dom.smil.ElementSequentialTimeContainer;
 import org.w3c.dom.smil.ElementTime;
 import org.w3c.dom.smil.SMILElement;
 
-import com.android.mms.dom.NodeListImpl;
+import java.util.ArrayList;
 
 public abstract class ElementSequentialTimeContainerImpl extends
         ElementTimeContainerImpl implements ElementSequentialTimeContainer {

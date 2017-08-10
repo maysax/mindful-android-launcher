@@ -23,7 +23,7 @@ import com.android.internal.os.IResultReceiver;
  * by creating a subclass and implement {@link #onReceiveResult}, which you can
  * then pass to others and send through IPC, and receive results they
  * supply with {@link #send}.
- *
+ * <p>
  * <p>Note: the implementation underneath is just a simple wrapper around
  * a {@link Binder} that is used to perform the communication.  This means
  * semantically you should treat it as such: this class does not impact process
@@ -34,23 +34,23 @@ import com.android.internal.os.IResultReceiver;
 public class ResultReceiver implements Parcelable {
     final boolean mLocal;
     final Handler mHandler;
-    
+
     IResultReceiver mReceiver;
-    
+
     class MyRunnable implements Runnable {
         final int mResultCode;
         final Bundle mResultData;
-        
+
         MyRunnable(int resultCode, Bundle resultData) {
             mResultCode = resultCode;
             mResultData = resultData;
         }
-        
+
         public void run() {
             onReceiveResult(mResultCode, mResultData);
         }
     }
-    
+
     class MyResultReceiver extends IResultReceiver.Stub {
         public void send(int resultCode, Bundle resultData) {
             if (mHandler != null) {
@@ -60,7 +60,7 @@ public class ResultReceiver implements Parcelable {
             }
         }
     }
-    
+
     /**
      * Create a new ResultReceive to receive results.  Your
      * {@link #onReceiveResult} method will be called from the thread running
@@ -70,11 +70,12 @@ public class ResultReceiver implements Parcelable {
         mLocal = true;
         mHandler = handler;
     }
-    
+
     /**
      * Deliver a result to this receiver.  Will call {@link #onReceiveResult},
      * always asynchronously if the receiver has supplied a Handler in which
      * to dispatch the result.
+     *
      * @param resultCode Arbitrary result code to deliver, as defined by you.
      * @param resultData Any additional data provided by you.
      */
@@ -87,7 +88,7 @@ public class ResultReceiver implements Parcelable {
             }
             return;
         }
-        
+
         if (mReceiver != null) {
             try {
                 mReceiver.send(resultCode, resultData);
@@ -95,17 +96,17 @@ public class ResultReceiver implements Parcelable {
             }
         }
     }
-    
+
     /**
      * Override to receive results delivered to this object.
-     * 
+     *
      * @param resultCode Arbitrary result code delivered by the sender, as
-     * defined by the sender.
+     *                   defined by the sender.
      * @param resultData Any additional data provided by the sender.
      */
     protected void onReceiveResult(int resultCode, Bundle resultData) {
     }
-    
+
     public int describeContents() {
         return 0;
     }
@@ -124,12 +125,13 @@ public class ResultReceiver implements Parcelable {
         mHandler = null;
         mReceiver = IResultReceiver.Stub.asInterface(in.readStrongBinder());
     }
-    
+
     public static final Parcelable.Creator<ResultReceiver> CREATOR
             = new Parcelable.Creator<ResultReceiver>() {
         public ResultReceiver createFromParcel(Parcel in) {
             return new ResultReceiver(in);
         }
+
         public ResultReceiver[] newArray(int size) {
             return new ResultReceiver[size];
         }

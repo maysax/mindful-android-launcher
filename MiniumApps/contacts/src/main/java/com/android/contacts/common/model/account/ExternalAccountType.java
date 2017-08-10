@@ -31,7 +31,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Xml;
 
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -52,12 +51,12 @@ public class ExternalAccountType extends BaseAccountType {
 
     /**
      * The metadata name for so-called "contacts.xml".
-     *
+     * <p>
      * On LMP and later, we also accept the "alternate" name.
      * This is to allow sync adapters to have a contacts.xml without making it visible on older
      * platforms.
      */
-    private static final String[] METADATA_CONTACTS_NAMES = new String[] {
+    private static final String[] METADATA_CONTACTS_NAMES = new String[]{
             "android.provider.ALTERNATE_CONTACTS_STRUCTURE",
             "android.provider.CONTACTS_STRUCTURE"
     };
@@ -108,10 +107,10 @@ public class ExternalAccountType extends BaseAccountType {
      * Constructor used for testing to initialize with any arbitrary XML.
      *
      * @param injectedMetadata If non-null, it'll be used to initialize the type.  Only set by
-     *     tests.  If null, the metadata is loaded from the specified package.
+     *                         tests.  If null, the metadata is loaded from the specified package.
      */
     ExternalAccountType(Context context, String packageName, boolean isExtension,
-            XmlResourceParser injectedMetadata) {
+                        XmlResourceParser injectedMetadata) {
         this.mIsExtension = isExtension;
         this.resourcePackageName = packageName;
         this.syncAdapterPackageName = packageName;
@@ -182,14 +181,14 @@ public class ExternalAccountType extends BaseAccountType {
 
     /**
      * Returns the CONTACTS_STRUCTURE metadata (aka "contacts.xml") in the given apk package.
-     *
+     * <p>
      * Unfortunately, there's no public way to determine which service defines a sync service for
      * which account type, so this method looks through all services in the package, and just
      * returns the first CONTACTS_STRUCTURE metadata defined in any of them.
-     *
+     * <p>
      * Returns {@code null} if the package has no CONTACTS_STRUCTURE metadata.  In this case
      * the account type *will* be initialized with minimal configuration.
-     *
+     * <p>
      * On the other hand, if the package is not found, it throws a {@link NameNotFoundException},
      * in which case the account type will *not* be initialized.
      */
@@ -197,7 +196,7 @@ public class ExternalAccountType extends BaseAccountType {
             throws NameNotFoundException {
         final PackageManager pm = context.getPackageManager();
         PackageInfo packageInfo = pm.getPackageInfo(resPackageName,
-                PackageManager.GET_SERVICES|PackageManager.GET_META_DATA);
+                PackageManager.GET_SERVICES | PackageManager.GET_META_DATA);
         for (ServiceInfo serviceInfo : packageInfo.services) {
             for (String metadataName : METADATA_CONTACTS_NAMES) {
                 final XmlResourceParser parser = serviceInfo.loadXmlMetaData(pm,
@@ -350,7 +349,7 @@ public class ExternalAccountType extends BaseAccountType {
             // Parse all children kinds
             final int startDepth = parser.getDepth();
             while (((type = parser.next()) != XmlPullParser.END_TAG
-                        || parser.getDepth() > startDepth)
+                    || parser.getDepth() > startDepth)
                     && type != XmlPullParser.END_DOCUMENT) {
 
                 if (type != XmlPullParser.START_TAG || parser.getDepth() != startDepth + 1) {
@@ -396,17 +395,17 @@ public class ExternalAccountType extends BaseAccountType {
     /**
      * Takes a string in the "@xxx/yyy" format and return the resource ID for the resource in
      * the resource package.
-     *
+     * <p>
      * If the argument is in the invalid format or isn't a resource name, it returns -1.
      *
-     * @param context context
-     * @param resourceName Resource name in the "@xxx/yyy" format, e.g. "@string/invite_lavbel"
-     * @param packageName name of the package containing the resource.
+     * @param context          context
+     * @param resourceName     Resource name in the "@xxx/yyy" format, e.g. "@string/invite_lavbel"
+     * @param packageName      name of the package containing the resource.
      * @param xmlAttributeName attribute name which the resource came from.  Used for logging.
      */
     @VisibleForTesting
     static int resolveExternalResId(Context context, String resourceName,
-            String packageName, String xmlAttributeName) {
+                                    String packageName, String xmlAttributeName) {
         if (TextUtils.isEmpty(resourceName)) {
             return -1; // Empty text is okay.
         }
@@ -417,7 +416,7 @@ public class ExternalAccountType extends BaseAccountType {
         final String name = resourceName.substring(1);
         final Resources res;
         try {
-             res = context.getPackageManager().getResourcesForApplication(packageName);
+            res = context.getPackageManager().getResourcesForApplication(packageName);
         } catch (NameNotFoundException e) {
             Log.e(TAG, "Unable to load package " + packageName);
             return -1;

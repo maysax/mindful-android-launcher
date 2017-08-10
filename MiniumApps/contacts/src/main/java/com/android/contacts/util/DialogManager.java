@@ -32,12 +32,12 @@ import minium.co.contacts.R;
  * To be able to do that, two IDs are required which are used consecutively.
  * How to use:<ul>
  * <li>The owning Activity creates on instance of this class, passing itself and two Ids that are
- *    not used by other Dialogs of the Activity.</li>
+ * not used by other Dialogs of the Activity.</li>
  * <li>Views owning Dialogs must implement {@link DialogManager.DialogShowingView}</li>
  * <li>After creating the Views, configureManagingViews must be called to configure all views
- *    that implement {@link DialogManager.DialogShowingView}</li>
+ * that implement {@link DialogManager.DialogShowingView}</li>
  * <li>In the implementation of {@link Activity#onCreateDialog}, calls for the
- *    ViewId are forwarded to {@link DialogManager#onCreateDialog(int, Bundle)}</li>
+ * ViewId are forwarded to {@link DialogManager#onCreateDialog(int, Bundle)}</li>
  * </ul>
  * To actually show a Dialog, the View uses {@link DialogManager#showDialogInView(View, Bundle)},
  * passing itself as a first parameter
@@ -53,6 +53,7 @@ public class DialogManager {
 
     /**
      * Creates a new instance of this class for the given Activity.
+     *
      * @param activity The activity this object is used for
      */
     public DialogManager(final Activity activity) {
@@ -99,7 +100,7 @@ public class DialogManager {
         if (view == null || !(view instanceof DialogShowingView)) {
             return null;
         }
-        final Dialog dialog = ((DialogShowingView)view).createDialog(bundle);
+        final Dialog dialog = ((DialogShowingView) view).createDialog(bundle);
         if (dialog == null) {
             return dialog;
         }

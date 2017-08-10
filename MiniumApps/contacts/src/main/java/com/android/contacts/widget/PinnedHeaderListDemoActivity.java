@@ -54,27 +54,27 @@ public class PinnedHeaderListDemoActivity extends ListActivity {
 
         @Override
         protected View newHeaderView(Context context, int partition, Cursor cursor,
-                ViewGroup parent) {
+                                     ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(context);
             return inflater.inflate(R.layout.list_section, null);
         }
 
         @Override
         protected void bindHeaderView(View view, int parition, Cursor cursor) {
-            TextView headerText = (TextView)view.findViewById(R.id.header_text);
+            TextView headerText = (TextView) view.findViewById(R.id.header_text);
             headerText.setText(mHeaders[parition]);
         }
 
         @Override
         protected View newView(Context context, int partition, Cursor cursor, int position,
-                ViewGroup parent) {
+                               ViewGroup parent) {
             LayoutInflater inflater = LayoutInflater.from(context);
             return inflater.inflate(android.R.layout.simple_list_item_1, null);
         }
 
         @Override
         protected void bindView(View v, int partition, Cursor cursor, int position) {
-            TextView text = (TextView)v.findViewById(android.R.id.text1);
+            TextView text = (TextView) v.findViewById(android.R.id.text1);
             text.setText(cursor.getString(1));
         }
 

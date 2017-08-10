@@ -43,7 +43,7 @@ class WithFramework {
         String[] newArgs = new String[args.length - 1];
         System.arraycopy(args, 1, newArgs, 0, newArgs.length);
         Method mainMethod = mainClass.getMethod("main", String[].class);
-        mainMethod.invoke(null, new Object[] { newArgs });
+        mainMethod.invoke(null, new Object[]{newArgs});
     }
 
     private static void printUsage() {

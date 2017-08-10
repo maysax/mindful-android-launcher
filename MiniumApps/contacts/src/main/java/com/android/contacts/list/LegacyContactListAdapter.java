@@ -33,12 +33,12 @@ import com.android.contacts.common.list.ContactListItemView;
 @SuppressWarnings("deprecation")
 public class LegacyContactListAdapter extends ContactEntryListAdapter {
 
-    static final String[] PEOPLE_PROJECTION = new String[] {
-        People._ID,                         // 0
-        People.DISPLAY_NAME,                // 1
-        People.PHONETIC_NAME,               // 2
-        People.STARRED,                     // 3
-        People.PRESENCE_STATUS,             // 4
+    static final String[] PEOPLE_PROJECTION = new String[]{
+            People._ID,                         // 0
+            People.DISPLAY_NAME,                // 1
+            People.PHONETIC_NAME,               // 2
+            People.STARRED,                     // 3
+            People.PRESENCE_STATUS,             // 4
     };
 
     protected static final int PERSON_ID_COLUMN_INDEX = 0;
@@ -63,11 +63,11 @@ public class LegacyContactListAdapter extends ContactEntryListAdapter {
 
     @Override
     public String getContactDisplayName(int position) {
-        return ((Cursor)getItem(position)).getString(PERSON_DISPLAY_NAME_COLUMN_INDEX);
+        return ((Cursor) getItem(position)).getString(PERSON_DISPLAY_NAME_COLUMN_INDEX);
     }
 
     public Uri getPersonUri(int position) {
-        Cursor cursor = ((Cursor)getItem(position));
+        Cursor cursor = ((Cursor) getItem(position));
         long personId = cursor.getLong(PERSON_ID_COLUMN_INDEX);
         return ContentUris.withAppendedId(People.CONTENT_URI, personId);
     }
@@ -83,7 +83,7 @@ public class LegacyContactListAdapter extends ContactEntryListAdapter {
     @Override
     protected void bindView(View itemView, int partition, Cursor cursor, int position) {
         super.bindView(itemView, partition, cursor, position);
-        ContactListItemView view = (ContactListItemView)itemView;
+        ContactListItemView view = (ContactListItemView) itemView;
         bindName(view, cursor);
         bindViewId(view, cursor, PERSON_ID_COLUMN_INDEX);
         bindPresence(view, cursor);

@@ -151,7 +151,10 @@ public class Transaction {
         //
         // then, send as MMS, else send as Voice or SMS
         if (checkMMS(message)) {
-            try { Looper.prepare(); } catch (Exception e) { }
+            try {
+                Looper.prepare();
+            } catch (Exception e) {
+            }
             RateController.init(context);
             DownloadManager.init(context);
             sendMmsMessage(message.getText(), message.getAddresses(), message.getImages(), message.getImageNames(), message.getMedia(), message.getMediaMimeType(), message.getSubject());
@@ -201,7 +204,7 @@ public class Transaction {
 
                 if (LOCAL_LOGV) Log.v(TAG, "inserted to uri: " + messageUri);
 
-                Cursor query = context.getContentResolver().query(messageUri, new String[] {"_id"}, null, null, null);
+                Cursor query = context.getContentResolver().query(messageUri, new String[]{"_id"}, null, null, null);
                 if (query != null && query.moveToFirst()) {
                     messageId = query.getInt(0);
                 }
@@ -289,7 +292,8 @@ public class Transaction {
                                     Toast.makeText(context, "Message could not be sent", Toast.LENGTH_LONG).show();
                                 }
                             });
-                        } catch (Exception f) { }
+                        } catch (Exception f) {
+                        }
                     }
                 }
             }
@@ -304,7 +308,8 @@ public class Transaction {
             public void run() {
                 try {
                     Thread.sleep(delay);
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
 
                 if (checkIfMessageExistsAfterDelay(messageUri)) {
                     if (LOCAL_LOGV) Log.v(TAG, "message sent after delay");
@@ -321,7 +326,7 @@ public class Transaction {
     }
 
     private boolean checkIfMessageExistsAfterDelay(Uri messageUti) {
-        Cursor query = context.getContentResolver().query(messageUti, new String[] {"_id"}, null, null, null);
+        Cursor query = context.getContentResolver().query(messageUti, new String[]{"_id"}, null, null, null);
         return query != null && query.moveToFirst();
     }
 
@@ -356,9 +361,9 @@ public class Transaction {
             part.MimeType = mimeType;
             part.Name = mimeType.split("/")[0];
             part.Data = media;
-            data.add(part);     	
+            data.add(part);
         }
-        
+
         if (!text.equals("")) {
             // add text to the end of the part and send
             MMSPart part = new MMSPart();
@@ -425,7 +430,7 @@ public class Transaction {
     }
 
     public static MessageInfo getBytes(Context context, boolean saveMessage, String[] recipients, MMSPart[] parts, String subject)
-                throws MmsException {
+            throws MmsException {
         final SendReq sendRequest = new SendReq();
 
         // create send request addresses
@@ -513,7 +518,7 @@ public class Transaction {
         }
 
         try {
-            Cursor query = context.getContentResolver().query(info.location, new String[] {"thread_id"}, null, null, null);
+            Cursor query = context.getContentResolver().query(info.location, new String[]{"thread_id"}, null, null, null);
             if (query != null && query.moveToFirst()) {
                 info.token = query.getLong(query.getColumnIndex("thread_id"));
             } else {
@@ -785,12 +790,14 @@ public class Transaction {
 
                 try {
                     // attempts to send the message using given apns
-                    if (LOCAL_LOGV) Log.v(TAG, apns.get(0).MMSCenterUrl + " " + apns.get(0).MMSProxy + " " + apns.get(0).MMSPort);
+                    if (LOCAL_LOGV)
+                        Log.v(TAG, apns.get(0).MMSCenterUrl + " " + apns.get(0).MMSProxy + " " + apns.get(0).MMSPort);
                     if (LOCAL_LOGV) Log.v(TAG, "initial attempt at sending starting now");
                     trySending(apns.get(0), bytesToSend, 0);
                 } catch (Exception e) {
                     // some type of apn error, so notify user of failure
-                    if (LOCAL_LOGV) Log.v(TAG, "weird error, not sure how this could even be called other than apn stuff");
+                    if (LOCAL_LOGV)
+                        Log.v(TAG, "weird error, not sure how this could even be called other than apn stuff");
                     markMmsFailed();
                 }
 
@@ -834,7 +841,9 @@ public class Transaction {
 
                         context.sendBroadcast(new Intent(REFRESH));
 
-                        try { context.unregisterReceiver(this); } catch (Exception e) { /* Receiver not registered */ }
+                        try {
+                            context.unregisterReceiver(this);
+                        } catch (Exception e) { /* Receiver not registered */ }
 
                         // give everything time to finish up, may help the abort being shown after the progress is already 100
                         new Handler().postDelayed(new Runnable() {

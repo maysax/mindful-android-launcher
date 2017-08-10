@@ -1,6 +1,7 @@
 package com.moez.QKSMS;
 
 import com.crashlytics.android.Crashlytics;
+
 import io.fabric.sdk.android.Fabric;
 
 public class QKSMSApp extends QKSMSAppBase {

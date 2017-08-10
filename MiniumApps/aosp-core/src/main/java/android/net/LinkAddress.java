@@ -35,7 +35,7 @@ import static android.system.OsConstants.RT_SCOPE_UNIVERSE;
 
 /**
  * Identifies an IP address on a network link.
- *
+ * <p>
  * A {@code LinkAddress} consists of:
  * <ul>
  * <li>An IP address and prefix length (e.g., {@code 2001:db8::1/64} or {@code 192.0.2.1/24}).
@@ -72,6 +72,7 @@ public class LinkAddress implements Parcelable {
     /**
      * Utility function to determines the scope of a unicast address. Per RFC 4291 section 2.5 and
      * RFC 6724 section 3.2.
+     *
      * @hide
      */
     static int scopeForUnicastAddress(InetAddress addr) {
@@ -113,11 +114,12 @@ public class LinkAddress implements Parcelable {
     /**
      * Constructs a new {@code LinkAddress} from an {@code InetAddress} and prefix length, with
      * the specified flags and scope. Flags and scope are not checked for validity.
-     * @param address The IP address.
+     *
+     * @param address      The IP address.
      * @param prefixLength The prefix length.
-     * @param flags A bitmask of {@code IFA_F_*} values representing properties of the address.
-     * @param scope An integer defining the scope in which the address is unique (e.g.,
-     *              {@link OsConstants#RT_SCOPE_LINK} or {@link OsConstants#RT_SCOPE_SITE}).
+     * @param flags        A bitmask of {@code IFA_F_*} values representing properties of the address.
+     * @param scope        An integer defining the scope in which the address is unique (e.g.,
+     *                     {@link OsConstants#RT_SCOPE_LINK} or {@link OsConstants#RT_SCOPE_SITE}).
      * @hide
      */
     public LinkAddress(InetAddress address, int prefixLength, int flags, int scope) {
@@ -127,7 +129,8 @@ public class LinkAddress implements Parcelable {
     /**
      * Constructs a new {@code LinkAddress} from an {@code InetAddress} and a prefix length.
      * The flags are set to zero and the scope is determined from the address.
-     * @param address The IP address.
+     *
+     * @param address      The IP address.
      * @param prefixLength The prefix length.
      * @hide
      */
@@ -139,17 +142,19 @@ public class LinkAddress implements Parcelable {
     /**
      * Constructs a new {@code LinkAddress} from an {@code InterfaceAddress}.
      * The flags are set to zero and the scope is determined from the address.
+     *
      * @param interfaceAddress The interface address.
      * @hide
      */
     public LinkAddress(InterfaceAddress interfaceAddress) {
         this(interfaceAddress.getAddress(),
-             interfaceAddress.getNetworkPrefixLength());
+                interfaceAddress.getNetworkPrefixLength());
     }
 
     /**
      * Constructs a new {@code LinkAddress} from a string such as "192.0.2.5/24" or
      * "2001:db8::1/64". The flags are set to zero and the scope is determined from the address.
+     *
      * @param string The string to parse.
      * @hide
      */
@@ -161,9 +166,10 @@ public class LinkAddress implements Parcelable {
     /**
      * Constructs a new {@code LinkAddress} from a string such as "192.0.2.5/24" or
      * "2001:db8::1/64", with the specified flags and scope.
+     *
      * @param string The string to parse.
-     * @param flags The address flags.
-     * @param scope The address scope.
+     * @param flags  The address flags.
+     * @param scope  The address scope.
      * @hide
      */
     public LinkAddress(String address, int flags, int scope) {
@@ -198,9 +204,9 @@ public class LinkAddress implements Parcelable {
         }
         LinkAddress linkAddress = (LinkAddress) obj;
         return this.address.equals(linkAddress.address) &&
-            this.prefixLength == linkAddress.prefixLength &&
-            this.flags == linkAddress.flags &&
-            this.scope == linkAddress.scope;
+                this.prefixLength == linkAddress.prefixLength &&
+                this.flags == linkAddress.flags &&
+                this.scope == linkAddress.scope;
     }
 
     /**
@@ -243,6 +249,7 @@ public class LinkAddress implements Parcelable {
     /**
      * Returns the prefix length of this {@code LinkAddress}.
      * TODO: Delete all callers and remove in favour of getPrefixLength().
+     *
      * @hide
      */
     public int getNetworkPrefixLength() {
@@ -265,6 +272,7 @@ public class LinkAddress implements Parcelable {
 
     /**
      * Returns true if this {@code LinkAddress} is global scope and preferred.
+     *
      * @hide
      */
     public boolean isGlobalPreferred() {
@@ -293,24 +301,24 @@ public class LinkAddress implements Parcelable {
      * Implement the Parcelable interface.
      */
     public static final Creator<LinkAddress> CREATOR =
-        new Creator<LinkAddress>() {
-            public LinkAddress createFromParcel(Parcel in) {
-                InetAddress address = null;
-                try {
-                    address = InetAddress.getByAddress(in.createByteArray());
-                } catch (UnknownHostException e) {
-                    // Nothing we can do here. When we call the constructor, we'll throw an
-                    // IllegalArgumentException, because a LinkAddress can't have a null
-                    // InetAddress.
+            new Creator<LinkAddress>() {
+                public LinkAddress createFromParcel(Parcel in) {
+                    InetAddress address = null;
+                    try {
+                        address = InetAddress.getByAddress(in.createByteArray());
+                    } catch (UnknownHostException e) {
+                        // Nothing we can do here. When we call the constructor, we'll throw an
+                        // IllegalArgumentException, because a LinkAddress can't have a null
+                        // InetAddress.
+                    }
+                    int prefixLength = in.readInt();
+                    int flags = in.readInt();
+                    int scope = in.readInt();
+                    return new LinkAddress(address, prefixLength, flags, scope);
                 }
-                int prefixLength = in.readInt();
-                int flags = in.readInt();
-                int scope = in.readInt();
-                return new LinkAddress(address, prefixLength, flags, scope);
-            }
 
-            public LinkAddress[] newArray(int size) {
-                return new LinkAddress[size];
-            }
-        };
+                public LinkAddress[] newArray(int size) {
+                    return new LinkAddress[size];
+                }
+            };
 }

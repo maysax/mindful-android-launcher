@@ -28,7 +28,9 @@ public abstract class WeakAsyncTask<Params, Progress, Result, WeakTarget> extend
         mTarget = new WeakReference<WeakTarget>(target);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final void onPreExecute() {
         final WeakTarget target = mTarget.get();
@@ -37,7 +39,9 @@ public abstract class WeakAsyncTask<Params, Progress, Result, WeakTarget> extend
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final Result doInBackground(Params... params) {
         final WeakTarget target = mTarget.get();
@@ -48,7 +52,9 @@ public abstract class WeakAsyncTask<Params, Progress, Result, WeakTarget> extend
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected final void onPostExecute(Result result) {
         final WeakTarget target = mTarget.get();

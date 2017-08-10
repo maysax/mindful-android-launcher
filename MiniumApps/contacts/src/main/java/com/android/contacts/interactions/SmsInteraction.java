@@ -94,7 +94,7 @@ public class SmsInteraction implements ContactInteraction {
     public String getAddress() {
         final String address = mValues.getAsString(Sms.ADDRESS);
         return address == null ? null :
-            sBidiFormatter.unicodeWrap(address, TextDirectionHeuristics.LTR);
+                sBidiFormatter.unicodeWrap(address, TextDirectionHeuristics.LTR);
     }
 
     public String getBody() {

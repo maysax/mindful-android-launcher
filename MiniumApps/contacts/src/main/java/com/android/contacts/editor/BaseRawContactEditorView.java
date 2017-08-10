@@ -28,8 +28,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.android.contacts.common.model.RawContactDelta;
-import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.RawContactModifier;
+import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountType.EditType;
 
@@ -69,7 +69,7 @@ public abstract class BaseRawContactEditorView extends LinearLayout {
         mBody = findViewById(R.id.body);
         mDivider = findViewById(R.id.divider);
 
-        mPhoto = (PhotoEditorView)findViewById(R.id.edit_photo);
+        mPhoto = (PhotoEditorView) findViewById(R.id.edit_photo);
         mPhoto.setEnabled(isEnabled());
     }
 
@@ -119,7 +119,7 @@ public abstract class BaseRawContactEditorView extends LinearLayout {
      * apply to that state.
      */
     public abstract void setState(RawContactDelta state, AccountType source, ViewIdGenerator vig,
-            boolean isProfile);
+                                  boolean isProfile);
 
     /* package */ void setExpanded(boolean value) {
         // only allow collapsing if we are one of several children

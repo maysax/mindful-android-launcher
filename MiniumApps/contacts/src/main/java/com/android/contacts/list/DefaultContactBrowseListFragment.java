@@ -38,8 +38,8 @@ import com.android.contacts.common.list.ContactListFilterController;
 import com.android.contacts.common.list.ContactListItemView;
 import com.android.contacts.common.list.DefaultContactListAdapter;
 import com.android.contacts.common.list.ProfileAndContactsLoader;
-import com.android.contacts.editor.ContactEditorFragment;
 import com.android.contacts.common.util.AccountFilterUtil;
+import com.android.contacts.editor.ContactEditorFragment;
 
 import minium.co.contacts.R;
 
@@ -65,11 +65,12 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment 
         @Override
         public void onClick(View view) {
             AccountFilterUtil.startAccountFilterActivityForResult(
-                        DefaultContactBrowseListFragment.this,
-                        REQUEST_CODE_ACCOUNT_FILTER,
-                        getFilter());
+                    DefaultContactBrowseListFragment.this,
+                    REQUEST_CODE_ACCOUNT_FILTER,
+                    getFilter());
         }
     }
+
     private OnClickListener mFilterHeaderClickListener = new FilterHeaderClickListener();
 
     public DefaultContactBrowseListFragment() {
@@ -141,7 +142,9 @@ public class DefaultContactBrowseListFragment extends ContactBrowseListFragment 
         if (!flag) showSearchProgress(false);
     }
 
-    /** Show or hide the directory-search progress spinner. */
+    /**
+     * Show or hide the directory-search progress spinner.
+     */
     private void showSearchProgress(boolean show) {
         if (mSearchProgress != null) {
             mSearchProgress.setVisibility(show ? View.VISIBLE : View.GONE);

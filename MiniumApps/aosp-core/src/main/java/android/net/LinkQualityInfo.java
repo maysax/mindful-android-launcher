@@ -20,13 +20,14 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- *  Class that represents useful attributes of generic network links
- *  such as the upload/download throughput or packet error rate.
- *  Generally speaking, you should be dealing with instances of
- *  LinkQualityInfo subclasses, such as {@link android.net.#WifiLinkQualityInfo}
- *  or {@link android.net.#MobileLinkQualityInfo} which provide additional
- *  information.
- *  @hide
+ * Class that represents useful attributes of generic network links
+ * such as the upload/download throughput or packet error rate.
+ * Generally speaking, you should be dealing with instances of
+ * LinkQualityInfo subclasses, such as {@link android.net.#WifiLinkQualityInfo}
+ * or {@link android.net.#MobileLinkQualityInfo} which provide additional
+ * information.
+ *
+ * @hide
  */
 public class LinkQualityInfo implements Parcelable {
 
@@ -70,6 +71,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * Implement the Parcelable interface
+     *
      * @hide
      */
     public int describeContents() {
@@ -149,6 +151,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the type of network this link is connected to
+     *
      * @return network type as defined by {@link android.net.ConnectivityManager} or
      * {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
@@ -165,6 +168,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the signal strength normalized across multiple types of networks
+     *
      * @return an integer value from 0 - 99 or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getNormalizedSignalStrength() {
@@ -180,6 +184,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the total number of packets sent or received in sample duration
+     *
      * @return number of packets or {@link android.net.LinkQualityInfo#UNKNOWN_LONG}
      */
     public long getPacketCount() {
@@ -195,6 +200,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the total number of packets errors encountered in sample duration
+     *
      * @return number of errors or {@link android.net.LinkQualityInfo#UNKNOWN_LONG}
      */
     public long getPacketErrorCount() {
@@ -210,6 +216,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the theoretical upload bandwidth of this network
+     *
      * @return bandwidth in Kbps or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getTheoreticalTxBandwidth() {
@@ -225,6 +232,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the theoretical download bandwidth of this network
+     *
      * @return bandwidth in Kbps or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getTheoreticalRxBandwidth() {
@@ -240,6 +248,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the theoretical latency of this network
+     *
      * @return latency in milliseconds or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getTheoreticalLatency() {
@@ -255,6 +264,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the time stamp of the last sample
+     *
      * @return milliseconds elapsed since start and sample time or
      * {@link android.net.LinkQualityInfo#UNKNOWN_LONG}
      */
@@ -271,6 +281,7 @@ public class LinkQualityInfo implements Parcelable {
 
     /**
      * returns the sample duration used
+     *
      * @return duration in milliseconds or {@link android.net.LinkQualityInfo#UNKNOWN_INT}
      */
     public int getDataSampleDuration() {

@@ -16,12 +16,14 @@ import android.nfc.tech.NfcV;
 import java.io.UnsupportedEncodingException;
 
 public interface NFCInterface {
-     String nfcRead(Tag t);
-     String readText(NdefRecord record)throws UnsupportedEncodingException;
-     void nfcReader(Tag tag);
+    String nfcRead(Tag t);
 
-    final String[][] techList = new String[][] {
-            new String[] {
+    String readText(NdefRecord record) throws UnsupportedEncodingException;
+
+    void nfcReader(Tag tag);
+
+    final String[][] techList = new String[][]{
+            new String[]{
                     NfcA.class.getName(),
                     NfcB.class.getName(),
                     NfcF.class.getName(),

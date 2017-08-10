@@ -19,7 +19,7 @@ package android.os;
 /**
  * Writes trace events to the system trace buffer.  These trace events can be
  * collected and visualized using the Systrace tool.
- *
+ * <p>
  * <p>This tracing mechanism is independent of the method tracing mechanism
  * offered by {@link Debug#startMethodTracing}.  In particular, it enables
  * tracing of events that occur across multiple processes.
@@ -37,43 +37,81 @@ public final class Trace {
 
     // These tags must be kept in sync with system/core/include/cutils/trace.h.
     // They should also be added to frameworks/native/cmds/atrace/atrace.cpp.
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_NEVER = 0;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_ALWAYS = 1L << 0;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_GRAPHICS = 1L << 1;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_INPUT = 1L << 2;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_VIEW = 1L << 3;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_WEBVIEW = 1L << 4;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_WINDOW_MANAGER = 1L << 5;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_ACTIVITY_MANAGER = 1L << 6;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_SYNC_MANAGER = 1L << 7;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_AUDIO = 1L << 8;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_VIDEO = 1L << 9;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_CAMERA = 1L << 10;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_HAL = 1L << 11;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_APP = 1L << 12;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_RESOURCES = 1L << 13;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_DALVIK = 1L << 14;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_RS = 1L << 15;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_BIONIC = 1L << 16;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final long TRACE_TAG_POWER = 1L << 17;
 
     private static final long TRACE_TAG_NOT_READY = 1L << 63;
@@ -83,12 +121,19 @@ public final class Trace {
     private static volatile long sEnabledTags = TRACE_TAG_NOT_READY;
 
     private static native long nativeGetEnabledTags();
+
     private static native void nativeTraceCounter(long tag, String name, int value);
+
     private static native void nativeTraceBegin(long tag, String name);
+
     private static native void nativeTraceEnd(long tag);
+
     private static native void nativeAsyncTraceBegin(long tag, String name, int cookie);
+
     private static native void nativeAsyncTraceEnd(long tag, String name, int cookie);
+
     private static native void nativeSetAppTracingAllowed(boolean allowed);
+
     private static native void nativeSetTracingEnabled(boolean allowed);
 
     static {
@@ -101,7 +146,8 @@ public final class Trace {
         // SystemProperties.addChangeCallback currently have a negative priority, while
         // our native code is using a priority of zero.
         SystemProperties.addChangeCallback(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 cacheEnabledTags();
             }
         });
@@ -135,7 +181,6 @@ public final class Trace {
      *
      * @param traceTag The trace tag to check.
      * @return True if the trace tag is valid.
-     *
      * @hide
      */
     public static boolean isTagEnabled(long traceTag) {
@@ -149,10 +194,9 @@ public final class Trace {
     /**
      * Writes trace message to indicate the value of a given counter.
      *
-     * @param traceTag The trace tag.
-     * @param counterName The counter name to appear in the trace.
+     * @param traceTag     The trace tag.
+     * @param counterName  The counter name to appear in the trace.
      * @param counterValue The counter value.
-     *
      * @hide
      */
     public static void traceCounter(long traceTag, String counterName, int counterValue) {
@@ -196,9 +240,8 @@ public final class Trace {
      * begun. Must be followed by a call to {@link #traceEnd} using the same
      * tag.
      *
-     * @param traceTag The trace tag.
+     * @param traceTag   The trace tag.
      * @param methodName The method name to appear in the trace.
-     *
      * @hide
      */
     public static void traceBegin(long traceTag, String methodName) {
@@ -212,7 +255,6 @@ public final class Trace {
      * Must be called exactly once for each call to {@link #traceBegin} using the same tag.
      *
      * @param traceTag The trace tag.
-     *
      * @hide
      */
     public static void traceEnd(long traceTag) {
@@ -228,10 +270,9 @@ public final class Trace {
      * asynchronous events do not need to be nested. The name and cookie used to
      * begin an event must be used to end it.
      *
-     * @param traceTag The trace tag.
+     * @param traceTag   The trace tag.
      * @param methodName The method name to appear in the trace.
-     * @param cookie Unique identifier for distinguishing simultaneous events
-     *
+     * @param cookie     Unique identifier for distinguishing simultaneous events
      * @hide
      */
     public static void asyncTraceBegin(long traceTag, String methodName, int cookie) {
@@ -245,10 +286,9 @@ public final class Trace {
      * Must be called exactly once for each call to {@link #asyncTraceBegin(long, String, int)}
      * using the same tag, name and cookie.
      *
-     * @param traceTag The trace tag.
+     * @param traceTag   The trace tag.
      * @param methodName The method name to appear in the trace.
-     * @param cookie Unique identifier for distinguishing simultaneous events
-     *
+     * @param cookie     Unique identifier for distinguishing simultaneous events
      * @hide
      */
     public static void asyncTraceEnd(long traceTag, String methodName, int cookie) {
@@ -260,13 +300,13 @@ public final class Trace {
     /**
      * Writes a trace message to indicate that a given section of code has begun. This call must
      * be followed by a corresponding call to {@link #endSection()} on the same thread.
-     *
+     * <p>
      * <p class="note"> At this time the vertical bar character '|', newline character '\n', and
      * null character '\0' are used internally by the tracing mechanism.  If sectionName contains
      * these characters they will be replaced with a space character in the trace.
      *
      * @param sectionName The name of the code section to appear in the trace.  This may be at
-     * most 127 Unicode code units long.
+     *                    most 127 Unicode code units long.
      */
     public static void beginSection(String sectionName) {
         if (isTagEnabled(TRACE_TAG_APP)) {

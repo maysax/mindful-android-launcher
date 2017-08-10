@@ -49,17 +49,18 @@ public final class CellIdentityWcdma implements Parcelable {
         mCid = Integer.MAX_VALUE;
         mPsc = Integer.MAX_VALUE;
     }
+
     /**
      * public constructor
+     *
      * @param mcc 3-digit Mobile Country Code, 0..999
      * @param mnc 2 or 3-digit Mobile Network Code, 0..999
      * @param lac 16-bit Location Area Code, 0..65535
      * @param cid 28-bit UMTS Cell Identity
      * @param psc 9-bit UMTS Primary Scrambling Code
-     *
      * @hide
      */
-    public CellIdentityWcdma (int mcc, int mnc, int lac, int cid, int psc) {
+    public CellIdentityWcdma(int mcc, int mnc, int lac, int cid, int psc) {
         mMcc = mcc;
         mMnc = mnc;
         mLac = lac;
@@ -76,7 +77,7 @@ public final class CellIdentityWcdma implements Parcelable {
     }
 
     CellIdentityWcdma copy() {
-       return new CellIdentityWcdma(this);
+        return new CellIdentityWcdma(this);
     }
 
     /**
@@ -127,7 +128,7 @@ public final class CellIdentityWcdma implements Parcelable {
     public boolean equals(Object other) {
         if (super.equals(other)) {
             try {
-                CellIdentityWcdma o = (CellIdentityWcdma)other;
+                CellIdentityWcdma o = (CellIdentityWcdma) other;
                 return mMcc == o.mMcc &&
                         mMnc == o.mMnc &&
                         mLac == o.mLac &&
@@ -154,13 +155,17 @@ public final class CellIdentityWcdma implements Parcelable {
         return sb.toString();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         if (DBG) log("writeToParcel(Parcel, int): " + toString());
@@ -171,7 +176,9 @@ public final class CellIdentityWcdma implements Parcelable {
         dest.writeInt(mPsc);
     }
 
-    /** Construct from Parcel, type has already been processed */
+    /**
+     * Construct from Parcel, type has already been processed
+     */
     private CellIdentityWcdma(Parcel in) {
         mMcc = in.readInt();
         mMnc = in.readInt();
@@ -181,20 +188,22 @@ public final class CellIdentityWcdma implements Parcelable {
         if (DBG) log("CellIdentityWcdma(Parcel): " + toString());
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @SuppressWarnings("hiding")
     public static final Creator<CellIdentityWcdma> CREATOR =
             new Creator<CellIdentityWcdma>() {
-        @Override
-        public CellIdentityWcdma createFromParcel(Parcel in) {
-            return new CellIdentityWcdma(in);
-        }
+                @Override
+                public CellIdentityWcdma createFromParcel(Parcel in) {
+                    return new CellIdentityWcdma(in);
+                }
 
-        @Override
-        public CellIdentityWcdma[] newArray(int size) {
-            return new CellIdentityWcdma[size];
-        }
-    };
+                @Override
+                public CellIdentityWcdma[] newArray(int size) {
+                    return new CellIdentityWcdma[size];
+                }
+            };
 
     /**
      * log

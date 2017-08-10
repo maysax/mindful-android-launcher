@@ -17,7 +17,9 @@
 package android.os;
 
 import android.util.ArrayMap;
+
 import com.android.internal.util.XmlUtils;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
@@ -30,7 +32,6 @@ import java.util.Set;
 /**
  * A mapping from String values to various types that can be saved to persistent and later
  * restored.
- *
  */
 public final class PersistableBundle extends BaseBundle implements Cloneable, Parcelable,
         XmlUtils.WriteMapCallback {
@@ -131,7 +132,7 @@ public final class PersistableBundle extends BaseBundle implements Cloneable, Pa
      * Inserts a PersistableBundle value into the mapping of this Bundle, replacing
      * any existing value for the given key.  Either key or value may be null.
      *
-     * @param key a String, or null
+     * @param key   a String, or null
      * @param value a Bundle object, or null
      */
     public void putPersistableBundle(String key, PersistableBundle value) {
@@ -174,7 +175,9 @@ public final class PersistableBundle extends BaseBundle implements Cloneable, Pa
                 }
             };
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @Override
     public void writeUnknownObject(Object v, String name, XmlSerializer out)
             throws XmlPullParserException, IOException {
@@ -188,14 +191,18 @@ public final class PersistableBundle extends BaseBundle implements Cloneable, Pa
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public void saveToXml(XmlSerializer out) throws IOException, XmlPullParserException {
         unparcel();
         XmlUtils.writeMapXml(mMap, out, this);
     }
 
-    /** @hide */
-    static class MyReadMapCallback implements  XmlUtils.ReadMapCallback {
+    /**
+     * @hide
+     */
+    static class MyReadMapCallback implements XmlUtils.ReadMapCallback {
         @Override
         public Object readThisUnknownObjectXml(XmlPullParser in, String tag)
                 throws XmlPullParserException, IOException {
@@ -217,6 +224,7 @@ public final class PersistableBundle extends BaseBundle implements Cloneable, Pa
     /**
      * Writes the PersistableBundle contents to a Parcel, typically in order for
      * it to be passed through an IBinder connection.
+     *
      * @param parcel The parcel to copy this bundle to.
      */
     @Override
@@ -229,7 +237,9 @@ public final class PersistableBundle extends BaseBundle implements Cloneable, Pa
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static PersistableBundle restoreFromXml(XmlPullParser in) throws IOException,
             XmlPullParserException {
         final int outerDepth = in.getDepth();

@@ -28,12 +28,12 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.SearchView.OnCloseListener;
-import android.view.View.OnClickListener;
-import android.widget.EditText;
 import android.widget.Toolbar;
 
 import com.android.contacts.activities.ActionBarAdapter.Listener.Action;
@@ -74,9 +74,13 @@ public class ActionBarAdapter implements OnCloseListener {
     private String mQueryString;
 
     private EditText mSearchView;
-    /** The view that represents tabs when we are in portrait mode **/
+    /**
+     * The view that represents tabs when we are in portrait mode
+     **/
     private View mPortraitTabs;
-    /** The view that represents tabs when we are in landscape mode **/
+    /**
+     * The view that represents tabs when we are in landscape mode
+     **/
     private View mLandscapeTabs;
     private View mSearchContainer;
 
@@ -104,7 +108,7 @@ public class ActionBarAdapter implements OnCloseListener {
     private int mCurrentTab = TabState.DEFAULT;
 
     public ActionBarAdapter(Context context, Listener listener, ActionBar actionBar,
-            View portraitTabs, View landscapeTabs, Toolbar toolbar) {
+                            View portraitTabs, View landscapeTabs, Toolbar toolbar) {
         mContext = context;
         mListener = listener;
         mActionBar = actionBar;
@@ -142,20 +146,20 @@ public class ActionBarAdapter implements OnCloseListener {
         mSearchView.addTextChangedListener(new SearchTextWatcher());
         mSearchContainer.findViewById(R.id.search_close_button).setOnClickListener(
                 new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSearchView.setText(null);
-            }
-        });
+                    @Override
+                    public void onClick(View v) {
+                        mSearchView.setText(null);
+                    }
+                });
         mSearchContainer.findViewById(R.id.search_back_button).setOnClickListener(
                 new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onUpButtonPressed();
-                }
-            }
-        });
+                    @Override
+                    public void onClick(View v) {
+                        if (mListener != null) {
+                            mListener.onUpButtonPressed();
+                        }
+                    }
+                });
     }
 
     public void initialize(Bundle savedState, ContactsRequest request) {
@@ -206,10 +210,12 @@ public class ActionBarAdapter implements OnCloseListener {
         }
 
         @Override
-        public void afterTextChanged(Editable s) {}
+        public void afterTextChanged(Editable s) {
+        }
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
     }
 
     /**
@@ -238,7 +244,7 @@ public class ActionBarAdapter implements OnCloseListener {
 
     /**
      * @return Whether in search mode, i.e. if the search view is visible/expanded.
-     *
+     * <p>
      * Note even if the action bar is in search mode, if the query is empty, the search fragment
      * will not be in search mode.
      */
@@ -275,7 +281,9 @@ public class ActionBarAdapter implements OnCloseListener {
         }
     }
 
-    /** @return true if the "UP" icon is showing. */
+    /**
+     * @return true if the "UP" icon is showing.
+     */
     public boolean isUpShowing() {
         return mSearchMode; // Only shown on the search mode.
     }

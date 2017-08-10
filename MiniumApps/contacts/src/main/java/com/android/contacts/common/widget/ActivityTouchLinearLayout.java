@@ -35,7 +35,7 @@ public class ActivityTouchLinearLayout extends LinearLayout {
     }
 
     @Override
-    public boolean onInterceptTouchEvent (MotionEvent ev) {
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             TouchPointManager.getInstance().setPoint((int) ev.getRawX(), (int) ev.getRawY());
         }

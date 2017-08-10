@@ -46,7 +46,7 @@ public class SmilLayoutElementImpl extends SmilElementImpl implements
         int childrenCount = childNodes.getLength();
         for (int i = 0; i < childrenCount; i++) {
             if (childNodes.item(i).getNodeName().equals("root-layout")) {
-                rootLayoutNode = (SMILRootLayoutElement)childNodes.item(i);
+                rootLayoutNode = (SMILRootLayoutElement) childNodes.item(i);
             }
         }
         if (null == rootLayoutNode) {

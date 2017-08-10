@@ -37,8 +37,6 @@ import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.main.ItemTouchHelperAdapter;
 import co.siempo.phone.main.ItemTouchHelperViewHolder;
 import co.siempo.phone.main.OnStartDragListener;
-import co.siempo.phone.msg.SmsEvent;
-import co.siempo.phone.msg.SmsEventType;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
 import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
 import de.greenrobot.event.EventBus;
@@ -53,7 +51,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     private final OnStartDragListener mDragStartListener;
 
-    public RecyclerListAdapter(Context context,List<Notification> notificationList, OnStartDragListener dragStartListener) {
+    public RecyclerListAdapter(Context context, List<Notification> notificationList, OnStartDragListener dragStartListener) {
         mContext = context;
         mDragStartListener = dragStartListener;
         this.notificationList = notificationList;
@@ -61,7 +59,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     }
 
 
-    public RecyclerListAdapter(Context context,List<Notification> notificationList) {
+    public RecyclerListAdapter(Context context, List<Notification> notificationList) {
         mContext = context;
         mDragStartListener = null;
         this.notificationList = notificationList;
@@ -71,7 +69,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.notification_card,parent, false);
+                .inflate(R.layout.notification_card, parent, false);
 
         ItemViewHolder itemViewHolder = new ItemViewHolder(view);
         return itemViewHolder;
@@ -79,24 +77,24 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
-        Notification notification  = notificationList.get(position);
+        Notification notification = notificationList.get(position);
         holder._name.setText(notification.getNotificationContactModel().getName());
         holder._text.setText(notification.get_text());
         holder._time.setText(notification.get_time());
         //holder.thumbnail.setImageResource(notification.get_image());
         try {
-            if (notification.getNotificationContactModel().getImage()!=null && !notification.getNotificationContactModel().getImage().equals("")){
+            if (notification.getNotificationContactModel().getImage() != null && !notification.getNotificationContactModel().getImage().equals("")) {
                 Glide.with(mContext)
                         .load(Uri.parse(notification.getNotificationContactModel().getImage()))
                         .placeholder(R.drawable.ic_person_black_24dp)
                         .into(holder.thumbnail);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-  //  }
+        //  }
 //        Glide.with(mContext).load(notification.getNotificationContactModel().getImage()).into(holder.thumbnail);
     }
 
@@ -112,7 +110,6 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         if (notificationList.isEmpty())
             EventBus.getDefault().post(new TopBarUpdateEvent());
     }
-
 
 
     @Override
@@ -133,7 +130,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
      */
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
-        public TextView _name, _text,_time;
+        public TextView _name, _text, _time;
         public ImageView overflow;
         public CircleImageView thumbnail;
 

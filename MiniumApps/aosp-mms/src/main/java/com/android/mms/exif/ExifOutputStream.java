@@ -16,9 +16,9 @@
 
 package com.android.mms.exif;
 
-import com.android.mms.LogTag;
-
 import android.util.Log;
+
+import com.android.mms.LogTag;
 
 import java.io.BufferedOutputStream;
 import java.io.FilterOutputStream;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
  * This class provides a way to replace the Exif header of a JPEG image.
  * <p>
  * Below is an example of writing EXIF data into a file
- *
+ * <p>
  * <pre>
  * public static void writeExif(byte[] jpeg, ExifData exif, String path) {
  *     OutputStream os = null;
@@ -244,7 +244,7 @@ class ExifOutputStream extends FilterOutputStream {
 
     private ArrayList<ExifTag> stripNullValueTags(ExifData data) {
         ArrayList<ExifTag> nullTags = new ArrayList<ExifTag>();
-        for(ExifTag t : data.getAllTags()) {
+        for (ExifTag t : data.getAllTags()) {
             if (t.getValue() == null && !ExifInterface.isOffsetTag(t.getTagId())) {
                 data.removeTag(t.getTagId(), t.getIfd());
                 nullTags.add(t);

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,36 +18,37 @@ import de.greenrobot.event.EventBus;
  * Created by tkb on 2017-02-24.
  */
 
-public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecyclerViewAdapter.ViewHolder>{
+public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecyclerViewAdapter.ViewHolder> {
 
     ArrayList<PauseDataModel> SubjectValues;
     Context context;
     View view1;
     ViewHolder viewHolder1;
 
-    public PauseRecyclerViewAdapter(Context context1, ArrayList<PauseDataModel> SubjectValues){
+    public PauseRecyclerViewAdapter(Context context1, ArrayList<PauseDataModel> SubjectValues) {
 
         this.SubjectValues = SubjectValues;
         context = context1;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView textView;
         public CheckBox option_checkbox;
-        public ViewHolder(View v){
+
+        public ViewHolder(View v) {
 
             super(v);
 
-            textView = (TextView)v.findViewById(R.id.name_textview);
-            option_checkbox = (CheckBox)v.findViewById(R.id.option_checkbox);
+            textView = (TextView) v.findViewById(R.id.name_textview);
+            option_checkbox = (CheckBox) v.findViewById(R.id.option_checkbox);
         }
     }
 
     @Override
-    public PauseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public PauseRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        view1 = LayoutInflater.from(context).inflate(R.layout.pause_pref_row,parent,false);
+        view1 = LayoutInflater.from(context).inflate(R.layout.pause_pref_row, parent, false);
 
         viewHolder1 = new ViewHolder(view1);
 
@@ -56,7 +56,7 @@ public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecycler
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position){
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         holder.textView.setText(SubjectValues.get(position).getName());
         holder.option_checkbox.setChecked(SubjectValues.get(position).getStatus());
@@ -70,7 +70,7 @@ public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecycler
     }
 
     @Override
-    public int getItemCount(){
+    public int getItemCount() {
 
         return SubjectValues.size();
     }

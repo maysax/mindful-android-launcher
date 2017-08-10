@@ -77,7 +77,7 @@ public class FormatUtils {
             }
             int j;
             for (j = 0; j < size; j++) {
-                if (array1[i+j] != array2[j]) {
+                if (array1[i + j] != array2[j]) {
                     break;
                 }
             }
@@ -91,16 +91,17 @@ public class FormatUtils {
 
     /**
      * Applies the given style to a range of the input CharSequence.
+     *
      * @param style The style to apply (see the style constants in {@link Typeface}).
      * @param input The CharSequence to style.
      * @param start Starting index of the range to style (will be clamped to be a minimum of 0).
-     * @param end Ending index of the range to style (will be clamped to a maximum of the input
-     *     length).
+     * @param end   Ending index of the range to style (will be clamped to a maximum of the input
+     *              length).
      * @param flags Bitmask for configuring behavior of the span.  See {@link android.text.Spanned}.
      * @return The styled CharSequence.
      */
     public static CharSequence applyStyleToSpan(int style, CharSequence input, int start, int end,
-            int flags) {
+                                                int flags) {
         // Enforce bounds of the char sequence.
         start = Math.max(0, start);
         end = Math.min(input.length(), end);
@@ -124,7 +125,9 @@ public class FormatUtils {
         }
     }
 
-    /** Returns a String that represents the content of the given {@link CharArrayBuffer}. */
+    /**
+     * Returns a String that represents the content of the given {@link CharArrayBuffer}.
+     */
     @VisibleForTesting
     public static String charArrayBufferToString(CharArrayBuffer buffer) {
         return new String(buffer.data, 0, buffer.sizeCopied);
@@ -135,7 +138,7 @@ public class FormatUtils {
      * <p>
      * If not found, returns -1.
      *
-     * @param text the text in which to search for the prefix
+     * @param text   the text in which to search for the prefix
      * @param prefix the text to find, in upper case letters
      */
     public static int indexOfWordPrefix(CharSequence text, String prefix) {

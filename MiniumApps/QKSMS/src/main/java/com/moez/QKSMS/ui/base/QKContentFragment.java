@@ -1,6 +1,7 @@
 package com.moez.QKSMS.ui.base;
 
 import android.os.Bundle;
+
 import com.moez.QKSMS.ui.ContentFragment;
 
 /**

@@ -17,14 +17,14 @@
 
 package com.android.mms.ui;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import android.content.Context;
 import android.util.Log;
 
 import com.android.mms.LogTag;
 import com.android.mms.model.Model;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * The factory of concrete presenters.
@@ -34,7 +34,7 @@ public class PresenterFactory {
     private static final String PRESENTER_PACKAGE = "com.android.mms.ui.";
 
     public static Presenter getPresenter(String className, Context context,
-            ViewInterface view, Model model) {
+                                         ViewInterface view, Model model) {
         try {
             if (className.indexOf(".") == -1) {
                 className = PRESENTER_PACKAGE + className;

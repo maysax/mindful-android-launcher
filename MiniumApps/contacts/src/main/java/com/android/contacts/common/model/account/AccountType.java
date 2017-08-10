@@ -27,7 +27,6 @@ import android.provider.ContactsContract.RawContacts;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
-
 import com.android.contacts.common.model.dataitem.DataKind;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
@@ -65,14 +64,14 @@ public abstract class AccountType {
     /**
      * Package that resources should be loaded from.  Will be null for embedded types, in which
      * case resources are stored in this package itself.
-     *
+     * <p>
      * TODO Clean up {@link #resourcePackageName}, {@link #syncAdapterPackageName} and
      * {@link #getViewContactNotifyServicePackageName()}.
-     *
+     * <p>
      * There's the following invariants:
      * - {@link #syncAdapterPackageName} is always set to the actual sync adapter package name.
      * - {@link #resourcePackageName} too is set to the same value, unless {@link #isEmbedded()},
-     *   in which case it'll be null.
+     * in which case it'll be null.
      * There's an unfortunate exception of {@link FallbackAccountType}.  Even though it
      * {@link #isEmbedded()}, but we set non-null to {@link #resourcePackageName} for unit tests.
      */
@@ -119,7 +118,7 @@ public abstract class AccountType {
     /**
      * @return Whether this type is an "embedded" type.  i.e. any of {@link FallbackAccountType},
      * {@link GoogleAccountType} or {@link ExternalAccountType}.
-     *
+     * <p>
      * If an embedded type cannot be initialized (i.e. if {@link #isInitialized()} returns
      * {@code false}) it's considered critical, and the application will crash.  On the other
      * hand if it's not an embedded type, we just skip loading the type.
@@ -141,7 +140,7 @@ public abstract class AccountType {
 
     /**
      * Returns an optional custom edit activity.
-     *
+     * <p>
      * Only makes sense for non-embedded account types.
      * The activity class should reside in the sync adapter package as determined by
      * {@link #syncAdapterPackageName}.
@@ -152,7 +151,7 @@ public abstract class AccountType {
 
     /**
      * Returns an optional custom new contact activity.
-     *
+     * <p>
      * Only makes sense for non-embedded account types.
      * The activity class should reside in the sync adapter package as determined by
      * {@link #syncAdapterPackageName}.
@@ -163,7 +162,7 @@ public abstract class AccountType {
 
     /**
      * Returns an optional custom invite contact activity.
-     *
+     * <p>
      * Only makes sense for non-embedded account types.
      * The activity class should reside in the sync adapter package as determined by
      * {@link #syncAdapterPackageName}.
@@ -175,7 +174,7 @@ public abstract class AccountType {
     /**
      * Returns an optional service that can be launched whenever a contact is being looked at.
      * This allows the sync adapter to provide more up-to-date information.
-     *
+     * <p>
      * The service class should reside in the sync adapter package as determined by
      * {@link #getViewContactNotifyServicePackageName()}.
      */
@@ -185,7 +184,7 @@ public abstract class AccountType {
 
     /**
      * TODO This is way too hacky should be removed.
-     *
+     * <p>
      * This is introduced for {@link GoogleAccountType} where {@link #syncAdapterPackageName}
      * is the authenticator package name but the notification service is in the sync adapter
      * package.  See {@link #resourcePackageName} -- we should clean up those.
@@ -194,7 +193,9 @@ public abstract class AccountType {
         return syncAdapterPackageName;
     }
 
-    /** Returns an optional Activity string that can be used to view the group. */
+    /**
+     * Returns an optional Activity string that can be used to view the group.
+     */
     public String getViewGroupActivity() {
         return null;
     }
@@ -262,12 +263,12 @@ public abstract class AccountType {
      * Return a string resource loaded from the given package (or the current package
      * if {@code packageName} is null), unless {@code resId} is -1, in which case it returns
      * {@code defaultValue}.
-     *
+     * <p>
      * (The behavior is undefined if the resource or package doesn't exist.)
      */
     @VisibleForTesting
     static CharSequence getResourceText(Context context, String packageName, int resId,
-            String defaultValue) {
+                                        String defaultValue) {
         if (resId != -1 && packageName != null) {
             final PackageManager pm = context.getPackageManager();
             return pm.getText(packageName, resId, null);
@@ -352,6 +353,7 @@ public abstract class AccountType {
         public boolean secondary;
         /**
          * The number of entries allowed for the type. -1 if not specified.
+         *
          * @see DataKind#typeOverallMax
          */
         public int specificMax;
@@ -381,7 +383,7 @@ public abstract class AccountType {
         @Override
         public boolean equals(Object object) {
             if (object instanceof EditType) {
-                final EditType other = (EditType)object;
+                final EditType other = (EditType) object;
                 return other.rawValue == rawValue;
             }
             return false;
@@ -503,7 +505,9 @@ public abstract class AccountType {
      */
     public static class DisplayLabelComparator implements Comparator<AccountType> {
         private final Context mContext;
-        /** {@link Comparator} for the current locale. */
+        /**
+         * {@link Comparator} for the current locale.
+         */
         private final Collator mCollator = Collator.getInstance();
 
         public DisplayLabelComparator(Context context) {

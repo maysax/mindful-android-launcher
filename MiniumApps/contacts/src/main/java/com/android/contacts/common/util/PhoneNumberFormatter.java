@@ -24,7 +24,8 @@ import android.widget.TextView;
 import com.android.contacts.common.GeoUtil;
 
 public final class PhoneNumberFormatter {
-    private PhoneNumberFormatter() {}
+    private PhoneNumberFormatter() {
+    }
 
     /**
      * Load {@link TextWatcherLoadAsyncTask} in a worker thread and set it to a {@link TextView}.
@@ -66,7 +67,7 @@ public final class PhoneNumberFormatter {
      * Delay-set {@link PhoneNumberFormattingTextWatcher} to a {@link TextView}.
      */
     public static final void setPhoneNumberFormattingTextWatcher(Context context,
-            TextView textView) {
+                                                                 TextView textView) {
         new TextWatcherLoadAsyncTask(GeoUtil.getCurrentCountryIso(context), textView)
                 .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[]) null);
     }

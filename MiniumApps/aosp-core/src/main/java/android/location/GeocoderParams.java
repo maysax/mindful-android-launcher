@@ -65,21 +65,21 @@ public class GeocoderParams implements Parcelable {
     }
 
     public static final Parcelable.Creator<GeocoderParams> CREATOR =
-        new Parcelable.Creator<GeocoderParams>() {
-        public GeocoderParams createFromParcel(Parcel in) {
-            GeocoderParams gp = new GeocoderParams();
-            String language = in.readString();
-            String country = in.readString();
-            String variant = in.readString();
-            gp.mLocale = new Locale(language, country, variant);
-            gp.mPackageName = in.readString();
-            return gp;
-        }
+            new Parcelable.Creator<GeocoderParams>() {
+                public GeocoderParams createFromParcel(Parcel in) {
+                    GeocoderParams gp = new GeocoderParams();
+                    String language = in.readString();
+                    String country = in.readString();
+                    String variant = in.readString();
+                    gp.mLocale = new Locale(language, country, variant);
+                    gp.mPackageName = in.readString();
+                    return gp;
+                }
 
-        public GeocoderParams[] newArray(int size) {
-            return new GeocoderParams[size];
-        }
-    };
+                public GeocoderParams[] newArray(int size) {
+                    return new GeocoderParams[size];
+                }
+            };
 
     public int describeContents() {
         return 0;

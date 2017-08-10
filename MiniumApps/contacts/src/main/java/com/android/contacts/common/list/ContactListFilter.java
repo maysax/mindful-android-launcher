@@ -41,7 +41,7 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
     /**
      * Obsolete filter which had been used in Honeycomb. This may be stored in
      * {@link SharedPreferences}, but should be replaced with ALL filter when it is found.
-     *
+     * <p>
      * TODO: "group" filter and relevant variables are all obsolete. Remove them.
      */
     private static final int FILTER_TYPE_GROUP = 1;
@@ -59,7 +59,7 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
     private String mId;
 
     public ContactListFilter(int filterType, String accountType, String accountName, String dataSet,
-            Drawable icon) {
+                             Drawable icon) {
         this.filterType = filterType;
         this.accountType = accountType;
         this.accountName = accountName;
@@ -72,7 +72,7 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
     }
 
     public static ContactListFilter createAccountFilter(String accountType, String accountName,
-            String dataSet, Drawable icon) {
+                                                        String dataSet, Drawable icon) {
         return new ContactListFilter(ContactListFilter.FILTER_TYPE_ACCOUNT, accountType,
                 accountName, dataSet, icon);
     }
@@ -165,11 +165,11 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
             return;
         }
         prefs.edit()
-            .putInt(KEY_FILTER_TYPE, filter == null ? FILTER_TYPE_DEFAULT : filter.filterType)
-            .putString(KEY_ACCOUNT_NAME, filter == null ? null : filter.accountName)
-            .putString(KEY_ACCOUNT_TYPE, filter == null ? null : filter.accountType)
-            .putString(KEY_DATA_SET, filter == null ? null : filter.dataSet)
-            .apply();
+                .putInt(KEY_FILTER_TYPE, filter == null ? FILTER_TYPE_DEFAULT : filter.filterType)
+                .putString(KEY_ACCOUNT_NAME, filter == null ? null : filter.accountName)
+                .putString(KEY_ACCOUNT_TYPE, filter == null ? null : filter.accountType)
+                .putString(KEY_DATA_SET, filter == null ? null : filter.dataSet)
+                .apply();
     }
 
     /**
@@ -213,20 +213,20 @@ public final class ContactListFilter implements Comparable<ContactListFilter>, P
 
     public static final Parcelable.Creator<ContactListFilter> CREATOR =
             new Parcelable.Creator<ContactListFilter>() {
-        @Override
-        public ContactListFilter createFromParcel(Parcel source) {
-            int filterType = source.readInt();
-            String accountName = source.readString();
-            String accountType = source.readString();
-            String dataSet = source.readString();
-            return new ContactListFilter(filterType, accountType, accountName, dataSet, null);
-        }
+                @Override
+                public ContactListFilter createFromParcel(Parcel source) {
+                    int filterType = source.readInt();
+                    String accountName = source.readString();
+                    String accountType = source.readString();
+                    String dataSet = source.readString();
+                    return new ContactListFilter(filterType, accountType, accountName, dataSet, null);
+                }
 
-        @Override
-        public ContactListFilter[] newArray(int size) {
-            return new ContactListFilter[size];
-        }
-    };
+                @Override
+                public ContactListFilter[] newArray(int size) {
+                    return new ContactListFilter[size];
+                }
+            };
 
     @Override
     public int describeContents() {

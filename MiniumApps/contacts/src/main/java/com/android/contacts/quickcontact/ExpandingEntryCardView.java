@@ -37,15 +37,13 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.View.OnCreateContextMenuListener;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,11 +88,11 @@ public class ExpandingEntryCardView extends CardView {
         private final int mIconResourceId;
 
         public Entry(int id, Drawable icon, String header, String subHeader, String text,
-                String primaryContentDescription, Intent intent, Drawable alternateIcon,
-                Intent alternateIntent, String alternateContentDescription,
-                boolean shouldApplyColor, boolean isEditable,
-                EntryContextMenuInfo entryContextMenuInfo, Drawable thirdIcon, Intent thirdIntent,
-                String thirdContentDescription, int iconResourceId) {
+                     String primaryContentDescription, Intent intent, Drawable alternateIcon,
+                     Intent alternateIntent, String alternateContentDescription,
+                     boolean shouldApplyColor, boolean isEditable,
+                     EntryContextMenuInfo entryContextMenuInfo, Drawable thirdIcon, Intent thirdIntent,
+                     String thirdContentDescription, int iconResourceId) {
             this(id, icon, header, subHeader, null, text, null, primaryContentDescription, intent,
                     alternateIcon,
                     alternateIntent, alternateContentDescription, shouldApplyColor, isEditable,
@@ -103,12 +101,12 @@ public class ExpandingEntryCardView extends CardView {
         }
 
         public Entry(int id, Drawable mainIcon, String header, String subHeader,
-                Drawable subHeaderIcon, String text, Drawable textIcon,
-                String primaryContentDescription, Intent intent,
-                Drawable alternateIcon, Intent alternateIntent, String alternateContentDescription,
-                boolean shouldApplyColor, boolean isEditable,
-                EntryContextMenuInfo entryContextMenuInfo, Drawable thirdIcon, Intent thirdIntent,
-                String thirdContentDescription, int iconResourceId) {
+                     Drawable subHeaderIcon, String text, Drawable textIcon,
+                     String primaryContentDescription, Intent intent,
+                     Drawable alternateIcon, Intent alternateIntent, String alternateContentDescription,
+                     boolean shouldApplyColor, boolean isEditable,
+                     EntryContextMenuInfo entryContextMenuInfo, Drawable thirdIcon, Intent thirdIntent,
+                     String thirdContentDescription, int iconResourceId) {
             mId = id;
             mIcon = mainIcon;
             mHeader = header;
@@ -209,6 +207,7 @@ public class ExpandingEntryCardView extends CardView {
 
     public interface ExpandingEntryCardViewListener {
         void onCollapse(int heightDelta);
+
         void onExpand(int heightDelta);
     }
 
@@ -235,7 +234,9 @@ public class ExpandingEntryCardView extends CardView {
     private int mThemeColor;
     private ColorFilter mThemeColorFilter;
     private boolean mIsAlwaysExpanded;
-    /** The ViewGroup to run the expand/collapse animation on */
+    /**
+     * The ViewGroup to run the expand/collapse animation on
+     */
     private ViewGroup mAnimationViewGroup;
     private LinearLayout mBadgeContainer;
     private final List<ImageView> mBadges;
@@ -288,8 +289,8 @@ public class ExpandingEntryCardView extends CardView {
      * @param entries The Entry list to display.
      */
     public void initialize(List<List<Entry>> entries, int numInitialVisibleEntries,
-            boolean isExpanded, boolean isAlwaysExpanded,
-            ExpandingEntryCardViewListener listener, ViewGroup animationViewGroup) {
+                           boolean isExpanded, boolean isAlwaysExpanded,
+                           ExpandingEntryCardViewListener listener, ViewGroup animationViewGroup) {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         mIsExpanded = isExpanded;
         mIsAlwaysExpanded = isAlwaysExpanded;
@@ -352,7 +353,7 @@ public class ExpandingEntryCardView extends CardView {
     }
 
     @Override
-    public void setOnCreateContextMenuListener (OnCreateContextMenuListener listener) {
+    public void setOnCreateContextMenuListener(OnCreateContextMenuListener listener) {
         mOnCreateContextMenuListener = listener;
     }
 
@@ -383,7 +384,7 @@ public class ExpandingEntryCardView extends CardView {
             int numInViewGroup = 0;
             int extraEntries = mCollapsedEntriesCount - mEntryViews.size();
             for (int i = 0; i < mEntryViews.size() && numInViewGroup < mCollapsedEntriesCount;
-                    i++) {
+                 i++) {
                 List<View> entryViewList = mEntryViews.get(i);
                 if (i > 0) {
                     View separator;
@@ -399,9 +400,9 @@ public class ExpandingEntryCardView extends CardView {
                 numInViewGroup++;
                 // Insert entries in this list to hit mCollapsedEntriesCount.
                 for (int j = 1;
-                        j < entryViewList.size() && numInViewGroup < mCollapsedEntriesCount &&
-                        extraEntries > 0;
-                        j++) {
+                     j < entryViewList.size() && numInViewGroup < mCollapsedEntriesCount &&
+                             extraEntries > 0;
+                     j++) {
                     addEntry(entryViewList.get(j));
                     numInViewGroup++;
                     extraEntries--;
@@ -423,8 +424,8 @@ public class ExpandingEntryCardView extends CardView {
             entry.setPadding(entry.getPaddingLeft(),
                     getResources().getDimensionPixelSize(
                             R.dimen.expanding_entry_card_item_padding_top) +
-                    getResources().getDimensionPixelSize(
-                            R.dimen.expanding_entry_card_null_title_top_extra_padding),
+                            getResources().getDimensionPixelSize(
+                                    R.dimen.expanding_entry_card_null_title_top_extra_padding),
                     entry.getPaddingRight(),
                     entry.getPaddingBottom());
         }
@@ -448,7 +449,7 @@ public class ExpandingEntryCardView extends CardView {
         if (entryIcon.getVisibility() == View.VISIBLE) {
             int imageWidthAndMargin =
                     res.getDimensionPixelSize(R.dimen.expanding_entry_card_item_icon_width) +
-                    res.getDimensionPixelSize(R.dimen.expanding_entry_card_item_image_spacing);
+                            res.getDimensionPixelSize(R.dimen.expanding_entry_card_item_image_spacing);
             marginStart += imageWidthAndMargin;
         }
         layoutParams.setMarginStart(marginStart);
@@ -596,7 +597,7 @@ public class ExpandingEntryCardView extends CardView {
     }
 
     private View createEntryView(LayoutInflater layoutInflater, final Entry entry,
-            int iconVisibility) {
+                                 int iconVisibility) {
         final EntryView view = (EntryView) layoutInflater.inflate(
                 R.layout.expanding_entry_card_item, this, false);
 
@@ -677,7 +678,7 @@ public class ExpandingEntryCardView extends CardView {
                             R.dimen.expanding_entry_card_item_no_icon_margin_top),
                     view.getPaddingEnd(),
                     view.getPaddingBottom());
-        } else if (iconVisibility == View.INVISIBLE &&  TextUtils.isEmpty(entry.getSubHeader())
+        } else if (iconVisibility == View.INVISIBLE && TextUtils.isEmpty(entry.getSubHeader())
                 && TextUtils.isEmpty(entry.getText())) {
             view.setPaddingRelative(view.getPaddingStart(), 0, view.getPaddingEnd(),
                     view.getPaddingBottom());
@@ -876,6 +877,7 @@ public class ExpandingEntryCardView extends CardView {
 
     /**
      * Sets the title text of this ExpandingEntryCardView.
+     *
      * @param title The title to set. A null title will result in the title being removed.
      */
     public void setTitle(String title) {
@@ -941,7 +943,7 @@ public class ExpandingEntryCardView extends CardView {
         private final boolean mIsSuperPrimary;
 
         public EntryContextMenuInfo(String copyText, String copyLabel, String mimeType, long id,
-                boolean isSuperPrimary) {
+                                    boolean isSuperPrimary) {
             mCopyText = copyText;
             mCopyLabel = copyLabel;
             mMimeType = mimeType;
@@ -997,9 +999,13 @@ public class ExpandingEntryCardView extends CardView {
         private final View mEntry;
         private final ImageView mAlternateIcon;
         private final ImageView mThirdIcon;
-        /** mTouchedView locks in a view on touch down */
+        /**
+         * mTouchedView locks in a view on touch down
+         */
         private View mTouchedView;
-        /** mSlop adds some space to account for touches that are just outside the hit area */
+        /**
+         * mSlop adds some space to account for touches that are just outside the hit area
+         */
         private int mSlop;
 
         public EntryTouchListener(View entry, ImageView alternateIcon, ImageView thirdIcon) {

@@ -12,12 +12,13 @@
         android:id="@+id/imgBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="fitXY"
         android:src="@drawable/pause_background"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null" />
 
-        <include layout="@layout/siempo_toolbar"/>
+    <include layout="@layout/siempo_toolbar" />
 
-      <TextView
+    <TextView
         android:id="@+id/txtRemainingTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,8 +26,8 @@
         android:fontFamily="sans-serif"
         android:layout_marginTop="105dp"
         android:layout_alignParentTop="true"
-          android:layout_centerHorizontal="true"
-          android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
         tools:text="30 minute" />
 
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
@@ -46,7 +47,7 @@
         app:show_thumb="false"
         app:is_touchable="false"
         app:wheel_active_color="@color/white"
-        app:wheel_unactive_color="@color/pauseSeekBarInactive"/>
+        app:wheel_unactive_color="@color/pauseSeekBarInactive" />
 
     <LinearLayout
         android:id="@+id/endingLayout"
@@ -63,7 +64,7 @@
             android:textSize="14sp"
             android:fontFamily="sans-serif"
             android:text="Ending at "
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/txtEndingTime"

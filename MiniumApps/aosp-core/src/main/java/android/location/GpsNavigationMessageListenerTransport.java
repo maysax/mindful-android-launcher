@@ -56,12 +56,12 @@ class GpsNavigationMessageListenerTransport
         public void onGpsNavigationMessageReceived(final GpsNavigationMessageEvent event) {
             ListenerOperation<GpsNavigationMessageEvent.Listener> operation =
                     new ListenerOperation<GpsNavigationMessageEvent.Listener>() {
-                @Override
-                public void execute(GpsNavigationMessageEvent.Listener listener)
-                        throws RemoteException {
-                    listener.onGpsNavigationMessageReceived(event);
-                }
-            };
+                        @Override
+                        public void execute(GpsNavigationMessageEvent.Listener listener)
+                                throws RemoteException {
+                            listener.onGpsNavigationMessageReceived(event);
+                        }
+                    };
 
             foreach(operation);
         }

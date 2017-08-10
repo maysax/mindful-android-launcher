@@ -57,7 +57,7 @@ public class SmilXmlSerializer {
         if (element.hasAttributes()) {
             NamedNodeMap attributes = element.getAttributes();
             for (int i = 0; i < attributes.getLength(); i++) {
-                Attr attribute = (Attr)attributes.item(i);
+                Attr attribute = (Attr) attributes.item(i);
                 writer.write(" " + attribute.getName());
                 writer.write("=\"" + attribute.getValue() + "\"");
             }

@@ -19,7 +19,9 @@ package android.content.pm;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/** @hide */
+/**
+ * @hide
+ */
 public class PackageCleanItem {
     public final int userId;
     public final String packageName;
@@ -38,7 +40,7 @@ public class PackageCleanItem {
         }
         try {
             if (obj != null) {
-                PackageCleanItem other = (PackageCleanItem)obj;
+                PackageCleanItem other = (PackageCleanItem) obj;
                 return userId == other.userId && packageName.equals(other.packageName)
                         && andCode == other.andCode;
             }

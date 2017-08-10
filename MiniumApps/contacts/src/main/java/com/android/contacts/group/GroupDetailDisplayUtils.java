@@ -34,13 +34,13 @@ public class GroupDetailDisplayUtils {
     }
 
     public static View getNewGroupSourceView(Context context) {
-        LayoutInflater inflater = (LayoutInflater)context.getSystemService(
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         return inflater.inflate(R.layout.group_source_button, null);
     }
 
     public static void bindGroupSourceView(Context context, View view, String accountTypeString,
-            String dataSet) {
+                                           String dataSet) {
         AccountTypeManager accountTypeManager = AccountTypeManager.getInstance(context);
         AccountType accountType = accountTypeManager.getAccountType(accountTypeString, dataSet);
 

@@ -61,7 +61,7 @@ public final class PhoneCapabilityTester {
     }
 
     private static void initialize(Context context) {
-        final TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+        final TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         sIsPhone = telephonyManager.isVoiceCapable();
         sIsSipPhone = sIsPhone && SipManager.isVoipSupported(context);
         sIsInitialized = true;

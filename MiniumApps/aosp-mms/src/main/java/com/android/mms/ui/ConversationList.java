@@ -95,17 +95,17 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     private static final boolean DEBUG = false;
     private static final boolean DEBUGCLEANUP = true;
 
-    private static final int THREAD_LIST_QUERY_TOKEN       = 1701;
-    private static final int UNREAD_THREADS_QUERY_TOKEN    = 1702;
-    public static final int DELETE_CONVERSATION_TOKEN      = 1801;
-    public static final int HAVE_LOCKED_MESSAGES_TOKEN     = 1802;
+    private static final int THREAD_LIST_QUERY_TOKEN = 1701;
+    private static final int UNREAD_THREADS_QUERY_TOKEN = 1702;
+    public static final int DELETE_CONVERSATION_TOKEN = 1801;
+    public static final int HAVE_LOCKED_MESSAGES_TOKEN = 1802;
     private static final int DELETE_OBSOLETE_THREADS_TOKEN = 1803;
 
     // IDs of the context menu items for the list of conversations.
-    public static final int MENU_DELETE               = 0;
-    public static final int MENU_VIEW                 = 1;
-    public static final int MENU_VIEW_CONTACT         = 2;
-    public static final int MENU_ADD_TO_CONTACTS      = 3;
+    public static final int MENU_DELETE = 0;
+    public static final int MENU_VIEW = 1;
+    public static final int MENU_VIEW_CONTACT = 2;
+    public static final int MENU_ADD_TO_CONTACTS = 3;
 
     private ThreadListQueryHandler mQueryHandler;
     private ConversationListAdapter mListAdapter;
@@ -228,8 +228,8 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     private void setupActionBar() {
         ActionBar actionBar = getActionBar();
 
-        ViewGroup v = (ViewGroup)LayoutInflater.from(this)
-            .inflate(R.layout.conversation_list_actionbar, null);
+        ViewGroup v = (ViewGroup) LayoutInflater.from(this)
+                .inflate(R.layout.conversation_list_actionbar, null);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
                 ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setCustomView(v,
@@ -237,16 +237,16 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
                         ActionBar.LayoutParams.WRAP_CONTENT,
                         Gravity.CENTER_VERTICAL | Gravity.RIGHT));
 
-        mUnreadConvCount = (TextView)v.findViewById(R.id.unread_conv_count);
+        mUnreadConvCount = (TextView) v.findViewById(R.id.unread_conv_count);
     }
 
     private final ConversationListAdapter.OnContentChangedListener mContentChangedListener =
-        new ConversationListAdapter.OnContentChangedListener() {
-        @Override
-        public void onContentChanged(ConversationListAdapter adapter) {
-            startAsyncQuery();
-        }
-    };
+            new ConversationListAdapter.OnContentChangedListener() {
+                @Override
+                public void onContentChanged(ConversationListAdapter adapter) {
+                    startAsyncQuery();
+                }
+            };
 
     private void initListAdapter() {
         mListAdapter = new ConversationListAdapter(this, null);
@@ -275,10 +275,10 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         // If we got all the info we needed
         if (smsAppIcon != null && smsAppInfo != null && smsAppIntent != null) {
             ImageView defaultSmsAppIconImageView =
-                    (ImageView)mSmsPromoBannerView.findViewById(R.id.banner_sms_default_app_icon);
+                    (ImageView) mSmsPromoBannerView.findViewById(R.id.banner_sms_default_app_icon);
             defaultSmsAppIconImageView.setImageDrawable(smsAppIcon);
             TextView smsPromoBannerTitle =
-                    (TextView)mSmsPromoBannerView.findViewById(R.id.banner_sms_promo_title);
+                    (TextView) mSmsPromoBannerView.findViewById(R.id.banner_sms_promo_title);
             String message = getResources().getString(R.string.banner_sms_promo_title_application,
                     smsAppInfo.loadLabel(packageManager));
             smsPromoBannerTitle.setText(message);
@@ -431,7 +431,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         for (int i = 0; i < getListView().getChildCount(); i++) {
             View view = getListView().getChildAt(i);
             if (view instanceof ConversationListItem) {
-                ConversationListItem item = (ConversationListItem)view;
+                ConversationListItem item = (ConversationListItem) view;
                 if (threadIds == null) {
                     item.unbind();
                 } else if (threadIds.contains(item.getConversation().getThreadId())) {
@@ -457,7 +457,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
     private void startAsyncQuery() {
         try {
-            ((TextView)(getListView().getEmptyView())).setText(R.string.loading_conversations);
+            ((TextView) (getListView().getEmptyView())).setText(R.string.loading_conversations);
 
             Conversation.startQueryForAll(mQueryHandler, THREAD_LIST_QUERY_TOKEN);
             Conversation.startQuery(mQueryHandler, UNREAD_THREADS_QUERY_TOKEN, Threads.READ + "=0");
@@ -538,7 +538,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             item.setVisible((mListAdapter.getCount() > 0) && mIsSmsEnabled);
         }
         item = menu.findItem(R.id.action_compose_new);
-        if (item != null ){
+        if (item != null) {
             // Dim compose if SMS is disabled because it will not work (will show a toast)
             item.getIcon().setAlpha(mIsSmsEnabled ? 255 : 127);
         }
@@ -561,7 +561,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_compose_new:
                 if (mIsSmsEnabled) {
                     createNewMessage();
@@ -612,7 +612,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         // clicked and load the data from the cursor.
         // (ConversationListAdapter extends CursorAdapter, so getItemAtPosition() should
         // return the cursor object, which is moved to the position passed in)
-        Cursor cursor  = (Cursor) getListView().getItemAtPosition(position);
+        Cursor cursor = (Cursor) getListView().getItemAtPosition(position);
         Conversation conv = Conversation.from(this, cursor);
         long tid = conv.getThreadId();
 
@@ -648,36 +648,36 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
     }
 
     private final OnCreateContextMenuListener mConvListOnCreateContextMenuListener =
-        new OnCreateContextMenuListener() {
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View v,
-                ContextMenuInfo menuInfo) {
-            Cursor cursor = mListAdapter.getCursor();
-            if (cursor == null || cursor.getPosition() < 0) {
-                return;
-            }
-            Conversation conv = Conversation.from(ConversationList.this, cursor);
-            ContactList recipients = conv.getRecipients();
-            menu.setHeaderTitle(recipients.formatNames(","));
+            new OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v,
+                                                ContextMenuInfo menuInfo) {
+                    Cursor cursor = mListAdapter.getCursor();
+                    if (cursor == null || cursor.getPosition() < 0) {
+                        return;
+                    }
+                    Conversation conv = Conversation.from(ConversationList.this, cursor);
+                    ContactList recipients = conv.getRecipients();
+                    menu.setHeaderTitle(recipients.formatNames(","));
 
-            AdapterView.AdapterContextMenuInfo info =
-                (AdapterView.AdapterContextMenuInfo) menuInfo;
-            menu.add(0, MENU_VIEW, 0, R.string.menu_view);
+                    AdapterView.AdapterContextMenuInfo info =
+                            (AdapterView.AdapterContextMenuInfo) menuInfo;
+                    menu.add(0, MENU_VIEW, 0, R.string.menu_view);
 
-            // Only show if there's a single recipient
-            if (recipients.size() == 1) {
-                // do we have this recipient in contacts?
-                if (recipients.get(0).existsInDatabase()) {
-                    menu.add(0, MENU_VIEW_CONTACT, 0, R.string.menu_view_contact);
-                } else {
-                    menu.add(0, MENU_ADD_TO_CONTACTS, 0, R.string.menu_add_to_contacts);
+                    // Only show if there's a single recipient
+                    if (recipients.size() == 1) {
+                        // do we have this recipient in contacts?
+                        if (recipients.get(0).existsInDatabase()) {
+                            menu.add(0, MENU_VIEW_CONTACT, 0, R.string.menu_view_contact);
+                        } else {
+                            menu.add(0, MENU_ADD_TO_CONTACTS, 0, R.string.menu_add_to_contacts);
+                        }
+                    }
+                    if (mIsSmsEnabled) {
+                        menu.add(0, MENU_DELETE, 0, R.string.menu_delete);
+                    }
                 }
-            }
-            if (mIsSmsEnabled) {
-                menu.add(0, MENU_DELETE, 0, R.string.menu_delete);
-            }
-        }
-    };
+            };
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -686,28 +686,28 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             Conversation conv = Conversation.from(ConversationList.this, cursor);
             long threadId = conv.getThreadId();
             switch (item.getItemId()) {
-            case MENU_DELETE: {
-                confirmDeleteThread(threadId, mQueryHandler);
-                break;
-            }
-            case MENU_VIEW: {
-                openThread(threadId);
-                break;
-            }
-            case MENU_VIEW_CONTACT: {
-                Contact contact = conv.getRecipients().get(0);
-                Intent intent = new Intent(Intent.ACTION_VIEW, contact.getUri());
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-                startActivity(intent);
-                break;
-            }
-            case MENU_ADD_TO_CONTACTS: {
-                String address = conv.getRecipients().get(0).getNumber();
-                startActivity(createAddContactIntent(address));
-                break;
-            }
-            default:
-                break;
+                case MENU_DELETE: {
+                    confirmDeleteThread(threadId, mQueryHandler);
+                    break;
+                }
+                case MENU_VIEW: {
+                    openThread(threadId);
+                    break;
+                }
+                case MENU_VIEW_CONTACT: {
+                    Contact contact = conv.getRecipients().get(0);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, contact.getUri());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                    startActivity(intent);
+                    break;
+                }
+                case MENU_ADD_TO_CONTACTS: {
+                    String address = conv.getRecipients().get(0).getNumber();
+                    startActivity(createAddContactIntent(address));
+                    break;
+                }
+                default:
+                    break;
             }
         }
         return super.onContextItemSelected(item);
@@ -731,8 +731,9 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
      * Start the process of putting up a dialog to confirm deleting a thread,
      * but first start a background query to see if any of the threads or thread
      * contain locked messages so we'll know how detailed of a UI to display.
+     *
      * @param threadId id of the thread to delete or -1 for all threads
-     * @param handler query handler to do the background locked query
+     * @param handler  query handler to do the background locked query
      */
     public static void confirmDeleteThread(long threadId, AsyncQueryHandler handler) {
         ArrayList<Long> threadIds = null;
@@ -747,8 +748,9 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
      * Start the process of putting up a dialog to confirm deleting threads,
      * but first start a background query to see if any of the threads
      * contain locked messages so we'll know how detailed of a UI to display.
+     *
      * @param threadIds list of threadIds to delete or null for all threads
-     * @param handler query handler to do the background locked query
+     * @param handler   query handler to do the background locked query
      */
     public static void confirmDeleteThreads(Collection<Long> threadIds, AsyncQueryHandler handler) {
         Conversation.startQueryHaveLockedMessages(handler, threadIds,
@@ -759,17 +761,18 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
      * Build and show the proper delete thread dialog. The UI is slightly different
      * depending on whether there are locked messages in the thread(s) and whether we're
      * deleting single/multiple threads or all threads.
-     * @param listener gets called when the delete button is pressed
-     * @param threadIds the thread IDs to be deleted (pass null for all threads)
+     *
+     * @param listener          gets called when the delete button is pressed
+     * @param threadIds         the thread IDs to be deleted (pass null for all threads)
      * @param hasLockedMessages whether the thread(s) contain locked messages
-     * @param context used to load the various UI elements
+     * @param context           used to load the various UI elements
      */
     public static void confirmDeleteThreadDialog(final DeleteThreadListener listener,
-            Collection<Long> threadIds,
-            boolean hasLockedMessages,
-            Context context) {
+                                                 Collection<Long> threadIds,
+                                                 boolean hasLockedMessages,
+                                                 Context context) {
         View contents = View.inflate(context, R.layout.delete_thread_dialog_view, null);
-        TextView msg = (TextView)contents.findViewById(R.id.message);
+        TextView msg = (TextView) contents.findViewById(R.id.message);
 
         if (threadIds == null) {
             msg.setText(R.string.confirm_delete_all_conversations);
@@ -777,10 +780,10 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
             // Show the number of threads getting deleted in the confirmation dialog.
             int cnt = threadIds.size();
             msg.setText(context.getResources().getQuantityString(
-                R.plurals.confirm_delete_conversation, cnt, cnt));
+                    R.plurals.confirm_delete_conversation, cnt, cnt));
         }
 
-        final CheckBox checkbox = (CheckBox)contents.findViewById(R.id.delete_locked);
+        final CheckBox checkbox = (CheckBox) contents.findViewById(R.id.delete_locked);
         if (!hasLockedMessages) {
             checkbox.setVisibility(View.GONE);
         } else {
@@ -795,12 +798,12 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.confirm_dialog_title)
-            .setIconAttribute(android.R.attr.alertDialogIcon)
-            .setCancelable(true)
-            .setPositiveButton(R.string.delete, listener)
-            .setNegativeButton(R.string.no, null)
-            .setView(contents)
-            .show();
+                .setIconAttribute(android.R.attr.alertDialogIcon)
+                .setCancelable(true)
+                .setPositiveButton(R.string.delete, listener)
+                .setNegativeButton(R.string.no, null)
+                .setView(contents)
+                .show();
     }
 
     private final OnKeyListener mThreadListKeyListener = new OnKeyListener() {
@@ -828,7 +831,7 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         private boolean mDeleteLockedMessages;
 
         public DeleteThreadListener(Collection<Long> threadIds, ConversationQueryHandler handler,
-                Context context) {
+                                    Context context) {
             mThreadIds = threadIds;
             mHandler = handler;
             mContext = context;
@@ -842,21 +845,21 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         public void onClick(DialogInterface dialog, final int whichButton) {
             MessageUtils.handleReadReport(mContext, mThreadIds,
                     PduHeaders.READ_STATUS__DELETED_WITHOUT_BEING_READ, new Runnable() {
-                @Override
-                public void run() {
-                    int token = DELETE_CONVERSATION_TOKEN;
-                    if (mContext instanceof ConversationList) {
-                        ((ConversationList)mContext).unbindListeners(mThreadIds);
-                    }
-                    if (mThreadIds == null) {
-                        Conversation.startDeleteAll(mHandler, token, mDeleteLockedMessages);
-                        DraftCache.getInstance().refresh();
-                    } else {
-                        Conversation.startDelete(mHandler, token, mDeleteLockedMessages,
-                                mThreadIds);
-                    }
-                }
-            });
+                        @Override
+                        public void run() {
+                            int token = DELETE_CONVERSATION_TOKEN;
+                            if (mContext instanceof ConversationList) {
+                                ((ConversationList) mContext).unbindListeners(mThreadIds);
+                            }
+                            if (mThreadIds == null) {
+                                Conversation.startDeleteAll(mHandler, token, mDeleteLockedMessages);
+                                DraftCache.getInstance().refresh();
+                            } else {
+                                Conversation.startDelete(mHandler, token, mDeleteLockedMessages,
+                                        mThreadIds);
+                            }
+                        }
+                    });
             dialog.dismiss();
         }
     }
@@ -908,64 +911,64 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
             switch (token) {
-            case THREAD_LIST_QUERY_TOKEN:
-                mListAdapter.changeCursor(cursor);
+                case THREAD_LIST_QUERY_TOKEN:
+                    mListAdapter.changeCursor(cursor);
 
-                if (mListAdapter.getCount() == 0) {
-                    ((TextView)(getListView().getEmptyView())).setText(R.string.no_conversations);
-                }
+                    if (mListAdapter.getCount() == 0) {
+                        ((TextView) (getListView().getEmptyView())).setText(R.string.no_conversations);
+                    }
 
-                if (mDoOnceAfterFirstQuery) {
-                    mDoOnceAfterFirstQuery = false;
-                    // Delay doing a couple of DB operations until we've initially queried the DB
-                    // for the list of conversations to display. We don't want to slow down showing
-                    // the initial UI.
+                    if (mDoOnceAfterFirstQuery) {
+                        mDoOnceAfterFirstQuery = false;
+                        // Delay doing a couple of DB operations until we've initially queried the DB
+                        // for the list of conversations to display. We don't want to slow down showing
+                        // the initial UI.
 
-                    // 1. Delete any obsolete threads. Obsolete threads are threads that aren't
-                    // referenced by at least one message in the pdu or sms tables.
-                    mHandler.post(mDeleteObsoleteThreadsRunnable);
+                        // 1. Delete any obsolete threads. Obsolete threads are threads that aren't
+                        // referenced by at least one message in the pdu or sms tables.
+                        mHandler.post(mDeleteObsoleteThreadsRunnable);
 
-                    // 2. Mark all the conversations as seen.
-                    Conversation.markAllConversationsAsSeen(getApplicationContext());
-                }
-                if (mSavedFirstVisiblePosition != AdapterView.INVALID_POSITION) {
-                    // Restore the list to its previous position.
-                    getListView().setSelectionFromTop(mSavedFirstVisiblePosition,
-                            mSavedFirstItemOffset);
-                    mSavedFirstVisiblePosition = AdapterView.INVALID_POSITION;
-                }
-                break;
+                        // 2. Mark all the conversations as seen.
+                        Conversation.markAllConversationsAsSeen(getApplicationContext());
+                    }
+                    if (mSavedFirstVisiblePosition != AdapterView.INVALID_POSITION) {
+                        // Restore the list to its previous position.
+                        getListView().setSelectionFromTop(mSavedFirstVisiblePosition,
+                                mSavedFirstItemOffset);
+                        mSavedFirstVisiblePosition = AdapterView.INVALID_POSITION;
+                    }
+                    break;
 
-            case UNREAD_THREADS_QUERY_TOKEN:
-                int count = 0;
-                if (cursor != null) {
-                    count = cursor.getCount();
-                    cursor.close();
-                }
-                mUnreadConvCount.setText(count > 0 ? Integer.toString(count) : null);
-                break;
+                case UNREAD_THREADS_QUERY_TOKEN:
+                    int count = 0;
+                    if (cursor != null) {
+                        count = cursor.getCount();
+                        cursor.close();
+                    }
+                    mUnreadConvCount.setText(count > 0 ? Integer.toString(count) : null);
+                    break;
 
-            case HAVE_LOCKED_MESSAGES_TOKEN:
-                if (ConversationList.this.isFinishing()) {
-                    Log.w(TAG, "ConversationList is finished, do nothing ");
+                case HAVE_LOCKED_MESSAGES_TOKEN:
+                    if (ConversationList.this.isFinishing()) {
+                        Log.w(TAG, "ConversationList is finished, do nothing ");
+                        if (cursor != null) {
+                            cursor.close();
+                        }
+                        return;
+                    }
+                    @SuppressWarnings("unchecked")
+                    Collection<Long> threadIds = (Collection<Long>) cookie;
+                    confirmDeleteThreadDialog(new DeleteThreadListener(threadIds, mQueryHandler,
+                                    ConversationList.this), threadIds,
+                            cursor != null && cursor.getCount() > 0,
+                            ConversationList.this);
                     if (cursor != null) {
                         cursor.close();
                     }
-                    return ;
-                }
-                @SuppressWarnings("unchecked")
-                Collection<Long> threadIds = (Collection<Long>)cookie;
-                confirmDeleteThreadDialog(new DeleteThreadListener(threadIds, mQueryHandler,
-                        ConversationList.this), threadIds,
-                        cursor != null && cursor.getCount() > 0,
-                        ConversationList.this);
-                if (cursor != null) {
-                    cursor.close();
-                }
-                break;
+                    break;
 
-            default:
-                Log.e(TAG, "onQueryComplete called with unknown token " + token);
+                default:
+                    Log.e(TAG, "onQueryComplete called with unknown token " + token);
             }
         }
 
@@ -973,48 +976,48 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
         protected void onDeleteComplete(int token, Object cookie, int result) {
             super.onDeleteComplete(token, cookie, result);
             switch (token) {
-            case DELETE_CONVERSATION_TOKEN:
-                long threadId = cookie != null ? (Long)cookie : -1;     // default to all threads
+                case DELETE_CONVERSATION_TOKEN:
+                    long threadId = cookie != null ? (Long) cookie : -1;     // default to all threads
 
-                if (threadId == -1) {
-                    // Rebuild the contacts cache now that all threads and their associated unique
-                    // recipients have been deleted.
-                    Contact.init(ConversationList.this);
-                } else {
-                    // Remove any recipients referenced by this single thread from the
-                    // contacts cache. It's possible for two or more threads to reference
-                    // the same contact. That's ok if we remove it. We'll recreate that contact
-                    // when we init all Conversations below.
-                    Conversation conv = Conversation.get(ConversationList.this, threadId, false);
-                    if (conv != null) {
-                        ContactList recipients = conv.getRecipients();
-                        for (Contact contact : recipients) {
-                            contact.removeFromCache();
+                    if (threadId == -1) {
+                        // Rebuild the contacts cache now that all threads and their associated unique
+                        // recipients have been deleted.
+                        Contact.init(ConversationList.this);
+                    } else {
+                        // Remove any recipients referenced by this single thread from the
+                        // contacts cache. It's possible for two or more threads to reference
+                        // the same contact. That's ok if we remove it. We'll recreate that contact
+                        // when we init all Conversations below.
+                        Conversation conv = Conversation.get(ConversationList.this, threadId, false);
+                        if (conv != null) {
+                            ContactList recipients = conv.getRecipients();
+                            for (Contact contact : recipients) {
+                                contact.removeFromCache();
+                            }
                         }
                     }
-                }
-                // Make sure the conversation cache reflects the threads in the DB.
-                Conversation.init(ConversationList.this);
+                    // Make sure the conversation cache reflects the threads in the DB.
+                    Conversation.init(ConversationList.this);
 
-                // Update the notification for new messages since they
-                // may be deleted.
-                MessagingNotification.nonBlockingUpdateNewMessageIndicator(ConversationList.this,
-                        MessagingNotification.THREAD_NONE, false);
-                // Update the notification for failed messages since they
-                // may be deleted.
-                MessagingNotification.nonBlockingUpdateSendFailedNotification(ConversationList.this);
+                    // Update the notification for new messages since they
+                    // may be deleted.
+                    MessagingNotification.nonBlockingUpdateNewMessageIndicator(ConversationList.this,
+                            MessagingNotification.THREAD_NONE, false);
+                    // Update the notification for failed messages since they
+                    // may be deleted.
+                    MessagingNotification.nonBlockingUpdateSendFailedNotification(ConversationList.this);
 
-                // Make sure the list reflects the delete
-                startAsyncQuery();
+                    // Make sure the list reflects the delete
+                    startAsyncQuery();
 
-                MmsWidgetProvider.notifyDatasetChanged(getApplicationContext());
-                break;
+                    MmsWidgetProvider.notifyDatasetChanged(getApplicationContext());
+                    break;
 
-            case DELETE_OBSOLETE_THREADS_TOKEN:
-                if (DEBUGCLEANUP) {
-                    LogTag.debug("onQueryComplete finished DELETE_OBSOLETE_THREADS_TOKEN");
-                }
-                break;
+                case DELETE_OBSOLETE_THREADS_TOKEN:
+                    if (DEBUGCLEANUP) {
+                        LogTag.debug("onQueryComplete finished DELETE_OBSOLETE_THREADS_TOKEN");
+                    }
+                    break;
             }
         }
     }
@@ -1032,25 +1035,25 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
             if (mMultiSelectActionBarView == null) {
                 mMultiSelectActionBarView = LayoutInflater.from(ConversationList.this)
-                    .inflate(R.layout.conversation_list_multi_select_actionbar, null);
+                        .inflate(R.layout.conversation_list_multi_select_actionbar, null);
 
                 mSelectedConvCount =
-                    (TextView)mMultiSelectActionBarView.findViewById(R.id.selected_conv_count);
+                        (TextView) mMultiSelectActionBarView.findViewById(R.id.selected_conv_count);
             }
             mode.setCustomView(mMultiSelectActionBarView);
-            ((TextView)mMultiSelectActionBarView.findViewById(R.id.title))
-                .setText(R.string.select_conversations);
+            ((TextView) mMultiSelectActionBarView.findViewById(R.id.title))
+                    .setText(R.string.select_conversations);
             return true;
         }
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             if (mMultiSelectActionBarView == null) {
-                ViewGroup v = (ViewGroup)LayoutInflater.from(ConversationList.this)
-                    .inflate(R.layout.conversation_list_multi_select_actionbar, null);
+                ViewGroup v = (ViewGroup) LayoutInflater.from(ConversationList.this)
+                        .inflate(R.layout.conversation_list_multi_select_actionbar, null);
                 mode.setCustomView(v);
 
-                mSelectedConvCount = (TextView)v.findViewById(R.id.selected_conv_count);
+                mSelectedConvCount = (TextView) v.findViewById(R.id.selected_conv_count);
             }
             return true;
         }
@@ -1073,19 +1076,19 @@ public class ConversationList extends ListActivity implements DraftCache.OnDraft
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            ConversationListAdapter adapter = (ConversationListAdapter)getListView().getAdapter();
+            ConversationListAdapter adapter = (ConversationListAdapter) getListView().getAdapter();
             adapter.uncheckAll();
             mSelectedThreadIds = null;
         }
 
         @Override
         public void onItemCheckedStateChanged(ActionMode mode,
-                int position, long id, boolean checked) {
+                                              int position, long id, boolean checked) {
             ListView listView = getListView();
             final int checkedCount = listView.getCheckedItemCount();
             mSelectedConvCount.setText(Integer.toString(checkedCount));
 
-            Cursor cursor  = (Cursor)listView.getItemAtPosition(position);
+            Cursor cursor = (Cursor) listView.getItemAtPosition(position);
             Conversation conv = Conversation.from(ConversationList.this, cursor);
             conv.setIsChecked(checked);
             long threadId = conv.getThreadId();

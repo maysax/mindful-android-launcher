@@ -25,7 +25,7 @@ public class DateUtils {
 
         Calendar now = Calendar.getInstance();
 
-        long unit = (long) Math.ceil ((now.getTimeInMillis() - cal.getTimeInMillis()) / (double) millis);
+        long unit = (long) Math.ceil((now.getTimeInMillis() - cal.getTimeInMillis()) / (double) millis);
         cal.setTimeInMillis(cal.getTimeInMillis() + millis * unit);
 
         //Tracer.d("nextIntervalMillis: " + SimpleDateFormat.getDateTimeInstance().format(cal.getTimeInMillis()) + " for mins " + (millis / 60 / 1000) + " unit: " + unit);

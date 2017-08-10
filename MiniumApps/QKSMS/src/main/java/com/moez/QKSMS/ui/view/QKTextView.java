@@ -10,12 +10,13 @@ import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.TextView;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.FontManager;
 import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.common.TypefaceManager;
-import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.common.utils.TextUtils;
+import com.moez.QKSMS.enums.QKPreference;
 import com.moez.QKSMS.ui.ThemeManager;
 import com.moez.QKSMS.ui.settings.SettingsFragment;
 

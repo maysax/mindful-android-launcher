@@ -34,7 +34,7 @@ public abstract class NoNullCursorAsyncQueryHandler extends AsyncQueryHandler {
 
     @Override
     public void startQuery(int token, Object cookie, Uri uri, String[] projection, String selection,
-            String[] selectionArgs, String orderBy) {
+                           String[] selectionArgs, String orderBy) {
         final CookieWithProjection projectionCookie = new CookieWithProjection(cookie, projection);
         super.startQuery(token, projectionCookie, uri, projection, selection, selectionArgs,
                 orderBy);

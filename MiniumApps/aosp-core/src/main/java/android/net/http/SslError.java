@@ -56,8 +56,9 @@ public class SslError {
 
     /**
      * The number of different SSL errors.
+     *
      * @deprecated This constant is not necessary for using the SslError API and
-     *             can change from release to release.
+     * can change from release to release.
      */
     // Update if you add a new SSL error!!!
     @Deprecated
@@ -82,7 +83,8 @@ public class SslError {
     /**
      * Creates a new SslError object using the supplied error and certificate.
      * The URL will be set to the empty string.
-     * @param error The SSL error
+     *
+     * @param error       The SSL error
      * @param certificate The associated SSL certificate
      * @deprecated Use {@link #SslError(int, SslCertificate, String)}
      */
@@ -94,7 +96,8 @@ public class SslError {
     /**
      * Creates a new SslError object using the supplied error and certificate.
      * The URL will be set to the empty string.
-     * @param error The SSL error
+     *
+     * @param error       The SSL error
      * @param certificate The associated SSL certificate
      * @deprecated Use {@link #SslError(int, X509Certificate, String)}
      */
@@ -106,9 +109,10 @@ public class SslError {
     /**
      * Creates a new SslError object using the supplied error, certificate and
      * URL.
-     * @param error The SSL error
+     *
+     * @param error       The SSL error
      * @param certificate The associated SSL certificate
-     * @param url The associated URL
+     * @param url         The associated URL
      */
     public SslError(int error, SslCertificate certificate, String url) {
         assert certificate != null;
@@ -121,9 +125,10 @@ public class SslError {
     /**
      * Creates a new SslError object using the supplied error, certificate and
      * URL.
-     * @param error The SSL error
+     *
+     * @param error       The SSL error
      * @param certificate The associated SSL certificate
-     * @param url The associated URL
+     * @param url         The associated URL
      */
     public SslError(int error, X509Certificate certificate, String url) {
         this(error, new SslCertificate(certificate), url);
@@ -131,10 +136,11 @@ public class SslError {
 
     /**
      * Creates an SslError object from a chromium error code.
-     * @param error The chromium error code
+     *
+     * @param error       The chromium error code
      * @param certificate The associated SSL certificate
-     * @param url The associated URL.
-     * @hide  chromium error codes only available inside the framework
+     * @param url         The associated URL.
+     * @hide chromium error codes only available inside the framework
      */
     public static SslError SslErrorFromChromiumErrorCode(
             int error, SslCertificate cert, String url) {
@@ -153,6 +159,7 @@ public class SslError {
 
     /**
      * Gets the SSL certificate associated with this object.
+     *
      * @return The SSL certificate, non-null.
      */
     public SslCertificate getCertificate() {
@@ -161,6 +168,7 @@ public class SslError {
 
     /**
      * Gets the URL associated with this object.
+     *
      * @return The URL, non-null.
      */
     public String getUrl() {
@@ -169,9 +177,10 @@ public class SslError {
 
     /**
      * Adds the supplied SSL error to the set.
+     *
      * @param error The SSL error to add
      * @return True if the error being added is a known SSL error, otherwise
-     *         false.
+     * false.
      */
     public boolean addError(int error) {
         boolean rval = (0 <= error && error < SslError.SSL_MAX_ERROR);
@@ -184,6 +193,7 @@ public class SslError {
 
     /**
      * Determines whether this object includes the supplied error.
+     *
      * @param error The SSL error to check for
      * @return True if this object includes the error, otherwise false.
      */
@@ -199,6 +209,7 @@ public class SslError {
     /**
      * Gets the most severe SSL error in this object's set of errors.
      * Returns -1 if the set is empty.
+     *
      * @return The most severe SSL error, or -1 if the set is empty.
      */
     public int getPrimaryError() {
@@ -218,6 +229,7 @@ public class SslError {
 
     /**
      * Returns a string representation of this object.
+     *
      * @return A String representation of this object.
      */
     public String toString() {

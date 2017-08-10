@@ -19,57 +19,64 @@ package android.os.storage;
 /**
  * Class that provides access to constants returned from StorageManager
  * and lower level MountService APIs.
- * 
+ *
  * @hide
  */
-public class StorageResultCode
-{
+public class StorageResultCode {
     /**
      * Operation succeeded.
+     *
      * @see android.os.storage.StorageManager
      */
-    public static final int OperationSucceeded               =  0;
+    public static final int OperationSucceeded = 0;
 
     /**
      * Operation failed: Internal error.
+     *
      * @see android.os.storage.StorageManager
      */
-    public static final int OperationFailedInternalError     = -1;
+    public static final int OperationFailedInternalError = -1;
 
     /**
      * Operation failed: Missing media.
+     *
      * @see android.os.storage.StorageManager
      */
-    public static final int OperationFailedNoMedia           = -2;
+    public static final int OperationFailedNoMedia = -2;
 
     /**
      * Operation failed: Media is blank.
+     *
      * @see android.os.storage.StorageManager
      */
-    public static final int OperationFailedMediaBlank        = -3;
+    public static final int OperationFailedMediaBlank = -3;
 
     /**
      * Operation failed: Media is corrupt.
+     *
      * @see android.os.storage.StorageManager
      */
-    public static final int OperationFailedMediaCorrupt      = -4;
+    public static final int OperationFailedMediaCorrupt = -4;
 
     /**
      * Operation failed: Storage not mounted.
+     *
      * @see android.os.storage.StorageManager
      */
-    public static final int OperationFailedStorageNotMounted  = -5;
+    public static final int OperationFailedStorageNotMounted = -5;
 
     /**
      * Operation failed: Storage is mounted.
+     *
      * @see android.os.storage.StorageManager
      */
-    public static final int OperationFailedStorageMounted     = -6;
+    public static final int OperationFailedStorageMounted = -6;
 
     /**
      * Operation failed: Storage is busy.
+     *
      * @see android.os.storage.StorageManager
      */
-    public static final int OperationFailedStorageBusy        = -7;
+    public static final int OperationFailedStorageBusy = -7;
 
 }

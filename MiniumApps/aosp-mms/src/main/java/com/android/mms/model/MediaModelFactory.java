@@ -17,14 +17,6 @@
 
 package com.android.mms.model;
 
-import java.io.IOException;
-
-import org.w3c.dom.smil.SMILMediaElement;
-import org.w3c.dom.smil.SMILRegionElement;
-import org.w3c.dom.smil.SMILRegionMediaElement;
-import org.w3c.dom.smil.Time;
-import org.w3c.dom.smil.TimeList;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -35,11 +27,19 @@ import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu.PduBody;
 import com.google.android.mms.pdu.PduPart;
 
+import org.w3c.dom.smil.SMILMediaElement;
+import org.w3c.dom.smil.SMILRegionElement;
+import org.w3c.dom.smil.SMILRegionMediaElement;
+import org.w3c.dom.smil.Time;
+import org.w3c.dom.smil.TimeList;
+
+import java.io.IOException;
+
 public class MediaModelFactory {
     private static final String TAG = LogTag.TAG;
 
     public static MediaModel getMediaModel(Context context,
-            SMILMediaElement sme, LayoutModel layouts, PduBody pb)
+                                           SMILMediaElement sme, LayoutModel layouts, PduBody pb)
             throws IOException, IllegalArgumentException, MmsException {
         String tag = sme.getTagName();
         String src = sme.getSrc();
@@ -80,16 +80,16 @@ public class MediaModelFactory {
     }
 
     private static String unescapeXML(String str) {
-        return str.replaceAll("&lt;","<")
-            .replaceAll("&gt;", ">")
-            .replaceAll("&quot;","\"")
-            .replaceAll("&apos;","'")
-            .replaceAll("&amp;", "&");
+        return str.replaceAll("&lt;", "<")
+                .replaceAll("&gt;", ">")
+                .replaceAll("&quot;", "\"")
+                .replaceAll("&apos;", "'")
+                .replaceAll("&amp;", "&");
     }
 
     private static MediaModel getRegionMediaModel(Context context,
-            String tag, String src, SMILRegionMediaElement srme,
-            LayoutModel layouts, PduPart part) throws IOException, MmsException {
+                                                  String tag, String src, SMILRegionMediaElement srme,
+                                                  LayoutModel layouts, PduPart part) throws IOException, MmsException {
         SMILRegionElement sre = srme.getRegion();
         if (sre != null) {
             RegionModel region = layouts.findRegionById(sre.getId());
@@ -116,14 +116,14 @@ public class MediaModelFactory {
 
     // When we encounter a content type we can't handle, such as "application/vnd.smaf", instead
     // of throwing an exception and crashing, insert an empty TextModel in its place.
-    private static MediaModel createEmptyTextModel(Context context,  RegionModel regionModel)
+    private static MediaModel createEmptyTextModel(Context context, RegionModel regionModel)
             throws IOException {
         return new TextModel(context, ContentType.TEXT_PLAIN, null, regionModel);
     }
 
     private static MediaModel getGenericMediaModel(Context context,
-            String tag, String src, SMILMediaElement sme, PduPart part,
-            RegionModel regionModel) throws IOException, MmsException {
+                                                   String tag, String src, SMILMediaElement sme, PduPart part,
+                                                   RegionModel regionModel) throws IOException, MmsException {
         byte[] bytes = part.getContentType();
         if (bytes == null) {
             throw new IllegalArgumentException(

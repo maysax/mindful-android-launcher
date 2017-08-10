@@ -28,14 +28,17 @@ import android.provider.ContactsContract.RawContacts;
  */
 public final class ContactLoaderUtils {
 
-    /** Static helper, not instantiable. */
-    private ContactLoaderUtils() {}
+    /**
+     * Static helper, not instantiable.
+     */
+    private ContactLoaderUtils() {
+    }
 
     /**
      * Transforms the given Uri and returns a Lookup-Uri that represents the contact.
      * For legacy contacts, a raw-contact lookup is performed. An {@link IllegalArgumentException}
      * can be thrown if the URI is null or the authority is not recognized.
-     *
+     * <p>
      * Do not call from the UI thread.
      */
     @SuppressWarnings("deprecation")

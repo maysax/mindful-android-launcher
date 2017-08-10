@@ -21,7 +21,7 @@ import android.util.Log;
 
 /**
  * Localized strings for the error codes defined in EventHandler.
- *
+ * <p>
  * {@hide}
  */
 public class ErrorStrings {
@@ -42,7 +42,7 @@ public class ErrorStrings {
      * If the code is unknown, we'll return a generic error message.
      */
     public static int getResource(int errorCode) {
-        switch(errorCode) {
+        switch (errorCode) {
             case EventHandler.OK:
                 return com.android.internal.R.string.httpErrorOk;
 

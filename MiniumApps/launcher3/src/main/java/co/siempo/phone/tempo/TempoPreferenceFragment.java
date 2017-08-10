@@ -12,7 +12,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.pause.PauseRecyclerViewAdapter;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.ui.CoreFragment;
 
@@ -38,10 +37,11 @@ public class TempoPreferenceFragment extends CoreFragment {
 
     @ViewById
     RecyclerView pref_recyclerview;
+
     @AfterViews
     void afterViews() {
         //String[] subjects =
-          //      {"Allow favorites","Allow calls"};
+        //      {"Allow favorites","Allow calls"};
         recylerViewLayoutManager =
                 new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         pref_recyclerview.setLayoutManager(recylerViewLayoutManager);

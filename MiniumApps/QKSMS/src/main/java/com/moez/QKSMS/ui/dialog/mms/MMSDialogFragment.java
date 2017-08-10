@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.utils.Units;
 import com.moez.QKSMS.ui.ThemeManager;
@@ -29,9 +30,9 @@ import com.moez.QKSMS.ui.view.QKTextView;
  * @author Moez Bhatti
  * @author Shane Creighton-Young
  * @since 2015-02-08
- *
+ * <p>
  * BaseDialogFragment is a backwards-compatible, Material-styled Dialog fragment.
- *
+ * <p>
  * To listen on results from BaseDialogFragment, launch it from a Fragment that implements
  * DialogFragmentListener. Then, the "onDialogFragmentResult" methods will get called much like
  * "onActivityResult".
@@ -94,12 +95,12 @@ public class MMSDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         // Restore the target fragment; this is our listener.
-        mListener = (DialogFragmentListener)getTargetFragment();
+        mListener = (DialogFragmentListener) getTargetFragment();
     }
 
     /**
      * Sets the listener of the the DialogFragment.
-     *
+     * <p>
      * The generic stuff is just to ensure that the listener is both a Fragment and a
      * DialogFragmentListener.
      */

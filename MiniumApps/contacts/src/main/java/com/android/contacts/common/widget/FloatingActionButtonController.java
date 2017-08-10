@@ -18,9 +18,9 @@ package com.android.contacts.common.widget;
 
 import android.app.Activity;
 import android.content.res.Resources;
+import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import android.view.View;
 
 import com.android.contacts.common.util.ViewUtil;
 import com.android.phone.common.animation.AnimUtils;
@@ -97,7 +97,7 @@ public class FloatingActionButtonController {
     /**
      * Aligns the FAB to the described location plus specified additional offsets.
      *
-     * @param align One of ALIGN_MIDDLE, ALIGN_QUARTER_RIGHT, or ALIGN_RIGHT.
+     * @param align   One of ALIGN_MIDDLE, ALIGN_QUARTER_RIGHT, or ALIGN_RIGHT.
      * @param offsetX Additional offsetX to translate by.
      * @param animate Whether or not to animate the transition.
      */
@@ -124,8 +124,9 @@ public class FloatingActionButtonController {
 
     /**
      * Resizes width and height of the floating action bar container.
+     *
      * @param dimension The new dimensions for the width and height.
-     * @param animate Whether to animate this change.
+     * @param animate   Whether to animate this change.
      */
     public void resize(int dimension, boolean animate) {
         if (animate) {
@@ -140,6 +141,7 @@ public class FloatingActionButtonController {
     /**
      * Scales the floating action button from no height and width to its actual dimensions. This is
      * an animation for showing the floating action button.
+     *
      * @param delayMs The delay for the effect, in milliseconds.
      */
     public void scaleIn(int delayMs) {

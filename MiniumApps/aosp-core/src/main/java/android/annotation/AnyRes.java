@@ -29,7 +29,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  * to be a resource reference of any type. If the specific type is known, use
  * one of the more specific annotations instead, such as {@link StringRes} or
  * {@link DrawableRes}.
- *
+ * <p>
  * {@hide}
  */
 @Documented

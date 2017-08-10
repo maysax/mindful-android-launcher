@@ -16,9 +16,7 @@
 package com.android.contacts.common.util;
 
 import android.content.Context;
-import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Locale;
@@ -32,6 +30,7 @@ public class TelephonyManagerUtils {
 
     /**
      * Gets the voicemail tag from Telephony Manager.
+     *
      * @param context Current application context
      * @return Voicemail tag, the alphabetic identifier associated with the voice mail number.
      */
@@ -44,14 +43,14 @@ public class TelephonyManagerUtils {
 
     /**
      * @return The ISO 3166-1 two letters country code of the country the user
-     *         is in based on the network location. If the network location does not exist, fall
-     *         back to the locale setting.
+     * is in based on the network location. If the network location does not exist, fall
+     * back to the locale setting.
      */
     public static String getCurrentCountryIso(Context context, Locale locale) {
         // Without framework function calls, this seems to be the most accurate location service
         // we can rely on.
         final TelephonyManager telephonyManager =
-            (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String countryIso = telephonyManager.getNetworkCountryIso().toUpperCase();
 
         if (countryIso == null) {

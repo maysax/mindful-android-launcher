@@ -1,16 +1,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/margin.2"
-    android:paddingLeft="@dimen/margin.2"
-    android:paddingRight="@dimen/margin.2"
-    android:paddingTop="@dimen/margin.2"
-    tools:context="minium.co.launcher2.ui.SearchFragment">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingBottom="@dimen/margin.2"
+    android:paddingLeft="@dimen/margin.2" android:paddingRight="@dimen/margin.2"
+    android:paddingTop="@dimen/margin.2" tools:context="minium.co.launcher2.ui.SearchFragment">
 
-    <minium.co.launcher2.ui.SearchLayout_
-        android:id="@+id/searchLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <minium.co.launcher2.ui.SearchLayout_ android:id="@+id/searchLayout"
+        android:layout_width="match_parent" android:layout_height="wrap_content" />
 
 </FrameLayout>

@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.List;
 

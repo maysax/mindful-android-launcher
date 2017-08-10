@@ -39,7 +39,9 @@ import android.view.ViewGroup;
  */
 public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
-    /** No resource constant. */
+    /**
+     * No resource constant.
+     */
     protected static final int NO_RESOURCE = 0;
 
     // Current context
@@ -55,6 +57,7 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Constructor
+     *
      * @param context the current context
      */
     protected AbstractWheelCustomAdapter(Context context) {
@@ -63,7 +66,8 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Constructor
-     * @param context the current context
+     *
+     * @param context      the current context
      * @param itemResource the resource ID for a layout file containing a TextView to use when instantiating items views
      */
     protected AbstractWheelCustomAdapter(Context context, int itemResource) {
@@ -75,6 +79,7 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Constructor
+     *
      * @param inflater the current inflater
      */
     protected AbstractWheelCustomAdapter(LayoutInflater inflater) {
@@ -83,7 +88,8 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Constructor
-     * @param inflater the current inflater
+     *
+     * @param inflater     the current inflater
      * @param itemResource the resource ID for a layout file containing a TextView to use when instantiating items views
      */
     protected AbstractWheelCustomAdapter(LayoutInflater inflater, int itemResource) {
@@ -93,6 +99,7 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Gets resource Id for items views
+     *
      * @return the item resource Id
      */
     public int getItemResource() {
@@ -101,6 +108,7 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Sets resource Id for items views
+     *
      * @param itemResourceId the resource Id to set
      */
     public void setItemResource(int itemResourceId) {
@@ -109,6 +117,7 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Gets resource Id for empty items views
+     *
      * @return the empty item resource Id
      */
     public int getEmptyItemResource() {
@@ -117,6 +126,7 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Sets resource Id for empty items views
+     *
      * @param emptyItemResourceId the empty item resource Id to set
      */
     public void setEmptyItemResource(int emptyItemResourceId) {
@@ -148,12 +158,14 @@ public abstract class AbstractWheelCustomAdapter extends AbstractWheelAdapter {
 
     /**
      * Configures item view.
+     *
      * @param view the custom view to be configured
      */
     abstract protected void configureItemView(View view, int index);
 
     /**
      * Loads view from resources
+     *
      * @param resource the resource Id
      * @return the loaded view or null if resource is not set
      */

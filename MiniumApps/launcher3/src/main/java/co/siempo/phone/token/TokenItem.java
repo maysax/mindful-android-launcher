@@ -74,4 +74,16 @@ public class TokenItem {
     public void setCompleteType(TokenCompleteType completeType) {
         this.completeType = completeType;
     }
+
+    @Override
+    public String toString() {
+        return "TokenItem{" +
+                "itemType=" + itemType +
+                ", isChipable=" + isChipable +
+                ", title='" + title + '\'' +
+                ", extra1='" + extra1 + '\'' +
+                ", extra2='" + extra2 + '\'' +
+                ", completeType=" + completeType +
+                '}';
+    }
 }

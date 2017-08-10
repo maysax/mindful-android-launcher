@@ -16,12 +16,6 @@
 
 package android.os;
 
-import static android.system.OsConstants.AF_UNIX;
-import static android.system.OsConstants.SEEK_SET;
-import static android.system.OsConstants.SOCK_STREAM;
-import static android.system.OsConstants.S_ISLNK;
-import static android.system.OsConstants.S_ISREG;
-
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.system.ErrnoException;
@@ -29,11 +23,6 @@ import android.system.Os;
 import android.system.OsConstants;
 import android.system.StructStat;
 import android.util.Log;
-
-import dalvik.system.CloseGuard;
-
-import libcore.io.IoUtils;
-import libcore.io.Memory;
 
 import java.io.Closeable;
 import java.io.File;
@@ -46,6 +35,16 @@ import java.io.InterruptedIOException;
 import java.net.DatagramSocket;
 import java.net.Socket;
 import java.nio.ByteOrder;
+
+import dalvik.system.CloseGuard;
+import libcore.io.IoUtils;
+import libcore.io.Memory;
+
+import static android.system.OsConstants.AF_UNIX;
+import static android.system.OsConstants.SEEK_SET;
+import static android.system.OsConstants.SOCK_STREAM;
+import static android.system.OsConstants.S_ISLNK;
+import static android.system.OsConstants.S_ISREG;
 
 /**
  * The FileDescriptor returned by {@link Parcel#readFileDescriptor}, allowing
@@ -95,12 +94,12 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * such that any application can read it.
      *
      * @deprecated Creating world-readable files is very dangerous, and likely
-     *             to cause security holes in applications. It is strongly
-     *             discouraged; instead, applications should use more formal
-     *             mechanism for interactions such as {@link ContentProvider},
-     *             {@link BroadcastReceiver}, and {@link android.app.Service}.
-     *             There are no guarantees that this access mode will remain on
-     *             a file, such as when it goes through a backup and restore.
+     * to cause security holes in applications. It is strongly
+     * discouraged; instead, applications should use more formal
+     * mechanism for interactions such as {@link ContentProvider},
+     * {@link BroadcastReceiver}, and {@link android.app.Service}.
+     * There are no guarantees that this access mode will remain on
+     * a file, such as when it goes through a backup and restore.
      */
     @Deprecated
     public static final int MODE_WORLD_READABLE = 0x00000001;
@@ -111,12 +110,12 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * such that any application can write it.
      *
      * @deprecated Creating world-writable files is very dangerous, and likely
-     *             to cause security holes in applications. It is strongly
-     *             discouraged; instead, applications should use more formal
-     *             mechanism for interactions such as {@link ContentProvider},
-     *             {@link BroadcastReceiver}, and {@link android.app.Service}.
-     *             There are no guarantees that this access mode will remain on
-     *             a file, such as when it goes through a backup and restore.
+     * to cause security holes in applications. It is strongly
+     * discouraged; instead, applications should use more formal
+     * mechanism for interactions such as {@link ContentProvider},
+     * {@link BroadcastReceiver}, and {@link android.app.Service}.
+     * There are no guarantees that this access mode will remain on
+     * a file, such as when it goes through a backup and restore.
      */
     @Deprecated
     public static final int MODE_WORLD_WRITEABLE = 0x00000002;
@@ -164,12 +163,16 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
         mClosed = true;
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public ParcelFileDescriptor(FileDescriptor fd) {
         this(fd, null);
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public ParcelFileDescriptor(FileDescriptor fd, FileDescriptor commChannel) {
         if (fd == null) {
             throw new NullPointerException("FileDescriptor must not be null");
@@ -185,14 +188,14 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      *
      * @param file The file to be opened.
      * @param mode The desired access mode, must be one of
-     *            {@link #MODE_READ_ONLY}, {@link #MODE_WRITE_ONLY}, or
-     *            {@link #MODE_READ_WRITE}; may also be any combination of
-     *            {@link #MODE_CREATE}, {@link #MODE_TRUNCATE},
-     *            {@link #MODE_WORLD_READABLE}, and
-     *            {@link #MODE_WORLD_WRITEABLE}.
+     *             {@link #MODE_READ_ONLY}, {@link #MODE_WRITE_ONLY}, or
+     *             {@link #MODE_READ_WRITE}; may also be any combination of
+     *             {@link #MODE_CREATE}, {@link #MODE_TRUNCATE},
+     *             {@link #MODE_WORLD_READABLE}, and
+     *             {@link #MODE_WORLD_WRITEABLE}.
      * @return a new ParcelFileDescriptor pointing to the given file.
      * @throws FileNotFoundException if the given file does not exist or can not
-     *             be opened with the requested mode.
+     *                               be opened with the requested mode.
      * @see #parseMode(String)
      */
     public static ParcelFileDescriptor open(File file, int mode) throws FileNotFoundException {
@@ -205,19 +208,19 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
     /**
      * Create a new ParcelFileDescriptor accessing a given file.
      *
-     * @param file The file to be opened.
-     * @param mode The desired access mode, must be one of
-     *            {@link #MODE_READ_ONLY}, {@link #MODE_WRITE_ONLY}, or
-     *            {@link #MODE_READ_WRITE}; may also be any combination of
-     *            {@link #MODE_CREATE}, {@link #MODE_TRUNCATE},
-     *            {@link #MODE_WORLD_READABLE}, and
-     *            {@link #MODE_WORLD_WRITEABLE}.
-     * @param handler to call listener from; must not be null.
+     * @param file     The file to be opened.
+     * @param mode     The desired access mode, must be one of
+     *                 {@link #MODE_READ_ONLY}, {@link #MODE_WRITE_ONLY}, or
+     *                 {@link #MODE_READ_WRITE}; may also be any combination of
+     *                 {@link #MODE_CREATE}, {@link #MODE_TRUNCATE},
+     *                 {@link #MODE_WORLD_READABLE}, and
+     *                 {@link #MODE_WORLD_WRITEABLE}.
+     * @param handler  to call listener from; must not be null.
      * @param listener to be invoked when the returned descriptor has been
-     *            closed; must not be null.
+     *                 closed; must not be null.
      * @return a new ParcelFileDescriptor pointing to the given file.
      * @throws FileNotFoundException if the given file does not exist or can not
-     *             be opened with the requested mode.
+     *                               be opened with the requested mode.
      * @see #parseMode(String)
      */
     public static ParcelFileDescriptor open(
@@ -288,7 +291,6 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * so you must still close that fd as well as the new ParcelFileDescriptor.
      *
      * @param fd The native fd that the ParcelFileDescriptor should dup.
-     *
      * @return Returns a new ParcelFileDescriptor holding a FileDescriptor
      * for a dup of the given fd.
      */
@@ -310,7 +312,6 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * responsible for closing it.  You must not close the fd yourself.
      *
      * @param fd The native fd that the ParcelFileDescriptor should adopt.
-     *
      * @return Returns a new ParcelFileDescriptor holding a FileDescriptor
      * for the given fd.
      */
@@ -329,9 +330,8 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      *
      * @param socket The Socket whose FileDescriptor is used to create
      *               a new ParcelFileDescriptor.
-     *
      * @return A new ParcelFileDescriptor with the FileDescriptor of the
-     *         specified Socket.
+     * specified Socket.
      */
     public static ParcelFileDescriptor fromSocket(Socket socket) {
         FileDescriptor fd = socket.getFileDescriptor$();
@@ -342,10 +342,9 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * Create a new ParcelFileDescriptor from the specified DatagramSocket.
      *
      * @param datagramSocket The DatagramSocket whose FileDescriptor is used
-     *               to create a new ParcelFileDescriptor.
-     *
+     *                       to create a new ParcelFileDescriptor.
      * @return A new ParcelFileDescriptor with the FileDescriptor of the
-     *         specified DatagramSocket.
+     * specified DatagramSocket.
      */
     public static ParcelFileDescriptor fromDatagramSocket(DatagramSocket datagramSocket) {
         FileDescriptor fd = datagramSocket.getFileDescriptor$();
@@ -360,9 +359,9 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
     public static ParcelFileDescriptor[] createPipe() throws IOException {
         try {
             final FileDescriptor[] fds = Os.pipe();
-            return new ParcelFileDescriptor[] {
+            return new ParcelFileDescriptor[]{
                     new ParcelFileDescriptor(fds[0]),
-                    new ParcelFileDescriptor(fds[1]) };
+                    new ParcelFileDescriptor(fds[1])};
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
@@ -382,9 +381,9 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
         try {
             final FileDescriptor[] comm = createCommSocketPair();
             final FileDescriptor[] fds = Os.pipe();
-            return new ParcelFileDescriptor[] {
+            return new ParcelFileDescriptor[]{
                     new ParcelFileDescriptor(fds[0], comm[0]),
-                    new ParcelFileDescriptor(fds[1], comm[1]) };
+                    new ParcelFileDescriptor(fds[1], comm[1])};
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
@@ -399,9 +398,9 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
             final FileDescriptor fd0 = new FileDescriptor();
             final FileDescriptor fd1 = new FileDescriptor();
             Os.socketpair(AF_UNIX, SOCK_STREAM, 0, fd0, fd1);
-            return new ParcelFileDescriptor[] {
+            return new ParcelFileDescriptor[]{
                     new ParcelFileDescriptor(fd0),
-                    new ParcelFileDescriptor(fd1) };
+                    new ParcelFileDescriptor(fd1)};
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
@@ -422,9 +421,9 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
             final FileDescriptor fd0 = new FileDescriptor();
             final FileDescriptor fd1 = new FileDescriptor();
             Os.socketpair(AF_UNIX, SOCK_STREAM, 0, fd0, fd1);
-            return new ParcelFileDescriptor[] {
+            return new ParcelFileDescriptor[]{
                     new ParcelFileDescriptor(fd0, comm[0]),
-                    new ParcelFileDescriptor(fd1, comm[1]) };
+                    new ParcelFileDescriptor(fd1, comm[1])};
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
@@ -437,21 +436,20 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
             Os.socketpair(AF_UNIX, SOCK_STREAM, 0, comm1, comm2);
             IoUtils.setBlocking(comm1, false);
             IoUtils.setBlocking(comm2, false);
-            return new FileDescriptor[] { comm1, comm2 };
+            return new FileDescriptor[]{comm1, comm2};
         } catch (ErrnoException e) {
             throw e.rethrowAsIOException();
         }
     }
 
     /**
-     * @hide Please use createPipe() or ContentProvider.openPipeHelper().
-     * Gets a file descriptor for a read-only copy of the given data.
-     *
      * @param data Data to copy.
      * @param name Name for the shared memory area that may back the file descriptor.
-     *        This is purely informative and may be {@code null}.
+     *             This is purely informative and may be {@code null}.
      * @return A ParcelFileDescriptor.
      * @throws IOException if there is an error while creating the shared memory area.
+     * @hide Please use createPipe() or ContentProvider.openPipeHelper().
+     * Gets a file descriptor for a read-only copy of the given data.
      */
     @Deprecated
     public static ParcelFileDescriptor fromData(byte[] data, String name) throws IOException {
@@ -469,6 +467,7 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * Converts a string representing a file mode, such as "rw", into a bitmask suitable for use
      * with {@link #open}.
      * <p>
+     *
      * @param mode The string representation of the file mode.
      * @return A bitmask representing the given file mode.
      * @throws IllegalArgumentException if the given string does not match a known file mode.
@@ -536,6 +535,7 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
     /**
      * This is needed for implementing AssetFileDescriptor.AutoCloseOutputStream,
      * and I really don't think we want it to be public.
+     *
      * @hide
      */
     public long seekTo(long pos) throws IOException {
@@ -595,8 +595,7 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * Close the ParcelFileDescriptor. This implementation closes the underlying
      * OS resources allocated to represent this stream.
      *
-     * @throws IOException
-     *             If an error occurs attempting to close this ParcelFileDescriptor.
+     * @throws IOException If an error occurs attempting to close this ParcelFileDescriptor.
      */
     @Override
     public void close() throws IOException {
@@ -646,6 +645,7 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
     /**
      * Called when the fd is being closed, for subclasses to release any other resources
      * associated with it, such as acquired providers.
+     *
      * @hide
      */
     public void releaseResources() {
@@ -760,11 +760,10 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * If this ParcelFileDescriptor is unable to detect remote errors, it will
      * return silently.
      *
-     * @throws IOException for normal errors.
-     * @throws FileDescriptorDetachedException
-     *            if the remote side called {@link #detachFd()}. Once detached, the remote
-     *            side is unable to communicate any errors through
-     *            {@link #closeWithError(String)}.
+     * @throws IOException                     for normal errors.
+     * @throws FileDescriptorDetachedException if the remote side called {@link #detachFd()}. Once detached, the remote
+     *                                         side is unable to communicate any errors through
+     *                                         {@link #closeWithError(String)}.
      * @see #canDetectErrors()
      */
     public void checkError() throws IOException {
@@ -931,12 +930,12 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
          * attached has been closed.
          *
          * @param e error state, or {@code null} if closed cleanly.
-         *        If the close event was the result of
-         *        {@link ParcelFileDescriptor#detachFd()}, this will be a
-         *        {@link FileDescriptorDetachedException}. After detach the
-         *        remote side may continue reading/writing to the underlying
-         *        {@link FileDescriptor}, but they can no longer deliver
-         *        reliable close/error events.
+         *          If the close event was the result of
+         *          {@link ParcelFileDescriptor#detachFd()}, this will be a
+         *          {@link FileDescriptorDetachedException}. After detach the
+         *          remote side may continue reading/writing to the underlying
+         *          {@link FileDescriptor}, but they can no longer deliver
+         *          reliable close/error events.
          */
         public void onClose(IOException e);
     }
@@ -958,18 +957,30 @@ public class ParcelFileDescriptor implements Parcelable, Closeable {
      * {@link ParcelFileDescriptor#readCommStatus(FileDescriptor, byte[])}.
      */
     private static class Status {
-        /** Special value indicating remote side died. */
+        /**
+         * Special value indicating remote side died.
+         */
         public static final int DEAD = -2;
-        /** Special value indicating no status should be written. */
+        /**
+         * Special value indicating no status should be written.
+         */
         public static final int SILENCE = -1;
 
-        /** Remote reported that everything went better than expected. */
+        /**
+         * Remote reported that everything went better than expected.
+         */
         public static final int OK = 0;
-        /** Remote reported error; length and message follow. */
+        /**
+         * Remote reported error; length and message follow.
+         */
         public static final int ERROR = 1;
-        /** Remote reported {@link #detachFd()} and went rogue. */
+        /**
+         * Remote reported {@link #detachFd()} and went rogue.
+         */
         public static final int DETACHED = 2;
-        /** Remote reported their object was finalized. */
+        /**
+         * Remote reported their object was finalized.
+         */
         public static final int LEAKED = 3;
 
         public final int status;

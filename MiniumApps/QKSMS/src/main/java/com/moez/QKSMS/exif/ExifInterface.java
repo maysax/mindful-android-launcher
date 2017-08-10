@@ -72,257 +72,258 @@ public class ExifInterface {
 
     // IFD 0
     public static final int TAG_IMAGE_WIDTH =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0100);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0100);
     public static final int TAG_IMAGE_LENGTH =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0101); // Image height
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0101); // Image height
     public static final int TAG_BITS_PER_SAMPLE =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0102);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0102);
     public static final int TAG_COMPRESSION =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0103);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0103);
     public static final int TAG_PHOTOMETRIC_INTERPRETATION =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0106);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0106);
     public static final int TAG_IMAGE_DESCRIPTION =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x010E);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x010E);
     public static final int TAG_MAKE =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x010F);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x010F);
     public static final int TAG_MODEL =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0110);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0110);
     public static final int TAG_STRIP_OFFSETS =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0111);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0111);
     public static final int TAG_ORIENTATION =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0112);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0112);
     public static final int TAG_SAMPLES_PER_PIXEL =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0115);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0115);
     public static final int TAG_ROWS_PER_STRIP =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0116);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0116);
     public static final int TAG_STRIP_BYTE_COUNTS =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0117);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0117);
     public static final int TAG_X_RESOLUTION =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x011A);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x011A);
     public static final int TAG_Y_RESOLUTION =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x011B);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x011B);
     public static final int TAG_PLANAR_CONFIGURATION =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x011C);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x011C);
     public static final int TAG_RESOLUTION_UNIT =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0128);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0128);
     public static final int TAG_TRANSFER_FUNCTION =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x012D);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x012D);
     public static final int TAG_SOFTWARE =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0131);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0131);
     public static final int TAG_DATE_TIME =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0132);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0132);
     public static final int TAG_ARTIST =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x013B);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x013B);
     public static final int TAG_WHITE_POINT =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x013E);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x013E);
     public static final int TAG_PRIMARY_CHROMATICITIES =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x013F);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x013F);
     public static final int TAG_Y_CB_CR_COEFFICIENTS =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0211);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0211);
     public static final int TAG_Y_CB_CR_SUB_SAMPLING =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0212);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0212);
     public static final int TAG_Y_CB_CR_POSITIONING =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0213);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0213);
     public static final int TAG_REFERENCE_BLACK_WHITE =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x0214);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x0214);
     public static final int TAG_COPYRIGHT =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x8298);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x8298);
     public static final int TAG_EXIF_IFD =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x8769);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x8769);
     public static final int TAG_GPS_IFD =
-        defineTag(IfdId.TYPE_IFD_0, (short) 0x8825);
+            defineTag(IfdId.TYPE_IFD_0, (short) 0x8825);
     // IFD 1
     public static final int TAG_JPEG_INTERCHANGE_FORMAT =
-        defineTag(IfdId.TYPE_IFD_1, (short) 0x0201);
+            defineTag(IfdId.TYPE_IFD_1, (short) 0x0201);
     public static final int TAG_JPEG_INTERCHANGE_FORMAT_LENGTH =
-        defineTag(IfdId.TYPE_IFD_1, (short) 0x0202);
+            defineTag(IfdId.TYPE_IFD_1, (short) 0x0202);
     // IFD Exif Tags
     public static final int TAG_EXPOSURE_TIME =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x829A);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x829A);
     public static final int TAG_F_NUMBER =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x829D);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x829D);
     public static final int TAG_EXPOSURE_PROGRAM =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x8822);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x8822);
     public static final int TAG_SPECTRAL_SENSITIVITY =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x8824);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x8824);
     public static final int TAG_ISO_SPEED_RATINGS =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x8827);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x8827);
     public static final int TAG_OECF =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x8828);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x8828);
     public static final int TAG_EXIF_VERSION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9000);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9000);
     public static final int TAG_DATE_TIME_ORIGINAL =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9003);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9003);
     public static final int TAG_DATE_TIME_DIGITIZED =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9004);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9004);
     public static final int TAG_COMPONENTS_CONFIGURATION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9101);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9101);
     public static final int TAG_COMPRESSED_BITS_PER_PIXEL =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9102);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9102);
     public static final int TAG_SHUTTER_SPEED_VALUE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9201);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9201);
     public static final int TAG_APERTURE_VALUE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9202);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9202);
     public static final int TAG_BRIGHTNESS_VALUE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9203);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9203);
     public static final int TAG_EXPOSURE_BIAS_VALUE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9204);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9204);
     public static final int TAG_MAX_APERTURE_VALUE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9205);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9205);
     public static final int TAG_SUBJECT_DISTANCE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9206);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9206);
     public static final int TAG_METERING_MODE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9207);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9207);
     public static final int TAG_LIGHT_SOURCE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9208);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9208);
     public static final int TAG_FLASH =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9209);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9209);
     public static final int TAG_FOCAL_LENGTH =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x920A);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x920A);
     public static final int TAG_SUBJECT_AREA =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9214);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9214);
     public static final int TAG_MAKER_NOTE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x927C);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x927C);
     public static final int TAG_USER_COMMENT =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9286);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9286);
     public static final int TAG_SUB_SEC_TIME =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9290);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9290);
     public static final int TAG_SUB_SEC_TIME_ORIGINAL =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9291);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9291);
     public static final int TAG_SUB_SEC_TIME_DIGITIZED =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9292);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0x9292);
     public static final int TAG_FLASHPIX_VERSION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA000);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA000);
     public static final int TAG_COLOR_SPACE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA001);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA001);
     public static final int TAG_PIXEL_X_DIMENSION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA002);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA002);
     public static final int TAG_PIXEL_Y_DIMENSION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA003);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA003);
     public static final int TAG_RELATED_SOUND_FILE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA004);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA004);
     public static final int TAG_INTEROPERABILITY_IFD =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA005);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA005);
     public static final int TAG_FLASH_ENERGY =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA20B);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA20B);
     public static final int TAG_SPATIAL_FREQUENCY_RESPONSE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA20C);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA20C);
     public static final int TAG_FOCAL_PLANE_X_RESOLUTION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA20E);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA20E);
     public static final int TAG_FOCAL_PLANE_Y_RESOLUTION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA20F);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA20F);
     public static final int TAG_FOCAL_PLANE_RESOLUTION_UNIT =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA210);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA210);
     public static final int TAG_SUBJECT_LOCATION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA214);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA214);
     public static final int TAG_EXPOSURE_INDEX =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA215);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA215);
     public static final int TAG_SENSING_METHOD =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA217);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA217);
     public static final int TAG_FILE_SOURCE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA300);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA300);
     public static final int TAG_SCENE_TYPE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA301);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA301);
     public static final int TAG_CFA_PATTERN =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA302);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA302);
     public static final int TAG_CUSTOM_RENDERED =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA401);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA401);
     public static final int TAG_EXPOSURE_MODE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA402);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA402);
     public static final int TAG_WHITE_BALANCE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA403);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA403);
     public static final int TAG_DIGITAL_ZOOM_RATIO =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA404);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA404);
     public static final int TAG_FOCAL_LENGTH_IN_35_MM_FILE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA405);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA405);
     public static final int TAG_SCENE_CAPTURE_TYPE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA406);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA406);
     public static final int TAG_GAIN_CONTROL =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA407);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA407);
     public static final int TAG_CONTRAST =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA408);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA408);
     public static final int TAG_SATURATION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA409);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA409);
     public static final int TAG_SHARPNESS =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA40A);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA40A);
     public static final int TAG_DEVICE_SETTING_DESCRIPTION =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA40B);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA40B);
     public static final int TAG_SUBJECT_DISTANCE_RANGE =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA40C);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA40C);
     public static final int TAG_IMAGE_UNIQUE_ID =
-        defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA420);
+            defineTag(IfdId.TYPE_IFD_EXIF, (short) 0xA420);
     // IFD GPS tags
     public static final int TAG_GPS_VERSION_ID =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 0);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 0);
     public static final int TAG_GPS_LATITUDE_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 1);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 1);
     public static final int TAG_GPS_LATITUDE =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 2);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 2);
     public static final int TAG_GPS_LONGITUDE_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 3);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 3);
     public static final int TAG_GPS_LONGITUDE =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 4);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 4);
     public static final int TAG_GPS_ALTITUDE_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 5);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 5);
     public static final int TAG_GPS_ALTITUDE =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 6);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 6);
     public static final int TAG_GPS_TIME_STAMP =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 7);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 7);
     public static final int TAG_GPS_SATTELLITES =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 8);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 8);
     public static final int TAG_GPS_STATUS =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 9);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 9);
     public static final int TAG_GPS_MEASURE_MODE =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 10);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 10);
     public static final int TAG_GPS_DOP =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 11);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 11);
     public static final int TAG_GPS_SPEED_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 12);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 12);
     public static final int TAG_GPS_SPEED =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 13);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 13);
     public static final int TAG_GPS_TRACK_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 14);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 14);
     public static final int TAG_GPS_TRACK =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 15);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 15);
     public static final int TAG_GPS_IMG_DIRECTION_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 16);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 16);
     public static final int TAG_GPS_IMG_DIRECTION =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 17);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 17);
     public static final int TAG_GPS_MAP_DATUM =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 18);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 18);
     public static final int TAG_GPS_DEST_LATITUDE_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 19);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 19);
     public static final int TAG_GPS_DEST_LATITUDE =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 20);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 20);
     public static final int TAG_GPS_DEST_LONGITUDE_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 21);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 21);
     public static final int TAG_GPS_DEST_LONGITUDE =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 22);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 22);
     public static final int TAG_GPS_DEST_BEARING_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 23);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 23);
     public static final int TAG_GPS_DEST_BEARING =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 24);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 24);
     public static final int TAG_GPS_DEST_DISTANCE_REF =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 25);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 25);
     public static final int TAG_GPS_DEST_DISTANCE =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 26);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 26);
     public static final int TAG_GPS_PROCESSING_METHOD =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 27);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 27);
     public static final int TAG_GPS_AREA_INFORMATION =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 28);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 28);
     public static final int TAG_GPS_DATE_STAMP =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 29);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 29);
     public static final int TAG_GPS_DIFFERENTIAL =
-        defineTag(IfdId.TYPE_IFD_GPS, (short) 30);
+            defineTag(IfdId.TYPE_IFD_GPS, (short) 30);
     // IFD Interoperability tags
     public static final int TAG_INTEROPERABILITY_INDEX =
-        defineTag(IfdId.TYPE_IFD_INTEROPERABILITY, (short) 1);
+            defineTag(IfdId.TYPE_IFD_INTEROPERABILITY, (short) 1);
 
     /**
      * Tags that contain offset markers. These are included in the banned
      * defines.
      */
     private static HashSet<Short> sOffsetTags = new HashSet<>();
+
     static {
         sOffsetTags.add(getTrueTagKey(TAG_GPS_IFD));
         sOffsetTags.add(getTrueTagKey(TAG_EXIF_IFD));
@@ -335,6 +336,7 @@ public class ExifInterface {
      * Tags with definitions that cannot be overridden (banned defines).
      */
     protected static HashSet<Short> sBannedDefines = new HashSet<>(sOffsetTags);
+
     static {
         sBannedDefines.add(getTrueTagKey(TAG_NULL));
         sBannedDefines.add(getTrueTagKey(TAG_JPEG_INTERCHANGE_FORMAT_LENGTH));
@@ -790,9 +792,9 @@ public class ExifInterface {
      * Writes the tags from this ExifInterface object into a jpeg image,
      * removing prior exif tags.
      *
-     * @param jpeg a byte array containing a jpeg compressed image.
+     * @param jpeg          a byte array containing a jpeg compressed image.
      * @param exifOutStream an OutputStream to which the jpeg image with added
-     *            exif tags will be written.
+     *                      exif tags will be written.
      * @throws java.io.IOException
      */
     public void writeExif(byte[] jpeg, OutputStream exifOutStream) throws IOException {
@@ -808,9 +810,9 @@ public class ExifInterface {
      * Writes the tags from this ExifInterface object into a jpeg compressed
      * bitmap, removing prior exif tags.
      *
-     * @param bmap a bitmap to compress and write exif into.
+     * @param bmap          a bitmap to compress and write exif into.
      * @param exifOutStream the OutputStream to which the jpeg image with added
-     *            exif tags will be written.
+     *                      exif tags will be written.
      * @throws java.io.IOException
      */
     public void writeExif(Bitmap bmap, OutputStream exifOutStream) throws IOException {
@@ -826,9 +828,9 @@ public class ExifInterface {
      * Writes the tags from this ExifInterface object into a jpeg stream,
      * removing prior exif tags.
      *
-     * @param jpegStream an InputStream containing a jpeg compressed image.
+     * @param jpegStream    an InputStream containing a jpeg compressed image.
      * @param exifOutStream an OutputStream to which the jpeg image with added
-     *            exif tags will be written.
+     *                      exif tags will be written.
      * @throws java.io.IOException
      */
     public void writeExif(InputStream jpegStream, OutputStream exifOutStream) throws IOException {
@@ -844,9 +846,9 @@ public class ExifInterface {
      * Writes the tags from this ExifInterface object into a jpeg image,
      * removing prior exif tags.
      *
-     * @param jpeg a byte array containing a jpeg compressed image.
+     * @param jpeg            a byte array containing a jpeg compressed image.
      * @param exifOutFileName a String containing the filepath to which the jpeg
-     *            image with added exif tags will be written.
+     *                        image with added exif tags will be written.
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
@@ -871,9 +873,9 @@ public class ExifInterface {
      * Writes the tags from this ExifInterface object into a jpeg compressed
      * bitmap, removing prior exif tags.
      *
-     * @param bmap a bitmap to compress and write exif into.
+     * @param bmap            a bitmap to compress and write exif into.
      * @param exifOutFileName a String containing the filepath to which the jpeg
-     *            image with added exif tags will be written.
+     *                        image with added exif tags will be written.
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
@@ -898,9 +900,9 @@ public class ExifInterface {
      * Writes the tags from this ExifInterface object into a jpeg stream,
      * removing prior exif tags.
      *
-     * @param jpegStream an InputStream containing a jpeg compressed image.
+     * @param jpegStream      an InputStream containing a jpeg compressed image.
      * @param exifOutFileName a String containing the filepath to which the jpeg
-     *            image with added exif tags will be written.
+     *                        image with added exif tags will be written.
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
@@ -925,9 +927,9 @@ public class ExifInterface {
      * Writes the tags from this ExifInterface object into a jpeg file, removing
      * prior exif tags.
      *
-     * @param jpegFileName a String containing the filepath for a jpeg file.
+     * @param jpegFileName    a String containing the filepath for a jpeg file.
      * @param exifOutFileName a String containing the filepath to which the jpeg
-     *            image with added exif tags will be written.
+     *                        image with added exif tags will be written.
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
@@ -956,7 +958,7 @@ public class ExifInterface {
      *
      * @param outStream an OutputStream to wrap.
      * @return an OutputStream that wraps the outStream parameter, and adds exif
-     *         metadata. A jpeg image should be written to this stream.
+     * metadata. A jpeg image should be written to this stream.
      */
     public OutputStream getExifWriterStream(OutputStream outStream) {
         if (outStream == null) {
@@ -976,7 +978,7 @@ public class ExifInterface {
      *
      * @param exifOutFileName an String containing a filepath for a jpeg file.
      * @return an OutputStream that writes to the exifOutFileName file, and adds
-     *         exif metadata. A jpeg image should be written to this stream.
+     * exif metadata. A jpeg image should be written to this stream.
      * @throws java.io.FileNotFoundException
      */
     public OutputStream getExifWriterStream(String exifOutFileName) throws FileNotFoundException {
@@ -999,11 +1001,11 @@ public class ExifInterface {
      * existing exif tags, this method will fail.
      *
      * @param filename a String containing a filepath for a jpeg file with exif
-     *            tags to rewrite.
-     * @param tags tags that will be written into the jpeg file over existing
-     *            tags if possible.
+     *                 tags to rewrite.
+     * @param tags     tags that will be written into the jpeg file over existing
+     *                 tags if possible.
      * @return true if success, false if could not overwrite. If false, no
-     *         changes are made to the file.
+     * changes are made to the file.
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
@@ -1057,12 +1059,12 @@ public class ExifInterface {
      * the given tags. If tags do not exist or do not have the same size as the
      * existing exif tags, this method will fail.
      *
-     * @param buf a ByteBuffer containing a jpeg file with existing exif tags to
-     *            rewrite.
+     * @param buf  a ByteBuffer containing a jpeg file with existing exif tags to
+     *             rewrite.
      * @param tags tags that will be written into the jpeg ByteBuffer over
-     *            existing tags if possible.
+     *             existing tags if possible.
      * @return true if success, false if could not overwrite. If false, no
-     *         changes are made to the ByteBuffer.
+     * changes are made to the ByteBuffer.
      * @throws java.io.IOException
      */
     public boolean rewriteExif(ByteBuffer buf, Collection<ExifTag> tags) throws IOException {
@@ -1084,8 +1086,8 @@ public class ExifInterface {
      * rewritten.
      *
      * @param filename a String containing a filepath for a jpeg file.
-     * @param tags tags that will be written into the jpeg file over existing
-     *            tags if possible.
+     * @param tags     tags that will be written into the jpeg file over existing
+     *                 tags if possible.
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      * @see #rewriteExif
@@ -1148,7 +1150,7 @@ public class ExifInterface {
      * exist.
      *
      * @param tagId a TID as defined in the exif standard (or with
-     *            {@link #defineTag}).
+     *              {@link #defineTag}).
      * @return a List of {@link ExifTag}s.
      */
     public List<ExifTag> getTagsForTagId(short tagId) {
@@ -1161,7 +1163,7 @@ public class ExifInterface {
      * exist.
      *
      * @param ifdId an IFD as defined in the exif standard (or with
-     *            {@link #defineTag}).
+     *              {@link #defineTag}).
      * @return a List of {@link ExifTag}s.
      */
     public List<ExifTag> getTagsForIfdId(int ifdId) {
@@ -1408,7 +1410,7 @@ public class ExifInterface {
      *
      * @param tagId a defined tag constant, e.g. {@link #TAG_IMAGE_WIDTH}.
      * @return the number of elements or {@link ExifTag#SIZE_UNDEFINED} if the
-     *         tag or the number of elements is not defined.
+     * tag or the number of elements is not defined.
      */
     public int getDefinedTagCount(int tagId) {
         int info = getTagInfo().get(tagId);
@@ -1424,8 +1426,8 @@ public class ExifInterface {
      * @param tagId a defined tag constant, e.g. {@link #TAG_IMAGE_WIDTH}.
      * @param ifdId the IFD containing the ExifTag to check.
      * @return the number of elements in the ExifTag, if the tag's size is
-     *         undefined this will return the actual number of elements that is
-     *         in the ExifTag's value.
+     * undefined this will return the actual number of elements that is
+     * in the ExifTag's value.
      */
     public int getActualTagCount(int tagId, int ifdId) {
         ExifTag t = getTag(tagId, ifdId);
@@ -1440,7 +1442,7 @@ public class ExifInterface {
      *
      * @param tagId a defined tag constant, e.g. {@link #TAG_IMAGE_WIDTH}.
      * @return the default IFD for a tag definition or {@link #IFD_NULL} if no
-     *         definition exists.
+     * definition exists.
      */
     public int getDefinedTagDefaultIfd(int tagId) {
         int info = getTagInfo().get(tagId);
@@ -1487,7 +1489,7 @@ public class ExifInterface {
      *
      * @param tagId a tag constant, e.g. {@link #TAG_IMAGE_WIDTH}.
      * @param ifdId the IFD that the tag should be in.
-     * @param val the value of the tag to set.
+     * @param val   the value of the tag to set.
      * @return an ExifTag object or null if one could not be constructed.
      * @see #buildTag
      */
@@ -1513,7 +1515,7 @@ public class ExifInterface {
      * Creates a tag for a defined tag constant in the tag's default IFD.
      *
      * @param tagId a tag constant, e.g. {@link #TAG_IMAGE_WIDTH}.
-     * @param val the tag's value.
+     * @param val   the tag's value.
      * @return an ExifTag object.
      */
     public ExifTag buildTag(int tagId, Object val) {
@@ -1540,9 +1542,9 @@ public class ExifInterface {
      *
      * @param tagId a tag constant, e.g. {@link #TAG_IMAGE_WIDTH}.
      * @param ifdId the IFD that the ExifTag is in.
-     * @param val the value to set.
+     * @param val   the value to set.
      * @return true if success, false if the ExifTag doesn't exist or the value
-     *         is the wrong type/length.
+     * is the wrong type/length.
      * @see #setTagValue
      */
     public boolean setTagValue(int tagId, int ifdId, Object val) {
@@ -1555,9 +1557,9 @@ public class ExifInterface {
      * must be the correct type and length for that ExifTag.
      *
      * @param tagId a tag constant, e.g. {@link #TAG_IMAGE_WIDTH}.
-     * @param val the value to set.
+     * @param val   the value to set.
      * @return true if success, false if the ExifTag doesn't exist or the value
-     *         is the wrong type/length.
+     * is the wrong type/length.
      */
     public boolean setTagValue(int tagId, Object val) {
         int ifdId = getDefinedTagDefaultIfd(tagId);
@@ -1571,7 +1573,7 @@ public class ExifInterface {
      *
      * @param tag an ExifTag to put into this ExifInterface's tags.
      * @return the previous ExifTag with the same TID and IFD or null if none
-     *         exists.
+     * exists.
      */
     public ExifTag setTag(ExifTag tag) {
         return mData.addTag(tag);
@@ -1615,17 +1617,17 @@ public class ExifInterface {
      * and default IFD. Creating a definition with the same TID and default IFD
      * as a previous definition will override it.
      *
-     * @param tagId the TID for the tag.
-     * @param defaultIfd the default IFD for the tag.
-     * @param tagType the type of the tag (see {@link ExifTag#getDataType()}).
+     * @param tagId                 the TID for the tag.
+     * @param defaultIfd            the default IFD for the tag.
+     * @param tagType               the type of the tag (see {@link ExifTag#getDataType()}).
      * @param defaultComponentCount the number of elements of this tag's type in
-     *            the tags value.
-     * @param allowedIfds the IFD's this tag is allowed to be put in.
+     *                              the tags value.
+     * @param allowedIfds           the IFD's this tag is allowed to be put in.
      * @return the defined tag constant (e.g. {@link #TAG_IMAGE_WIDTH}) or
-     *         {@link #TAG_NULL} if the definition could not be made.
+     * {@link #TAG_NULL} if the definition could not be made.
      */
     public int setTagDefinition(short tagId, int defaultIfd, short tagType,
-            short defaultComponentCount, int[] allowedIfds) {
+                                short defaultComponentCount, int[] allowedIfds) {
         if (sBannedDefines.contains(tagId)) {
             return TAG_NULL;
         }
@@ -1890,12 +1892,12 @@ public class ExifInterface {
      * coordinate.
      *
      * @param coordinate an array of 3 Rationals representing the degrees,
-     *            minutes, and seconds of the GPS location as defined in the
-     *            exif specification.
-     * @param reference a GPS reference reperesented by a String containing "N",
-     *            "S", "E", or "W".
+     *                   minutes, and seconds of the GPS location as defined in the
+     *                   exif specification.
+     * @param reference  a GPS reference reperesented by a String containing "N",
+     *                   "S", "E", or "W".
      * @return the GPS coordinate represented as degrees + minutes/60 +
-     *         seconds/3600
+     * seconds/3600
      */
     public static double convertLatOrLongToDouble(Rational[] coordinate, String reference) {
         try {
@@ -1917,7 +1919,7 @@ public class ExifInterface {
      * ExifInterface object's tags, or null if the necessary tags do not exist.
      *
      * @return an array of 2 doubles containing the latitude, and longitude
-     *         respectively.
+     * respectively.
      * @see #convertLatOrLongToDouble
      */
     public double[] getLatLongAsDoubles() {
@@ -1947,9 +1949,9 @@ public class ExifInterface {
      * {@link #TAG_DATE_TIME}, {@link #TAG_DATE_TIME_DIGITIZED},
      * {@link #TAG_DATE_TIME_ORIGINAL}.
      *
-     * @param tagId one of the DateTimeStamp tags.
+     * @param tagId     one of the DateTimeStamp tags.
      * @param timestamp a timestamp to format.
-     * @param timezone a TimeZone object.
+     * @param timezone  a TimeZone object.
      * @return true if success, false if the tag could not be set.
      */
     public boolean addDateTimeStampTag(int tagId, long timestamp, TimeZone timezone) {
@@ -1970,7 +1972,7 @@ public class ExifInterface {
     /**
      * Creates and sets all to the GPS tags for a give latitude and longitude.
      *
-     * @param latitude a GPS latitude coordinate.
+     * @param latitude  a GPS latitude coordinate.
      * @param longitude a GPS longitude coordinate.
      * @return true if success, false if they could not be created or set.
      */
@@ -2006,7 +2008,7 @@ public class ExifInterface {
         }
         setTag(t);
         mGPSTimeStampCalendar.setTimeInMillis(timestamp);
-        t = buildTag(TAG_GPS_TIME_STAMP, new Rational[] {
+        t = buildTag(TAG_GPS_TIME_STAMP, new Rational[]{
                 new Rational(mGPSTimeStampCalendar.get(Calendar.HOUR_OF_DAY), 1),
                 new Rational(mGPSTimeStampCalendar.get(Calendar.MINUTE), 1),
                 new Rational(mGPSTimeStampCalendar.get(Calendar.SECOND), 1)
@@ -2026,7 +2028,7 @@ public class ExifInterface {
         int minutes = (int) value;
         value = (value - minutes) * 6000;
         int seconds = (int) value;
-        return new Rational[] {
+        return new Rational[]{
                 new Rational(degrees, 1), new Rational(minutes, 1), new Rational(seconds, 100)
         };
     }
@@ -2136,7 +2138,7 @@ public class ExifInterface {
                 ifdFlags | ExifTag.TYPE_UNSIGNED_LONG << 16 | 1);
         // IFD1 tags
         int[] ifd1AllowedIfds = {
-            IfdId.TYPE_IFD_1
+                IfdId.TYPE_IFD_1
         };
         int ifdFlags1 = getFlagsFromAllowedIfds(ifd1AllowedIfds) << 24;
         mTagInfo.put(ExifInterface.TAG_JPEG_INTERCHANGE_FORMAT,
@@ -2145,7 +2147,7 @@ public class ExifInterface {
                 ifdFlags1 | ExifTag.TYPE_UNSIGNED_LONG << 16 | 1);
         // Exif tags
         int[] exifAllowedIfds = {
-            IfdId.TYPE_IFD_EXIF
+                IfdId.TYPE_IFD_EXIF
         };
         int exifFlags = getFlagsFromAllowedIfds(exifAllowedIfds) << 24;
         mTagInfo.put(ExifInterface.TAG_EXIF_VERSION,
@@ -2264,7 +2266,7 @@ public class ExifInterface {
                 | ExifTag.TYPE_UNSIGNED_LONG << 16 | 1);
         // GPS tag
         int[] gpsAllowedIfds = {
-            IfdId.TYPE_IFD_GPS
+                IfdId.TYPE_IFD_GPS
         };
         int gpsFlags = getFlagsFromAllowedIfds(gpsAllowedIfds) << 24;
         mTagInfo.put(ExifInterface.TAG_GPS_VERSION_ID,
@@ -2327,7 +2329,7 @@ public class ExifInterface {
                 gpsFlags | ExifTag.TYPE_UNSIGNED_SHORT << 16 | 11);
         // Interoperability tag
         int[] interopAllowedIfds = {
-            IfdId.TYPE_IFD_INTEROPERABILITY
+                IfdId.TYPE_IFD_INTEROPERABILITY
         };
         int interopFlags = getFlagsFromAllowedIfds(interopAllowedIfds) << 24;
         mTagInfo.put(TAG_INTEROPERABILITY_INDEX, interopFlags | ExifTag.TYPE_ASCII << 16

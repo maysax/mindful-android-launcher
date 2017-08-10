@@ -41,7 +41,7 @@ public class SearchUtil {
      * Given a string with lines delimited with '\n', finds the matching line to the given
      * substring.
      *
-     * @param contents The string to search.
+     * @param contents  The string to search.
      * @param substring The substring to search for.
      * @return A MatchedLine object containing the matching line and the startIndex of the substring
      * match within that line.
@@ -82,10 +82,10 @@ public class SearchUtil {
      * <p>
      * 2) Returns the starting index where the substring is found.
      *
-     * @param value The string to search.
+     * @param value     The string to search.
      * @param substring The substring to look for.
      * @return The starting index where the substring is found. {@literal -1} if substring is not
-     *         found in value.
+     * found in value.
      */
     @VisibleForTesting
     static int contains(String value, String substring) {
@@ -127,7 +127,7 @@ public class SearchUtil {
      * Find the start of the next token.  A token is composed of letters and numbers. Any other
      * character are considered delimiters.
      *
-     * @param line The string to search for the next token.
+     * @param line       The string to search for the next token.
      * @param startIndex The index to start searching.  0 based indexing.
      * @return The index for the start of the next token.  line.length() if next token not found.
      */

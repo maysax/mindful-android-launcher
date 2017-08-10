@@ -29,17 +29,19 @@ public class NetworkState implements Parcelable {
     public final NetworkInfo networkInfo;
     public final LinkProperties linkProperties;
     public final NetworkCapabilities networkCapabilities;
-    /** Currently only used by testing. */
+    /**
+     * Currently only used by testing.
+     */
     public final String subscriberId;
     public final String networkId;
 
     public NetworkState(NetworkInfo networkInfo, LinkProperties linkProperties,
-            NetworkCapabilities networkCapabilities) {
+                        NetworkCapabilities networkCapabilities) {
         this(networkInfo, linkProperties, networkCapabilities, null, null);
     }
 
     public NetworkState(NetworkInfo networkInfo, LinkProperties linkProperties,
-            NetworkCapabilities networkCapabilities, String subscriberId, String networkId) {
+                        NetworkCapabilities networkCapabilities, String subscriberId, String networkId) {
         this.networkInfo = networkInfo;
         this.linkProperties = linkProperties;
         this.networkCapabilities = networkCapabilities;

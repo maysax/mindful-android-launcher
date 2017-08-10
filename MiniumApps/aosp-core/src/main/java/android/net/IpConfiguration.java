@@ -24,6 +24,7 @@ import java.util.Objects;
 
 /**
  * A class representing a configured network.
+ *
  * @hide
  */
 public class IpConfiguration implements Parcelable {
@@ -90,7 +91,7 @@ public class IpConfiguration implements Parcelable {
         this();
         if (source != null) {
             init(source.ipAssignment, source.proxySettings,
-                 source.staticIpConfiguration, source.httpProxy);
+                    source.staticIpConfiguration, source.httpProxy);
         }
     }
 
@@ -165,17 +166,21 @@ public class IpConfiguration implements Parcelable {
     @Override
     public int hashCode() {
         return 13 + (staticIpConfiguration != null ? staticIpConfiguration.hashCode() : 0) +
-               17 * ipAssignment.ordinal() +
-               47 * proxySettings.ordinal() +
-               83 * httpProxy.hashCode();
+                17 * ipAssignment.ordinal() +
+                47 * proxySettings.ordinal() +
+                83 * httpProxy.hashCode();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface  */
+    /**
+     * Implement the Parcelable interface
+     */
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(ipAssignment.name());
         dest.writeString(proxySettings.name());
@@ -183,20 +188,22 @@ public class IpConfiguration implements Parcelable {
         dest.writeParcelable(httpProxy, flags);
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static final Creator<IpConfiguration> CREATOR =
-        new Creator<IpConfiguration>() {
-            public IpConfiguration createFromParcel(Parcel in) {
-                IpConfiguration config = new IpConfiguration();
-                config.ipAssignment = IpAssignment.valueOf(in.readString());
-                config.proxySettings = ProxySettings.valueOf(in.readString());
-                config.staticIpConfiguration = in.readParcelable(null);
-                config.httpProxy = in.readParcelable(null);
-                return config;
-            }
+            new Creator<IpConfiguration>() {
+                public IpConfiguration createFromParcel(Parcel in) {
+                    IpConfiguration config = new IpConfiguration();
+                    config.ipAssignment = IpAssignment.valueOf(in.readString());
+                    config.proxySettings = ProxySettings.valueOf(in.readString());
+                    config.staticIpConfiguration = in.readParcelable(null);
+                    config.httpProxy = in.readParcelable(null);
+                    return config;
+                }
 
-            public IpConfiguration[] newArray(int size) {
-                return new IpConfiguration[size];
-            }
-        };
+                public IpConfiguration[] newArray(int size) {
+                    return new IpConfiguration[size];
+                }
+            };
 }

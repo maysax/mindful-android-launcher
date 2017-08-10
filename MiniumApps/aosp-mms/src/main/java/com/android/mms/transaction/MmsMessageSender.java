@@ -30,7 +30,6 @@ import android.provider.Telephony.MmsSms.PendingMessages;
 import android.util.Log;
 
 import com.android.mms.LogTag;
-import com.android.mms.ui.ComposeMessageActivity;
 import com.android.mms.ui.MessagingPreferenceActivity;
 import com.android.mms.util.SendingProgressTokenManager;
 import com.google.android.mms.InvalidHeaderValueException;
@@ -51,11 +50,11 @@ public class MmsMessageSender implements MessageSender {
     private final long mMessageSize;
 
     // Default preference values
-    private static final boolean DEFAULT_DELIVERY_REPORT_MODE  = false;
-    private static final boolean DEFAULT_READ_REPORT_MODE      = false;
-    private static final long    DEFAULT_EXPIRY_TIME     = 7 * 24 * 60 * 60;
-    private static final int     DEFAULT_PRIORITY        = PduHeaders.PRIORITY_NORMAL;
-    private static final String  DEFAULT_MESSAGE_CLASS   = PduHeaders.MESSAGE_CLASS_PERSONAL_STR;
+    private static final boolean DEFAULT_DELIVERY_REPORT_MODE = false;
+    private static final boolean DEFAULT_READ_REPORT_MODE = false;
+    private static final long DEFAULT_EXPIRY_TIME = 7 * 24 * 60 * 60;
+    private static final int DEFAULT_PRIORITY = PduHeaders.PRIORITY_NORMAL;
+    private static final String DEFAULT_MESSAGE_CLASS = PduHeaders.MESSAGE_CLASS_PERSONAL_STR;
 
     public MmsMessageSender(Context context, Uri location, long messageSize) {
         mContext = context;
@@ -140,12 +139,12 @@ public class MmsMessageSender implements MessageSender {
         // Delivery report.
         boolean dr = prefs.getBoolean(MessagingPreferenceActivity.MMS_DELIVERY_REPORT_MODE,
                 DEFAULT_DELIVERY_REPORT_MODE);
-        sendReq.setDeliveryReport(dr?PduHeaders.VALUE_YES:PduHeaders.VALUE_NO);
+        sendReq.setDeliveryReport(dr ? PduHeaders.VALUE_YES : PduHeaders.VALUE_NO);
 
         // Read report.
         boolean rr = prefs.getBoolean(MessagingPreferenceActivity.READ_REPORT_MODE,
                 DEFAULT_READ_REPORT_MODE);
-        sendReq.setReadReport(rr?PduHeaders.VALUE_YES:PduHeaders.VALUE_NO);
+        sendReq.setReadReport(rr ? PduHeaders.VALUE_YES : PduHeaders.VALUE_NO);
     }
 
     public static void sendReadRec(Context context, String to, String messageId, int status) {

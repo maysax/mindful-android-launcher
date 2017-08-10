@@ -59,7 +59,7 @@ public class ConversationListAdapter extends CursorAdapter implements AbsListVie
     }
 
     public void onMovedToScrapHeap(View view) {
-        ConversationListItem headerView = (ConversationListItem)view;
+        ConversationListItem headerView = (ConversationListItem) view;
         headerView.unbind();
     }
 
@@ -89,7 +89,7 @@ public class ConversationListAdapter extends CursorAdapter implements AbsListVie
     public void uncheckAll() {
         int count = getCount();
         for (int i = 0; i < count; i++) {
-            Cursor cursor = (Cursor)getItem(i);
+            Cursor cursor = (Cursor) getItem(i);
             Conversation conv = Conversation.from(mContext, cursor);
             conv.setIsChecked(false);
         }

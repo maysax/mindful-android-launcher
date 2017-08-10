@@ -96,7 +96,7 @@ public class ContactTileAdapter extends BaseAdapter {
          * Display all contacts from a group in the cursor
          * Use {@link com.android.contacts.GroupMemberLoader}
          * when passing {@link Cursor} into loadFromCusor method.
-         *
+         * <p>
          * Group member logic has been moved into GroupMemberTileAdapter.  This constant is still
          * needed by calling classes.
          */
@@ -104,7 +104,7 @@ public class ContactTileAdapter extends BaseAdapter {
     }
 
     public ContactTileAdapter(Context context, ContactTileView.Listener listener, int numCols,
-            DisplayType displayType) {
+                              DisplayType displayType) {
         mListener = listener;
         mContext = context;
         mResources = context.getResources();
@@ -157,7 +157,7 @@ public class ContactTileAdapter extends BaseAdapter {
 
     /**
      * Gets the number of frequents from the passed in cursor.
-     *
+     * <p>
      * This methods is needed so the GroupMemberTileAdapter can override this.
      *
      * @param cursor The cursor to get number of frequents from.
@@ -171,7 +171,7 @@ public class ContactTileAdapter extends BaseAdapter {
                 break;
             case STREQUENT:
                 mNumFrequents = cursorIsValid(cursor) ?
-                    cursor.getCount() - mDividerPosition : 0;
+                        cursor.getCount() - mDividerPosition : 0;
                 break;
             case FREQUENT_ONLY:
                 mNumFrequents = cursorIsValid(cursor) ? cursor.getCount() : 0;
@@ -183,7 +183,7 @@ public class ContactTileAdapter extends BaseAdapter {
 
     /**
      * Creates {@link ContactTileView}s for each item in {@link Cursor}.
-     *
+     * <p>
      * Else use {@link ContactTileLoaderFactory}
      */
     public void setContactCursor(Cursor cursor) {
@@ -427,6 +427,7 @@ public class ContactTileAdapter extends BaseAdapter {
                 throw new IllegalArgumentException("Unrecognized viewType " + viewType);
         }
     }
+
     @Override
     public int getViewTypeCount() {
         return ViewTypes.COUNT;
@@ -470,7 +471,7 @@ public class ContactTileAdapter extends BaseAdapter {
 
     /**
      * Acts as a row item composed of {@link ContactTileView}
-     *
+     * <p>
      * TODO: FREQUENT doesn't really need it.  Just let {@link #getView} return
      */
     private class ContactTileRow extends FrameLayout {
@@ -532,7 +533,7 @@ public class ContactTileAdapter extends BaseAdapter {
                     contactTile.setPaddingRelative(
                             (mPaddingInPixels + 1) / 2, 0,
                             mPaddingInPixels
-                            / 2, 0);
+                                    / 2, 0);
                     break;
                 case ViewTypes.FREQUENT:
                     contactTile.setHorizontalDividerVisibility(
@@ -621,7 +622,7 @@ public class ContactTileAdapter extends BaseAdapter {
                 child.measure(
                         MeasureSpec.makeMeasureSpec(childWidth, MeasureSpec.EXACTLY),
                         MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-                        );
+                );
             }
             setMeasuredDimension(width, getChildAt(0).getMeasuredHeight());
         }

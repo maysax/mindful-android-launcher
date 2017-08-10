@@ -33,7 +33,7 @@ public abstract class VCardParser {
     /**
      * <p>Parses a whole InputStream as a vCard file and lets registered {@link VCardInterpreter}
      * instances handle callbacks.</p>
-     *
+     * <p>
      * <p>This method reads a whole InputStream. If you just want to parse one vCard entry inside
      * a vCard file with multiple entries, try {@link #parseOne(InputStream)}.</p>
      *
@@ -45,16 +45,16 @@ public abstract class VCardParser {
     /**
      * <p>Parses the first vCard entry in InputStream and lets registered {@link VCardInterpreter}
      * instances handle callbacks.</p>
-     *
+     * <p>
      * <p>This method finishes itself when the first entry ended.</p>
-     *
+     * <p>
      * <p>Note that, registered {@link VCardInterpreter} may still see multiple
      * {@link VCardInterpreter#onEntryStarted()} / {@link VCardInterpreter#onEntryEnded()} calls
      * even with this method.</p>
-     *
+     * <p>
      * <p>This happens when the first entry contains nested vCards, which is allowed in vCard 2.1.
      * See the following example.</p>
-     *
+     * <p>
      * <code>
      * BEGIN:VCARD
      * N:a
@@ -63,12 +63,12 @@ public abstract class VCardParser {
      * END:VCARD
      * END:VCARD
      * </code>
-     *
+     * <p>
      * <p>With this vCard, registered interpreters will grab two
      * {@link VCardInterpreter#onEntryStarted()} and {@link VCardInterpreter#onEntryEnded()}
      * calls. Callers should handle the situation by themselves.</p>
      *
-     * @param is  The source to parse.
+     * @param is The source to parse.
      * @throws IOException, VCardException
      */
     public abstract void parseOne(InputStream is) throws IOException, VCardException;

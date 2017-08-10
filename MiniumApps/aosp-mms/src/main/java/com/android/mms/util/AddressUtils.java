@@ -45,8 +45,8 @@ public class AddressUtils {
         builder.appendPath(msgId).appendPath("addr");
 
         Cursor cursor = SqliteWrapper.query(context, context.getContentResolver(),
-                            builder.build(), new String[] {Addr.ADDRESS, Addr.CHARSET},
-                            Addr.TYPE + "=" + PduHeaders.FROM, null, null);
+                builder.build(), new String[]{Addr.ADDRESS, Addr.CHARSET},
+                Addr.TYPE + "=" + PduHeaders.FROM, null, null);
 
         if (cursor != null) {
             try {
@@ -71,6 +71,7 @@ public class AddressUtils {
      * isPossiblePhoneNumberCanDoFileAccess does a more accurate test if the input is a
      * phone number, but it can do file access to load country prefixes and other info, so
      * it's not safe to call from the UI thread.
+     *
      * @param query the phone number to test
      * @return true if query looks like a valid phone number
      */

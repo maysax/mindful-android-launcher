@@ -134,7 +134,7 @@ public class PinnedHeaderListView extends AutoScrollListView
 
     @Override
     public void setAdapter(ListAdapter adapter) {
-        mAdapter = (PinnedHeaderAdapter)adapter;
+        mAdapter = (PinnedHeaderAdapter) adapter;
         super.setAdapter(adapter);
     }
 
@@ -156,7 +156,7 @@ public class PinnedHeaderListView extends AutoScrollListView
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
-            int totalItemCount) {
+                         int totalItemCount) {
         if (mAdapter != null) {
             int count = mAdapter.getPinnedHeaderCount();
             if (count != mSize) {
@@ -253,8 +253,8 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Set header to be pinned at the top.
      *
      * @param viewIndex index of the header view
-     * @param y is position of the header in pixels.
-     * @param animate true if the transition to the new coordinate should be animated
+     * @param y         is position of the header in pixels.
+     * @param animate   true if the transition to the new coordinate should be animated
      */
     public void setHeaderPinnedAtTop(int viewIndex, int y, boolean animate) {
         ensurePinnedHeaderLayout(viewIndex);
@@ -271,8 +271,8 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Set header to be pinned at the bottom.
      *
      * @param viewIndex index of the header view
-     * @param y is position of the header in pixels.
-     * @param animate true if the transition to the new coordinate should be animated
+     * @param y         is position of the header in pixels.
+     * @param animate   true if the transition to the new coordinate should be animated
      */
     public void setHeaderPinnedAtBottom(int viewIndex, int y, boolean animate) {
         ensurePinnedHeaderLayout(viewIndex);
@@ -303,7 +303,7 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Set header to be pinned at the top of the first visible item.
      *
      * @param viewIndex index of the header view
-     * @param position is position of the header in pixels.
+     * @param position  is position of the header in pixels.
      */
     public void setFadingHeader(int viewIndex, int position, boolean fade) {
         ensurePinnedHeaderLayout(viewIndex);
@@ -334,7 +334,7 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Makes header invisible.
      *
      * @param viewIndex index of the header view
-     * @param animate true if the transition to the new coordinate should be animated
+     * @param animate   true if the transition to the new coordinate should be animated
      */
     public void setHeaderInvisible(int viewIndex, boolean animate) {
         PinnedHeader header = mHeaders[viewIndex];
@@ -384,7 +384,7 @@ public class PinnedHeaderListView extends AutoScrollListView
      * Returns the sum of heights of headers pinned to the top.
      */
     public int getTotalTopPinnedHeaderHeight() {
-        for (int i = mSize; --i >= 0;) {
+        for (int i = mSize; --i >= 0; ) {
             PinnedHeader header = mHeaders[i];
             if (header.visible && header.state == TOP) {
                 return header.y + header.height;
@@ -417,9 +417,9 @@ public class PinnedHeaderListView extends AutoScrollListView
         }
 
         if (mScrollState == SCROLL_STATE_IDLE) {
-            final int y = (int)ev.getY();
-            final int x = (int)ev.getX();
-            for (int i = mSize; --i >= 0;) {
+            final int y = (int) ev.getY();
+            final int x = (int) ev.getX();
+            for (int i = mSize; --i >= 0; ) {
                 PinnedHeader header = mHeaders[i];
                 // For RTL layouts, this also takes into account that the scrollbar is on the left
                 // side.
@@ -449,7 +449,9 @@ public class PinnedHeaderListView extends AutoScrollListView
             return true;
         }
         return super.onTouchEvent(ev);
-    };
+    }
+
+    ;
 
     private boolean smoothScrollToPartition(int partition) {
         if (mAdapter == null) {
@@ -529,7 +531,7 @@ public class PinnedHeaderListView extends AutoScrollListView
             }
 
             // First draw top headers, then the bottom ones to handle the Z axis correctly
-            for (int i = mSize; --i >= 0;) {
+            for (int i = mSize; --i >= 0; ) {
                 PinnedHeader header = mHeaders[i];
                 if (header.visible && (header.state == TOP || header.state == FADING)) {
                     drawHeader(canvas, header, currentTime);
@@ -549,7 +551,7 @@ public class PinnedHeaderListView extends AutoScrollListView
 
     private void drawHeader(Canvas canvas, PinnedHeader header, long currentTime) {
         if (header.animating) {
-            int timeLeft = (int)(header.targetTime - currentTime);
+            int timeLeft = (int) (header.targetTime - currentTime);
             if (timeLeft <= 0) {
                 header.y = header.targetY;
                 header.visible = header.targetVisible;

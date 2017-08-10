@@ -54,11 +54,11 @@ class GpsMeasurementListenerTransport
         public void onGpsMeasurementsReceived(final GpsMeasurementsEvent event) {
             ListenerOperation<GpsMeasurementsEvent.Listener> operation =
                     new ListenerOperation<GpsMeasurementsEvent.Listener>() {
-                @Override
-                public void execute(GpsMeasurementsEvent.Listener listener) throws RemoteException {
-                    listener.onGpsMeasurementsReceived(event);
-                }
-            };
+                        @Override
+                        public void execute(GpsMeasurementsEvent.Listener listener) throws RemoteException {
+                            listener.onGpsMeasurementsReceived(event);
+                        }
+                    };
 
             foreach(operation);
         }

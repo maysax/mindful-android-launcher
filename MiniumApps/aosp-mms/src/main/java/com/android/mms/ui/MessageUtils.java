@@ -17,13 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentUris;
@@ -75,6 +68,13 @@ import com.google.android.mms.pdu.PduPersister;
 import com.google.android.mms.pdu.RetrieveConf;
 import com.google.android.mms.pdu.SendReq;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * An utility class for managing messages.
  */
@@ -99,17 +99,17 @@ public class MessageUtils {
 
     // When we pass a video record duration to the video recorder, use one of these values.
     private static final int[] sVideoDuration =
-            new int[] {0, 5, 10, 15, 20, 30, 40, 50, 60, 90, 120};
+            new int[]{0, 5, 10, 15, 20, 30, 40, 50, 60, 90, 120};
 
     /**
      * MMS address parsing data structures
      */
     // allowable phone number separators
     private static final char[] NUMERIC_CHARS_SUGAR = {
-        '-', '.', ',', '(', ')', ' ', '/', '\\', '*', '#', '+'
+            '-', '.', ',', '(', ')', ' ', '/', '\\', '*', '#', '+'
     };
 
-    private static HashMap numericSugarMap = new HashMap (NUMERIC_CHARS_SUGAR.length);
+    private static HashMap numericSugarMap = new HashMap(NUMERIC_CHARS_SUGAR.length);
 
     static {
         for (int i = 0; i < NUMERIC_CHARS_SUGAR.length; i++) {
@@ -125,6 +125,7 @@ public class MessageUtils {
     /**
      * cleanseMmsSubject will take a subject that's says, "<Subject: no subject>", and return
      * a null string. Otherwise it will return the original subject string.
+     *
      * @param context a regular context so the function can grab string resources
      * @param subject the raw subject
      * @return
@@ -193,15 +194,15 @@ public class MessageUtils {
         String from = extractEncStr(context, nInd.getFrom());
         details.append('\n');
         details.append(res.getString(R.string.from_label));
-        details.append(!TextUtils.isEmpty(from)? from:
-                                 res.getString(R.string.hidden_sender_address));
+        details.append(!TextUtils.isEmpty(from) ? from :
+                res.getString(R.string.hidden_sender_address));
 
         // Date: ***
         details.append('\n');
         details.append(res.getString(
-                                R.string.expire_on,
-                                MessageUtils.formatTimeStampString(
-                                        context, nInd.getExpiry() * 1000L, true)));
+                R.string.expire_on,
+                MessageUtils.formatTimeStampString(
+                        context, nInd.getExpiry() * 1000L, true)));
 
         // Subject: ***
         details.append('\n');
@@ -257,8 +258,8 @@ public class MessageUtils {
             String from = extractEncStr(context, ((RetrieveConf) msg).getFrom());
             details.append('\n');
             details.append(res.getString(R.string.from_label));
-            details.append(!TextUtils.isEmpty(from)? from:
-                                  res.getString(R.string.hidden_sender_address));
+            details.append(!TextUtils.isEmpty(from) ? from :
+                    res.getString(R.string.hidden_sender_address));
         }
 
         // To: ***
@@ -267,8 +268,7 @@ public class MessageUtils {
         EncodedStringValue[] to = msg.getTo();
         if (to != null) {
             details.append(EncodedStringValue.concat(to));
-        }
-        else {
+        } else {
             Log.w(TAG, "recipient list is empty!");
         }
 
@@ -317,7 +317,7 @@ public class MessageUtils {
         // Message size: *** KB
         details.append('\n');
         details.append(res.getString(R.string.message_size_label));
-        details.append((size - 1)/1000 + 1);
+        details.append((size - 1) / 1000 + 1);
         details.append(" KB");
 
         return details.toString();
@@ -382,8 +382,8 @@ public class MessageUtils {
         int errorCode = cursor.getInt(MessageListAdapter.COLUMN_SMS_ERROR_CODE);
         if (errorCode != 0) {
             details.append('\n')
-                .append(res.getString(R.string.error_code_label))
-                .append(errorCode);
+                    .append(res.getString(R.string.error_code_label))
+                    .append(errorCode);
         }
 
         return details.toString();
@@ -391,7 +391,7 @@ public class MessageUtils {
 
     static private String getPriorityDescription(Context context, int PriorityValue) {
         Resources res = context.getResources();
-        switch(PriorityValue) {
+        switch (PriorityValue) {
             case PduHeaders.PRIORITY_HIGH:
                 return res.getString(R.string.priority_high);
             case PduHeaders.PRIORITY_LOW:
@@ -455,8 +455,8 @@ public class MessageUtils {
 
         // Basic settings for formatDateTime() we want for all cases.
         int format_flags = DateUtils.FORMAT_NO_NOON_MIDNIGHT |
-                           DateUtils.FORMAT_ABBREV_ALL |
-                           DateUtils.FORMAT_CAP_AMPM;
+                DateUtils.FORMAT_ABBREV_ALL |
+                DateUtils.FORMAT_CAP_AMPM;
 
         // If the message is from a different year, show the date and year.
         if (then.year != now.year) {
@@ -552,7 +552,7 @@ public class MessageUtils {
 
     private static void selectMediaByType(
             Context context, int requestCode, String contentType, boolean localFilesOnly) {
-         if (context instanceof Activity) {
+        if (context instanceof Activity) {
 
             Intent innerIntent = new Intent(Intent.ACTION_GET_CONTENT);
 
@@ -595,7 +595,7 @@ public class MessageUtils {
     }
 
     public static void showErrorDialog(Activity activity,
-            String title, String message) {
+                                       String title, String message) {
         if (activity.isFinishing()) {
             return;
         }
@@ -632,9 +632,9 @@ public class MessageUtils {
     public static final int MESSAGE_OVERHEAD = 5000;
 
     public static void resizeImageAsync(final Context context,
-            final Uri imageUri, final Handler handler,
-            final ResizeImageResultCallback cb,
-            final boolean append) {
+                                        final Uri imageUri, final Handler handler,
+                                        final ResizeImageResultCallback cb,
+                                        final boolean append) {
 
         // Show a progress toast if the resize hasn't finished
         // within one second.
@@ -667,9 +667,9 @@ public class MessageUtils {
                     }
 
                     part = image.getResizedImageAsPart(
-                        widthLimit,
-                        heightLimit,
-                        MmsConfig.getMaxMessageSize() - MESSAGE_OVERHEAD);
+                            widthLimit,
+                            heightLimit,
+                            MmsConfig.getMaxMessageSize() - MESSAGE_OVERHEAD);
                 } finally {
                     // Cancel pending show of the progress toast if necessary.
                     handler.removeCallbacks(showProgress);
@@ -686,7 +686,7 @@ public class MessageUtils {
     }
 
     public static void showDiscardDraftConfirmDialog(Context context,
-            OnClickListener listener) {
+                                                     OnClickListener listener) {
         new AlertDialog.Builder(context)
                 .setMessage(R.string.discard_message_reason)
                 .setPositiveButton(R.string.yes, listener)
@@ -718,9 +718,9 @@ public class MessageUtils {
     }
 
     public static void handleReadReport(final Context context,
-            final Collection<Long> threadIds,
-            final int status,
-            final Runnable callback) {
+                                        final Collection<Long> threadIds,
+                                        final int status,
+                                        final Runnable callback) {
         StringBuilder selectionBuilder = new StringBuilder(Mms.MESSAGE_TYPE + " = "
                 + PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF
                 + " AND " + Mms.READ + " = 0"
@@ -746,8 +746,8 @@ public class MessageUtils {
         }
 
         final Cursor c = SqliteWrapper.query(context, context.getContentResolver(),
-                        Mms.Inbox.CONTENT_URI, new String[] {Mms._ID, Mms.MESSAGE_ID},
-                        selectionBuilder.toString(), selectionArgs, null);
+                Mms.Inbox.CONTENT_URI, new String[]{Mms._ID, Mms.MESSAGE_ID},
+                selectionBuilder.toString(), selectionArgs, null);
 
         if (c == null) {
             return;
@@ -775,7 +775,7 @@ public class MessageUtils {
             public void onClick(DialogInterface dialog, int which) {
                 for (final Map.Entry<String, String> entry : map.entrySet()) {
                     MmsMessageSender.sendReadRec(context, entry.getValue(),
-                                                 entry.getKey(), status);
+                            entry.getKey(), status);
                 }
 
                 if (callback != null) {
@@ -806,13 +806,13 @@ public class MessageUtils {
         };
 
         confirmReadReportDialog(context, positiveListener,
-                                         negativeListener,
-                                         cancelListener);
+                negativeListener,
+                cancelListener);
     }
 
     private static void confirmReadReportDialog(Context context,
-            OnClickListener positiveListener, OnClickListener negativeListener,
-            OnCancelListener cancelListener) {
+                                                OnClickListener positiveListener, OnClickListener negativeListener,
+                                                OnCancelListener cancelListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setCancelable(true);
         builder.setTitle(R.string.confirm);
@@ -824,7 +824,7 @@ public class MessageUtils {
     }
 
     public static String extractEncStrFromCursor(Cursor cursor,
-            int columnRawBytes, int columnCharset) {
+                                                 int columnRawBytes, int columnCharset) {
         String rawBytes = cursor.getString(columnRawBytes);
         int charset = cursor.getInt(columnCharset);
 
@@ -858,22 +858,23 @@ public class MessageUtils {
     /**
      * Play/view the message attachments.
      * TOOD: We need to save the draft before launching another activity to view the attachments.
-     *       This is hacky though since we will do saveDraft twice and slow down the UI.
-     *       We should pass the slideshow in intent extra to the view activity instead of
-     *       asking it to read attachments from database.
+     * This is hacky though since we will do saveDraft twice and slow down the UI.
+     * We should pass the slideshow in intent extra to the view activity instead of
+     * asking it to read attachments from database.
+     *
      * @param activity
-     * @param msgUri the MMS message URI in database
+     * @param msgUri    the MMS message URI in database
      * @param slideshow the slideshow to save
      * @param persister the PDU persister for updating the database
-     * @param sendReq the SendReq for updating the database
+     * @param sendReq   the SendReq for updating the database
      */
     public static void viewMmsMessageAttachment(Activity activity, Uri msgUri,
-            SlideshowModel slideshow, AsyncDialog asyncDialog) {
+                                                SlideshowModel slideshow, AsyncDialog asyncDialog) {
         viewMmsMessageAttachment(activity, msgUri, slideshow, 0, asyncDialog);
     }
 
     public static void viewMmsMessageAttachment(final Activity activity, final Uri msgUri,
-            final SlideshowModel slideshow, final int requestCode, AsyncDialog asyncDialog) {
+                                                final SlideshowModel slideshow, final int requestCode, AsyncDialog asyncDialog) {
         boolean isSimple = (slideshow == null) ? false : slideshow.isSimple();
         if (isSimple) {
             // In attachment-editor mode, we only ever have one slide.
@@ -916,7 +917,7 @@ public class MessageUtils {
         intent.setData(msgUri);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         if (requestCode > 0 && context instanceof Activity) {
-            ((Activity)context).startActivityForResult(intent, requestCode);
+            ((Activity) context).startActivityForResult(intent, requestCode);
         } else {
             context.startActivity(intent);
         }
@@ -926,7 +927,7 @@ public class MessageUtils {
     /**
      * Debugging
      */
-    public static void writeHprofDataToFile(){
+    public static void writeHprofDataToFile() {
         String filename = Environment.getExternalStorageDirectory() + "/mms_oom_hprof_data";
         try {
             android.os.Debug.dumpHprofData(filename);

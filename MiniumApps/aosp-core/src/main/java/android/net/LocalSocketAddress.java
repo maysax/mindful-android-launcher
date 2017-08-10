@@ -19,18 +19,19 @@ package android.net;
 /**
  * A UNIX-domain (AF_LOCAL) socket address. For use with
  * android.net.LocalSocket and android.net.LocalServerSocket.
- *
+ * <p>
  * On the Android system, these names refer to names in the Linux
  * abstract (non-filesystem) UNIX domain namespace.
  */
-public class LocalSocketAddress
-{
+public class LocalSocketAddress {
     /**
      * The namespace that this address exists in. See also
      * include/cutils/sockets.h ANDROID_SOCKET_NAMESPACE_*
      */
     public enum Namespace {
-        /** A socket in the Linux abstract namespace */
+        /**
+         * A socket in the Linux abstract namespace
+         */
         ABSTRACT(0),
         /**
          * A socket in the Android reserved namespace in /dev/socket.
@@ -42,9 +43,12 @@ public class LocalSocketAddress
          */
         FILESYSTEM(2);
 
-        /** The id matches with a #define in include/cutils/sockets.h */
+        /**
+         * The id matches with a #define in include/cutils/sockets.h
+         */
         private int id;
-        Namespace (int id) {
+
+        Namespace(int id) {
             this.id = id;
         }
 
@@ -62,7 +66,7 @@ public class LocalSocketAddress
     /**
      * Creates an instance with a given name.
      *
-     * @param name non-null name
+     * @param name      non-null name
      * @param namespace namespace the name should be created in.
      */
     public LocalSocketAddress(String name, Namespace namespace) {
@@ -77,15 +81,15 @@ public class LocalSocketAddress
      * @param name non-null name
      */
     public LocalSocketAddress(String name) {
-        this(name,Namespace.ABSTRACT);
+        this(name, Namespace.ABSTRACT);
     }
 
     /**
      * Retrieves the string name of this address
+     *
      * @return string name
      */
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 

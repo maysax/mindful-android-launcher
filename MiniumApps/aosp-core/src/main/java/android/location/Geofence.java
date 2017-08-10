@@ -21,13 +21,15 @@ import android.os.Parcelable;
 
 /**
  * Represents a geographical boundary, also known as a geofence.
- *
+ * <p>
  * <p>Currently only circular geofences are supported and they do not support altitude changes.
  *
  * @hide
  */
 public final class Geofence implements Parcelable {
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int TYPE_HORIZONTAL_CIRCLE = 1;
 
     private final int mType;
@@ -38,9 +40,9 @@ public final class Geofence implements Parcelable {
     /**
      * Create a circular geofence (on a flat, horizontal plane).
      *
-     * @param latitude latitude in degrees, between -90 and +90 inclusive
+     * @param latitude  latitude in degrees, between -90 and +90 inclusive
      * @param longitude longitude in degrees, between -180 and +180 inclusive
-     * @param radius radius in meters
+     * @param radius    radius in meters
      * @return a new geofence
      * @throws IllegalArgumentException if any parameters are out of range
      */
@@ -57,22 +59,30 @@ public final class Geofence implements Parcelable {
         mRadius = radius;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int getType() {
         return mType;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public double getLatitude() {
         return mLatitude;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public double getLongitude() {
         return mLongitude;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public float getRadius() {
         return mRadius;
     }
@@ -108,6 +118,7 @@ public final class Geofence implements Parcelable {
             checkType(type);
             return Geofence.createCircle(latitude, longitude, radius);
         }
+
         @Override
         public Geofence[] newArray(int size) {
             return new Geofence[size];

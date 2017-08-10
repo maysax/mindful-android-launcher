@@ -21,7 +21,7 @@ package com.android.internal.telephony;
  * TODO: This should probably not be an interface see
  * http://www.javaworld.com/javaworld/javaqa/2001-06/01-qa-0608-constants.html and google with
  * http://www.google.com/search?q=interface+constants&ie=utf-8&oe=utf-8&aq=t&rls=com.ubuntu:en-US:unofficial&client=firefox-a
- *
+ * <p>
  * Also they should all probably be static final.
  */
 
@@ -61,31 +61,31 @@ public interface RILConstants {
     int SUBSCRIPTION_NOT_SUPPORTED = 26;      /* Subscription not supported */
 
     /* NETWORK_MODE_* See ril.h RIL_REQUEST_SET_PREFERRED_NETWORK_TYPE */
-    int NETWORK_MODE_WCDMA_PREF     = 0; /* GSM/WCDMA (WCDMA preferred) */
-    int NETWORK_MODE_GSM_ONLY       = 1; /* GSM only */
-    int NETWORK_MODE_WCDMA_ONLY     = 2; /* WCDMA only */
-    int NETWORK_MODE_GSM_UMTS       = 3; /* GSM/WCDMA (auto mode, according to PRL)
+    int NETWORK_MODE_WCDMA_PREF = 0; /* GSM/WCDMA (WCDMA preferred) */
+    int NETWORK_MODE_GSM_ONLY = 1; /* GSM only */
+    int NETWORK_MODE_WCDMA_ONLY = 2; /* WCDMA only */
+    int NETWORK_MODE_GSM_UMTS = 3; /* GSM/WCDMA (auto mode, according to PRL)
                                             AVAILABLE Application Settings menu*/
-    int NETWORK_MODE_CDMA           = 4; /* CDMA and EvDo (auto mode, according to PRL)
+    int NETWORK_MODE_CDMA = 4; /* CDMA and EvDo (auto mode, according to PRL)
                                             AVAILABLE Application Settings menu*/
-    int NETWORK_MODE_CDMA_NO_EVDO   = 5; /* CDMA only */
-    int NETWORK_MODE_EVDO_NO_CDMA   = 6; /* EvDo only */
-    int NETWORK_MODE_GLOBAL         = 7; /* GSM/WCDMA, CDMA, and EvDo (auto mode, according to PRL)
+    int NETWORK_MODE_CDMA_NO_EVDO = 5; /* CDMA only */
+    int NETWORK_MODE_EVDO_NO_CDMA = 6; /* EvDo only */
+    int NETWORK_MODE_GLOBAL = 7; /* GSM/WCDMA, CDMA, and EvDo (auto mode, according to PRL)
                                             AVAILABLE Application Settings menu*/
-    int NETWORK_MODE_LTE_CDMA_EVDO  = 8; /* LTE, CDMA and EvDo */
-    int NETWORK_MODE_LTE_GSM_WCDMA  = 9; /* LTE, GSM/WCDMA */
+    int NETWORK_MODE_LTE_CDMA_EVDO = 8; /* LTE, CDMA and EvDo */
+    int NETWORK_MODE_LTE_GSM_WCDMA = 9; /* LTE, GSM/WCDMA */
     int NETWORK_MODE_LTE_CDMA_EVDO_GSM_WCDMA = 10; /* LTE, CDMA, EvDo, GSM/WCDMA */
-    int NETWORK_MODE_LTE_ONLY       = 11; /* LTE Only mode. */
-    int NETWORK_MODE_LTE_WCDMA      = 12; /* LTE/WCDMA */
-    int PREFERRED_NETWORK_MODE      = NETWORK_MODE_WCDMA_PREF;
+    int NETWORK_MODE_LTE_ONLY = 11; /* LTE Only mode. */
+    int NETWORK_MODE_LTE_WCDMA = 12; /* LTE/WCDMA */
+    int PREFERRED_NETWORK_MODE = NETWORK_MODE_WCDMA_PREF;
 
     int CDMA_CELL_BROADCAST_SMS_DISABLED = 1;
-    int CDMA_CELL_BROADCAST_SMS_ENABLED  = 0;
+    int CDMA_CELL_BROADCAST_SMS_ENABLED = 0;
 
     int NO_PHONE = 0;
     int GSM_PHONE = 1;
     int CDMA_PHONE = 2;
-    int SIP_PHONE  = 3;
+    int SIP_PHONE = 3;
     int THIRD_PARTY_PHONE = 4;
     int IMS_PHONE = 5;
 
@@ -101,16 +101,16 @@ public interface RILConstants {
     int CDM_TTY_VCO_MODE = 3;
 
     /* Setup a packet data connection. See ril.h RIL_REQUEST_SETUP_DATA_CALL */
-    int SETUP_DATA_TECH_CDMA      = 0;
-    int SETUP_DATA_TECH_GSM       = 1;
+    int SETUP_DATA_TECH_CDMA = 0;
+    int SETUP_DATA_TECH_GSM = 1;
 
-    int SETUP_DATA_AUTH_NONE      = 0;
-    int SETUP_DATA_AUTH_PAP       = 1;
-    int SETUP_DATA_AUTH_CHAP      = 2;
-    int SETUP_DATA_AUTH_PAP_CHAP  = 3;
+    int SETUP_DATA_AUTH_NONE = 0;
+    int SETUP_DATA_AUTH_PAP = 1;
+    int SETUP_DATA_AUTH_CHAP = 2;
+    int SETUP_DATA_AUTH_PAP_CHAP = 3;
 
-    String SETUP_DATA_PROTOCOL_IP     = "IP";
-    String SETUP_DATA_PROTOCOL_IPV6   = "IPV6";
+    String SETUP_DATA_PROTOCOL_IP = "IP";
+    String SETUP_DATA_PROTOCOL_IPV6 = "IPV6";
     String SETUP_DATA_PROTOCOL_IPV4V6 = "IPV4V6";
 
     /* Deactivate data call reasons */
@@ -156,12 +156,12 @@ cat include/telephony/ril.h | \
     int RIL_RESTRICTED_STATE_PS_ALL = 0x10;
 
     /** Data profile for RIL_REQUEST_SETUP_DATA_CALL */
-    public static final int DATA_PROFILE_DEFAULT   = 0;
-    public static final int DATA_PROFILE_TETHERED  = 1;
-    public static final int DATA_PROFILE_IMS       = 2;
-    public static final int DATA_PROFILE_FOTA      = 3;
-    public static final int DATA_PROFILE_CBS       = 4;
-    public static final int DATA_PROFILE_OEM_BASE  = 1000;
+    public static final int DATA_PROFILE_DEFAULT = 0;
+    public static final int DATA_PROFILE_TETHERED = 1;
+    public static final int DATA_PROFILE_IMS = 2;
+    public static final int DATA_PROFILE_FOTA = 3;
+    public static final int DATA_PROFILE_CBS = 4;
+    public static final int DATA_PROFILE_OEM_BASE = 1000;
 
     int RIL_REQUEST_GET_SIM_STATUS = 1;
     int RIL_REQUEST_ENTER_SIM_PIN = 2;

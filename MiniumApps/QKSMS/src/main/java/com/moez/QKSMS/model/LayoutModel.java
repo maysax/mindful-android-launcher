@@ -31,10 +31,10 @@ public class LayoutModel extends Model {
     private static final boolean LOCAL_LOGV = DEBUG ? Config.LOGD : Config.LOGV;
 
     public static final String IMAGE_REGION_ID = "Image";
-    public static final String TEXT_REGION_ID  = "Text";
+    public static final String TEXT_REGION_ID = "Text";
 
     public static final int LAYOUT_BOTTOM_TEXT = 0;
-    public static final int LAYOUT_TOP_TEXT    = 1;
+    public static final int LAYOUT_TOP_TEXT = 1;
     public static final int DEFAULT_LAYOUT_TYPE = LAYOUT_BOTTOM_TEXT;
 
     private int mLayoutType = DEFAULT_LAYOUT_TYPE;

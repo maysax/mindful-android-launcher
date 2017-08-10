@@ -61,7 +61,7 @@ public class BatteryProperty implements Parcelable {
     }
 
     public static final Parcelable.Creator<BatteryProperty> CREATOR
-        = new Parcelable.Creator<BatteryProperty>() {
+            = new Parcelable.Creator<BatteryProperty>() {
         public BatteryProperty createFromParcel(Parcel p) {
             return new BatteryProperty(p);
         }

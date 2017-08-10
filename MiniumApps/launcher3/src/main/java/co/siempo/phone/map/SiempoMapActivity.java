@@ -7,7 +7,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.EActivity;
@@ -24,7 +23,7 @@ import static android.view.View.GONE;
 public class SiempoMapActivity extends CoreActivity {
     String HOME_PAGE = "https://www.google.com/maps";
 
-  //  @ViewById
+    //  @ViewById
     WebView mWebView;
 
     @ViewById
@@ -38,7 +37,7 @@ public class SiempoMapActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_siempo);
 
-          mWebView = (WebView) findViewById(R.id.mWebView);
+        mWebView = (WebView) findViewById(R.id.mWebView);
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -49,10 +48,10 @@ public class SiempoMapActivity extends CoreActivity {
         webSettings.setSupportZoom(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-    //    webview.setWebViewClient(new GeoWebViewClient());
+        //    webview.setWebViewClient(new GeoWebViewClient());
         mWebView.setWebChromeClient(new GeoWebChromeClient());
         webSettings.setDatabaseEnabled(true);
-        webSettings.setGeolocationDatabasePath( this.getFilesDir().getPath());
+        webSettings.setGeolocationDatabasePath(this.getFilesDir().getPath());
 
 
         mWebView.setVerticalScrollbarPosition(2);
@@ -134,5 +133,5 @@ public class SiempoMapActivity extends CoreActivity {
         } else {
             super.onBackPressed();
         }
-        }
+    }
 }

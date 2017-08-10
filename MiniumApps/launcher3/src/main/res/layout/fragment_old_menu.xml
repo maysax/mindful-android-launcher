@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:scrollbars="none"
             android:divider="@color/transparent"
-            tools:context="co.siempo.phone.old.OldMenuFragment"/>
+            tools:context="co.siempo.phone.old.OldMenuFragment" />
 
     </android.support.v7.widget.CardView>
 

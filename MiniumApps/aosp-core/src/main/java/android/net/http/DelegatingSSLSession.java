@@ -23,8 +23,6 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLPeerUnverifiedException;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSessionContext;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.X509TrustManager;
 
 /**
  * This is only used when a {@code certificate} is available but usage
@@ -45,7 +43,7 @@ public class DelegatingSSLSession implements SSLSession {
 
         @Override
         public Certificate[] getPeerCertificates() throws SSLPeerUnverifiedException {
-            return new Certificate[] { mCertificate };
+            return new Certificate[]{mCertificate};
         }
     }
 

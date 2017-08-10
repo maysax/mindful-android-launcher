@@ -16,13 +16,10 @@
 
 package com.android.contacts.list;
 
-import com.android.contacts.ContactsSearchManager;
-
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.Contacts.ContactMethods;
 import android.provider.Contacts.People;
 import android.provider.Contacts.Phones;
@@ -101,7 +98,7 @@ public class ContactsIntentResolver {
             } else if (ContactMethods.CONTENT_POSTAL_ITEM_TYPE.equals(type)) {
                 request.setActionCode(ContactsRequest.ACTION_PICK_POSTAL);
                 request.setLegacyCompatibilityMode(true);
-            }  else if (People.CONTENT_ITEM_TYPE.equals(type)) {
+            } else if (People.CONTENT_ITEM_TYPE.equals(type)) {
                 request.setActionCode(ContactsRequest.ACTION_PICK_OR_CREATE_CONTACT);
                 request.setLegacyCompatibilityMode(true);
             }

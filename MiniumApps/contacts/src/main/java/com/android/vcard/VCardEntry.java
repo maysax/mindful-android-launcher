@@ -16,8 +16,6 @@
 
 package com.android.vcard;
 
-import com.android.vcard.VCardUtils.PhoneNumberUtilsPort;
-
 import android.accounts.Account;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -42,6 +40,8 @@ import android.provider.ContactsContract.RawContacts;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.android.vcard.VCardUtils.PhoneNumberUtilsPort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,7 +105,7 @@ public class VCardEntry {
         public EntryLabel getEntryLabel();
 
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex);
+                                             int backReferenceIndex);
 
         public boolean isEmpty();
     }
@@ -158,7 +158,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(StructuredName.RAW_CONTACT_ID, backReferenceIndex);
@@ -238,7 +238,7 @@ public class VCardEntry {
 
         @Override
         public int hashCode() {
-            final String[] hashTargets = new String[] {mFamily, mMiddle, mGiven, mPrefix, mSuffix,
+            final String[] hashTargets = new String[]{mFamily, mMiddle, mGiven, mPrefix, mSuffix,
                     mFormatted, mPhoneticFamily, mPhoneticMiddle,
                     mPhoneticGiven, mSortString};
             int hash = 0;
@@ -287,16 +287,40 @@ public class VCardEntry {
             return mSortString;
         }
 
-        /** @hide Just for testing. */
-        public void setFamily(String family) { mFamily = family; }
-        /** @hide Just for testing. */
-        public void setMiddle(String middle) { mMiddle = middle; }
-        /** @hide Just for testing. */
-        public void setGiven(String given) { mGiven = given; }
-        /** @hide Just for testing. */
-        public void setPrefix(String prefix) { mPrefix = prefix; }
-        /** @hide Just for testing. */
-        public void setSuffix(String suffix) { mSuffix = suffix; }
+        /**
+         * @hide Just for testing.
+         */
+        public void setFamily(String family) {
+            mFamily = family;
+        }
+
+        /**
+         * @hide Just for testing.
+         */
+        public void setMiddle(String middle) {
+            mMiddle = middle;
+        }
+
+        /**
+         * @hide Just for testing.
+         */
+        public void setGiven(String given) {
+            mGiven = given;
+        }
+
+        /**
+         * @hide Just for testing.
+         */
+        public void setPrefix(String prefix) {
+            mPrefix = prefix;
+        }
+
+        /**
+         * @hide Just for testing.
+         */
+        public void setSuffix(String suffix) {
+            mSuffix = suffix;
+        }
     }
 
     public static class PhoneData implements EntryElement {
@@ -318,7 +342,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Phone.RAW_CONTACT_ID, backReferenceIndex);
@@ -408,7 +432,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Email.RAW_CONTACT_ID, backReferenceIndex);
@@ -497,13 +521,15 @@ public class VCardEntry {
         private final String mLabel;
         private boolean mIsPrimary;
 
-        /** We keep this for {@link StructuredPostal#FORMATTED_ADDRESS} */
+        /**
+         * We keep this for {@link StructuredPostal#FORMATTED_ADDRESS}
+         */
         // TODO: need better way to construct formatted address.
         private int mVCardType;
 
         public PostalData(String pobox, String extendedAddress, String street, String localty,
-                String region, String postalCode, String country, int type, String label,
-                boolean isPrimary, int vcardType) {
+                          String region, String postalCode, String country, int type, String label,
+                          boolean isPrimary, int vcardType) {
             mType = type;
             mPobox = pobox;
             mExtendedAddress = extendedAddress;
@@ -521,7 +547,7 @@ public class VCardEntry {
          * Accepts raw propertyValueList in vCard and constructs PostalData.
          */
         public static PostalData constructPostalData(final List<String> propValueList,
-                final int type, final String label, boolean isPrimary, int vcardType) {
+                                                     final int type, final String label, boolean isPrimary, int vcardType) {
             final String[] dataArray = new String[ADDR_MAX_DATA_SIZE];
 
             int size = propValueList.size();
@@ -551,7 +577,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(StructuredPostal.RAW_CONTACT_ID, backReferenceIndex);
@@ -593,7 +619,7 @@ public class VCardEntry {
         public String getFormattedAddress(final int vcardType) {
             StringBuilder builder = new StringBuilder();
             boolean empty = true;
-            final String[] dataArray = new String[] {
+            final String[] dataArray = new String[]{
                     mPobox, mExtendedAddress, mStreet, mLocalty, mRegion, mPostalCode, mCountry
             };
             if (VCardConfig.isJapaneseDevice(vcardType)) {
@@ -648,7 +674,7 @@ public class VCardEntry {
             final PostalData postalData = (PostalData) obj;
             return (mType == postalData.mType)
                     && (mType == StructuredPostal.TYPE_CUSTOM ? TextUtils.equals(mLabel,
-                            postalData.mLabel) : true)
+                    postalData.mLabel) : true)
                     && (mIsPrimary == postalData.mIsPrimary)
                     && TextUtils.equals(mPobox, postalData.mPobox)
                     && TextUtils.equals(mExtendedAddress, postalData.mExtendedAddress)
@@ -665,7 +691,7 @@ public class VCardEntry {
             hash = hash * 31 + (mLabel != null ? mLabel.hashCode() : 0);
             hash = hash * 31 + (mIsPrimary ? 1231 : 1237);
 
-            final String[] hashTargets = new String[] {mPobox, mExtendedAddress, mStreet,
+            final String[] hashTargets = new String[]{mPobox, mExtendedAddress, mStreet,
                     mLocalty, mRegion, mPostalCode, mCountry};
             for (String hashTarget : hashTargets) {
                 hash = hash * 31 + (hashTarget != null ? hashTarget.hashCode() : 0);
@@ -676,8 +702,8 @@ public class VCardEntry {
         @Override
         public String toString() {
             return String.format("type: %d, label: %s, isPrimary: %s, pobox: %s, "
-                    + "extendedAddress: %s, street: %s, localty: %s, region: %s, postalCode %s, "
-                    + "country: %s", mType, mLabel, mIsPrimary, mPobox, mExtendedAddress, mStreet,
+                            + "extendedAddress: %s, street: %s, localty: %s, region: %s, postalCode %s, "
+                            + "country: %s", mType, mLabel, mIsPrimary, mPobox, mExtendedAddress, mStreet,
                     mLocalty, mRegion, mPostalCode, mCountry);
         }
 
@@ -739,8 +765,8 @@ public class VCardEntry {
         private boolean mIsPrimary;
 
         public OrganizationData(final String organizationName, final String departmentName,
-                final String titleName, final String phoneticName, int type,
-                final boolean isPrimary) {
+                                final String titleName, final String phoneticName, int type,
+                                final boolean isPrimary) {
             mType = type;
             mOrganizationName = organizationName;
             mDepartmentName = departmentName;
@@ -774,7 +800,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Organization.RAW_CONTACT_ID, backReferenceIndex);
@@ -875,7 +901,7 @@ public class VCardEntry {
         private final boolean mIsPrimary;
 
         public ImData(final int protocol, final String customProtocol, final String address,
-                final int type, final boolean isPrimary) {
+                      final int type, final boolean isPrimary) {
             mProtocol = protocol;
             mCustomProtocol = customProtocol;
             mType = type;
@@ -885,7 +911,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Im.RAW_CONTACT_ID, backReferenceIndex);
@@ -989,7 +1015,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Photo.RAW_CONTACT_ID, backReferenceIndex);
@@ -1072,7 +1098,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Nickname.RAW_CONTACT_ID, backReferenceIndex);
@@ -1125,7 +1151,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Note.RAW_CONTACT_ID, backReferenceIndex);
@@ -1180,7 +1206,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Website.RAW_CONTACT_ID, backReferenceIndex);
@@ -1238,7 +1264,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Event.RAW_CONTACT_ID, backReferenceIndex);
@@ -1294,7 +1320,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(Event.RAW_CONTACT_ID, backReferenceIndex);
@@ -1336,7 +1362,9 @@ public class VCardEntry {
             return EntryLabel.ANNIVERSARY;
         }
 
-        public String getAnniversary() { return mAnniversary; }
+        public String getAnniversary() {
+            return mAnniversary;
+        }
     }
 
     public static class SipData implements EntryElement {
@@ -1363,7 +1391,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(SipAddress.RAW_CONTACT_ID, backReferenceIndex);
@@ -1421,9 +1449,17 @@ public class VCardEntry {
         /**
          * @return Address part of the sip data. The schema ("sip:") isn't contained here.
          */
-        public String getAddress() { return mAddress; }
-        public int getType() { return mType; }
-        public String getLabel() { return mLabel; }
+        public String getAddress() {
+            return mAddress;
+        }
+
+        public int getType() {
+            return mType;
+        }
+
+        public String getLabel() {
+            return mLabel;
+        }
     }
 
     /**
@@ -1462,7 +1498,7 @@ public class VCardEntry {
 
         @Override
         public void constructInsertOperation(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                             int backReferenceIndex) {
             final ContentProviderOperation.Builder builder = ContentProviderOperation
                     .newInsert(Data.CONTENT_URI);
             builder.withValueBackReference(GroupMembership.RAW_CONTACT_ID, backReferenceIndex);
@@ -1534,8 +1570,13 @@ public class VCardEntry {
             return EntryLabel.ANDROID_CUSTOM;
         }
 
-        public String getMimeType() { return mMimeType; }
-        public List<String> getDataList() { return mDataList; }
+        public String getMimeType() {
+            return mMimeType;
+        }
+
+        public List<String> getDataList() {
+            return mDataList;
+        }
     }
 
     private final NameData mNameData = new NameData();
@@ -1576,7 +1617,7 @@ public class VCardEntry {
 
         /**
          * @return should be true when child wants to continue the operation.
-         *         False otherwise.
+         * False otherwise.
          */
         public boolean onElement(EntryElement elem);
     }
@@ -1613,7 +1654,7 @@ public class VCardEntry {
     }
 
     private void iterateOneList(List<? extends EntryElement> elemList,
-            EntryElementIterator iterator) {
+                                EntryElementIterator iterator) {
         if (elemList != null && elemList.size() > 0) {
             iterator.onElementGroupStarted(elemList.get(0).getEntryLabel());
             for (EntryElement elem : elemList) {
@@ -1707,7 +1748,7 @@ public class VCardEntry {
         private final int mBackReferenceIndex;
 
         public InsertOperationConstrutor(List<ContentProviderOperation> operationList,
-                int backReferenceIndex) {
+                                         int backReferenceIndex) {
             mOperationList = operationList;
             mBackReferenceIndex = backReferenceIndex;
         }
@@ -1837,7 +1878,7 @@ public class VCardEntry {
      * {@link #handleTitleValue(String)}.
      */
     private void addNewOrganization(final String organizationName, final String departmentName,
-            final String titleName, final String phoneticName, int type, final boolean isPrimary) {
+                                    final String titleName, final String phoneticName, int type, final boolean isPrimary) {
         if (mOrganizationList == null) {
             mOrganizationList = new ArrayList<OrganizationData>();
         }
@@ -1876,7 +1917,7 @@ public class VCardEntry {
      * {@link OrganizationData} is created, whose title is set to null.
      */
     private void handleOrgValue(final int type, List<String> orgList,
-            Map<String, Collection<String>> paramMap, boolean isPrimary) {
+                                Map<String, Collection<String>> paramMap, boolean isPrimary) {
         final String phoneticName = buildSinglePhoneticNameFromSortAsParam(paramMap);
         if (orgList == null) {
             orgList = sEmptyList;
@@ -1885,29 +1926,29 @@ public class VCardEntry {
         final String departmentName;
         final int size = orgList.size();
         switch (size) {
-        case 0: {
-            organizationName = "";
-            departmentName = null;
-            break;
-        }
-        case 1: {
-            organizationName = orgList.get(0);
-            departmentName = null;
-            break;
-        }
-        default: { // More than 1.
-            organizationName = orgList.get(0);
-            // We're not sure which is the correct string for department.
-            // In order to keep all the data, concatinate the rest of elements.
-            StringBuilder builder = new StringBuilder();
-            for (int i = 1; i < size; i++) {
-                if (i > 1) {
-                    builder.append(' ');
-                }
-                builder.append(orgList.get(i));
+            case 0: {
+                organizationName = "";
+                departmentName = null;
+                break;
             }
-            departmentName = builder.toString();
-        }
+            case 1: {
+                organizationName = orgList.get(0);
+                departmentName = null;
+                break;
+            }
+            default: { // More than 1.
+                organizationName = orgList.get(0);
+                // We're not sure which is the correct string for department.
+                // In order to keep all the data, concatinate the rest of elements.
+                StringBuilder builder = new StringBuilder();
+                for (int i = 1; i < size; i++) {
+                    if (i > 1) {
+                        builder.append(' ');
+                    }
+                    builder.append(orgList.get(i));
+                }
+                departmentName = builder.toString();
+            }
         }
         if (mOrganizationList == null) {
             // Create new first organization entry, with "null" title which may be
@@ -1960,7 +2001,7 @@ public class VCardEntry {
     }
 
     private void addIm(int protocol, String customProtocol, String propValue, int type,
-            boolean isPrimary) {
+                       boolean isPrimary) {
         if (mImList == null) {
             mImList = new ArrayList<ImData>();
         }
@@ -1994,8 +2035,8 @@ public class VCardEntry {
     private void tryHandleSortAsName(final Map<String, Collection<String>> paramMap) {
         if (VCardConfig.isVersion30(mVCardType)
                 && !(TextUtils.isEmpty(mNameData.mPhoneticFamily)
-                        && TextUtils.isEmpty(mNameData.mPhoneticMiddle) && TextUtils
-                        .isEmpty(mNameData.mPhoneticGiven))) {
+                && TextUtils.isEmpty(mNameData.mPhoneticMiddle) && TextUtils
+                .isEmpty(mNameData.mPhoneticGiven))) {
             return;
         }
 
@@ -2013,20 +2054,20 @@ public class VCardEntry {
                 size = 3;
             }
             switch (size) {
-            case 3:
-                mNameData.mPhoneticMiddle = sortNames.get(2); //$FALL-THROUGH$
-            case 2:
-                mNameData.mPhoneticGiven = sortNames.get(1); //$FALL-THROUGH$
-            default:
-                mNameData.mPhoneticFamily = sortNames.get(0);
-                break;
+                case 3:
+                    mNameData.mPhoneticMiddle = sortNames.get(2); //$FALL-THROUGH$
+                case 2:
+                    mNameData.mPhoneticGiven = sortNames.get(1); //$FALL-THROUGH$
+                default:
+                    mNameData.mPhoneticFamily = sortNames.get(0);
+                    break;
             }
         }
     }
 
     @SuppressWarnings("fallthrough")
     private void handleNProperty(final List<String> paramValues,
-            Map<String, Collection<String>> paramMap) {
+                                 Map<String, Collection<String>> paramMap) {
         // in vCard 4.0, SORT-AS parameter is available.
         tryHandleSortAsName(paramMap);
 
@@ -2040,17 +2081,17 @@ public class VCardEntry {
         }
 
         switch (size) {
-        // Fall-through.
-        case 5:
-            mNameData.mSuffix = paramValues.get(4);
-        case 4:
-            mNameData.mPrefix = paramValues.get(3);
-        case 3:
-            mNameData.mMiddle = paramValues.get(2);
-        case 2:
-            mNameData.mGiven = paramValues.get(1);
-        default:
-            mNameData.mFamily = paramValues.get(0);
+            // Fall-through.
+            case 5:
+                mNameData.mSuffix = paramValues.get(4);
+            case 4:
+                mNameData.mPrefix = paramValues.get(3);
+            case 3:
+                mNameData.mMiddle = paramValues.get(2);
+            case 2:
+                mNameData.mGiven = paramValues.get(1);
+            default:
+                mNameData.mFamily = paramValues.get(0);
         }
     }
 
@@ -2111,13 +2152,13 @@ public class VCardEntry {
         }
 
         switch (size) {
-        // fallthrough
-        case 3:
-            mNameData.mPhoneticMiddle = elems.get(2);
-        case 2:
-            mNameData.mPhoneticGiven = elems.get(1);
-        default:
-            mNameData.mPhoneticFamily = elems.get(0);
+            // fallthrough
+            case 3:
+                mNameData.mPhoneticMiddle = elems.get(2);
+            case 2:
+                mNameData.mPhoneticGiven = elems.get(1);
+            default:
+                mNameData.mPhoneticFamily = elems.get(0);
         }
     }
 
@@ -2192,7 +2233,7 @@ public class VCardEntry {
                         label = null;
                     } else if (typeStringUpperCase.equals(VCardConstants.PARAM_TYPE_WORK)
                             || typeStringUpperCase
-                                    .equalsIgnoreCase(VCardConstants.PARAM_EXTRA_TYPE_COMPANY)) {
+                            .equalsIgnoreCase(VCardConstants.PARAM_EXTRA_TYPE_COMPANY)) {
                         // "COMPANY" seems emitted by Windows Mobile, which is not
                         // specifically supported by vCard 2.1. We assume this is same
                         // as "WORK".
@@ -2409,7 +2450,7 @@ public class VCardEntry {
     }
 
     /**
-     * @param propValue may contain "sip:" at the beginning.
+     * @param propValue      may contain "sip:" at the beginning.
      * @param typeCollection
      */
     private void handleSipCase(String propValue, Collection<String> typeCollection) {
@@ -2504,11 +2545,11 @@ public class VCardEntry {
 
     /**
      * @return true when this object has nothing meaningful for Android's
-     *         Contacts, and thus is "ignorable" for Android's Contacts. This
-     *         does not mean an original vCard is really empty. Even when the
-     *         original vCard has some fields, this may ignore it if those
-     *         fields cannot be transcoded into Android's Contacts
-     *         representation.
+     * Contacts, and thus is "ignorable" for Android's Contacts. This
+     * does not mean an original vCard is really empty. Even when the
+     * original vCard has some fields, this may ignore it if those
+     * fields cannot be transcoded into Android's Contacts
+     * representation.
      */
     public boolean isIgnorable() {
         IsIgnorableIterator iterator = new IsIgnorableIterator();
@@ -2523,16 +2564,16 @@ public class VCardEntry {
      * this object. When operationList argument is not null, this method appends
      * those new operations into the object instead of creating a new ArrayList.
      *
-     * @param resolver {@link ContentResolver} object to be used in this method.
+     * @param resolver      {@link ContentResolver} object to be used in this method.
      * @param operationList object to be filled. You can use this argument to
-     *            concatinate operation lists. If null, this method creates a
-     *            new array object.
+     *                      concatinate operation lists. If null, this method creates a
+     *                      new array object.
      * @return If operationList argument is null, new object with new insert
-     *         operations. If it is not null, the operationList object with
-     *         operations inserted by this method.
+     * operations. If it is not null, the operationList object with
+     * operations inserted by this method.
      */
     public ArrayList<ContentProviderOperation> constructInsertOperations(ContentResolver resolver,
-            ArrayList<ContentProviderOperation> operationList) {
+                                                                         ArrayList<ContentProviderOperation> operationList) {
         if (operationList == null) {
             operationList = new ArrayList<ContentProviderOperation>();
         }

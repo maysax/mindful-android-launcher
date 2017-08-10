@@ -32,15 +32,17 @@ import javax.crypto.spec.IvParameterSpec;
 /**
  * Represents encryption parameters used to read a container.
  *
- * @deprecated encrypted containers are legacy.
  * @hide
+ * @deprecated encrypted containers are legacy.
  */
 @SystemApi
 @Deprecated
 public class ContainerEncryptionParams implements Parcelable {
     protected static final String TAG = "ContainerEncryptionParams";
 
-    /** What we print out first when toString() is called. */
+    /**
+     * What we print out first when toString() is called.
+     */
     private static final String TO_STRING_PREFIX = "ContainerEncryptionParams{";
 
     /**
@@ -49,34 +51,54 @@ public class ContainerEncryptionParams implements Parcelable {
      */
     private static final int ENC_PARAMS_IV_PARAMETERS = 1;
 
-    /** Parameter type for paceling that indicates there are no MAC parameters. */
+    /**
+     * Parameter type for paceling that indicates there are no MAC parameters.
+     */
     private static final int MAC_PARAMS_NONE = 1;
 
-    /** The encryption algorithm used. */
+    /**
+     * The encryption algorithm used.
+     */
     private final String mEncryptionAlgorithm;
 
-    /** The parameter spec to be used for encryption. */
+    /**
+     * The parameter spec to be used for encryption.
+     */
     private final IvParameterSpec mEncryptionSpec;
 
-    /** Secret key to be used for decryption. */
+    /**
+     * Secret key to be used for decryption.
+     */
     private final SecretKey mEncryptionKey;
 
-    /** Algorithm name for the MAC to be used. */
+    /**
+     * Algorithm name for the MAC to be used.
+     */
     private final String mMacAlgorithm;
 
-    /** The parameter spec to be used for the MAC tag authentication. */
+    /**
+     * The parameter spec to be used for the MAC tag authentication.
+     */
     private final AlgorithmParameterSpec mMacSpec;
 
-    /** Secret key to be used for MAC tag authentication. */
+    /**
+     * Secret key to be used for MAC tag authentication.
+     */
     private final SecretKey mMacKey;
 
-    /** MAC tag authenticating the data in the container. */
+    /**
+     * MAC tag authenticating the data in the container.
+     */
     private final byte[] mMacTag;
 
-    /** Offset into file where authenticated (e.g., MAC protected) data begins. */
+    /**
+     * Offset into file where authenticated (e.g., MAC protected) data begins.
+     */
     private final long mAuthenticatedDataStart;
 
-    /** Offset into file where encrypted data begins. */
+    /**
+     * Offset into file where encrypted data begins.
+     */
     private final long mEncryptedDataStart;
 
     /**
@@ -86,7 +108,7 @@ public class ContainerEncryptionParams implements Parcelable {
     private final long mDataEnd;
 
     public ContainerEncryptionParams(String encryptionAlgorithm,
-            AlgorithmParameterSpec encryptionSpec, SecretKey encryptionKey)
+                                     AlgorithmParameterSpec encryptionSpec, SecretKey encryptionKey)
             throws InvalidAlgorithmParameterException {
         this(encryptionAlgorithm, encryptionSpec, encryptionKey, null, null, null, null, -1, -1,
                 -1);
@@ -96,26 +118,26 @@ public class ContainerEncryptionParams implements Parcelable {
      * Creates container encryption specifications for installing from encrypted
      * containers.
      *
-     * @param encryptionAlgorithm encryption algorithm to use; format matches
-     *            JCE
-     * @param encryptionSpec algorithm parameter specification
-     * @param encryptionKey key used for decryption
-     * @param macAlgorithm MAC algorithm to use; format matches JCE
-     * @param macSpec algorithm parameters specification, may be {@code null}
-     * @param macKey key used for authentication (i.e., for the MAC tag)
-     * @param macTag message authentication code (MAC) tag for the authenticated
-     *            data
+     * @param encryptionAlgorithm    encryption algorithm to use; format matches
+     *                               JCE
+     * @param encryptionSpec         algorithm parameter specification
+     * @param encryptionKey          key used for decryption
+     * @param macAlgorithm           MAC algorithm to use; format matches JCE
+     * @param macSpec                algorithm parameters specification, may be {@code null}
+     * @param macKey                 key used for authentication (i.e., for the MAC tag)
+     * @param macTag                 message authentication code (MAC) tag for the authenticated
+     *                               data
      * @param authenticatedDataStart offset of start of authenticated data in
-     *            stream
-     * @param encryptedDataStart offset of start of encrypted data in stream
-     * @param dataEnd offset of the end of both the authenticated and encrypted
-     *            data
+     *                               stream
+     * @param encryptedDataStart     offset of start of encrypted data in stream
+     * @param dataEnd                offset of the end of both the authenticated and encrypted
+     *                               data
      * @throws InvalidAlgorithmParameterException
      */
     public ContainerEncryptionParams(String encryptionAlgorithm,
-            AlgorithmParameterSpec encryptionSpec, SecretKey encryptionKey, String macAlgorithm,
-            AlgorithmParameterSpec macSpec, SecretKey macKey, byte[] macTag,
-            long authenticatedDataStart, long encryptedDataStart, long dataEnd)
+                                     AlgorithmParameterSpec encryptionSpec, SecretKey encryptionKey, String macAlgorithm,
+                                     AlgorithmParameterSpec macSpec, SecretKey macKey, byte[] macTag,
+                                     long authenticatedDataStart, long encryptedDataStart, long dataEnd)
             throws InvalidAlgorithmParameterException {
         if (TextUtils.isEmpty(encryptionAlgorithm)) {
             throw new NullPointerException("algorithm == null");
@@ -368,17 +390,17 @@ public class ContainerEncryptionParams implements Parcelable {
 
     public static final Parcelable.Creator<ContainerEncryptionParams> CREATOR =
             new Parcelable.Creator<ContainerEncryptionParams>() {
-        public ContainerEncryptionParams createFromParcel(Parcel source) {
-            try {
-                return new ContainerEncryptionParams(source);
-            } catch (InvalidAlgorithmParameterException e) {
-                Slog.e(TAG, "Invalid algorithm parameters specified", e);
-                return null;
-            }
-        }
+                public ContainerEncryptionParams createFromParcel(Parcel source) {
+                    try {
+                        return new ContainerEncryptionParams(source);
+                    } catch (InvalidAlgorithmParameterException e) {
+                        Slog.e(TAG, "Invalid algorithm parameters specified", e);
+                        return null;
+                    }
+                }
 
-        public ContainerEncryptionParams[] newArray(int size) {
-            return new ContainerEncryptionParams[size];
-        }
-    };
+                public ContainerEncryptionParams[] newArray(int size) {
+                    return new ContainerEncryptionParams[size];
+                }
+            };
 }

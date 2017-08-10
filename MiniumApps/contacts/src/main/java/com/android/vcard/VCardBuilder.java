@@ -52,17 +52,17 @@ import java.util.Set;
  * </p>
  * <pre class="prettyprint">final VCardBuilder builder = new VCardBuilder(vcardType);
  * builder.appendNameProperties(contentValuesListMap.get(StructuredName.CONTENT_ITEM_TYPE))
- *     .appendNickNames(contentValuesListMap.get(Nickname.CONTENT_ITEM_TYPE))
- *     .appendPhones(contentValuesListMap.get(Phone.CONTENT_ITEM_TYPE))
- *     .appendEmails(contentValuesListMap.get(Email.CONTENT_ITEM_TYPE))
- *     .appendPostals(contentValuesListMap.get(StructuredPostal.CONTENT_ITEM_TYPE))
- *     .appendOrganizations(contentValuesListMap.get(Organization.CONTENT_ITEM_TYPE))
- *     .appendWebsites(contentValuesListMap.get(Website.CONTENT_ITEM_TYPE))
- *     .appendPhotos(contentValuesListMap.get(Photo.CONTENT_ITEM_TYPE))
- *     .appendNotes(contentValuesListMap.get(Note.CONTENT_ITEM_TYPE))
- *     .appendEvents(contentValuesListMap.get(Event.CONTENT_ITEM_TYPE))
- *     .appendIms(contentValuesListMap.get(Im.CONTENT_ITEM_TYPE))
- *     .appendRelation(contentValuesListMap.get(Relation.CONTENT_ITEM_TYPE));
+ * .appendNickNames(contentValuesListMap.get(Nickname.CONTENT_ITEM_TYPE))
+ * .appendPhones(contentValuesListMap.get(Phone.CONTENT_ITEM_TYPE))
+ * .appendEmails(contentValuesListMap.get(Email.CONTENT_ITEM_TYPE))
+ * .appendPostals(contentValuesListMap.get(StructuredPostal.CONTENT_ITEM_TYPE))
+ * .appendOrganizations(contentValuesListMap.get(Organization.CONTENT_ITEM_TYPE))
+ * .appendWebsites(contentValuesListMap.get(Website.CONTENT_ITEM_TYPE))
+ * .appendPhotos(contentValuesListMap.get(Photo.CONTENT_ITEM_TYPE))
+ * .appendNotes(contentValuesListMap.get(Note.CONTENT_ITEM_TYPE))
+ * .appendEvents(contentValuesListMap.get(Event.CONTENT_ITEM_TYPE))
+ * .appendIms(contentValuesListMap.get(Im.CONTENT_ITEM_TYPE))
+ * .appendRelation(contentValuesListMap.get(Relation.CONTENT_ITEM_TYPE));
  * return builder.toString();</pre>
  */
 public class VCardBuilder {
@@ -128,7 +128,7 @@ public class VCardBuilder {
 
     /**
      * @param vcardType
-     * @param charset If null, we use default charset for export.
+     * @param charset   If null, we use default charset for export.
      * @hide
      */
     public VCardBuilder(final int vcardType, String charset) {
@@ -175,7 +175,7 @@ public class VCardBuilder {
             if (TextUtils.isEmpty(charset)) {
                 Log.i(LOG_TAG,
                         "Use the charset \"" + VCardConfig.DEFAULT_EXPORT_CHARSET
-                        + "\" for export.");
+                                + "\" for export.");
                 mCharset = VCardConfig.DEFAULT_EXPORT_CHARSET;
                 mVCardCharsetParameter = "CHARSET=" + VCardConfig.DEFAULT_EXPORT_CHARSET;
             } else {
@@ -227,7 +227,7 @@ public class VCardBuilder {
         ContentValues primaryContentValues = null;
         ContentValues subprimaryContentValues = null;
         for (ContentValues contentValues : contentValuesList) {
-            if (contentValues == null){
+            if (contentValues == null) {
                 continue;
             }
             Integer isSuperPrimary = contentValues.getAsInteger(StructuredName.IS_SUPER_PRIMARY);
@@ -322,8 +322,8 @@ public class VCardBuilder {
         mBuilder.append(VCardConstants.PROPERTY_N);
 
         if (!(TextUtils.isEmpty(phoneticFamilyName) &&
-                        TextUtils.isEmpty(phoneticMiddleName) &&
-                        TextUtils.isEmpty(phoneticGivenName))) {
+                TextUtils.isEmpty(phoneticMiddleName) &&
+                TextUtils.isEmpty(phoneticGivenName))) {
             mBuilder.append(VCARD_PARAM_SEPARATOR);
             final String sortAs = escapeCharacters(phoneticFamilyName)
                     + ';' + escapeCharacters(phoneticGivenName)
@@ -423,7 +423,7 @@ public class VCardBuilder {
                     shouldAppendCharsetParam(formattedName);
             final boolean reallyUseQuotedPrintableToFN =
                     !mRefrainsQPToNameProperties &&
-                    !VCardUtils.containsOnlyNonCrLfPrintableAscii(formattedName);
+                            !VCardUtils.containsOnlyNonCrLfPrintableAscii(formattedName);
 
             final String encodedFamily;
             final String encodedGiven;
@@ -559,11 +559,11 @@ public class VCardBuilder {
         final String phoneticGivenName;
         {
             final String tmpPhoneticFamilyName =
-                contentValues.getAsString(StructuredName.PHONETIC_FAMILY_NAME);
+                    contentValues.getAsString(StructuredName.PHONETIC_FAMILY_NAME);
             final String tmpPhoneticMiddleName =
-                contentValues.getAsString(StructuredName.PHONETIC_MIDDLE_NAME);
+                    contentValues.getAsString(StructuredName.PHONETIC_MIDDLE_NAME);
             final String tmpPhoneticGivenName =
-                contentValues.getAsString(StructuredName.PHONETIC_GIVEN_NAME);
+                    contentValues.getAsString(StructuredName.PHONETIC_GIVEN_NAME);
             if (mNeedsToConvertPhoneticString) {
                 phoneticFamilyName = VCardUtils.toHalfWidthString(tmpPhoneticFamilyName);
                 phoneticMiddleName = VCardUtils.toHalfWidthString(tmpPhoneticMiddleName);
@@ -629,13 +629,13 @@ public class VCardBuilder {
             mBuilder.append(VCardConstants.PARAM_TYPE_X_IRMC_N);
 
             boolean reallyUseQuotedPrintable =
-                (!mRefrainsQPToNameProperties
-                        && !(VCardUtils.containsOnlyNonCrLfPrintableAscii(
-                                phoneticFamilyName)
-                                && VCardUtils.containsOnlyNonCrLfPrintableAscii(
-                                        phoneticMiddleName)
-                                && VCardUtils.containsOnlyNonCrLfPrintableAscii(
-                                        phoneticGivenName)));
+                    (!mRefrainsQPToNameProperties
+                            && !(VCardUtils.containsOnlyNonCrLfPrintableAscii(
+                            phoneticFamilyName)
+                            && VCardUtils.containsOnlyNonCrLfPrintableAscii(
+                            phoneticMiddleName)
+                            && VCardUtils.containsOnlyNonCrLfPrintableAscii(
+                            phoneticGivenName)));
 
             final String encodedPhoneticFamilyName;
             final String encodedPhoneticMiddleName;
@@ -687,8 +687,8 @@ public class VCardBuilder {
         if (mUsesDefactProperty) {
             if (!TextUtils.isEmpty(phoneticGivenName)) {
                 final boolean reallyUseQuotedPrintable =
-                    (mShouldUseQuotedPrintable &&
-                            !VCardUtils.containsOnlyNonCrLfPrintableAscii(phoneticGivenName));
+                        (mShouldUseQuotedPrintable &&
+                                !VCardUtils.containsOnlyNonCrLfPrintableAscii(phoneticGivenName));
                 final String encodedPhoneticGivenName;
                 if (reallyUseQuotedPrintable) {
                     encodedPhoneticGivenName = encodeQuotedPrintable(phoneticGivenName);
@@ -710,8 +710,8 @@ public class VCardBuilder {
             }  // if (!TextUtils.isEmpty(phoneticGivenName))
             if (!TextUtils.isEmpty(phoneticMiddleName)) {
                 final boolean reallyUseQuotedPrintable =
-                    (mShouldUseQuotedPrintable &&
-                            !VCardUtils.containsOnlyNonCrLfPrintableAscii(phoneticMiddleName));
+                        (mShouldUseQuotedPrintable &&
+                                !VCardUtils.containsOnlyNonCrLfPrintableAscii(phoneticMiddleName));
                 final String encodedPhoneticMiddleName;
                 if (reallyUseQuotedPrintable) {
                     encodedPhoneticMiddleName = encodeQuotedPrintable(phoneticMiddleName);
@@ -733,8 +733,8 @@ public class VCardBuilder {
             }  // if (!TextUtils.isEmpty(phoneticGivenName))
             if (!TextUtils.isEmpty(phoneticFamilyName)) {
                 final boolean reallyUseQuotedPrintable =
-                    (mShouldUseQuotedPrintable &&
-                            !VCardUtils.containsOnlyNonCrLfPrintableAscii(phoneticFamilyName));
+                        (mShouldUseQuotedPrintable &&
+                                !VCardUtils.containsOnlyNonCrLfPrintableAscii(phoneticFamilyName));
                 final String encodedPhoneticFamilyName;
                 if (reallyUseQuotedPrintable) {
                     encodedPhoneticFamilyName = encodeQuotedPrintable(phoneticFamilyName);
@@ -784,7 +784,7 @@ public class VCardBuilder {
     }
 
     public VCardBuilder appendPhones(final List<ContentValues> contentValuesList,
-            VCardPhoneNumberTranslationCallback translationCallback) {
+                                     VCardPhoneNumberTranslationCallback translationCallback) {
         boolean phoneLineExists = false;
         if (contentValuesList != null) {
             Set<String> phoneSet = new HashSet<String>();
@@ -1036,7 +1036,7 @@ public class VCardBuilder {
                     typeAsInteger : DEFAULT_POSTAL_TYPE);
             final String label = contentValues.getAsString(StructuredPostal.LABEL);
             final Integer isPrimaryAsInteger =
-                contentValues.getAsInteger(StructuredPostal.IS_PRIMARY);
+                    contentValues.getAsInteger(StructuredPostal.IS_PRIMARY);
             final boolean isPrimary = (isPrimaryAsInteger != null ?
                     (isPrimaryAsInteger > 0) : false);
             appendPostalLine(type, label, contentValues, isPrimary, false);
@@ -1047,8 +1047,9 @@ public class VCardBuilder {
         final boolean reallyUseQuotedPrintable;
         final boolean appendCharset;
         final String addressData;
+
         public PostalStruct(final boolean reallyUseQuotedPrintable,
-                final boolean appendCharset, final String addressData) {
+                            final boolean appendCharset, final String addressData) {
             this.reallyUseQuotedPrintable = reallyUseQuotedPrintable;
             this.appendCharset = appendCharset;
             this.addressData = addressData;
@@ -1074,10 +1075,10 @@ public class VCardBuilder {
                 rawRegion, rawPostalCode, rawCountry};
         if (!VCardUtils.areAllEmpty(rawAddressArray)) {
             final boolean reallyUseQuotedPrintable =
-                (mShouldUseQuotedPrintable &&
-                        !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawAddressArray));
+                    (mShouldUseQuotedPrintable &&
+                            !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawAddressArray));
             final boolean appendCharset =
-                !VCardUtils.containsOnlyPrintableAscii(rawAddressArray);
+                    !VCardUtils.containsOnlyPrintableAscii(rawAddressArray);
             final String encodedPoBox;
             final String encodedStreet;
             final String encodedLocality;
@@ -1143,15 +1144,15 @@ public class VCardBuilder {
         } else {  // VCardUtils.areAllEmpty(rawAddressArray) == true
             // Try to use FORMATTED_ADDRESS instead.
             final String rawFormattedAddress =
-                contentValues.getAsString(StructuredPostal.FORMATTED_ADDRESS);
+                    contentValues.getAsString(StructuredPostal.FORMATTED_ADDRESS);
             if (TextUtils.isEmpty(rawFormattedAddress)) {
                 return null;
             }
             final boolean reallyUseQuotedPrintable =
-                (mShouldUseQuotedPrintable &&
-                        !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawFormattedAddress));
+                    (mShouldUseQuotedPrintable &&
+                            !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawFormattedAddress));
             final boolean appendCharset =
-                !VCardUtils.containsOnlyPrintableAscii(rawFormattedAddress);
+                    !VCardUtils.containsOnlyPrintableAscii(rawFormattedAddress);
             final String encodedFormattedAddress;
             if (reallyUseQuotedPrintable) {
                 encodedFormattedAddress = encodeQuotedPrintable(rawFormattedAddress);
@@ -1344,10 +1345,10 @@ public class VCardBuilder {
                 // This means we scan noteStr completely twice, which is redundant.
                 // But for now, we assume this is not so time-consuming..
                 final boolean shouldAppendCharsetInfo =
-                    !VCardUtils.containsOnlyPrintableAscii(noteStr);
+                        !VCardUtils.containsOnlyPrintableAscii(noteStr);
                 final boolean reallyUseQuotedPrintable =
                         (mShouldUseQuotedPrintable &&
-                            !VCardUtils.containsOnlyNonCrLfPrintableAscii(noteStr));
+                                !VCardUtils.containsOnlyNonCrLfPrintableAscii(noteStr));
                 appendLine(VCardConstants.PROPERTY_NOTE, noteStr,
                         shouldAppendCharsetInfo, reallyUseQuotedPrintable);
             } else {
@@ -1358,7 +1359,7 @@ public class VCardBuilder {
                                 !VCardUtils.containsOnlyPrintableAscii(noteStr);
                         final boolean reallyUseQuotedPrintable =
                                 (mShouldUseQuotedPrintable &&
-                                    !VCardUtils.containsOnlyNonCrLfPrintableAscii(noteStr));
+                                        !VCardUtils.containsOnlyNonCrLfPrintableAscii(noteStr));
                         appendLine(VCardConstants.PROPERTY_NOTE, noteStr,
                                 shouldAppendCharsetInfo, reallyUseQuotedPrintable);
                     }
@@ -1391,7 +1392,7 @@ public class VCardBuilder {
                         continue;
                     }
                     final Integer isSuperPrimaryAsInteger =
-                        contentValues.getAsInteger(Event.IS_SUPER_PRIMARY);
+                            contentValues.getAsInteger(Event.IS_SUPER_PRIMARY);
                     final boolean isSuperPrimary = (isSuperPrimaryAsInteger != null ?
                             (isSuperPrimaryAsInteger > 0) : false);
                     if (isSuperPrimary) {
@@ -1400,7 +1401,7 @@ public class VCardBuilder {
                         break;
                     }
                     final Integer isPrimaryAsInteger =
-                        contentValues.getAsInteger(Event.IS_PRIMARY);
+                            contentValues.getAsInteger(Event.IS_PRIMARY);
                     final boolean isPrimary = (isPrimaryAsInteger != null ?
                             (isPrimaryAsInteger > 0) : false);
                     if (isPrimary) {
@@ -1418,7 +1419,7 @@ public class VCardBuilder {
             if (primaryBirthday != null) {
                 appendLineWithCharsetAndQPDetection(VCardConstants.PROPERTY_BDAY,
                         primaryBirthday.trim());
-            } else if (secondaryBirthday != null){
+            } else if (secondaryBirthday != null) {
                 appendLineWithCharsetAndQPDetection(VCardConstants.PROPERTY_BDAY,
                         secondaryBirthday.trim());
             }
@@ -1442,8 +1443,8 @@ public class VCardBuilder {
      * @param emitEveryTime If true, builder builds the line even when there's no entry.
      */
     public void appendPostalLine(final int type, final String label,
-            final ContentValues contentValues,
-            final boolean isPrimary, final boolean emitEveryTime) {
+                                 final ContentValues contentValues,
+                                 final boolean isPrimary, final boolean emitEveryTime) {
         final boolean reallyUseQuotedPrintable;
         final boolean appendCharset;
         final String addressValue;
@@ -1520,7 +1521,7 @@ public class VCardBuilder {
     }
 
     public void appendEmailLine(final int type, final String label,
-            final String rawValue, final boolean isPrimary) {
+                                final String rawValue, final boolean isPrimary) {
         final String typeAsString;
         switch (type) {
             case Email.TYPE_CUSTOM: {
@@ -1570,7 +1571,7 @@ public class VCardBuilder {
     }
 
     public void appendTelLine(final Integer typeAsInteger, final String label,
-            final String encodedValue, boolean isPrimary) {
+                              final String encodedValue, boolean isPrimary) {
         mBuilder.append(VCardConstants.PROPERTY_TEL);
         mBuilder.append(VCARD_PARAM_SEPARATOR);
 
@@ -1772,14 +1773,14 @@ public class VCardBuilder {
      * SIP (Session Initiation Protocol) is first supported in RFC 4770 as part of IMPP
      * support. vCard 2.1 and old vCard 3.0 may not able to parse it, or expect X-SIP
      * instead of "IMPP;sip:...".
-     *
+     * <p>
      * We honor RFC 4770 and don't allow vCard 3.0 to emit X-SIP at all.
      */
     public VCardBuilder appendSipAddresses(final List<ContentValues> contentValuesList) {
         final boolean useXProperty;
         if (mIsV30OrV40) {
             useXProperty = false;
-        } else if (mUsesDefactProperty){
+        } else if (mUsesDefactProperty) {
             useXProperty = true;
         } else {
             return this;
@@ -1836,11 +1837,11 @@ public class VCardBuilder {
         }
 
         boolean needCharset =
-            (mShouldAppendCharsetParam &&
-                    !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawValueList));
+                (mShouldAppendCharsetParam &&
+                        !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawValueList));
         boolean reallyUseQuotedPrintable =
-            (mShouldUseQuotedPrintable &&
-                    !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawValueList));
+                (mShouldUseQuotedPrintable &&
+                        !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawValueList));
         mBuilder.append(VCardConstants.PROPERTY_X_ANDROID_CUSTOM);
         if (needCharset) {
             mBuilder.append(VCARD_PARAM_SEPARATOR);
@@ -1870,7 +1871,7 @@ public class VCardBuilder {
     }
 
     public void appendLineWithCharsetAndQPDetection(final String propertyName,
-            final String rawValue) {
+                                                    final String rawValue) {
         appendLineWithCharsetAndQPDetection(propertyName, null, rawValue);
     }
 
@@ -1880,7 +1881,7 @@ public class VCardBuilder {
     }
 
     public void appendLineWithCharsetAndQPDetection(final String propertyName,
-            final List<String> parameterList, final String rawValue) {
+                                                    final List<String> parameterList, final String rawValue) {
         final boolean needCharset =
                 !VCardUtils.containsOnlyPrintableAscii(rawValue);
         final boolean reallyUseQuotedPrintable =
@@ -1891,13 +1892,13 @@ public class VCardBuilder {
     }
 
     public void appendLineWithCharsetAndQPDetection(final String propertyName,
-            final List<String> parameterList, final List<String> rawValueList) {
+                                                    final List<String> parameterList, final List<String> rawValueList) {
         boolean needCharset =
-            (mShouldAppendCharsetParam &&
-                    !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawValueList));
+                (mShouldAppendCharsetParam &&
+                        !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawValueList));
         boolean reallyUseQuotedPrintable =
-            (mShouldUseQuotedPrintable &&
-                    !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawValueList));
+                (mShouldUseQuotedPrintable &&
+                        !VCardUtils.containsOnlyNonCrLfPrintableAscii(rawValueList));
         appendLine(propertyName, parameterList, rawValueList,
                 needCharset, reallyUseQuotedPrintable);
     }
@@ -1914,19 +1915,19 @@ public class VCardBuilder {
     }
 
     public void appendLine(final String propertyName,
-            final String rawValue, final boolean needCharset,
-            boolean reallyUseQuotedPrintable) {
+                           final String rawValue, final boolean needCharset,
+                           boolean reallyUseQuotedPrintable) {
         appendLine(propertyName, null, rawValue, needCharset, reallyUseQuotedPrintable);
     }
 
     public void appendLine(final String propertyName, final List<String> parameterList,
-            final String rawValue) {
+                           final String rawValue) {
         appendLine(propertyName, parameterList, rawValue, false, false);
     }
 
     public void appendLine(final String propertyName, final List<String> parameterList,
-            final String rawValue, final boolean needCharset,
-            boolean reallyUseQuotedPrintable) {
+                           final String rawValue, final boolean needCharset,
+                           boolean reallyUseQuotedPrintable) {
         mBuilder.append(propertyName);
         if (parameterList != null && parameterList.size() > 0) {
             mBuilder.append(VCARD_PARAM_SEPARATOR);
@@ -1954,13 +1955,13 @@ public class VCardBuilder {
     }
 
     public void appendLine(final String propertyName, final List<String> rawValueList,
-            final boolean needCharset, boolean needQuotedPrintable) {
+                           final boolean needCharset, boolean needQuotedPrintable) {
         appendLine(propertyName, null, rawValueList, needCharset, needQuotedPrintable);
     }
 
     public void appendLine(final String propertyName, final List<String> parameterList,
-            final List<String> rawValueList, final boolean needCharset,
-            final boolean needQuotedPrintable) {
+                           final List<String> rawValueList, final boolean needCharset,
+                           final boolean needQuotedPrintable) {
         mBuilder.append(propertyName);
         if (parameterList != null && parameterList.size() > 0) {
             mBuilder.append(VCARD_PARAM_SEPARATOR);
@@ -2057,17 +2058,17 @@ public class VCardBuilder {
     /**
      * Returns true when the property line should contain charset parameter
      * information. This method may return true even when vCard version is 3.0.
-     *
+     * <p>
      * Strictly, adding charset information is invalid in VCard 3.0.
      * However we'll add the info only when charset we use is not UTF-8
      * in vCard 3.0 format, since parser side may be able to use the charset
      * via this field, though we may encounter another problem by adding it.
-     *
+     * <p>
      * e.g. Japanese mobile phones use Shift_Jis while RFC 2426
      * recommends UTF-8. By adding this field, parsers may be able
      * to know this text is NOT UTF-8 but Shift_Jis.
      */
-    private boolean shouldAppendCharsetParam(String...propertyValueList) {
+    private boolean shouldAppendCharsetParam(String... propertyValueList) {
         if (!mShouldAppendCharsetParam) {
             return false;
         }
@@ -2120,7 +2121,7 @@ public class VCardBuilder {
     /**
      * Append '\' to the characters which should be escaped. The character set is different
      * not only between vCard 2.1 and vCard 3.0 but also among each device.
-     *
+     * <p>
      * Note that Quoted-Printable string must not be input here.
      */
     @SuppressWarnings("fallthrough")

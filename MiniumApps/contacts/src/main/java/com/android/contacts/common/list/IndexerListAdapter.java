@@ -97,7 +97,7 @@ public abstract class IndexerListAdapter extends PinnedHeaderListAdapter impleme
 
     public Object[] getSections() {
         if (mIndexer == null) {
-            return new String[] { " " };
+            return new String[]{" "};
         } else {
             return mIndexer.getSections();
         }
@@ -178,7 +178,7 @@ public abstract class IndexerListAdapter extends PinnedHeaderListAdapter impleme
                     // Match the pinned header's height to the height of the list item.
                     mHeader.setMinimumHeight(topChild.getMeasuredHeight());
                 }
-                setPinnedSectionTitle(mHeader, (String)mIndexer.getSections()[section]);
+                setPinnedSectionTitle(mHeader, (String) mIndexer.getSections()[section]);
 
                 // Compute the item position where the current partition begins
                 int partitionStart = getPositionForPartition(mIndexedPartition);
@@ -209,7 +209,7 @@ public abstract class IndexerListAdapter extends PinnedHeaderListAdapter impleme
             int section = getSectionForPosition(position);
             if (section != -1 && getPositionForSection(section) == position) {
                 mPlacementCache.firstInSection = true;
-                mPlacementCache.sectionHeader = (String)getSections()[section];
+                mPlacementCache.sectionHeader = (String) getSections()[section];
             } else {
                 mPlacementCache.firstInSection = false;
                 mPlacementCache.sectionHeader = null;

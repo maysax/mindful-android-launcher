@@ -16,10 +16,10 @@
 
 package com.android.mms.util;
 
+import android.content.Context;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import android.content.Context;
 
 public class ImageCacheService {
     public static final String IMAGE_CACHE_FILE = "imgcache";
@@ -47,6 +47,7 @@ public class ImageCacheService {
             mData = data;
             mOffset = offset;
         }
+
         public byte[] mData;
         public int mOffset;
     }

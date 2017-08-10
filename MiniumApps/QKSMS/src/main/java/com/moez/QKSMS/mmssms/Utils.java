@@ -276,7 +276,8 @@ public class Utils {
 
     /**
      * Gets the current thread_id or creates a new one for the given recipient
-     * @param context is the context of the activity or service
+     *
+     * @param context   is the context of the activity or service
      * @param recipient is the person message is being sent to
      * @return the thread_id to use in the database
      */
@@ -288,7 +289,8 @@ public class Utils {
 
     /**
      * Gets the current thread_id or creates a new one for the given recipient
-     * @param context is the context of the activity or service
+     *
+     * @param context    is the context of the activity or service
      * @param recipients is the set of people message is being sent to
      * @return the thread_id to use in the database
      */
@@ -300,7 +302,8 @@ public class Utils {
 
     /**
      * Gets the current thread_id or -1 if none found
-     * @param context is the context of the activity or service
+     *
+     * @param context   is the context of the activity or service
      * @param recipient is the person message is being sent to
      * @return the thread_id to use in the database, -1 if none found
      */
@@ -312,7 +315,8 @@ public class Utils {
 
     /**
      * Gets the current thread_id or -1 if none found
-     * @param context is the context of the activity or service
+     *
+     * @param context    is the context of the activity or service
      * @param recipients is the set of people message is being sent to
      * @return the thread_id to use in the database, -1 if none found
      */
@@ -380,6 +384,7 @@ public class Utils {
 
     /**
      * Gets the default settings from a shared preferences file associated with your app
+     *
      * @param context is the context of the activity or service
      * @return the settings object to send with
      */
@@ -409,6 +414,7 @@ public class Utils {
 
     /**
      * Determines whether or not the user has Android 4.4 KitKat
+     *
      * @return true if version code on device is >= kitkat
      */
     public static boolean hasKitKat() {
@@ -417,6 +423,7 @@ public class Utils {
 
     /**
      * Determines whether or not the app is the default SMS app on a device
+     *
      * @param context
      * @return true if app is default
      */

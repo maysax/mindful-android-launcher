@@ -17,14 +17,6 @@
 
 package com.android.mms.model;
 
-import java.lang.ref.SoftReference;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.w3c.dom.events.Event;
-import org.w3c.dom.smil.ElementTime;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,6 +38,14 @@ import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu.PduPart;
 import com.google.android.mms.pdu.PduPersister;
 
+import org.w3c.dom.events.Event;
+import org.w3c.dom.smil.ElementTime;
+
+import java.lang.ref.SoftReference;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 
 public class ImageModel extends RegionMediaModel {
     private static final String TAG = LogTag.TAG;
@@ -59,8 +59,8 @@ public class ImageModel extends RegionMediaModel {
      * into one of these content types before being sent over MMS.
      */
     private static final Set<String> SUPPORTED_MMS_IMAGE_CONTENT_TYPES =
-        new HashSet<String>(Arrays.asList(new String[] {
-                "image/jpeg",
+            new HashSet<String>(Arrays.asList(new String[]{
+                    "image/jpeg",
             }));
 
     private int mWidth;
@@ -76,7 +76,7 @@ public class ImageModel extends RegionMediaModel {
     }
 
     public ImageModel(Context context, String contentType, String src,
-            Uri uri, RegionModel region) throws MmsException {
+                      Uri uri, RegionModel region) throws MmsException {
         super(context, SmilHelper.ELEMENT_TAG_IMAGE,
                 contentType, src, uri, region);
         decodeImageBounds(uri);
@@ -161,7 +161,7 @@ public class ImageModel extends RegionMediaModel {
         return data == null ? null : BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
-    public Bitmap getBitmap(int width, int height)  {
+    public Bitmap getBitmap(int width, int height) {
         Bitmap bm = mFullSizeBitmapCache.get();
         if (bm == null) {
             try {

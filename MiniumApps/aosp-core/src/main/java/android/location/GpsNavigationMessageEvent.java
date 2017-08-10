@@ -21,9 +21,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.security.InvalidParameterException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * A class implementing a container for data associated with a navigation message event.

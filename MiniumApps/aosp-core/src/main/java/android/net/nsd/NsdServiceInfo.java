@@ -16,10 +16,10 @@
 
 package android.net.nsd;
 
-import android.os.Parcelable;
 import android.os.Parcel;
-import android.util.Log;
+import android.os.Parcelable;
 import android.util.ArrayMap;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -49,53 +49,73 @@ public final class NsdServiceInfo implements Parcelable {
     public NsdServiceInfo() {
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public NsdServiceInfo(String sn, String rt) {
         mServiceName = sn;
         mServiceType = rt;
     }
 
-    /** Get the service name */
+    /**
+     * Get the service name
+     */
     public String getServiceName() {
         return mServiceName;
     }
 
-    /** Set the service name */
+    /**
+     * Set the service name
+     */
     public void setServiceName(String s) {
         mServiceName = s;
     }
 
-    /** Get the service type */
+    /**
+     * Get the service type
+     */
     public String getServiceType() {
         return mServiceType;
     }
 
-    /** Set the service type */
+    /**
+     * Set the service type
+     */
     public void setServiceType(String s) {
         mServiceType = s;
     }
 
-    /** Get the host address. The host address is valid for a resolved service. */
+    /**
+     * Get the host address. The host address is valid for a resolved service.
+     */
     public InetAddress getHost() {
         return mHost;
     }
 
-    /** Set the host address */
+    /**
+     * Set the host address
+     */
     public void setHost(InetAddress s) {
         mHost = s;
     }
 
-    /** Get port number. The port number is valid for a resolved service. */
+    /**
+     * Get port number. The port number is valid for a resolved service.
+     */
     public int getPort() {
         return mPort;
     }
 
-    /** Set port number */
+    /**
+     * Set port number
+     */
     public void setPort(int p) {
         mPort = p;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public void setAttribute(String key, byte[] value) {
         // Key must be printable US-ASCII, excluding =.
         for (int i = 0; i < key.length(); ++i) {
@@ -132,32 +152,34 @@ public final class NsdServiceInfo implements Parcelable {
 
     /**
      * Add a service attribute as a key/value pair.
-     *
+     * <p>
      * <p> Service attributes are included as DNS-SD TXT record pairs.
-     *
+     * <p>
      * <p> The key must be US-ASCII printable characters, excluding the '=' character.  Values may
      * be UTF-8 strings or null.  The total length of key + value must be less than 255 bytes.
-     *
+     * <p>
      * <p> Keys should be short, ideally no more than 9 characters, and unique per instance of
      * {@link NsdServiceInfo}.  Calling {@link #setAttribute} twice with the same key will overwrite
      * first value.
      */
     public void setAttribute(String key, String value) {
         try {
-            setAttribute(key, value == null ? (byte []) null : value.getBytes("UTF-8"));
+            setAttribute(key, value == null ? (byte[]) null : value.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException("Value must be UTF-8");
         }
     }
 
-    /** Remove an attribute by key */
+    /**
+     * Remove an attribute by key
+     */
     public void removeAttribute(String key) {
         mTxtRecord.remove(key);
     }
 
     /**
      * Retrive attributes as a map of String keys to byte[] values.
-     *
+     * <p>
      * <p> The returned map is unmodifiable; changes must be made through {@link #setAttribute} and
      * {@link #removeAttribute}.
      */
@@ -176,7 +198,9 @@ public final class NsdServiceInfo implements Parcelable {
         return txtRecordSize;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public byte[] getTxtRecord() {
         int txtRecordSize = getTxtRecordSize();
         if (txtRecordSize == 0) {
@@ -200,7 +224,7 @@ public final class NsdServiceInfo implements Parcelable {
             ptr += key.length();
 
             // US-ASCII '=' character.
-            txtRecord[ptr++] = (byte)'=';
+            txtRecord[ptr++] = (byte) '=';
 
             // The value, as any raw bytes.
             if (value != null) {
@@ -226,12 +250,16 @@ public final class NsdServiceInfo implements Parcelable {
         return sb.toString();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mServiceName);
         dest.writeString(mServiceType);
@@ -258,38 +286,41 @@ public final class NsdServiceInfo implements Parcelable {
         }
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static final Creator<NsdServiceInfo> CREATOR =
-        new Creator<NsdServiceInfo>() {
-            public NsdServiceInfo createFromParcel(Parcel in) {
-                NsdServiceInfo info = new NsdServiceInfo();
-                info.mServiceName = in.readString();
-                info.mServiceType = in.readString();
+            new Creator<NsdServiceInfo>() {
+                public NsdServiceInfo createFromParcel(Parcel in) {
+                    NsdServiceInfo info = new NsdServiceInfo();
+                    info.mServiceName = in.readString();
+                    info.mServiceType = in.readString();
 
-                if (in.readInt() == 1) {
-                    try {
-                        info.mHost = InetAddress.getByAddress(in.createByteArray());
-                    } catch (java.net.UnknownHostException e) {}
-                }
-
-                info.mPort = in.readInt();
-
-                // TXT record key/value pairs.
-                int recordCount = in.readInt();
-                for (int i = 0; i < recordCount; ++i) {
-                    byte[] valueArray = null;
                     if (in.readInt() == 1) {
-                        int valueLength = in.readInt();
-                        valueArray = new byte[valueLength];
-                        in.readByteArray(valueArray);
+                        try {
+                            info.mHost = InetAddress.getByAddress(in.createByteArray());
+                        } catch (java.net.UnknownHostException e) {
+                        }
                     }
-                    info.mTxtRecord.put(in.readString(), valueArray);
-                }
-                return info;
-            }
 
-            public NsdServiceInfo[] newArray(int size) {
-                return new NsdServiceInfo[size];
-            }
-        };
+                    info.mPort = in.readInt();
+
+                    // TXT record key/value pairs.
+                    int recordCount = in.readInt();
+                    for (int i = 0; i < recordCount; ++i) {
+                        byte[] valueArray = null;
+                        if (in.readInt() == 1) {
+                            int valueLength = in.readInt();
+                            valueArray = new byte[valueLength];
+                            in.readByteArray(valueArray);
+                        }
+                        info.mTxtRecord.put(in.readString(), valueArray);
+                    }
+                    return info;
+                }
+
+                public NsdServiceInfo[] newArray(int size) {
+                    return new NsdServiceInfo[size];
+                }
+            };
 }

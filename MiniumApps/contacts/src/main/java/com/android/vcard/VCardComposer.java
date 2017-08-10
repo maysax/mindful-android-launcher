@@ -24,6 +24,7 @@ import android.content.EntityIterator;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Im;
@@ -41,7 +42,6 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
 import android.provider.ContactsContract.RawContactsEntity;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -61,27 +61,27 @@ import java.util.Map;
  * </p>
  * <pre class="prettyprint">VCardComposer composer = null;
  * try {
- *     composer = new VCardComposer(context);
- *     composer.addHandler(
- *             composer.new HandlerForOutputStream(outputStream));
- *     if (!composer.init()) {
- *         // Do something handling the situation.
- *         return;
- *     }
- *     while (!composer.isAfterLast()) {
- *         if (mCanceled) {
- *             // Assume a user may cancel this operation during the export.
- *             return;
- *         }
- *         if (!composer.createOneEntry()) {
- *             // Do something handling the error situation.
- *             return;
- *         }
- *     }
+ * composer = new VCardComposer(context);
+ * composer.addHandler(
+ * composer.new HandlerForOutputStream(outputStream));
+ * if (!composer.init()) {
+ * // Do something handling the situation.
+ * return;
+ * }
+ * while (!composer.isAfterLast()) {
+ * if (mCanceled) {
+ * // Assume a user may cancel this operation during the export.
+ * return;
+ * }
+ * if (!composer.createOneEntry()) {
+ * // Do something handling the error situation.
+ * return;
+ * }
+ * }
  * } finally {
- *     if (composer != null) {
- *         composer.terminate();
- *     }
+ * if (composer != null) {
+ * composer.terminate();
+ * }
  * }</pre>
  * <p>
  * Users have to manually take care of memory efficiency. Even one vCard may contain
@@ -96,17 +96,19 @@ public class VCardComposer {
     private static final boolean DEBUG = false;
 
     public static final String FAILURE_REASON_FAILED_TO_GET_DATABASE_INFO =
-        "Failed to get database information";
+            "Failed to get database information";
 
     public static final String FAILURE_REASON_NO_ENTRY =
-        "There's no exportable in the database";
+            "There's no exportable in the database";
 
     public static final String FAILURE_REASON_NOT_INITIALIZED =
-        "The vCard composer object is not correctly initialized";
+            "The vCard composer object is not correctly initialized";
 
-    /** Should be visible only from developers... (no need to translate, hopefully) */
+    /**
+     * Should be visible only from developers... (no need to translate, hopefully)
+     */
     public static final String FAILURE_REASON_UNSUPPORTED_URI =
-        "The Uri vCard composer received is not supported by the composer.";
+            "The Uri vCard composer received is not supported by the composer.";
 
     public static final String NO_ERROR = "No error";
 
@@ -154,8 +156,8 @@ public class VCardComposer {
      */
     private boolean mTerminateCalled = true;
 
-    private static final String[] sContactsProjection = new String[] {
-        Contacts._ID,
+    private static final String[] sContactsProjection = new String[]{
+            Contacts._ID,
     };
 
     public VCardComposer(Context context) {
@@ -177,30 +179,31 @@ public class VCardComposer {
      * The variant which sets charset to null.
      */
     public VCardComposer(final Context context, final int vcardType,
-            final boolean careHandlerErrors) {
+                         final boolean careHandlerErrors) {
         this(context, vcardType, null, careHandlerErrors);
     }
 
     /**
      * Constructs for supporting call log entry vCard composing.
      *
-     * @param context Context to be used during the composition.
-     * @param vcardType The type of vCard, typically available via {@link VCardConfig}.
-     * @param charset The charset to be used. Use null when you don't need the charset.
+     * @param context           Context to be used during the composition.
+     * @param vcardType         The type of vCard, typically available via {@link VCardConfig}.
+     * @param charset           The charset to be used. Use null when you don't need the charset.
      * @param careHandlerErrors If true, This object returns false everytime
      */
     public VCardComposer(final Context context, final int vcardType, String charset,
-            final boolean careHandlerErrors) {
+                         final boolean careHandlerErrors) {
         this(context, context.getContentResolver(), vcardType, charset, careHandlerErrors);
     }
 
     /**
      * Just for testing for now.
+     *
      * @param resolver {@link ContentResolver} which used by this object.
      * @hide
      */
     public VCardComposer(final Context context, ContentResolver resolver,
-            final int vcardType, String charset, final boolean careHandlerErrors) {
+                         final int vcardType, String charset, final boolean careHandlerErrors) {
         // Not used right now
         // mContext = context;
         mVCardType = vcardType;
@@ -238,12 +241,12 @@ public class VCardComposer {
 
     /**
      * Initializes this object using default {@link Contacts#CONTENT_URI}.
-     *
+     * <p>
      * You can call this method or a variant of this method just once. In other words, you cannot
      * reuse this object.
      *
      * @return Returns true when initialization is successful and all the other
-     *          methods are available. Returns false otherwise.
+     * methods are available. Returns false otherwise.
      */
     public boolean init() {
         return init(null, null);
@@ -256,9 +259,9 @@ public class VCardComposer {
      * String selection = Data.CONTACT_ID + "=?";
      * String[] selectionArgs = new String[] {contactId};
      * Cursor cursor = mContentResolver.query(
-     *         contentUriForRawContactsEntity, null, selection, selectionArgs, null)
+     * contentUriForRawContactsEntity, null, selection, selectionArgs, null)
      * </code>
-     *
+     * <p>
      * You can call this method or a variant of this method just once. In other words, you cannot
      * reuse this object.
      *
@@ -284,70 +287,69 @@ public class VCardComposer {
      * Note that this is unstable interface, may be deleted in the future.
      */
     public boolean init(final Uri contentUri, final String selection,
-            final String[] selectionArgs, final String sortOrder) {
+                        final String[] selectionArgs, final String sortOrder) {
         return init(contentUri, sContactsProjection, selection, selectionArgs, sortOrder, null);
     }
 
     /**
-     * @param contentUri Uri for obtaining the list of contactId. Used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
-     * @param selection selection used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
-     * @param selectionArgs selectionArgs used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
-     * @param sortOrder sortOrder used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param contentUri                     Uri for obtaining the list of contactId. Used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param selection                      selection used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param selectionArgs                  selectionArgs used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param sortOrder                      sortOrder used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
      * @param contentUriForRawContactsEntity Uri for obtaining entries relevant to each
-     * contactId.
-     * Note that this is an unstable interface, may be deleted in the future.
+     *                                       contactId.
+     *                                       Note that this is an unstable interface, may be deleted in the future.
      */
     public boolean init(final Uri contentUri, final String selection,
-            final String[] selectionArgs, final String sortOrder,
-            final Uri contentUriForRawContactsEntity) {
+                        final String[] selectionArgs, final String sortOrder,
+                        final Uri contentUriForRawContactsEntity) {
         return init(contentUri, sContactsProjection, selection, selectionArgs, sortOrder,
                 contentUriForRawContactsEntity);
     }
 
     /**
      * A variant of init(). Currently just for testing. Use other variants for init().
-     *
+     * <p>
      * First we'll create {@link Cursor} for the list of contactId.
-     *
+     * <p>
      * <code>
      * Cursor cursorForId = mContentResolver.query(
-     *         contentUri, projection, selection, selectionArgs, sortOrder);
+     * contentUri, projection, selection, selectionArgs, sortOrder);
      * </code>
-     *
+     * <p>
      * After that, we'll obtain data for each contactId in the list.
-     *
+     * <p>
      * <code>
      * Cursor cursorForContent = mContentResolver.query(
-     *         contentUriForRawContactsEntity, null,
-     *         Data.CONTACT_ID + "=?", new String[] {contactId}, null)
+     * contentUriForRawContactsEntity, null,
+     * Data.CONTACT_ID + "=?", new String[] {contactId}, null)
      * </code>
-     *
+     * <p>
      * {@link #createOneEntry()} or its variants let the caller obtain each entry from
      * <code>cursorForContent</code> above.
      *
-     * @param contentUri Uri for obtaining the list of contactId. Used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
-     * @param projection projection used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
-     * @param selection selection used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
-     * @param selectionArgs selectionArgs used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
-     * @param sortOrder sortOrder used with
-     * {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param contentUri                     Uri for obtaining the list of contactId. Used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param projection                     projection used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param selection                      selection used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param selectionArgs                  selectionArgs used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
+     * @param sortOrder                      sortOrder used with
+     *                                       {@link ContentResolver#query(Uri, String[], String, String[], String)}
      * @param contentUriForRawContactsEntity Uri for obtaining entries relevant to each
-     * contactId.
+     *                                       contactId.
      * @return true when successful
-     *
      * @hide
      */
     public boolean init(final Uri contentUri, final String[] projection,
-            final String selection, final String[] selectionArgs,
-            final String sortOrder, Uri contentUriForRawContactsEntity) {
+                        final String selection, final String[] selectionArgs,
+                        final String sortOrder, Uri contentUriForRawContactsEntity) {
         if (!ContactsContract.AUTHORITY.equals(contentUri.getAuthority())) {
             if (DEBUG) Log.d(LOG_TAG, "Unexpected contentUri: " + contentUri);
             mErrorReason = FAILURE_REASON_UNSUPPORTED_URI;
@@ -369,6 +371,7 @@ public class VCardComposer {
 
     /**
      * Just for testing for now. Do not use.
+     *
      * @hide
      */
     public boolean init(Cursor cursor) {
@@ -412,7 +415,7 @@ public class VCardComposer {
         if (mCursor.getCount() == 0 || !mCursor.moveToFirst()) {
             if (DEBUG) {
                 Log.d(LOG_TAG,
-                    String.format("mCursor has an error (getCount: %d): ", mCursor.getCount()));
+                        String.format("mCursor has an error (getCount: %d): ", mCursor.getCount()));
             }
             closeCursorIfAppropriate();
             return false;
@@ -456,7 +459,7 @@ public class VCardComposer {
     }
 
     private String createOneEntryInternal(final String contactId,
-            final Method getEntityIteratorMethod) {
+                                          final Method getEntityIteratorMethod) {
         final Map<String, List<ContentValues>> contentValuesListMap =
                 new HashMap<String, List<ContentValues>>();
         // The resolver may return the entity iterator with no data. It is possible.
@@ -466,11 +469,11 @@ public class VCardComposer {
         try {
             final Uri uri = mContentUriForRawContactsEntity;
             final String selection = Data.CONTACT_ID + "=?";
-            final String[] selectionArgs = new String[] {contactId};
+            final String[] selectionArgs = new String[]{contactId};
             if (getEntityIteratorMethod != null) {
                 // Please note that this branch is executed by unit tests only
                 try {
-                    entityIterator = (EntityIterator)getEntityIteratorMethod.invoke(null,
+                    entityIterator = (EntityIterator) getEntityIteratorMethod.invoke(null,
                             mContentResolver, uri, selection, selectionArgs, null);
                 } catch (IllegalArgumentException e) {
                     Log.e(LOG_TAG, "IllegalArgumentException has been thrown: " +
@@ -523,6 +526,7 @@ public class VCardComposer {
     }
 
     private VCardPhoneNumberTranslationCallback mPhoneTranslationCallback;
+
     /**
      * <p>
      * Set a callback for phone number formatting. It will be called every time when this object

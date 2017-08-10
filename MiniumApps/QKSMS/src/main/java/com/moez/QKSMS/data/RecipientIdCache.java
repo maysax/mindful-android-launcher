@@ -29,7 +29,10 @@ public class RecipientIdCache {
             Uri.parse("content://mms-sms/canonical-address");
 
     private static RecipientIdCache sInstance;
-    static RecipientIdCache getInstance() { return sInstance; }
+
+    static RecipientIdCache getInstance() {
+        return sInstance;
+    }
 
     private final Map<Long, String> mCache;
 
@@ -229,7 +232,8 @@ public class RecipientIdCache {
     /**
      * getSingleNumberFromCanonicalAddresses looks up the recipientId in the canonical_addresses
      * table and returns the associated number or email address.
-     * @param context needed for the ContentResolver
+     *
+     * @param context     needed for the ContentResolver
      * @param recipientId of the contact to look up
      * @return phone number or email address of the recipientId
      */

@@ -18,13 +18,13 @@ package android.net.http;
 
 import android.net.ParseException;
 import android.net.WebAddress;
-import junit.framework.Assert;
 import android.webkit.CookieManager;
+
+import junit.framework.Assert;
 
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.InputStream;
-import java.lang.Math;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -34,22 +34,22 @@ import java.util.Random;
 /**
  * RequestHandle: handles a request session that may include multiple
  * redirects, HTTP authentication requests, etc.
- * 
+ * <p>
  * {@hide}
  */
 public class RequestHandle {
 
-    private String        mUrl;
-    private WebAddress    mUri;
-    private String        mMethod;
+    private String mUrl;
+    private WebAddress mUri;
+    private String mMethod;
     private Map<String, String> mHeaders;
-    private RequestQueue  mRequestQueue;
-    private Request       mRequest;
-    private InputStream   mBodyProvider;
-    private int           mBodyLength;
-    private int           mRedirectCount = 0;
+    private RequestQueue mRequestQueue;
+    private Request mRequest;
+    private InputStream mBodyProvider;
+    private int mBodyLength;
+    private int mRedirectCount = 0;
     // Used only with synchronous requests.
-    private Connection    mConnection;
+    private Connection mConnection;
 
     private final static String AUTHORIZATION_HEADER = "Authorization";
     private final static String PROXY_AUTHORIZATION_HEADER = "Proxy-Authorization";
@@ -60,8 +60,8 @@ public class RequestHandle {
      * Creates a new request session.
      */
     public RequestHandle(RequestQueue requestQueue, String url, WebAddress uri,
-            String method, Map<String, String> headers,
-            InputStream bodyProvider, int bodyLength, Request request) {
+                         String method, Map<String, String> headers,
+                         InputStream bodyProvider, int bodyLength, Request request) {
 
         if (headers == null) {
             headers = new HashMap<String, String>();
@@ -69,7 +69,7 @@ public class RequestHandle {
         mHeaders = headers;
         mBodyProvider = bodyProvider;
         mBodyLength = bodyLength;
-        mMethod = method == null? "GET" : method;
+        mMethod = method == null ? "GET" : method;
 
         mUrl = url;
         mUri = uri;
@@ -84,9 +84,9 @@ public class RequestHandle {
      * is used during a synchronous load to handle this request.
      */
     public RequestHandle(RequestQueue requestQueue, String url, WebAddress uri,
-            String method, Map<String, String> headers,
-            InputStream bodyProvider, int bodyLength, Request request,
-            Connection conn) {
+                         String method, Map<String, String> headers,
+                         InputStream bodyProvider, int bodyLength, Request request,
+                         Connection conn) {
         this(requestQueue, url, uri, method, headers, bodyProvider, bodyLength,
                 request);
         mConnection = conn;
@@ -139,17 +139,17 @@ public class RequestHandle {
     /**
      * Create and queue a redirect request.
      *
-     * @param redirectTo URL to redirect to
-     * @param statusCode HTTP status code returned from original request
+     * @param redirectTo   URL to redirect to
+     * @param statusCode   HTTP status code returned from original request
      * @param cacheHeaders Cache header for redirect URL
      * @return true if setup succeeds, false otherwise (redirect loop
      * count exceeded, body provider unable to rewind on 307 redirect)
      */
     public boolean setupRedirect(String redirectTo, int statusCode,
-            Map<String, String> cacheHeaders) {
+                                 Map<String, String> cacheHeaders) {
         if (HttpLog.LOGV) {
             HttpLog.v("RequestHandle.setupRedirect(): redirectCount " +
-                  mRedirectCount);
+                    mRedirectCount);
         }
 
         // be careful and remove authentication headers, if any
@@ -160,9 +160,9 @@ public class RequestHandle {
             // Way too many redirects -- fail out
             if (HttpLog.LOGV) HttpLog.v(
                     "RequestHandle.setupRedirect(): too many redirects " +
-                    mRequest);
+                            mRequest);
             mRequest.error(EventHandler.ERROR_REDIRECT_LOOP,
-                           com.android.internal.R.string.httpErrorRedirectLoop);
+                    com.android.internal.R.string.httpErrorRedirectLoop);
             return false;
         }
 
@@ -306,7 +306,7 @@ public class RequestHandle {
         Assert.assertNotNull(realm);
 
         String A1 = username + ":" + realm + ":" + password;
-        String A2 = mMethod  + ":" + mUrl;
+        String A2 = mMethod + ":" + mUrl;
 
         // because we do not preemptively send authorization headers, nc is always 1
         String nc = "00000001";
@@ -315,20 +315,20 @@ public class RequestHandle {
 
         String response = "";
         response += "username=" + doubleQuote(username) + ", ";
-        response += "realm="    + doubleQuote(realm)    + ", ";
-        response += "nonce="    + doubleQuote(nonce)    + ", ";
-        response += "uri="      + doubleQuote(mUrl)     + ", ";
-        response += "response=" + doubleQuote(digest) ;
+        response += "realm=" + doubleQuote(realm) + ", ";
+        response += "nonce=" + doubleQuote(nonce) + ", ";
+        response += "uri=" + doubleQuote(mUrl) + ", ";
+        response += "response=" + doubleQuote(digest);
 
-        if (opaque     != null) {
+        if (opaque != null) {
             response += ", opaque=" + doubleQuote(opaque);
         }
 
-         if (algorithm != null) {
-            response += ", algorithm=" +  algorithm;
+        if (algorithm != null) {
+            response += ", algorithm=" + algorithm;
         }
 
-        if (QOP        != null) {
+        if (QOP != null) {
             response += ", qop=" + QOP + ", nc=" + nc + ", cnonce=" + doubleQuote(cnonce);
         }
 
@@ -350,7 +350,7 @@ public class RequestHandle {
      * @return Double-quoted MD5 digest.
      */
     private String computeDigest(
-        String A1, String A2, String nonce, String QOP, String nc, String cnonce) {
+            String A1, String A2, String nonce, String QOP, String nc, String cnonce) {
         if (HttpLog.LOGV) {
             HttpLog.v("computeDigest(): QOP: " + QOP);
         }
@@ -398,7 +398,7 @@ public class RequestHandle {
      */
     private String bufferToHex(byte[] buffer) {
         final char hexChars[] =
-            { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+                {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
         if (buffer != null) {
             int length = buffer.length;
@@ -407,7 +407,7 @@ public class RequestHandle {
 
                 for (int i = 0; i < length; ++i) {
                     byte l = (byte) (buffer[i] & 0x0F);
-                    byte h = (byte)((buffer[i] & 0xF0) >> 4);
+                    byte h = (byte) ((buffer[i] & 0xF0) >> 4);
 
                     hex.append(hexChars[h]);
                     hex.append(hexChars[l]);

@@ -222,7 +222,7 @@ public class InterpolatingLayout extends ViewGroup {
                 if (fillChild != null) {
                     throw new RuntimeException(
                             "Interpolating layout allows at most one child"
-                            + " with layout_width='match_parent'");
+                                    + " with layout_width='match_parent'");
                 }
                 fillChild = child;
             } else {

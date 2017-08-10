@@ -29,23 +29,23 @@ import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.PhoneLookup;
 import android.provider.ContactsContract.RawContacts;
 import android.telephony.PhoneNumberUtils;
+import android.telephony.Rlog;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.telephony.Rlog;
 import android.util.Log;
 
-import com.android.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder;
 import com.android.i18n.phonenumbers.NumberParseException;
 import com.android.i18n.phonenumbers.PhoneNumberUtil;
 import com.android.i18n.phonenumbers.Phonenumber.PhoneNumber;
-import android.telephony.SubscriptionManager;
+import com.android.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder;
 
 import java.util.Locale;
 
 
 /**
  * Looks up caller information for the given phone number.
- *
+ * <p>
  * {@hide}
  */
 public class CallerInfo {
@@ -55,12 +55,12 @@ public class CallerInfo {
     /**
      * Please note that, any one of these member variables can be null,
      * and any accesses to them should be prepared to handle such a case.
-     *
+     * <p>
      * Also, it is implied that phoneNumber is more often populated than
      * name is, (think of calls being dialed/received using numbers where
      * names are not known to the device), so phoneNumber should serve as
      * a dependable fallback when name is unavailable.
-     *
+     * <p>
      * One other detail here is that this CallerInfo object reflects
      * information found on a connection, it is an OUTPUT that serves
      * mainly to display information to the user.  In no way is this object
@@ -68,13 +68,13 @@ public class CallerInfo {
      * whatever human-readable text makes sense to the user for a
      * connection.  This is especially relevant for the phone number field,
      * since it is the one field that is most likely exposed to the user.
-     *
+     * <p>
      * As an example:
-     *   1. User dials "911"
-     *   2. Device recognizes that this is an emergency number
-     *   3. We use the "Emergency Number" string instead of "911" in the
-     *     phoneNumber field.
-     *
+     * 1. User dials "911"
+     * 2. Device recognizes that this is an emergency number
+     * 3. We use the "Emergency Number" string instead of "911" in the
+     * phoneNumber field.
+     * <p>
      * What we're really doing here is treating phoneNumber as an essential
      * field here, NOT name.  We're NOT always guaranteed to have a name
      * for a connection, but the number should be displayable.
@@ -91,7 +91,7 @@ public class CallerInfo {
 
     public String phoneLabel;
     /* Split up the phoneLabel into number type and label name */
-    public int    numberType;
+    public int numberType;
     public String numberLabel;
 
     public int photoResource;
@@ -118,11 +118,11 @@ public class CallerInfo {
      * Drawable representing the caller image.  This is essentially
      * a cache for the image data tied into the connection /
      * callerinfo object.
-     *
+     * <p>
      * This might be a high resolution picture which is more suitable
      * for full-screen image view than for smaller icons used in some
      * kinds of notifications.
-     *
+     * <p>
      * The {@link #isCachedPhotoCurrent} flag indicates if the image
      * data needs to be reloaded.
      */
@@ -131,10 +131,10 @@ public class CallerInfo {
      * Bitmap representing the caller image which has possibly lower
      * resolution than {@link #cachedPhoto} and thus more suitable for
      * icons (like notification icons).
-     *
+     * <p>
      * In usual cases this is just down-scaled image of {@link #cachedPhoto}.
      * If the down-scaling fails, this will just become null.
-     *
+     * <p>
      * The {@link #isCachedPhotoCurrent} flag indicates if the image
      * data needs to be reloaded.
      */
@@ -157,9 +157,10 @@ public class CallerInfo {
 
     /**
      * getCallerInfo given a Cursor.
-     * @param context the context used to retrieve string constants
+     *
+     * @param context    the context used to retrieve string constants
      * @param contactRef the URI to attach to this CallerInfo object
-     * @param cursor the first object in the cursor is used to build the CallerInfo object.
+     * @param cursor     the first object in the cursor is used to build the CallerInfo object.
      * @return the CallerInfo which contains the caller id for the given
      * number. The returned CallerInfo is null if no number is supplied.
      */
@@ -276,7 +277,8 @@ public class CallerInfo {
     /**
      * getCallerInfo given a URI, look up in the call-log database
      * for the uri unique key.
-     * @param context the context used to get the ContentResolver
+     *
+     * @param context    the context used to get the ContentResolver
      * @param contactRef the URI used to lookup caller id
      * @return the CallerInfo which contains the caller id for the given
      * number. The returned CallerInfo is null if no number is supplied.
@@ -291,8 +293,9 @@ public class CallerInfo {
     /**
      * getCallerInfo given a phone number, look up in the call-log database
      * for the matching caller id info.
+     *
      * @param context the context used to get the ContentResolver
-     * @param number the phone number used to lookup caller id
+     * @param number  the phone number used to lookup caller id
      * @return the CallerInfo which contains the caller id for the given
      * number. The returned CallerInfo is null if no number is supplied. If
      * a matching number is not found, then a generic caller info is returned,
@@ -308,9 +311,10 @@ public class CallerInfo {
     /**
      * getCallerInfo given a phone number and subscription, look up in the call-log database
      * for the matching caller id info.
+     *
      * @param context the context used to get the ContentResolver
-     * @param number the phone number used to lookup caller id
-     * @param subId the subscription for checking for if voice mail number or not
+     * @param number  the phone number used to lookup caller id
+     * @param subId   the subscription for checking for if voice mail number or not
      * @return the CallerInfo which contains the caller id for the given
      * number. The returned CallerInfo is null if no number is supplied. If
      * a matching number is not found, then a generic caller info is returned,
@@ -351,13 +355,13 @@ public class CallerInfo {
      * and the peer's username is all numeric. Look up the username as it
      * could be a PSTN number in the contact database.
      *
-     * @param context the query context
-     * @param number the original phone number, could be a SIP URI
+     * @param context        the query context
+     * @param number         the original phone number, could be a SIP URI
      * @param previousResult the result of previous lookup
      * @return previousResult if it's not the case
      */
     static CallerInfo doSecondaryLookupIfNecessary(Context context,
-            String number, CallerInfo previousResult) {
+                                                   String number, CallerInfo previousResult) {
         if (!previousResult.contactExists
                 && PhoneNumberUtils.isUriNumber(number)) {
             String username = PhoneNumberUtils.getUsernameFromUriNumber(number);
@@ -388,6 +392,7 @@ public class CallerInfo {
 
     /**
      * Mark this CallerInfo as an emergency call.
+     *
      * @param context To lookup the localized 'Emergency Number' string.
      * @return this instance.
      */
@@ -400,7 +405,7 @@ public class CallerInfo {
     // should be displayed.
     /* package */ CallerInfo markAsEmergency(Context context) {
         phoneNumber = context.getString(
-            com.android.internal.R.string.emergency_call_dialog_number_for_display);
+                com.android.internal.R.string.emergency_call_dialog_number_for_display);
         photoResource = com.android.internal.R.drawable.picture_emergency;
         mIsEmergency = true;
         return this;
@@ -412,6 +417,7 @@ public class CallerInfo {
      * is obtained from the telephony manager. Caller must hold the
      * READ_PHONE_STATE permission otherwise the phoneNumber will be
      * set to null.
+     *
      * @return this instance.
      */
     // TODO: As in the emergency number handling, we end up writing a
@@ -456,18 +462,18 @@ public class CallerInfo {
      * Returns the column index to use to find the "person_id" field in
      * the specified cursor, based on the contact URI that was originally
      * queried.
-     *
+     * <p>
      * This is a helper function for the getCallerInfo() method that takes
      * a Cursor.  Looking up the person_id is nontrivial (compared to all
      * the other CallerInfo fields) since the column we need to use
      * depends on what query we originally ran.
-     *
+     * <p>
      * Watch out: be sure to not do any database access in this method, since
      * it's run from the UI thread (see comments below for more info.)
      *
      * @return the columnIndex to use (with cursor.getLong()) to get the
      * person_id, or -1 if we couldn't figure out what colum to use.
-     *
+     * <p>
      * TODO: Add a unittest for this method.  (This is a little tricky to
      * test, since we'll need a live contacts database to test against,
      * preloaded with at least some phone numbers and SIP addresses.  And
@@ -496,7 +502,7 @@ public class CallerInfo {
         // looking at the URI itself.
 
         if (VDBG) Rlog.v(TAG, "- getColumnIndexForPersonId: contactRef URI = '"
-                        + contactRef + "'...");
+                + contactRef + "'...");
         // Warning: Do not enable the following logging (due to ANR risk.)
         // if (VDBG) Rlog.v(TAG, "- MIME type: "
         //                 + context.getContentResolver().getType(contactRef));
@@ -525,21 +531,21 @@ public class CallerInfo {
         }
         int columnIndex = (columnName != null) ? cursor.getColumnIndex(columnName) : -1;
         if (VDBG) Rlog.v(TAG, "==> Using column '" + columnName
-                        + "' (columnIndex = " + columnIndex + ") for person_id lookup...");
+                + "' (columnIndex = " + columnIndex + ") for person_id lookup...");
         return columnIndex;
     }
 
     /**
      * Updates this CallerInfo's geoDescription field, based on the raw
      * phone number in the phoneNumber field.
-     *
+     * <p>
      * (Note that the various getCallerInfo() methods do *not* set the
      * geoDescription automatically; you need to call this method
      * explicitly to get it.)
      *
-     * @param context the context used to look up the current locale / country
+     * @param context        the context used to look up the current locale / country
      * @param fallbackNumber if this CallerInfo's phoneNumber field is empty,
-     *        this specifies a fallback number to use instead.
+     *                       this specifies a fallback number to use instead.
      */
     public void updateGeoDescription(Context context, String fallbackNumber) {
         String number = TextUtils.isEmpty(phoneNumber) ? fallbackNumber : phoneNumber;
@@ -565,7 +571,7 @@ public class CallerInfo {
         PhoneNumber pn = null;
         try {
             if (VDBG) Rlog.v(TAG, "parsing '" + number
-                            + "' for countryIso '" + countryIso + "'...");
+                    + "' for countryIso '" + countryIso + "'...");
             pn = util.parse(number, countryIso);
             if (VDBG) Rlog.v(TAG, "- parsed number: " + pn);
         } catch (NumberParseException e) {
@@ -583,7 +589,7 @@ public class CallerInfo {
 
     /**
      * @return The ISO 3166-1 two letters country code of the country the user
-     *         is in.
+     * is in.
      */
     private static String getCurrentCountryIso(Context context, Locale locale) {
         String countryIso = null;

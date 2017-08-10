@@ -7,13 +7,13 @@
     android:background="@drawable/pause_background"
     tools:context="co.siempo.phone.pause.PauseActivity">
 
-   <!-- <ImageView
-        android:id="@+id/imgBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/pause_background"
-        android:contentDescription="@null"
-        android:visibility="visible"/>-->
+    <!-- <ImageView
+         android:id="@+id/imgBackground"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:src="@drawable/pause_background"
+         android:contentDescription="@null"
+         android:visibility="visible"/>-->
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:padding="4dp"
                 android:src="@drawable/icon_close_app"
                 android:layout_marginStart="18dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null" />
 
             <TextView
                 android:id="@+id/titleActionBar"
@@ -49,7 +49,7 @@
                 android:textSize="20sp"
                 android:textColor="#ffffff"
                 android:fontFamily="sans-serif-medium"
-                android:text="Mindful Morning"/>
+                android:text="Mindful Morning" />
 
             <ImageView
                 android:id="@+id/settingsActionBar"
@@ -58,12 +58,11 @@
                 android:padding="4dp"
                 android:src="@drawable/icon_settings"
                 android:layout_marginEnd="18dp"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null" />
 
         </LinearLayout>
 
     </android.support.v7.widget.Toolbar>
-
 
 
     <Button
@@ -88,7 +87,7 @@
         android:textColor="#FFFFFF"
         android:layout_marginTop="83.1dp"
         android:layout_below="@+id/toolbar"
-        android:layout_centerHorizontal="true"  />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/txtAmPm"

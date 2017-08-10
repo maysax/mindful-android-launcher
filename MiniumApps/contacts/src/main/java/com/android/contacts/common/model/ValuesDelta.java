@@ -348,7 +348,7 @@ public class ValuesDelta implements Parcelable {
     public boolean equals(Object object) {
         if (object instanceof ValuesDelta) {
             // Only exactly equal with both are identical subsets
-            final ValuesDelta other = (ValuesDelta)object;
+            final ValuesDelta other = (ValuesDelta) object;
             return this.subsetEquals(other) && other.subsetEquals(this);
         }
         return false;
@@ -426,13 +426,17 @@ public class ValuesDelta implements Parcelable {
         return builder;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int describeContents() {
         // Nothing special about this parcel
         return 0;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(mBefore, flags);
         dest.writeParcelable(mAfter, flags);
@@ -441,8 +445,8 @@ public class ValuesDelta implements Parcelable {
 
     public void readFromParcel(Parcel source) {
         final ClassLoader loader = getClass().getClassLoader();
-        mBefore = source.<ContentValues> readParcelable(loader);
-        mAfter = source.<ContentValues> readParcelable(loader);
+        mBefore = source.<ContentValues>readParcelable(loader);
+        mAfter = source.<ContentValues>readParcelable(loader);
         mIdColumn = source.readString();
     }
 

@@ -76,7 +76,7 @@ public class SystemVibrator extends Vibrator {
      */
     @Override
     public void vibrate(int uid, String opPkg, long[] pattern, int repeat,
-            AudioAttributes attributes) {
+                        AudioAttributes attributes) {
         if (mService == null) {
             Log.w(TAG, "Failed to vibrate; no vibrator service.");
             return;

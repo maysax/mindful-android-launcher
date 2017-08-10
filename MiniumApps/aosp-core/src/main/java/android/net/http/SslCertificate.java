@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.org.bouncycastle.asn1.x509.X509Name;
+
 import java.io.ByteArrayInputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -36,8 +38,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
-
-import com.android.org.bouncycastle.asn1.x509.X509Name;
 
 /**
  * SSL certificate info (certificate details) class
@@ -71,7 +71,7 @@ public class SslCertificate {
 
     /**
      * The original source certificate, if available.
-     *
+     * <p>
      * TODO If deprecated constructors are removed, this should always
      * be available, and saveState and restoreState can be simplified
      * to be unconditional.
@@ -89,6 +89,7 @@ public class SslCertificate {
 
     /**
      * Saves the certificate state to a bundle
+     *
      * @param certificate The SSL certificate to store
      * @return A bundle with the certificate stored in it or null if fails
      */
@@ -113,6 +114,7 @@ public class SslCertificate {
 
     /**
      * Restores the certificate stored in the bundle
+     *
      * @param bundle The bundle with the certificate state stored in it
      * @return The SSL certificate stored in the bundle or null if fails
      */
@@ -134,20 +136,21 @@ public class SslCertificate {
             }
         }
         return new SslCertificate(bundle.getString(ISSUED_TO),
-                                  bundle.getString(ISSUED_BY),
-                                  parseDate(bundle.getString(VALID_NOT_BEFORE)),
-                                  parseDate(bundle.getString(VALID_NOT_AFTER)),
-                                  x509Certificate);
+                bundle.getString(ISSUED_BY),
+                parseDate(bundle.getString(VALID_NOT_BEFORE)),
+                parseDate(bundle.getString(VALID_NOT_AFTER)),
+                x509Certificate);
     }
 
     /**
      * Creates a new SSL certificate object
-     * @param issuedTo The entity this certificate is issued to
-     * @param issuedBy The entity that issued this certificate
+     *
+     * @param issuedTo       The entity this certificate is issued to
+     * @param issuedBy       The entity that issued this certificate
      * @param validNotBefore The not-before date from the certificate
-     *     validity period in ISO 8601 format
-     * @param validNotAfter The not-after date from the certificate
-     *     validity period in ISO 8601 format
+     *                       validity period in ISO 8601 format
+     * @param validNotAfter  The not-after date from the certificate
+     *                       validity period in ISO 8601 format
      * @deprecated Use {@link #SslCertificate(X509Certificate)}
      */
     @Deprecated
@@ -158,10 +161,11 @@ public class SslCertificate {
 
     /**
      * Creates a new SSL certificate object
-     * @param issuedTo The entity this certificate is issued to
-     * @param issuedBy The entity that issued this certificate
+     *
+     * @param issuedTo       The entity this certificate is issued to
+     * @param issuedBy       The entity that issued this certificate
      * @param validNotBefore The not-before date from the certificate validity period
-     * @param validNotAfter The not-after date from the certificate validity period
+     * @param validNotAfter  The not-after date from the certificate validity period
      * @deprecated Use {@link #SslCertificate(X509Certificate)}
      */
     @Deprecated
@@ -172,14 +176,15 @@ public class SslCertificate {
 
     /**
      * Creates a new SSL certificate object from an X509 certificate
+     *
      * @param certificate X509 certificate
      */
     public SslCertificate(X509Certificate certificate) {
         this(certificate.getSubjectDN().getName(),
-             certificate.getIssuerDN().getName(),
-             certificate.getNotBefore(),
-             certificate.getNotAfter(),
-             certificate);
+                certificate.getIssuerDN().getName(),
+                certificate.getNotBefore(),
+                certificate.getNotAfter(),
+                certificate);
     }
 
     private SslCertificate(
@@ -189,7 +194,7 @@ public class SslCertificate {
         mIssuedTo = new DName(issuedTo);
         mIssuedBy = new DName(issuedBy);
         mValidNotBefore = cloneDate(validNotBefore);
-        mValidNotAfter  = cloneDate(validNotAfter);
+        mValidNotAfter = cloneDate(validNotAfter);
         mX509Certificate = x509Certificate;
     }
 
@@ -204,7 +209,6 @@ public class SslCertificate {
     /**
      * @return Not-before date from the certificate validity period in
      * ISO 8601 format or "" if none has been set
-     *
      * @deprecated Use {@link #getValidNotBeforeDate()}
      */
     @Deprecated
@@ -223,7 +227,6 @@ public class SslCertificate {
     /**
      * @return Not-after date from the certificate validity period in
      * ISO 8601 format or "" if none has been set
-     *
      * @deprecated Use {@link #getValidNotAfterDate()}
      */
     @Deprecated
@@ -286,7 +289,7 @@ public class SslCertificate {
         for (int i = 0; i < bytes.length; i++) {
             byte b = bytes[i];
             IntegralToString.appendByteAsHex(sb, b, true);
-            if (i+1 != bytes.length) {
+            if (i + 1 != bytes.length) {
                 sb.append(':');
             }
         }
@@ -335,9 +338,9 @@ public class SslCertificate {
     /**
      * A distinguished name helper class: a 3-tuple of:
      * <ul>
-     *   <li>the most specific common name (CN)</li>
-     *   <li>the most specific organization (O)</li>
-     *   <li>the most specific organizational unit (OU)</li>
+     * <li>the most specific common name (CN)</li>
+     * <li>the most specific organization (O)</li>
+     * <li>the most specific organizational unit (OU)</li>
      * <ul>
      */
     public class DName {
@@ -440,16 +443,16 @@ public class SslCertificate {
 
     /**
      * Inflates the SSL certificate view (helper method).
+     *
      * @return The resultant certificate view with issued-to, issued-by,
      * issued-on, expires-on, and possibly other fields set.
-     *
      * @hide Used by Browser and Settings
      */
     public View inflateCertificateView(Context context) {
         LayoutInflater factory = LayoutInflater.from(context);
 
         View certificateView = factory.inflate(
-            com.android.internal.R.layout.ssl_certificate, null);
+                com.android.internal.R.layout.ssl_certificate, null);
 
         // issued to:
         SslCertificate.DName issuedTo = getIssuedTo();
@@ -497,6 +500,7 @@ public class SslCertificate {
 
     /**
      * Formats the certificate date to a properly localized date string.
+     *
      * @return Properly localized version of the certificate date string and
      * the "" if it fails to localize.
      */

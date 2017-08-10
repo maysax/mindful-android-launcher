@@ -38,22 +38,21 @@ public final class VoLteServiceState implements Parcelable {
     public static final int SUPPORTED = 1;
 
     // Single Radio Voice Call Continuity(SRVCC) progress state
-    public static final int HANDOVER_STARTED   = 0;
+    public static final int HANDOVER_STARTED = 0;
     public static final int HANDOVER_COMPLETED = 1;
-    public static final int HANDOVER_FAILED    = 2;
-    public static final int HANDOVER_CANCELED  = 3;
+    public static final int HANDOVER_FAILED = 2;
+    public static final int HANDOVER_CANCELED = 3;
 
     private int mSrvccState;
 
     /**
      * Create a new VoLteServiceState from a intent notifier Bundle
-     *
+     * <p>
      * This method is used by PhoneStateIntentReceiver and maybe by
      * external applications.
      *
      * @param m Bundle from intent notifier
      * @return newly created VoLteServiceState
-     *
      * @hide
      */
     public static VoLteServiceState newFromBundle(Bundle m) {
@@ -87,7 +86,6 @@ public final class VoLteServiceState implements Parcelable {
      * Copy constructors
      *
      * @param s Source VoLteServiceState
-     *
      * @hide
      */
     public VoLteServiceState(VoLteServiceState s) {
@@ -155,8 +153,7 @@ public final class VoLteServiceState implements Parcelable {
      * specified in ril.h
      * Set to invalid any field that is not in the valid range
      *
-     * @return
-     *      Valid values for all fields
+     * @return Valid values for all fields
      * @hide
      */
     public void validateInput() {
@@ -171,7 +168,7 @@ public final class VoLteServiceState implements Parcelable {
      * @return true if the LTE network states are the same
      */
     @Override
-    public boolean equals (Object o) {
+    public boolean equals(Object o) {
         VoLteServiceState s;
 
         try {

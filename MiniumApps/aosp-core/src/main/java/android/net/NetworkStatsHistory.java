@@ -16,18 +16,6 @@
 
 package android.net;
 
-import static android.net.NetworkStats.IFACE_ALL;
-import static android.net.NetworkStats.SET_DEFAULT;
-import static android.net.NetworkStats.TAG_NONE;
-import static android.net.NetworkStats.UID_ALL;
-import static android.net.NetworkStatsHistory.DataStreamUtils.readFullLongArray;
-import static android.net.NetworkStatsHistory.DataStreamUtils.readVarLongArray;
-import static android.net.NetworkStatsHistory.DataStreamUtils.writeVarLongArray;
-import static android.net.NetworkStatsHistory.Entry.UNKNOWN;
-import static android.net.NetworkStatsHistory.ParcelUtils.readLongArray;
-import static android.net.NetworkStatsHistory.ParcelUtils.writeLongArray;
-import static com.android.internal.util.ArrayUtils.total;
-
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.MathUtils;
@@ -41,6 +29,18 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.util.Arrays;
 import java.util.Random;
+
+import static android.net.NetworkStats.IFACE_ALL;
+import static android.net.NetworkStats.SET_DEFAULT;
+import static android.net.NetworkStats.TAG_NONE;
+import static android.net.NetworkStats.UID_ALL;
+import static android.net.NetworkStatsHistory.DataStreamUtils.readFullLongArray;
+import static android.net.NetworkStatsHistory.DataStreamUtils.readVarLongArray;
+import static android.net.NetworkStatsHistory.DataStreamUtils.writeVarLongArray;
+import static android.net.NetworkStatsHistory.Entry.UNKNOWN;
+import static android.net.NetworkStatsHistory.ParcelUtils.readLongArray;
+import static android.net.NetworkStatsHistory.ParcelUtils.writeLongArray;
+import static com.android.internal.util.ArrayUtils.total;
 
 /**
  * Collection of historical network statistics, recorded into equally-sized
@@ -331,11 +331,16 @@ public class NetworkStatsHistory implements Parcelable {
             final long fracOperations = operations * overlap / duration;
 
             addLong(activeTime, i, overlap);
-            addLong(this.rxBytes, i, fracRxBytes); rxBytes -= fracRxBytes;
-            addLong(this.rxPackets, i, fracRxPackets); rxPackets -= fracRxPackets;
-            addLong(this.txBytes, i, fracTxBytes); txBytes -= fracTxBytes;
-            addLong(this.txPackets, i, fracTxPackets); txPackets -= fracTxPackets;
-            addLong(this.operations, i, fracOperations); operations -= fracOperations;
+            addLong(this.rxBytes, i, fracRxBytes);
+            rxBytes -= fracRxBytes;
+            addLong(this.rxPackets, i, fracRxPackets);
+            rxPackets -= fracRxPackets;
+            addLong(this.txBytes, i, fracTxBytes);
+            txBytes -= fracTxBytes;
+            addLong(this.txPackets, i, fracTxPackets);
+            txPackets -= fracTxPackets;
+            addLong(this.operations, i, fracOperations);
+            operations -= fracOperations;
 
             duration -= overlap;
         }
@@ -543,7 +548,7 @@ public class NetworkStatsHistory implements Parcelable {
      */
     @Deprecated
     public void generateRandom(long start, long end, long rxBytes, long rxPackets, long txBytes,
-            long txPackets, long operations, Random r) {
+                               long txPackets, long operations, Random r) {
         ensureBuckets(start, end);
 
         final NetworkStats.Entry entry = new NetworkStats.Entry(
@@ -574,22 +579,44 @@ public class NetworkStatsHistory implements Parcelable {
     }
 
     public void dump(IndentingPrintWriter pw, boolean fullHistory) {
-        pw.print("NetworkStatsHistory: bucketDuration="); pw.println(bucketDuration);
+        pw.print("NetworkStatsHistory: bucketDuration=");
+        pw.println(bucketDuration);
         pw.increaseIndent();
 
         final int start = fullHistory ? 0 : Math.max(0, bucketCount - 32);
         if (start > 0) {
-            pw.print("(omitting "); pw.print(start); pw.println(" buckets)");
+            pw.print("(omitting ");
+            pw.print(start);
+            pw.println(" buckets)");
         }
 
         for (int i = start; i < bucketCount; i++) {
-            pw.print("bucketStart="); pw.print(bucketStart[i]);
-            if (activeTime != null) { pw.print(" activeTime="); pw.print(activeTime[i]); }
-            if (rxBytes != null) { pw.print(" rxBytes="); pw.print(rxBytes[i]); }
-            if (rxPackets != null) { pw.print(" rxPackets="); pw.print(rxPackets[i]); }
-            if (txBytes != null) { pw.print(" txBytes="); pw.print(txBytes[i]); }
-            if (txPackets != null) { pw.print(" txPackets="); pw.print(txPackets[i]); }
-            if (operations != null) { pw.print(" operations="); pw.print(operations[i]); }
+            pw.print("bucketStart=");
+            pw.print(bucketStart[i]);
+            if (activeTime != null) {
+                pw.print(" activeTime=");
+                pw.print(activeTime[i]);
+            }
+            if (rxBytes != null) {
+                pw.print(" rxBytes=");
+                pw.print(rxBytes[i]);
+            }
+            if (rxPackets != null) {
+                pw.print(" rxPackets=");
+                pw.print(rxPackets[i]);
+            }
+            if (txBytes != null) {
+                pw.print(" txBytes=");
+                pw.print(txBytes[i]);
+            }
+            if (txPackets != null) {
+                pw.print(" txPackets=");
+                pw.print(txPackets[i]);
+            }
+            if (operations != null) {
+                pw.print(" operations=");
+                pw.print(operations[i]);
+            }
             pw.println();
         }
 

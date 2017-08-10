@@ -34,7 +34,9 @@ import minium.co.contacts.R;
  * child of this layout.</p>
  */
 public class ProportionalLayout extends ViewGroup {
-    /** Specifies whether the width should be calculated based on the height or vice-versa  */
+    /**
+     * Specifies whether the width should be calculated based on the height or vice-versa
+     */
     public enum Direction {
         widthToHeight("widthToHeight"),
         heightToWidth("heightToWidth");
@@ -126,7 +128,7 @@ public class ProportionalLayout extends ViewGroup {
         }
 
         final View child = getChildAt(0);
-        child.layout(0, 0, right-left, bottom-top);
+        child.layout(0, 0, right - left, bottom - top);
     }
 
     public Direction getDirection() {

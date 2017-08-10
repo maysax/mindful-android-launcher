@@ -37,12 +37,15 @@ import java.util.List;
 public class EditorAnimator {
     private static EditorAnimator sInstance = new EditorAnimator();
 
-    public static  EditorAnimator getInstance() {
+    public static EditorAnimator getInstance() {
         return sInstance;
     }
 
-    /** Private constructor for singleton */
-    private EditorAnimator() { }
+    /**
+     * Private constructor for singleton
+     */
+    private EditorAnimator() {
+    }
 
     private AnimatorRunner mRunner = new AnimatorRunner();
 
@@ -83,9 +86,9 @@ public class EditorAnimator {
     /**
      * Slides the view into its new height, while simultaneously fading it into view.
      *
-     * @param target The target view to perform the animation on.
+     * @param target         The target view to perform the animation on.
      * @param previousHeight The previous height of the view before its height was changed.
-     * Needed because the view does not store any state information about its previous height.
+     *                       Needed because the view does not store any state information about its previous height.
      */
     public void slideAndFadeIn(final ViewGroup target, final int previousHeight) {
         mRunner.endOldAnimation();
@@ -116,7 +119,7 @@ public class EditorAnimator {
     }
 
     public void expandOrganization(final View addOrganizationButton,
-            final ViewGroup organizationSectionViewContainer) {
+                                   final ViewGroup organizationSectionViewContainer) {
         mRunner.endOldAnimation();
         // Make the new controls visible and do one layout pass (so that we can measure)
         organizationSectionViewContainer.setVisibility(View.VISIBLE);
@@ -219,7 +222,7 @@ public class EditorAnimator {
      * Creates a translation-animation for the given views
      */
     private static void translateViews(List<Animator> animators, List<View> views, float fromY,
-            float toY, int startDelay, int duration) {
+                                       float toY, int startDelay, int duration) {
         for (int i = 0; i < views.size(); i++) {
             final View child = views.get(i);
             final ObjectAnimator translateAnimator =
@@ -246,7 +249,7 @@ public class EditorAnimator {
     }
 
     private static void getViewsBelowOfRecursive(List<View> result, ViewGroup container,
-            int index, View target) {
+                                                 int index, View target) {
         for (int i = index; i < container.getChildCount(); i++) {
             View view = container.getChildAt(i);
             // consider the child view below the target view only if it is physically

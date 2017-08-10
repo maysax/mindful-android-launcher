@@ -51,7 +51,7 @@ public class SmsRejectedReceiver extends BroadcastReceiver {
             }
 
             NotificationManager nm = (NotificationManager)
-            context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             Intent viewConvIntent = new Intent(context, ConversationList.class);
             viewConvIntent.setAction(Intent.ACTION_VIEW);

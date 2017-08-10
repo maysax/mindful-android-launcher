@@ -136,35 +136,35 @@ public final class GeofenceHardwareRequestParcelable implements Parcelable {
      */
     public static final Parcelable.Creator<GeofenceHardwareRequestParcelable> CREATOR =
             new Parcelable.Creator<GeofenceHardwareRequestParcelable>() {
-        @Override
-        public GeofenceHardwareRequestParcelable createFromParcel(Parcel parcel) {
-            int geofenceType = parcel.readInt();
-            if(geofenceType != GeofenceHardwareRequest.GEOFENCE_TYPE_CIRCLE) {
-                Log.e(
-                        "GeofenceHardwareRequest",
-                        String.format("Invalid Geofence type: %d", geofenceType));
-                return null;
-            }
+                @Override
+                public GeofenceHardwareRequestParcelable createFromParcel(Parcel parcel) {
+                    int geofenceType = parcel.readInt();
+                    if (geofenceType != GeofenceHardwareRequest.GEOFENCE_TYPE_CIRCLE) {
+                        Log.e(
+                                "GeofenceHardwareRequest",
+                                String.format("Invalid Geofence type: %d", geofenceType));
+                        return null;
+                    }
 
-            GeofenceHardwareRequest request = GeofenceHardwareRequest.createCircularGeofence(
-                    parcel.readDouble(),
-                    parcel.readDouble(),
-                    parcel.readDouble());
-            request.setLastTransition(parcel.readInt());
-            request.setMonitorTransitions(parcel.readInt());
-            request.setUnknownTimer(parcel.readInt());
-            request.setNotificationResponsiveness(parcel.readInt());
-            request.setSourceTechnologies(parcel.readInt());
+                    GeofenceHardwareRequest request = GeofenceHardwareRequest.createCircularGeofence(
+                            parcel.readDouble(),
+                            parcel.readDouble(),
+                            parcel.readDouble());
+                    request.setLastTransition(parcel.readInt());
+                    request.setMonitorTransitions(parcel.readInt());
+                    request.setUnknownTimer(parcel.readInt());
+                    request.setNotificationResponsiveness(parcel.readInt());
+                    request.setSourceTechnologies(parcel.readInt());
 
-            int id = parcel.readInt();
-            return new GeofenceHardwareRequestParcelable(id, request);
-        }
+                    int id = parcel.readInt();
+                    return new GeofenceHardwareRequestParcelable(id, request);
+                }
 
-        @Override
-        public GeofenceHardwareRequestParcelable[] newArray(int size) {
-            return new GeofenceHardwareRequestParcelable[size];
-        }
-    };
+                @Override
+                public GeofenceHardwareRequestParcelable[] newArray(int size) {
+                    return new GeofenceHardwareRequestParcelable[size];
+                }
+            };
 
     @Override
     public int describeContents() {

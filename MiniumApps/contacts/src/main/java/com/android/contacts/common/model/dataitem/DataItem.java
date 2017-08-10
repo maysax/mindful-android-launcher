@@ -137,7 +137,7 @@ public class DataItem implements Collapser.Collapsible<DataItem> {
     public boolean hasKindTypeColumn(DataKind kind) {
         final String key = kind.typeColumn;
         return key != null && mContentValues.containsKey(key) &&
-            mContentValues.getAsInteger(key) != null;
+                mContentValues.getAsInteger(key) != null;
     }
 
     public int getKindTypeColumn(DataKind kind) {
@@ -192,9 +192,9 @@ public class DataItem implements Collapser.Collapsible<DataItem> {
         // use that's type
         if ((!hasKindTypeColumn(thisKind) && that.hasKindTypeColumn(thatKind)) ||
                 that.hasKindTypeColumn(thatKind) &&
-                RawContactModifier.getTypePrecedence(thisKind, getKindTypeColumn(thisKind))
-                >
-                RawContactModifier.getTypePrecedence(thatKind, that.getKindTypeColumn(thatKind))) {
+                        RawContactModifier.getTypePrecedence(thisKind, getKindTypeColumn(thisKind))
+                                >
+                                RawContactModifier.getTypePrecedence(thatKind, that.getKindTypeColumn(thatKind))) {
             mContentValues.put(thatKind.typeColumn, that.getKindTypeColumn(thatKind));
             mKind = thatKind;
         }

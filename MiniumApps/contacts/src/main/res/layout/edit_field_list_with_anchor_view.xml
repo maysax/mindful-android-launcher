@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2011 The Android Open Source Project
 
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,21 +16,12 @@
 
 <!-- Layout that behaves similarly to edit_field_list.xml,
      but also has an anchor view for ListPopupWindow -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="0dip"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="0dip"
+    android:layout_height="wrap_content" android:layout_weight="1"
     android:paddingLeft="@dimen/editor_field_left_padding"
-    android:paddingStart="@dimen/editor_field_left_padding"
-    android:orientation="vertical">
-    <LinearLayout
-         android:id="@+id/editors"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:orientation="vertical" />
-    <View
-         android:id="@+id/anchor_view"
-         android:layout_width="match_parent"
-         android:layout_height="0px" />
+    android:paddingStart="@dimen/editor_field_left_padding" android:orientation="vertical">
+    <LinearLayout android:id="@+id/editors" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="vertical" />
+    <View android:id="@+id/anchor_view" android:layout_width="match_parent"
+        android:layout_height="0px" />
 </LinearLayout>

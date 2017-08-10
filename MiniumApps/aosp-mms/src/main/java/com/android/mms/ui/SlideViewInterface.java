@@ -17,33 +17,46 @@
 
 package com.android.mms.ui;
 
-import java.util.Map;
-
 import android.graphics.Bitmap;
 import android.net.Uri;
+
+import java.util.Map;
 
 /**
  * Defines the interfaces of the view to show contents of a slide.
  */
 public interface SlideViewInterface extends ViewInterface {
     void setImage(String name, Bitmap bitmap);
+
     void setImageRegionFit(String fit);
+
     void setImageVisibility(boolean visible);
 
     void setVideo(String name, Uri video);
+
     void setVideoThumbnail(String name, Bitmap bitmap);
+
     void setVideoVisibility(boolean visible);
+
     void startVideo();
+
     void stopVideo();
+
     void pauseVideo();
+
     void seekVideo(int seekTo);
 
     void setAudio(Uri audio, String name, Map<String, ?> extras);
+
     void startAudio();
+
     void stopAudio();
+
     void pauseAudio();
+
     void seekAudio(int seekTo);
 
     void setText(String name, String text);
+
     void setTextVisibility(boolean visible);
 }

@@ -1,6 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="minium.co.messages">
+    xmlns:tools="http://schemas.android.com/tools" package="minium.co.messages">
 
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
@@ -13,18 +12,12 @@
     More info: https://developer.android.com/preview/backup/index.html
     -->
 
-    <application
-        android:name=".app.MessagesApp_"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/CoreTheme"
-        tools:replace="label,icon">
+    <application android:name=".app.MessagesApp_" android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
+        android:supportsRtl="true" android:theme="@style/CoreTheme" tools:replace="label,icon">
 
         <!-- Fabric configuration -->
-        <meta-data
-            android:name="io.fabric.ApiKey"
+        <meta-data android:name="io.fabric.ApiKey"
             android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
         <activity android:name=".ui.MainActivity_">

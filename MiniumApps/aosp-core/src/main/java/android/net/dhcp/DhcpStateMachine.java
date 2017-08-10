@@ -29,8 +29,8 @@ interface DhcpStateMachine {
      * parameters.
      */
     public void onOfferReceived(boolean broadcast, int transactionId,
-        byte[] myMac, InetAddress offeredIpAddress,
-        InetAddress serverIpAddress);
+                                byte[] myMac, InetAddress offeredIpAddress,
+                                InetAddress serverIpAddress);
 
     /**
      * Signals that a NAK packet has been received.
@@ -41,30 +41,30 @@ interface DhcpStateMachine {
      * Signals that the final ACK has been received from the server.
      */
     public void onAckReceived(InetAddress myIpAddress, InetAddress myNetMask,
-        InetAddress myGateway, List<InetAddress> myDnsServers,
-        InetAddress myDhcpServer, int leaseTime);
+                              InetAddress myGateway, List<InetAddress> myDnsServers,
+                              InetAddress myDhcpServer, int leaseTime);
 
     /**
      * Signals that a client's DISCOVER packet has been received with the
      * specified parameters.
      */
     public void onDiscoverReceived(boolean broadcast, int transactionId,
-        byte[] clientMac, byte[] requestedParameterList);
+                                   byte[] clientMac, byte[] requestedParameterList);
 
     /**
      * Signals that a client's REQUEST packet has been received with the
      * specified parameters.
      */
     public void onRequestReceived(boolean broadcast, int transactionId,
-        byte[] clientMac, InetAddress requestedIp, byte[] requestedParams,
-        String clientHostName);
+                                  byte[] clientMac, InetAddress requestedIp, byte[] requestedParams,
+                                  String clientHostName);
 
     /**
      * Signals that a client's INFORM packet has been received with the
      * specified parameters.
      */
     public void onInformReceived(int transactionId, byte[] clientMac,
-        InetAddress preassignedIp, byte[] requestedParams);
+                                 InetAddress preassignedIp, byte[] requestedParams);
 
     /**
      * Signals that a client's DECLINE packet has been received with the

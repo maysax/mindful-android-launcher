@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2014 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2014 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,33 +13,20 @@
      limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/container">
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:orientation="vertical" android:id="@+id/container">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:lines="1"
-        android:padding="@dimen/expanding_entry_card_title_padding"
-        android:singleLine="true"
-        android:textSize="@dimen/expanding_entry_card_title_text_size"
-        android:visibility="gone" />
+    <TextView android:id="@+id/title" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:ellipsize="end" android:lines="1"
+        android:padding="@dimen/expanding_entry_card_title_padding" android:singleLine="true"
+        android:textSize="@dimen/expanding_entry_card_title_text_size" android:visibility="gone" />
 
-    <View
-        android:id="@+id/title_separator"
-        android:layout_width="match_parent"
+    <View android:id="@+id/title_separator" android:layout_width="match_parent"
         android:layout_height="@dimen/expanding_entry_card_item_separator_height"
         android:background="@color/expanding_entry_card_item_separator_color"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/content_area_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" />
+    <LinearLayout android:id="@+id/content_area_linear_layout" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:orientation="vertical" />
 
 </LinearLayout>

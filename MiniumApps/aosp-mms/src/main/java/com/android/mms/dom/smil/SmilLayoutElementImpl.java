@@ -17,11 +17,11 @@
 
 package com.android.mms.dom.smil;
 
+import com.android.mms.layout.LayoutManager;
+
 import org.w3c.dom.NodeList;
 import org.w3c.dom.smil.SMILLayoutElement;
 import org.w3c.dom.smil.SMILRootLayoutElement;
-
-import com.android.mms.layout.LayoutManager;
 
 public class SmilLayoutElementImpl extends SmilElementImpl implements
         SMILLayoutElement {
@@ -48,7 +48,7 @@ public class SmilLayoutElementImpl extends SmilElementImpl implements
         int childrenCount = childNodes.getLength();
         for (int i = 0; i < childrenCount; i++) {
             if (childNodes.item(i).getNodeName().equals("root-layout")) {
-                rootLayoutNode = (SMILRootLayoutElement)childNodes.item(i);
+                rootLayoutNode = (SMILRootLayoutElement) childNodes.item(i);
             }
         }
         if (null == rootLayoutNode) {

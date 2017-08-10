@@ -17,8 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.Map;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,6 +29,8 @@ import android.widget.LinearLayout;
 
 import com.android.mms.LogTag;
 import com.android.mms.R;
+
+import java.util.Map;
 // TODO: remove dependency for SDK build
 
 /**

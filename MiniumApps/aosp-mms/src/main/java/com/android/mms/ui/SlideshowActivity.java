@@ -17,17 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.io.ByteArrayOutputStream;
-
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.smil.SMILDocument;
-import org.w3c.dom.smil.SMILElement;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -55,6 +44,17 @@ import com.android.mms.model.RegionModel;
 import com.android.mms.model.SlideshowModel;
 import com.android.mms.model.SmilHelper;
 import com.google.android.mms.MmsException;
+
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.smil.SMILDocument;
+import org.w3c.dom.smil.SMILElement;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Plays the given slideshow in full-screen mode with a common controller.
@@ -129,7 +129,7 @@ public class SlideshowActivity extends Activity implements EventListener {
                     } else if ("id".equals(attrName)) {
                         String value;
                         if (node instanceof AttrImpl) {
-                            value = ((AttrImpl)node).getValue();
+                            value = ((AttrImpl) node).getValue();
                         } else {
                             return false;
                         }
@@ -244,16 +244,16 @@ public class SlideshowActivity extends Activity implements EventListener {
         mMediaController.setMediaPlayer(new SmilPlayerController(mSmilPlayer));
         mMediaController.setAnchorView(findViewById(R.id.slide_view));
         mMediaController.setPrevNextListeners(
-            new OnClickListener() {
-              public void onClick(View v) {
-                  mSmilPlayer.next();
-              }
-            },
-            new OnClickListener() {
-              public void onClick(View v) {
-                  mSmilPlayer.prev();
-              }
-            });
+                new OnClickListener() {
+                    public void onClick(View v) {
+                        mSmilPlayer.next();
+                    }
+                },
+                new OnClickListener() {
+                    public void onClick(View v) {
+                        mSmilPlayer.prev();
+                    }
+                });
     }
 
     @Override
@@ -291,7 +291,7 @@ public class SlideshowActivity extends Activity implements EventListener {
                 View seekBar = mMediaController
                         .findViewById(com.android.internal.R.id.mediacontroller_progress);
                 if (seekBar instanceof SeekBar) {
-                    ((SeekBar)seekBar).setOnSeekBarChangeListener(null);
+                    ((SeekBar) seekBar).setOnSeekBarChangeListener(null);
                 }
                 // Must do this so we don't leak a window.
                 mMediaController.hide();
@@ -322,8 +322,8 @@ public class SlideshowActivity extends Activity implements EventListener {
             case KeyEvent.KEYCODE_MENU:
                 if ((mSmilPlayer != null) &&
                         (mSmilPlayer.isPausedState()
-                        || mSmilPlayer.isPlayingState()
-                        || mSmilPlayer.isPlayedState())) {
+                                || mSmilPlayer.isPlayingState()
+                                || mSmilPlayer.isPlayedState())) {
                     mSmilPlayer.stop();
                 }
                 break;
@@ -343,7 +343,7 @@ public class SlideshowActivity extends Activity implements EventListener {
          * value immediately. However, the SmilPlayer executes play and pause asynchronously, so
          * {@link #isPlaying()} will return the wrong value for some time. That's why we keep our
          * own version of the state of whether the player is playing.
-         *
+         * <p>
          * Initialized to true because we always programatically start the SmilPlayer upon creation
          */
         private boolean mCachedIsPlaying = true;
@@ -406,7 +406,7 @@ public class SlideshowActivity extends Activity implements EventListener {
         mHandler.post(new Runnable() {
             public void run() {
                 String type = event.getType();
-                if(type.equals(SmilDocumentImpl.SMIL_DOCUMENT_END_EVENT)) {
+                if (type.equals(SmilDocumentImpl.SMIL_DOCUMENT_END_EVENT)) {
                     finish();
                 }
             }

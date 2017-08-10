@@ -27,54 +27,55 @@ import java.util.Set;
  * @author Shaopeng Jia
  * @author David Yonge-Mallo
  */
-@Deprecated public class ShortNumberUtil {
+@Deprecated
+public class ShortNumberUtil {
 
-  /**
-   * Cost categories of short numbers.
-   */
-  public enum ShortNumberCost {
-    TOLL_FREE,
-    STANDARD_RATE,
-    PREMIUM_RATE,
-    UNKNOWN_COST
-  }
+    /**
+     * Cost categories of short numbers.
+     */
+    public enum ShortNumberCost {
+        TOLL_FREE,
+        STANDARD_RATE,
+        PREMIUM_RATE,
+        UNKNOWN_COST
+    }
 
-  public ShortNumberUtil() {
-  }
+    public ShortNumberUtil() {
+    }
 
-  /**
-   * Convenience method to get a list of what regions the library has metadata for.
-   */
-  public Set<String> getSupportedRegions() {
-    return ShortNumberInfo.getInstance().getSupportedRegions();
-  }
+    /**
+     * Convenience method to get a list of what regions the library has metadata for.
+     */
+    public Set<String> getSupportedRegions() {
+        return ShortNumberInfo.getInstance().getSupportedRegions();
+    }
 
-  /**
-   * Returns true if the number might be used to connect to an emergency service in the given
-   * region.
-   *
-   * This method takes into account cases where the number might contain formatting, or might have
-   * additional digits appended (when it is okay to do that in the region specified).
-   *
-   * @param number  the phone number to test
-   * @param regionCode  the region where the phone number is being dialed
-   * @return  if the number might be used to connect to an emergency service in the given region.
-   */
-  public boolean connectsToEmergencyNumber(String number, String regionCode) {
-    return ShortNumberInfo.getInstance().connectsToEmergencyNumber(number, regionCode);
-  }
+    /**
+     * Returns true if the number might be used to connect to an emergency service in the given
+     * region.
+     * <p>
+     * This method takes into account cases where the number might contain formatting, or might have
+     * additional digits appended (when it is okay to do that in the region specified).
+     *
+     * @param number     the phone number to test
+     * @param regionCode the region where the phone number is being dialed
+     * @return if the number might be used to connect to an emergency service in the given region.
+     */
+    public boolean connectsToEmergencyNumber(String number, String regionCode) {
+        return ShortNumberInfo.getInstance().connectsToEmergencyNumber(number, regionCode);
+    }
 
-  /**
-   * Returns true if the number exactly matches an emergency service number in the given region.
-   *
-   * This method takes into account cases where the number might contain formatting, but doesn't
-   * allow additional digits to be appended.
-   *
-   * @param number  the phone number to test
-   * @param regionCode  the region where the phone number is being dialed
-   * @return  if the number exactly matches an emergency services number in the given region.
-   */
-  public boolean isEmergencyNumber(String number, String regionCode) {
-    return ShortNumberInfo.getInstance().isEmergencyNumber(number, regionCode);
-  }
+    /**
+     * Returns true if the number exactly matches an emergency service number in the given region.
+     * <p>
+     * This method takes into account cases where the number might contain formatting, but doesn't
+     * allow additional digits to be appended.
+     *
+     * @param number     the phone number to test
+     * @param regionCode the region where the phone number is being dialed
+     * @return if the number exactly matches an emergency services number in the given region.
+     */
+    public boolean isEmergencyNumber(String number, String regionCode) {
+        return ShortNumberInfo.getInstance().isEmergencyNumber(number, regionCode);
+    }
 }

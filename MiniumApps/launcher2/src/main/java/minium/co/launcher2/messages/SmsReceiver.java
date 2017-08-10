@@ -17,7 +17,6 @@ import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.launcher2.model.ReceivedSMSItem;
 import minium.co.launcher2.notification.DisplayAlertActivity_;
-import minium.co.launcher2.notificationscheduler.NotificationScheduleReceiver_;
 
 /**
  * Created by Shahab on 7/29/2016.

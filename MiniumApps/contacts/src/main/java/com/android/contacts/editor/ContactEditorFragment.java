@@ -28,7 +28,6 @@ import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,7 +49,6 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Groups;
 import android.provider.ContactsContract.Intents;
-import android.provider.ContactsContract.QuickContact;
 import android.provider.ContactsContract.RawContacts;
 import android.text.TextUtils;
 import android.util.Log;
@@ -72,6 +70,12 @@ import com.android.contacts.GroupMetaDataLoader;
 import com.android.contacts.activities.ContactEditorAccountsChangedActivity;
 import com.android.contacts.activities.ContactEditorActivity;
 import com.android.contacts.common.model.AccountTypeManager;
+import com.android.contacts.common.model.Contact;
+import com.android.contacts.common.model.ContactLoader;
+import com.android.contacts.common.model.RawContact;
+import com.android.contacts.common.model.RawContactDelta;
+import com.android.contacts.common.model.RawContactDeltaList;
+import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountWithDataSet;
@@ -81,12 +85,6 @@ import com.android.contacts.common.util.AccountsListAdapter.AccountListFilter;
 import com.android.contacts.detail.PhotoSelectionHandler;
 import com.android.contacts.editor.AggregationSuggestionEngine.Suggestion;
 import com.android.contacts.editor.Editor.EditorListener;
-import com.android.contacts.common.model.Contact;
-import com.android.contacts.common.model.ContactLoader;
-import com.android.contacts.common.model.RawContact;
-import com.android.contacts.common.model.RawContactDelta;
-import com.android.contacts.common.model.RawContactDeltaList;
-import com.android.contacts.common.model.RawContactModifier;
 import com.android.contacts.quickcontact.QuickContactActivity;
 import com.android.contacts.util.ContactPhotoUtils;
 import com.android.contacts.util.HelpUtils;
@@ -225,7 +223,7 @@ public class ContactEditorFragment extends Fragment implements
     /**
      * The {@link PhotoHandler} for the photo editor for the {@link #mRawContactIdRequestingPhoto}
      * raw contact.
-     *
+     * <p>
      * A {@link PhotoHandler} is created for each photo editor in {@link #bindPhotoHandler}, but
      * the only "active" one should get the activity result.  This member represents the active
      * one.
@@ -292,7 +290,7 @@ public class ContactEditorFragment extends Fragment implements
         private final List<Suggestion> mSuggestions;
 
         public AggregationSuggestionAdapter(Activity activity, boolean setNewContact,
-                AggregationSuggestionView.Listener listener, List<Suggestion> suggestions) {
+                                            AggregationSuggestionView.Listener listener, List<Suggestion> suggestions) {
             mActivity = activity;
             mSetNewContact = setNewContact;
             mListener = listener;
@@ -330,14 +328,14 @@ public class ContactEditorFragment extends Fragment implements
 
     private OnItemClickListener mAggregationSuggestionItemClickListener =
             new OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final AggregationSuggestionView suggestionView = (AggregationSuggestionView) view;
-            suggestionView.handleItemClickEvent();
-            UiClosables.closeQuietly(mAggregationSuggestionPopup);
-            mAggregationSuggestionPopup = null;
-        }
-    };
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    final AggregationSuggestionView suggestionView = (AggregationSuggestionView) view;
+                    suggestionView.handleItemClickEvent();
+                    UiClosables.closeQuietly(mAggregationSuggestionPopup);
+                    mAggregationSuggestionPopup = null;
+                }
+            };
 
     private boolean mAutoAddToDefaultGroup;
 
@@ -502,7 +500,7 @@ public class ContactEditorFragment extends Fragment implements
             mViewIdGenerator = new ViewIdGenerator();
         } else {
             // Read state from savedState. No loading involved here
-            mState = savedState.<RawContactDeltaList> getParcelable(KEY_EDIT_STATE);
+            mState = savedState.<RawContactDeltaList>getParcelable(KEY_EDIT_STATE);
             mRawContactIdRequestingPhoto = savedState.getLong(
                     KEY_RAW_CONTACT_ID_REQUESTING_PHOTO);
             mViewIdGenerator = savedState.getParcelable(KEY_VIEW_ID_GENERATOR);
@@ -523,8 +521,8 @@ public class ContactEditorFragment extends Fragment implements
             mRawContacts = ImmutableList.copyOf(savedState.<RawContact>getParcelableArrayList(
                     KEY_RAW_CONTACTS));
             mSendToVoicemailState = savedState.getBoolean(KEY_SEND_TO_VOICE_MAIL_STATE);
-            mCustomRingtone =  savedState.getString(KEY_CUSTOM_RINGTONE);
-            mArePhoneOptionsChangable =  savedState.getBoolean(KEY_ARE_PHONE_OPTIONS_CHANGEABLE);
+            mCustomRingtone = savedState.getString(KEY_CUSTOM_RINGTONE);
+            mArePhoneOptionsChangable = savedState.getBoolean(KEY_ARE_PHONE_OPTIONS_CHANGEABLE);
         }
 
         // mState can still be null because it may not have have finished loading before
@@ -588,7 +586,7 @@ public class ContactEditorFragment extends Fragment implements
     }
 
     private void bindEditorsForExistingContact(String displayName, boolean isUserProfile,
-            ImmutableList<RawContact> rawContacts) {
+                                               ImmutableList<RawContact> rawContacts) {
         setEnabled(true);
         mDefaultDisplayName = displayName;
 
@@ -723,7 +721,7 @@ public class ContactEditorFragment extends Fragment implements
      * Removes a current editor ({@link #mState}) and rebinds new editor for a new account.
      * Some of old data are reused with new restriction enforced by the new account.
      *
-     * @param oldState Old data being edited.
+     * @param oldState   Old data being edited.
      * @param oldAccount Old account associated with oldState.
      * @param newAccount New account to be used.
      */
@@ -753,13 +751,13 @@ public class ContactEditorFragment extends Fragment implements
     }
 
     private void bindEditorsForNewContact(AccountWithDataSet account,
-            final AccountType accountType) {
+                                          final AccountType accountType) {
         bindEditorsForNewContact(account, accountType, null, null);
     }
 
     private void bindEditorsForNewContact(AccountWithDataSet newAccount,
-            final AccountType newAccountType, RawContactDelta oldState,
-            AccountType oldAccountType) {
+                                          final AccountType newAccountType, RawContactDelta oldState,
+                                          AccountType oldAccountType) {
         mStatus = Status.EDITING;
 
         final RawContact rawContact = new RawContact();
@@ -926,16 +924,17 @@ public class ContactEditorFragment extends Fragment implements
     /**
      * If we've stashed a temporary file containing a contact's new photo,
      * decode it and return the bitmap.
+     *
      * @param rawContactId identifies the raw-contact whose Bitmap we'll try to return.
      * @return Bitmap of photo for specified raw-contact, or null
-    */
+     */
     private Bitmap updatedBitmapForRawContact(long rawContactId) {
         String path = mUpdatedPhotos.getString(String.valueOf(rawContactId));
         return path == null ? null : BitmapFactory.decodeFile(path);
     }
 
     private void bindPhotoHandler(BaseRawContactEditorView editor, AccountType type,
-            RawContactDeltaList state) {
+                                  RawContactDeltaList state) {
         final int mode;
         if (type.areContactsWritable()) {
             if (editor.hasSetPhoto()) {
@@ -1014,7 +1013,7 @@ public class ContactEditorFragment extends Fragment implements
                 final ListPopupWindow popup = new ListPopupWindow(mContext, null);
                 final AccountsListAdapter adapter =
                         new AccountsListAdapter(mContext,
-                        AccountListFilter.ACCOUNTS_CONTACT_WRITABLE, currentAccount);
+                                AccountListFilter.ACCOUNTS_CONTACT_WRITABLE, currentAccount);
                 popup.setWidth(anchorView.getWidth());
                 popup.setAnchorView(anchorView);
                 popup.setAdapter(adapter);
@@ -1023,7 +1022,7 @@ public class ContactEditorFragment extends Fragment implements
                 popup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
+                                            long id) {
                         UiClosables.closeQuietly(popup);
                         AccountWithDataSet newAccount = adapter.getItem(position);
                         if (!newAccount.equals(currentAccount)) {
@@ -1149,7 +1148,7 @@ public class ContactEditorFragment extends Fragment implements
         // early to do a join
         if (mState.size() == 1 && mState.get(0).isContactInsert() && !hasPendingChanges()) {
             Toast.makeText(mContext, R.string.toast_join_with_empty_contact,
-                            Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_LONG).show();
             return true;
         }
 
@@ -1208,7 +1207,7 @@ public class ContactEditorFragment extends Fragment implements
         // Save contact
         Intent intent = ContactSaveService.createSaveContactIntent(mContext, mState,
                 SAVE_MODE_EXTRA_KEY, saveMode, isEditingUserProfile(),
-                ((Activity)mContext).getClass(), ContactEditorActivity.ACTION_SAVE_COMPLETED,
+                ((Activity) mContext).getClass(), ContactEditorActivity.ACTION_SAVE_COMPLETED,
                 mUpdatedPhotos);
         mContext.startService(intent);
 
@@ -1272,12 +1271,12 @@ public class ContactEditorFragment extends Fragment implements
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setMessage(R.string.cancel_confirmation_dialog_message)
                     .setPositiveButton(android.R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int whichButton) {
-                                ((ContactEditorFragment)getTargetFragment()).doRevertAction();
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int whichButton) {
+                                    ((ContactEditorFragment) getTargetFragment()).doRevertAction();
+                                }
                             }
-                        }
                     )
                     .setNegativeButton(android.R.string.cancel, null)
                     .create();
@@ -1309,7 +1308,7 @@ public class ContactEditorFragment extends Fragment implements
     }
 
     public void onSaveCompleted(boolean hadChanges, int saveMode, boolean saveSucceeded,
-            Uri contactLookupUri) {
+                                Uri contactLookupUri) {
         if (hadChanges) {
             if (saveSucceeded) {
                 if (saveMode != SaveMode.JOIN) {
@@ -1436,8 +1435,9 @@ public class ContactEditorFragment extends Fragment implements
 
         /**
          * Contact was split, so we can close now.
+         *
          * @param newLookupUri The lookup uri of the new contact that should be shown to the user.
-         * The editor tries best to chose the most natural contact here.
+         *                     The editor tries best to chose the most natural contact here.
          */
         void onContactSplit(Uri newLookupUri);
 
@@ -1463,17 +1463,17 @@ public class ContactEditorFragment extends Fragment implements
          * new contact activity.
          */
         void onCustomCreateContactActivityRequested(AccountWithDataSet account,
-                Bundle intentExtras);
+                                                    Bundle intentExtras);
 
         /**
          * The edited raw contact belongs to an external account that provides
          * its own edit activity.
          *
          * @param redirect indicates that the current editor should be closed
-         *            before the custom editor is shown.
+         *                 before the custom editor is shown.
          */
         void onCustomEditContactActivityRequested(AccountWithDataSet account, Uri rawContactUri,
-                Bundle intentExtras, boolean redirect);
+                                                  Bundle intentExtras, boolean redirect);
 
         void onDeleteRequested(Uri contactUri);
     }
@@ -1512,7 +1512,7 @@ public class ContactEditorFragment extends Fragment implements
                 return -1;
             } else if (!isGoogleAccount1 && isGoogleAccount2) {
                 return 1;
-            } else if (isGoogleAccount1 && isGoogleAccount2){
+            } else if (isGoogleAccount1 && isGoogleAccount2) {
                 skipAccountTypeCheck = true;
             }
 
@@ -1567,7 +1567,7 @@ public class ContactEditorFragment extends Fragment implements
                 return 1;
             }
 
-            return (int)(oneId - twoId);
+            return (int) (oneId - twoId);
         }
     }
 
@@ -1588,7 +1588,7 @@ public class ContactEditorFragment extends Fragment implements
      * Triggers an asynchronous search for aggregation suggestions.
      */
     private void acquireAggregationSuggestions(Context context,
-            RawContactEditorView rawContactEditor) {
+                                               RawContactEditorView rawContactEditor) {
         long rawContactId = rawContactEditor.getRawContactId();
         if (mAggregationSuggestionsRawContactId != rawContactId
                 && mAggregationSuggestionView != null) {
@@ -1615,7 +1615,7 @@ public class ContactEditorFragment extends Fragment implements
     public void onAggregationSuggestionChange() {
         Activity activity = getActivity();
         if ((activity != null && activity.isFinishing())
-                || !isVisible() ||  mState.isEmpty() || mStatus != Status.EDITING) {
+                || !isVisible() || mState.isEmpty() || mStatus != Status.EDITING) {
             return;
         }
 
@@ -1626,7 +1626,7 @@ public class ContactEditorFragment extends Fragment implements
         }
 
         final RawContactEditorView rawContactView =
-                (RawContactEditorView)getRawContactEditorView(mAggregationSuggestionsRawContactId);
+                (RawContactEditorView) getRawContactEditorView(mAggregationSuggestionsRawContactId);
         if (rawContactView == null) {
             return; // Raw contact deleted?
         }
@@ -1670,16 +1670,16 @@ public class ContactEditorFragment extends Fragment implements
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setMessage(R.string.aggregation_suggestion_join_dialog_message)
                     .setPositiveButton(android.R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ContactEditorFragment targetFragment =
-                                        (ContactEditorFragment) getTargetFragment();
-                                long rawContactIds[] =
-                                        getArguments().getLongArray("rawContactIds");
-                                targetFragment.doJoinSuggestedContact(rawContactIds);
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    ContactEditorFragment targetFragment =
+                                            (ContactEditorFragment) getTargetFragment();
+                                    long rawContactIds[] =
+                                            getArguments().getLongArray("rawContactIds");
+                                    targetFragment.doJoinSuggestedContact(rawContactIds);
+                                }
                             }
-                        }
                     )
                     .setNegativeButton(android.R.string.no, null)
                     .create();
@@ -1718,16 +1718,16 @@ public class ContactEditorFragment extends Fragment implements
                     .setIconAttribute(android.R.attr.alertDialogIcon)
                     .setMessage(R.string.aggregation_suggestion_edit_dialog_message)
                     .setPositiveButton(android.R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                ContactEditorFragment targetFragment =
-                                        (ContactEditorFragment) getTargetFragment();
-                                Uri contactUri =
-                                        getArguments().getParcelable("contactUri");
-                                targetFragment.doEditSuggestedContact(contactUri);
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    ContactEditorFragment targetFragment =
+                                            (ContactEditorFragment) getTargetFragment();
+                                    Uri contactUri =
+                                            getArguments().getParcelable("contactUri");
+                                    targetFragment.doEditSuggestedContact(contactUri);
+                                }
                             }
-                        }
                     )
                     .setNegativeButton(android.R.string.no, null)
                     .create();
@@ -1787,7 +1787,7 @@ public class ContactEditorFragment extends Fragment implements
         outState.putBoolean(KEY_EXISTING_CONTACT_READY, mExistingContactDataReady);
         outState.putParcelableArrayList(KEY_RAW_CONTACTS,
                 mRawContacts == null ?
-                Lists.<RawContact> newArrayList() :  Lists.newArrayList(mRawContacts));
+                        Lists.<RawContact>newArrayList() : Lists.newArrayList(mRawContacts));
         outState.putBoolean(KEY_SEND_TO_VOICE_MAIL_STATE, mSendToVoicemailState);
         outState.putString(KEY_CUSTOM_RINGTONE, mCustomRingtone);
         outState.putBoolean(KEY_ARE_PHONE_OPTIONS_CHANGEABLE, mArePhoneOptionsChangable);
@@ -1921,36 +1921,36 @@ public class ContactEditorFragment extends Fragment implements
      */
     private final LoaderManager.LoaderCallbacks<Contact> mDataLoaderListener =
             new LoaderCallbacks<Contact>() {
-        @Override
-        public Loader<Contact> onCreateLoader(int id, Bundle args) {
-            mLoaderStartTime = SystemClock.elapsedRealtime();
-            return new ContactLoader(mContext, mLookupUri, true);
-        }
+                @Override
+                public Loader<Contact> onCreateLoader(int id, Bundle args) {
+                    mLoaderStartTime = SystemClock.elapsedRealtime();
+                    return new ContactLoader(mContext, mLookupUri, true);
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Contact> loader, Contact data) {
-            final long loaderCurrentTime = SystemClock.elapsedRealtime();
-            Log.v(TAG, "Time needed for loading: " + (loaderCurrentTime-mLoaderStartTime));
-            if (!data.isLoaded()) {
-                // Item has been deleted
-                Log.i(TAG, "No contact found. Closing activity");
-                if (mListener != null) mListener.onContactNotFound();
-                return;
-            }
+                @Override
+                public void onLoadFinished(Loader<Contact> loader, Contact data) {
+                    final long loaderCurrentTime = SystemClock.elapsedRealtime();
+                    Log.v(TAG, "Time needed for loading: " + (loaderCurrentTime - mLoaderStartTime));
+                    if (!data.isLoaded()) {
+                        // Item has been deleted
+                        Log.i(TAG, "No contact found. Closing activity");
+                        if (mListener != null) mListener.onContactNotFound();
+                        return;
+                    }
 
-            mStatus = Status.EDITING;
-            mLookupUri = data.getLookupUri();
-            final long setDataStartTime = SystemClock.elapsedRealtime();
-            setData(data);
-            final long setDataEndTime = SystemClock.elapsedRealtime();
+                    mStatus = Status.EDITING;
+                    mLookupUri = data.getLookupUri();
+                    final long setDataStartTime = SystemClock.elapsedRealtime();
+                    setData(data);
+                    final long setDataEndTime = SystemClock.elapsedRealtime();
 
-            Log.v(TAG, "Time needed for setting UI: " + (setDataEndTime-setDataStartTime));
-        }
+                    Log.v(TAG, "Time needed for setting UI: " + (setDataEndTime - setDataStartTime));
+                }
 
-        @Override
-        public void onLoaderReset(Loader<Contact> loader) {
-        }
-    };
+                @Override
+                public void onLoaderReset(Loader<Contact> loader) {
+                }
+            };
 
     /**
      * The listener for the group meta data loader for all groups.
@@ -1958,21 +1958,21 @@ public class ContactEditorFragment extends Fragment implements
     private final LoaderManager.LoaderCallbacks<Cursor> mGroupLoaderListener =
             new LoaderCallbacks<Cursor>() {
 
-        @Override
-        public CursorLoader onCreateLoader(int id, Bundle args) {
-            return new GroupMetaDataLoader(mContext, Groups.CONTENT_URI);
-        }
+                @Override
+                public CursorLoader onCreateLoader(int id, Bundle args) {
+                    return new GroupMetaDataLoader(mContext, Groups.CONTENT_URI);
+                }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            mGroupMetaData = data;
-            bindGroupMetaData();
-        }
+                @Override
+                public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                    mGroupMetaData = data;
+                    bindGroupMetaData();
+                }
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-        }
-    };
+                @Override
+                public void onLoaderReset(Loader<Cursor> loader) {
+                }
+            };
 
     @Override
     public void onSplitContactConfirmed() {
@@ -2001,7 +2001,7 @@ public class ContactEditorFragment extends Fragment implements
         private final PhotoActionListener mPhotoEditorListener;
 
         public PhotoHandler(Context context, BaseRawContactEditorView editor, int photoMode,
-                RawContactDeltaList state) {
+                            RawContactDeltaList state) {
             super(context, editor.getPhotoEditor(), photoMode, false, state);
             mEditor = editor;
             mRawContactId = editor.getRawContactId();

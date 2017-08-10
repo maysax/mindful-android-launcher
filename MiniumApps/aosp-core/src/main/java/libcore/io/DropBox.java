@@ -45,6 +45,7 @@ public final class DropBox {
      */
     public static interface Reporter {
         public void addData(String tag, byte[] data, int flags);
+
         public void addText(String tag, String data);
     }
 

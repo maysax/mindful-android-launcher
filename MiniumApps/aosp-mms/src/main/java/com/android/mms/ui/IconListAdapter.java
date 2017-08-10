@@ -17,8 +17,6 @@
 
 package com.android.mms.ui;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.mms.R;
+
+import java.util.List;
 
 /**
  * An adapter to store icons.
@@ -62,8 +62,9 @@ public class IconListAdapter extends ArrayAdapter<IconListAdapter.IconListItem> 
             return mImageView;
         }
     }
+
     public IconListAdapter(Context context,
-            List<IconListItem> items) {
+                           List<IconListItem> items) {
         super(context, mResource, items);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

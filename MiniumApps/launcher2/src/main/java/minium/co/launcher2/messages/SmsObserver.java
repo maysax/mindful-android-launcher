@@ -35,8 +35,7 @@ public class SmsObserver extends ContentObserver {
             this.resolver = context.getContentResolver();
             this.address = address;
             this.body = body;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException(
                     "Context must implement OnSmsSentListener interface");
         }
@@ -45,8 +44,7 @@ public class SmsObserver extends ContentObserver {
     public void start() {
         if (resolver != null) {
             resolver.registerContentObserver(uri, true, this);
-        }
-        else {
+        } else {
             throw new IllegalStateException(
                     "Current SmsObserver instance is invalid");
         }
@@ -63,7 +61,7 @@ public class SmsObserver extends ContentObserver {
                 final int type = cursor.getInt(
                         cursor.getColumnIndex(Telephony.Sms.TYPE));
 
-                if(type == Telephony.Sms.Sent.MESSAGE_TYPE_SENT) {
+                if (type == Telephony.Sms.Sent.MESSAGE_TYPE_SENT) {
                     final String address = cursor.getString(
                             cursor.getColumnIndex(Telephony.Sms.ADDRESS));
                     final String body = cursor.getString(
@@ -81,8 +79,7 @@ public class SmsObserver extends ContentObserver {
             }
         } catch (IllegalStateException e) {
             Tracer.e(e, e.getMessage());
-        }
-        finally {
+        } finally {
             if (cursor != null) {
                 cursor.close();
             }

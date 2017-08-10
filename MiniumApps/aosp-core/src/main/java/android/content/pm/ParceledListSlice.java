@@ -63,7 +63,7 @@ public class ParceledListSlice<T extends Parcelable> implements Parcelable {
                 break;
             }
             mList.add(p.readCreator(creator, loader));
-            if (DEBUG) Log.d(TAG, "Read inline #" + i + ": " + mList.get(mList.size()-1));
+            if (DEBUG) Log.d(TAG, "Read inline #" + i + ": " + mList.get(mList.size() - 1));
             i++;
         }
         if (i >= N) {
@@ -83,7 +83,7 @@ public class ParceledListSlice<T extends Parcelable> implements Parcelable {
             }
             while (i < N && reply.readInt() != 0) {
                 mList.add(reply.readCreator(creator, loader));
-                if (DEBUG) Log.d(TAG, "Read extra #" + i + ": " + mList.get(mList.size()-1));
+                if (DEBUG) Log.d(TAG, "Read extra #" + i + ": " + mList.get(mList.size() - 1));
                 i++;
             }
             reply.recycle();
@@ -98,7 +98,7 @@ public class ParceledListSlice<T extends Parcelable> implements Parcelable {
     @Override
     public int describeContents() {
         int contents = 0;
-        for (int i=0; i<mList.size(); i++) {
+        for (int i = 0; i < mList.size(); i++) {
             contents |= mList.get(i).describeContents();
         }
         return contents;
@@ -157,17 +157,17 @@ public class ParceledListSlice<T extends Parcelable> implements Parcelable {
     @SuppressWarnings("unchecked")
     public static final Parcelable.ClassLoaderCreator<ParceledListSlice> CREATOR =
             new Parcelable.ClassLoaderCreator<ParceledListSlice>() {
-        public ParceledListSlice createFromParcel(Parcel in) {
-            return new ParceledListSlice(in, null);
-        }
+                public ParceledListSlice createFromParcel(Parcel in) {
+                    return new ParceledListSlice(in, null);
+                }
 
-        @Override
-        public ParceledListSlice createFromParcel(Parcel in, ClassLoader loader) {
-            return new ParceledListSlice(in, loader);
-        }
+                @Override
+                public ParceledListSlice createFromParcel(Parcel in, ClassLoader loader) {
+                    return new ParceledListSlice(in, loader);
+                }
 
-        public ParceledListSlice[] newArray(int size) {
-            return new ParceledListSlice[size];
-        }
-    };
+                public ParceledListSlice[] newArray(int size) {
+                    return new ParceledListSlice[size];
+                }
+            };
 }

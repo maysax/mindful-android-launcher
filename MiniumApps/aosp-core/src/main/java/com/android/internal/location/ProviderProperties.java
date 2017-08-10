@@ -22,6 +22,7 @@ import android.os.Parcelable;
 /**
  * A Parcelable containing (legacy) location provider properties.
  * This object is just used inside the framework and system services.
+ *
  * @hide
  */
 public final class ProviderProperties implements Parcelable {
@@ -95,9 +96,9 @@ public final class ProviderProperties implements Parcelable {
     public final int mAccuracy;
 
     public ProviderProperties(boolean mRequiresNetwork,
-            boolean mRequiresSatellite, boolean mRequiresCell, boolean mHasMonetaryCost,
-            boolean mSupportsAltitude, boolean mSupportsSpeed, boolean mSupportsBearing,
-            int mPowerRequirement, int mAccuracy) {
+                              boolean mRequiresSatellite, boolean mRequiresCell, boolean mHasMonetaryCost,
+                              boolean mSupportsAltitude, boolean mSupportsSpeed, boolean mSupportsBearing,
+                              int mPowerRequirement, int mAccuracy) {
         this.mRequiresNetwork = mRequiresNetwork;
         this.mRequiresSatellite = mRequiresSatellite;
         this.mRequiresCell = mRequiresCell;
@@ -111,26 +112,27 @@ public final class ProviderProperties implements Parcelable {
 
     public static final Parcelable.Creator<ProviderProperties> CREATOR =
             new Parcelable.Creator<ProviderProperties>() {
-        @Override
-        public ProviderProperties createFromParcel(Parcel in) {
-            boolean requiresNetwork = in.readInt() == 1;
-            boolean requiresSatellite = in.readInt() == 1;
-            boolean requiresCell = in.readInt() == 1;
-            boolean hasMonetaryCost = in.readInt() == 1;
-            boolean supportsAltitude = in.readInt() == 1;
-            boolean supportsSpeed = in.readInt() == 1;
-            boolean supportsBearing = in.readInt() == 1;
-            int powerRequirement = in.readInt();
-            int accuracy = in.readInt();
-            return new ProviderProperties(requiresNetwork, requiresSatellite,
-                    requiresCell, hasMonetaryCost, supportsAltitude, supportsSpeed, supportsBearing,
-                    powerRequirement, accuracy);
-        }
-        @Override
-        public ProviderProperties[] newArray(int size) {
-            return new ProviderProperties[size];
-        }
-    };
+                @Override
+                public ProviderProperties createFromParcel(Parcel in) {
+                    boolean requiresNetwork = in.readInt() == 1;
+                    boolean requiresSatellite = in.readInt() == 1;
+                    boolean requiresCell = in.readInt() == 1;
+                    boolean hasMonetaryCost = in.readInt() == 1;
+                    boolean supportsAltitude = in.readInt() == 1;
+                    boolean supportsSpeed = in.readInt() == 1;
+                    boolean supportsBearing = in.readInt() == 1;
+                    int powerRequirement = in.readInt();
+                    int accuracy = in.readInt();
+                    return new ProviderProperties(requiresNetwork, requiresSatellite,
+                            requiresCell, hasMonetaryCost, supportsAltitude, supportsSpeed, supportsBearing,
+                            powerRequirement, accuracy);
+                }
+
+                @Override
+                public ProviderProperties[] newArray(int size) {
+                    return new ProviderProperties[size];
+                }
+            };
 
     @Override
     public int describeContents() {

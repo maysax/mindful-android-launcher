@@ -34,6 +34,7 @@ import android.provider.Telephony.Mms;
 import android.provider.Telephony.MmsSms;
 import android.provider.Telephony.MmsSms.PendingMessages;
 import android.util.Log;
+
 import com.android.mms.util.DownloadManager;
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.PduHeaders;
@@ -54,6 +55,7 @@ public class RetryScheduler implements Observer {
     }
 
     private static RetryScheduler sInstance;
+
     public static RetryScheduler getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new RetryScheduler(context);
@@ -188,7 +190,7 @@ public class RetryScheduler implements Observer {
                         errorType = MmsSms.ERR_TYPE_GENERIC_PERMANENT;
                         if (isRetryDownloading) {
                             Cursor c = SqliteWrapper.query(mContext, mContext.getContentResolver(), uri,
-                                    new String[] { Mms.THREAD_ID }, null, null, null);
+                                    new String[]{Mms.THREAD_ID}, null, null, null);
 
                             long threadId = -1;
                             if (c != null) {
@@ -213,9 +215,9 @@ public class RetryScheduler implements Observer {
                         }
                     }
 
-                    values.put(PendingMessages.ERROR_TYPE,  errorType);
+                    values.put(PendingMessages.ERROR_TYPE, errorType);
                     values.put(PendingMessages.RETRY_INDEX, retryIndex);
-                    values.put(PendingMessages.LAST_TRY,    current);
+                    values.put(PendingMessages.LAST_TRY, current);
 
                     int columnIndex = cursor.getColumnIndexOrThrow(
                             PendingMessages._ID);
@@ -300,7 +302,7 @@ public class RetryScheduler implements Observer {
         try {
             if (cursor.moveToFirst()) {
                 retrieveStatus = cursor.getInt(cursor.getColumnIndexOrThrow(
-                            Mms.RESPONSE_STATUS));
+                        Mms.RESPONSE_STATUS));
             }
         } finally {
             cursor.close();
@@ -332,7 +334,7 @@ public class RetryScheduler implements Observer {
                     am.set(AlarmManager.RTC, retryAt, operation);
 
                     if (LOCAL_LOGV) Log.v(TAG, "Next retry is scheduled at "
-                                + (retryAt - System.currentTimeMillis()) + "ms from now");
+                            + (retryAt - System.currentTimeMillis()) + "ms from now");
                 }
             } finally {
                 cursor.close();

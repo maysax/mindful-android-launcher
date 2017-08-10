@@ -93,7 +93,9 @@ public class PackageInstaller {
     @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
     public static final String ACTION_SESSION_DETAILS = "android.content.pm.action.SESSION_DETAILS";
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static final String
             ACTION_CONFIRM_PERMISSIONS = "android.content.pm.action.CONFIRM_PERMISSIONS";
 
@@ -150,15 +152,23 @@ public class PackageInstaller {
      */
     public static final String EXTRA_STORAGE_PATH = "android.content.pm.extra.STORAGE_PATH";
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     @Deprecated
     public static final String EXTRA_PACKAGE_NAMES = "android.content.pm.extra.PACKAGE_NAMES";
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static final String EXTRA_LEGACY_STATUS = "android.content.pm.extra.LEGACY_STATUS";
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static final String EXTRA_LEGACY_BUNDLE = "android.content.pm.extra.LEGACY_BUNDLE";
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public static final String EXTRA_CALLBACK = "android.content.pm.extra.CALLBACK";
 
     /**
@@ -264,9 +274,11 @@ public class PackageInstaller {
 
     private final ArrayList<SessionCallbackDelegate> mDelegates = new ArrayList<>();
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public PackageInstaller(Context context, PackageManager pm, IPackageInstaller installer,
-            String installerPackageName, int userId) {
+                            String installerPackageName, int userId) {
         mContext = context;
         mPm = pm;
         mInstaller = installer;
@@ -283,14 +295,14 @@ public class PackageInstaller {
      * finalized (either committed or abandoned) within a reasonable period of
      * time, typically on the order of a day.
      *
-     * @throws IOException if parameters were unsatisfiable, such as lack of
-     *             disk space or unavailable media.
-     * @throws SecurityException when installation services are unavailable,
-     *             such as when called from a restricted user.
-     * @throws IllegalArgumentException when {@link SessionParams} is invalid.
      * @return positive, non-zero unique ID that represents the created session.
-     *         This ID remains consistent across device reboots until the
-     *         session is finalized. IDs are not reused during a given boot.
+     * This ID remains consistent across device reboots until the
+     * session is finalized. IDs are not reused during a given boot.
+     * @throws IOException              if parameters were unsatisfiable, such as lack of
+     *                                  disk space or unavailable media.
+     * @throws SecurityException        when installation services are unavailable,
+     *                                  such as when called from a restricted user.
+     * @throws IllegalArgumentException when {@link SessionParams} is invalid.
      */
     public int createSession(@NonNull SessionParams params) throws IOException {
         try {
@@ -307,12 +319,14 @@ public class PackageInstaller {
      * Open an existing session to actively perform work. To succeed, the caller
      * must be the owner of the install session.
      *
-     * @throws IOException if parameters were unsatisfiable, such as lack of
-     *             disk space or unavailable media.
+     * @throws IOException       if parameters were unsatisfiable, such as lack of
+     *                           disk space or unavailable media.
      * @throws SecurityException when the caller does not own the session, or
-     *             the session is invalid.
+     *                           the session is invalid.
      */
-    public @NonNull Session openSession(int sessionId) throws IOException {
+    public
+    @NonNull
+    Session openSession(int sessionId) throws IOException {
         try {
             return new Session(mInstaller.openSession(sessionId));
         } catch (RuntimeException e) {
@@ -329,7 +343,7 @@ public class PackageInstaller {
      * {@link ActivityManager#getLauncherLargeIconSize()} in both dimensions.
      *
      * @throws SecurityException when the caller does not own the session, or
-     *             the session is invalid.
+     *                           the session is invalid.
      */
     public void updateSessionAppIcon(int sessionId, @Nullable Bitmap appIcon) {
         try {
@@ -344,7 +358,7 @@ public class PackageInstaller {
      * session.
      *
      * @throws SecurityException when the caller does not own the session, or
-     *             the session is invalid.
+     *                           the session is invalid.
      */
     public void updateSessionAppLabel(int sessionId, @Nullable CharSequence appLabel) {
         try {
@@ -362,7 +376,7 @@ public class PackageInstaller {
      * opening the session and calling {@link Session#abandon()}.
      *
      * @throws SecurityException when the caller does not own the session, or
-     *             the session is invalid.
+     *                           the session is invalid.
      */
     public void abandonSession(int sessionId) {
         try {
@@ -377,9 +391,11 @@ public class PackageInstaller {
      * required to retrieve these details.
      *
      * @return details for the requested session, or {@code null} if the session
-     *         does not exist.
+     * does not exist.
      */
-    public @Nullable SessionInfo getSessionInfo(int sessionId) {
+    public
+    @Nullable
+    SessionInfo getSessionInfo(int sessionId) {
         try {
             return mInstaller.getSessionInfo(sessionId);
         } catch (RemoteException e) {
@@ -390,7 +406,9 @@ public class PackageInstaller {
     /**
      * Return list of all known install sessions, regardless of the installer.
      */
-    public @NonNull List<SessionInfo> getAllSessions() {
+    public
+    @NonNull
+    List<SessionInfo> getAllSessions() {
         final ApplicationInfo info = mContext.getApplicationInfo();
         if ("com.google.android.googlequicksearchbox".equals(info.packageName)
                 && info.versionCode <= 300400110) {
@@ -408,7 +426,9 @@ public class PackageInstaller {
     /**
      * Return list of all known install sessions owned by the calling app.
      */
-    public @NonNull List<SessionInfo> getMySessions() {
+    public
+    @NonNull
+    List<SessionInfo> getMySessions() {
         try {
             return mInstaller.getMySessions(mInstallerPackageName, mUserId).getList();
         } catch (RemoteException e) {
@@ -429,7 +449,9 @@ public class PackageInstaller {
         }
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     public void setPermissionsResult(int sessionId, boolean accepted) {
         try {
             mInstaller.setPermissionsResult(sessionId, accepted);
@@ -497,7 +519,9 @@ public class PackageInstaller {
         public abstract void onFinished(int sessionId, boolean success);
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     private static class SessionCallbackDelegate extends IPackageInstallerCallback.Stub implements
             Handler.Callback {
         private static final int MSG_SESSION_CREATED = 1;
@@ -567,7 +591,9 @@ public class PackageInstaller {
         }
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     @Deprecated
     public void addSessionCallback(@NonNull SessionCallback callback) {
         registerSessionCallback(callback);
@@ -581,7 +607,9 @@ public class PackageInstaller {
         registerSessionCallback(callback, new Handler());
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     @Deprecated
     public void addSessionCallback(@NonNull SessionCallback callback, @NonNull Handler handler) {
         registerSessionCallback(callback, handler);
@@ -592,7 +620,7 @@ public class PackageInstaller {
      * are required to watch for these events.
      *
      * @param handler to dispatch callback events through, otherwise uses
-     *            calling thread.
+     *                calling thread.
      */
     public void registerSessionCallback(@NonNull SessionCallback callback, @NonNull Handler handler) {
         // TODO: remove this temporary guard once we have new prebuilts
@@ -615,7 +643,9 @@ public class PackageInstaller {
         }
     }
 
-    /** {@hide} */
+    /**
+     * {@hide}
+     */
     @Deprecated
     public void removeSessionCallback(@NonNull SessionCallback callback) {
         unregisterSessionCallback(callback);
@@ -626,7 +656,7 @@ public class PackageInstaller {
      */
     public void unregisterSessionCallback(@NonNull SessionCallback callback) {
         synchronized (mDelegates) {
-            for (Iterator<SessionCallbackDelegate> i = mDelegates.iterator(); i.hasNext();) {
+            for (Iterator<SessionCallbackDelegate> i = mDelegates.iterator(); i.hasNext(); ) {
                 final SessionCallbackDelegate delegate = i.next();
                 if (delegate.mCallback == callback) {
                     try {
@@ -655,12 +685,16 @@ public class PackageInstaller {
     public static class Session implements Closeable {
         private IPackageInstallerSession mSession;
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public Session(IPackageInstallerSession session) {
             mSession = session;
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         @Deprecated
         public void setProgress(float progress) {
             setStagingProgress(progress);
@@ -683,7 +717,9 @@ public class PackageInstaller {
             }
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public void addProgress(float progress) {
             try {
                 mSession.addClientProgress(progress);
@@ -706,24 +742,26 @@ public class PackageInstaller {
          * persisted to disk, and then close when finished. All streams must be
          * closed before calling {@link #commit(IntentSender)}.
          *
-         * @param name arbitrary, unique name of your choosing to identify the
-         *            APK being written. You can open a file again for
-         *            additional writes (such as after a reboot) by using the
-         *            same name. This name is only meaningful within the context
-         *            of a single install session.
+         * @param name        arbitrary, unique name of your choosing to identify the
+         *                    APK being written. You can open a file again for
+         *                    additional writes (such as after a reboot) by using the
+         *                    same name. This name is only meaningful within the context
+         *                    of a single install session.
          * @param offsetBytes offset into the file to begin writing at, or 0 to
-         *            start at the beginning of the file.
+         *                    start at the beginning of the file.
          * @param lengthBytes total size of the file being written, used to
-         *            preallocate the underlying disk space, or -1 if unknown.
-         *            The system may clear various caches as needed to allocate
-         *            this space.
-         * @throws IOException if trouble opening the file for writing, such as
-         *             lack of disk space or unavailable media.
+         *                    preallocate the underlying disk space, or -1 if unknown.
+         *                    The system may clear various caches as needed to allocate
+         *                    this space.
+         * @throws IOException       if trouble opening the file for writing, such as
+         *                           lack of disk space or unavailable media.
          * @throws SecurityException if called after the session has been
-         *             committed or abandoned.
+         *                           committed or abandoned.
          */
-        public @NonNull OutputStream openWrite(@NonNull String name, long offsetBytes,
-                long lengthBytes) throws IOException {
+        public
+        @NonNull
+        OutputStream openWrite(@NonNull String name, long offsetBytes,
+                               long lengthBytes) throws IOException {
             try {
                 final ParcelFileDescriptor clientSocket = mSession.openWrite(name,
                         offsetBytes, lengthBytes);
@@ -756,9 +794,11 @@ public class PackageInstaller {
          * {@link #openWrite(String, long, long)} as part of this session.
          *
          * @throws SecurityException if called after the session has been
-         *             committed or abandoned.
+         *                           committed or abandoned.
          */
-        public @NonNull String[] getNames() throws IOException {
+        public
+        @NonNull
+        String[] getNames() throws IOException {
             try {
                 return mSession.getNames();
             } catch (RuntimeException e) {
@@ -778,9 +818,11 @@ public class PackageInstaller {
          * {@link MessageDigest} of a written APK before committing.
          *
          * @throws SecurityException if called after the session has been
-         *             committed or abandoned.
+         *                           committed or abandoned.
          */
-        public @NonNull InputStream openRead(@NonNull String name) throws IOException {
+        public
+        @NonNull
+        InputStream openRead(@NonNull String name) throws IOException {
             try {
                 final ParcelFileDescriptor pfd = mSession.openRead(name);
                 return new ParcelFileDescriptor.AutoCloseInputStream(pfd);
@@ -802,7 +844,7 @@ public class PackageInstaller {
          * finalized, you may commit the session again.
          *
          * @throws SecurityException if streams opened through
-         *             {@link #openWrite(String, long, long)} are still open.
+         *                           {@link #openWrite(String, long, long)} are still open.
          */
         public void commit(@NonNull IntentSender statusReceiver) {
             try {
@@ -845,7 +887,9 @@ public class PackageInstaller {
      */
     public static class SessionParams implements Parcelable {
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public static final int MODE_INVALID = -1;
 
         /**
@@ -865,41 +909,65 @@ public class PackageInstaller {
          */
         public static final int MODE_INHERIT_EXISTING = 2;
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public int mode = MODE_INVALID;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public int installFlags;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public int installLocation = PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public long sizeBytes = -1;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public String appPackageName;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public Bitmap appIcon;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public String appLabel;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public long appIconLastModified = -1;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public Uri originatingUri;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public Uri referrerUri;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public String abiOverride;
 
         /**
          * Construct parameters for a new package install session.
          *
          * @param mode one of {@link #MODE_FULL_INSTALL} or
-         *            {@link #MODE_INHERIT_EXISTING} describing how the session
-         *            should interact with an existing app.
+         *             {@link #MODE_INHERIT_EXISTING} describing how the session
+         *             should interact with an existing app.
          */
         public SessionParams(int mode) {
             this.mode = mode;
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public SessionParams(Parcel source) {
             mode = source.readInt();
             installFlags = source.readInt();
@@ -984,19 +1052,25 @@ public class PackageInstaller {
             this.referrerUri = referrerUri;
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public void setInstallFlagsInternal() {
             installFlags |= PackageManager.INSTALL_INTERNAL;
             installFlags &= ~PackageManager.INSTALL_EXTERNAL;
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public void setInstallFlagsExternal() {
             installFlags |= PackageManager.INSTALL_EXTERNAL;
             installFlags &= ~PackageManager.INSTALL_INTERNAL;
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public void dump(IndentingPrintWriter pw) {
             pw.printPair("mode", mode);
             pw.printHexPair("installFlags", installFlags);
@@ -1032,16 +1106,16 @@ public class PackageInstaller {
 
         public static final Parcelable.Creator<SessionParams>
                 CREATOR = new Parcelable.Creator<SessionParams>() {
-                    @Override
-                    public SessionParams createFromParcel(Parcel p) {
-                        return new SessionParams(p);
-                    }
+            @Override
+            public SessionParams createFromParcel(Parcel p) {
+                return new SessionParams(p);
+            }
 
-                    @Override
-                    public SessionParams[] newArray(int size) {
-                        return new SessionParams[size];
-                    }
-                };
+            @Override
+            public SessionParams[] newArray(int size) {
+                return new SessionParams[size];
+            }
+        };
     }
 
     /**
@@ -1049,35 +1123,61 @@ public class PackageInstaller {
      */
     public static class SessionInfo implements Parcelable {
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public int sessionId;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public String installerPackageName;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public String resolvedBaseCodePath;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public float progress;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public boolean sealed;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public boolean active;
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public int mode;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public long sizeBytes;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public String appPackageName;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public Bitmap appIcon;
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public CharSequence appLabel;
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public SessionInfo() {
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         public SessionInfo(Parcel source) {
             sessionId = source.readInt();
             installerPackageName = source.readString();
@@ -1103,7 +1203,9 @@ public class PackageInstaller {
         /**
          * Return the package name of the app that owns this session.
          */
-        public @Nullable String getInstallerPackageName() {
+        public
+        @Nullable
+        String getInstallerPackageName() {
             return installerPackageName;
         }
 
@@ -1137,7 +1239,9 @@ public class PackageInstaller {
             return active;
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         @Deprecated
         public boolean isOpen() {
             return isActive();
@@ -1147,7 +1251,9 @@ public class PackageInstaller {
          * Return the package name this session is working with. May be {@code null}
          * if unknown.
          */
-        public @Nullable String getAppPackageName() {
+        public
+        @Nullable
+        String getAppPackageName() {
             return appPackageName;
         }
 
@@ -1155,7 +1261,9 @@ public class PackageInstaller {
          * Return an icon representing the app being installed. May be {@code null}
          * if unavailable.
          */
-        public @Nullable Bitmap getAppIcon() {
+        public
+        @Nullable
+        Bitmap getAppIcon() {
             return appIcon;
         }
 
@@ -1163,7 +1271,9 @@ public class PackageInstaller {
          * Return a label representing the app being installed. May be {@code null}
          * if unavailable.
          */
-        public @Nullable CharSequence getAppLabel() {
+        public
+        @Nullable
+        CharSequence getAppLabel() {
             return appLabel;
         }
 
@@ -1176,7 +1286,9 @@ public class PackageInstaller {
          *
          * @see PackageInstaller#ACTION_SESSION_DETAILS
          */
-        public @Nullable Intent createDetailsIntent() {
+        public
+        @Nullable
+        Intent createDetailsIntent() {
             final Intent intent = new Intent(PackageInstaller.ACTION_SESSION_DETAILS);
             intent.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
             intent.setPackage(installerPackageName);
@@ -1184,9 +1296,13 @@ public class PackageInstaller {
             return intent;
         }
 
-        /** {@hide} */
+        /**
+         * {@hide}
+         */
         @Deprecated
-        public @Nullable Intent getDetailsIntent() {
+        public
+        @Nullable
+        Intent getDetailsIntent() {
             return createDetailsIntent();
         }
 
@@ -1213,15 +1329,15 @@ public class PackageInstaller {
 
         public static final Parcelable.Creator<SessionInfo>
                 CREATOR = new Parcelable.Creator<SessionInfo>() {
-                    @Override
-                    public SessionInfo createFromParcel(Parcel p) {
-                        return new SessionInfo(p);
-                    }
+            @Override
+            public SessionInfo createFromParcel(Parcel p) {
+                return new SessionInfo(p);
+            }
 
-                    @Override
-                    public SessionInfo[] newArray(int size) {
-                        return new SessionInfo[size];
-                    }
-                };
+            @Override
+            public SessionInfo[] newArray(int size) {
+                return new SessionInfo[size];
+            }
+        };
     }
 }

@@ -59,20 +59,20 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
     private static final ViewOutlineProvider VIEW_BOUNDS_OUTLINE_PROVIDER =
             new ViewOutlineProvider() {
-        @Override
-        public void getOutline(View view, Outline outline) {
-            outline.setRect(0, 0, view.getWidth(), view.getHeight());
-        }
-    };
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setRect(0, 0, view.getWidth(), view.getHeight());
+                }
+            };
 
     private static final int TAB_SIDE_PADDING_IN_DPS = 10;
 
     // TODO: This should use <declare-styleable> in the future
-    private static final int[] ATTRS = new int[] {
-        android.R.attr.textSize,
-        android.R.attr.textStyle,
-        android.R.attr.textColor,
-        android.R.attr.textAllCaps
+    private static final int[] ATTRS = new int[]{
+            android.R.attr.textSize,
+            android.R.attr.textStyle,
+            android.R.attr.textColor,
+            android.R.attr.textAllCaps
     };
 
     /**

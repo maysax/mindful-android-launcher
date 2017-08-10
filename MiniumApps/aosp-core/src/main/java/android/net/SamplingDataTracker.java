@@ -30,13 +30,11 @@ import java.util.Map;
 /**
  * @hide
  */
-public class SamplingDataTracker
-{
+public class SamplingDataTracker {
     private static final boolean DBG = false;
-    private static final String  TAG = "SamplingDataTracker";
+    private static final String TAG = "SamplingDataTracker";
 
-    public static class SamplingSnapshot
-    {
+    public static class SamplingSnapshot {
         public long mTxByteCount;
         public long mRxByteCount;
         public long mTxPacketCount;
@@ -79,14 +77,14 @@ public class SamplingDataTracker
                     try {
                         SamplingSnapshot ss = new SamplingSnapshot();
 
-                        ss.mTxByteCount        = Long.parseLong(tokens[1]);
-                        ss.mTxPacketCount      = Long.parseLong(tokens[2]);
+                        ss.mTxByteCount = Long.parseLong(tokens[1]);
+                        ss.mTxPacketCount = Long.parseLong(tokens[2]);
                         ss.mTxPacketErrorCount = Long.parseLong(tokens[3]);
-                        ss.mRxByteCount        = Long.parseLong(tokens[9]);
-                        ss.mRxPacketCount      = Long.parseLong(tokens[10]);
+                        ss.mRxByteCount = Long.parseLong(tokens[9]);
+                        ss.mRxPacketCount = Long.parseLong(tokens[10]);
                         ss.mRxPacketErrorCount = Long.parseLong(tokens[11]);
 
-                        ss.mTimestamp          = SystemClock.elapsedRealtime();
+                        ss.mTimestamp = SystemClock.elapsedRealtime();
 
                         if (DBG) {
                             Slog.d(TAG, "Interface = " + currentIface);
@@ -113,13 +111,13 @@ public class SamplingDataTracker
             if (DBG) {
                 Iterator it = mapIfaceToSample.entrySet().iterator();
                 while (it.hasNext()) {
-                    Map.Entry kvpair = (Map.Entry)it.next();
+                    Map.Entry kvpair = (Map.Entry) it.next();
                     if (kvpair.getValue() == null) {
                         Slog.d(TAG, "could not find snapshot for interface " + kvpair.getKey());
                     }
                 }
             }
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Slog.e(TAG, "could not find /proc/net/dev");
         } catch (IOException e) {
             Slog.e(TAG, "could not read /proc/net/dev");
@@ -148,16 +146,16 @@ public class SamplingDataTracker
     private final int MINIMUM_SAMPLING_INTERVAL = 15 * 1000;
 
     // statistics is useless unless we have enough data
-    private final int MINIMUM_SAMPLED_PACKETS   = 30;
+    private final int MINIMUM_SAMPLED_PACKETS = 30;
 
     public void startSampling(SamplingSnapshot s) {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             mLastSample = s;
         }
     }
 
     public void stopSampling(SamplingSnapshot s) {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mLastSample != null) {
                 if (s.mTimestamp - mLastSample.mTimestamp > MINIMUM_SAMPLING_INTERVAL
                         && getSampledPacketCount(mLastSample, s) > MINIMUM_SAMPLED_PACKETS) {
@@ -173,7 +171,7 @@ public class SamplingDataTracker
 
     public void resetSamplingData() {
         if (DBG) Slog.d(TAG, "Resetting sampled network data");
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
 
             // We could just take another sample here and treat it as an
             // 'ending sample' effectively shortening sampling interval, but that
@@ -185,7 +183,7 @@ public class SamplingDataTracker
     }
 
     public long getSampledTxByteCount() {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mBeginningSample != null && mEndingSample != null) {
                 return mEndingSample.mTxByteCount - mBeginningSample.mTxByteCount;
             } else {
@@ -195,7 +193,7 @@ public class SamplingDataTracker
     }
 
     public long getSampledTxPacketCount() {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mBeginningSample != null && mEndingSample != null) {
                 return mEndingSample.mTxPacketCount - mBeginningSample.mTxPacketCount;
             } else {
@@ -205,7 +203,7 @@ public class SamplingDataTracker
     }
 
     public long getSampledTxPacketErrorCount() {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mBeginningSample != null && mEndingSample != null) {
                 return mEndingSample.mTxPacketErrorCount - mBeginningSample.mTxPacketErrorCount;
             } else {
@@ -215,7 +213,7 @@ public class SamplingDataTracker
     }
 
     public long getSampledRxByteCount() {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mBeginningSample != null && mEndingSample != null) {
                 return mEndingSample.mRxByteCount - mBeginningSample.mRxByteCount;
             } else {
@@ -225,7 +223,7 @@ public class SamplingDataTracker
     }
 
     public long getSampledRxPacketCount() {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mBeginningSample != null && mEndingSample != null) {
                 return mEndingSample.mRxPacketCount - mBeginningSample.mRxPacketCount;
             } else {
@@ -259,7 +257,7 @@ public class SamplingDataTracker
     }
 
     public long getSampledRxPacketErrorCount() {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mBeginningSample != null && mEndingSample != null) {
                 return mEndingSample.mRxPacketErrorCount - mBeginningSample.mRxPacketErrorCount;
             } else {
@@ -269,7 +267,7 @@ public class SamplingDataTracker
     }
 
     public long getSampleTimestamp() {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mEndingSample != null) {
                 return mEndingSample.mTimestamp;
             } else {
@@ -279,7 +277,7 @@ public class SamplingDataTracker
     }
 
     public int getSampleDuration() {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             if (mBeginningSample != null && mEndingSample != null) {
                 return (int) (mEndingSample.mTimestamp - mBeginningSample.mTimestamp);
             } else {
@@ -289,7 +287,7 @@ public class SamplingDataTracker
     }
 
     public void setCommonLinkQualityInfoFields(LinkQualityInfo li) {
-        synchronized(mSamplingDataLock) {
+        synchronized (mSamplingDataLock) {
             li.setLastDataSampleTime(getSampleTimestamp());
             li.setDataSampleDuration(getSampleDuration());
             li.setPacketCount(getSampledPacketCount());

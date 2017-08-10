@@ -45,7 +45,7 @@ public class ResolveInfo implements Parcelable {
      * {@link #providerInfo} will be non-null.
      */
     public ActivityInfo activityInfo;
-    
+
     /**
      * The service that corresponds to this resolution match, if this resolution
      * is for a service. Exactly one of {@link #activityInfo},
@@ -64,21 +64,21 @@ public class ResolveInfo implements Parcelable {
      * The IntentFilter that was matched for this ResolveInfo.
      */
     public IntentFilter filter;
-    
+
     /**
      * The declared priority of this match.  Comes from the "priority"
      * attribute or, if not set, defaults to 0.  Higher values are a higher
      * priority.
      */
     public int priority;
-    
+
     /**
      * Order of result according to the user's preference.  If the user
      * has not set a preference for this result, the value is 0; higher
      * values are a higher priority.
      */
     public int preferredOrder;
-    
+
     /**
      * The system's evaluation of how well the activity matches the
      * IntentFilter.  This is a match constant, a combination of
@@ -86,7 +86,7 @@ public class ResolveInfo implements Parcelable {
      * and {@link IntentFilter#MATCH_ADJUSTMENT_MASK IntentFiler.MATCH_ADJUSTMENT_MASK}.
      */
     public int match;
-    
+
     /**
      * Only set when returned by
      * {@link PackageManager#queryIntentActivityOptions}, this tells you
@@ -94,26 +94,26 @@ public class ResolveInfo implements Parcelable {
      * first in the list, < 0 means it came from the generic Intent query.
      */
     public int specificIndex = -1;
-    
+
     /**
      * This filter has specified the Intent.CATEGORY_DEFAULT, meaning it
      * would like to be considered a default action that the user can
      * perform on this data.
      */
     public boolean isDefault;
-    
+
     /**
      * A string resource identifier (in the package's resources) of this
      * match's label.  From the "label" attribute or, if not set, 0.
      */
     public int labelRes;
-    
+
     /**
      * The actual string retrieve from <var>labelRes</var> or null if none
      * was provided.
      */
     public CharSequence nonLocalizedLabel;
-    
+
     /**
      * A drawable resource identifier (in the package's resources) of this
      * match's icon.  From the "icon" attribute or, if not set, 0.
@@ -129,6 +129,7 @@ public class ResolveInfo implements Parcelable {
 
     /**
      * If not equal to UserHandle.USER_CURRENT, then the intent will be forwarded to this user.
+     *
      * @hide
      */
     public int targetUserId;
@@ -154,10 +155,9 @@ public class ResolveInfo implements Parcelable {
      * Retrieve the current textual label associated with this resolution.  This
      * will call back on the given PackageManager to load the label from
      * the application.
-     * 
+     *
      * @param pm A PackageManager from which the label can be loaded; usually
-     * the PackageManager from which you originally retrieved this item.
-     * 
+     *           the PackageManager from which you originally retrieved this item.
      * @return Returns a CharSequence containing the resolutions's label.  If the
      * item does not have a label, its name is returned.
      */
@@ -186,15 +186,14 @@ public class ResolveInfo implements Parcelable {
         if (data != null) data = data.toString().trim();
         return data;
     }
-    
+
     /**
      * Retrieve the current graphical icon associated with this resolution.  This
      * will call back on the given PackageManager to load the icon from
      * the application.
-     * 
+     *
      * @param pm A PackageManager from which the icon can be loaded; usually
-     * the PackageManager from which you originally retrieved this item.
-     * 
+     *           the PackageManager from which you originally retrieved this item.
      * @return Returns a Drawable containing the resolution's icon.  If the
      * item does not have an icon, the default activity icon is returned.
      */
@@ -216,12 +215,12 @@ public class ResolveInfo implements Parcelable {
         }
         return ci.loadIcon(pm);
     }
-    
+
     /**
      * Return the icon resource identifier to use for this match.  If the
      * match defines an icon, that is used; else if the activity defines
      * an icon, that is used; else, the application icon is used.
-     * 
+     *
      * @return The icon associated with this match.
      */
     public final int getIconResource() {
@@ -263,7 +262,7 @@ public class ResolveInfo implements Parcelable {
             providerInfo.dump(pw, prefix + "  ");
         }
     }
-    
+
     public ResolveInfo() {
         targetUserId = UserHandle.USER_CURRENT;
     }
@@ -351,6 +350,7 @@ public class ResolveInfo implements Parcelable {
         public ResolveInfo createFromParcel(Parcel source) {
             return new ResolveInfo(source);
         }
+
         public ResolveInfo[] newArray(int size) {
             return new ResolveInfo[size];
         }
@@ -390,7 +390,7 @@ public class ResolveInfo implements Parcelable {
         system = source.readInt() != 0;
         noResourceId = source.readInt() != 0;
     }
-    
+
     public static class DisplayNameComparator
             implements Comparator<ResolveInfo> {
         public DisplayNameComparator(PackageManager pm) {
@@ -406,15 +406,15 @@ public class ResolveInfo implements Parcelable {
             if (b.targetUserId != UserHandle.USER_CURRENT) {
                 return -1;
             }
-            CharSequence  sa = a.loadLabel(mPM);
+            CharSequence sa = a.loadLabel(mPM);
             if (sa == null) sa = a.activityInfo.name;
-            CharSequence  sb = b.loadLabel(mPM);
+            CharSequence sb = b.loadLabel(mPM);
             if (sb == null) sb = b.activityInfo.name;
-            
+
             return mCollator.compare(sa.toString(), sb.toString());
         }
 
-        private final Collator   mCollator = Collator.getInstance();
-        private PackageManager   mPM;
+        private final Collator mCollator = Collator.getInstance();
+        private PackageManager mPM;
     }
 }

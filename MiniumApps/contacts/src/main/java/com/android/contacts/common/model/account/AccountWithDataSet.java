@@ -48,7 +48,7 @@ public class AccountWithDataSet extends Account {
     public final String dataSet;
     private final AccountTypeWithDataSet mAccountTypeWithDataSet;
 
-    private static final String[] ID_PROJECTION = new String[] {BaseColumns._ID};
+    private static final String[] ID_PROJECTION = new String[]{BaseColumns._ID};
     private static final Uri RAW_CONTACTS_URI_LIMIT_1 = RawContacts.CONTENT_URI.buildUpon()
             .appendQueryParameter(ContactsContract.LIMIT_PARAM_KEY, "1").build();
 
@@ -97,10 +97,10 @@ public class AccountWithDataSet extends Account {
         final String[] args;
         if (TextUtils.isEmpty(dataSet)) {
             selection = BASE_SELECTION + " AND " + RawContacts.DATA_SET + " IS NULL";
-            args = new String[] {type, name};
+            args = new String[]{type, name};
         } else {
             selection = BASE_SELECTION + " AND " + RawContacts.DATA_SET + " = ?";
-            args = new String[] {type, name, dataSet};
+            args = new String[]{type, name, dataSet};
         }
 
         final Cursor c = context.getContentResolver().query(RAW_CONTACTS_URI_LIMIT_1,

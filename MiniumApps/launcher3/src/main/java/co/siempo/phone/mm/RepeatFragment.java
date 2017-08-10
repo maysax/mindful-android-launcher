@@ -14,9 +14,9 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.db.DaysOfWeekWhichWasSetAlarm;
 import co.siempo.phone.mm.controller.AlarmController;
 import co.siempo.phone.mm.controller.DatabaseController;
-import co.siempo.phone.db.DaysOfWeekWhichWasSetAlarm;
 import co.siempo.phone.mm.model.Utilities;
 import minium.co.core.ui.CoreFragment;
 
@@ -39,11 +39,11 @@ public class RepeatFragment extends CoreFragment implements RepeatAdapter.IteamA
     public void onViewCreated(View view, Bundle savedInstanceState) {
         daysOfWeekCheckedList = DatabaseController.getDays();
 
-        TextView titleActionBar = (TextView)view.findViewById(R.id.titleActionBar);
+        TextView titleActionBar = (TextView) view.findViewById(R.id.titleActionBar);
         titleActionBar.setText("Repeat");
 
-        ListView listView = (ListView)view.findViewById(R.id.activity_list_view);
-        RepeatAdapter repeatAdapter = new RepeatAdapter(getActivity(),this,daysOfWeekCheckedList);
+        ListView listView = (ListView) view.findViewById(R.id.activity_list_view);
+        RepeatAdapter repeatAdapter = new RepeatAdapter(getActivity(), this, daysOfWeekCheckedList);
         listView.setAdapter(repeatAdapter);
 
         ImageView crossActionBar = (ImageView) view.findViewById(R.id.crossActionBar);
@@ -59,12 +59,12 @@ public class RepeatFragment extends CoreFragment implements RepeatAdapter.IteamA
     public void onPause() {
         super.onPause();
 
-        if (daysOfWeekCheckedList.size()!=0){
+        if (daysOfWeekCheckedList.size() != 0) {
             DatabaseController.updateDaysList(daysOfWeekCheckedList);
         }
 
         Calendar calendar = Utilities.getCalendar(launcherPrefs);
-        AlarmController.setAlarm(getActivity(),calendar);
+        AlarmController.setAlarm(getActivity(), calendar);
 
     }
 

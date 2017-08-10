@@ -39,12 +39,12 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.android.contacts.GroupMetaDataLoader;
+import com.android.contacts.common.model.RawContactDelta;
+import com.android.contacts.common.model.RawContactModifier;
+import com.android.contacts.common.model.ValuesDelta;
 import com.android.contacts.common.model.account.AccountType;
 import com.android.contacts.common.model.account.AccountType.EditType;
 import com.android.contacts.common.model.dataitem.DataKind;
-import com.android.contacts.common.model.RawContactDelta;
-import com.android.contacts.common.model.ValuesDelta;
-import com.android.contacts.common.model.RawContactModifier;
 import com.google.common.base.Objects;
 
 import java.util.ArrayList;
@@ -136,15 +136,15 @@ public class RawContactEditorView extends BaseRawContactEditorView {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        mInflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        mName = (StructuredNameEditorView)findViewById(R.id.edit_name);
+        mName = (StructuredNameEditorView) findViewById(R.id.edit_name);
         mName.setDeletable(false);
 
-        mPhoneticName = (PhoneticNameEditorView)findViewById(R.id.edit_phonetic_name);
+        mPhoneticName = (PhoneticNameEditorView) findViewById(R.id.edit_phonetic_name);
         mPhoneticName.setDeletable(false);
 
-        mFields = (ViewGroup)findViewById(R.id.sect_fields);
+        mFields = (ViewGroup) findViewById(R.id.sect_fields);
 
         mAccountIcon = (ImageView) findViewById(R.id.account_icon);
         mAccountTypeTextView = (TextView) findViewById(R.id.account_type);
@@ -202,7 +202,7 @@ public class RawContactEditorView extends BaseRawContactEditorView {
      */
     @Override
     public void setState(RawContactDelta state, AccountType type, ViewIdGenerator vig,
-            boolean isProfile) {
+                         boolean isProfile) {
 
         mState = state;
 
@@ -266,7 +266,7 @@ public class RawContactEditorView extends BaseRawContactEditorView {
 
         mGroupMembershipKind = type.getKindForMimetype(GroupMembership.CONTENT_ITEM_TYPE);
         if (mGroupMembershipKind != null) {
-            mGroupMembershipView = (GroupMembershipView)mInflater.inflate(
+            mGroupMembershipView = (GroupMembershipView) mInflater.inflate(
                     R.layout.item_group_membership, mFields, false);
             mGroupMembershipView.setKind(mGroupMembershipKind);
             mGroupMembershipView.setEnabled(isEnabled());
@@ -329,7 +329,7 @@ public class RawContactEditorView extends BaseRawContactEditorView {
             } else {
                 // Otherwise use generic section-based editors
                 if (kind.fieldList == null) continue;
-                final KindSectionView section = (KindSectionView)mInflater.inflate(
+                final KindSectionView section = (KindSectionView) mInflater.inflate(
                         R.layout.item_kind_section, mFields, false);
                 section.setEnabled(isEnabled());
                 section.setState(kind, state, false, vig);
@@ -416,7 +416,7 @@ public class RawContactEditorView extends BaseRawContactEditorView {
                     && Objects.equal(dataSet, accountDataSet)) {
                 long groupId = mGroupMetaData.getLong(GroupMetaDataLoader.GROUP_ID);
                 if (!mGroupMetaData.isNull(GroupMetaDataLoader.AUTO_ADD)
-                            && mGroupMetaData.getInt(GroupMetaDataLoader.AUTO_ADD) != 0) {
+                        && mGroupMetaData.getInt(GroupMetaDataLoader.AUTO_ADD) != 0) {
                     return groupId;
                 }
             }

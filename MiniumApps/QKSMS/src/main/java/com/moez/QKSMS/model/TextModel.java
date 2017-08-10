@@ -40,7 +40,7 @@ public class TextModel extends RegionMediaModel {
     }
 
     public TextModel(Context context, String contentType, String src,
-            int charset, byte[] data, RegionModel region) {
+                     int charset, byte[] data, RegionModel region) {
         super(context, SmilHelper.ELEMENT_TAG_TEXT, contentType, src,
                 data != null ? data : new byte[0], region);
 

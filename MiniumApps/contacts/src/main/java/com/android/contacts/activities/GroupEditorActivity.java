@@ -30,7 +30,6 @@ import android.view.View.OnClickListener;
 import com.android.contacts.ContactsActivity;
 import com.android.contacts.group.GroupEditorFragment;
 import com.android.contacts.util.DialogManager;
-import com.android.contacts.util.PhoneCapabilityTester;
 
 import minium.co.contacts.R;
 
@@ -77,7 +76,7 @@ public class GroupEditorActivity extends ContactsActivity
             // Show the custom action bar but hide the home icon and title
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM,
                     ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME |
-                    ActionBar.DISPLAY_SHOW_TITLE);
+                            ActionBar.DISPLAY_SHOW_TITLE);
             actionBar.setCustomView(customActionBarView);
         }
 
@@ -129,32 +128,32 @@ public class GroupEditorActivity extends ContactsActivity
 
     private final GroupEditorFragment.Listener mFragmentListener =
             new GroupEditorFragment.Listener() {
-        @Override
-        public void onGroupNotFound() {
-            finish();
-        }
+                @Override
+                public void onGroupNotFound() {
+                    finish();
+                }
 
-        @Override
-        public void onReverted() {
-            finish();
-        }
+                @Override
+                public void onReverted() {
+                    finish();
+                }
 
-        @Override
-        public void onAccountsNotFound() {
-            finish();
-        }
+                @Override
+                public void onAccountsNotFound() {
+                    finish();
+                }
 
-        @Override
-        public void onSaveFinished(int resultCode, Intent resultIntent) {
-            if (resultIntent != null) {
-                Intent intent = new Intent(GroupEditorActivity.this, GroupDetailActivity.class);
-                intent.setData(resultIntent.getData());
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }
-        }
-    };
+                @Override
+                public void onSaveFinished(int resultCode, Intent resultIntent) {
+                    if (resultIntent != null) {
+                        Intent intent = new Intent(GroupEditorActivity.this, GroupDetailActivity.class);
+                        intent.setData(resultIntent.getData());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            };
 
     @Override
     public DialogManager getDialogManager() {

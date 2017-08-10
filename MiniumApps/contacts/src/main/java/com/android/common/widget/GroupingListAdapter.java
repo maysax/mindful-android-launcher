@@ -35,8 +35,8 @@ public abstract class GroupingListAdapter extends BaseAdapter {
 
     private static final int GROUP_METADATA_ARRAY_INITIAL_SIZE = 16;
     private static final int GROUP_METADATA_ARRAY_INCREMENT = 128;
-    private static final long GROUP_OFFSET_MASK    = 0x00000000FFFFFFFFL;
-    private static final long GROUP_SIZE_MASK     = 0x7FFFFFFF00000000L;
+    private static final long GROUP_OFFSET_MASK = 0x00000000FFFFFFFFL;
+    private static final long GROUP_SIZE_MASK = 0x7FFFFFFF00000000L;
     private static final long EXPANDED_GROUP_MASK = 0x8000000000000000L;
 
     public static final int ITEM_TYPE_STANDALONE = 0;
@@ -125,13 +125,16 @@ public abstract class GroupingListAdapter extends BaseAdapter {
     protected abstract void addGroups(Cursor cursor);
 
     protected abstract View newStandAloneView(Context context, ViewGroup parent);
+
     protected abstract void bindStandAloneView(View view, Context context, Cursor cursor);
 
     protected abstract View newGroupView(Context context, ViewGroup parent);
+
     protected abstract void bindGroupView(View view, Context context, Cursor cursor, int groupSize,
-            boolean expanded);
+                                          boolean expanded);
 
     protected abstract View newChildView(Context context, ViewGroup parent);
+
     protected abstract void bindChildView(View view, Context context, Cursor cursor);
 
     /**
@@ -207,7 +210,7 @@ public abstract class GroupingListAdapter extends BaseAdapter {
             mGroupMetadata = array;
         }
 
-        long metadata = ((long)size << 32) | cursorPosition;
+        long metadata = ((long) size << 32) | cursorPosition;
         if (expanded) {
             metadata |= EXPANDED_GROUP_MASK;
         }
@@ -241,9 +244,9 @@ public abstract class GroupingListAdapter extends BaseAdapter {
         int count = 0;
         for (int i = 0; i < mGroupCount; i++) {
             long metadata = mGroupMetadata[i];
-            int offset = (int)(metadata & GROUP_OFFSET_MASK);
+            int offset = (int) (metadata & GROUP_OFFSET_MASK);
             boolean expanded = (metadata & EXPANDED_GROUP_MASK) != 0;
-            int size = (int)((metadata & GROUP_SIZE_MASK) >> 32);
+            int size = (int) ((metadata & GROUP_SIZE_MASK) >> 32);
 
             count += (offset - cursorPosition);
 
@@ -308,7 +311,7 @@ public abstract class GroupingListAdapter extends BaseAdapter {
                     listPosition = mPositionCache.keyAt(index);
                     firstGroupToCheck = mPositionCache.valueAt(index);
                     long descriptor = mGroupMetadata[firstGroupToCheck];
-                    cursorPosition = (int)(descriptor & GROUP_OFFSET_MASK);
+                    cursorPosition = (int) (descriptor & GROUP_OFFSET_MASK);
                 }
             } else {
 
@@ -322,7 +325,7 @@ public abstract class GroupingListAdapter extends BaseAdapter {
 
         for (int i = firstGroupToCheck; i < mGroupCount; i++) {
             long group = mGroupMetadata[i];
-            int offset = (int)(group & GROUP_OFFSET_MASK);
+            int offset = (int) (group & GROUP_OFFSET_MASK);
 
             // Move pointers to the beginning of the group
             listPosition += (offset - cursorPosition);

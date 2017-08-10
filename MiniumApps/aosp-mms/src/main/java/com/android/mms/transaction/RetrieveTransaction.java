@@ -17,8 +17,6 @@
 
 package com.android.mms.transaction;
 
-import java.io.IOException;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -45,10 +43,12 @@ import com.google.android.mms.pdu.PduParser;
 import com.google.android.mms.pdu.PduPersister;
 import com.google.android.mms.pdu.RetrieveConf;
 
+import java.io.IOException;
+
 /**
  * The RetrieveTransaction is responsible for retrieving multimedia
  * messages (M-Retrieve.conf) from the MMSC server.  It:
- *
+ * <p>
  * <ul>
  * <li>Sends a GET request to the MMSC server.
  * <li>Retrieves the binary M-Retrieve.conf data and parses it.
@@ -67,17 +67,17 @@ public class RetrieveTransaction extends Transaction implements Runnable {
     private final String mContentLocation;
     private boolean mLocked;
 
-    static final String[] PROJECTION = new String[] {
-        Mms.CONTENT_LOCATION,
-        Mms.LOCKED
+    static final String[] PROJECTION = new String[]{
+            Mms.CONTENT_LOCATION,
+            Mms.LOCKED
     };
 
     // The indexes of the columns which must be consistent with above PROJECTION.
-    static final int COLUMN_CONTENT_LOCATION      = 0;
-    static final int COLUMN_LOCKED                = 1;
+    static final int COLUMN_CONTENT_LOCATION = 0;
+    static final int COLUMN_LOCKED = 1;
 
     public RetrieveTransaction(Context context, int serviceId,
-            TransactionSettings connectionSettings, String uri)
+                               TransactionSettings connectionSettings, String uri)
             throws MmsException {
         super(context, serviceId, connectionSettings);
 
@@ -99,7 +99,7 @@ public class RetrieveTransaction extends Transaction implements Runnable {
     private String getContentLocation(Context context, Uri uri)
             throws MmsException {
         Cursor cursor = SqliteWrapper.query(context, context.getContentResolver(),
-                            uri, PROJECTION, null, null, null);
+                uri, PROJECTION, null, null, null);
         mLocked = false;
 
         if (cursor != null) {
@@ -172,7 +172,7 @@ public class RetrieveTransaction extends Transaction implements Runnable {
 
             // Delete the corresponding M-Notification.ind.
             SqliteWrapper.delete(mContext, mContext.getContentResolver(),
-                                 mUri, null, null);
+                    mUri, null, null);
 
             if (msgUri != null) {
                 // Have to delete messages over limit *after* the delete above. Otherwise,
@@ -202,13 +202,13 @@ public class RetrieveTransaction extends Transaction implements Runnable {
         if (rawMessageId != null) {
             String messageId = new String(rawMessageId);
             String selection = "(" + Mms.MESSAGE_ID + " = ? AND "
-                                   + Mms.MESSAGE_TYPE + " = ?)";
-            String[] selectionArgs = new String[] { messageId,
-                    String.valueOf(PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF) };
+                    + Mms.MESSAGE_TYPE + " = ?)";
+            String[] selectionArgs = new String[]{messageId,
+                    String.valueOf(PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF)};
 
             Cursor cursor = SqliteWrapper.query(
                     context, context.getContentResolver(),
-                    Mms.CONTENT_URI, new String[] { Mms._ID, Mms.SUBJECT, Mms.SUBJECT_CHARSET },
+                    Mms.CONTENT_URI, new String[]{Mms._ID, Mms.SUBJECT, Mms.SUBJECT_CHARSET},
                     selection, selectionArgs, null);
 
             if (cursor != null) {
@@ -281,7 +281,7 @@ public class RetrieveTransaction extends Transaction implements Runnable {
             acknowledgeInd.setFrom(new EncodedStringValue(lineNumber));
 
             // Pack M-Acknowledge.ind and send it
-            if(MmsConfig.getNotifyWapMMSC()) {
+            if (MmsConfig.getNotifyWapMMSC()) {
                 sendPdu(new PduComposer(mContext, acknowledgeInd).make(), mContentLocation);
             } else {
                 sendPdu(new PduComposer(mContext, acknowledgeInd).make());
@@ -296,7 +296,7 @@ public class RetrieveTransaction extends Transaction implements Runnable {
         values.put(Mms.CONTENT_LOCATION, contentLocation);
         values.put(Mms.LOCKED, locked);     // preserve the state of the M-Notification.ind lock.
         SqliteWrapper.update(context, context.getContentResolver(),
-                             uri, values, null, null);
+                uri, values, null, null);
     }
 
     @Override

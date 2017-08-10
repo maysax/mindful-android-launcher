@@ -20,9 +20,9 @@
 
 package android.net.http;
 
-import org.apache.http.HttpHost;
-
 import android.os.SystemClock;
+
+import org.apache.http.HttpHost;
 
 /**
  * {@hide}
@@ -33,7 +33,9 @@ class IdleCache {
         HttpHost mHost;
         Connection mConnection;
         long mTimeout;
-    };
+    }
+
+    ;
 
     private final static int IDLE_CACHE_MAX = 8;
 
@@ -61,6 +63,7 @@ class IdleCache {
 
     /**
      * Caches connection, if there is room.
+     *
      * @return true if connection cached
      */
     synchronized boolean cacheConnection(
@@ -69,7 +72,7 @@ class IdleCache {
         boolean ret = false;
 
         if (HttpLog.LOGV) {
-            HttpLog.v("IdleCache size " + mCount + " host "  + host);
+            HttpLog.v("IdleCache size " + mCount + " host " + host);
         }
 
         if (mCount < IDLE_CACHE_MAX) {
@@ -166,7 +169,7 @@ class IdleCache {
             }
             if (HttpLog.LOGV) {
                 HttpLog.v("IdleCache IdleReaper shutdown: cached " + mCached +
-                          " reused " + mReused);
+                        " reused " + mReused);
                 mCached = 0;
                 mReused = 0;
             }

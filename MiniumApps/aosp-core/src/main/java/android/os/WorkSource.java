@@ -58,21 +58,25 @@ public class WorkSource implements Parcelable {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public WorkSource(int uid) {
         mNum = 1;
-        mUids = new int[] { uid, 0 };
+        mUids = new int[]{uid, 0};
         mNames = null;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public WorkSource(int uid, String name) {
         if (name == null) {
             throw new NullPointerException("Name can't be null");
         }
         mNum = 1;
-        mUids = new int[] { uid, 0 };
-        mNames = new String[] { name, null };
+        mUids = new int[]{uid, 0};
+        mNames = new String[]{name, null};
     }
 
     WorkSource(Parcel in) {
@@ -81,25 +85,32 @@ public class WorkSource implements Parcelable {
         mNames = in.createStringArray();
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int size() {
         return mNum;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public int get(int index) {
         return mUids[index];
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public String getName(int index) {
         return mNames != null ? mNames[index] : null;
     }
 
     /**
      * Clear names from this WorkSource.  Uids are left intact.
-     *
+     * <p>
      * <p>Useful when combining with another WorkSource that doesn't have names.
+     *
      * @hide
      */
     public void clearNames() {
@@ -129,7 +140,7 @@ public class WorkSource implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof WorkSource && !diff((WorkSource)o);
+        return o instanceof WorkSource && !diff((WorkSource) o);
     }
 
     @Override
@@ -148,6 +159,7 @@ public class WorkSource implements Parcelable {
 
     /**
      * Compare this WorkSource with another.
+     *
      * @param other The WorkSource to compare against.
      * @return If there is a difference, true is returned.
      */
@@ -160,7 +172,7 @@ public class WorkSource implements Parcelable {
         final int[] uids2 = other.mUids;
         final String[] names1 = mNames;
         final String[] names2 = other.mNames;
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             if (uids1[i] != uids2[i]) {
                 return true;
             }
@@ -203,7 +215,9 @@ public class WorkSource implements Parcelable {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public void set(int uid) {
         mNum = 1;
         if (mUids == null) mUids = new int[2];
@@ -211,7 +225,9 @@ public class WorkSource implements Parcelable {
         mNames = null;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public void set(int uid, String name) {
         if (name == null) {
             throw new NullPointerException("Name can't be null");
@@ -225,7 +241,9 @@ public class WorkSource implements Parcelable {
         mNames[0] = name;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public WorkSource[] setReturningDiffs(WorkSource other) {
         synchronized (sTmpWorkSource) {
             sNewbWork = null;
@@ -253,7 +271,9 @@ public class WorkSource implements Parcelable {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public WorkSource addReturningNewbs(WorkSource other) {
         synchronized (sTmpWorkSource) {
             sNewbWork = null;
@@ -262,7 +282,9 @@ public class WorkSource implements Parcelable {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public boolean add(int uid) {
         if (mNum <= 0) {
             mNames = null;
@@ -277,11 +299,13 @@ public class WorkSource implements Parcelable {
         if (i >= 0) {
             return false;
         }
-        insert(-i-1, uid);
+        insert(-i - 1, uid);
         return true;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public boolean add(int uid, String name) {
         if (mNum <= 0) {
             insert(0, uid, name);
@@ -291,12 +315,12 @@ public class WorkSource implements Parcelable {
             throw new IllegalArgumentException("Adding name to unnamed " + this);
         }
         int i;
-        for (i=0; i<mNum; i++) {
+        for (i = 0; i < mNum; i++) {
             if (mUids[i] > uid) {
                 break;
             }
             if (mUids[i] == uid) {
-                int diff = mNames[i].compareTo(name); 
+                int diff = mNames[i].compareTo(name);
                 if (diff > 0) {
                     break;
                 }
@@ -309,7 +333,9 @@ public class WorkSource implements Parcelable {
         return true;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public WorkSource addReturningNewbs(int uid) {
         synchronized (sTmpWorkSource) {
             sNewbWork = null;
@@ -338,14 +364,16 @@ public class WorkSource implements Parcelable {
         }
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public WorkSource stripNames() {
         if (mNum <= 0) {
             return new WorkSource();
         }
         WorkSource result = new WorkSource();
         int lastUid = -1;
-        for (int i=0; i<mNum; i++) {
+        for (int i = 0; i < mNum; i++) {
             int uid = mUids[i];
             if (i == 0 || lastUid != uid) {
                 result.add(uid);
@@ -370,7 +398,7 @@ public class WorkSource implements Parcelable {
                         + ": remove " + uids1[i1]);
                 N1--;
                 changed = true;
-                if (i1 < N1) System.arraycopy(uids1, i1+1, uids1, i1, N1-i1);
+                if (i1 < N1) System.arraycopy(uids1, i1 + 1, uids1, i1, N1 - i1);
                 i2++;
             } else if (uids2[i2] > uids1[i1]) {
                 if (DEBUG) Log.d(TAG, "i1=" + i1 + " i2=" + i2 + " N1=" + N1 + ": skip i1");
@@ -405,8 +433,8 @@ public class WorkSource implements Parcelable {
                 N1--;
                 changed = true;
                 if (i1 < N1) {
-                    System.arraycopy(uids1, i1+1, uids1, i1, N1-i1);
-                    System.arraycopy(names1, i1+1, names1, i1, N1-i1);
+                    System.arraycopy(uids1, i1 + 1, uids1, i1, N1 - i1);
+                    System.arraycopy(names1, i1 + 1, names1, i1, N1 - i1);
                 }
                 i2++;
             } else if (uids2[i2] > uids1[i1]
@@ -469,13 +497,13 @@ public class WorkSource implements Parcelable {
                     uids1 = new int[4];
                     uids1[0] = uids2[i2];
                 } else if (N1 >= uids1.length) {
-                    int[] newuids = new int[(uids1.length*3)/2];
+                    int[] newuids = new int[(uids1.length * 3) / 2];
                     if (i1 > 0) System.arraycopy(uids1, 0, newuids, 0, i1);
-                    if (i1 < N1) System.arraycopy(uids1, i1, newuids, i1+1, N1-i1);
+                    if (i1 < N1) System.arraycopy(uids1, i1, newuids, i1 + 1, N1 - i1);
                     uids1 = newuids;
                     uids1[i1] = uids2[i2];
                 } else {
-                    if (i1 < N1) System.arraycopy(uids1, i1, uids1, i1+1, N1-i1);
+                    if (i1 < N1) System.arraycopy(uids1, i1, uids1, i1 + 1, N1 - i1);
                     uids1[i1] = uids2[i2];
                 }
                 if (returnNewbs) {
@@ -501,8 +529,8 @@ public class WorkSource implements Parcelable {
                         i1++;
                     }
                     if (start < i1) {
-                        System.arraycopy(uids1, i1, uids1, start, N1-i1);
-                        N1 -= i1-start;
+                        System.arraycopy(uids1, i1, uids1, start, N1 - i1);
+                        N1 -= i1 - start;
                         i1 = start;
                     }
                     // If there is a matching uid, skip it.
@@ -552,7 +580,7 @@ public class WorkSource implements Parcelable {
             if (DEBUG) Log.d(TAG, "Step: target @ " + i1 + " of " + mNum + ", other @ " + i2
                     + " of " + N2);
             int diff = -1;
-            if (i1 >= mNum || (i2 < N2 && (diff=compare(other, i1, i2)) > 0)) {
+            if (i1 >= mNum || (i2 < N2 && (diff = compare(other, i1, i2)) > 0)) {
                 // Need to insert a new uid.
                 changed = true;
                 if (DEBUG) Log.d(TAG, "i1=" + i1 + " i2=" + i2 + " N1=" + mNum
@@ -584,9 +612,9 @@ public class WorkSource implements Parcelable {
                         diff = i2 < N2 ? compare(other, i1, i2) : -1;
                     }
                     if (start < i1) {
-                        System.arraycopy(mUids, i1, mUids, start, mNum-i1);
-                        System.arraycopy(mNames, i1, mNames, start, mNum-i1);
-                        mNum -= i1-start;
+                        System.arraycopy(mUids, i1, mUids, start, mNum - i1);
+                        System.arraycopy(mNames, i1, mNames, start, mNum - i1);
+                        mNum -= i1 - start;
                         i1 = start;
                     }
                     // If there is a matching uid, skip it.
@@ -602,33 +630,33 @@ public class WorkSource implements Parcelable {
         return changed;
     }
 
-    private void insert(int index, int uid)  {
+    private void insert(int index, int uid) {
         if (DEBUG) Log.d(TAG, "Insert in " + this + " @ " + index + " uid " + uid);
         if (mUids == null) {
             mUids = new int[4];
             mUids[0] = uid;
             mNum = 1;
         } else if (mNum >= mUids.length) {
-            int[] newuids = new int[(mNum*3)/2];
+            int[] newuids = new int[(mNum * 3) / 2];
             if (index > 0) {
                 System.arraycopy(mUids, 0, newuids, 0, index);
             }
             if (index < mNum) {
-                System.arraycopy(mUids, index, newuids, index+1, mNum-index);
+                System.arraycopy(mUids, index, newuids, index + 1, mNum - index);
             }
             mUids = newuids;
             mUids[index] = uid;
             mNum++;
         } else {
             if (index < mNum) {
-                System.arraycopy(mUids, index, mUids, index+1, mNum-index);
+                System.arraycopy(mUids, index, mUids, index + 1, mNum - index);
             }
             mUids[index] = uid;
             mNum++;
         }
     }
 
-    private void insert(int index, int uid, String name)  {
+    private void insert(int index, int uid, String name) {
         if (mUids == null) {
             mUids = new int[4];
             mUids[0] = uid;
@@ -636,15 +664,15 @@ public class WorkSource implements Parcelable {
             mNames[0] = name;
             mNum = 1;
         } else if (mNum >= mUids.length) {
-            int[] newuids = new int[(mNum*3)/2];
-            String[] newnames = new String[(mNum*3)/2];
+            int[] newuids = new int[(mNum * 3) / 2];
+            String[] newnames = new String[(mNum * 3) / 2];
             if (index > 0) {
                 System.arraycopy(mUids, 0, newuids, 0, index);
                 System.arraycopy(mNames, 0, newnames, 0, index);
             }
             if (index < mNum) {
-                System.arraycopy(mUids, index, newuids, index+1, mNum-index);
-                System.arraycopy(mNames, index, newnames, index+1, mNum-index);
+                System.arraycopy(mUids, index, newuids, index + 1, mNum - index);
+                System.arraycopy(mNames, index, newnames, index + 1, mNum - index);
             }
             mUids = newuids;
             mNames = newnames;
@@ -653,8 +681,8 @@ public class WorkSource implements Parcelable {
             mNum++;
         } else {
             if (index < mNum) {
-                System.arraycopy(mUids, index, mUids, index+1, mNum-index);
-                System.arraycopy(mNames, index, mNames, index+1, mNum-index);
+                System.arraycopy(mUids, index, mUids, index + 1, mNum - index);
+                System.arraycopy(mNames, index, mNames, index + 1, mNum - index);
             }
             mUids[index] = uid;
             mNames[index] = name;
@@ -697,6 +725,7 @@ public class WorkSource implements Parcelable {
         public WorkSource createFromParcel(Parcel in) {
             return new WorkSource(in);
         }
+
         public WorkSource[] newArray(int size) {
             return new WorkSource[size];
         }

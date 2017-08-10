@@ -46,8 +46,6 @@ import minium.co.launcher2.events.ActionItemUpdateEvent;
 import minium.co.launcher2.events.LoadFragmentEvent;
 import minium.co.launcher2.flow.FlowActivity_;
 import minium.co.launcher2.helper.ActivityHelper;
-import minium.co.launcher2.intro.SiempoIntroActivity;
-import minium.co.launcher2.map.SiempoMapActivity;
 import minium.co.launcher2.map.SiempoMapActivity_;
 import minium.co.launcher2.model.ActionItem;
 import minium.co.launcher2.model.ActionListItem;
@@ -327,7 +325,6 @@ public class FilterFragment extends CoreFragment {
         }
 
 
-
     }
 
 
@@ -352,7 +349,7 @@ public class FilterFragment extends CoreFragment {
             if (getLauncherPackageName().equals("android")) {
                 openChooser();
             } else
-            resetPreferredLauncherAndOpenChooser();
+                resetPreferredLauncherAndOpenChooser();
 //                openSettings();
         }
     }
@@ -399,7 +396,7 @@ public class FilterFragment extends CoreFragment {
             intent.setData(Uri.parse("package:" + currentHomePackage));
             startActivity(intent);
 
-        } catch ( ActivityNotFoundException e ) {
+        } catch (ActivityNotFoundException e) {
             Tracer.e(e, e.getMessage());
 
             //Open the generic Apps page:

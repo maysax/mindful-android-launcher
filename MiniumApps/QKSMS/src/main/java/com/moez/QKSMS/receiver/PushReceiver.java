@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.android.mms.transaction.NotificationTransaction;
 import com.android.mms.transaction.Transaction;
 import com.android.mms.transaction.TransactionBundle;
@@ -43,8 +44,9 @@ public class PushReceiver extends BroadcastReceiver {
     private static final String TAG = "PushReceiver";
     private static final boolean LOCAL_LOGV = false;
 
-    private class ReceivePushTask extends AsyncTask<Intent,Void,Void> {
+    private class ReceivePushTask extends AsyncTask<Intent, Void, Void> {
         private Context mContext;
+
         public ReceivePushTask(Context context) {
             mContext = context;
         }
@@ -101,10 +103,10 @@ public class PushReceiver extends BroadcastReceiver {
                         NotificationInd nInd = (NotificationInd) pdu;
 
                         if (MmsConfig.getTransIdEnabled()) {
-                            byte [] contentLocation = nInd.getContentLocation();
+                            byte[] contentLocation = nInd.getContentLocation();
                             if ('=' == contentLocation[contentLocation.length - 1]) {
-                                byte [] transactionId = nInd.getTransactionId();
-                                byte [] contentLocationWithId = new byte [contentLocation.length
+                                byte[] transactionId = nInd.getTransactionId();
+                                byte[] contentLocationWithId = new byte[contentLocation.length
                                         + transactionId.length];
                                 System.arraycopy(contentLocation, 0, contentLocationWithId,
                                         0, contentLocation.length);
@@ -172,7 +174,7 @@ public class PushReceiver extends BroadcastReceiver {
                     || Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 // Hold a wake lock for 5 seconds, enough to give any
                 // services we start time to take their own wake locks.
-                PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
+                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                         "MMS PushReceiver");
                 wl.acquire(5000);
@@ -213,7 +215,7 @@ public class PushReceiver extends BroadcastReceiver {
         // sb.append(')');
 
         Cursor cursor = SqliteWrapper.query(context, context.getContentResolver(),
-                Uri.parse("content://mms"), new String[] { "thread_id" },
+                Uri.parse("content://mms"), new String[]{"thread_id"},
                 sb.toString(), null, null);
         if (cursor != null) {
             try {
@@ -235,10 +237,10 @@ public class PushReceiver extends BroadcastReceiver {
             String location = new String(rawLocation);
             // TODO do not use the sdk > 19 sms apis for this
             String selection = "ct_l = ?";
-            String[] selectionArgs = new String[] { location };
+            String[] selectionArgs = new String[]{location};
             Cursor cursor = SqliteWrapper.query(
                     context, context.getContentResolver(),
-                    Uri.parse("content://mms"), new String[] { "_id" },
+                    Uri.parse("content://mms"), new String[]{"_id"},
                     selection, selectionArgs, null);
             if (cursor != null) {
                 try {

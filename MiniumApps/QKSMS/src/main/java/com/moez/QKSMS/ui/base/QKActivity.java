@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.LiveViewManager;
@@ -31,8 +29,6 @@ import com.moez.QKSMS.ui.view.QKTextView;
 import org.androidannotations.annotations.EActivity;
 
 import java.util.ArrayList;
-
-import minium.co.core.ui.CoreActivity;
 
 @EActivity
 public abstract class QKActivity extends AppCompatActivity {

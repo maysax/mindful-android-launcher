@@ -2,10 +2,7 @@ package co.siempo.phone.pause;
 
 import android.os.Handler;
 import android.os.Vibrator;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,11 +20,9 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.PauseStartEvent;
 import de.greenrobot.event.EventBus;
-import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
-
 
 
 @EFragment(R.layout.fragment_pause)
@@ -62,16 +57,18 @@ public class PauseFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        ((CoreActivity)getActivity()).setSupportActionBar(toolbar);
+        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
         seekbar.setOnSeekBarChangeListener(seekbarListener);
         titleActionBar.setText(R.string.title_pause);
         handler = new Handler();
     }
+
     @Click
-    void pause_button(){
+    void pause_button() {
         startPause();
 
     }
+
     @Click
     void imgLeft() {
         getActivity().onBackPressed();
@@ -82,7 +79,7 @@ public class PauseFragment extends CoreFragment {
         if (launcherPrefs.isPauseActive().get()) {
             getActivity().onBackPressed();
         } else {
-            ((CoreActivity)getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(),R.id.mainView);
+            ((CoreActivity) getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(), R.id.mainView);
         }
     }
 

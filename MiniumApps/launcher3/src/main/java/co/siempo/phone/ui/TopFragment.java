@@ -3,18 +3,15 @@ package co.siempo.phone.ui;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.media.Image;
 import android.net.wifi.WifiManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.Icon;
-import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
 import org.androidannotations.annotations.AfterViews;
@@ -24,8 +21,6 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.util.Locale;
-
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.battery.BatteryChangeEvent;
@@ -34,8 +29,6 @@ import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NotificationSchedulerEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
-import co.siempo.phone.msg.SmsEvent;
-import co.siempo.phone.msg.SmsEventType;
 import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
@@ -81,9 +74,9 @@ public class TopFragment extends CoreFragment {
     ImageView imgAirplane;
 
     @SystemService
-            WifiManager wifiManager;
+    WifiManager wifiManager;
 
-    FontAwesomeIcons [] batteryIcons = {
+    FontAwesomeIcons[] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
             FontAwesomeIcons.fa_battery_1,
             FontAwesomeIcons.fa_battery_2,
@@ -190,12 +183,12 @@ public class TopFragment extends CoreFragment {
     }
 
     private Icon getBatteryIcon(int level) {
-        if (level < 15) return batteryIcons [0];
-        else if (level <= 25) return batteryIcons [1];
-        else if (level <= 65) return batteryIcons [2];
-        else if (level <= 80) return batteryIcons [3];
-        else if (level > 80) return batteryIcons [4];
-        return batteryIcons [2];
+        if (level < 15) return batteryIcons[0];
+        else if (level <= 25) return batteryIcons[1];
+        else if (level <= 65) return batteryIcons[2];
+        else if (level <= 80) return batteryIcons[3];
+        else if (level > 80) return batteryIcons[4];
+        return batteryIcons[2];
     }
 
     private class SignalStrengthListener extends PhoneStateListener {
@@ -224,8 +217,7 @@ public class TopFragment extends CoreFragment {
         if (event.isStarting()) {
             imgTempo.setVisibility(View.VISIBLE);
             launcherPrefs.isTempoActive().put(true);
-        }
-        else {
+        } else {
             imgTempo.setVisibility(View.GONE);
             launcherPrefs.isTempoActive().put(false);
         }
@@ -243,7 +235,7 @@ public class TopFragment extends CoreFragment {
             imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
             imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
         } else if (event.getState() == ConnectivityEvent.WIFI) {
-            imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE :  View.GONE);
+            imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
             imgWifi.setImageResource(getWifiIcon(event.getValue()));
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
             imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
@@ -253,7 +245,7 @@ public class TopFragment extends CoreFragment {
     }
 
     private int getBatteryIcon2(int level) {
-        int icons [] = {
+        int icons[] = {
                 IconStyleData.TYPE_VECTOR,
                 com.james.status.R.drawable.ic_battery_alert,
                 com.james.status.R.drawable.ic_battery_20,
@@ -272,11 +264,11 @@ public class TopFragment extends CoreFragment {
                 com.james.status.R.drawable.ic_battery_charging_full
         };
 
-        return icons [level + 1];
+        return icons[level + 1];
     }
 
     private int getWifiIcon(int level) {
-        int icons [] = {
+        int icons[] = {
                 IconStyleData.TYPE_VECTOR,
                 com.james.status.R.drawable.ic_wifi_triangle_0,
                 com.james.status.R.drawable.ic_wifi_triangle_1,
@@ -285,11 +277,11 @@ public class TopFragment extends CoreFragment {
                 com.james.status.R.drawable.ic_wifi_triangle_4
         };
 
-        return icons [level + 1];
+        return icons[level + 1];
     }
 
     private int getNetworkIcon(int level) {
-        int icons [] = {
+        int icons[] = {
                 IconStyleData.TYPE_VECTOR,
                 com.james.status.R.drawable.ic_signal_0,
                 com.james.status.R.drawable.ic_signal_1,
@@ -298,6 +290,6 @@ public class TopFragment extends CoreFragment {
                 com.james.status.R.drawable.ic_signal_4
         };
 
-        return icons [level + 1];
+        return icons[level + 1];
     }
 }

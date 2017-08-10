@@ -28,11 +28,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.contacts.editor.ContactEditorUtils;
 import com.android.contacts.common.model.AccountTypeManager;
 import com.android.contacts.common.model.account.AccountWithDataSet;
 import com.android.contacts.common.util.AccountsListAdapter;
 import com.android.contacts.common.util.AccountsListAdapter.AccountListFilter;
+import com.android.contacts.editor.ContactEditorUtils;
 
 import java.util.List;
 

@@ -14,9 +14,7 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.event.MindfulMorgingEventStart;
-import co.siempo.phone.event.PauseStartEvent;
 import de.greenrobot.event.EventBus;
-import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
 /**
@@ -43,23 +41,28 @@ public class MindfulMorningListDetails extends CoreFragment {
     ImageView crossActionBar;
     @ViewById
     ImageButton pause_button;
+
     @Click
-    void pause_button(){
-      //  MMTimePickerActivity_.intent(getActivity()).start();
+    void pause_button() {
+        //  MMTimePickerActivity_.intent(getActivity()).start();
         startPause();
     }
+
     @Click
-    void crossActionBar(){
+    void crossActionBar() {
         getActivity().onBackPressed();
     }
+
     @AfterViews
-    public void afterViews(){
+    public void afterViews() {
         seekbar.setOnSeekBarChangeListener(seekbarListener);
         seekbar.setValue(value);
     }
+
     private void startPause() {
         EventBus.getDefault().post(new MindfulMorgingEventStart(1));
     }
+
     private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {
 
         @Override

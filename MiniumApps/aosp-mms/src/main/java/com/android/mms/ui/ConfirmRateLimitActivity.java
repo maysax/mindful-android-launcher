@@ -17,7 +17,6 @@
 
 package com.android.mms.ui;
 
-import static com.android.mms.util.RateController.RATE_LIMIT_CONFIRMED_ACTION;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +31,8 @@ import android.widget.Button;
 import com.android.mms.LogTag;
 import com.android.mms.R;
 import com.android.mms.util.RateController;
+
+import static com.android.mms.util.RateController.RATE_LIMIT_CONFIRMED_ACTION;
 
 public class ConfirmRateLimitActivity extends Activity {
     private static final String TAG = LogTag.TAG;
@@ -81,7 +82,7 @@ public class ConfirmRateLimitActivity extends Activity {
         super.onResume();
 
         long delay = mCreateTime - System.currentTimeMillis()
-                        + (RateController.ANSWER_TIMEOUT - 500);
+                + (RateController.ANSWER_TIMEOUT - 500);
 
         if (delay <= 0) {
             doAnswer(false);

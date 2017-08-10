@@ -24,7 +24,7 @@ public class LimitedLengthInputStream extends FilterInputStream {
     private long mOffset;
 
     /**
-     * @param in underlying stream to wrap
+     * @param in     underlying stream to wrap
      * @param offset offset into stream where data starts
      * @param length length of data at offset
      * @throws IOException if an error occurred with the underlying stream

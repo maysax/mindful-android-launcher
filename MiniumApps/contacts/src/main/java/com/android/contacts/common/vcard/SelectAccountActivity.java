@@ -42,6 +42,7 @@ public class SelectAccountActivity extends Activity {
         public void onClick(DialogInterface dialog, int which) {
             finish();
         }
+
         public void onCancel(DialogInterface dialog) {
             finish();
         }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2010 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2010 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,22 +13,13 @@
      limitations under the License.
 -->
 
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pinned_header_list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pinned_header_list_layout" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:orientation="vertical">
 
-    <view
-        class="com.android.contacts.common.list.PinnedHeaderListView"
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
+    <view class="com.android.contacts.common.list.PinnedHeaderListView"
+        android:id="@android:id/list" android:layout_width="match_parent"
         android:layout_height="0dip"
         android:paddingTop="@dimen/contact_browser_list_item_padding_top_or_bottom"
-        android:clipToPadding="false"
-        android:fastScrollEnabled="true"
-        android:layout_weight="1"
-    />
+        android:clipToPadding="false" android:fastScrollEnabled="true" android:layout_weight="1" />
 </LinearLayout>

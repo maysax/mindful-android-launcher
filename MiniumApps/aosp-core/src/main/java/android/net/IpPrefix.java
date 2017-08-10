@@ -28,19 +28,19 @@ import java.util.Arrays;
  * This class represents an IP prefix, i.e., a contiguous block of IP addresses aligned on a
  * power of two boundary (also known as an "IP subnet"). A prefix is specified by two pieces of
  * information:
- *
+ * <p>
  * <ul>
  * <li>A starting IP address (IPv4 or IPv6). This is the first IP address of the prefix.
  * <li>A prefix length. This specifies the length of the prefix by specifing the number of bits
- *     in the IP address, starting from the most significant bit in network byte order, that
- *     are constant for all addresses in the prefix.
+ * in the IP address, starting from the most significant bit in network byte order, that
+ * are constant for all addresses in the prefix.
  * </ul>
- *
+ * <p>
  * For example, the prefix <code>192.0.2.0/24</code> covers the 256 IPv4 addresses from
  * <code>192.0.2.0</code> to <code>192.0.2.255</code>, inclusive, and the prefix
  * <code>2001:db8:1:2</code>  covers the 2^64 IPv6 addresses from <code>2001:db8:1:2::</code> to
  * <code>2001:db8:1:2:ffff:ffff:ffff:ffff</code>, inclusive.
- *
+ * <p>
  * Objects of this class are immutable.
  */
 public final class IpPrefix implements Parcelable {
@@ -60,9 +60,8 @@ public final class IpPrefix implements Parcelable {
      * network byte order and a prefix length. Silently truncates the address to the prefix length,
      * so for example {@code 192.0.2.1/24} is silently converted to {@code 192.0.2.0/24}.
      *
-     * @param address the IP address. Must be non-null and exactly 4 or 16 bytes long.
+     * @param address      the IP address. Must be non-null and exactly 4 or 16 bytes long.
      * @param prefixLength the prefix length. Must be &gt;= 0 and &lt;= (32 or 128) (IPv4 or IPv6).
-     *
      * @hide
      */
     public IpPrefix(byte[] address, int prefixLength) {
@@ -76,7 +75,7 @@ public final class IpPrefix implements Parcelable {
      * truncates the address to the prefix length, so for example {@code 192.0.2.1/24} is silently
      * converted to {@code 192.0.2.0/24}.
      *
-     * @param address the IP address. Must be non-null.
+     * @param address      the IP address. Must be non-null.
      * @param prefixLength the prefix length. Must be &gt;= 0 and &lt;= (32 or 128) (IPv4 or IPv6).
      * @hide
      */
@@ -94,7 +93,6 @@ public final class IpPrefix implements Parcelable {
      * is silently converted to {@code 192.0.2.0/24}.
      *
      * @param prefix the prefix to parse
-     *
      * @hide
      */
     public IpPrefix(String prefix) {
@@ -177,7 +175,7 @@ public final class IpPrefix implements Parcelable {
     public String toString() {
         try {
             return InetAddress.getByAddress(address).getHostAddress() + "/" + prefixLength;
-        } catch(UnknownHostException e) {
+        } catch (UnknownHostException e) {
             // Cosmic rays?
             throw new IllegalStateException("IpPrefix with invalid address! Shouldn't happen.", e);
         }

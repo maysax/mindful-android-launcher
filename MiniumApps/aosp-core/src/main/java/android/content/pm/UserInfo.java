@@ -23,11 +23,14 @@ import android.os.UserHandle;
 
 /**
  * Per-user information.
+ *
  * @hide
  */
 public class UserInfo implements Parcelable {
 
-    /** 8 bits for user type */
+    /**
+     * 8 bits for user type
+     */
     public static final int FLAG_MASK_USER_TYPE = 0x000000FF;
 
     /**
@@ -46,12 +49,12 @@ public class UserInfo implements Parcelable {
      * User with administrative privileges. Such a user can create and
      * delete users.
      */
-    public static final int FLAG_ADMIN   = 0x00000002;
+    public static final int FLAG_ADMIN = 0x00000002;
 
     /**
      * Indicates a guest user that may be transient.
      */
-    public static final int FLAG_GUEST   = 0x00000004;
+    public static final int FLAG_GUEST = 0x00000004;
 
     /**
      * Indicates the user has restrictions in privileges, in addition to those for normal users.
@@ -87,7 +90,9 @@ public class UserInfo implements Parcelable {
     public long lastLoggedInTime;
     public int profileGroupId;
 
-    /** User is only partially created. */
+    /**
+     * User is only partially created.
+     */
     public boolean partial;
     public boolean guestToRemove;
 
@@ -182,6 +187,7 @@ public class UserInfo implements Parcelable {
         public UserInfo createFromParcel(Parcel source) {
             return new UserInfo(source);
         }
+
         public UserInfo[] newArray(int size) {
             return new UserInfo[size];
         }

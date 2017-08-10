@@ -6,7 +6,6 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
@@ -38,8 +37,12 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 @EViewGroup(R.layout.search_layout)
 public class SearchLayout extends CardView {
 
+    public ChipsEditText getTxtSearchBox() {
+        return txtSearchBox;
+    }
+
     @ViewById
-    protected ChipsEditText txtSearchBox;
+    ChipsEditText txtSearchBox;
 
     @ViewById
     protected ImageView btnClear;
@@ -98,11 +101,13 @@ public class SearchLayout extends CardView {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                handleAfterTextChanged(s.toString());
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-                handleAfterTextChanged(s);
+
             }
         });
     }
@@ -110,7 +115,7 @@ public class SearchLayout extends CardView {
     public void askFocus() {
         txtSearchBox.requestFocus();
         txtSearchBox.setText("");
-        handler.postDelayed(showKeyboardRunnable, 200);
+        handler.postDelayed(showKeyboardRunnable, 500);
     }
 
     private Runnable showKeyboardRunnable = new Runnable() {
@@ -120,7 +125,7 @@ public class SearchLayout extends CardView {
         }
     };
 
-    private void handleAfterTextChanged(Editable s) {
+    private void handleAfterTextChanged(String s) {
         if (s.length() != 0) {
             btnClear.setVisibility(VISIBLE);
         } else {

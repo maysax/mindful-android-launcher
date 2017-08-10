@@ -15,110 +15,118 @@ package org.w3c.dom.smil;
 import org.w3c.dom.DOMException;
 
 /**
- *  This interface define the set of animation extensions for SMIL.  The  
- * attributes will go in a XLink interface. 
+ * This interface define the set of animation extensions for SMIL.  The
+ * attributes will go in a XLink interface.
  */
 public interface SMILAnimation extends SMILElement, ElementTargetAttributes, ElementTime, ElementTimeControl {
     // additiveTypes
-    public static final short ADDITIVE_REPLACE          = 0;
-    public static final short ADDITIVE_SUM              = 1;
+    public static final short ADDITIVE_REPLACE = 0;
+    public static final short ADDITIVE_SUM = 1;
 
     /**
-     *  A code representing the value of the  additive attribute, as defined 
-     * above. Default value is <code>ADDITIVE_REPLACE</code> . 
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A code representing the value of the  additive attribute, as defined
+     * above. Default value is <code>ADDITIVE_REPLACE</code> .
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public short getAdditive();
+
     public void setAdditive(short additive)
-                                throws DOMException;
+            throws DOMException;
 
     // accumulateTypes
-    public static final short ACCUMULATE_NONE           = 0;
-    public static final short ACCUMULATE_SUM            = 1;
+    public static final short ACCUMULATE_NONE = 0;
+    public static final short ACCUMULATE_SUM = 1;
 
     /**
-     *  A code representing the value of the  accumulate attribute, as defined 
-     * above. Default value is <code>ACCUMULATE_NONE</code> . 
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A code representing the value of the  accumulate attribute, as defined
+     * above. Default value is <code>ACCUMULATE_NONE</code> .
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public short getAccumulate();
+
     public void setAccumulate(short accumulate)
-                                throws DOMException;
+            throws DOMException;
 
     // calcModeTypes
-    public static final short CALCMODE_DISCRETE         = 0;
-    public static final short CALCMODE_LINEAR           = 1;
-    public static final short CALCMODE_PACED            = 2;
-    public static final short CALCMODE_SPLINE           = 3;
+    public static final short CALCMODE_DISCRETE = 0;
+    public static final short CALCMODE_LINEAR = 1;
+    public static final short CALCMODE_PACED = 2;
+    public static final short CALCMODE_SPLINE = 3;
 
     /**
-     *  A code representing the value of the  calcMode attribute, as defined 
-     * above. 
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A code representing the value of the  calcMode attribute, as defined
+     * above.
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public short getCalcMode();
+
     public void setCalcMode(short calcMode)
-                                throws DOMException;
+            throws DOMException;
 
     /**
-     *  A <code>DOMString</code> representing the value of the  keySplines 
-     * attribute.  Need an interface a point (x1,y1,x2,y2) 
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A <code>DOMString</code> representing the value of the  keySplines
+     * attribute.  Need an interface a point (x1,y1,x2,y2)
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public String getKeySplines();
+
     public void setKeySplines(String keySplines)
-                                throws DOMException;
+            throws DOMException;
 
     /**
-     *  A list of the time value of the  keyTimes attribute. 
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A list of the time value of the  keyTimes attribute.
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public TimeList getKeyTimes();
+
     public void setKeyTimes(TimeList keyTimes)
-                                throws DOMException;
+            throws DOMException;
 
     /**
-     *  A <code>DOMString</code> representing the value of the  values 
-     * attribute. 
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A <code>DOMString</code> representing the value of the  values
+     * attribute.
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public String getValues();
+
     public void setValues(String values)
-                                throws DOMException;
+            throws DOMException;
 
     /**
-     *  A <code>DOMString</code> representing the value of the  from attribute.
-     *  
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A <code>DOMString</code> representing the value of the  from attribute.
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public String getFrom();
+
     public void setFrom(String from)
-                                throws DOMException;
+            throws DOMException;
 
     /**
-     *  A <code>DOMString</code> representing the value of the  to attribute. 
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A <code>DOMString</code> representing the value of the  to attribute.
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public String getTo();
+
     public void setTo(String to)
-                                throws DOMException;
+            throws DOMException;
 
     /**
-     *  A <code>DOMString</code> representing the value of the  by attribute. 
-     * @exception org.w3c.dom.DOMException
-     *    NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly. 
+     * A <code>DOMString</code> representing the value of the  by attribute.
+     *
+     * @throws org.w3c.dom.DOMException NO_MODIFICATION_ALLOWED_ERR: Raised if this attribute is readonly.
      */
     public String getBy();
+
     public void setBy(String by)
-                                throws DOMException;
+            throws DOMException;
 
 }
 

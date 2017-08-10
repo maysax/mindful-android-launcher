@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2009 The Android Open Source Project
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -57,11 +57,11 @@ import java.util.Vector;
  * state machine below mP1.enter will be invoked and then mS1.enter. Finally,
  * messages sent to the state machine will be processed by the current state,
  * in our simple state machine below that would initially be mS1.processMessage.</p>
-<code>
-        mP1
-       /   \
-      mS2   mS1 ----> initial state
-</code>
+ <code>
+ mP1
+ /   \
+ mS2   mS1 ----> initial state
+ </code>
  * <p>After the state machine is created and started, messages are sent to a state
  * machine using <code>sendMessage</code> and the messages are created using
  * <code>obtainMessage</code>. When the state machine receives a message the
@@ -109,15 +109,15 @@ import java.util.Vector;
  *
  * <p>To illustrate some of these properties we'll use state machine with an 8
  * state hierarchy:</p>
-<code>
-          mP0
-         /   \
-        mP1   mS0
-       /   \
-      mS2   mS1
-     /  \    \
-    mS3  mS4  mS5  ---> initial state
-</code>
+ <code>
+ mP0
+ /   \
+ mP1   mS0
+ /   \
+ mS2   mS1
+ /  \    \
+ mS3  mS4  mS5  ---> initial state
+ </code>
  * <p>After starting mS5 the list of active states is mP0, mP1, mS1 and mS5.
  * So the order of calling processMessage when a message is received is mS5,
  * mS1, mP1, mP0 assuming each processMessage indicates it can't handle this
@@ -133,288 +133,288 @@ import java.util.Vector;
  *
  * <p>Now for some concrete examples, here is the canonical HelloWorld as a state machine.
  * It responds with "Hello World" being printed to the log for every message.</p>
-<code>
-class HelloWorld extends StateMachine {
-    HelloWorld(String name) {
-        super(name);
-        addState(mState1);
-        setInitialState(mState1);
-    }
+ <code>
+ class HelloWorld extends StateMachine {
+ HelloWorld(String name) {
+ super(name);
+ addState(mState1);
+ setInitialState(mState1);
+ }
 
-    public static HelloWorld makeHelloWorld() {
-        HelloWorld hw = new HelloWorld("hw");
-        hw.start();
-        return hw;
-    }
+ public static HelloWorld makeHelloWorld() {
+ HelloWorld hw = new HelloWorld("hw");
+ hw.start();
+ return hw;
+ }
 
-    class State1 extends State {
-        &#64;Override public boolean processMessage(Message message) {
-            log("Hello World");
-            return HANDLED;
-        }
-    }
-    State1 mState1 = new State1();
-}
+ class State1 extends State {
+ &#64;Override public boolean processMessage(Message message) {
+ log("Hello World");
+ return HANDLED;
+ }
+ }
+ State1 mState1 = new State1();
+ }
 
-void testHelloWorld() {
-    HelloWorld hw = makeHelloWorld();
-    hw.sendMessage(hw.obtainMessage());
-}
-</code>
+ void testHelloWorld() {
+ HelloWorld hw = makeHelloWorld();
+ hw.sendMessage(hw.obtainMessage());
+ }
+ </code>
  * <p>A more interesting state machine is one with four states
  * with two independent parent states.</p>
-<code>
-        mP1      mP2
-       /   \
-      mS2   mS1
-</code>
+ <code>
+ mP1      mP2
+ /   \
+ mS2   mS1
+ </code>
  * <p>Here is a description of this state machine using pseudo code.</p>
  <code>
-state mP1 {
-     enter { log("mP1.enter"); }
-     exit { log("mP1.exit");  }
-     on msg {
-         CMD_2 {
-             send(CMD_3);
-             defer(msg);
-             transitonTo(mS2);
-             return HANDLED;
-         }
-         return NOT_HANDLED;
-     }
-}
+ state mP1 {
+ enter { log("mP1.enter"); }
+ exit { log("mP1.exit");  }
+ on msg {
+ CMD_2 {
+ send(CMD_3);
+ defer(msg);
+ transitonTo(mS2);
+ return HANDLED;
+ }
+ return NOT_HANDLED;
+ }
+ }
 
-INITIAL
-state mS1 parent mP1 {
-     enter { log("mS1.enter"); }
-     exit  { log("mS1.exit");  }
-     on msg {
-         CMD_1 {
-             transitionTo(mS1);
-             return HANDLED;
-         }
-         return NOT_HANDLED;
-     }
-}
+ INITIAL
+ state mS1 parent mP1 {
+ enter { log("mS1.enter"); }
+ exit  { log("mS1.exit");  }
+ on msg {
+ CMD_1 {
+ transitionTo(mS1);
+ return HANDLED;
+ }
+ return NOT_HANDLED;
+ }
+ }
 
-state mS2 parent mP1 {
-     enter { log("mS2.enter"); }
-     exit  { log("mS2.exit");  }
-     on msg {
-         CMD_2 {
-             send(CMD_4);
-             return HANDLED;
-         }
-         CMD_3 {
-             defer(msg);
-             transitionTo(mP2);
-             return HANDLED;
-         }
-         return NOT_HANDLED;
-     }
-}
+ state mS2 parent mP1 {
+ enter { log("mS2.enter"); }
+ exit  { log("mS2.exit");  }
+ on msg {
+ CMD_2 {
+ send(CMD_4);
+ return HANDLED;
+ }
+ CMD_3 {
+ defer(msg);
+ transitionTo(mP2);
+ return HANDLED;
+ }
+ return NOT_HANDLED;
+ }
+ }
 
-state mP2 {
-     enter {
-         log("mP2.enter");
-         send(CMD_5);
-     }
-     exit { log("mP2.exit"); }
-     on msg {
-         CMD_3, CMD_4 { return HANDLED; }
-         CMD_5 {
-             transitionTo(HaltingState);
-             return HANDLED;
-         }
-         return NOT_HANDLED;
-     }
-}
-</code>
+ state mP2 {
+ enter {
+ log("mP2.enter");
+ send(CMD_5);
+ }
+ exit { log("mP2.exit"); }
+ on msg {
+ CMD_3, CMD_4 { return HANDLED; }
+ CMD_5 {
+ transitionTo(HaltingState);
+ return HANDLED;
+ }
+ return NOT_HANDLED;
+ }
+ }
+ </code>
  * <p>The implementation is below and also in StateMachineTest:</p>
-<code>
-class Hsm1 extends StateMachine {
-    public static final int CMD_1 = 1;
-    public static final int CMD_2 = 2;
-    public static final int CMD_3 = 3;
-    public static final int CMD_4 = 4;
-    public static final int CMD_5 = 5;
+ <code>
+ class Hsm1 extends StateMachine {
+ public static final int CMD_1 = 1;
+ public static final int CMD_2 = 2;
+ public static final int CMD_3 = 3;
+ public static final int CMD_4 = 4;
+ public static final int CMD_5 = 5;
 
-    public static Hsm1 makeHsm1() {
-        log("makeHsm1 E");
-        Hsm1 sm = new Hsm1("hsm1");
-        sm.start();
-        log("makeHsm1 X");
-        return sm;
-    }
+ public static Hsm1 makeHsm1() {
+ log("makeHsm1 E");
+ Hsm1 sm = new Hsm1("hsm1");
+ sm.start();
+ log("makeHsm1 X");
+ return sm;
+ }
 
-    Hsm1(String name) {
-        super(name);
-        log("ctor E");
+ Hsm1(String name) {
+ super(name);
+ log("ctor E");
 
-        // Add states, use indentation to show hierarchy
-        addState(mP1);
-            addState(mS1, mP1);
-            addState(mS2, mP1);
-        addState(mP2);
+ // Add states, use indentation to show hierarchy
+ addState(mP1);
+ addState(mS1, mP1);
+ addState(mS2, mP1);
+ addState(mP2);
 
-        // Set the initial state
-        setInitialState(mS1);
-        log("ctor X");
-    }
+ // Set the initial state
+ setInitialState(mS1);
+ log("ctor X");
+ }
 
-    class P1 extends State {
-        &#64;Override public void enter() {
-            log("mP1.enter");
-        }
-        &#64;Override public boolean processMessage(Message message) {
-            boolean retVal;
-            log("mP1.processMessage what=" + message.what);
-            switch(message.what) {
-            case CMD_2:
-                // CMD_2 will arrive in mS2 before CMD_3
-                sendMessage(obtainMessage(CMD_3));
-                deferMessage(message);
-                transitionTo(mS2);
-                retVal = HANDLED;
-                break;
-            default:
-                // Any message we don't understand in this state invokes unhandledMessage
-                retVal = NOT_HANDLED;
-                break;
-            }
-            return retVal;
-        }
-        &#64;Override public void exit() {
-            log("mP1.exit");
-        }
-    }
+ class P1 extends State {
+ &#64;Override public void enter() {
+ log("mP1.enter");
+ }
+ &#64;Override public boolean processMessage(Message message) {
+ boolean retVal;
+ log("mP1.processMessage what=" + message.what);
+ switch(message.what) {
+ case CMD_2:
+ // CMD_2 will arrive in mS2 before CMD_3
+ sendMessage(obtainMessage(CMD_3));
+ deferMessage(message);
+ transitionTo(mS2);
+ retVal = HANDLED;
+ break;
+ default:
+ // Any message we don't understand in this state invokes unhandledMessage
+ retVal = NOT_HANDLED;
+ break;
+ }
+ return retVal;
+ }
+ &#64;Override public void exit() {
+ log("mP1.exit");
+ }
+ }
 
-    class S1 extends State {
-        &#64;Override public void enter() {
-            log("mS1.enter");
-        }
-        &#64;Override public boolean processMessage(Message message) {
-            log("S1.processMessage what=" + message.what);
-            if (message.what == CMD_1) {
-                // Transition to ourself to show that enter/exit is called
-                transitionTo(mS1);
-                return HANDLED;
-            } else {
-                // Let parent process all other messages
-                return NOT_HANDLED;
-            }
-        }
-        &#64;Override public void exit() {
-            log("mS1.exit");
-        }
-    }
+ class S1 extends State {
+ &#64;Override public void enter() {
+ log("mS1.enter");
+ }
+ &#64;Override public boolean processMessage(Message message) {
+ log("S1.processMessage what=" + message.what);
+ if (message.what == CMD_1) {
+ // Transition to ourself to show that enter/exit is called
+ transitionTo(mS1);
+ return HANDLED;
+ } else {
+ // Let parent process all other messages
+ return NOT_HANDLED;
+ }
+ }
+ &#64;Override public void exit() {
+ log("mS1.exit");
+ }
+ }
 
-    class S2 extends State {
-        &#64;Override public void enter() {
-            log("mS2.enter");
-        }
-        &#64;Override public boolean processMessage(Message message) {
-            boolean retVal;
-            log("mS2.processMessage what=" + message.what);
-            switch(message.what) {
-            case(CMD_2):
-                sendMessage(obtainMessage(CMD_4));
-                retVal = HANDLED;
-                break;
-            case(CMD_3):
-                deferMessage(message);
-                transitionTo(mP2);
-                retVal = HANDLED;
-                break;
-            default:
-                retVal = NOT_HANDLED;
-                break;
-            }
-            return retVal;
-        }
-        &#64;Override public void exit() {
-            log("mS2.exit");
-        }
-    }
+ class S2 extends State {
+ &#64;Override public void enter() {
+ log("mS2.enter");
+ }
+ &#64;Override public boolean processMessage(Message message) {
+ boolean retVal;
+ log("mS2.processMessage what=" + message.what);
+ switch(message.what) {
+ case(CMD_2):
+ sendMessage(obtainMessage(CMD_4));
+ retVal = HANDLED;
+ break;
+ case(CMD_3):
+ deferMessage(message);
+ transitionTo(mP2);
+ retVal = HANDLED;
+ break;
+ default:
+ retVal = NOT_HANDLED;
+ break;
+ }
+ return retVal;
+ }
+ &#64;Override public void exit() {
+ log("mS2.exit");
+ }
+ }
 
-    class P2 extends State {
-        &#64;Override public void enter() {
-            log("mP2.enter");
-            sendMessage(obtainMessage(CMD_5));
-        }
-        &#64;Override public boolean processMessage(Message message) {
-            log("P2.processMessage what=" + message.what);
-            switch(message.what) {
-            case(CMD_3):
-                break;
-            case(CMD_4):
-                break;
-            case(CMD_5):
-                transitionToHaltingState();
-                break;
-            }
-            return HANDLED;
-        }
-        &#64;Override public void exit() {
-            log("mP2.exit");
-        }
-    }
+ class P2 extends State {
+ &#64;Override public void enter() {
+ log("mP2.enter");
+ sendMessage(obtainMessage(CMD_5));
+ }
+ &#64;Override public boolean processMessage(Message message) {
+ log("P2.processMessage what=" + message.what);
+ switch(message.what) {
+ case(CMD_3):
+ break;
+ case(CMD_4):
+ break;
+ case(CMD_5):
+ transitionToHaltingState();
+ break;
+ }
+ return HANDLED;
+ }
+ &#64;Override public void exit() {
+ log("mP2.exit");
+ }
+ }
 
-    &#64;Override
-    void onHalting() {
-        log("halting");
-        synchronized (this) {
-            this.notifyAll();
-        }
-    }
+ &#64;Override
+ void onHalting() {
+ log("halting");
+ synchronized (this) {
+ this.notifyAll();
+ }
+ }
 
-    P1 mP1 = new P1();
-    S1 mS1 = new S1();
-    S2 mS2 = new S2();
-    P2 mP2 = new P2();
-}
-</code>
+ P1 mP1 = new P1();
+ S1 mS1 = new S1();
+ S2 mS2 = new S2();
+ P2 mP2 = new P2();
+ }
+ </code>
  * <p>If this is executed by sending two messages CMD_1 and CMD_2
  * (Note the synchronize is only needed because we use hsm.wait())</p>
-<code>
-Hsm1 hsm = makeHsm1();
-synchronize(hsm) {
-     hsm.sendMessage(obtainMessage(hsm.CMD_1));
-     hsm.sendMessage(obtainMessage(hsm.CMD_2));
-     try {
-          // wait for the messages to be handled
-          hsm.wait();
-     } catch (InterruptedException e) {
-          loge("exception while waiting " + e.getMessage());
-     }
-}
-</code>
+ <code>
+ Hsm1 hsm = makeHsm1();
+ synchronize(hsm) {
+ hsm.sendMessage(obtainMessage(hsm.CMD_1));
+ hsm.sendMessage(obtainMessage(hsm.CMD_2));
+ try {
+ // wait for the messages to be handled
+ hsm.wait();
+ } catch (InterruptedException e) {
+ loge("exception while waiting " + e.getMessage());
+ }
+ }
+ </code>
  * <p>The output is:</p>
-<code>
-D/hsm1    ( 1999): makeHsm1 E
-D/hsm1    ( 1999): ctor E
-D/hsm1    ( 1999): ctor X
-D/hsm1    ( 1999): mP1.enter
-D/hsm1    ( 1999): mS1.enter
-D/hsm1    ( 1999): makeHsm1 X
-D/hsm1    ( 1999): mS1.processMessage what=1
-D/hsm1    ( 1999): mS1.exit
-D/hsm1    ( 1999): mS1.enter
-D/hsm1    ( 1999): mS1.processMessage what=2
-D/hsm1    ( 1999): mP1.processMessage what=2
-D/hsm1    ( 1999): mS1.exit
-D/hsm1    ( 1999): mS2.enter
-D/hsm1    ( 1999): mS2.processMessage what=2
-D/hsm1    ( 1999): mS2.processMessage what=3
-D/hsm1    ( 1999): mS2.exit
-D/hsm1    ( 1999): mP1.exit
-D/hsm1    ( 1999): mP2.enter
-D/hsm1    ( 1999): mP2.processMessage what=3
-D/hsm1    ( 1999): mP2.processMessage what=4
-D/hsm1    ( 1999): mP2.processMessage what=5
-D/hsm1    ( 1999): mP2.exit
-D/hsm1    ( 1999): halting
-</code>
+ <code>
+ D/hsm1    ( 1999): makeHsm1 E
+ D/hsm1    ( 1999): ctor E
+ D/hsm1    ( 1999): ctor X
+ D/hsm1    ( 1999): mP1.enter
+ D/hsm1    ( 1999): mS1.enter
+ D/hsm1    ( 1999): makeHsm1 X
+ D/hsm1    ( 1999): mS1.processMessage what=1
+ D/hsm1    ( 1999): mS1.exit
+ D/hsm1    ( 1999): mS1.enter
+ D/hsm1    ( 1999): mS1.processMessage what=2
+ D/hsm1    ( 1999): mP1.processMessage what=2
+ D/hsm1    ( 1999): mS1.exit
+ D/hsm1    ( 1999): mS2.enter
+ D/hsm1    ( 1999): mS2.processMessage what=2
+ D/hsm1    ( 1999): mS2.processMessage what=3
+ D/hsm1    ( 1999): mS2.exit
+ D/hsm1    ( 1999): mP1.exit
+ D/hsm1    ( 1999): mP2.enter
+ D/hsm1    ( 1999): mP2.processMessage what=3
+ D/hsm1    ( 1999): mP2.processMessage what=4
+ D/hsm1    ( 1999): mP2.processMessage what=5
+ D/hsm1    ( 1999): mP2.exit
+ D/hsm1    ( 1999): halting
+ </code>
  */
 public class StateMachine {
     // Name of the state machine and used as logging tag
@@ -464,7 +464,7 @@ public class StateMachine {
          * processed.
          */
         LogRec(StateMachine sm, Message msg, String info, IState state, IState orgState,
-                IState transToState) {
+               IState transToState) {
             update(sm, msg, info, state, orgState, transToState);
         }
 
@@ -475,7 +475,7 @@ public class StateMachine {
          * @param dstState is the state that was the transition target when logging
          */
         public void update(StateMachine sm, Message msg, String info, IState state, IState orgState,
-                IState dstState) {
+                           IState dstState) {
             mSm = sm;
             mTime = System.currentTimeMillis();
             mWhat = (msg != null) ? msg.what : 0;
@@ -589,7 +589,7 @@ public class StateMachine {
          * Set size of messages to maintain and clears all current records.
          *
          * @param maxSize number of records to maintain at anyone time.
-        */
+         */
         synchronized void setSize(int maxSize) {
             mMaxSize = maxSize;
             mCount = 0;
@@ -655,7 +655,7 @@ public class StateMachine {
          *
          */
         synchronized void add(StateMachine sm, Message msg, String messageInfo, IState state,
-                IState orgState, IState transToState) {
+                              IState orgState, IState transToState) {
             mCount += 1;
             if (mLogRecVector.size() < mMaxSize) {
                 mLogRecVector.add(new LogRec(sm, msg, messageInfo, state, orgState, transToState));
@@ -1515,7 +1515,7 @@ public class StateMachine {
      * in MessageQueue#enqueMessage if sent directly or if sent using
      * StateMachine#sendMessage the message will just be ignored.
      *
-     * @return  A Message object from the global pool
+     * @return A Message object from the global pool
      */
     public final Message obtainMessage() {
         return Message.obtain(mSmHandler);
@@ -1530,7 +1530,7 @@ public class StateMachine {
      * StateMachine#sendMessage the message will just be ignored.
      *
      * @param what is the assigned to Message.what.
-     * @return  A Message object from the global pool
+     * @return A Message object from the global pool
      */
     public final Message obtainMessage(int what) {
         return Message.obtain(mSmHandler, what);
@@ -1547,7 +1547,7 @@ public class StateMachine {
      *
      * @param what is the assigned to Message.what.
      * @param obj is assigned to Message.obj.
-     * @return  A Message object from the global pool
+     * @return A Message object from the global pool
      */
     public final Message obtainMessage(int what, Object obj) {
         return Message.obtain(mSmHandler, what, obj);
@@ -1564,7 +1564,7 @@ public class StateMachine {
      *
      * @param what  is assigned to Message.what
      * @param arg1  is assigned to Message.arg1
-     * @return  A Message object from the global pool
+     * @return A Message object from the global pool
      */
     public final Message obtainMessage(int what, int arg1) {
         // use this obtain so we don't match the obtain(h, what, Object) method
@@ -1583,7 +1583,7 @@ public class StateMachine {
      * @param what  is assigned to Message.what
      * @param arg1  is assigned to Message.arg1
      * @param arg2  is assigned to Message.arg2
-     * @return  A Message object from the global pool
+     * @return A Message object from the global pool
      */
     public final Message obtainMessage(int what, int arg1, int arg2) {
         return Message.obtain(mSmHandler, what, arg1, arg2);
@@ -1602,7 +1602,7 @@ public class StateMachine {
      * @param arg1  is assigned to Message.arg1
      * @param arg2  is assigned to Message.arg2
      * @param obj is assigned to Message.obj
-     * @return  A Message object from the global pool
+     * @return A Message object from the global pool
      */
     public final Message obtainMessage(int what, int arg1, int arg2, Object obj) {
         return Message.obtain(mSmHandler, what, arg1, arg2, obj);
@@ -1744,7 +1744,7 @@ public class StateMachine {
      * Message is ignored if state machine has quit.
      */
     public final void sendMessageDelayed(int what, int arg1, int arg2, Object obj,
-            long delayMillis) {
+                                         long delayMillis) {
         // mSmHandler can be null if the state machine has quit.
         SmHandler smh = mSmHandler;
         if (smh == null) return;

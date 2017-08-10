@@ -50,10 +50,10 @@ public class ContactsLoader {
         List<ContactListItem> items = new ArrayList<>();
 
         if (contactCursor != null) {
-            while(contactCursor.moveToNext()) {
+            while (contactCursor.moveToNext()) {
                 long id = contactCursor.getLong(contactCursor.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID));
                 String name = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                String label =  ContactsContract.CommonDataKinds.Phone.getTypeLabel(context.getResources(),
+                String label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(context.getResources(),
                         contactCursor.getInt(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE)),
                         contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL))).toString();
                 String number = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));

@@ -19,11 +19,10 @@ package android.os;
 import android.util.TimeUtils;
 
 /**
- * 
  * Defines a message containing a description and arbitrary data object that can be
  * sent to a {@link Handler}.  This object contains two extra int fields and an
- * extra object field that allow you to not do allocations in many cases.  
- *
+ * extra object field that allow you to not do allocations in many cases.
+ * <p>
  * <p class="note">While the constructor of Message is public, the best way to get
  * one of these is to call {@link #obtain Message.obtain()} or one of the
  * {@link Handler#obtainMessage Handler.obtainMessage()} methods, which will pull
@@ -31,7 +30,7 @@ import android.util.TimeUtils;
  */
 public final class Message implements Parcelable {
     /**
-     * User-defined message code so that the recipient can identify 
+     * User-defined message code so that the recipient can identify
      * what this message is about. Each {@link Handler} has its own name-space
      * for message codes, so you do not need to worry about yours conflicting
      * with other handlers.
@@ -43,7 +42,7 @@ public final class Message implements Parcelable {
      * {@link #setData(Bundle) setData()} if you only need to store a
      * few integer values.
      */
-    public int arg1; 
+    public int arg1;
 
     /**
      * arg1 and arg2 are lower-cost alternatives to using
@@ -58,7 +57,7 @@ public final class Message implements Parcelable {
      * be non-null if it contains a Parcelable of a framework class (not one
      * implemented by the application).   For other data transfer use
      * {@link #setData}.
-     * 
+     * <p>
      * <p>Note that Parcelable objects here are not supported prior to
      * the {@link android.os.Build.VERSION_CODES#FROYO} release.
      */
@@ -78,32 +77,37 @@ public final class Message implements Parcelable {
      */
     public int sendingUid = -1;
 
-    /** If set message is in use.
+    /**
+     * If set message is in use.
      * This flag is set when the message is enqueued and remains set while it
      * is delivered and afterwards when it is recycled.  The flag is only cleared
      * when a new message is created or obtained since that is the only time that
      * applications are allowed to modify the contents of the message.
-     *
+     * <p>
      * It is an error to attempt to enqueue or recycle a message that is already in use.
      */
     /*package*/ static final int FLAG_IN_USE = 1 << 0;
 
-    /** If set message is asynchronous */
+    /**
+     * If set message is asynchronous
+     */
     /*package*/ static final int FLAG_ASYNCHRONOUS = 1 << 1;
 
-    /** Flags to clear in the copyFrom method */
+    /**
+     * Flags to clear in the copyFrom method
+     */
     /*package*/ static final int FLAGS_TO_CLEAR_ON_COPY_FROM = FLAG_IN_USE;
 
     /*package*/ int flags;
 
     /*package*/ long when;
-    
+
     /*package*/ Bundle data;
-    
+
     /*package*/ Handler target;
-    
+
     /*package*/ Runnable callback;
-    
+
     // sometimes we store linked lists of these things
     /*package*/ Message next;
 
@@ -136,6 +140,7 @@ public final class Message implements Parcelable {
     /**
      * Same as {@link #obtain()}, but copies the values of an existing
      * message (including its target) into the new one.
+     *
      * @param orig Original message to copy.
      * @return A Message object from the global pool.
      */
@@ -158,7 +163,8 @@ public final class Message implements Parcelable {
 
     /**
      * Same as {@link #obtain()}, but sets the value for the <em>target</em> member on the Message returned.
-     * @param h  Handler to assign to the returned Message object's <em>target</em> member.
+     *
+     * @param h Handler to assign to the returned Message object's <em>target</em> member.
      * @return A Message object from the global pool.
      */
     public static Message obtain(Handler h) {
@@ -171,7 +177,8 @@ public final class Message implements Parcelable {
     /**
      * Same as {@link #obtain(Handler)}, but assigns a callback Runnable on
      * the Message that is returned.
-     * @param h  Handler to assign to the returned Message object's <em>target</em> member.
+     *
+     * @param h        Handler to assign to the returned Message object's <em>target</em> member.
      * @param callback Runnable that will execute when the message is handled.
      * @return A Message object from the global pool.
      */
@@ -186,8 +193,9 @@ public final class Message implements Parcelable {
     /**
      * Same as {@link #obtain()}, but sets the values for both <em>target</em> and
      * <em>what</em> members on the Message.
-     * @param h  Value to assign to the <em>target</em> member.
-     * @param what  Value to assign to the <em>what</em> member.
+     *
+     * @param h    Value to assign to the <em>target</em> member.
+     * @param what Value to assign to the <em>what</em> member.
      * @return A Message object from the global pool.
      */
     public static Message obtain(Handler h, int what) {
@@ -201,10 +209,11 @@ public final class Message implements Parcelable {
     /**
      * Same as {@link #obtain()}, but sets the values of the <em>target</em>, <em>what</em>, and <em>obj</em>
      * members.
-     * @param h  The <em>target</em> value to set.
-     * @param what  The <em>what</em> value to set.
+     *
+     * @param h    The <em>target</em> value to set.
+     * @param what The <em>what</em> value to set.
      * @param obj  The <em>object</em> method to set.
-     * @return  A Message object from the global pool.
+     * @return A Message object from the global pool.
      */
     public static Message obtain(Handler h, int what, Object obj) {
         Message m = obtain();
@@ -216,14 +225,14 @@ public final class Message implements Parcelable {
     }
 
     /**
-     * Same as {@link #obtain()}, but sets the values of the <em>target</em>, <em>what</em>, 
+     * Same as {@link #obtain()}, but sets the values of the <em>target</em>, <em>what</em>,
      * <em>arg1</em>, and <em>arg2</em> members.
-     * 
-     * @param h  The <em>target</em> value to set.
-     * @param what  The <em>what</em> value to set.
-     * @param arg1  The <em>arg1</em> value to set.
-     * @param arg2  The <em>arg2</em> value to set.
-     * @return  A Message object from the global pool.
+     *
+     * @param h    The <em>target</em> value to set.
+     * @param what The <em>what</em> value to set.
+     * @param arg1 The <em>arg1</em> value to set.
+     * @param arg2 The <em>arg2</em> value to set.
+     * @return A Message object from the global pool.
      */
     public static Message obtain(Handler h, int what, int arg1, int arg2) {
         Message m = obtain();
@@ -236,18 +245,18 @@ public final class Message implements Parcelable {
     }
 
     /**
-     * Same as {@link #obtain()}, but sets the values of the <em>target</em>, <em>what</em>, 
+     * Same as {@link #obtain()}, but sets the values of the <em>target</em>, <em>what</em>,
      * <em>arg1</em>, <em>arg2</em>, and <em>obj</em> members.
-     * 
-     * @param h  The <em>target</em> value to set.
-     * @param what  The <em>what</em> value to set.
-     * @param arg1  The <em>arg1</em> value to set.
-     * @param arg2  The <em>arg2</em> value to set.
+     *
+     * @param h    The <em>target</em> value to set.
+     * @param what The <em>what</em> value to set.
+     * @param arg1 The <em>arg1</em> value to set.
+     * @param arg2 The <em>arg2</em> value to set.
      * @param obj  The <em>obj</em> value to set.
-     * @return  A Message object from the global pool.
+     * @return A Message object from the global pool.
      */
-    public static Message obtain(Handler h, int what, 
-            int arg1, int arg2, Object obj) {
+    public static Message obtain(Handler h, int what,
+                                 int arg1, int arg2, Object obj) {
         Message m = obtain();
         m.target = h;
         m.what = what;
@@ -258,7 +267,9 @@ public final class Message implements Parcelable {
         return m;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static void updateCheckRecycle(int targetSdkVersion) {
         if (targetSdkVersion < Build.VERSION_CODES.LOLLIPOP) {
             gCheckRecycle = false;
@@ -339,7 +350,7 @@ public final class Message implements Parcelable {
     public long getWhen() {
         return when;
     }
-    
+
     public void setTarget(Handler target) {
         this.target = target;
     }
@@ -367,8 +378,8 @@ public final class Message implements Parcelable {
     public Runnable getCallback() {
         return callback;
     }
-    
-    /** 
+
+    /**
      * Obtains a Bundle of arbitrary data associated with this
      * event, lazily creating it if necessary. Set this value by calling
      * {@link #setData(Bundle)}.  Note that when transferring data across
@@ -376,6 +387,7 @@ public final class Message implements Parcelable {
      * on the Bundle via {@link Bundle#setClassLoader(ClassLoader)
      * Bundle.setClassLoader()} so that it can instantiate your objects when
      * you retrieve them.
+     *
      * @see #peekData()
      * @see #setData(Bundle)
      */
@@ -383,14 +395,15 @@ public final class Message implements Parcelable {
         if (data == null) {
             data = new Bundle();
         }
-        
+
         return data;
     }
 
-    /** 
+    /**
      * Like getData(), but does not lazily create the Bundle.  A null
      * is returned if the Bundle does not already exist.  See
      * {@link #getData} for further information on this.
+     *
      * @see #getData()
      * @see #setData(Bundle)
      */
@@ -401,7 +414,8 @@ public final class Message implements Parcelable {
     /**
      * Sets a Bundle of arbitrary data values. Use arg1 and arg2 members
      * as a lower cost way to send a few simple integer values, if you can.
-     * @see #getData() 
+     *
+     * @see #getData()
      * @see #peekData()
      */
     public void setData(Bundle data) {
@@ -418,18 +432,16 @@ public final class Message implements Parcelable {
 
     /**
      * Returns true if the message is asynchronous.
-     *
+     * <p>
      * Asynchronous messages represent interrupts or events that do not require global ordering
      * with represent to synchronous messages.  Asynchronous messages are not subject to
      * the synchronization barriers introduced by {@link MessageQueue#enqueueSyncBarrier(long)}.
      *
      * @return True if the message is asynchronous.
-     *
+     * @hide
      * @see #setAsynchronous(boolean)
      * @see MessageQueue#enqueueSyncBarrier(long)
      * @see MessageQueue#removeSyncBarrier(int)
-     *
-     * @hide
      */
     public boolean isAsynchronous() {
         return (flags & FLAG_ASYNCHRONOUS) != 0;
@@ -437,18 +449,16 @@ public final class Message implements Parcelable {
 
     /**
      * Sets whether the message is asynchronous.
-     *
+     * <p>
      * Asynchronous messages represent interrupts or events that do not require global ordering
      * with represent to synchronous messages.  Asynchronous messages are not subject to
      * the synchronization barriers introduced by {@link MessageQueue#enqueueSyncBarrier(long)}.
      *
      * @param async True if the message is asynchronous.
-     *
+     * @hide
      * @see #isAsynchronous()
      * @see MessageQueue#enqueueSyncBarrier(long)
      * @see MessageQueue#removeSyncBarrier(int)
-     *
-     * @hide
      */
     public void setAsynchronous(boolean async) {
         if (async) {
@@ -466,8 +476,9 @@ public final class Message implements Parcelable {
         flags |= FLAG_IN_USE;
     }
 
-    /** Constructor (but the preferred way to get a Message is to call {@link #obtain() Message.obtain()}).
-    */
+    /**
+     * Constructor (but the preferred way to get a Message is to call {@link #obtain() Message.obtain()}).
+     */
     public Message() {
     }
 
@@ -523,12 +534,12 @@ public final class Message implements Parcelable {
             msg.readFromParcel(source);
             return msg;
         }
-        
+
         public Message[] newArray(int size) {
             return new Message[size];
         }
     };
-        
+
     public int describeContents() {
         return 0;
     }
@@ -536,19 +547,19 @@ public final class Message implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         if (callback != null) {
             throw new RuntimeException(
-                "Can't marshal callbacks across processes.");
+                    "Can't marshal callbacks across processes.");
         }
         dest.writeInt(what);
         dest.writeInt(arg1);
         dest.writeInt(arg2);
         if (obj != null) {
             try {
-                Parcelable p = (Parcelable)obj;
+                Parcelable p = (Parcelable) obj;
                 dest.writeInt(1);
                 dest.writeParcelable(p, flags);
             } catch (ClassCastException e) {
                 throw new RuntimeException(
-                    "Can't marshal non-Parcelable objects across processes.");
+                        "Can't marshal non-Parcelable objects across processes.");
             }
         } else {
             dest.writeInt(0);

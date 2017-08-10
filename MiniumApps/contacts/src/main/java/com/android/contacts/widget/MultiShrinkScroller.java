@@ -1,9 +1,5 @@
 package com.android.contacts.widget;
 
-import com.android.contacts.quickcontact.ExpandingEntryCardView;
-import com.android.contacts.test.NeededForReflection;
-import com.android.contacts.util.SchedulingUtils;
-
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorListenerAdapter;
@@ -27,8 +23,8 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
@@ -36,9 +32,13 @@ import android.view.animation.PathInterpolator;
 import android.widget.EdgeEffect;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Scroller;
 import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.TextView;
+
+import com.android.contacts.quickcontact.ExpandingEntryCardView;
+import com.android.contacts.test.NeededForReflection;
+import com.android.contacts.util.SchedulingUtils;
 
 import minium.co.contacts.R;
 import minium.co.contacts.app.ContactsApp;
@@ -47,15 +47,15 @@ import minium.co.contacts.app.ContactsApp;
  * A custom {@link ViewGroup} that operates similarly to a {@link ScrollView}, except with multiple
  * subviews. These subviews are scrolled or shrinked one at a time, until each reaches their
  * minimum or maximum value.
- *
+ * <p>
  * MultiShrinkScroller is designed for a specific problem. As such, this class is designed to be
  * used with a specific layout file: quickcontact_activity.xml. MultiShrinkScroller expects subviews
  * with specific ID values.
- *
+ * <p>
  * MultiShrinkScroller's code is heavily influenced by ScrollView. Nonetheless, several ScrollView
  * features are missing. For example: handling of KEYCODES, OverScroll bounce and saving
  * scroll state in savedInstanceState bundles.
- *
+ * <p>
  * Before copying this approach to nested scrolling, consider whether something simpler & less
  * customized will work for you. For example, see the re-usable StickyHeaderListView used by
  * WifiSetupActivity (very nice). Alternatively, check out Google+'s cover photo scrolling or
@@ -90,7 +90,7 @@ public class MultiShrinkScroller extends FrameLayout {
      */
     private static final float MAXIMUM_FLING_VELOCITY = 2000;
 
-    private float[] mLastEventPosition = { 0, 0 };
+    private float[] mLastEventPosition = {0, 0};
     private VelocityTracker mVelocityTracker;
     private boolean mIsBeingDragged = false;
     private boolean mReceivedDown = false;
@@ -104,7 +104,9 @@ public class MultiShrinkScroller extends FrameLayout {
     private MultiShrinkScrollerListener mListener;
     private TextView mLargeTextView;
     private View mPhotoTouchInterceptOverlay;
-    /** Contains desired location/size of the title, once the header is fully compressed */
+    /**
+     * Contains desired location/size of the title, once the header is fully compressed
+     */
     private TextView mInvisiblePlaceholderTextView;
     private View mTitleGradientView;
     private View mActionBarGradientView;
@@ -172,7 +174,7 @@ public class MultiShrinkScroller extends FrameLayout {
     private final PathInterpolator mWhiteBlendingPathInterpolator
             = new PathInterpolator(1.0f, 0.4f, 0.9f, 0.8f);
 
-    private final int[] mGradientColors = new int[] {0,0xAA000000};
+    private final int[] mGradientColors = new int[]{0, 0xAA000000};
     private GradientDrawable mTitleGradientDrawable = new GradientDrawable(
             GradientDrawable.Orientation.TOP_BOTTOM, mGradientColors);
     private GradientDrawable mActionBarGradientDrawable = new GradientDrawable(
@@ -241,7 +243,7 @@ public class MultiShrinkScroller extends FrameLayout {
         mScroller = new Scroller(context, sInterpolator);
         mTouchSlop = configuration.getScaledTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
-        mMaximumVelocity = (int)TypedValue.applyDimension(
+        mMaximumVelocity = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, MAXIMUM_FLING_VELOCITY,
                 getResources().getDisplayMetrics());
         mTransparentStartHeight = (int) getResources().getDimension(
@@ -625,8 +627,8 @@ public class MultiShrinkScroller extends FrameLayout {
 
     /**
      * @param scrollToCurrentPosition if true, will scroll from the bottom of the screen to the
-     * current position. Otherwise, will scroll from the bottom of the screen to the top of the
-     * screen.
+     *                                current position. Otherwise, will scroll from the bottom of the screen to the top of the
+     *                                screen.
      */
     public void scrollUpForEntranceAnimation(boolean scrollToCurrentPosition) {
         final int currentPosition = getScroll();
@@ -665,7 +667,7 @@ public class MultiShrinkScroller extends FrameLayout {
         mHasEverTouchedTheTop |= isFullscreen;
         if (mListener != null) {
             if (wasFullscreen && !isFullscreen) {
-                 mListener.onExitFullscreen();
+                mListener.onExitFullscreen();
             } else if (!wasFullscreen && isFullscreen) {
                 mListener.onEnterFullscreen();
             }
@@ -738,11 +740,11 @@ public class MultiShrinkScroller extends FrameLayout {
      * A variant of {@link #getScroll} that pretends the header is never larger than
      * than mIntermediateHeaderHeight. This function is sometimes needed when making scrolling
      * decisions that will not change the header size (ie, snapping to the bottom or top).
-     *
+     * <p>
      * When mIsOpenContactSquare is true, this function considers mIntermediateHeaderHeight ==
      * mMaximumHeaderHeight, since snapping decisions will be made relative the full header
      * size when mIsOpenContactSquare = true.
-     *
+     * <p>
      * This value should never be used in conjunction with {@link #getScroll} values.
      */
     private int getScroll_ignoreOversizedHeaderForSnapping() {
@@ -961,8 +963,8 @@ public class MultiShrinkScroller extends FrameLayout {
             return;
         }
 
-        final float ratio = (toolbarHeight  - mMinimumHeaderHeight)
-                / (float)(mMaximumHeaderHeight - mMinimumHeaderHeight);
+        final float ratio = (toolbarHeight - mMinimumHeaderHeight)
+                / (float) (mMaximumHeaderHeight - mMinimumHeaderHeight);
         final float minimumSize = mInvisiblePlaceholderTextView.getHeight();
         float bezierOutput = mTextSizePathInterpolator.getInterpolation(ratio);
         float scale = (minimumSize + (mMaximumHeaderTextSize - minimumSize) * bezierOutput)
@@ -1020,8 +1022,8 @@ public class MultiShrinkScroller extends FrameLayout {
         titleLayoutParams.setMarginStart((int) (mCollapsedTitleStartMargin * (1 - x)
                 + mMaximumTitleMargin * x) + startColumnWidth);
         // How offset the title should be from the bottom of the toolbar
-        final int pretendBottomMargin =  (int) (mCollapsedTitleBottomMargin * (1 - x)
-                + mMaximumTitleMargin * x) ;
+        final int pretendBottomMargin = (int) (mCollapsedTitleBottomMargin * (1 - x)
+                + mMaximumTitleMargin * x);
         // Calculate how offset the title should be from the top of the screen. Instead of
         // calling mLargeTextView.getHeight() use the mMaximumHeaderTextSize for this calculation.
         // The getHeight() value acts unexpectedly when mLargeTextView is partially clipped by
@@ -1094,7 +1096,7 @@ public class MultiShrinkScroller extends FrameLayout {
             final float DESIRED_INTERMEDIATE_ALPHA = 0.9f;
             final float TILE_EXPONENT = 1.5f;
             final float slowingFactor = (float) ((1 - intermediateRatio) / intermediateRatio
-                    / (1 - Math.pow(1 - DESIRED_INTERMEDIATE_ALPHA, 1/TILE_EXPONENT)));
+                    / (1 - Math.pow(1 - DESIRED_INTERMEDIATE_ALPHA, 1 / TILE_EXPONENT)));
             float linearBeforeMiddleish = Math.max(1 - (1 - ratio) / intermediateRatio
                     / slowingFactor, 0);
             colorAlpha = 1 - (float) Math.pow(linearBeforeMiddleish, TILE_EXPONENT);
@@ -1137,7 +1139,7 @@ public class MultiShrinkScroller extends FrameLayout {
 
     /**
      * Simulates multiply blending an image with a single {@param color}.
-     *
+     * <p>
      * Multiply blending is [Sa * Da, Sc * Dc]. See {@link android.graphics.PorterDuff}.
      */
     private ColorMatrix multiplyBlendMatrix(int color, float alpha) {
@@ -1186,7 +1188,7 @@ public class MultiShrinkScroller extends FrameLayout {
     /**
      * Interpolator that enforces a specific starting velocity. This is useful to avoid a
      * discontinuity between dragging speed and flinging speed.
-     *
+     * <p>
      * Similar to a {@link android.view.animation.AccelerateInterpolator} in the sense that
      * getInterpolation() is a quadratic function.
      */
@@ -1198,7 +1200,7 @@ public class MultiShrinkScroller extends FrameLayout {
         private final float mNumberFrames;
 
         public AcceleratingFlingInterpolator(int durationMs, float startingSpeedPixelsPerSecond,
-                int pixelsDelta) {
+                                             int pixelsDelta) {
             mStartingSpeedPixelsPerFrame = startingSpeedPixelsPerSecond / getRefreshRate();
             mDurationMs = durationMs;
             mPixelsDelta = pixelsDelta;
@@ -1227,7 +1229,7 @@ public class MultiShrinkScroller extends FrameLayout {
         }
 
         public long getFrameIntervalMs() {
-            return (long)(1000 / getRefreshRate());
+            return (long) (1000 / getRefreshRate());
         }
     }
 

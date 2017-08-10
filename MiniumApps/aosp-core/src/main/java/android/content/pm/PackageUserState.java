@@ -16,12 +16,13 @@
 
 package android.content.pm;
 
-import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
-
 import java.util.HashSet;
+
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
 
 /**
  * Per-user state information about a package.
+ *
  * @hide
  */
 public class PackageUserState {

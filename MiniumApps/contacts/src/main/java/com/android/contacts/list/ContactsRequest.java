@@ -20,65 +20,100 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 /**
  * Parsed form of the intent sent to the Contacts application.
  */
 public class ContactsRequest implements Parcelable {
 
-    /** Default mode: browse contacts */
+    /**
+     * Default mode: browse contacts
+     */
     public static final int ACTION_DEFAULT = 10;
 
-    /** Show all contacts */
+    /**
+     * Show all contacts
+     */
     public static final int ACTION_ALL_CONTACTS = 15;
 
-    /** Show all contacts with phone numbers */
+    /**
+     * Show all contacts with phone numbers
+     */
     public static final int ACTION_CONTACTS_WITH_PHONES = 17;
 
-    /** Show contents of a specific group */
+    /**
+     * Show contents of a specific group
+     */
     public static final int ACTION_GROUP = 20;
 
-    /** Show all starred contacts */
+    /**
+     * Show all starred contacts
+     */
     public static final int ACTION_STARRED = 30;
 
-    /** Show frequently contacted contacts */
+    /**
+     * Show frequently contacted contacts
+     */
     public static final int ACTION_FREQUENT = 40;
 
-    /** Show starred and the frequent */
+    /**
+     * Show starred and the frequent
+     */
     public static final int ACTION_STREQUENT = 50;
 
-    /** Show all contacts and pick them when clicking */
+    /**
+     * Show all contacts and pick them when clicking
+     */
     public static final int ACTION_PICK_CONTACT = 60;
 
-    /** Show all contacts as well as the option to create a new one */
+    /**
+     * Show all contacts as well as the option to create a new one
+     */
     public static final int ACTION_PICK_OR_CREATE_CONTACT = 70;
 
-    /** Show all contacts and pick them for edit when clicking, and allow creating a new contact */
+    /**
+     * Show all contacts and pick them for edit when clicking, and allow creating a new contact
+     */
     public static final int ACTION_INSERT_OR_EDIT_CONTACT = 80;
 
-    /** Show all phone numbers and pick them when clicking */
+    /**
+     * Show all phone numbers and pick them when clicking
+     */
     public static final int ACTION_PICK_PHONE = 90;
 
-    /** Show all postal addresses and pick them when clicking */
+    /**
+     * Show all postal addresses and pick them when clicking
+     */
     public static final int ACTION_PICK_POSTAL = 100;
 
-    /** Show all postal addresses and pick them when clicking */
+    /**
+     * Show all postal addresses and pick them when clicking
+     */
     public static final int ACTION_PICK_EMAIL = 105;
 
-    /** Show all contacts and create a shortcut for the picked contact */
+    /**
+     * Show all contacts and create a shortcut for the picked contact
+     */
     public static final int ACTION_CREATE_SHORTCUT_CONTACT = 110;
 
-    /** Show all phone numbers and create a call shortcut for the picked number */
+    /**
+     * Show all phone numbers and create a call shortcut for the picked number
+     */
     public static final int ACTION_CREATE_SHORTCUT_CALL = 120;
 
-    /** Show all phone numbers and create an SMS shortcut for the picked number */
+    /**
+     * Show all phone numbers and create an SMS shortcut for the picked number
+     */
     public static final int ACTION_CREATE_SHORTCUT_SMS = 130;
 
-    /** Show all contacts and activate the specified one */
+    /**
+     * Show all contacts and activate the specified one
+     */
     public static final int ACTION_VIEW_CONTACT = 140;
 
-    /** Show contacts recommended for joining with a specified target contact */
+    /**
+     * Show contacts recommended for joining with a specified target contact
+     */
     public static final int ACTION_PICK_JOIN = 150;
 
     private boolean mValid = true;
@@ -139,7 +174,7 @@ public class ContactsRequest implements Parcelable {
             request.mSearchMode = source.readInt() != 0;
             request.mQueryString = source.readString();
             request.mIncludeProfile = source.readInt() != 0;
-            request.mLegacyCompatibilityMode  = source.readInt() != 0;
+            request.mLegacyCompatibilityMode = source.readInt() != 0;
             request.mDirectorySearchEnabled = source.readInt() != 0;
             request.mContactUri = source.readParcelable(classLoader);
             return request;

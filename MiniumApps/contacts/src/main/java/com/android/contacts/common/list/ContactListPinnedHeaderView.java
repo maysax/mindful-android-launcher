@@ -23,7 +23,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 

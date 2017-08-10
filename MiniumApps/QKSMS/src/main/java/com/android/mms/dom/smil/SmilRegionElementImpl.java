@@ -152,7 +152,7 @@ public class SmilRegionElementImpl extends SmilElementImpl implements
             final int height = parseRegionLength(getAttribute(HEIGHT_ATTRIBUTE_NAME), false);
             return height == 0 ?
                     ((SMILDocument) getOwnerDocument()).getLayout().getRootLayout().getHeight() :
-                        height;
+                    height;
         } catch (NumberFormatException _) {
             if (LOCAL_LOGV) Log.v(TAG, "Height attribute is not set or incorrect.");
         }
@@ -179,7 +179,7 @@ public class SmilRegionElementImpl extends SmilElementImpl implements
             final int width = parseRegionLength(getAttribute(WIDTH_ATTRIBUTE_NAME), true);
             return width == 0 ?
                     ((SMILDocument) getOwnerDocument()).getLayout().getRootLayout().getWidth() :
-                        width;
+                    width;
         } catch (NumberFormatException _) {
             if (LOCAL_LOGV) Log.v(TAG, "Width attribute is not set or incorrect.");
         }
@@ -236,7 +236,7 @@ public class SmilRegionElementImpl extends SmilElementImpl implements
             length = length.substring(0, length.indexOf("px"));
             return Integer.parseInt(length);
         } else if (length.endsWith("%")) {
-            double value = 0.01*Integer.parseInt(length.substring(0, length.length() - 1));
+            double value = 0.01 * Integer.parseInt(length.substring(0, length.length() - 1));
             if (horizontal) {
                 value *= ((SMILDocument) getOwnerDocument()).getLayout().getRootLayout().getWidth();
             } else {

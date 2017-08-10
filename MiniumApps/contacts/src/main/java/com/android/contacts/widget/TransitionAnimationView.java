@@ -67,10 +67,10 @@ public class TransitionAnimationView extends FrameLayout {
      * either fade in or out of view.
      *
      * @param showMask If true, the mask the mask will be set to be invisible then fade into hide
-     * the other views in this container. If false, the the mask will be set to be hide other
-     * views initially.  Then, the other views in this container will be revealed.
+     *                 the other views in this container. If false, the the mask will be set to be hide other
+     *                 views initially.  Then, the other views in this container will be revealed.
      * @param duration The duration the animation should last for. If -1, the system default(300)
-     * is used.
+     *                 is used.
      */
     public void startMaskTransition(boolean showMask, int duration) {
         // Stop any animation that may still be running.

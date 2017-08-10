@@ -33,6 +33,7 @@ import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.ThemeUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher2.R;
@@ -41,7 +42,6 @@ import minium.co.launcher2.notificationscheduler.NotificationScheduleReceiver_;
 import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.ui.widget.VerticalProgressBar;
 import minium.co.launcher2.utils.AudioUtils;
-import minium.co.core.util.ServiceUtils;
 
 @Fullscreen
 @EActivity(R.layout.activity_flow)
@@ -156,7 +156,9 @@ public class FlowActivity extends CoreActivity {
         UIUtils.toastShort(this, "Press Volume-Up key to increase by 15 min");
     }
 
-    /** @return True if {@link SiempoNotificationService} is enabled. */
+    /**
+     * @return True if {@link SiempoNotificationService} is enabled.
+     */
     public static boolean isEnabled(Context mContext) {
         return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationService_.class);
     }
@@ -178,10 +180,12 @@ public class FlowActivity extends CoreActivity {
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {}
+            public void onAnimationCancel(Animator animation) {
+            }
 
             @Override
-            public void onAnimationRepeat(Animator animation) {}
+            public void onAnimationRepeat(Animator animation) {
+            }
         });
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.start();
@@ -223,8 +227,7 @@ public class FlowActivity extends CoreActivity {
                 }
             });
             return true;
-        }
-        else
+        } else
             return super.onKeyUp(keyCode, keyEvent);
     }
 
@@ -236,8 +239,7 @@ public class FlowActivity extends CoreActivity {
 //                onVolumeUpKeyPressed();
 //                return true;
 //            }
-            case KeyEvent.KEYCODE_BACK:
-            {
+            case KeyEvent.KEYCODE_BACK: {
                 return onBackKeyPressed(keyCode, keyEvent);
             }
         }

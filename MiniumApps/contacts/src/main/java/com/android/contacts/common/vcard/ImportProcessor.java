@@ -65,7 +65,7 @@ public class ImportProcessor extends ProcessorBase implements VCardEntryHandler 
     private int mTotalCount = 0;
 
     public ImportProcessor(final VCardService service, final VCardImportExportListener listener,
-            final ImportRequest request, final int jobId) {
+                           final ImportRequest request, final int jobId) {
         mService = service;
         mResolver = mService.getContentResolver();
         mListener = listener;
@@ -132,12 +132,12 @@ public class ImportProcessor extends ProcessorBase implements VCardEntryHandler 
              * Note: this code assumes that a given Uri is able to be opened more than once,
              * which may not be true in certain conditions.
              */
-            possibleVCardVersions = new int[] {
+            possibleVCardVersions = new int[]{
                     ImportVCardActivity.VCARD_VERSION_V21,
                     ImportVCardActivity.VCARD_VERSION_V30
             };
         } else {
-            possibleVCardVersions = new int[] {
+            possibleVCardVersions = new int[]{
                     request.vcardVersion
             };
         }
@@ -161,7 +161,7 @@ public class ImportProcessor extends ProcessorBase implements VCardEntryHandler 
             if (uri != null) {
                 Log.i(LOG_TAG, "start importing one vCard (Uri: " + uri + ")");
                 is = mResolver.openInputStream(uri);
-            } else if (request.data != null){
+            } else if (request.data != null) {
                 Log.i(LOG_TAG, "start importing one vCard (byte[])");
                 is = new ByteArrayInputStream(request.data);
             }
@@ -201,7 +201,7 @@ public class ImportProcessor extends ProcessorBase implements VCardEntryHandler 
                         // Not critical, but suspicious.
                         Log.w(LOG_TAG,
                                 "Created Uris is null or 0 length " +
-                                "though the creation itself is successful.");
+                                        "though the creation itself is successful.");
                         mListener.onImportFinished(mImportRequest, mJobId, null);
                     }
                 }
@@ -213,8 +213,8 @@ public class ImportProcessor extends ProcessorBase implements VCardEntryHandler 
     }
 
     private boolean readOneVCard(InputStream is, int vcardType, String charset,
-            final VCardInterpreter interpreter,
-            final int[] possibleVCardVersions) {
+                                 final VCardInterpreter interpreter,
+                                 final int[] possibleVCardVersions) {
         boolean successful = false;
         final int length = possibleVCardVersions.length;
         for (int i = 0; i < length; i++) {
@@ -232,7 +232,7 @@ public class ImportProcessor extends ProcessorBase implements VCardEntryHandler 
                 synchronized (this) {
                     mVCardParser = (vcardVersion == ImportVCardActivity.VCARD_VERSION_V30 ?
                             new VCardParser_V30(vcardType) :
-                                new VCardParser_V21(vcardType));
+                            new VCardParser_V21(vcardType));
                     if (isCancelled()) {
                         Log.i(LOG_TAG, "ImportProcessor already recieves cancel request, so " +
                                 "send cancel request to vCard parser too.");

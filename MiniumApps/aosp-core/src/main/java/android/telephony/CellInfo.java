@@ -25,26 +25,44 @@ import android.os.Parcelable;
 public abstract class CellInfo implements Parcelable {
 
     // Type fields for parceling
-    /** @hide */
+    /**
+     * @hide
+     */
     protected static final int TYPE_GSM = 1;
-    /** @hide */
+    /**
+     * @hide
+     */
     protected static final int TYPE_CDMA = 2;
-    /** @hide */
+    /**
+     * @hide
+     */
     protected static final int TYPE_LTE = 3;
-    /** @hide */
+    /**
+     * @hide
+     */
     protected static final int TYPE_WCDMA = 4;
 
     // Type to distinguish where time stamp gets recorded.
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int TIMESTAMP_TYPE_UNKNOWN = 0;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int TIMESTAMP_TYPE_ANTENNA = 1;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int TIMESTAMP_TYPE_MODEM = 2;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int TIMESTAMP_TYPE_OEM_RIL = 3;
-    /** @hide */
+    /**
+     * @hide
+     */
     public static final int TIMESTAMP_TYPE_JAVA_RIL = 4;
 
     // True if device is mRegistered to the mobile network
@@ -57,48 +75,65 @@ public abstract class CellInfo implements Parcelable {
     // Value of TIMESTAMP_TYPE_XXXX
     private int mTimeStampType;
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected CellInfo() {
         this.mRegistered = false;
         this.mTimeStampType = TIMESTAMP_TYPE_UNKNOWN;
         this.mTimeStamp = Long.MAX_VALUE;
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     protected CellInfo(CellInfo ci) {
         this.mRegistered = ci.mRegistered;
         this.mTimeStampType = ci.mTimeStampType;
         this.mTimeStamp = ci.mTimeStamp;
     }
 
-    /** True if this cell is registered to the mobile network */
+    /**
+     * True if this cell is registered to the mobile network
+     */
     public boolean isRegistered() {
         return mRegistered;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setRegistered(boolean registered) {
         mRegistered = registered;
     }
 
-    /** Approximate time of this cell information in nanos since boot */
+    /**
+     * Approximate time of this cell information in nanos since boot
+     */
     public long getTimeStamp() {
         return mTimeStamp;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setTimeStamp(long timeStamp) {
         mTimeStamp = timeStamp;
     }
 
     /**
      * Where time stamp gets recorded.
-     * @return one of TIMESTAMP_TYPE_XXXX
      *
+     * @return one of TIMESTAMP_TYPE_XXXX
      * @hide
      */
     public int getTimeStampType() {
         return mTimeStampType;
     }
-    /** @hide */
+
+    /**
+     * @hide
+     */
     public void setTimeStampType(int timeStampType) {
         if (timeStampType < TIMESTAMP_TYPE_UNKNOWN || timeStampType > TIMESTAMP_TYPE_JAVA_RIL) {
             mTimeStampType = TIMESTAMP_TYPE_UNKNOWN;
@@ -110,7 +145,7 @@ public abstract class CellInfo implements Parcelable {
     @Override
     public int hashCode() {
         int primeNum = 31;
-        return ((mRegistered ? 0 : 1) * primeNum) + ((int)(mTimeStamp / 1000) * primeNum)
+        return ((mRegistered ? 0 : 1) * primeNum) + ((int) (mTimeStamp / 1000) * primeNum)
                 + (mTimeStampType * primeNum);
     }
 
@@ -167,7 +202,9 @@ public abstract class CellInfo implements Parcelable {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     @Override
     public abstract void writeToParcel(Parcel dest, int flags);
 
@@ -194,18 +231,25 @@ public abstract class CellInfo implements Parcelable {
         mTimeStamp = in.readLong();
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static final Creator<CellInfo> CREATOR = new Creator<CellInfo>() {
         @Override
         public CellInfo createFromParcel(Parcel in) {
-                int type = in.readInt();
-                switch (type) {
-                    case TYPE_GSM: return CellInfoGsm.createFromParcelBody(in);
-                    case TYPE_CDMA: return CellInfoCdma.createFromParcelBody(in);
-                    case TYPE_LTE: return CellInfoLte.createFromParcelBody(in);
-                    case TYPE_WCDMA: return CellInfoWcdma.createFromParcelBody(in);
-                    default: throw new RuntimeException("Bad CellInfo Parcel");
-                }
+            int type = in.readInt();
+            switch (type) {
+                case TYPE_GSM:
+                    return CellInfoGsm.createFromParcelBody(in);
+                case TYPE_CDMA:
+                    return CellInfoCdma.createFromParcelBody(in);
+                case TYPE_LTE:
+                    return CellInfoLte.createFromParcelBody(in);
+                case TYPE_WCDMA:
+                    return CellInfoWcdma.createFromParcelBody(in);
+                default:
+                    throw new RuntimeException("Bad CellInfo Parcel");
+            }
         }
 
         @Override

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /*
 * Copyright (C) 2011 - 2015 by Ngewi Fet <ngewif@gmail.com>
 *
@@ -23,68 +22,38 @@
 */
 -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    style="@style/ListItem"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="horizontal"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:gravity="center_vertical" style="@style/ListItem"
     tools:background="@color/material.core.red">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/icon"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginRight="@dimen/margin.4"
-        android:src="@drawable/ic_person_black_24dp"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@color/black"/>
+    <de.hdodenhof.circleimageview.CircleImageView android:id="@+id/icon" android:layout_width="30dp"
+        android:layout_height="30dp" android:layout_marginRight="@dimen/margin.4"
+        android:src="@drawable/ic_person_black_24dp" app:civ_border_width="2dp"
+        app:civ_border_color="@color/black" />
 
-    <TextView
-        android:id="@+id/displayName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/icon"
-        android:layout_alignBaseline="@id/icon"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textColor="@color/text.primary"
-        android:textSize="@dimen/text.size.regular"
-        tools:text="John Doe"
-        />
+    <TextView android:id="@+id/displayName" android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_toRightOf="@id/icon"
+        android:layout_alignBaseline="@id/icon" android:singleLine="true" android:ellipsize="end"
+        android:textColor="@color/text.primary" android:textSize="@dimen/text.size.regular"
+        tools:text="John Doe" />
 
-    <TextView
-        android:id="@+id/phoneLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/displayName"
-        android:layout_alignLeft="@id/displayName"
-        android:textSize="@dimen/text.size.small"
-        android:textColor="@color/text.secondary"
-        tools:text="Mobile"/>
+    <TextView android:id="@+id/phoneLabel" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_below="@id/displayName"
+        android:layout_alignLeft="@id/displayName" android:textSize="@dimen/text.size.small"
+        android:textColor="@color/text.secondary" tools:text="Mobile" />
 
-    <TextView android:id="@+id/labelSeparator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/phoneLabel"
-        android:layout_marginEnd="5dp"
-        android:layout_alignBaseline="@id/phoneLabel"
-        android:textSize="@dimen/text.size.small"
-        android:textColor="@color/text.secondary"
-        android:text=":"/>
+    <TextView android:id="@+id/labelSeparator" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_toRightOf="@id/phoneLabel"
+        android:layout_marginEnd="5dp" android:layout_alignBaseline="@id/phoneLabel"
+        android:textSize="@dimen/text.size.small" android:textColor="@color/text.secondary"
+        android:text=":" />
 
-    <TextView
-        android:id="@+id/phoneNumber"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/labelSeparator"
-        android:layout_alignBaseline="@id/labelSeparator"
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:textSize="@dimen/text.size.small"
-        android:textColor="@color/text.secondary"
-        tools:text="+1-555-12345"/>
+    <TextView android:id="@+id/phoneNumber" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_toRightOf="@id/labelSeparator"
+        android:layout_alignBaseline="@id/labelSeparator" android:singleLine="true"
+        android:ellipsize="end" android:textSize="@dimen/text.size.small"
+        android:textColor="@color/text.secondary" tools:text="+1-555-12345" />
 </RelativeLayout>

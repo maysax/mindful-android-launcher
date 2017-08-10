@@ -17,23 +17,22 @@
 package android.net;
 
 import android.net.LinkAddress;
-import android.os.Parcelable;
 import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * Class that describes static IP configuration.
- *
+ * <p>
  * This class is different from LinkProperties because it represents
  * configuration intent. The general contract is that if we can represent
  * a configuration here, then we should be able to configure it on a network.
  * The intent is that it closely match the UI we have for configuring networks.
- *
+ * <p>
  * In contrast, LinkProperties represents current state. It is much more
  * expressive. For example, it supports multiple IP addresses, multiple routes,
  * stacked interfaces, and so on. Because LinkProperties is so expressive,
@@ -114,7 +113,7 @@ public class StaticIpConfiguration implements Parcelable {
         StringBuffer str = new StringBuffer();
 
         str.append("IP address ");
-        if (ipAddress != null ) str.append(ipAddress).append(" ");
+        if (ipAddress != null) str.append(ipAddress).append(" ");
 
         str.append("Gateway ");
         if (gateway != null) str.append(gateway.getHostAddress()).append(" ");
@@ -153,26 +152,32 @@ public class StaticIpConfiguration implements Parcelable {
                 Objects.equals(domains, other.domains);
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public static Creator<StaticIpConfiguration> CREATOR =
-        new Creator<StaticIpConfiguration>() {
-            public StaticIpConfiguration createFromParcel(Parcel in) {
-                StaticIpConfiguration s = new StaticIpConfiguration();
-                readFromParcel(s, in);
-                return s;
-            }
+            new Creator<StaticIpConfiguration>() {
+                public StaticIpConfiguration createFromParcel(Parcel in) {
+                    StaticIpConfiguration s = new StaticIpConfiguration();
+                    readFromParcel(s, in);
+                    return s;
+                }
 
-            public StaticIpConfiguration[] newArray(int size) {
-                return new StaticIpConfiguration[size];
-            }
-        };
+                public StaticIpConfiguration[] newArray(int size) {
+                    return new StaticIpConfiguration[size];
+                }
+            };
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public int describeContents() {
         return 0;
     }
 
-    /** Implement the Parcelable interface */
+    /**
+     * Implement the Parcelable interface
+     */
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeParcelable(ipAddress, flags);
         NetworkUtils.parcelInetAddress(dest, gateway, flags);

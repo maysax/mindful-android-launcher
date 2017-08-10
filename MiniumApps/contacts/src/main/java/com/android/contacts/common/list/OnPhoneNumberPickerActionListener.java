@@ -22,7 +22,7 @@ import android.net.Uri;
 /**
  * Action callbacks that can be sent by a phone number picker.
  */
-public interface OnPhoneNumberPickerActionListener  {
+public interface OnPhoneNumberPickerActionListener {
 
     /**
      * Returns the selected phone number to the requester.

@@ -13,6 +13,7 @@ import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.CharacterSets;
 import com.google.android.mms.pdu_alt.EncodedStringValue;

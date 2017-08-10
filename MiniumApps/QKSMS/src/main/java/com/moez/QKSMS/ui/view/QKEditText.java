@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+
 import com.moez.QKSMS.common.FontManager;
 import com.moez.QKSMS.common.LiveViewManager;
 import com.moez.QKSMS.common.TypefaceManager;

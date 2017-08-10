@@ -114,7 +114,7 @@ public abstract class ContactBrowseListFragment extends
                 final ContentResolver resolver = getContext().getContentResolver();
                 final Uri uriCurrentFormat = ContactLoaderUtils.ensureIsContactUri(resolver, mUri);
                 cursor = resolver.query(uriCurrentFormat,
-                        new String[] { Contacts._ID, Contacts.LOOKUP_KEY }, null, null, null);
+                        new String[]{Contacts._ID, Contacts.LOOKUP_KEY}, null, null, null);
 
                 if (cursor != null && cursor.moveToFirst()) {
                     final long contactId = cursor.getLong(0);
@@ -265,7 +265,7 @@ public abstract class ContactBrowseListFragment extends
             onContactUriQueryFinished(mSelectedContactUri);
         } else {
             mContactLookupTask = new ContactLookupTask(mSelectedContactUri);
-            mContactLookupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[])null);
+            mContactLookupTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Void[]) null);
         }
     }
 
@@ -295,12 +295,13 @@ public abstract class ContactBrowseListFragment extends
 
     /**
      * Sets whether or not a contact selection must be made.
+     *
      * @param required if true, we need to check if the selection is present in
-     *            the list and if not notify the listener so that it can load a
-     *            different list.
-     * TODO: Figure out how to reconcile this with {@link #setSelectedContactUri},
-     * without causing unnecessary loading of the list if the selected contact URI is
-     * the same as before.
+     *                 the list and if not notify the listener so that it can load a
+     *                 different list.
+     *                 TODO: Figure out how to reconcile this with {@link #setSelectedContactUri},
+     *                 without causing unnecessary loading of the list if the selected contact URI is
+     *                 the same as before.
      */
     public void setSelectionRequired(boolean required) {
         mSelectionRequired = required;
@@ -309,20 +310,20 @@ public abstract class ContactBrowseListFragment extends
     /**
      * Sets the new contact selection.
      *
-     * @param uri the new selection
-     * @param required if true, we need to check if the selection is present in
-     *            the list and if not notify the listener so that it can load a
-     *            different list
-     * @param smoothScroll if true, the UI will roll smoothly to the new
-     *            selection
-     * @param persistent if true, the selection will be stored in shared
-     *            preferences.
+     * @param uri            the new selection
+     * @param required       if true, we need to check if the selection is present in
+     *                       the list and if not notify the listener so that it can load a
+     *                       different list
+     * @param smoothScroll   if true, the UI will roll smoothly to the new
+     *                       selection
+     * @param persistent     if true, the selection will be stored in shared
+     *                       preferences.
      * @param willReloadData if true, the selection will be remembered but not
-     *            actually shown, because we are expecting that the data will be
-     *            reloaded momentarily
+     *                       actually shown, because we are expecting that the data will be
+     *                       reloaded momentarily
      */
     private void setSelectedContactUri(Uri uri, boolean required, boolean smoothScroll,
-            boolean persistent, boolean willReloadData) {
+                                       boolean persistent, boolean willReloadData) {
         mSmoothScrollRequested = smoothScroll;
         mSelectionToScreenRequested = true;
 
@@ -560,7 +561,7 @@ public abstract class ContactBrowseListFragment extends
 
     protected void requestSelectionToScreen(int selectedPosition) {
         if (selectedPosition != -1) {
-            AutoScrollListView listView = (AutoScrollListView)getListView();
+            AutoScrollListView listView = (AutoScrollListView) getListView();
             listView.requestPositionToScreen(
                     selectedPosition + listView.getHeaderViewsCount(), mSmoothScrollRequested);
             mSelectionToScreenRequested = false;

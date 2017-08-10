@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.moez.QKSMS.R;
 import com.moez.QKSMS.common.ConversationPrefsHelper;
 import com.moez.QKSMS.common.utils.Units;

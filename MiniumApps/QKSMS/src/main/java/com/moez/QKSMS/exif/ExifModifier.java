@@ -71,7 +71,7 @@ class ExifModifier {
         try {
             is = new ByteBufferInputStream(mByteBuffer);
             int flag = 0;
-            IfdData[] ifdDatas = new IfdData[] {
+            IfdData[] ifdDatas = new IfdData[]{
                     mTagToModified.getIfdData(IfdId.TYPE_IFD_0),
                     mTagToModified.getIfdData(IfdId.TYPE_IFD_1),
                     mTagToModified.getIfdData(IfdId.TYPE_IFD_EXIF),

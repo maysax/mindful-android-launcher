@@ -30,7 +30,7 @@ import com.android.contacts.common.model.RawContactModifier;
  * different types associated with contact data items.
  *
  * @deprecated use {@link RawContactModifier#getTypePrecedence} instead, since this
- *             list isn't {@link Account} based.
+ * list isn't {@link Account} based.
  */
 @Deprecated
 public final class TypePrecedence {
@@ -38,7 +38,8 @@ public final class TypePrecedence {
     public static final String MIME_TYPE_VIDEO_CHAT = "vnd.android.cursor.item/video-chat-address";
 
     /* This utility class has cannot be instantiated.*/
-    private TypePrecedence() {}
+    private TypePrecedence() {
+    }
 
     //TODO These may need to be tweaked.
     private static final int[] TYPE_PRECEDENCE_PHONES = {
@@ -79,7 +80,7 @@ public final class TypePrecedence {
      * Returns the precedence (1 being the highest) of a type in the context of it's mimetype.
      *
      * @param mimetype The mimetype of the data with which the type is associated.
-     * @param type The integer type as defined in {@Link ContactsContract#CommonDataKinds}.
+     * @param type     The integer type as defined in {@Link ContactsContract#CommonDataKinds}.
      * @return The integer precedence, where 1 is the highest.
      */
     @Deprecated

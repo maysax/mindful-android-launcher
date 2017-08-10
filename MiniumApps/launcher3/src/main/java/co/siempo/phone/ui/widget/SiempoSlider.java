@@ -3,7 +3,6 @@ package co.siempo.phone.ui.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -152,7 +151,9 @@ public class SiempoSlider extends View {
 
     public interface OnSliderChangeListener {
         void onSliderChanged(SiempoSlider slider, int progress, boolean fromUser);
+
         void onStartSliderTouch(SiempoSlider slider);
+
         void onStopSliderTouch(SiempoSlider slider);
     }
 }

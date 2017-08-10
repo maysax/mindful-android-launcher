@@ -30,6 +30,7 @@ import android.provider.Telephony.Mms.Inbox;
 import android.provider.Telephony.Threads;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
 import com.android.mms.util.DownloadManager;
 import com.google.android.mms.MmsException;
 import com.google.android.mms.pdu_alt.GenericPdu;
@@ -54,14 +55,14 @@ import static com.google.android.mms.pdu_alt.PduHeaders.STATUS_UNRECOGNIZED;
 /**
  * The NotificationTransaction is responsible for handling multimedia
  * message notifications (M-Notification.ind).  It:
- *
+ * <p>
  * <ul>
  * <li>Composes the notification response (M-NotifyResp.ind).
  * <li>Sends the notification response to the MMSC server.
  * <li>Stores the notification indication.
  * <li>Notifies the TransactionService about succesful completion.
  * </ul>
- *
+ * <p>
  * NOTE: This MMS client handles all notifications with a <b>deferred
  * retrieval</b> response.  The transaction service, upon succesful
  * completion of this transaction, will trigger a retrieve transaction
@@ -122,8 +123,8 @@ public class NotificationTransaction extends Transaction implements Runnable {
             }
 
             mUri = PduPersister.getPduPersister(context).persist(
-                        ind, Inbox.CONTENT_URI, !allowAutoDownload(context),
-                        group, null);
+                    ind, Inbox.CONTENT_URI, !allowAutoDownload(context),
+                    group, null);
         } catch (MmsException e) {
             Log.e(TAG, "Failed to save NotificationInd in constructor.", e);
             throw new IllegalArgumentException();
@@ -143,7 +144,10 @@ public class NotificationTransaction extends Transaction implements Runnable {
     }
 
     public static boolean allowAutoDownload(Context context) {
-        try { Looper.prepare(); } catch (Exception e) { }
+        try {
+            Looper.prepare();
+        } catch (Exception e) {
+        }
         boolean autoDownload = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("pref_key_auto_download", true);
         boolean dataSuspended = (((TelephonyManager) context.getSystemService(Service.TELEPHONY_SERVICE)).getDataState() ==
                 TelephonyManager.DATA_SUSPENDED);
@@ -209,7 +213,7 @@ public class NotificationTransaction extends Transaction implements Runnable {
                     // We have successfully downloaded the new MM. Delete the
                     // M-NotifyResp.ind from Inbox.
                     SqliteWrapper.delete(mContext, mContext.getContentResolver(),
-                                         mUri, null, null);
+                            mUri, null, null);
                     Log.v(TAG, "NotificationTransaction received new mms message: " + uri);
                     // Delete obsolete threads
                     SqliteWrapper.delete(mContext, mContext.getContentResolver(),
@@ -264,7 +268,7 @@ public class NotificationTransaction extends Transaction implements Runnable {
                 status);
 
         // Pack M-NotifyResp.ind and send it
-        if(MmsConfig.getNotifyWapMMSC()) {
+        if (MmsConfig.getNotifyWapMMSC()) {
             sendPdu(new PduComposer(mContext, notifyRespInd).make(), mContentLocation);
         } else {
             sendPdu(new PduComposer(mContext, notifyRespInd).make());

@@ -27,4 +27,5 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
-public @interface NeededForTesting {}
+public @interface NeededForTesting {
+}

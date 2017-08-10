@@ -1,8 +1,8 @@
 package co.siempo.phone.db;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * Created by Shahab on 4/21/2017.
@@ -24,7 +24,7 @@ public class StatusBarNotificationStorage {
 
     @Generated(hash = 1830063501)
     public StatusBarNotificationStorage(Long id, String packageName, String title,
-            String content, Long postTime) {
+                                        String content, Long postTime) {
         this.id = id;
         this.packageName = packageName;
         this.title = title;

@@ -24,15 +24,19 @@ import android.os.RemoteException;
 
 /**
  * Callback class for receiving events related to shutdown.
- * 
+ *
  * @hide - For internal consumption only.
  */
 public interface IMountShutdownObserver extends IInterface {
-    /** Local-side IPC implementation stub class. */
+    /**
+     * Local-side IPC implementation stub class.
+     */
     public static abstract class Stub extends Binder implements IMountShutdownObserver {
         private static final java.lang.String DESCRIPTOR = "IMountShutdownObserver";
 
-        /** Construct the stub at attach it to the interface. */
+        /**
+         * Construct the stub at attach it to the interface.
+         */
         public Stub() {
             this.attachInterface(this, DESCRIPTOR);
         }
@@ -94,7 +98,7 @@ public interface IMountShutdownObserver extends IInterface {
             /**
              * This method is called when the shutdown of MountService
              * completed.
-             * 
+             *
              * @param statusCode indicates success or failure of the shutdown.
              */
             public void onShutDownComplete(int statusCode) throws RemoteException {
@@ -117,7 +121,7 @@ public interface IMountShutdownObserver extends IInterface {
 
     /**
      * This method is called when the shutdown of MountService completed.
-     * 
+     *
      * @param statusCode indicates success or failure of the shutdown.
      */
     public void onShutDownComplete(int statusCode) throws RemoteException;

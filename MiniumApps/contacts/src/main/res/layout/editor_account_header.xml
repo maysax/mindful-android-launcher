@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2011 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2011 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,59 +13,35 @@
      limitations under the License.
 -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/account_container"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
-    android:minHeight="48dip"
-    android:background="#EEEEEE"
-    android:orientation="horizontal"
-    android:paddingTop="8dip"
-    android:paddingBottom="8dip"
-    android:gravity="center_vertical"
-    android:paddingLeft="@dimen/account_container_left_padding"
-    android:paddingRight="28dip"
-    android:paddingStart="@dimen/account_container_left_padding"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/account_container" android:layout_height="wrap_content"
+    android:layout_width="match_parent" android:minHeight="48dip" android:background="#EEEEEE"
+    android:orientation="horizontal" android:paddingTop="8dip" android:paddingBottom="8dip"
+    android:gravity="center_vertical" android:paddingLeft="@dimen/account_container_left_padding"
+    android:paddingRight="28dip" android:paddingStart="@dimen/account_container_left_padding"
     android:paddingEnd="28dip">
 
-    <LinearLayout
-        android:id="@+id/account"
-        android:layout_height="wrap_content"
-        android:layout_width="0dip"
-        android:layout_weight="1"
-        android:orientation="vertical"
+    <LinearLayout android:id="@+id/account" android:layout_height="wrap_content"
+        android:layout_width="0dip" android:layout_weight="1" android:orientation="vertical"
         android:background="?android:attr/selectableItemBackground">
 
-        <TextView
-            android:id="@+id/account_type"
-            android:layout_width="match_parent"
+        <TextView android:id="@+id/account_type" android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:singleLine="true"
-            android:textColor="@color/primary_text_color"
-            android:ellipsize="end" />
+            android:textAppearance="?android:attr/textAppearanceMedium" android:singleLine="true"
+            android:textColor="@color/primary_text_color" android:ellipsize="end" />
 
-        <TextView
-             android:id="@+id/account_name"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:textAppearance="?android:attr/textAppearanceSmall"
-             android:textColor="@color/primary_text_color"
-             android:singleLine="true"
-             android:ellipsize="end" />
+        <TextView android:id="@+id/account_name" android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/primary_text_color" android:singleLine="true"
+            android:ellipsize="end" />
 
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+    <FrameLayout android:layout_width="wrap_content" android:layout_height="match_parent">
 
-        <ImageView
-             android:id="@+id/account_icon"
-             android:layout_width="32dip"
-             android:layout_height="32dip"
-             android:layout_gravity="center_vertical" />
+        <ImageView android:id="@+id/account_icon" android:layout_width="32dip"
+            android:layout_height="32dip" android:layout_gravity="center_vertical" />
 
     </FrameLayout>
 

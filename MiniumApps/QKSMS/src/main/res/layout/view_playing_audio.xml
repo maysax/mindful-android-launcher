@@ -18,26 +18,15 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/playing_audio"
-    android:layout_width="match_parent"
-    android:layout_height="82dip"
-    android:orientation="horizontal"
-    android:gravity="center"
-    android:visibility="gone">
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/playing_audio"
+    android:layout_width="match_parent" android:layout_height="82dip"
+    android:orientation="horizontal" android:gravity="center" android:visibility="gone">
 
-    <ImageView
-        android:id="@+id/audio_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_attach_audio" />
+    <ImageView android:id="@+id/audio_icon" android:layout_width="wrap_content"
+        android:layout_height="match_parent" android:src="@drawable/ic_attach_audio" />
 
-    <com.moez.QKSMS.ui.view.QKTextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:singleLine="true"
-        android:textStyle="bold"
-        app:type="primary"/>
+    <com.moez.QKSMS.ui.view.QKTextView android:id="@+id/name" android:layout_width="wrap_content"
+        android:layout_height="match_parent" android:singleLine="true" android:textStyle="bold"
+        app:type="primary" />
 
 </LinearLayout>

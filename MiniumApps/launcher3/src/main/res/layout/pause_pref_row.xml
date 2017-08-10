@@ -14,7 +14,7 @@
         android:layout_marginLeft="18dp"
         android:layout_weight="1"
         android:fontFamily="sans-serif"
-        android:textColor="#de000000"/>
+        android:textColor="#de000000" />
 
     <CheckBox
         android:layout_width="wrap_content"

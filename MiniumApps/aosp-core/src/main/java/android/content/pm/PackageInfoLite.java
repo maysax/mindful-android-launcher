@@ -22,6 +22,7 @@ import android.os.Parcelable;
 /**
  * Basic information about a package as specified in its manifest.
  * Utility class used in PackageManager methods
+ *
  * @hide
  */
 public class PackageInfoLite implements Parcelable {
@@ -60,8 +61,8 @@ public class PackageInfoLite implements Parcelable {
 
     public String toString() {
         return "PackageInfoLite{"
-            + Integer.toHexString(System.identityHashCode(this))
-            + " " + packageName + "}";
+                + Integer.toHexString(System.identityHashCode(this))
+                + " " + packageName + "}";
     }
 
     public int describeContents() {

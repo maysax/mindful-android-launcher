@@ -21,6 +21,7 @@ import java.util.Locale;
 /**
  * Describes the buildtime configuration of a network.
  * Holds settings read from resources.
+ *
  * @hide
  */
 public class NetworkConfig {

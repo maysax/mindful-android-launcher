@@ -47,11 +47,11 @@ public class MmsMessageSender implements MessageSender {
     private final long mMessageSize;
 
     // Default preference values
-    private static final boolean DEFAULT_DELIVERY_REPORT_MODE  = false;
-    private static final boolean DEFAULT_READ_REPORT_MODE      = false;
-    private static final long    DEFAULT_EXPIRY_TIME     = 7 * 24 * 60 * 60;
-    private static final int     DEFAULT_PRIORITY        = PduHeaders.PRIORITY_NORMAL;
-    private static final String  DEFAULT_MESSAGE_CLASS   = PduHeaders.MESSAGE_CLASS_PERSONAL_STR;
+    private static final boolean DEFAULT_DELIVERY_REPORT_MODE = false;
+    private static final boolean DEFAULT_READ_REPORT_MODE = false;
+    private static final long DEFAULT_EXPIRY_TIME = 7 * 24 * 60 * 60;
+    private static final int DEFAULT_PRIORITY = PduHeaders.PRIORITY_NORMAL;
+    private static final String DEFAULT_MESSAGE_CLASS = PduHeaders.MESSAGE_CLASS_PERSONAL_STR;
 
     private static final String DELIVERY_REPORT_PREFERENCE = "delivery_reports";
     private static final String READ_REPORT_PREFERENCE = "read_reports";
@@ -122,7 +122,7 @@ public class MmsMessageSender implements MessageSender {
         // Start MMS transaction service
         try {
             SendingProgressTokenManager.put(messageId, token);
-            Intent service =  new Intent(
+            Intent service = new Intent(
                     TransactionService.HANDLE_PENDING_TRANSACTIONS_ACTION, null, mContext,
                     TransactionService.class
             );
@@ -146,15 +146,15 @@ public class MmsMessageSender implements MessageSender {
 
         // Delivery report.
         boolean dr = prefs.getBoolean(DELIVERY_REPORT_PREFERENCE,
-                        DEFAULT_DELIVERY_REPORT_MODE);
-        sendReq.setDeliveryReport(dr?PduHeaders.VALUE_YES:PduHeaders.VALUE_NO);
+                DEFAULT_DELIVERY_REPORT_MODE);
+        sendReq.setDeliveryReport(dr ? PduHeaders.VALUE_YES : PduHeaders.VALUE_NO);
 
         // Read report.
         boolean rr = prefs.getBoolean(READ_REPORT_PREFERENCE,
                 // default to delivery report value if read report not available
                 prefs.getBoolean(DELIVERY_REPORT_PREFERENCE,
                         DEFAULT_READ_REPORT_MODE));
-        sendReq.setReadReport(rr?PduHeaders.VALUE_YES:PduHeaders.VALUE_NO);
+        sendReq.setReadReport(rr ? PduHeaders.VALUE_YES : PduHeaders.VALUE_NO);
     }
 
     public static void sendReadRec(Context context, String to, String messageId, int status) {

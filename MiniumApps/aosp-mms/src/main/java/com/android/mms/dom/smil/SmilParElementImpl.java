@@ -17,8 +17,6 @@
 
 package com.android.mms.dom.smil;
 
-import java.util.ArrayList;
-
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.DocumentEvent;
@@ -29,73 +27,74 @@ import org.w3c.dom.smil.SMILParElement;
 import org.w3c.dom.smil.Time;
 import org.w3c.dom.smil.TimeList;
 
+import java.util.ArrayList;
+
 public class SmilParElementImpl extends SmilElementImpl implements SMILParElement {
     public final static String SMIL_SLIDE_START_EVENT = "SmilSlideStart";
     public final static String SMIL_SLIDE_END_EVENT = "SmilSlideEnd";
 
     ElementParallelTimeContainer mParTimeContainer =
-        new ElementParallelTimeContainerImpl(this) {
-        @Override
-        public TimeList getBegin() {
+            new ElementParallelTimeContainerImpl(this) {
+                @Override
+                public TimeList getBegin() {
             /*
              * For children of a sequence, the only legal value for begin is
              * a (single) non-negative offset value.
              */
-            TimeList beginTimeList = super.getBegin();
-            if (beginTimeList.getLength() > 1) {
-                ArrayList<Time> singleTimeContainer = new ArrayList<Time>();
-                singleTimeContainer.add(beginTimeList.item(0));
-                beginTimeList = new TimeListImpl(singleTimeContainer);
-            }
-            return beginTimeList;
-        }
+                    TimeList beginTimeList = super.getBegin();
+                    if (beginTimeList.getLength() > 1) {
+                        ArrayList<Time> singleTimeContainer = new ArrayList<Time>();
+                        singleTimeContainer.add(beginTimeList.item(0));
+                        beginTimeList = new TimeListImpl(singleTimeContainer);
+                    }
+                    return beginTimeList;
+                }
 
-        public NodeList getTimeChildren() {
-            return getChildNodes();
-        }
+                public NodeList getTimeChildren() {
+                    return getChildNodes();
+                }
 
-        public boolean beginElement() {
-            DocumentEvent doc = (DocumentEvent) SmilParElementImpl.this.getOwnerDocument();
-            Event startEvent = doc.createEvent("Event");
-            startEvent.initEvent(SMIL_SLIDE_START_EVENT, false, false);
-            dispatchEvent(startEvent);
-            return true;
-        }
+                public boolean beginElement() {
+                    DocumentEvent doc = (DocumentEvent) SmilParElementImpl.this.getOwnerDocument();
+                    Event startEvent = doc.createEvent("Event");
+                    startEvent.initEvent(SMIL_SLIDE_START_EVENT, false, false);
+                    dispatchEvent(startEvent);
+                    return true;
+                }
 
-        public boolean endElement() {
-            DocumentEvent doc = (DocumentEvent) SmilParElementImpl.this.getOwnerDocument();
-            Event endEvent = doc.createEvent("Event");
-            endEvent.initEvent(SMIL_SLIDE_END_EVENT, false, false);
-            dispatchEvent(endEvent);
-            return true;
-        }
+                public boolean endElement() {
+                    DocumentEvent doc = (DocumentEvent) SmilParElementImpl.this.getOwnerDocument();
+                    Event endEvent = doc.createEvent("Event");
+                    endEvent.initEvent(SMIL_SLIDE_END_EVENT, false, false);
+                    dispatchEvent(endEvent);
+                    return true;
+                }
 
-        public void pauseElement() {
-            // TODO Auto-generated method stub
+                public void pauseElement() {
+                    // TODO Auto-generated method stub
 
-        }
+                }
 
-        public void resumeElement() {
-            // TODO Auto-generated method stub
+                public void resumeElement() {
+                    // TODO Auto-generated method stub
 
-        }
+                }
 
-        public void seekElement(float seekTo) {
-            // TODO Auto-generated method stub
+                public void seekElement(float seekTo) {
+                    // TODO Auto-generated method stub
 
-        }
+                }
 
-        ElementTime getParentElementTime() {
-            return ((SmilDocumentImpl) mSmilElement.getOwnerDocument()).mSeqTimeContainer;
-        }
-    };
+                ElementTime getParentElementTime() {
+                    return ((SmilDocumentImpl) mSmilElement.getOwnerDocument()).mSeqTimeContainer;
+                }
+            };
 
     /*
      * Internal Interface
      */
 
-    SmilParElementImpl(SmilDocumentImpl owner, String tagName)
-    {
+    SmilParElementImpl(SmilDocumentImpl owner, String tagName) {
         super(owner, tagName.toUpperCase());
     }
 

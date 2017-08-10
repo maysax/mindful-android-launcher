@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.util.Log;
 
 import com.moez.QKSMS.mmssms.Utils;
@@ -47,7 +46,7 @@ public class MmsSystemEventReceiver extends BroadcastReceiver {
     public static void wakeUpService(Context context) {
         if (LOCAL_LOGV) Log.v(TAG, "wakeUpService: start transaction service ...");
 
-        Intent service  = new Intent(
+        Intent service = new Intent(
                 TransactionService.HANDLE_PENDING_TRANSACTIONS_ACTION, null, context,
                 TransactionService.class
         );
@@ -78,7 +77,7 @@ public class MmsSystemEventReceiver extends BroadcastReceiver {
             boolean isConnected = mmsNetworkInfo.isConnected();
 
             if (LOCAL_LOGV) Log.v(TAG, "TYPE_MOBILE_MMS available = " + available +
-                           ", isConnected = " + isConnected);
+                    ", isConnected = " + isConnected);
 
             // Wake up transact service when MMS data is available and isn't connected.
             if (available && !isConnected) {

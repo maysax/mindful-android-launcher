@@ -45,31 +45,34 @@ public interface Divot {
     public static final int BOTTOM_MIDDLE = 11;
     public static final int BOTTOM_RIGHT = 12;
 
-    static final String [] sPositionChoices = new String [] {
-        "",
-        "left_upper",
-        "left_middle",
-        "left_lower",
+    static final String[] sPositionChoices = new String[]{
+            "",
+            "left_upper",
+            "left_middle",
+            "left_lower",
 
-        "right_upper",
-        "right_middle",
-        "right_lower",
+            "right_upper",
+            "right_middle",
+            "right_lower",
 
-        "top_left",
-        "top_middle",
-        "top_right",
+            "top_left",
+            "top_middle",
+            "top_right",
 
-        "bottom_left",
-        "bottom_middle",
-        "bottom_right",
+            "bottom_left",
+            "bottom_middle",
+            "bottom_right",
     };
 
     public void setPosition(int position);
+
     public int getPosition();
 
     public float getCloseOffset();
+
     public float getFarOffset();
 
     public ImageView asImageView();
+
     public void assignContactFromEmail(String emailAddress);
 }
