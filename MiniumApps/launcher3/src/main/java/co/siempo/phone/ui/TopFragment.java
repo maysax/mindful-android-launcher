@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -136,7 +137,7 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        Log.d("hardikkamothi","onAttach");
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
         airplaneModeDataReceiver.register(context);
 
@@ -151,10 +152,17 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        airplaneModeDataReceiver.unregister(context);
-        batteryDataReceiver.unregister(context);
-        networkDataReceiver.unregister(context);
-        wifiDataReceiver.unregister(context);
+        Log.d("hardikkamothi","onDetach");
+        try{
+
+            airplaneModeDataReceiver.unregister(context);
+            batteryDataReceiver.unregister(context);
+            networkDataReceiver.unregister(context);
+            wifiDataReceiver.unregister(context);
+        }
+        catch (Exception e){
+
+        }
     }
 
     @Override

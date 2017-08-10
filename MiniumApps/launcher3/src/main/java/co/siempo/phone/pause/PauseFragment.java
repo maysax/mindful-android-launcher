@@ -79,7 +79,7 @@ public class PauseFragment extends CoreFragment {
         if (launcherPrefs.isPauseActive().get()) {
             getActivity().onBackPressed();
         } else {
-            ((CoreActivity) getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(), R.id.mainView);
+            ((CoreActivity) getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(), R.id.pauseView);
         }
     }
 

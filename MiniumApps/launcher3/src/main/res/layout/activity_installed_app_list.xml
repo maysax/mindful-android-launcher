@@ -12,20 +12,30 @@
         android:src="@drawable/pause_background"
         android:visibility="visible" />-->
 
+
+    <FrameLayout
+        android:id="@+id/statusView"
+        android:layout_width="match_parent"
+        android:layout_height="27dp"
+        android:background="@android:color/white"/>
+
     <GridView
         android:id="@+id/activity_grid_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/included"
+
         android:numColumns="@integer/grid_column"
         android:paddingBottom="48dp"
         android:dividerHeight="1dp" />
 
     <include
         android:id="@+id/included"
+        android:layout_below="@+id/statusView"
         layout="@layout/custom_toolbar_with_settings"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -77,6 +87,14 @@
         </LinearLayout>
 
     </android.support.v7.widget.Toolbar>
+
+
+
+    <FrameLayout
+        android:id="@+id/mainView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/statusView"></FrameLayout>
 
 
 </RelativeLayout>
