@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.provider.Telephony;
 
 import co.siempo.phone.BuildConfig;
@@ -130,7 +132,7 @@ public class ActivityHelper {
         }
     }
 
-    private boolean isMyLauncherDefault(CoreActivity activity) {
+    public boolean isMyLauncherDefault(CoreActivity activity) {
         return getLauncherPackageName(activity).equals(activity.getPackageName());
     }
 
@@ -153,7 +155,7 @@ public class ActivityHelper {
         packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
     }
 
-    private void openChooser(CoreActivity activity) {
+    public void openChooser(CoreActivity activity) {
         Intent startMain = new Intent(Intent.ACTION_MAIN);
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

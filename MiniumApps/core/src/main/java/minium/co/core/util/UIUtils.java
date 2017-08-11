@@ -19,6 +19,7 @@ import minium.co.core.R;
  * Created by shahab on 12/21/15.
  */
 public class UIUtils {
+    public static final String PACKAGE_NAME = "co.siempo.phone";
 
     public static int dpToPx(Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
@@ -66,6 +67,14 @@ public class UIUtils {
                 .setMessage(msg)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+    public static void confirmWithCancel(Context context, String title, String msg, DialogInterface.OnClickListener listener) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(msg)
+                .setPositiveButton(android.R.string.ok, listener)
+                .setNegativeButton(android.R.string.cancel, listener)
                 .show();
     }
 
