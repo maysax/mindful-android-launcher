@@ -1,5 +1,6 @@
 package co.siempo.phone.applist;
 
+import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
@@ -20,6 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.notification.NotificationFragment;
+import co.siempo.phone.notification.NotificationRetreat_;
+import co.siempo.phone.notification.StatusBarHandler;
+import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
@@ -28,6 +33,8 @@ import minium.co.core.ui.CoreActivity;
 @Fullscreen
 @EActivity(R.layout.activity_installed_app_list)
 public class AppDrawerActivity extends CoreActivity implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>> {
+
+    StatusBarHandler statusBarHandler;
 
     ArrayList<ApplistDataModel> arrayList = new ArrayList<>();
     @ViewById
@@ -111,6 +118,8 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
         installedAppListAdapter = new InstalledAppListAdapter(AppDrawerActivity.this);
         activity_grid_view.setAdapter(installedAppListAdapter);
         getLoaderManager().initLoader(0, null, this);
+        loadTopBar();
+        statusBarHandler = new StatusBarHandler(AppDrawerActivity.this);
 
     }
 
@@ -135,5 +144,43 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
     @Subscribe
     public void appOpenEvent(AppOpenEvent event) {
         new AppOpenHandler().handle(this, event);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (statusBarHandler != null && !statusBarHandler.isActive())
+            statusBarHandler.requestStatusBarCustomization();
+    }
+
+    private void loadTopBar() {
+        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+        try {
+            if(statusBarHandler!=null)
+                statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (statusBarHandler.isNotificationTrayVisible) {
+            Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+            if (f instanceof NotificationFragment) ;
+            {
+                statusBarHandler.isNotificationTrayVisible = false;
+                ((NotificationFragment) f).animateOut();
+            }
+        }
     }
 }

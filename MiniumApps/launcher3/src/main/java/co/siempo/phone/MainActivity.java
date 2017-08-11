@@ -138,8 +138,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @UiThread(delay = 500)
     void loadViews() {
-        statusBarHandler = new StatusBarHandler(this);
-        statusBarHandler.requestStatusBarCustomization();
 
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
@@ -267,12 +265,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
+
 
     @Override
     protected void onStart() {
@@ -298,18 +292,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStop() {
         super.onStop();
-        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-        try {
-            statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         try {
             enableNfc(true);
         } catch (Exception e) {
@@ -317,16 +308,23 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
-        if (statusBarHandler != null && !statusBarHandler.isActive())
-            statusBarHandler.requestStatusBarCustomization();
-
+        statusBarHandler = new StatusBarHandler(MainActivity.this);
+        statusBarHandler.requestStatusBarCustomization();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         enableNfc(false);
-        Log.i("onPause", "MainActivity");
+
+
+        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+        try {
+            if(statusBarHandler!=null)
+                statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

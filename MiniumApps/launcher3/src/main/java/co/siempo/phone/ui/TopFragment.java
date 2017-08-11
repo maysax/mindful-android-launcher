@@ -7,6 +7,7 @@ import android.net.wifi.WifiManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -48,6 +49,8 @@ import minium.co.core.ui.CoreFragment;
  */
 @EFragment(R.layout.fragment_top)
 public class TopFragment extends CoreFragment {
+
+    private String TAG = "TopFragment";
 
     @Pref
     DroidPrefs_ prefs;
@@ -136,7 +139,6 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
         airplaneModeDataReceiver.register(context);
 
@@ -151,10 +153,16 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        airplaneModeDataReceiver.unregister(context);
-        batteryDataReceiver.unregister(context);
-        networkDataReceiver.unregister(context);
-        wifiDataReceiver.unregister(context);
+        try{
+
+            airplaneModeDataReceiver.unregister(context);
+            batteryDataReceiver.unregister(context);
+            networkDataReceiver.unregister(context);
+            wifiDataReceiver.unregister(context);
+        }
+        catch (Exception e){
+            Log.d(TAG,"onDetach Call");
+        }
     }
 
     @Override
