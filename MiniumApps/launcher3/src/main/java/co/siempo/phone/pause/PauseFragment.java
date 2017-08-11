@@ -87,7 +87,9 @@ public class PauseFragment extends CoreFragment {
 
         @Override
         public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
-
+            if(seekBar.getValue()==0){
+                seekBar.setValue(60);
+            }
         }
 
         @Override
