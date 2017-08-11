@@ -50,6 +50,8 @@ import minium.co.core.ui.CoreFragment;
 @EFragment(R.layout.fragment_top)
 public class TopFragment extends CoreFragment {
 
+    private String TAG = "TopFragment";
+
     @Pref
     DroidPrefs_ prefs;
 
@@ -137,7 +139,6 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.d("hardikkamothi","onAttach");
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
         airplaneModeDataReceiver.register(context);
 
@@ -152,7 +153,6 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Log.d("hardikkamothi","onDetach");
         try{
 
             airplaneModeDataReceiver.unregister(context);
@@ -161,7 +161,7 @@ public class TopFragment extends CoreFragment {
             wifiDataReceiver.unregister(context);
         }
         catch (Exception e){
-
+            Log.d(TAG,"onDetach Call");
         }
     }
 
