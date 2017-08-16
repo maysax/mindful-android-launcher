@@ -38,7 +38,7 @@ public class PauseActivity extends CoreActivity {
     private StatusBarHandler statusBarHandler;
 
     @Pref
-    Launcher3Prefs_ launcherPrefs;
+  public   Launcher3Prefs_ launcherPrefs;
 
     @Extra
     Tag tag;
