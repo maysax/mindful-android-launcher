@@ -22,7 +22,7 @@
     <string name="title.email">Email</string>
     <string name="title.feedback">Feedback</string>
     <string name="title.inbox">Google Inbox</string>
-    <string name="title.defaultLauncher">Default Launcher</string>
+    <string name="title.defaultLauncher">Switch Home app</string>
     <string name="title_tracking">Tracking</string>
     <string name="title.version">Version: %1$s</string>
     <string name="title.apps">Apps</string>

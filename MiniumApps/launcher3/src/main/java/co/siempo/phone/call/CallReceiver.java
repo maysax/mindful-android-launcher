@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
