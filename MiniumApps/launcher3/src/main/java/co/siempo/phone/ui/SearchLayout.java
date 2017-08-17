@@ -21,6 +21,7 @@ import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -99,12 +100,13 @@ public class SearchLayout extends CardView {
     void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 handleAfterTextChanged(s.toString());
-                MainActivity.isTextLenghGreater=s.toString();
+                MainActivity.isTextLenghGreater = s.toString();
             }
 
             @Override
@@ -129,7 +131,8 @@ public class SearchLayout extends CardView {
     private Runnable showKeyboardRunnable = new Runnable() {
         @Override
         public void run() {
-            UIUtils.showKeyboard(txtSearchBox);
+            if (!StatusBarHandler.isNotificationTrayVisible)
+                UIUtils.showKeyboard(txtSearchBox);
         }
     };
 
