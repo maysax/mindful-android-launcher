@@ -17,6 +17,7 @@ import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
@@ -103,6 +104,7 @@ public class SearchLayout extends CardView {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 handleAfterTextChanged(s.toString());
+                MainActivity.isTextLenghGreater=s.toString();
             }
 
             @Override
@@ -113,8 +115,14 @@ public class SearchLayout extends CardView {
     }
 
     public void askFocus() {
-        txtSearchBox.requestFocus();
-        txtSearchBox.setText("");
+
+        if (MainActivity.isTextLenghGreater.length() > 0) {
+            MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
+            handleAfterTextChanged(MainActivity.isTextLenghGreater);
+        } else {
+            txtSearchBox.requestFocus();
+            txtSearchBox.setText("");
+        }
         handler.postDelayed(showKeyboardRunnable, 500);
     }
 

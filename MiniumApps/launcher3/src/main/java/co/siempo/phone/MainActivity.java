@@ -91,6 +91,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    public static String isTextLenghGreater = "";
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
@@ -193,15 +195,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         });
 
         loadTopBar();
-//        if (launcherPrefs.isAppInstalledFirstTime().get()) {
-//            launcherPrefs.isAppInstalledFirstTime().put(false);
-//            ActivityHelper activityHelper = new ActivityHelper(this);
-//            if (!activityHelper.isMyLauncherDefault(this)) {
-//                activityHelper.handleDefaultLauncher(this);
-//                loadDialog();
-//            }
-//        }
-
     }
 
     private void loadTopBar() {
@@ -312,10 +305,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStart() {
         super.onStart();
-//        if (launcherPrefs.updatePrompt().get())
-//            checkVersion();
-
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+       if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
             new AppUpdater(this)
                     .setDisplay(Display.DIALOG)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -334,8 +324,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onStop() {
         super.onStop();
         currentIndex = 0;
-
-
     }
 
     @Override

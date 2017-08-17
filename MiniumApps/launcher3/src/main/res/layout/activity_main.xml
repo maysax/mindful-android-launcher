@@ -19,13 +19,6 @@
         android:layout_weight="1"
         tools:background="@color/material.core.orange">
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
-
-            <!--<include layout="@layout/tooltip_launcher" />-->
-        <!--</LinearLayout>-->
-
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
             android:layout_width="match_parent"
