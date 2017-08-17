@@ -91,6 +91,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    public static String isTextLenghGreater = "";
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
@@ -110,14 +112,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .check();
 
         if (!isEnabled(this)) {
-            UIUtils.confirmWithCancel(this, null,"Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
+            UIUtils.confirmWithCancel(this, null, "Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Log.d("Raja",""+which);
-                    if(which==-2){
+                    if (which == -2) {
                         checkAppLoadFirstTime();
-                    }else{
-                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"),100);
+                    } else {
+                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
                     }
 
                 }
@@ -146,7 +147,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
     private void checkAppLoadFirstTime() {
-        if (!launcherPrefs.isAppInstalledFirstTime().get()) {
+        if (launcherPrefs.isAppInstalledFirstTime().get()) {
             launcherPrefs.isAppInstalledFirstTime().put(false);
             ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!activityHelper.isMyLauncherDefault(MainActivity.this)) {
@@ -159,7 +160,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==100){
+        if (requestCode == 100) {
             checkAppLoadFirstTime();
         }
     }
@@ -193,15 +194,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         });
 
         loadTopBar();
-//        if (launcherPrefs.isAppInstalledFirstTime().get()) {
-//            launcherPrefs.isAppInstalledFirstTime().put(false);
-//            ActivityHelper activityHelper = new ActivityHelper(this);
-//            if (!activityHelper.isMyLauncherDefault(this)) {
-//                activityHelper.handleDefaultLauncher(this);
-//                loadDialog();
-//            }
-//        }
-
     }
 
     private void loadTopBar() {
@@ -312,9 +304,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStart() {
         super.onStart();
-//        if (launcherPrefs.updatePrompt().get())
-//            checkVersion();
-
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
             new AppUpdater(this)
                     .setDisplay(Display.DIALOG)
@@ -334,8 +323,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onStop() {
         super.onStop();
         currentIndex = 0;
-
-
     }
 
     @Override
@@ -362,7 +349,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
-            if(statusBarHandler!=null)
+            if (statusBarHandler != null)
                 statusBarHandler.restoreStatusBarExpansion();
         } catch (Exception e) {
             e.printStackTrace();
