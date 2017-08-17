@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:orientation="vertical">
 
@@ -103,7 +103,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/dp_10"
             android:paddingLeft="@dimen/dp_10">
 
             <TextView
@@ -126,9 +125,18 @@
                 android:textColor="@android:color/black" />
 
         </LinearLayout>
+        <Button
+            android:id="@+id/btnOk"
+            android:layout_gravity="right"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"/>
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linSecond"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent">

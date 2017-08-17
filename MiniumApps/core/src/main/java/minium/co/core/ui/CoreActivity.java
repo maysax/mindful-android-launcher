@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -137,6 +138,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        windowManager.removeView(mTestView);
                         mTestView = null;
                         onBackPressed();
                     }
@@ -144,6 +146,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 }
             });
             mTestView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    windowManager.removeView(mTestView);
+                    mTestView = null;
+                }
+            });
+            Button btnOk = (Button) mTestView.findViewById(R.id.btnOk);
+            btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     windowManager.removeView(mTestView);
