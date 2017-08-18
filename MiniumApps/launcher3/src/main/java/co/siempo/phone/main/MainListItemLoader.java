@@ -37,20 +37,20 @@ public class MainListItemLoader {
     }
 
     public void loadItems(List<MainListItem> items) {
-        items.add(new MainListItem(2, context.getString(R.string.title_calls), "fa-phone",R.drawable.icon_call, MainListItemType.ACTION));
-        items.add(new MainListItem(1, getString(R.string.title_messages), "fa-users",R.drawable.icon_sms,MainListItemType.ACTION));
+        items.add(new MainListItem(2, context.getString(R.string.title_calls), "fa-phone", R.drawable.icon_call, MainListItemType.ACTION));
+        items.add(new MainListItem(1, getString(R.string.title_messages), "fa-users", R.drawable.icon_sms, MainListItemType.ACTION));
         items.add(new MainListItem(20, getString(R.string.title_calendar), "fa-calendar"));
-        items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user",R.drawable.icon_create_user,MainListItemType.ACTION));
+        items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user", R.drawable.icon_create_user, MainListItemType.ACTION));
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
-        items.add(new MainListItem(6, getString(R.string.title_notes), "fa-sticky-note",R.drawable.icon_save_note,MainListItemType.ACTION));
+        items.add(new MainListItem(6, getString(R.string.title_notes), "fa-sticky-note", R.drawable.icon_save_note, MainListItemType.ACTION));
 
-        if (new ActivityHelper(context).isAppInstalled(GOOGLE_PHOTOS))
+        //if (new ActivityHelper(context).isAppInstalled(GOOGLE_PHOTOS))
             items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
-        items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs",R.drawable.icon_settings,MainListItemType.ACTION));
+        items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
         items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
-        items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell",R.drawable.icon_tempo,MainListItemType.ACTION));
+        items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell", R.drawable.icon_tempo, MainListItemType.ACTION));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
         items.add(new MainListItem(19, getString(R.string.title_apps), "fa-list"));
 
@@ -59,13 +59,17 @@ public class MainListItemLoader {
 //        items.add(new MainListItem(9, getString(R.string.title_theme), "fa-tint"));
         //items.add(new MainListItem(17, getString(R.string.title_inbox), "fa-inbox"));
 
-        if (!Build.MODEL.toLowerCase().contains("siempo")) {
-            items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
-        }
+        /**
+         * SSA-101 :  Comment "Switch home Launcher" & "Version" module.
+         */
+
+//        if (!Build.MODEL.toLowerCase().contains("siempo")) {
+//            items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
+//        }
         items.add(new MainListItem(18, getString(R.string.title_feedback), "fa-question-circle"));
         // items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
         //items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
-        items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
+//        items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
 
 
     }
@@ -123,7 +127,7 @@ public class MainListItemLoader {
                 ApiClient_.getInstance_(context).checkAppVersion();
                 break;
             case 16:
-                new ActivityHelper(context).openEmail();
+                new ActivityHelper(context).openGmail();
                 break;
             case 17: //new ActivityHelper(context).openGoogleInbox(); break;
             case 18:
@@ -133,13 +137,13 @@ public class MainListItemLoader {
                 AppDrawerActivity_.intent(context).start();
                 break;
             case 20:
-                new ActivityHelper(context).openGMape(Constants.CALENDAR_PACKAGE);
+                new ActivityHelper(context).openCalenderApp();
                 break;
             case 21:
-                new ActivityHelper(context).openGMape(Constants.CLOCK_PACKAGE);
+                new ActivityHelper(context).openClockApp();
                 break;
             case 22:
-                new ActivityHelper(context).openGMape(GOOGLE_PHOTOS);
+                new ActivityHelper(context).openPhotsApp();
                 break;
             default:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));

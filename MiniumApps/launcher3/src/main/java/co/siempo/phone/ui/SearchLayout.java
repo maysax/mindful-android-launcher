@@ -6,6 +6,7 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
@@ -16,9 +17,11 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.notification.StatusBarHandler;
@@ -42,6 +45,9 @@ public class SearchLayout extends CardView {
     public ChipsEditText getTxtSearchBox() {
         return txtSearchBox;
     }
+
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
 
     @ViewById
     ChipsEditText txtSearchBox;
@@ -122,7 +128,9 @@ public class SearchLayout extends CardView {
             MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
             handleAfterTextChanged(MainActivity.isTextLenghGreater);
         } else {
-            txtSearchBox.requestFocus();
+            if(launcherPrefs.isKeyBoardDisplay().get())
+                 txtSearchBox.requestFocus();
+            btnClear.setVisibility(INVISIBLE);
             txtSearchBox.setText("");
         }
         handler.postDelayed(showKeyboardRunnable, 500);
@@ -131,8 +139,11 @@ public class SearchLayout extends CardView {
     private Runnable showKeyboardRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!StatusBarHandler.isNotificationTrayVisible)
-                UIUtils.showKeyboard(txtSearchBox);
+            if (!StatusBarHandler.isNotificationTrayVisible) {
+                if(launcherPrefs.isKeyBoardDisplay().get()) {
+                    UIUtils.showKeyboard(txtSearchBox);
+                }
+            }
         }
     };
 

@@ -10,6 +10,12 @@
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -189,6 +195,11 @@
         </receiver>
 
         <activity android:name=".ui.UpdateActivity_"></activity>
+        <activity android:name=".settings.SiempoPhoneSettingsActivity_" />
+        <activity android:name=".settings.SiempoSettingsActivity_" />
+        <activity android:name=".settings.SiempoMainSettingsActivity_"/>
+        <activity android:name=".settings.SiempoAlphaSettingsActivity_"/>
+
     </application>
 
 </manifest>
