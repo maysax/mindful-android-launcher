@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.provider.Telephony;
 
 import co.siempo.phone.BuildConfig;
@@ -17,11 +15,14 @@ import co.siempo.phone.applist.AppOpenEvent;
 import co.siempo.phone.applist.AppOpenHandler;
 import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
+import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
+import co.siempo.phone.settings.SiempoMainSettingsActivity_;
+import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
+import co.siempo.phone.settings.SiempoSettingsActivity_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 import minium.co.notes.ui.MainActivity;
-import minium.co.settings.SiempoSettingsActivity_;
 
 
 /**
@@ -108,8 +109,7 @@ public class ActivityHelper {
 
     public boolean openSettingsApp() {
         try {
-//            getContext().startActivity(new Intent(Settings.ACTION_SETTINGS));
-            SiempoSettingsActivity_.intent(getContext()).start();
+            SiempoMainSettingsActivity_.intent(getContext()).start();
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
@@ -233,6 +233,36 @@ public class ActivityHelper {
             Tracer.e(e);
         }
 
+        return false;
+    }
+
+    public boolean openPhoneSettingsApp() {
+        try {
+            SiempoPhoneSettingsActivity_.intent(getContext()).start();
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean openSiempoSettingsApp() {
+        try {
+            SiempoSettingsActivity_.intent(getContext()).start();
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean openSiempoAlphaSettingsApp() {
+        try {
+            SiempoAlphaSettingsActivity_.intent(getContext()).start();
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
         return false;
     }
 }
