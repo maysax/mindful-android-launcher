@@ -23,23 +23,23 @@
 #before_script:
 #  - "export ANDROID_HOME=\"/home/ravi/Android/Sdk\""
 
-Test:
-  script:
-    - cd MiniumApps
-    - chmod +x ./gradlew
-    - ./gradlew test
-
-Build:
-  script:
-    - cd MiniumApps
-    - chmod +x ./gradlew
-    - ./gradlew test
+#Test:
+#  script:
+#    - cd MiniumApps
+#    - chmod +x ./gradlew
+#    - ./gradlew test
 
 Lint:
   script:
     - cd MiniumApps
     - chmod +x ./gradlew
-    - ./gradlew lint
+    - ./gradlew lint -p launcher3/
+
+Build:
+  script:
+    - cd MiniumApps
+    - chmod +x ./gradlew
+    - ./gradlew assembleDebug
 
 #stages:
 #  - build
