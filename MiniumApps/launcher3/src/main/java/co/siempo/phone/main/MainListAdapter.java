@@ -108,6 +108,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         return convertView;
     }
 
+
     private static class ActionViewHolder {
         ImageView icon;
         TextView text;

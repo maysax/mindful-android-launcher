@@ -122,6 +122,7 @@ public class SearchLayout extends CardView {
             MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
             handleAfterTextChanged(MainActivity.isTextLenghGreater);
         } else {
+            btnClear.setVisibility(INVISIBLE);
             txtSearchBox.requestFocus();
             txtSearchBox.setText("");
         }
