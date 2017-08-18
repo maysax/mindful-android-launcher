@@ -2,7 +2,10 @@ package minium.co.core.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.Crashlytics;
@@ -10,6 +13,9 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
@@ -38,6 +44,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private RefWatcher refWatcher;
+    private List<ApplicationInfo> packagesList = new ArrayList<>();
 
     @Override
     public void onCreate() {
@@ -52,6 +59,18 @@ public abstract class CoreApplication extends MultiDexApplication {
 
         sInstance = this;
         init();
+        getAllApplicationPackageName();
+    }
+
+    /**
+     * This method is used for fetch all installed application package list.
+     */
+    private void getAllApplicationPackageName() {
+        // broadcast reciever for taking over volume key
+        final PackageManager pm = getPackageManager();
+        //get a list of installed apps.
+        packagesList.addAll(pm.getInstalledApplications(PackageManager.GET_META_DATA));
+
     }
 
     protected void init() {
@@ -100,5 +119,9 @@ public abstract class CoreApplication extends MultiDexApplication {
     public static RefWatcher getRefWatcher(Context context) {
         CoreApplication application = (CoreApplication) context.getApplicationContext();
         return application.refWatcher;
+    }
+
+    public List<ApplicationInfo> getPackagesList() {
+        return packagesList;
     }
 }
