@@ -130,6 +130,7 @@ public class SearchLayout extends CardView {
         } else {
             if(launcherPrefs.isKeyBoardDisplay().get())
                  txtSearchBox.requestFocus();
+            btnClear.setVisibility(INVISIBLE);
             txtSearchBox.setText("");
         }
         handler.postDelayed(showKeyboardRunnable, 500);

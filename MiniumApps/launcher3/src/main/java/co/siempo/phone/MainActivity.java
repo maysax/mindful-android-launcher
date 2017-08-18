@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -36,6 +38,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
@@ -55,6 +58,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.event.NFCEvent;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
@@ -125,7 +129,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             });
         }
 
-        // broadcast reciever for taking over volume key
+
 
         final BroadcastReceiver vReceiver = new BroadcastReceiver() {
             @Override
@@ -232,10 +236,24 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         PauseActivity_.intent(this).start();
     }
 
-
     void checkVersion() {
         Tracer.d("Checking if new version is available ... ");
         ApiClient_.getInstance_(this).checkAppVersion();
+    }
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        if (event.isVisible()) {
+            if (statusBarHandler.isNotificationTrayVisible) {
+                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+                if (f instanceof NotificationFragment) ;
+                {
+                    statusBarHandler.isNotificationTrayVisible = false;
+                    ((NotificationFragment) f).animateOut();
+
+                }
+            }
+        }
     }
 
     @Subscribe
@@ -282,6 +300,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     public void onSmsSent(int threadId) {
         try {
+//            UIUtils.hideSoftKeyboard(MainActivity.this,getWindow().getDecorView().getWindowToken());
             Intent defineIntent = new Intent(Intent.ACTION_VIEW);
 //          defineIntent.setData(Uri.parse("content://mms-sms/conversations/"+threadId));
             defineIntent.setData(Uri.parse("smsto:" + manager.get(TokenItemType.CONTACT).getExtra2()));
@@ -290,6 +309,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
             startActivity(defineIntent);
             manager.clear();
+
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -298,6 +318,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MainActivity.isTextLenghGreater = "";
     }
 
 
