@@ -111,6 +111,7 @@ public class MainListItemLoader {
                 break;
             case 12:
                 new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
+                ((CoreActivity) context).loadDialog();
                 break;
             case 13:
                 MMTimePickerActivity_.intent(context).start();

@@ -18,6 +18,9 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -88,6 +91,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    public static String isTextLenghGreater = "";
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
@@ -107,10 +112,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .check();
 
         if (!isEnabled(this)) {
-            UIUtils.confirm(this, "Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
+            UIUtils.confirmWithCancel(this, null, "Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                    if (which == -2) {
+                        checkAppLoadFirstTime();
+                    } else {
+                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                    }
+
                 }
             });
         }
@@ -136,6 +146,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         launcherPrefs.updatePrompt().put(true);
     }
 
+    private void checkAppLoadFirstTime() {
+        if (launcherPrefs.isAppInstalledFirstTime().get()) {
+            launcherPrefs.isAppInstalledFirstTime().put(false);
+            ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
+            if (!activityHelper.isMyLauncherDefault(MainActivity.this)) {
+                activityHelper.handleDefaultLauncher(MainActivity.this);
+                loadDialog();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            checkAppLoadFirstTime();
+        }
+    }
+
     @UiThread(delay = 500)
     void loadViews() {
 
@@ -150,6 +179,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             @Override
             public void onPageSelected(int position) {
                 currentItem = position;
+                currentIndex = currentItem;
                 try {
                     if (position == 1)
                         UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
@@ -189,17 +219,19 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     };
 
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+    }
+
+
     @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
     void volumeUpPressed() {
         Tracer.i("Volume up pressed in MainActivity");
         PauseActivity_.intent(this).start();
     }
 
-    @Override
-    protected void onUserLeaveHint() {
-        UIUtils.hideSoftKeyboard(MainActivity.this, getWindow().getDecorView().getWindowToken());
-        super.onUserLeaveHint();
-    }
 
     void checkVersion() {
         Tracer.d("Checking if new version is available ... ");
@@ -246,6 +278,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     }
 
+
     @Override
     public void onSmsSent(int threadId) {
         try {
@@ -271,30 +304,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStart() {
         super.onStart();
-        if (launcherPrefs.updatePrompt().get())
-            checkVersion();
-
-//        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-//            new AppUpdater(this)
-//                    .setDisplay(Display.DIALOG)
-//                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-//                    .showEvery(5)
-//                    .setTitleOnUpdateAvailable("Update available")
-//                    .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
-//                    .setTitleOnUpdateNotAvailable("Update not available")
-//                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
-//                    .setButtonUpdate("Update")
-//                    .setButtonDismiss("Maybe later")
-//                    .start();
-//        }
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+            new AppUpdater(this)
+                    .setDisplay(Display.DIALOG)
+                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+                    .showEvery(5)
+                    .setTitleOnUpdateAvailable("Update available")
+                    .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
+                    .setTitleOnUpdateNotAvailable("Update not available")
+                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
+                    .setButtonUpdate("Update")
+                    .setButtonDismiss("Maybe later")
+                    .start();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-
-
+        currentIndex = 0;
     }
 
     @Override
@@ -308,6 +336,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
+        currentIndex = currentItem;
         statusBarHandler = new StatusBarHandler(MainActivity.this);
         statusBarHandler.requestStatusBarCustomization();
     }
@@ -320,7 +349,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
-            if(statusBarHandler!=null)
+            if (statusBarHandler != null)
                 statusBarHandler.restoreStatusBarExpansion();
         } catch (Exception e) {
             e.printStackTrace();
@@ -375,4 +404,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             pager.setCurrentItem(0);
         }
     }
+
+
 }

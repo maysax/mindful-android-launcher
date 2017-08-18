@@ -8,16 +8,19 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.pause.PauseActivity;
 import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -25,13 +28,12 @@ import minium.co.core.ui.CoreActivity;
 /**
  * Created by itc on 02/03/17.
  */
-
 public class StatusBarHandler {
 
 
     private String TAG = "StatusBarHandler";
-
     private boolean isActive = false;
+
 
     public boolean isActive() {
         return isActive;
@@ -121,23 +123,17 @@ public class StatusBarHandler {
         public boolean onTouchEvent(MotionEvent event) {
 
             if (event.getY() > status_bar_height) {
-                if (!isNotificationTrayVisible) {
-                    System.out.println(TAG + " y position on Touch on notification tray " + event.getY() + "status_bar_height " + status_bar_height);
-                    //Intent intent = new Intent(mContext, NotificationFragment.class);
-                    //mContext. startActivity(intent);
-//                    ((CoreActivity) mContext).loadChildFragment(NotificationFragment_.builder().build(), R.id.mainView);
-//                    ((CoreActivity) mContext).getFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_down, R.anim.slide_out_down);
-                    try {
-                        Config.isNotificationAlive = true;
-                        FragmentTransaction ft = ((CoreActivity) mContext).getFragmentManager().beginTransaction();
-                        ft.setCustomAnimations(R.animator.push_down_in_no_alpha, R.animator.push_down_out_no_alpha);
-                        ft.replace(R.id.mainView, NotificationFragment_.builder().build());
-                        ft.commitAllowingStateLoss();
-                        LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", true));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                if(mContext!=null && mContext instanceof PauseActivity ) {
+                    PauseActivity pauseActivity = (PauseActivity) mContext;
+                    if(pauseActivity.launcherPrefs != null && pauseActivity.launcherPrefs.isPauseActive().get()){
+                        Log.d(TAG,"Pause mode is active.");
                     }
-                    isNotificationTrayVisible = true;
+                    else{
+                        showSiempoNotification(event);
+                    }
+                }
+                else{
+                    showSiempoNotification(event);
                 }
             }
 
@@ -182,6 +178,27 @@ public class StatusBarHandler {
 
             b.destroyDrawingCache();
             blockingViewCollection.remove(b);
+        }
+    }
+
+    public void showSiempoNotification(MotionEvent event){
+        if (!isNotificationTrayVisible) {
+            System.out.println(TAG + " y position on Touch on notification tray " + event.getY() + "status_bar_height " + status_bar_height);
+            //Intent intent = new Intent(mContext, NotificationFragment.class);
+            //mContext. startActivity(intent);
+//                    ((CoreActivity) mContext).loadChildFragment(NotificationFragment_.builder().build(), R.id.mainView);
+//                    ((CoreActivity) mContext).getFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_down, R.anim.slide_out_down);
+            try {
+                Config.isNotificationAlive = true;
+                FragmentTransaction ft = ((CoreActivity) mContext).getFragmentManager().beginTransaction();
+                ft.setCustomAnimations(R.animator.push_down_in_no_alpha, R.animator.push_down_out_no_alpha);
+                ft.replace(R.id.mainView, NotificationFragment_.builder().build());
+                ft.commitAllowingStateLoss();
+                LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", true));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            isNotificationTrayVisible = true;
         }
     }
 }

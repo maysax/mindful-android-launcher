@@ -32,5 +32,7 @@
     <dimen name="text.size.tab">@dimen/text.size.medium</dimen>
     <dimen name="text.size.title">@dimen/text.size.3xl</dimen>
     <dimen name="text.size.subTitle">@dimen/text.size.xl</dimen>
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_10">10dp</dimen>
 
 </resources>

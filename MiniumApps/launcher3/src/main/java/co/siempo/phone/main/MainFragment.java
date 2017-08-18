@@ -140,9 +140,6 @@ public class MainFragment extends CoreFragment {
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
             searchLayout.askFocus();
         }
-        Log.d("Raja", " " + searchLayout.getTxtSearchBox().isNotificationVisible());
-
-
     }
 
     @Override
