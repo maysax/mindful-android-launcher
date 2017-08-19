@@ -186,4 +186,5 @@
     <string name="str_siemposettings">Siempo Settings</string>
     <string name="str_siempo_alphasettings">Siempo Alpha Settings</string>
     <string name="str_keyboard_configuration">Always show the keyboard  on the home screen</string>
+    <string name="view_save_note">View saved note</string>
 </resources>

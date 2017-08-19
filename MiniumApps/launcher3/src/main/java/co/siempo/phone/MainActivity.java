@@ -301,7 +301,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     public void onSmsSent(int threadId) {
-        try {
+//        try {
 // Don't remove this code,this code is needed for feature refrence.
 //            UIUtils.hideSoftKeyboard(MainActivity.this,getWindow().getDecorView().getWindowToken());
 //            Intent defineIntent = new Intent(Intent.ACTION_VIEW);
@@ -311,9 +311,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 //            defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
 //            startActivity(defineIntent);
              //manager.clear();
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-        }
+//        } catch (Exception e) {
+//            Tracer.e(e, e.getMessage());
+//        }
     }
 
     @Override
@@ -368,8 +368,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onPause() {
         super.onPause();
         enableNfc(false);
-
-
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
             if (statusBarHandler != null)

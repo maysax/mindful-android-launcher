@@ -17,6 +17,8 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
 import co.siempo.phone.MainActivity;
+import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
@@ -102,19 +104,20 @@ public class TokenRouter {
     public void sendText(Context context) {
         try {
             if (manager.hasCompleted(TokenItemType.CONTACT) && manager.has(TokenItemType.DATA)) {
-                new SmsObserver(context, manager.get(TokenItemType.CONTACT).getExtra2(), manager.get(TokenItemType.DATA).getTitle()).start();
+                String strNumber  = manager.get(TokenItemType.CONTACT).getExtra2();
+                String strMessage  =  manager.get(TokenItemType.DATA).getTitle();
+                new SmsObserver(context, strNumber, strMessage).start();
                 SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(manager.get(TokenItemType.CONTACT).getExtra2(), null, manager.get(TokenItemType.DATA).getTitle(), null, null);
+                smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
                 Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
                 String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(manager.get(TokenItemType.CONTACT).getExtra2())));
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(strNumber)));
                 if (defaultSmsPackageName != null) // Can be null in case that there is no default, then the user would be able to choose any app that supports this intent.
                 {
                     intent.setPackage(defaultSmsPackageName);
                 }
                 context.startActivity(intent);
-                MainActivity.isTextLenghGreater="";
-                manager.clear();
+                EventBus.getDefault().post(new SendSmsEvent(true,strNumber,strMessage));
             } else if (!manager.has(TokenItemType.CONTACT)) {
                 manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
                 manager.add(new TokenItem(TokenItemType.CONTACT));

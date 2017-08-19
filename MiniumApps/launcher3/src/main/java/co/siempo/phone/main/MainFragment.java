@@ -36,7 +36,9 @@ import co.siempo.phone.R;
 import co.siempo.phone.contact.PhoneNumbersAdapter;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -45,6 +47,7 @@ import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.ui.SearchLayout;
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
@@ -133,7 +136,7 @@ public class MainFragment extends CoreFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
                 new IntentFilter("IsNotificationVisible"));
         if (adapter != null) adapter.getFilter().filter("");
-        if (((MainActivity) getActivity()).statusBarHandler.isNotificationTrayVisible) {
+        if (StatusBarHandler.isNotificationTrayVisible) {
             searchLayout.clearFocus();
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", true));
         } else {
@@ -210,6 +213,20 @@ public class MainFragment extends CoreFragment {
             emptyChecker(event.getString());
             parser.parse(event.getString());
             adapter.getFilter().filter(manager.getCurrent().getTitle());
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
+    @Subscribe
+    public void sendSmsEvent(SendSmsEvent event) {
+        try {
+           if(event.isSendSms()){
+               MainActivity.isTextLenghGreater="";
+               afterEffectLayout.setVisibility(View.GONE);
+               moveSearchBar(true, null);
+              // manager.clear();
+           }
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -297,7 +314,7 @@ public class MainFragment extends CoreFragment {
     @Subscribe
     public void createNoteEvent(CreateNoteEvent event) {
         icon.setImageResource(R.drawable.icon_save_note);
-        text.setText("View saved note");
+        text.setText(R.string.view_save_note);
         text.setTag("1");
         afterEffectLayout.setVisibility(View.VISIBLE);
 
