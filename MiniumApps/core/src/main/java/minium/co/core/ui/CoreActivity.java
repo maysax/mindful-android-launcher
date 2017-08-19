@@ -23,8 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
@@ -134,7 +132,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 mTestView.findViewById(R.id.txtTitle).setVisibility(View.VISIBLE);
             } else {
                 mTestView.findViewById(R.id.linSiempoApp).setVisibility(View.GONE);
-                 mTestView.findViewById(R.id.linDefaultApp).setVisibility(View.VISIBLE);
+                mTestView.findViewById(R.id.linDefaultApp).setVisibility(View.VISIBLE);
                 mTestView.findViewById(R.id.txtTitle).setVisibility(View.GONE);
             }
             //Must wire up back button, otherwise it's not sent to our activity
@@ -142,7 +140,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        windowManager.removeView(mTestView);
+                        if (mTestView != null)
+                            windowManager.removeView(mTestView);
                         mTestView = null;
                         onBackPressed();
                     }
@@ -152,7 +151,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             mTestView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    windowManager.removeView(mTestView);
+                    if (mTestView != null)
+                        windowManager.removeView(mTestView);
                     mTestView = null;
                 }
             });
@@ -160,7 +160,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    windowManager.removeView(mTestView);
+                    if (mTestView != null)
+                        windowManager.removeView(mTestView);
                     mTestView = null;
                 }
             });
