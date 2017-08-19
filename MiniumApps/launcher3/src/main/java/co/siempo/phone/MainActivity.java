@@ -186,6 +186,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 currentIndex = currentItem;
                 try {
                     if (position == 1)
+                        //noinspection ConstantConditions
                         UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -241,14 +242,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         ApiClient_.getInstance_(this).checkAppVersion();
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         if (event.isVisible()) {
-            if (statusBarHandler.isNotificationTrayVisible) {
+            if (StatusBarHandler.isNotificationTrayVisible) {
                 Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-                if (f instanceof NotificationFragment) ;
+                if (f instanceof NotificationFragment)
                 {
-                    statusBarHandler.isNotificationTrayVisible = false;
+                    StatusBarHandler.isNotificationTrayVisible = false;
                     ((NotificationFragment) f).animateOut();
 
                 }
@@ -299,20 +301,19 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     public void onSmsSent(int threadId) {
-        try {
+//        try {
+// Don't remove this code,this code is needed for feature refrence.
 //            UIUtils.hideSoftKeyboard(MainActivity.this,getWindow().getDecorView().getWindowToken());
-            Intent defineIntent = new Intent(Intent.ACTION_VIEW);
-//          defineIntent.setData(Uri.parse("content://mms-sms/conversations/"+threadId));
-            defineIntent.setData(Uri.parse("smsto:" + manager.get(TokenItemType.CONTACT).getExtra2()));
-//          defineIntent.setType("vnd.android-dir/mms-sms");
-//          defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
-
-            startActivity(defineIntent);
-            manager.clear();
-
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-        }
+//            Intent defineIntent = new Intent(Intent.ACTION_VIEW);
+//            defineIntent.setData(Uri.parse("content://mms-sms/conversations/"+threadId));
+//            defineIntent.setData(Uri.parse("smsto:" + manager.get(TokenItemType.CONTACT).getExtra2()));
+//            defineIntent.setType("vnd.android-dir/mms-sms");
+//            defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
+//            startActivity(defineIntent);
+             //manager.clear();
+//        } catch (Exception e) {
+//            Tracer.e(e, e.getMessage());
+//        }
     }
 
     @Override
@@ -322,6 +323,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onStart() {
         super.onStart();
@@ -366,8 +368,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onPause() {
         super.onPause();
         enableNfc(false);
-
-
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
             if (statusBarHandler != null)
@@ -413,11 +413,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     public void onBackPressed() {
-        if (statusBarHandler.isNotificationTrayVisible) {
+        if (StatusBarHandler.isNotificationTrayVisible) {
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if (f instanceof NotificationFragment) ;
+            if (f instanceof NotificationFragment)
             {
-                statusBarHandler.isNotificationTrayVisible = false;
+                StatusBarHandler.isNotificationTrayVisible = false;
+                //noinspection ConstantConditions
                 ((NotificationFragment) f).animateOut();
 
             }
