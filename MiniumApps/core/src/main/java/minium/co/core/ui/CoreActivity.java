@@ -40,6 +40,7 @@ import minium.co.core.app.DroidPrefs_;
 import minium.co.core.app.HomeWatcher;
 import minium.co.core.config.Config;
 import minium.co.core.event.DownloadApkEvent;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.helper.Validate;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.ActiveActivitiesTracker;
@@ -51,6 +52,7 @@ import minium.co.core.util.UIUtils;
  * <p>
  * Created by shahab on 3/17/16.
  */
+@SuppressWarnings("JavaDoc")
 @EActivity
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
@@ -82,7 +84,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
+
                 UIUtils.hideSoftKeyboard(CoreActivity.this, getWindow().getDecorView().getWindowToken());
+                EventBus.getDefault().post(new HomePressEvent(true));
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                     loadDialog();
                 } else {
@@ -113,7 +117,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             layoutParams.format = PixelFormat.RGBA_8888;
-            layoutParams.gravity = Gravity.TOP | Gravity.LEFT;
+            layoutParams.gravity = Gravity.TOP | Gravity.START;
             layoutParams.flags =
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                             | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
@@ -125,13 +129,13 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             // final View mTestView = new View(this);
             mTestView = View.inflate(CoreActivity.this, R.layout.tooltip_launcher, null);
             if (currentIndex == 0) {
-                ((LinearLayout) mTestView.findViewById(R.id.linSiempoApp)).setVisibility(View.VISIBLE);
-                ((LinearLayout) mTestView.findViewById(R.id.linDefaultApp)).setVisibility(View.GONE);
-                ((TextView) mTestView.findViewById(R.id.txtTitle)).setVisibility(View.VISIBLE);
+                mTestView.findViewById(R.id.linSiempoApp).setVisibility(View.VISIBLE);
+                mTestView.findViewById(R.id.linDefaultApp).setVisibility(View.GONE);
+                mTestView.findViewById(R.id.txtTitle).setVisibility(View.VISIBLE);
             } else {
-                ((LinearLayout) mTestView.findViewById(R.id.linSiempoApp)).setVisibility(View.GONE);
-                ((LinearLayout) mTestView.findViewById(R.id.linDefaultApp)).setVisibility(View.VISIBLE);
-                ((TextView) mTestView.findViewById(R.id.txtTitle)).setVisibility(View.GONE);
+                mTestView.findViewById(R.id.linSiempoApp).setVisibility(View.GONE);
+                 mTestView.findViewById(R.id.linDefaultApp).setVisibility(View.VISIBLE);
+                mTestView.findViewById(R.id.txtTitle).setVisibility(View.GONE);
             }
             //Must wire up back button, otherwise it's not sent to our activity
             mTestView.setOnKeyListener(new View.OnKeyListener() {
