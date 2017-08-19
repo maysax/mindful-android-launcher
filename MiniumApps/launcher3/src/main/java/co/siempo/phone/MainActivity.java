@@ -310,7 +310,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 //            defineIntent.setType("vnd.android-dir/mms-sms");
 //            defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
 //            startActivity(defineIntent);
-              manager.clear();
+             //manager.clear();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }

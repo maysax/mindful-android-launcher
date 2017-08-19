@@ -16,6 +16,7 @@ import android.widget.Toast;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
@@ -112,6 +113,8 @@ public class TokenRouter {
                     intent.setPackage(defaultSmsPackageName);
                 }
                 context.startActivity(intent);
+                MainActivity.isTextLenghGreater="";
+                manager.clear();
             } else if (!manager.has(TokenItemType.CONTACT)) {
                 manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
                 manager.add(new TokenItem(TokenItemType.CONTACT));
