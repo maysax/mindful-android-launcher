@@ -30,9 +30,7 @@ import minium.co.core.util.UIUtils;
 import minium.co.notes.ui.MainActivity;
 
 
-/**
- * Created by shahab on 3/17/16.
- */
+
 public class ActivityHelper {
 
     private Context context;
@@ -56,13 +54,6 @@ public class ActivityHelper {
     }
 
     public void openMessagingApp() {
-//        try {
-//            getContext().startActivity(getContext().getPackageManager().getLaunchIntentForPackage("minium.co.messages"));
-//            return;
-//        } catch (Exception e) {
-//            Tracer.e(e, "Minium-Messages app not found : " + e.getMessage());
-//        }
-
         try {
             PackageManager pm = getContext().getPackageManager();
             Intent intent = pm.getLaunchIntentForPackage(Telephony.Sms.getDefaultSmsPackage(context));
@@ -145,9 +136,8 @@ public class ActivityHelper {
         PackageManager localPackageManager = activity.getPackageManager();
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.HOME");
-        String str = localPackageManager.resolveActivity(intent,
+        return localPackageManager.resolveActivity(intent,
                 PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
-        return str;
     }
 
     private void resetPreferredLauncherAndOpenChooser(CoreActivity activity) {
@@ -160,7 +150,7 @@ public class ActivityHelper {
         packageManager.setComponentEnabledSetting(componentName, PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP);
     }
 
-    public void openChooser(CoreActivity activity) {
+    private void openChooser(CoreActivity activity) {
         Intent startMain = new Intent(Intent.ACTION_MAIN);
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -198,7 +188,7 @@ public class ActivityHelper {
             context.startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         } catch (android.content.ActivityNotFoundException anfe) {
-
+                anfe.printStackTrace();
         }
 //        UpdateActivity_.intent(context).start();
     }
@@ -219,7 +209,7 @@ public class ActivityHelper {
     /**
      * Open the mail application from device.
      */
-    public void openMail() {
+    private void openMail() {
         try {
             Intent intent = new Intent(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_APP_EMAIL);
@@ -256,7 +246,7 @@ public class ActivityHelper {
                 UIUtils.alert(context, "Application not found");
             }
         } else {
-            openGMape(checkDialerApp().toString());
+            openGMape(checkDialerApp());
         }
     }
 
@@ -267,7 +257,7 @@ public class ActivityHelper {
         if (checkCalenderApp().isEmpty()) {
             context.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/")));
         } else {
-            openGMape(checkCalenderApp().toString());
+            openGMape(checkCalenderApp());
         }
     }
 
@@ -280,7 +270,7 @@ public class ActivityHelper {
             mClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(mClockIntent);
         } else {
-            openGMape(checkClockApp().toString());
+            openGMape(checkClockApp());
         }
     }
 
@@ -300,7 +290,7 @@ public class ActivityHelper {
     /**
      * Open the Default Gallary application from device.
      */
-    public void openGallaryApp() {
+    private void openGallaryApp() {
         try {
             Intent mediaChooser = new Intent(Intent.ACTION_GET_CONTENT);
             mediaChooser.setType("video/*, image/*");
