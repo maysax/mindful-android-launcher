@@ -161,6 +161,7 @@ public class ActivityHelper {
         try {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "feedback@siempo.co", null));
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME));
+            emailIntent.putExtra(Intent.EXTRA_TEXT, UIUtils.getDeviceInfo(context));
             context.startActivity(emailIntent);
         } catch (Exception e) {
             UIUtils.alert(context, "No email application found in your phone");
