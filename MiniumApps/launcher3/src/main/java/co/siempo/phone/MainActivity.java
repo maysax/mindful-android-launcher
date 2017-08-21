@@ -171,7 +171,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @UiThread(delay = 500)
     void loadViews() {
-
+        statusBarHandler = new StatusBarHandler(this);
+        if (statusBarHandler != null && !statusBarHandler.isActive()) {
+            statusBarHandler.requestStatusBarCustomization();
+        }
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
 
@@ -183,7 +186,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             @Override
             public void onPageSelected(int position) {
                 currentItem = position;
-                currentIndex = currentItem;
+              //  currentIndex = currentItem;
                 try {
                     if (position == 1)
                         //noinspection ConstantConditions
@@ -247,6 +250,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void homePressEvent(HomePressEvent event) {
         if (event.isVisible()) {
             if (StatusBarHandler.isNotificationTrayVisible) {
+
                 Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
                 if (f instanceof NotificationFragment)
                 {
@@ -286,14 +290,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Subscribe
     public void onCheckActivityEvent(CheckActivityEvent event) {
-        try {
-            if (event.isResume())
-                statusBarHandler.requestStatusBarCustomization();
-            else
-                statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());
-        }
+        /**
+         *  It will use further to maintain custom siempo flow.
+         */
+
+//        try {
+//
+//            if (event.isResume()) {
+//                if (statusBarHandler != null && !statusBarHandler.isActive()) {
+//                    statusBarHandler.requestStatusBarCustomization();
+//                }
+//            }else {
+//
+//                if (statusBarHandler != null) {
+//                    statusBarHandler.restoreStatusBarExpansion();
+//                }
+//            }
+//            } catch (Exception e) {
+//            System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());
+//        }
 
 
     }
@@ -320,6 +335,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onDestroy() {
         super.onDestroy();
         MainActivity.isTextLenghGreater = "";
+        try {
+            statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -345,7 +365,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStop() {
         super.onStop();
-        currentIndex = 0;
+        //currentIndex = 0;
+        try{
+            statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -359,9 +384,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
-        currentIndex = currentItem;
-        statusBarHandler = new StatusBarHandler(MainActivity.this);
-        statusBarHandler.requestStatusBarCustomization();
+      //  currentIndex = currentItem;
+        if (statusBarHandler != null && !statusBarHandler.isActive()) {
+            statusBarHandler.requestStatusBarCustomization();
+        }
     }
 
     @Override
@@ -413,19 +439,31 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     public void onBackPressed() {
+        try{
         if (StatusBarHandler.isNotificationTrayVisible) {
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if (f instanceof NotificationFragment)
+            if (f!=null && f instanceof NotificationFragment)
             {
                 StatusBarHandler.isNotificationTrayVisible = false;
                 //noinspection ConstantConditions
                 ((NotificationFragment) f).animateOut();
 
+                }
+            } else if (pager.getCurrentItem() == 1) {
+                pager.setCurrentItem(0);
             }
-        } else if (pager.getCurrentItem() == 1) {
-            pager.setCurrentItem(0);
         }
+        catch (Exception e){
+            Log.d(TAG,"Exception onBackPressed MainActivity:: "+e.toString());
+        }
+
     }
 
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(statusBarHandler!=null){
+            statusBarHandler = new StatusBarHandler(this);
+        }
+    }
 }

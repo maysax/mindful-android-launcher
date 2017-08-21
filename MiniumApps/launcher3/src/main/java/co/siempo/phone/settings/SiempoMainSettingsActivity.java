@@ -2,12 +2,15 @@ package co.siempo.phone.settings;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.UiThread;
+
 import java.util.ArrayList;
 import co.siempo.phone.R;
 import co.siempo.phone.helper.ActivityHelper;
@@ -35,6 +38,15 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         initView();
         onClickEvents();
         loadTopBar();
+        loadStatusBar();
+    }
+
+    @UiThread(delay = 1000)
+    void loadStatusBar() {
+        statusBarHandler = new StatusBarHandler(SiempoMainSettingsActivity.this);
+        if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+            statusBarHandler.requestStatusBarCustomization();
+        }
     }
 
     public void onClickEvents() {
@@ -64,6 +76,8 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     public void initView() {
         context = SiempoMainSettingsActivity.this;
         lst_settings = (ListView) findViewById(R.id.lst_settings);
+
+
         arr_menuList = new ArrayList<>();
         SettingsData s1 = new SettingsData();
         s1.setSettingType(getString(R.string.str_phonesettings));
@@ -90,8 +104,10 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        statusBarHandler = new StatusBarHandler(SiempoMainSettingsActivity.this);
-        statusBarHandler.requestStatusBarCustomization();
+//        statusBarHandler = new StatusBarHandler(SiempoMainSettingsActivity.this);
+//        statusBarHandler.requestStatusBarCustomization();
+        if (statusBarHandler != null && !statusBarHandler.isActive())
+            statusBarHandler.requestStatusBarCustomization();
     }
 
     @Override
@@ -109,11 +125,12 @@ public class SiempoMainSettingsActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
-        if (statusBarHandler.isNotificationTrayVisible) {
+        if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if (f instanceof NotificationFragment) ;
+            if (f!=null && f instanceof NotificationFragment) ;
             {
                 statusBarHandler.isNotificationTrayVisible = false;
+                ((NotificationFragment) f).animateOut();
 
             }
         }
@@ -124,4 +141,12 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if(statusBarHandler!=null){
+            statusBarHandler = new StatusBarHandler(this);
+        }
+    }
 }

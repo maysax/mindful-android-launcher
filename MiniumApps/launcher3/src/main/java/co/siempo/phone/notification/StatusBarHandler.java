@@ -68,40 +68,44 @@ public class StatusBarHandler {
     // preventStatusBarExpansion
 
     private void preventStatusBarExpansion() {
-
         try {
-            System.out.println(TAG + " preventStatusBarExpansion");
-            WindowManager manager = ((WindowManager) mContext.getApplicationContext()
-                    .getSystemService(Context.WINDOW_SERVICE));
+            if(blockingViewCollection!=null && blockingViewCollection.size()==0) {
+                System.out.println(TAG + " preventStatusBarExpansion");
+                WindowManager manager = ((WindowManager) mContext.getApplicationContext()
+                        .getSystemService(Context.WINDOW_SERVICE));
 
-            Activity activity = (Activity) mContext;
-            WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams();
-            localLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
-            localLayoutParams.gravity = Gravity.TOP;
-            localLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                Activity activity = (Activity) mContext;
+                WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams();
+                localLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+                localLayoutParams.gravity = Gravity.TOP;
+                localLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
 
-                    // this is to enable the notification to recieve touch events
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                        // this is to enable the notification to recieve touch events
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
 
-                    // Draws over status bar
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+                        // Draws over status bar
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 
-            localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-            int resId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-            int result = 0;
-            if (resId > 0) {
-                result = activity.getResources().getDimensionPixelSize(resId);
+                localLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                int resId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+                int result = 0;
+                if (resId > 0) {
+                    result = activity.getResources().getDimensionPixelSize(resId);
+                }
+
+                status_bar_height = result;
+
+                localLayoutParams.height = result;
+
+                localLayoutParams.format = PixelFormat.TRANSPARENT;
+
+                manager.addView(blockingView, localLayoutParams);
+                blockingViewCollection.add(blockingView);
+                isActive = true;
             }
-
-            status_bar_height = result;
-
-            localLayoutParams.height = result;
-
-            localLayoutParams.format = PixelFormat.TRANSPARENT;
-
-            manager.addView(blockingView, localLayoutParams);
-            blockingViewCollection.add(blockingView);
-            isActive = true;
+            else{
+                Log.d(TAG,"Blocking View already added...");
+            }
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -150,34 +154,39 @@ public class StatusBarHandler {
 
     public void restoreStatusBarExpansion() {
         System.out.println(TAG + " restoreStatusBarExpansion");
-        if (blockingView != null)
-            System.out.println(TAG + " restoreStatusBarExpansion  token == " + blockingView.getWindowToken());
-        if (blockingView != null)
-            if (blockingView.getWindowToken() != null) {
-                WindowManager manager = ((WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
-                manager.removeView(blockingView);
-                isActive = false;
-                System.out.println(TAG + " restored StatusBar Expansion total used blocked view == " + blockingViewCollection.size());
+if(blockingViewCollection!=null && blockingViewCollection.size()>=1) {
+    if (blockingView != null)
+        System.out.println(TAG + " restoreStatusBarExpansion  token == " + blockingView.getWindowToken());
+    if (blockingView != null)
+        if (blockingView.getWindowToken() != null) {
+            WindowManager manager = ((WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
+            manager.removeView(blockingView);
+            isActive = false;
+            System.out.println(TAG + " restored StatusBar Expansion total used blocked view == " + blockingViewCollection.size());
 
-            } else {
-                System.out.println(TAG + " restoreStatusBarExpansion got null ");
-            }
+        } else {
+            System.out.println(TAG + " restoreStatusBarExpansion got null ");
+        }
 
-        for (customViewGroup b : blockingViewCollection
-                ) {
+    for (customViewGroup b : blockingViewCollection
+            ) {
 
-            if (b.getWindowToken() != null) {
-                WindowManager manager = ((WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
-                manager.removeView(b);
-                isActive = false;
-                System.out.println(TAG + "  StatusBar total used blocked view == " + blockingViewCollection.size());
+        if (b.getWindowToken() != null) {
+            WindowManager manager = ((WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE));
+            manager.removeView(b);
+            isActive = false;
+            System.out.println(TAG + "  StatusBar total used blocked view == " + blockingViewCollection.size());
 
-            } else {
-                System.out.println(TAG + " blockingView got null ");
-            }
+        } else {
+            System.out.println(TAG + " blockingView got null ");
+        }
 
-            b.destroyDrawingCache();
-            blockingViewCollection.remove(b);
+        b.destroyDrawingCache();
+        blockingViewCollection.remove(b);
+    }
+}
+        else{
+            Log.d(TAG,"Restore block View Panel is em");
         }
     }
 
