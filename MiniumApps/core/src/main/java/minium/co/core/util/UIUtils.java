@@ -3,21 +3,23 @@ package minium.co.core.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Display;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import minium.co.core.R;
 
-/**
- * Created by shahab on 12/21/15.
- */
+
 public class UIUtils {
     public static final String PACKAGE_NAME = "co.siempo.phone";
 
@@ -122,4 +124,32 @@ public class UIUtils {
         return (int) metrics.density;
     }
 
+    /**
+     * This method returns the device model name.
+     *
+     * @param context refrence of calling view.
+     * @return return the Manufacture Name,Model Name,Android Version and Display Size in pixel.
+     */
+    public static String getDeviceInfo(Context context) {
+        return "\n\n\nMANUFACTURER : " + Build.MANUFACTURER
+                + "\nMODEL : " + Build.MODEL
+                + "\nVERSION : " + Build.VERSION.RELEASE
+                + "\nDISPLAY : " + getScreenDisplaySize(context);
+    }
+
+    /**
+     * This method returns the screen resolution.
+     *
+     * @param context takem the current view context.
+     * @return Display size in pixel
+     */
+    private static String getScreenDisplaySize(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        int width = size.x;
+        return "" + width + "*" + height;
+    }
 }
