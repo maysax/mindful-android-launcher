@@ -20,6 +20,7 @@ android {
         debug {
             debuggable true
             minifyEnabled false
+            lint
         }
         release {
             debuggable false
@@ -27,6 +28,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
 
     }
     dexOptions {
@@ -40,6 +42,7 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
+
 }
 
 repositories {
@@ -86,7 +89,7 @@ dependencies {
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
     compile 'com.google.firebase:firebase-core:10.2.4'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.github.javiersantos:AppUpdater:2.6.1'
+    compile 'com.github.javiersantos:AppUpdater:2.6.3'
 }
 greendao {
     schemaVersion "${databaseVersion}".toInteger()

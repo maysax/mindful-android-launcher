@@ -6,12 +6,14 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -65,7 +67,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected ActivityManager activityManager;
     public View mTestView = null;
     public WindowManager windowManager = null;
-
+    private boolean isOnStopCalled = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,16 +84,25 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
-
                 UIUtils.hideSoftKeyboard(CoreActivity.this, getWindow().getDecorView().getWindowToken());
                 EventBus.getDefault().post(new HomePressEvent(true));
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                    loadDialog();
-                } else {
-                    if (Settings.canDrawOverlays(CoreActivity.this)) {
-                        loadDialog();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                            if(!isOnStopCalled && !isMyLauncherDefault(CoreActivity.this))
+                            loadDialog();
+                        } else {
+                            if(!isOnStopCalled && !isMyLauncherDefault(CoreActivity.this))
+                            if (Settings.canDrawOverlays(CoreActivity.this)) {
+                                loadDialog();
+                            }
+                        }
+
                     }
-                }
+                },1000);
+
 
             }
 
@@ -103,10 +114,22 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
+    public boolean isMyLauncherDefault(CoreActivity activity) {
+        return getLauncherPackageName(activity).equals(activity.getPackageName());
+    }
+
+    private String getLauncherPackageName(CoreActivity activity) {
+        PackageManager localPackageManager = activity.getPackageManager();
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.HOME");
+        return localPackageManager.resolveActivity(intent,
+                PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
+    }
     @Override
     protected void onResume() {
         super.onResume();
-        if (mHomeWatcher != null) mHomeWatcher.startWatch();
+       if (mHomeWatcher != null) mHomeWatcher.startWatch();
+        isOnStopCalled = false;
     }
 
     public void loadDialog() {
@@ -221,6 +244,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        isOnStopCalled =true;
+
 
         super.onStop();
     }

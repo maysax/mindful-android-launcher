@@ -327,7 +327,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStart() {
         super.onStart();
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+        //if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
             new AppUpdater(this)
                     .setDisplay(Display.DIALOG)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -339,7 +339,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     .setButtonUpdate("Update")
                     .setButtonDismiss("Maybe later")
                     .start();
-        }
+        //}
     }
 
     @Override

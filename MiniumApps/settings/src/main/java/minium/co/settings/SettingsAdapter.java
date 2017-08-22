@@ -47,24 +47,24 @@ public class SettingsAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(context);
-
-            convertView = inflater.inflate(R.layout.list_main_settings, parent, false);
-            holder.txt_settingsName = (TextView) convertView.findViewById(R.id.txt_settingsName);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        String name = lst_settings.get(position);
-
-        if (!TextUtils.isEmpty(name)) {
-            holder.txt_settingsName.setText(name);
-        }
+//        ViewHolder holder;
+//        if (convertView == null) {
+//            holder = new ViewHolder();
+//            LayoutInflater inflater = LayoutInflater.from(context);
+//
+//            convertView = inflater.inflate(R.layout.list_main_settings, parent, false);
+//            holder.txt_settingsName = (TextView) convertView.findViewById(R.id.txt_settingsName);
+//
+//            convertView.setTag(holder);
+//        } else {
+//            holder = (ViewHolder) convertView.getTag();
+//        }
+//
+//        String name = lst_settings.get(position);
+//
+//        if (!TextUtils.isEmpty(name)) {
+//            holder.txt_settingsName.setText(name);
+//        }
 
         return convertView;
     }

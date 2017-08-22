@@ -23,7 +23,7 @@ android {
         debug {
             minifyEnabled true
             shrinkResources true
-            //ext.enableCrashlytics = false
+            ext.enableCrashlytics = false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
