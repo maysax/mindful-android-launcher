@@ -131,7 +131,8 @@ public class UIUtils {
      * @return return the Manufacture Name,Model Name,Android Version and Display Size in pixel.
      */
     public static String getDeviceInfo(Context context) {
-        return "\n\n\nMANUFACTURER : " + Build.MANUFACTURER
+        return "\n\n\nMy Device Information is as follows:"
+                +"\nMANUFACTURER : " + Build.MANUFACTURER
                 + "\nMODEL : " + Build.MODEL
                 + "\nVERSION : " + Build.VERSION.RELEASE
                 + "\nDISPLAY : " + getScreenDisplaySize(context);
