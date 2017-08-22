@@ -102,6 +102,7 @@ public class StatusBarHandler {
                 manager.addView(blockingView, localLayoutParams);
                 blockingViewCollection.add(blockingView);
                 isActive = true;
+
             }
             else{
                 Log.d(TAG,"Blocking View already added...");
@@ -153,8 +154,8 @@ public class StatusBarHandler {
 
 
     public void restoreStatusBarExpansion() {
+
         System.out.println(TAG + " restoreStatusBarExpansion");
-if(blockingViewCollection!=null && blockingViewCollection.size()>=1) {
     if (blockingView != null)
         System.out.println(TAG + " restoreStatusBarExpansion  token == " + blockingView.getWindowToken());
     if (blockingView != null)
@@ -183,11 +184,8 @@ if(blockingViewCollection!=null && blockingViewCollection.size()>=1) {
 
         b.destroyDrawingCache();
         blockingViewCollection.remove(b);
+
     }
-}
-        else{
-            Log.d(TAG,"Restore block View Panel is em");
-        }
     }
 
     public void showSiempoNotification(MotionEvent event){
