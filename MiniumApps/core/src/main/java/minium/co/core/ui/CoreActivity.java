@@ -4,8 +4,11 @@ import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.nfc.NdefRecord;
@@ -30,6 +33,8 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -82,13 +87,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
-
                 UIUtils.hideSoftKeyboard(CoreActivity.this, getWindow().getDecorView().getWindowToken());
                 EventBus.getDefault().post(new HomePressEvent(true));
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                    loadDialog();
+                   // if(!isMyLauncherDefault())
+                       loadDialog();
                 } else {
                     if (Settings.canDrawOverlays(CoreActivity.this)) {
+                       // if(!isMyLauncherDefault())
                         loadDialog();
                     }
                 }
@@ -102,6 +108,32 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         mHomeWatcher.startWatch();
 
     }
+
+
+
+
+    boolean isMyLauncherDefault() {
+        final IntentFilter filter = new IntentFilter(Intent.ACTION_MAIN);
+        filter.addCategory(Intent.CATEGORY_HOME);
+
+        List<IntentFilter> filters = new ArrayList<IntentFilter>();
+        filters.add(filter);
+
+        final String myPackageName = getPackageName();
+        List<ComponentName> activities = new ArrayList<ComponentName>();
+        final PackageManager packageManager = (PackageManager) getPackageManager();
+
+        // You can use name of your package here as third argument
+        packageManager.getPreferredActivities(filters, activities, null);
+
+        for (ComponentName activity : activities) {
+            if (myPackageName.equals(activity.getPackageName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     protected void onResume() {
@@ -231,6 +263,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         Log.i("onPause", "MainActivity");
         super.onPause();
         if (mHomeWatcher != null) mHomeWatcher.stopWatch();
+
     }
 
 //    @Override
