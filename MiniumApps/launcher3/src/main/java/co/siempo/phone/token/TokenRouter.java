@@ -7,13 +7,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.Telephony;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
+import co.siempo.phone.MainActivity;
+import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
@@ -21,16 +26,14 @@ import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
 import minium.co.notes.utils.DataUtils;
 
-/**
- * Created by shahab on 2/16/17.
- */
+
 @EBean
 public class TokenRouter {
 
     @Bean
     TokenManager manager;
 
-    public void route() {
+    void route() {
         EventBus.getDefault().post(new TokenUpdateEvent());
     }
 
@@ -39,7 +42,7 @@ public class TokenRouter {
     }
 
 
-    public void setCurrent(TokenItem tokenItem) {
+    void setCurrent(TokenItem tokenItem) {
         manager.setCurrent(tokenItem);
         route();
     }
@@ -100,11 +103,21 @@ public class TokenRouter {
 
     public void sendText(Context context) {
         try {
-
             if (manager.hasCompleted(TokenItemType.CONTACT) && manager.has(TokenItemType.DATA)) {
-                new SmsObserver(context, manager.get(TokenItemType.CONTACT).getExtra2(), manager.get(TokenItemType.DATA).getTitle()).start();
+                String strNumber  = manager.get(TokenItemType.CONTACT).getExtra2();
+                String strMessage  =  manager.get(TokenItemType.DATA).getTitle();
+                new SmsObserver(context, strNumber, strMessage).start();
                 SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(manager.get(TokenItemType.CONTACT).getExtra2(), null, manager.get(TokenItemType.DATA).getTitle(), null, null);
+                smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
+                Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
+                String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(strNumber)));
+                if (defaultSmsPackageName != null) // Can be null in case that there is no default, then the user would be able to choose any app that supports this intent.
+                {
+                    intent.setPackage(defaultSmsPackageName);
+                }
+                context.startActivity(intent);
+                EventBus.getDefault().post(new SendSmsEvent(true,strNumber,strMessage));
             } else if (!manager.has(TokenItemType.CONTACT)) {
                 manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
                 manager.add(new TokenItem(TokenItemType.CONTACT));

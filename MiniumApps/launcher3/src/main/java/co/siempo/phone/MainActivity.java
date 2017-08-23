@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,6 +20,9 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
 
+import com.github.javiersantos.appupdater.AppUpdater;
+import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
@@ -33,6 +38,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
@@ -52,6 +58,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.event.NFCEvent;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
@@ -88,6 +95,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    public static String isTextLenghGreater = "";
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
@@ -107,15 +116,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .check();
 
         if (!isEnabled(this)) {
-            UIUtils.confirm(this, "Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
+            UIUtils.confirmWithCancel(this, null, "Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"));
+                    if (which == -2) {
+                        checkAppLoadFirstTime();
+                    } else {
+                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                    }
+
                 }
             });
         }
 
-        // broadcast reciever for taking over volume key
+
 
         final BroadcastReceiver vReceiver = new BroadcastReceiver() {
             @Override
@@ -136,11 +150,31 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         launcherPrefs.updatePrompt().put(true);
     }
 
+    private void checkAppLoadFirstTime() {
+        if (launcherPrefs.isAppInstalledFirstTime().get()) {
+            launcherPrefs.isAppInstalledFirstTime().put(false);
+            ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
+            if (!activityHelper.isMyLauncherDefault(MainActivity.this)) {
+                activityHelper.handleDefaultLauncher(MainActivity.this);
+                loadDialog();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100) {
+            checkAppLoadFirstTime();
+        }
+    }
+
     @UiThread(delay = 500)
     void loadViews() {
         statusBarHandler = new StatusBarHandler(this);
-        statusBarHandler.requestStatusBarCustomization();
-
+        if (statusBarHandler != null && !statusBarHandler.isActive()) {
+            statusBarHandler.requestStatusBarCustomization();
+        }
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
 
@@ -152,8 +186,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             @Override
             public void onPageSelected(int position) {
                 currentItem = position;
+              //  currentIndex = currentItem;
                 try {
                     if (position == 1)
+                        //noinspection ConstantConditions
                         UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -191,21 +227,39 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     };
 
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+    }
+
+
     @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
     void volumeUpPressed() {
         Tracer.i("Volume up pressed in MainActivity");
         PauseActivity_.intent(this).start();
     }
 
-    @Override
-    protected void onUserLeaveHint() {
-        UIUtils.hideSoftKeyboard(MainActivity.this, getWindow().getDecorView().getWindowToken());
-        super.onUserLeaveHint();
-    }
-
     void checkVersion() {
         Tracer.d("Checking if new version is available ... ");
         ApiClient_.getInstance_(this).checkAppVersion();
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        if (event.isVisible()) {
+            if (StatusBarHandler.isNotificationTrayVisible) {
+
+                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+                if (f instanceof NotificationFragment)
+                {
+                    StatusBarHandler.isNotificationTrayVisible = false;
+                    ((NotificationFragment) f).animateOut();
+
+                }
+            }
+        }
     }
 
     @Subscribe
@@ -236,37 +290,51 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Subscribe
     public void onCheckActivityEvent(CheckActivityEvent event) {
-        try {
-            if (event.isResume())
-                statusBarHandler.requestStatusBarCustomization();
-            else
-                statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());
-        }
+        /**
+         *  It will use further to maintain custom siempo flow.
+         */
+
+//        try {
+//
+//            if (event.isResume()) {
+//                if (statusBarHandler != null && !statusBarHandler.isActive()) {
+//                    statusBarHandler.requestStatusBarCustomization();
+//                }
+//            }else {
+//
+//                if (statusBarHandler != null) {
+//                    statusBarHandler.restoreStatusBarExpansion();
+//                }
+//            }
+//            } catch (Exception e) {
+//            System.out.println(TAG + " exception caught on onCheckActivityEvent  " + e.getMessage());
+//        }
 
 
     }
 
+
     @Override
     public void onSmsSent(int threadId) {
-        try {
-            Intent defineIntent = new Intent(Intent.ACTION_VIEW);
-//          defineIntent.setData(Uri.parse("content://mms-sms/conversations/"+threadId));
-            defineIntent.setData(Uri.parse("smsto:" + manager.get(TokenItemType.CONTACT).getExtra2()));
-//          defineIntent.setType("vnd.android-dir/mms-sms");
-//          defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
-
-            startActivity(defineIntent);
-            manager.clear();
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-        }
+//        try {
+// Don't remove this code,this code is needed for feature refrence.
+//            UIUtils.hideSoftKeyboard(MainActivity.this,getWindow().getDecorView().getWindowToken());
+//            Intent defineIntent = new Intent(Intent.ACTION_VIEW);
+//            defineIntent.setData(Uri.parse("content://mms-sms/conversations/"+threadId));
+//            defineIntent.setData(Uri.parse("smsto:" + manager.get(TokenItemType.CONTACT).getExtra2()));
+//            defineIntent.setType("vnd.android-dir/mms-sms");
+//            defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
+//            startActivity(defineIntent);
+             //manager.clear();
+//        } catch (Exception e) {
+//            Tracer.e(e, e.getMessage());
+//        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MainActivity.isTextLenghGreater = "";
         try {
             statusBarHandler.restoreStatusBarExpansion();
         } catch (Exception e) {
@@ -274,42 +342,41 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
+
+    @SuppressWarnings("deprecation")
     @Override
     protected void onStart() {
         super.onStart();
-        if (launcherPrefs.updatePrompt().get())
-            checkVersion();
-
-//        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-//            new AppUpdater(this)
-//                    .setDisplay(Display.DIALOG)
-//                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-//                    .showEvery(5)
-//                    .setTitleOnUpdateAvailable("Update available")
-//                    .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
-//                    .setTitleOnUpdateNotAvailable("Update not available")
-//                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
-//                    .setButtonUpdate("Update")
-//                    .setButtonDismiss("Maybe later")
-//                    .start();
-//        }
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
+            new AppUpdater(this)
+                    .setDisplay(Display.DIALOG)
+                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+                    .showEvery(5)
+                    .setTitleOnUpdateAvailable("Update available")
+                    .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
+                    .setTitleOnUpdateNotAvailable("Update not available")
+                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
+                    .setButtonUpdate("Update")
+                    .setButtonDismiss("Maybe later")
+                    .start();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-        try {
+        //currentIndex = 0;
+        try{
             statusBarHandler.restoreStatusBarExpansion();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         try {
             enableNfc(true);
         } catch (Exception e) {
@@ -317,16 +384,23 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
-        if (statusBarHandler != null && !statusBarHandler.isActive())
+      //  currentIndex = currentItem;
+        if (statusBarHandler != null && !statusBarHandler.isActive()) {
             statusBarHandler.requestStatusBarCustomization();
-
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         enableNfc(false);
-        Log.i("onPause", "MainActivity");
+        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+        try {
+            if (statusBarHandler != null)
+                statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -365,16 +439,31 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     public void onBackPressed() {
-        if (statusBarHandler.isNotificationTrayVisible) {
+        try{
+        if (StatusBarHandler.isNotificationTrayVisible) {
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if (f instanceof NotificationFragment) ;
+            if (f!=null && f instanceof NotificationFragment)
             {
-                statusBarHandler.isNotificationTrayVisible = false;
+                StatusBarHandler.isNotificationTrayVisible = false;
+                //noinspection ConstantConditions
                 ((NotificationFragment) f).animateOut();
 
+                }
+            } else if (pager.getCurrentItem() == 1) {
+                pager.setCurrentItem(0);
             }
-        } else if (pager.getCurrentItem() == 1) {
-            pager.setCurrentItem(0);
+        }
+        catch (Exception e){
+            Log.d(TAG,"Exception onBackPressed MainActivity:: "+e.toString());
+        }
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(statusBarHandler!=null){
+            statusBarHandler = new StatusBarHandler(this);
         }
     }
 }

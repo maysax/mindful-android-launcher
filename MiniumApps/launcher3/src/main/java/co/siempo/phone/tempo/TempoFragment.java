@@ -137,7 +137,7 @@ public class TempoFragment extends CoreFragment {
 
     @Click
     void imgRight() {
-        ((CoreActivity) getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(), R.id.mainView);
+        ((CoreActivity) getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(), R.id.tempoView);
     }
 
     private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {

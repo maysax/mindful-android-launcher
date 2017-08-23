@@ -79,7 +79,7 @@ public class PauseFragment extends CoreFragment {
         if (launcherPrefs.isPauseActive().get()) {
             getActivity().onBackPressed();
         } else {
-            ((CoreActivity) getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(), R.id.mainView);
+            ((CoreActivity) getActivity()).loadChildFragment(PausePreferenceFragment_.builder().build(), R.id.pauseView);
         }
     }
 
@@ -87,7 +87,9 @@ public class PauseFragment extends CoreFragment {
 
         @Override
         public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
-
+            if(seekBar.getValue()==0){
+                seekBar.setValue(60);
+            }
         }
 
         @Override

@@ -1,5 +1,6 @@
 package co.siempo.phone.notification;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -38,14 +39,14 @@ import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.config.Config;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 
-/**
- * Created by itc on 17/02/17.
- */
+
 @EFragment(R.layout.notification_main)
 public class NotificationFragment extends CoreFragment implements View.OnTouchListener {
 
@@ -66,6 +67,14 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     @ViewById
     LinearLayout linSecond;
 
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            animateOut();
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -214,7 +223,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         for (int i = 0; i < items.size(); i++) {
             //DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
-            DateFormat sdf = new SimpleDateFormat("hh:mm a");
+            @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(items.get(i).get_date());
             Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type());
             notificationList.add(n);
@@ -236,7 +245,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
 
-        String contactName = "", imageUrl = "";
+        String contactName, imageUrl = "";
         try {
             if (cursor != null && cursor.moveToFirst()) {
                 contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
@@ -340,6 +349,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 }
             }
         });
+        //noinspection ConstantConditions
         getView().startAnimation(trans);
     }
 
@@ -393,6 +403,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     public void onResume() {
         super.onResume();
         try {
+            //noinspection ConstantConditions
             UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

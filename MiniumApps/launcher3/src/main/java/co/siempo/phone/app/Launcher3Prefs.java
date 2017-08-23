@@ -54,4 +54,10 @@ public interface Launcher3Prefs {
 
     @DefaultBoolean(true)
     boolean updatePrompt();
+
+    @DefaultBoolean(true)
+    boolean isAppInstalledFirstTime();
+
+    @DefaultBoolean(false)
+    boolean isKeyBoardDisplay();
 }

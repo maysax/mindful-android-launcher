@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.joanzapata.iconify.IconDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +108,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         return convertView;
     }
+
 
     private static class ActionViewHolder {
         ImageView icon;
@@ -207,7 +209,14 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         MainListItem item = getItem(position);
 
         if (item != null) {
-            holder.icon.setImageResource(item.getIconRes());
+            if(item.getIcon()!=null){
+                holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
+                        .colorRes(R.color.text_primary)
+                        .sizeDp(18));
+            }
+            else{
+                holder.icon.setImageResource(item.getIconRes());
+            }
             holder.text.setText(item.getTitle());
         }
 

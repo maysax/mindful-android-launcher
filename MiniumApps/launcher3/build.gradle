@@ -65,7 +65,6 @@ dependencies {
 
     compile project(':chips')
     // compile project(':color-picker')
-    compile project(':settings')
     compile project(':notes')
     compile project(':halo-circle-seekbar')
     compile project(':horizontal-timepicker')

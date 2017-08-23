@@ -1,9 +1,11 @@
 package co.siempo.phone.pause;
 
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import org.androidannotations.annotations.AfterViews;
@@ -12,6 +14,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
@@ -19,6 +22,11 @@ import java.io.IOException;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.PauseStartEvent;
+import co.siempo.phone.notification.NotificationFragment;
+import co.siempo.phone.notification.NotificationRetreat_;
+import co.siempo.phone.notification.StatusBarHandler;
+import co.siempo.phone.tempo.TempoActivity;
+import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -30,9 +38,11 @@ public class PauseActivity extends CoreActivity {
 
     private PauseFragment pauseFragment;
     private PauseActivatedFragment pauseActivatedFragment;
+    private StatusBarHandler statusBarHandler;
+    private String TAG="PauseActivity";
 
     @Pref
-    Launcher3Prefs_ launcherPrefs;
+  public   Launcher3Prefs_ launcherPrefs;
 
     @Extra
     Tag tag;
@@ -44,14 +54,26 @@ public class PauseActivity extends CoreActivity {
     void afterViews() {
         Tracer.d("afterviews PauseActivity");
         init();
+        loadTopBar();
+        loadStatusBar();
+    }
+    @UiThread(delay = 1000)
+    void loadStatusBar() {
+        statusBarHandler = new StatusBarHandler(PauseActivity.this);
+        if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+            statusBarHandler.requestStatusBarCustomization();
+        }
     }
 
+    private void loadTopBar() {
+        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
+    }
     private void init() {
         if (tag != null) {
             pauseStartEvent(new PauseStartEvent(-1));
         } else {
             pauseFragment = PauseFragment_.builder().build();
-            loadFragment(pauseFragment, R.id.mainView, "main");
+            loadFragment(pauseFragment, R.id.pauseView, "main");
         }
     }
 
@@ -67,11 +89,28 @@ public class PauseActivity extends CoreActivity {
         } else {
             super.onBackPressed();
         }
+
+        try{
+
+            if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+                if (f instanceof NotificationFragment) ;
+                {
+                    statusBarHandler.isNotificationTrayVisible = false;
+                    ((NotificationFragment) f).animateOut();
+
+                }
+            }
+        }
+        catch (Exception e){
+            Log.d(TAG,"Exception e");
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
         Tracer.d("onStart PauseActivity");
         if (tag != null) {
             if (nfcCheckHandler == null ) nfcCheckHandler = new Handler();
@@ -83,6 +122,7 @@ public class PauseActivity extends CoreActivity {
     protected void onStop() {
         super.onStop();
         Tracer.d("onStop PauseActivity");
+
         if (nfcCheckHandler != null) {
             nfcCheckHandler.removeCallbacks(nfcRunnable);
             Ndef  ndef = Ndef.get(tag);
@@ -94,6 +134,9 @@ public class PauseActivity extends CoreActivity {
                 }
             }
         }
+
+
+
     }
 
     @Click
@@ -113,6 +156,7 @@ public class PauseActivity extends CoreActivity {
     }
 
     private void stopPause() {
+
         if (pauseActivatedFragment != null) {
             pauseActivatedFragment.stopPause(true);
         }
@@ -121,7 +165,7 @@ public class PauseActivity extends CoreActivity {
     @Subscribe
     public void pauseStartEvent(PauseStartEvent event) {
         pauseActivatedFragment = PauseActivatedFragment_.builder().maxMillis(event.getMaxMillis()).build();
-        loadFragment(pauseActivatedFragment, R.id.mainView, "main");
+        loadFragment(pauseActivatedFragment, R.id.pauseView, "main");
     }
 
     private Runnable buildNfcRunnable(final Tag tag) {
@@ -150,5 +194,39 @@ public class PauseActivity extends CoreActivity {
                 }
             }
         };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        if (statusBarHandler != null && !statusBarHandler.isActive())
+            statusBarHandler.requestStatusBarCustomization();
+ }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+        try {
+            if(statusBarHandler!=null)
+                statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if(statusBarHandler!=null){
+            statusBarHandler = new StatusBarHandler(this);
+        }
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/pauseContainer"
@@ -15,11 +15,18 @@
         tools:background="@color/material.core.red"
         android:background="?android:attr/detailsElementBackground" />
 
-    <FrameLayout
-        android:id="@+id/mainView"
+    <RelativeLayout
+        android:id="@+id/tempoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/statusView"
         android:layout_marginBottom="54dp"
         android:background="?android:attr/detailsElementBackground" />
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/mainView"
+        android:layout_width="match_parent"
+        android:layout_below="@id/statusView"
+        android:layout_height="match_parent"></FrameLayout>
+
+</RelativeLayout>

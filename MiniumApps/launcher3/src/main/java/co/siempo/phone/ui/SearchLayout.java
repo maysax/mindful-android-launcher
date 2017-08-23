@@ -6,6 +6,7 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
@@ -16,10 +17,14 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -40,6 +45,9 @@ public class SearchLayout extends CardView {
     public ChipsEditText getTxtSearchBox() {
         return txtSearchBox;
     }
+
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
 
     @ViewById
     ChipsEditText txtSearchBox;
@@ -98,11 +106,13 @@ public class SearchLayout extends CardView {
     void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 handleAfterTextChanged(s.toString());
+                MainActivity.isTextLenghGreater = s.toString();
             }
 
             @Override
@@ -113,15 +123,27 @@ public class SearchLayout extends CardView {
     }
 
     public void askFocus() {
-        txtSearchBox.requestFocus();
-        txtSearchBox.setText("");
+
+        if (MainActivity.isTextLenghGreater.length() > 0) {
+            MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
+            handleAfterTextChanged(MainActivity.isTextLenghGreater);
+        } else {
+            if(launcherPrefs.isKeyBoardDisplay().get())
+                 txtSearchBox.requestFocus();
+            btnClear.setVisibility(INVISIBLE);
+            txtSearchBox.setText("");
+        }
         handler.postDelayed(showKeyboardRunnable, 500);
     }
 
     private Runnable showKeyboardRunnable = new Runnable() {
         @Override
         public void run() {
-            UIUtils.showKeyboard(txtSearchBox);
+            if (!StatusBarHandler.isNotificationTrayVisible) {
+                if(launcherPrefs.isKeyBoardDisplay().get()) {
+                    UIUtils.showKeyboard(txtSearchBox);
+                }
+            }
         }
     };
 

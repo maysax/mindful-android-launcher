@@ -4,15 +4,27 @@ import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.nfc.NdefRecord;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
@@ -25,11 +37,14 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.R;
 import minium.co.core.app.DroidPrefs_;
+import minium.co.core.app.HomeWatcher;
 import minium.co.core.config.Config;
 import minium.co.core.event.DownloadApkEvent;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.helper.Validate;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.ActiveActivitiesTracker;
+import minium.co.core.util.UIUtils;
 
 /**
  * This activity will be the base activity
@@ -37,29 +52,144 @@ import minium.co.core.util.ActiveActivitiesTracker;
  * <p>
  * Created by shahab on 3/17/16.
  */
+@SuppressWarnings("JavaDoc")
 @EActivity
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
 
     int onStartCount = 0;
-
+    public int currentIndex = 0;
+    public HomeWatcher mHomeWatcher;
     @Pref
     protected DroidPrefs_ prefs;
 
     @SystemService
     protected ActivityManager activityManager;
-
+    public View mTestView = null;
+    public WindowManager windowManager = null;
+    private boolean isOnStopCalled = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //onCreateAnimation(savedInstanceState);
+        windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
+
+        Log.d("CoreActivity", "CoreActivity");
         if (prefs != null && prefs.selectedThemeId().get() != 0) {
             setTheme(prefs.selectedThemeId().get());
         }
+        mHomeWatcher = new HomeWatcher(this);
+        mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+                UIUtils.hideSoftKeyboard(CoreActivity.this, getWindow().getDecorView().getWindowToken());
+                EventBus.getDefault().post(new HomePressEvent(true));
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                            if(!isOnStopCalled && !isMyLauncherDefault(CoreActivity.this))
+                                loadDialog();
+                        } else {
+                            if(!isOnStopCalled && !isMyLauncherDefault(CoreActivity.this))
+                                if (Settings.canDrawOverlays(CoreActivity.this)) {
+                                    loadDialog();
+                                }
+                        }
+
+                    }
+                },1000);
 
 
+            }
+
+            @Override
+            public void onHomeLongPressed() {
+            }
+        });
+        mHomeWatcher.startWatch();
+
+    }
+
+    public boolean isMyLauncherDefault(CoreActivity activity) {
+        return getLauncherPackageName(activity).equals(activity.getPackageName());
+    }
+
+    private String getLauncherPackageName(CoreActivity activity) {
+        PackageManager localPackageManager = activity.getPackageManager();
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.HOME");
+        return localPackageManager.resolveActivity(intent,
+                PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mHomeWatcher != null) mHomeWatcher.startWatch();
+        isOnStopCalled = false;
+    }
+
+    public void loadDialog() {
+        if (mTestView == null) {
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            layoutParams.format = PixelFormat.RGBA_8888;
+            layoutParams.gravity = Gravity.TOP | Gravity.START;
+            layoutParams.flags =
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                            | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+//            layoutParams.token = getWindow().getDecorView().getRootView().getWindowToken();
+//            layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+
+
+            //Feel free to inflate here
+            // final View mTestView = new View(this);
+            mTestView = View.inflate(CoreActivity.this, R.layout.tooltip_launcher, null);
+            if (currentIndex == 0) {
+                mTestView.findViewById(R.id.linSiempoApp).setVisibility(View.VISIBLE);
+                mTestView.findViewById(R.id.linDefaultApp).setVisibility(View.GONE);
+                mTestView.findViewById(R.id.txtTitle).setVisibility(View.VISIBLE);
+            } else {
+                mTestView.findViewById(R.id.linSiempoApp).setVisibility(View.GONE);
+                mTestView.findViewById(R.id.linDefaultApp).setVisibility(View.VISIBLE);
+                mTestView.findViewById(R.id.txtTitle).setVisibility(View.GONE);
+            }
+            //Must wire up back button, otherwise it's not sent to our activity
+            mTestView.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        if (mTestView != null)
+                            windowManager.removeView(mTestView);
+                        mTestView = null;
+                        onBackPressed();
+                    }
+                    return true;
+                }
+            });
+            mTestView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mTestView != null)
+                        windowManager.removeView(mTestView);
+                    mTestView = null;
+                }
+            });
+            Button btnOk = (Button) mTestView.findViewById(R.id.btnOk);
+            btnOk.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mTestView != null)
+                        windowManager.removeView(mTestView);
+                    mTestView = null;
+                }
+            });
+            windowManager.addView(mTestView, layoutParams);
+        }
     }
 
 
@@ -115,6 +245,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             e.printStackTrace();
         }
 
+        isOnStopCalled =true;
+
+
         super.onStop();
     }
 
@@ -123,6 +256,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
         Log.i("onPause", "MainActivity");
         super.onPause();
+        if (mHomeWatcher != null) mHomeWatcher.stopWatch();
     }
 
 //    @Override
