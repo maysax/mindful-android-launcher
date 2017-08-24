@@ -4,9 +4,10 @@ import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.nfc.NdefRecord;
@@ -68,6 +69,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public View mTestView = null;
     public WindowManager windowManager = null;
     private boolean isOnStopCalled = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,17 +93,17 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     @Override
                     public void run() {
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                            if(!isOnStopCalled && !isMyLauncherDefault(CoreActivity.this))
-                            loadDialog();
-                        } else {
-                            if(!isOnStopCalled && !isMyLauncherDefault(CoreActivity.this))
-                            if (Settings.canDrawOverlays(CoreActivity.this)) {
+                            if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
                                 loadDialog();
-                            }
+                        } else {
+                            if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
+                                if (Settings.canDrawOverlays(CoreActivity.this)) {
+                                    loadDialog();
+                                }
                         }
 
                     }
-                },1000);
+                }, 1000);
 
 
             }
@@ -114,22 +116,44 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
-    public boolean isMyLauncherDefault(CoreActivity activity) {
-        return getLauncherPackageName(activity).equals(activity.getPackageName());
-    }
 
-    private String getLauncherPackageName(CoreActivity activity) {
-        PackageManager localPackageManager = activity.getPackageManager();
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.HOME");
-        return localPackageManager.resolveActivity(intent,
-                PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
-    }
     @Override
     protected void onResume() {
         super.onResume();
-       if (mHomeWatcher != null) mHomeWatcher.startWatch();
+        if (mHomeWatcher != null) mHomeWatcher.startWatch();
         isOnStopCalled = false;
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(new UserPresentBroadcastReceiver(), intentFilter);
+    }
+
+    /**
+     * This BroadcastReceiver is included for the when user press home button and lock the screen.
+     * when it comes back we have to show launcher dialog,toottip window.
+     */
+    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
+                if (mTestView != null && mTestView.getVisibility() == View.INVISIBLE) {
+                    if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
+                        Intent startMain = new Intent(Intent.ACTION_MAIN);
+                        startMain.addCategory(Intent.CATEGORY_HOME);
+                        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(startMain);
+                    }
+                    mTestView.setVisibility(View.VISIBLE);
+                } else {
+                    if (mTestView != null)
+                        mTestView.setVisibility(View.VISIBLE);
+                }
+            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                if (mTestView != null) mTestView.setVisibility(View.INVISIBLE);
+            }
+        }
+
     }
 
     public void loadDialog() {
@@ -142,12 +166,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             layoutParams.flags =
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                             | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
-//            layoutParams.token = getWindow().getDecorView().getRootView().getWindowToken();
-//            layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-
-
-            //Feel free to inflate here
-            // final View mTestView = new View(this);
             mTestView = View.inflate(CoreActivity.this, R.layout.tooltip_launcher, null);
             if (currentIndex == 0) {
                 mTestView.findViewById(R.id.linSiempoApp).setVisibility(View.VISIBLE);
@@ -193,14 +211,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        //No call for super(). Bug on API Level > 11.
-    }
-
     private void onCreateAnimation(Bundle savedInstanceState) {
         onStartCount = 1;
-
         if (savedInstanceState == null) {
             this.overridePendingTransition(R.anim.anim_slide_in_left, R.anim.anim_slide_out_left);
         } else {
@@ -212,7 +224,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         if (onStartCount > 1) {
             this.overridePendingTransition(R.anim.anim_slide_in_right,
                     R.anim.anim_slide_out_right);
-
         } else if (onStartCount == 1) {
             onStartCount++;
         }
@@ -230,9 +241,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onStop() {
         ActiveActivitiesTracker.activityStopped();
         EventBus.getDefault().unregister(this);
-
-        Log.i("onStop", "MainActivity");
-
         try {
             if (Config.isNotificationAlive) {
                 //EventBus.getDefault().post(new NotificationTrayEvent(false));
@@ -244,25 +252,15 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        isOnStopCalled =true;
-
-
+        isOnStopCalled = true;
         super.onStop();
     }
 
     @Override
     protected void onPause() {
-
-        Log.i("onPause", "MainActivity");
         super.onPause();
         if (mHomeWatcher != null) mHomeWatcher.stopWatch();
     }
-
-//    @Override
-//    protected void attachBaseContext(Context newBase) {
-//        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-//    }
 
     /**
      * Load fragment by replacing all previous fragments
@@ -279,12 +277,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             FragmentTransaction t = fragmentManager.beginTransaction();
             t.replace(containerViewId, fragment, tag);
             fragmentManager.popBackStack();
-            // TODO: we have to allow state loss here
-            // since this function can get called from an AsyncTask which
-            // could be finishing after our app has already committed state
-            // and is about to get shutdown.  What we *should* do is
-            // not commit anything in an AsyncTask, but that's a bigger
-            // change than we want now.
             t.commitAllowingStateLoss();
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

@@ -12,8 +12,8 @@
         android:background="@color/white"
         android:orientation="vertical"
         android:paddingTop="15dp"
-        android:paddingRight="15dp"
-        android:paddingLeft="15dp">
+        android:paddingLeft="15dp"
+        tools:ignore="RtlHardcoded,RtlSymmetry">
 
         <TextView
             android:id="@+id/txtTitle"
@@ -139,7 +139,7 @@
         <Button
             android:id="@+id/btnOk"
             android:layout_gravity="right"
-            android:background="@android:color/transparent"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ok"
