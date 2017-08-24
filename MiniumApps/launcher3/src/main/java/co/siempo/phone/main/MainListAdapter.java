@@ -1,6 +1,7 @@
 package co.siempo.phone.main;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -35,10 +36,11 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private List<MainListItem> originalData = null;
     private List<MainListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
-
+    PackageManager packageManager;
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
+        packageManager = context.getPackageManager();
         loadData(items);
     }
 
@@ -101,10 +103,13 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             case CONTACT:
                 convertView = getContactItemView(position, convertView, parent);
                 break;
+            case APPS:
+                convertView = getActionItemView(position, convertView, parent, MainListItemType.APPS);
+                break;
             case ACTION:
             case DEFAULT:
             case NUMBERS:
-                convertView = getActionItemView(position, convertView, parent);
+                convertView = getActionItemView(position, convertView, parent, MainListItemType.NUMBERS);
         }
 
         return convertView;
@@ -191,7 +196,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         return view;
     }
 
-    private View getActionItemView(int position, View view, ViewGroup parent) {
+    private View getActionItemView(int position, View view, ViewGroup parent, MainListItemType numbers) {
         ActionViewHolder holder;
 
         if (view == null) {
@@ -210,15 +215,23 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         MainListItem item = getItem(position);
 
         if (item != null) {
-            if(item.getIcon()!=null){
-                holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
-                        .colorRes(R.color.text_primary)
-                        .sizeDp(18));
+            if(item.getItemType() == MainListItemType.NUMBERS) {
+                if (item.getIcon() != null) {
+                    holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
+                            .colorRes(R.color.text_primary)
+                            .sizeDp(18));
+                } else {
+                    holder.icon.setImageResource(item.getIconRes());
+                }
+                holder.text.setText(item.getTitle());
+            }else{
+                if (item.getApplicationInfo() != null) {
+                    holder.icon.setImageDrawable(item.getApplicationInfo().loadIcon(packageManager));
+                } else {
+                    holder.icon.setImageResource(item.getIconRes());
+                }
+                holder.text.setText(item.getTitle());
             }
-            else{
-                holder.icon.setImageResource(item.getIconRes());
-            }
-            holder.text.setText(item.getTitle());
         }
 
         return view;
@@ -296,6 +309,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             buildData.add(originalData.get(i));
                             break;
                         case NUMBERS:
+                            buildData.add(originalData.get(i));
+                            break;
+                        case APPS:
                             buildData.add(originalData.get(i));
                             break;
                     }

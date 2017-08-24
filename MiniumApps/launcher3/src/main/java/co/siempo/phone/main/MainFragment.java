@@ -267,6 +267,8 @@ public class MainFragment extends CoreFragment {
                     }
 
                 }
+            }else if(current.getItemType() == TokenItemType.APPS){
+                mediator.installedApplicationList();
             }
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

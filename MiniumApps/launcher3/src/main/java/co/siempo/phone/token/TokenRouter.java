@@ -41,12 +41,10 @@ public class TokenRouter {
 
     }
 
-
     void setCurrent(TokenItem tokenItem) {
         manager.setCurrent(tokenItem);
         route();
     }
-
     public void add(TokenItem tokenItem) {
         manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
         manager.add(tokenItem);

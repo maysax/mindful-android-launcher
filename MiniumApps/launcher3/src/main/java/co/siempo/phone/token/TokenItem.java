@@ -27,6 +27,8 @@ public class TokenItem {
             case END_OP:
                 init("", false, TokenCompleteType.FULL);
                 break;
+            case APPS:
+                init("/", false, TokenCompleteType.FULL);
         }
     }
 

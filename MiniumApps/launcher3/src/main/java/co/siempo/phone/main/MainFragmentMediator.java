@@ -1,9 +1,12 @@
 package co.siempo.phone.main;
 
+import android.content.pm.ApplicationInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.contact.ContactsLoader;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.model.ContactListItem;
@@ -52,6 +55,23 @@ class MainFragmentMediator {
     private void loadActions() {
         new MainListItemLoader(fragment.getActivity()).loadItems(items);
     }
+
+
+
+    private void loadAppList() {
+        try {
+            if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
+                items.clear();
+                for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
+                    String appName = applicationInfo.loadLabel(fragment.getActivity().getPackageManager()).toString();
+                    items.add(new MainListItem(appName,MainListItemType.APPS,applicationInfo));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void loadContacts() {
         try {
@@ -145,9 +165,7 @@ class MainFragmentMediator {
     }
 
     public void contactNumberPicker(int selectedContactId) {
-
         items.clear();
-
         for (ContactListItem item : contactItems) {
             if (item.getContactId() == selectedContactId) {
                 for (ContactListItem.ContactNumber number : item.getNumbers()) {
@@ -166,6 +184,14 @@ class MainFragmentMediator {
     public void defaultData() {
         items.clear();
         loadDefaults();
+        getAdapter().loadData(items);
+        getAdapter().notifyDataSetChanged();
+    }
+
+
+    public void installedApplicationList() {
+        items.clear();
+        loadAppList();
         getAdapter().loadData(items);
         getAdapter().notifyDataSetChanged();
     }

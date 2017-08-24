@@ -6,5 +6,5 @@ package co.siempo.phone.model;
 
 @SuppressWarnings("ALL")
 public enum MainListItemType {
-    CONTACT, ACTION, DEFAULT, NUMBERS
+    CONTACT, ACTION, DEFAULT, NUMBERS,APPS
 }

@@ -77,7 +77,6 @@ public class MainListItemLoader {
     public void listItemClicked(int id) {
         switch (id) {
             case 1:
-
                 new ActivityHelper(context).openMessagingApp();
                 break;
             case 2:

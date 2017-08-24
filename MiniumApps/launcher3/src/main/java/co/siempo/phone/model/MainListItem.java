@@ -1,5 +1,7 @@
 package co.siempo.phone.model;
 
+import android.content.pm.ApplicationInfo;
+
 import co.siempo.phone.R;
 
 /**
@@ -16,6 +18,13 @@ public class MainListItem {
     private MainListItemType itemType = MainListItemType.ACTION;
     private String icon;
     private int iconRes;
+    private ApplicationInfo applicationInfo;
+
+    public MainListItem(String title,MainListItemType itemType, ApplicationInfo applicationInfo) {
+        this.title = title;
+        this.itemType = itemType;
+        this.applicationInfo = applicationInfo;
+    }
 
     public MainListItem(int id, String title, String icon) {
         this(id, title, icon, MainListItemType.ACTION);
@@ -86,6 +95,14 @@ public class MainListItem {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public ApplicationInfo getApplicationInfo() {
+        return applicationInfo;
+    }
+
+    public void setApplicationInfo(ApplicationInfo applicationInfo) {
+        this.applicationInfo = applicationInfo;
     }
 
     @Override

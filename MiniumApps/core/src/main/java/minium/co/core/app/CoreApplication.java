@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.Crashlytics;
@@ -44,6 +44,8 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private RefWatcher refWatcher;
+
+
     private List<ApplicationInfo> packagesList = new ArrayList<>();
 
     @Override
@@ -60,24 +62,21 @@ public abstract class CoreApplication extends MultiDexApplication {
         sInstance = this;
         init();
         getAllApplicationPackageName();
+
     }
 
     /**
      * This method is used for fetch all installed application package list.
      */
     private void getAllApplicationPackageName() {
-        // broadcast reciever for taking over volume key
-        final PackageManager pm = getPackageManager();
-        //get a list of installed apps.
-        packagesList.addAll(pm.getInstalledApplications(PackageManager.GET_META_DATA));
-
+        new LoadApplications().execute();
     }
 
     protected void init() {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-       // configFabric();
+        // configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();
@@ -123,5 +122,41 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public List<ApplicationInfo> getPackagesList() {
         return packagesList;
+    }
+
+    public void setPackagesList(List<ApplicationInfo> packagesList) {
+        this.packagesList = packagesList;
+    }
+
+    private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
+
+        @Override
+        protected List<ApplicationInfo> doInBackground(Object... params) {
+            List<ApplicationInfo> applist = checkForLaunchIntent(getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA));
+            return applist;
+        }
+
+        @Override
+        protected void onPostExecute(List<ApplicationInfo> applicationInfos) {
+            super.onPostExecute(applicationInfos);
+            packagesList.clear();
+            setPackagesList(applicationInfos);
+        }
+
+        private List<ApplicationInfo> checkForLaunchIntent(List<ApplicationInfo> list) {
+            ArrayList<ApplicationInfo> applist = new ArrayList<ApplicationInfo>();
+            for (ApplicationInfo info : list) {
+                try {
+                    if (null != getPackageManager().getLaunchIntentForPackage(info.packageName)) {
+                        applist.add(info);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return applist;
+        }
+
     }
 }
