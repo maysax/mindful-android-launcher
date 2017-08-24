@@ -29,8 +29,8 @@
 #    - chmod +x ./gradlew
 #    - ./gradlew test
 
-before_script:
-    - "export ANDROID_HOME=\"/home/ravi/Android/Sdk/\""
+#before_script:
+#    - "export ANDROID_HOME=\"/home/ravi/Android/Sdk/\""
       
 Lint:
   script:
