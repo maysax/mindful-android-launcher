@@ -1,6 +1,7 @@
 package com.james.status.utils;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
@@ -61,6 +62,7 @@ public class StaticUtils {
         return px / Resources.getSystem().getDisplayMetrics().density;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     public static int getBluetoothState(Context context) {
         BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
         if (adapter != null) return adapter.getState();
@@ -179,6 +181,7 @@ public class StaticUtils {
         return false;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     public static boolean shouldUseCompatNotifications(Context context) {
         Boolean enabled = PreferenceUtils.getBooleanPreference(context, PreferenceUtils.PreferenceIdentifier.STATUS_NOTIFICATIONS_COMPAT);
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 || (enabled != null && enabled);

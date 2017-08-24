@@ -76,6 +76,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         }
     }
 
+    @SuppressLint("LogConditional")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Log.d(TAG, "" + event.getAction());
@@ -144,6 +145,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
         recyclerView.setOnTouchListener(new View.OnTouchListener() {
 
+            @SuppressLint("LogConditional")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d(TAG, "1 :::::   " + count);

@@ -14,6 +14,7 @@ import co.siempo.phone.app.Launcher3Prefs_;
  * Created by tkb on 2017-03-21.
  */
 
+@SuppressWarnings("ALL")
 @EReceiver
 public class AlarmReciever extends BroadcastReceiver {
     @Pref

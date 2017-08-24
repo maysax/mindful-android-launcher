@@ -6,6 +6,7 @@ import org.androidannotations.annotations.EBean;
 /**
  * Created by shahab on 2/16/17.
  */
+@SuppressWarnings("ALL")
 @EBean
 public class TokenParser {
 

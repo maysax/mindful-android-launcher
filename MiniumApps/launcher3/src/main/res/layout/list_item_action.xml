@@ -6,13 +6,15 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     style="@style/ListItem"
-    tools:background="@color/material.core.red">
+    tools:background="@color/material.core.red"
+    tools:ignore="UnusedResources">
 
     <com.joanzapata.iconify.widget.IconTextView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="{fa-comment-o 20dp}" />
+        android:text="{fa-comment-o 20dp}"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/text"
@@ -22,6 +24,7 @@
         android:textSize="@dimen/text.size.medium"
         android:text="@string/app_name"
         android:textColor="@color/text.primary"
-        tools:text="Hello World" />
+        tools:text="Hello World"
+        tools:ignore="RtlSymmetry" />
 
 </LinearLayout>

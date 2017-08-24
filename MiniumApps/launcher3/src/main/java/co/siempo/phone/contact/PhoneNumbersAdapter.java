@@ -13,6 +13,7 @@ import co.siempo.phone.R;
  * Created by shahab on 2/16/17.
  */
 
+@SuppressWarnings("ALL")
 public class PhoneNumbersAdapter extends SimpleCursorAdapter {
 
     public PhoneNumbersAdapter(Context context, int layout, Cursor c,

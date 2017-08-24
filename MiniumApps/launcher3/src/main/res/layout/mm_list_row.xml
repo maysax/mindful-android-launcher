@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:showDividers="none">
@@ -12,7 +13,8 @@
         android:gravity="center_vertical"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:ignore="UnusedIds,UselessParent">
 
         <TextView
             android:text="Sound"
@@ -21,7 +23,8 @@
             android:textSize="14sp"
             android:fontFamily="sans-serif"
             android:textColor="#ffffff"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:text="Sound"
@@ -33,7 +36,8 @@
             android:textColor="#ffffff"
             android:gravity="right"
             android:paddingRight="10dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="HardcodedText,RtlSymmetry" />
 
         <com.joanzapata.iconify.widget.IconTextView
             android:text="{fa-angle-right 27dp}"
@@ -43,7 +47,8 @@
             android:fontFamily="sans-serif"
             android:textColor="#ffffff"
             android:gravity="right"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="HardcodedText" />
 
     </TableRow>
 </TableLayout>

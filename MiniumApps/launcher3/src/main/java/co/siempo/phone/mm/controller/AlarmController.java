@@ -21,6 +21,7 @@ import co.siempo.phone.mm.AlarmReciever_;
  * Created by tkb on 2017-03-27.
  */
 
+@SuppressWarnings("ALL")
 public class AlarmController {
 
 

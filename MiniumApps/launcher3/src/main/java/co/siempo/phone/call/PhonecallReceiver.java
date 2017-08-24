@@ -10,6 +10,7 @@ import java.util.Date;
 /**
  * Created by Shahab on 7/27/2016.
  */
+@SuppressWarnings("ALL")
 public abstract class PhonecallReceiver extends BroadcastReceiver {
 
     //The receiver will be recreated whenever android feels like it.  We need a static variable to remember data between instantiations

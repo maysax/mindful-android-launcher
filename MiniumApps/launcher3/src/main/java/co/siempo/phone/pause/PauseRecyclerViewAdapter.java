@@ -1,5 +1,6 @@
 package co.siempo.phone.pause;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import de.greenrobot.event.EventBus;
  * Created by tkb on 2017-02-24.
  */
 
+@SuppressWarnings("ALL")
 public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecyclerViewAdapter.ViewHolder> {
 
     ArrayList<PauseDataModel> SubjectValues;
@@ -55,6 +57,7 @@ public class PauseRecyclerViewAdapter extends RecyclerView.Adapter<PauseRecycler
         return viewHolder1;
     }
 
+    @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 

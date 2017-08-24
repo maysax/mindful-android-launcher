@@ -18,6 +18,7 @@ import co.siempo.phone.util.AudioUtils;
 /**
  * Created by Shahab on 3/30/2017.
  */
+@SuppressWarnings("ALL")
 @EReceiver
 public class TempoReceiver extends BroadcastReceiver {
 

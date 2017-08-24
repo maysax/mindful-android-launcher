@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -31,7 +32,8 @@
                 android:textColor="#de000000"
                 android:layout_centerInParent="true"
                 android:fontFamily="sans-serif-medium"
-                android:text="Away Message" />
+                android:text="Away Message"
+                tools:ignore="HardcodedText" />
 
             <ImageView
                 android:id="@+id/crossActionBar"
@@ -41,7 +43,8 @@
                 android:layout_marginTop="20dp"
                 android:contentDescription="@null"
                 android:layout_alignBottom="@+id/titleActionBar"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                tools:ignore="PrivateResource" />
 
 
         </RelativeLayout>
@@ -68,14 +71,16 @@
             android:fontFamily="sans-serif"
             android:textColor="#de000000"
             android:layout_marginLeft="21.6dp"
-            android:text="Away Message" />
+            android:text="Away Message"
+            tools:ignore="HardcodedText,UnusedIds" />
 
 
         <Switch
             android:id="@+id/switch_away"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="18dp" />
+            android:layout_marginRight="18dp"
+            tools:ignore="UnusedIds" />
     </LinearLayout>
 
     <TextView
@@ -89,7 +94,8 @@
         android:layout_marginLeft="21.6dp"
         android:layout_marginRight="18dp"
         android:layout_marginBottom="24dp"
-        android:text="This message will be displayed to your contacts if they contact you during your Mindful Morning." />
+        android:text="This message will be displayed to your contacts if they contact you during your Mindful Morning."
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/text_update_message"
@@ -102,7 +108,8 @@
         android:layout_marginLeft="21.6dp"
         android:layout_marginRight="18dp"
         android:text="Stephanie has snoozed notifications."
-        android:layout_marginBottom="12.5dp" />
+        android:layout_marginBottom="12.5dp"
+        tools:ignore="HardcodedText,LabelFor,TextFields" />
 
     <View
         android:layout_width="match_parent"

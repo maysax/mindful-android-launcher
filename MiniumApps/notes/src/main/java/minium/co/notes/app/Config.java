@@ -6,6 +6,7 @@ import com.evernote.client.android.EvernoteSession;
  * Created by Shahab on 2/3/2017.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class Config {
 
     public static final String CONSUMER_KEY = "tausiq19";

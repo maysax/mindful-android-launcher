@@ -29,6 +29,7 @@ import co.siempo.phone.R;
 /**
  * Created by shahab on 12/6/16.
  */
+@SuppressWarnings("ALL")
 @Fullscreen
 @EActivity
 public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
@@ -270,12 +271,14 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
+            @SuppressWarnings("RedundantCast")
             Preference wifi_preference = (Preference) findPreference("key_wifi");
             Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
             //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             wifi_preference.setIntent(intent);
             bindPreferenceSummaryToValue(wifi_preference);
 
+            @SuppressWarnings("RedundantCast")
             Preference data_usage_preference = (Preference) findPreference("data_usage");
             Intent intent_data_usage = new Intent();
             intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
@@ -311,12 +314,14 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
+            @SuppressWarnings("RedundantCast")
             Preference battery_preference = (Preference) findPreference("key_battery");
             Intent intentBatteryUsage = new Intent(Intent.ACTION_POWER_USAGE_SUMMARY);
             battery_preference.setIntent(intentBatteryUsage);
 
             // process_usage_summary
 
+            @SuppressWarnings("RedundantCast")
             Preference process_usage_preference = (Preference) findPreference("key_process_usage");
             Intent intent_data_usage = new Intent();
             intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$MemorySettingsActivity"));
@@ -353,6 +358,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             // updated to reflect the new value, per the Android Design
             // guidelines.
 
+            @SuppressWarnings("RedundantCast")
             Preference pref_language_input = (Preference) findPreference("key_pref_language_input");
             Intent intent_input_method_language_settings = new Intent();
             intent_input_method_language_settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$InputMethodAndLanguageSettingsActivity"));

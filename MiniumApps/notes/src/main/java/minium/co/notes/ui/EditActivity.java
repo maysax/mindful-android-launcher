@@ -1,5 +1,6 @@
 package minium.co.notes.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,6 +61,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     private ColorPickerDialog colorPickerDialog;
 
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -151,6 +153,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
      * Initialize toolbar with required components such as
      * - title, navigation icon + listener, menu/OnMenuItemClickListener, menuHideBody -
      */
+    @SuppressLint("PrivateResource")
     protected void initToolbar() {
         toolbar.setTitle("");
 

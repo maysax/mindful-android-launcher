@@ -30,7 +30,8 @@
     android:layout_height="48dp"
     android:gravity="center_vertical"
     style="@style/ListItem"
-    tools:background="@color/material.core.red">
+    tools:background="@color/material.core.red"
+    tools:ignore="UnusedResources">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/icon"
@@ -67,5 +68,6 @@
         android:textSize="@dimen/text.size.medium"
         android:fontFamily="sans-serif"
         android:textColor="@color/text.secondary"
-        tools:text="Mobile" />
+        tools:text="Mobile"
+        tools:ignore="UnusedIds" />
 </RelativeLayout>

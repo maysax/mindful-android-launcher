@@ -23,6 +23,7 @@ import minium.co.core.log.Tracer;
 /**
  * Created by Shahab on 5/16/2017.
  */
+@SuppressWarnings("ALL")
 @EService
 public class SiempoNotificationListener extends NotificationListenerService {
 

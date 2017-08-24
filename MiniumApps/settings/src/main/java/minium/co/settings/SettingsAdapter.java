@@ -15,6 +15,7 @@ import java.util.List;
  * Created by hardik on 16/8/17.
  */
 
+@SuppressWarnings("DefaultFileTemplate")
 public class SettingsAdapter extends ArrayAdapter<String> {
 
 

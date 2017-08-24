@@ -13,4 +13,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
     }
+    lintOptions {
+        disable 'GoogleAppIndexingApiWarning','IconDensities','Registered','MissingTranslation','SetTextI18n','RtlHardcoded','SelectableText','PermissionImpliesUnsupportedHardware'
+        ignoreWarnings true
+    }
 }

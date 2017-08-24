@@ -20,6 +20,7 @@ import minium.co.core.ui.CoreFragment;
 /**
  * Created by tkb on 2017-03-10.
  */
+@SuppressWarnings("ALL")
 @EFragment(R.layout.mindful_morning_details)
 public class MindfulMorningListDetails extends CoreFragment {
     @FragmentArg

@@ -1,5 +1,6 @@
 package com.james.status.services;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -127,6 +128,7 @@ public class NotificationService extends NotificationListenerService {
         }
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     private ArrayList<StatusBarNotification> getNotifications() {
         ArrayList<StatusBarNotification> activeNotifications = new ArrayList<>();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {

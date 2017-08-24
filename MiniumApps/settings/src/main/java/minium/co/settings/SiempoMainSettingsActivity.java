@@ -1,5 +1,6 @@
 package minium.co.settings;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,6 +32,7 @@ import java.util.List;
 import minium.co.core.ui.CoreActivity;
 
 
+@SuppressLint("Registered")
 public class SiempoMainSettingsActivity extends CoreActivity{
 
     private ListView lst_settings;

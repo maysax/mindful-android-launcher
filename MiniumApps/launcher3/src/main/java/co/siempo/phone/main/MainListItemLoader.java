@@ -1,12 +1,10 @@
 package co.siempo.phone.main;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.StringRes;
 
 import java.util.List;
 
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.AppDrawerActivity_;
@@ -21,13 +19,11 @@ import co.siempo.phone.tempo.TempoActivity_;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
-import static co.siempo.phone.R.string.title_defaultLauncher;
-import static co.siempo.phone.app.Constants.GOOGLE_PHOTOS;
-
 /**
  * Created by Shahab on 5/4/2017.
  */
 
+@SuppressWarnings("ALL")
 public class MainListItemLoader {
 
     private Context context;
@@ -45,7 +41,7 @@ public class MainListItemLoader {
         items.add(new MainListItem(6, getString(R.string.title_notes), "fa-sticky-note", R.drawable.icon_save_note, MainListItemType.ACTION));
 
         //if (new ActivityHelper(context).isAppInstalled(GOOGLE_PHOTOS))
-            items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
+        items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
@@ -81,6 +77,7 @@ public class MainListItemLoader {
     public void listItemClicked(int id) {
         switch (id) {
             case 1:
+
                 new ActivityHelper(context).openMessagingApp();
                 break;
             case 2:

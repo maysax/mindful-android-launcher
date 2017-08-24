@@ -1,6 +1,7 @@
 package com.james.status.data.icon;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -107,6 +108,7 @@ public class GpsIconData extends IconData<GpsIconData.GpsReceiver> {
             } else return false;
         }
 
+        @SuppressLint("ObsoleteSdkInt")
         private long getElapsedTime(@NonNull Location location) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
                 return location.getElapsedRealtimeNanos() - SystemClock.elapsedRealtimeNanos();

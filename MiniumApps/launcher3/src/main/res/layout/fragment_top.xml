@@ -24,7 +24,8 @@
         android:padding="6dp"
         android:layout_toEndOf="@id/imgNotification"
         android:visibility="gone"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        tools:ignore="UnusedIds" />
 
     <ImageView
         android:id="@+id/imgBattery"
@@ -60,7 +61,8 @@
         android:src="@drawable/ic_airplane"
         android:padding="6dp"
         android:layout_toStartOf="@id/imgWifi"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        tools:ignore="UnusedIds" />
 
     <TextClock
         android:id="@+id/iTxt2"
@@ -70,7 +72,8 @@
         android:textSize="@dimen/text.size.large"
         android:fontFamily="sans-serif"
         android:textColor="#b3000000"
-        tools:text="SELECT" />
+        tools:text="SELECT"
+        tools:ignore="RelativeOverlap,UnusedIds" />
 
 
 </RelativeLayout>

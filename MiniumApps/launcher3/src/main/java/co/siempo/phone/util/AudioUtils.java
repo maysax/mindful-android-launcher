@@ -9,6 +9,7 @@ import android.net.Uri;
  * Created by Shahab on 4/6/2017.
  */
 
+@SuppressWarnings("ALL")
 public class AudioUtils {
 
     public static void playnotification(Context context) {

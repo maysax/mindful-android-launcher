@@ -27,6 +27,7 @@ import de.greenrobot.event.EventBus;
  * Created by Shahab on 2/16/2017.
  */
 
+@SuppressWarnings("ALL")
 public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
     private Context context;
@@ -323,6 +324,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     }
 
     private String phoneNumberString(String str) {
-        return str.replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\-", "");
+        return str.replaceAll("\\+", "").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll(context.getString(R.string.phone_replace_regex), "");
     }
 }

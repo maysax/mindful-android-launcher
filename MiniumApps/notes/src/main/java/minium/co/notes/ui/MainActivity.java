@@ -1,5 +1,6 @@
 package minium.co.notes.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -64,6 +65,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     private static File localPath, backupPath;
 
     // Layout components
+    @SuppressLint("StaticFieldLeak")
     private static ListView listView;
     private FloatingActionButton newNote;
     private TextView noNotes;
@@ -71,6 +73,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     private MenuItem searchMenu;
 
     private static JSONArray notes; // Main notes array
+    @SuppressLint("StaticFieldLeak")
     private static NoteAdapter adapter; // Custom ListView notes adapter
 
     // Array of selected positions for deletion
@@ -89,6 +92,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     public static final String EXTRA_OPEN_LATEST = "open_latest";
 
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);

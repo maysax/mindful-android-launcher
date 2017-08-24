@@ -11,6 +11,7 @@ import co.siempo.phone.service.SiempoDndService;
  * Created by Shahab on 5/17/2017.
  */
 
+@SuppressWarnings("ALL")
 public class PackageUtil {
 
     public static boolean isCallPackage(String pkg) {

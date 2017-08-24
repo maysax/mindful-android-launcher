@@ -1,5 +1,6 @@
 package co.siempo.phone.map;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.webkit.GeolocationPermissions;
@@ -32,6 +33,7 @@ public class SiempoMapActivity extends CoreActivity {
 //    @ViewById
 //    ImageView imgLogo;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -4,6 +4,7 @@ package co.siempo.phone.notification;
  * Created by tkb on 2017-03-31.
  */
 
+@SuppressWarnings("ALL")
 public class NotificationContactModel {
     private String name;
     private String image;

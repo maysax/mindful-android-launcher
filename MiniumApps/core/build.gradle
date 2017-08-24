@@ -46,10 +46,11 @@ android {
     }
 
     lintOptions {
-        abortOnError false
-        textReport true
-        textOutput 'stdout'
-        fatal 'UnusedResources'
+        disable 'GoogleAppIndexingApiWarning','IconDensities','Registered','MissingTranslation','SetTextI18n','RtlHardcoded','SelectableText','PermissionImpliesUnsupportedHardware'
+        ignoreWarnings true
+//        textReport true
+//        textOutput 'stdout'
+//        fatal 'UnusedResources'
     }
 
     dexOptions {

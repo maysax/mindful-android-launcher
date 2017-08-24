@@ -35,6 +35,7 @@ import minium.co.core.ui.CoreFragment;
 /**
  * Created by Shahab on 3/16/2017.
  */
+@SuppressWarnings("ALL")
 @EFragment(R.layout.fragment_minfulmorning_activated)
 public class MinfulMorningActivated extends CoreFragment {
 

@@ -1,5 +1,6 @@
 package co.siempo.phone.receiver;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import minium.co.core.log.Tracer;
  * Created by Shahab on 5/26/2017.
  */
 
+@SuppressWarnings("ALL")
 public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatus {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -53,7 +55,7 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
         }*/
             //UIUtils.toast(context,"network changed");
             if (networkInfo != null) {
-                WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                @SuppressLint("WifiManagerPotentialLeak") WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 int numberOfLevels = 5;
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);

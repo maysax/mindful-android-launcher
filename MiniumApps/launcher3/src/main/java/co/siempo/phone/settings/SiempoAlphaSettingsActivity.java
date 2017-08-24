@@ -17,6 +17,7 @@ import minium.co.core.ui.CoreActivity;
  */
 
 
+@SuppressWarnings("ALL")
 @Fullscreen
 @EActivity(R.layout.activity_siempo_alpha_settings)
 public class SiempoAlphaSettingsActivity extends CoreActivity {

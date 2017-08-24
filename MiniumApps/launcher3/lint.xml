@@ -17,4 +17,8 @@
         <ignore path="src/main/res/drawable-xxhdpi/hibernate_50.png" />
         <ignore path="src/main/res/drawable-xxxhdpi/hibernate_50.png" />
     </issue>
+    <issue id="Registered" severity="ignore"/>
+    <issue id="InvalidAnalyticsName" severity="ignore"/>
+    <issue id="Layo" severity="ignore"/>
+
 </lint>

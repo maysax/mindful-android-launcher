@@ -10,6 +10,7 @@ import minium.co.core.util.UIUtils;
  * Created by Shahab on 2/17/2017.
  */
 
+@SuppressWarnings("ALL")
 public class SiempoCardView extends CardView {
     public SiempoCardView(Context context) {
         super(context);
