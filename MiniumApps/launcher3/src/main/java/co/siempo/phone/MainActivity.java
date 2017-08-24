@@ -31,6 +31,7 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
+import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
@@ -154,7 +155,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (launcherPrefs.isAppInstalledFirstTime().get()) {
             launcherPrefs.isAppInstalledFirstTime().put(false);
             ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
-            if (!activityHelper.isMyLauncherDefault(MainActivity.this)) {
+            if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
                 activityHelper.handleDefaultLauncher(MainActivity.this);
                 loadDialog();
             }

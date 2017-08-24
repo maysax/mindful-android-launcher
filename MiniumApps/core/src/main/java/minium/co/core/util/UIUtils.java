@@ -3,6 +3,8 @@ package minium.co.core.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.IBinder;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import minium.co.core.R;
+import minium.co.core.ui.CoreActivity;
 
 
 public class UIUtils {
@@ -109,6 +112,28 @@ public class UIUtils {
     public static void showKeyboard(EditText editText) {
         InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    /**
+     * Method return true if my application is default launcher.
+     * @param activity
+     * @return
+     */
+    public static boolean isMyLauncherDefault(CoreActivity activity) {
+        return getLauncherPackageName(activity).equals(activity.getPackageName());
+    }
+
+    /**
+     * This method returns default launcher package name.
+     * @param activity
+     * @return
+     */
+    public static String getLauncherPackageName(CoreActivity activity) {
+        PackageManager localPackageManager = activity.getPackageManager();
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.HOME");
+        return localPackageManager.resolveActivity(intent,
+                PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
     }
 
     /**

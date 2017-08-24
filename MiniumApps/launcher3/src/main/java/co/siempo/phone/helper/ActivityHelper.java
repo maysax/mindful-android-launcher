@@ -17,18 +17,15 @@ import co.siempo.phone.applist.AppOpenEvent;
 import co.siempo.phone.applist.AppOpenHandler;
 import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
-
 import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
 import co.siempo.phone.settings.SiempoMainSettingsActivity_;
 import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
 import co.siempo.phone.settings.SiempoSettingsActivity_;
-
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 import minium.co.notes.ui.MainActivity;
-
 
 
 public class ActivityHelper {
@@ -114,30 +111,18 @@ public class ActivityHelper {
     }
 
     public void handleDefaultLauncher(CoreActivity activity) {
-        if (isMyLauncherDefault(activity)) {
+        if (UIUtils.isMyLauncherDefault(activity)) {
             Tracer.d("Launcher3 is the default launcher");
             activity.getPackageManager().clearPackagePreferredActivities(activity.getPackageName());
             openChooser(activity);
         } else {
-            Tracer.d("Launcher3 is not the default launcher: " + getLauncherPackageName(activity));
-            if (getLauncherPackageName(activity).equals("android")) {
+            Tracer.d("Launcher3 is not the default launcher: " + UIUtils.getLauncherPackageName(activity));
+            if (UIUtils.getLauncherPackageName(activity).equals("android")) {
                 openChooser(activity);
             } else
                 resetPreferredLauncherAndOpenChooser(activity);
 //                openSettings();
         }
-    }
-
-    public boolean isMyLauncherDefault(CoreActivity activity) {
-        return getLauncherPackageName(activity).equals(activity.getPackageName());
-    }
-
-    private String getLauncherPackageName(CoreActivity activity) {
-        PackageManager localPackageManager = activity.getPackageManager();
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.HOME");
-        return localPackageManager.resolveActivity(intent,
-                PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
     }
 
     private void resetPreferredLauncherAndOpenChooser(CoreActivity activity) {
@@ -189,7 +174,7 @@ public class ActivityHelper {
             context.startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
         } catch (android.content.ActivityNotFoundException anfe) {
-                anfe.printStackTrace();
+            anfe.printStackTrace();
         }
 //        UpdateActivity_.intent(context).start();
     }
@@ -219,6 +204,7 @@ public class ActivityHelper {
             UIUtils.alert(context, "No email application found in your phone");
         }
     }
+
     /**
      * Open the application with predefine package name.
      */
