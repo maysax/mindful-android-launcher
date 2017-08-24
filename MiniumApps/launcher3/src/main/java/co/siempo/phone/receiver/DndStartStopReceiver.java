@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.util.Log;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.SystemService;
@@ -35,10 +36,16 @@ public class DndStartStopReceiver extends BroadcastReceiver {
         else if (prefs.isTempoActive().get()) shouldStart = true;
         else shouldStart = false;
 
+
         if (shouldStart) {
             if (!prefs.isNotificationBlockerRunning().get()) startBlocker(context, true);
         } else {
-            if (prefs.isNotificationBlockerRunning().get()) startBlocker(context, false);
+            /**
+             * SSA-36 : NotificationBlockerRunning will use in further purpose
+             */
+//            if (prefs.isNotificationBlockerRunning().get()) {
+                startBlocker(context, false);
+//            }
         }
     }
 

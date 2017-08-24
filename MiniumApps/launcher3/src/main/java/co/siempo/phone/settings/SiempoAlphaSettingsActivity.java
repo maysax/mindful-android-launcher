@@ -1,10 +1,12 @@
 package co.siempo.phone.settings;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.UiThread;
 
 import co.siempo.phone.R;
 import co.siempo.phone.notification.NotificationRetreat_;
@@ -29,8 +31,16 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     void afterViews() {
         initView();
         loadTopBar();
+        loadStatusBar();
     }
 
+    @UiThread(delay = 1000)
+    void loadStatusBar() {
+        statusBarHandler = new StatusBarHandler(SiempoAlphaSettingsActivity.this);
+        if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+            statusBarHandler.requestStatusBarCustomization();
+        }
+    }
     public void initView() {
         context = SiempoAlphaSettingsActivity.this;
     }
@@ -42,7 +52,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        statusBarHandler = new StatusBarHandler(SiempoAlphaSettingsActivity.this);
+        if(statusBarHandler!=null && !statusBarHandler.isActive())
         statusBarHandler.requestStatusBarCustomization();
     }
 
@@ -58,4 +68,12 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if(statusBarHandler!=null){
+            statusBarHandler = new StatusBarHandler(this);
+        }
+    }
 }

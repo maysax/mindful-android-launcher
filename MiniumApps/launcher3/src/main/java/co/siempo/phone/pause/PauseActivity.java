@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import org.androidannotations.annotations.AfterViews;
@@ -13,6 +14,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
@@ -23,6 +25,7 @@ import co.siempo.phone.event.PauseStartEvent;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
+import co.siempo.phone.tempo.TempoActivity;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
@@ -36,6 +39,7 @@ public class PauseActivity extends CoreActivity {
     private PauseFragment pauseFragment;
     private PauseActivatedFragment pauseActivatedFragment;
     private StatusBarHandler statusBarHandler;
+    private String TAG="PauseActivity";
 
     @Pref
   public   Launcher3Prefs_ launcherPrefs;
@@ -51,7 +55,14 @@ public class PauseActivity extends CoreActivity {
         Tracer.d("afterviews PauseActivity");
         init();
         loadTopBar();
+        loadStatusBar();
+    }
+    @UiThread(delay = 1000)
+    void loadStatusBar() {
         statusBarHandler = new StatusBarHandler(PauseActivity.this);
+        if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+            statusBarHandler.requestStatusBarCustomization();
+        }
     }
 
     private void loadTopBar() {
@@ -79,14 +90,20 @@ public class PauseActivity extends CoreActivity {
             super.onBackPressed();
         }
 
-        if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
-            Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if (f instanceof NotificationFragment) ;
-            {
-                statusBarHandler.isNotificationTrayVisible = false;
-                ((NotificationFragment) f).animateOut();
+        try{
 
+            if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+                if (f instanceof NotificationFragment) ;
+                {
+                    statusBarHandler.isNotificationTrayVisible = false;
+                    ((NotificationFragment) f).animateOut();
+
+                }
             }
+        }
+        catch (Exception e){
+            Log.d(TAG,"Exception e");
         }
     }
 
@@ -208,5 +225,8 @@ public class PauseActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        if(statusBarHandler!=null){
+            statusBarHandler = new StatusBarHandler(this);
+        }
     }
 }

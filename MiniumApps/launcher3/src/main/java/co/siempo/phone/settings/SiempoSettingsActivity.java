@@ -15,6 +15,7 @@ import com.joanzapata.iconify.IconDrawable;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
@@ -52,6 +53,21 @@ public class SiempoSettingsActivity extends CoreActivity {
         initView();
         onClickEvents();
         loadTopBar();
+        loadStatusBar();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        currentIndex =0;
+    }
+
+    @UiThread(delay = 1000)
+    void loadStatusBar() {
+        statusBarHandler = new StatusBarHandler(SiempoSettingsActivity.this);
+        if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+            statusBarHandler.requestStatusBarCustomization();
+        }
     }
 
     public void initView() {
@@ -71,9 +87,6 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-
-        statusBarHandler = new StatusBarHandler(SiempoSettingsActivity.this);
-
 
     }
 
@@ -108,10 +121,16 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        currentIndex =1;
         if (statusBarHandler != null && !statusBarHandler.isActive())
             statusBarHandler.requestStatusBarCustomization();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        currentIndex =0;
+    }
 
     @Override
     protected void onPause() {
@@ -122,6 +141,15 @@ public class SiempoSettingsActivity extends CoreActivity {
                 statusBarHandler.restoreStatusBarExpansion();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        if(statusBarHandler!=null){
+            statusBarHandler = new StatusBarHandler(this);
         }
     }
 }
