@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Status</string>
     <string name="app_desc">Una barra de estado al estilo material design. No necesita root.</string>
 
@@ -28,7 +28,7 @@
     <string name="action_add_style">Añadir estilo</string>
     <string name="action_delete">Eliminar</string>
     <string name="action_edit_style">Editar estilo del icono</string>
-    <string name="action_policy">Politica de privacidad</string>
+    <string name="action_policy" tools:ignore="Typos">Politica de privacidad</string>
     <string name="action_new_backup">Nueva copia de seg.</string>
     <string name="action_save">Guardar</string>
     <string name="action_delete_backup">Eliminar esta copia de seg.</string>
@@ -53,7 +53,7 @@
 
     <string name="service_name">Servicio de Status</string>
     <string name="service_name_general">Servicio de accesibilidad</string>
-    <string name="service_desc">Es necesario activar el \'servicio de Status\' para detectar los cambios y que se reflejen de forma actualizada en la barra de notificaciones. En algunos dispositivos, será necesario deslizar hasta la parte inferior de la pantalla antes de que se pueda ver.</string>
+    <string name="service_desc" tools:ignore="TypographyQuotes">Es necesario activar el \'servicio de Status\' para detectar los cambios y que se reflejen de forma actualizada en la barra de notificaciones. En algunos dispositivos, será necesario deslizar hasta la parte inferior de la pantalla antes de que se pueda ver.</string>
 
     <string name="notifications_compat">Modo compatibilidad</string>
     <string name="notifications_compat_desc">Algunos dispositivos Android no pueden usar la API de notificaciones estándar para mostrar los iconos. He encontrado una forma de que se puedan mostrar a través del servicio de accesibilidad, pero no se puede detectar cuando una notificación se rechaza. Por lo tanto, se eliminan todas las notificaciones al abrir el panel de notificaciones. Si no te gusta esto, puedes intentar actualizar tu firmware o desactivar las notificaciones desde el menú de ajustes. Recuerda: estos cambios en el menú de ajustes pueden generar problemas con los iconos de notificación en algunos dispositivos. Se recomienda no activar esta opción en versiones de Android superiores a Lollipop.</string>
@@ -86,7 +86,7 @@
     <string name="preference_date_desc">El reloj mostrará la fecha junto a la hora si activas esto.</string>
     <string name="preference_show_notifications">Mostrar notificaciones</string>
     <string name="preference_heads_up">Mostrar superposiciones</string>
-    <string name="preference_heads_up_desc">Las notificaciones \'aparecerán\' en la parte superior de la pantalla al ser recibidas.</string>
+    <string name="preference_heads_up_desc" tools:ignore="TypographyQuotes">Las notificaciones \'aparecerán\' en la parte superior de la pantalla al ser recibidas.</string>
     <string name="preference_heads_up_duration">Duración de superposiciones (seg.)</string>
     <string name="preference_heads_up_duration_desc">Establece la cantidad de tiempo que aparece la notificación en la barra al ser recibida.</string>
     <string name="preference_battery_percent">Mostrar porcentaje de batería</string>
@@ -95,7 +95,7 @@
     <string name="preference_bar_color_auto_desc">Adopta el color de la aplicación actual en la barra de estado. Esto puede reducir el rendimiento, según el dispositivo.</string>
     <string name="preference_bar_color_chooser">Color de la barra estándar</string>
     <string name="preference_app_colors">Color de la barra personalizado</string>
-    <string name="preference_app_colors_desc">Establece un color para utilizarse en una pantalla específica. Esto se sobrepondrá ante cualquier otra opción si el \'color de la barra automático\' está activado.</string>
+    <string name="preference_app_colors_desc" tools:ignore="TypographyQuotes">Establece un color para utilizarse en una pantalla específica. Esto se sobrepondrá ante cualquier otra opción si el \'color de la barra automático\' está activado.</string>
     <string name="preference_transparent_home">Transparencia en la pantalla de inicio</string>
     <string name="preference_transparent_home_desc">Esta opción establece el fondo de la barra de estado de forma transparente al estar en la pantalla de inicio. Esta opción no funciona correctamente en los fondos de pantalla animados o si está activada la función de deslizamiento del fondo de pantalla.</string>
     <string name="preference_dark_icons">Contraste de color de iconos</string>
@@ -220,7 +220,7 @@
     <string name="tutorial_icon_order">Reorganizar iconos</string>
     <string name="tutorial_icon_order_desc">Cambia el orden de los iconos pulsando los botones de arriba y abajo, junto al nombre.</string>
     <string name="tutorial_activities">¿No quieres modificar toda la aplicación?</string>
-    <string name="tutorial_activities_desc">Cambia entre pantallas individuales haciendo clci en el botón de \'expandir\', junto al nombre de la aplicación.</string>
+    <string name="tutorial_activities_desc" tools:ignore="TypographyQuotes">Cambia entre pantallas individuales haciendo clci en el botón de \'expandir\', junto al nombre de la aplicación.</string>
 
     <string name="red">Rojo</string>
     <string name="green">Verde</string>
@@ -259,7 +259,7 @@
 
     <string name="about_translators">Traductores</string>
 
-    <string name="ryo_name">Eugenio \"Ryo567\" Martínez Seguín</string>
+    <string name="ryo_name" tools:ignore="TypographyQuotes">Eugenio \"Ryo567\" Martínez Seguín</string>
     <string name="ryo_desc">Traductor español y amante del Lancia Dedra.</string>
 
     <string name="about_icons">Fuente de iconos</string>

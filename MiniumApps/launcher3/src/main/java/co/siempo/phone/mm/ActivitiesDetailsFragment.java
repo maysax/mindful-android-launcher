@@ -22,6 +22,7 @@ import minium.co.core.ui.CoreFragment;
 /**
  * Created by tkb on 2017-03-10.
  */
+@SuppressWarnings("ALL")
 @EFragment(R.layout.meditation_time)
 public class ActivitiesDetailsFragment extends CoreFragment {
     @FragmentArg

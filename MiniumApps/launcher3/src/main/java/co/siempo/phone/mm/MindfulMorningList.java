@@ -24,6 +24,7 @@ import minium.co.core.ui.CoreFragment;
  * Created by tkb on 2017-03-14.
  */
 
+@SuppressWarnings("ALL")
 @EFragment(R.layout.mm_list)
 public class MindfulMorningList extends CoreFragment {
 

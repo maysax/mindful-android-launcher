@@ -5,9 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.github.yuweiguocn.library.greendao.MigrationHelper;
 
-/**
- * Created by tkb on 2017-04-12.
- */
 
 public class GreenDaoOpenHelper extends co.siempo.phone.db.DaoMaster.OpenHelper {
     public GreenDaoOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory) {

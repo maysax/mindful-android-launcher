@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -54,7 +55,8 @@
                             android:maxLines="1"
                             android:singleLine="true"
                             android:textColor="@color/textColorPrimary"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            tools:ignore="Deprecated,SelectableText" />
 
                     </LinearLayout>
 
@@ -69,7 +71,8 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/textColorPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:ignore="Deprecated,SelectableText" />
 
                     <TextView
                         android:id="@+id/subtitle"
@@ -83,7 +86,8 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/textColorSecondary"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="Deprecated,SelectableText" />
 
                 </LinearLayout>
 

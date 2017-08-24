@@ -1,6 +1,7 @@
 package com.james.status.services;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.PendingIntent;
@@ -392,6 +393,7 @@ public class StatusService extends Service {
         return notifications;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     public void showHeadsUp(NotificationData notification) {
         Integer headsUpLayout = PreferenceUtils.getIntegerPreference(this, PreferenceUtils.PreferenceIdentifier.STATUS_HEADS_UP_LAYOUT);
         if (headsUpLayout == null) headsUpLayout = HEADSUP_LAYOUT_PLAIN;
@@ -510,7 +512,7 @@ public class StatusService extends Service {
             actionsLayout.setVisibility(View.VISIBLE);
 
             for (ActionData action : actions) {
-                View button = LayoutInflater.from(this).inflate(R.layout.item_action, null);
+                @SuppressLint("InflateParams") View button = LayoutInflater.from(this).inflate(R.layout.item_action, null);
 
                 Drawable actionIcon = action.getIcon(this);
                 if (actionIcon != null)
@@ -612,6 +614,7 @@ public class StatusService extends Service {
         animator.start();
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     public static List<IconData> getIcons(Context context) {
         List<IconData> icons = new ArrayList<>();
         icons.add(new NotificationsIconData(context));

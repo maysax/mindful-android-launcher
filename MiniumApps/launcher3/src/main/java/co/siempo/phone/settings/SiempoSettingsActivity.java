@@ -33,6 +33,7 @@ import minium.co.core.ui.CoreActivity;
  * Created by hardik on 17/8/17.
  */
 
+@SuppressWarnings("ALL")
 @Fullscreen
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {

@@ -1,5 +1,6 @@
 package co.siempo.phone.app;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 
@@ -32,6 +33,7 @@ import minium.co.core.util.DateUtils;
 /**
  * Created by Shahab on 2/16/2017.
  */
+@SuppressWarnings("ALL")
 @EApplication
 public class Launcher3App extends CoreApplication {
 
@@ -47,6 +49,7 @@ public class Launcher3App extends CoreApplication {
     TokenManager manager;
 
     private FirebaseAnalytics mFirebaseAnalytics;
+    @SuppressLint("StaticFieldLeak")
     private static IconsHandler iconsPackHandler;
 
     @Trace(tag = TRACE_TAG)

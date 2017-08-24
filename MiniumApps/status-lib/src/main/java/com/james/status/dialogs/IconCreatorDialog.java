@@ -1,5 +1,6 @@
 package com.james.status.dialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -89,7 +90,7 @@ public class IconCreatorDialog extends AppCompatDialog {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
         for (int i = 0; i < size; i++) {
-            final View v = LayoutInflater.from(getContext()).inflate(R.layout.item_icon_create, null);
+            @SuppressLint("InflateParams") final View v = LayoutInflater.from(getContext()).inflate(R.layout.item_icon_create, null);
             ((TextView) v.findViewById(R.id.number)).setText(String.valueOf(i + 1));
             if (paths[i] != null) {
                 Drawable drawable = null;

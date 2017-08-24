@@ -6,6 +6,7 @@ import java.util.ArrayList;
  * Created by tkb on 2017-03-10.
  */
 
+@SuppressWarnings("ALL")
 public class ActivitiesModel {
     private String title;
     private String timeValue;

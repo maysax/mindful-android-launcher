@@ -33,7 +33,8 @@
                 android:padding="4dp"
                 android:src="@drawable/icon_close_app"
                 android:layout_marginStart="18dp"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                tools:ignore="UnusedIds" />
 
             <TextView
                 android:id="@+id/titleActionBar"
@@ -53,7 +54,8 @@
                 android:padding="4dp"
                 android:src="@drawable/icon_settings"
                 android:layout_marginEnd="18dp"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                tools:ignore="UnusedIds" />
 
         </LinearLayout>
 

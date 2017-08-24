@@ -26,6 +26,7 @@ import minium.co.core.ui.CoreFragment;
  * Created by tkb on 2017-03-13.
  */
 
+@SuppressWarnings("ALL")
 @EFragment(R.layout.mm_layout)
 public class MindfulMorningFragment extends CoreFragment {
     MediaPlayer mMediaPlayer;

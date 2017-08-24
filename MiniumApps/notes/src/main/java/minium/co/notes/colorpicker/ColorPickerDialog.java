@@ -1,5 +1,6 @@
 package minium.co.notes.colorpicker;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -105,7 +106,7 @@ public class ColorPickerDialog extends DialogFragment implements ColorPickerSwat
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Activity activity = getActivity();
 
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.color_picker_dialog, null);
+        @SuppressLint("InflateParams") View view = LayoutInflater.from(getActivity()).inflate(R.layout.color_picker_dialog, null);
         mProgress = (ProgressBar) view.findViewById(android.R.id.progress);
         mPalette = (ColorPickerPalette) view.findViewById(R.id.color_picker);
         mPalette.init(mSize, mColumns, this);

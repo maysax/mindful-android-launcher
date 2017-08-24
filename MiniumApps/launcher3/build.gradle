@@ -3,11 +3,16 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 apply plugin: 'org.greenrobot.greendao'
 
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
+    lintOptions {
+        disable 'GoogleAppIndexingApiWarning','IconDensities','Registered','MissingTranslation','SetTextI18n','RtlHardcoded','SelectableText','PermissionImpliesUnsupportedHardware'
+        ignoreWarnings true
+    }
     defaultConfig {
+        applicationId "co.siempo.phone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode "${versionMajor}".toInteger() * 1000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
@@ -28,6 +33,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
+
     }
     dexOptions {
         jumboMode true
@@ -40,6 +46,7 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
     }
+
 }
 
 repositories {
@@ -86,7 +93,7 @@ dependencies {
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
     compile 'com.google.firebase:firebase-core:10.2.4'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.github.javiersantos:AppUpdater:2.6.1'
+    compile 'com.github.javiersantos:AppUpdater:2.6.3'
 }
 greendao {
     schemaVersion "${databaseVersion}".toInteger()

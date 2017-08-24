@@ -92,12 +92,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     public void run() {
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
                             if(!isOnStopCalled && !isMyLauncherDefault(CoreActivity.this))
-                                loadDialog();
+                            loadDialog();
                         } else {
                             if(!isOnStopCalled && !isMyLauncherDefault(CoreActivity.this))
-                                if (Settings.canDrawOverlays(CoreActivity.this)) {
-                                    loadDialog();
-                                }
+                            if (Settings.canDrawOverlays(CoreActivity.this)) {
+                                loadDialog();
+                            }
                         }
 
                     }
@@ -128,7 +128,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onResume() {
         super.onResume();
-        if (mHomeWatcher != null) mHomeWatcher.startWatch();
+       if (mHomeWatcher != null) mHomeWatcher.startWatch();
         isOnStopCalled = false;
     }
 

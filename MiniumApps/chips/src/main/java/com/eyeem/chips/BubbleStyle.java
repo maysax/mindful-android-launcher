@@ -44,6 +44,7 @@ public class BubbleStyle {
         return build(context, R.style.default_bubble_style);
     }
 
+    @SuppressWarnings("ResourceType")
     public static BubbleStyle build(Context context, int styleId) {
 
         Drawable temp;

@@ -1,5 +1,6 @@
 package co.siempo.phone.helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -9,6 +10,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
  * Created by Shahab on 5/8/2017.
  */
 
+@SuppressWarnings("ALL")
 public class FirebaseHelper {
 
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -36,6 +38,7 @@ public class FirebaseHelper {
         getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
+    @SuppressLint("InvalidAnalyticsName")
     public void testEvent2() {
         Bundle params = new Bundle();
         params.putString("usage time", "messages");

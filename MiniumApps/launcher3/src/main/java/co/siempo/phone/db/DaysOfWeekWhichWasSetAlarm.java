@@ -4,9 +4,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
-/**
- * Created by tkb on 2017-03-24.
- */
+
 @Entity
 public class DaysOfWeekWhichWasSetAlarm {
     @Id

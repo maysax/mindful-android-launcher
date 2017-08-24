@@ -24,6 +24,7 @@
 
 package antistatic.spinnerwheel;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -173,6 +174,7 @@ public abstract class WheelScroller {
      *
      * @param friction the amount of friction
      */
+    @SuppressLint("ObsoleteSdkInt")
     public void setFriction(float friction) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             scroller.setFriction(friction);
@@ -242,6 +244,7 @@ public abstract class WheelScroller {
     }
 
     // animation handler
+    @SuppressLint("HandlerLeak")
     private Handler animationHandler = new Handler() {
         public void handleMessage(Message msg) {
             scroller.computeScrollOffset();

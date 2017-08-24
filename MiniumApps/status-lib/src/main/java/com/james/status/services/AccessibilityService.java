@@ -1,6 +1,7 @@
 package com.james.status.services;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -68,6 +69,7 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
         return super.onStartCommand(intent, flags, startId);
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();

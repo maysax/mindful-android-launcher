@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:ignore="UnusedResources">
 
 
     <FrameLayout
@@ -15,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/statusView"
-        android:elevation="6dp">
+        android:elevation="6dp"
+        tools:ignore="UnusedIds">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -26,7 +29,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             app:cardCornerRadius="4dp"
-            app:cardElevation="4dp">
+            app:cardElevation="4dp"
+            tools:ignore="ObsoleteLayoutParam">
 
             <ListView
                 android:id="@+id/lst_native_settings"
@@ -34,7 +38,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:divider="@color/transparent"
-                android:scrollbars="none" />
+                android:scrollbars="none"
+                tools:ignore="UnusedIds" />
 
 
         </android.support.v7.widget.CardView>

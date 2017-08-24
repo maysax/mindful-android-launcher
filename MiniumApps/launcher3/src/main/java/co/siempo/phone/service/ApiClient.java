@@ -8,6 +8,7 @@ import minium.co.core.service.CoreAPIClient;
  * Created by Shahab on 1/10/2017.
  */
 
+@SuppressWarnings("ALL")
 @EBean
 public class ApiClient extends CoreAPIClient {
 

@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/pause_background"
-    tools:context="co.siempo.phone.pause.PauseActivity">
+    tools:context="co.siempo.phone.pause.PauseActivity"
+    tools:ignore="Overdraw,UnusedIds">
 
     <!-- <ImageView
          android:id="@+id/imgBackground"
@@ -32,7 +33,8 @@
         android:fontFamily="sans-serif"
         android:text="7:00 AM  -  7:15 AM"
         android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        tools:ignore="HardcodedText" />
 
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
@@ -72,7 +74,8 @@
             android:fontFamily="sans-serif"
             android:text="..."
             android:textStyle="bold"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 
@@ -87,7 +90,8 @@
         android:fontFamily="sans-serif-medium"
         android:src="@drawable/control_pause"
         android:textColor="#212121"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:ignore="ContentDescription" />
 
 
 </RelativeLayout>

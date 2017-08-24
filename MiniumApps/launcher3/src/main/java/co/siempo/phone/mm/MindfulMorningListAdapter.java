@@ -1,5 +1,6 @@
 package co.siempo.phone.mm;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import co.siempo.phone.db.ActivitiesStorage;
  * Created by tkb on 2017-03-10.
  */
 
+@SuppressWarnings("ALL")
 public class MindfulMorningListAdapter extends ArrayAdapter<ActivitiesStorage> {
 
     private final Activity context;
@@ -30,7 +32,7 @@ public class MindfulMorningListAdapter extends ArrayAdapter<ActivitiesStorage> {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.mm_list_row, null, false);
+        @SuppressLint({"InflateParams", "ViewHolder"}) View rowView = inflater.inflate(R.layout.mm_list_row, null, false);
         TextView txt_time = (TextView) rowView.findViewById(R.id.txt_time);
 
         TextView txt_title = (TextView) rowView.findViewById(R.id.txt_title);

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Status</string>
     <string name="app_desc">A material design status bar replacement. No root needed.</string>
 
@@ -53,7 +53,7 @@
 
     <string name="service_name">Status Service</string>
     <string name="service_name_general">Accessibility Service</string>
-    <string name="service_desc">\'Status Service\' needs to be enabled in order to detect window changes to update the status bar. On some phones you may need to scroll to the bottom of the screen before it becomes visible.</string>
+    <string name="service_desc" tools:ignore="TypographyQuotes">\'Status Service\' needs to be enabled in order to detect window changes to update the status bar. On some phones you may need to scroll to the bottom of the screen before it becomes visible.</string>
 
     <string name="notifications_compat">Compatibility Mode</string>
     <string name="notifications_compat_desc">On some versions of android the app cannot use the standard notification listener API to display the notification icons. I have found a way to detect them through the accessibility service, however it cannot detect when a notification has been dismissed. Thus, it removes all notifications whenever the notification panel is opened. If you do not like this, you can either check for a firmware update or disable the notifications in the settings menu. Please note: this setting will break the notification icons on some devices. It is recommended not to enable this feature on versions of android that are newer than Lollipop.</string>
@@ -86,7 +86,7 @@
     <string name="preference_date_desc">Shows the date next to the time in the clock.</string>
     <string name="preference_show_notifications">Show Notifications</string>
     <string name="preference_heads_up">Show Heads-Up Overlays</string>
-    <string name="preference_heads_up_desc">Notifications will \'peek\' from the top of the screen whenever an important notification is received.</string>
+    <string name="preference_heads_up_desc" tools:ignore="TypographyQuotes">Notifications will \'peek\' from the top of the screen whenever an important notification is received.</string>
     <string name="preference_heads_up_duration">Heads-Up Overlay Duration (seconds)</string>
     <string name="preference_heads_up_duration_desc">Set the amount of time for the app to show a heads-up notification for.</string>
     <string name="preference_battery_percent">Display Battery Percent</string>
@@ -95,7 +95,7 @@
     <string name="preference_bar_color_auto_desc">Picks the status bar color from the current application. This may cause a significant decrease in performance depending on the device.</string>
     <string name="preference_bar_color_chooser">Default Status Bar Color</string>
     <string name="preference_app_colors">Screen-Specific Colors</string>
-    <string name="preference_app_colors_desc">Set the color for the status bar to use on a specific screen. This will override any other color options provided the \'automatic status bar coloring\' option is enabled.</string>
+    <string name="preference_app_colors_desc" tools:ignore="TypographyQuotes">Set the color for the status bar to use on a specific screen. This will override any other color options provided the \'automatic status bar coloring\' option is enabled.</string>
     <string name="preference_transparent_home">Transparency on Home Screen</string>
     <string name="preference_transparent_home_desc">This option sets the status bar\'s background as the current wallpaper when the home screen is displayed. This setting will not work correctly on live wallpapers or if your home screen\'s scrolling wallpaper option is enabled.</string>
     <string name="preference_dark_icons">Contrasting Icon Colors</string>
@@ -220,7 +220,7 @@
     <string name="tutorial_icon_order">Re-order Icons</string>
     <string name="tutorial_icon_order_desc">Change the order of the icons by pressing the up and down buttons next to an icon\'s name.</string>
     <string name="tutorial_activities">Don\'t want to modify an entire app?</string>
-    <string name="tutorial_activities_desc">Change individual screens by clicking the \'expand\' button next to the app\'s name.</string>
+    <string name="tutorial_activities_desc" tools:ignore="TypographyQuotes">Change individual screens by clicking the \'expand\' button next to the app\'s name.</string>
 
     <string name="red">Red</string>
     <string name="green">Green</string>
@@ -259,7 +259,7 @@
 
     <string name="about_translators">Translators</string>
 
-    <string name="ryo_name">Eugenio \"Ryo567\" Martínez Seguín</string>
+    <string name="ryo_name" tools:ignore="TypographyQuotes">Eugenio \"Ryo567\" Martínez Seguín</string>
     <string name="ryo_desc">Created the spanish translations for the app.</string>
 
     <string name="about_icons">Icon Sources</string>

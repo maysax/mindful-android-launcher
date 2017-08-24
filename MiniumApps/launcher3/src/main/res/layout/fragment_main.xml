@@ -45,7 +45,8 @@
         android:background="@drawable/intention_style"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
-        android:layout_below="@id/searchLayout">
+        android:layout_below="@id/searchLayout"
+        tools:ignore="UnusedIds">
 
         <include layout="@layout/list_item" />
 

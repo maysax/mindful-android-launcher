@@ -1,5 +1,6 @@
 package co.siempo.phone.kiss.utils;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Process;
@@ -16,6 +17,7 @@ public class UserHandle {
         this(0, null);
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     public UserHandle(long serial, android.os.UserHandle user) {
         if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {

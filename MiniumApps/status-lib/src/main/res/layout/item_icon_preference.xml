@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -38,7 +39,8 @@
                     android:textColor="@color/textColorPrimaryInverse"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    app:buttonTint="@color/textColorPrimaryInverse" />
+                    app:buttonTint="@color/textColorPrimaryInverse"
+                    tools:ignore="Deprecated" />
 
                 <android.support.v4.widget.Space
                     android:layout_width="0dp"

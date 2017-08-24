@@ -5,7 +5,8 @@
     android:id="@+id/pauseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.siempo.phone.pause.PauseActivity">
+    tools:context="co.siempo.phone.pause.PauseActivity"
+    tools:ignore="UnusedIds">
 
     <ImageView
         android:id="@+id/imgBackground"
@@ -27,7 +28,8 @@
         android:fontFamily="sans-serif"
         android:text="7:00 AM  -  7:15 AM"
         android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        tools:ignore="HardcodedText" />
 
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
@@ -73,7 +75,8 @@
             android:textSize="14sp"
             android:fontFamily="sans-serif"
             android:text="Ending at "
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/txtEndingTime"
@@ -102,7 +105,8 @@
             android:fontFamily="sans-serif"
             android:text="..."
             android:textStyle="bold"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

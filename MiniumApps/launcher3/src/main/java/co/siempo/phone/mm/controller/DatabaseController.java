@@ -11,6 +11,7 @@ import co.siempo.phone.mm.model.Utilities;
  * Created by tkb on 2017-03-24.
  */
 
+@SuppressWarnings("ALL")
 public class DatabaseController {
     public static List<DaysOfWeekWhichWasSetAlarm> getDays() {
 

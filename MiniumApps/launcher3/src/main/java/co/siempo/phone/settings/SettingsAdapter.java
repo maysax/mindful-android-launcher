@@ -19,6 +19,7 @@ import co.siempo.phone.model.SettingsData;
  * Created by hardik on 16/8/17.
  */
 
+@SuppressWarnings("ALL")
 public class SettingsAdapter extends ArrayAdapter<SettingsData> {
 
 

@@ -12,6 +12,7 @@ import minium.co.core.log.Tracer;
  * Created by Shahab on 5/26/2017.
  */
 
+@SuppressWarnings("ALL")
 public class AirplaneModeDataReceiver extends BroadcastReceiver implements IDynamicStatus {
 
     @Override

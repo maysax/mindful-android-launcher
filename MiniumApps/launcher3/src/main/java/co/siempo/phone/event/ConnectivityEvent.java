@@ -4,6 +4,7 @@ package co.siempo.phone.event;
  * Created by Shahab on 5/2/2017.
  */
 
+@SuppressWarnings("ALL")
 public class ConnectivityEvent {
     public static final int AIRPLANE = 0;
     public static final int WIFI = 1;

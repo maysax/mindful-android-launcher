@@ -4,6 +4,7 @@ package co.siempo.phone.applist;
  * Created by Shahab on 5/11/2017.
  */
 
+@SuppressWarnings("ALL")
 public class AppOpenEvent {
 
     private String packageName;

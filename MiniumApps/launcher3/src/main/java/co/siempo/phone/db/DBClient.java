@@ -4,9 +4,6 @@ import java.util.List;
 
 import minium.co.core.log.Tracer;
 
-/**
- * Created by Shahab on 5/18/2017.
- */
 
 public class DBClient {
 

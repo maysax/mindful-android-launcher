@@ -1,10 +1,10 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Settings</string>
 
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
+    <string name="pref_header_general" tools:ignore="UnusedResources">General</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
@@ -27,7 +27,7 @@
     </string-array>
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync" tools:ignore="UnusedResources">Data &amp; sync</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
@@ -47,24 +47,24 @@
         <item>-1</item>
     </string-array>
 
-    <string-array name="list_preference_entries">
+    <string-array name="list_preference_entries" tools:ignore="UnusedResources">
         <item>Entry 1</item>
         <item>Entry 2</item>
         <item>Entry 3</item>
     </string-array>
 
-    <string-array name="list_preference_entry_values">
+    <string-array name="list_preference_entry_values" tools:ignore="UnusedResources">
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_notifications" tools:ignore="UnusedResources">Notifications</string>
 
     <string name="pref_title_new_message_notifications">New message notifications</string>
 

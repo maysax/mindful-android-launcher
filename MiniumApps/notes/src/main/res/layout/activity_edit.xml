@@ -33,7 +33,8 @@
         android:textSize="@dimen/text.size.2xl"
         android:textStyle="bold"
         android:textColorHint="@color/black_50"
-        android:textColor="@color/black_95" />
+        android:textColor="@color/black_95"
+        tools:ignore="RtlHardcoded" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -46,7 +47,8 @@
         android:layout_alignParentRight="true"
         android:clipToPadding="false"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp">
+        android:paddingBottom="8dp"
+        tools:ignore="RtlHardcoded">
 
         <EditText
             android:layout_width="match_parent"
@@ -72,6 +74,7 @@
         android:layout_below="@+id/toolbarEdit"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/drop_shadow" />
+        android:background="@drawable/drop_shadow"
+        tools:ignore="RtlHardcoded" />
 
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.james.status.data;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -112,7 +113,7 @@ public class NotificationData implements Parcelable {
             actions[i] = new ActionData(NotificationCompat.getAction(notification, i), packageName);
         }
     }
-
+    @SuppressLint("NewApi")
     protected NotificationData(Parcel in) {
         category = in.readString();
         title = in.readString();
@@ -132,6 +133,7 @@ public class NotificationData implements Parcelable {
 
         int length = in.readInt();
         actions = new ActionData[length];
+
         for (int i = 0; i < length; i++) {
             actions[i] = in.readParcelable(ActionData.class.getClassLoader());
         }
@@ -190,6 +192,7 @@ public class NotificationData implements Parcelable {
         return packageManager.getApplicationLabel(application).toString();
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     public boolean shouldShowHeadsUp(Context context) {
         Boolean headsUp = PreferenceUtils.getBooleanPreference(context, PreferenceUtils.PreferenceIdentifier.STATUS_NOTIFICATIONS_HEADS_UP);
         return (headsUp != null ? headsUp : Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) && (priority >= NotificationCompat.PRIORITY_HIGH || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) && isAlert;

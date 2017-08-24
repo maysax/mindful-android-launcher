@@ -12,6 +12,7 @@ import co.siempo.phone.db.DaysOfWeekWhichWasSetAlarmDao;
  * Created by tkb on 2017-03-24.
  */
 
+@SuppressWarnings("ALL")
 public class Utilities {
 
     public static final String monday = "Mondays";

@@ -33,6 +33,7 @@
         android:paddingEnd="8dp"
         android:src="@drawable/icon_clear_field"
         android:layout_gravity="center_vertical"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        tools:ignore="UnusedIds" />
 
 </LinearLayout>

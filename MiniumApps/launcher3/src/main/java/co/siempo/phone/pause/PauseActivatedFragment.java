@@ -36,6 +36,7 @@ import static co.siempo.phone.app.Launcher3App.DND_START_STOP_ACTION;
 /**
  * Created by Shahab on 3/16/2017.
  */
+@SuppressWarnings("ALL")
 @EFragment(R.layout.fragment_pause_activated)
 public class PauseActivatedFragment extends CoreFragment {
 

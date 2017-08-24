@@ -1,5 +1,6 @@
 package com.james.status.activities;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,6 +35,7 @@ public class StartActivity extends AppCompatActivity {
 
     SteppersItem accessibilityStep, notificationStep, permissionsStep, optimizationStep, overlayStep;
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -190,6 +192,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     public static class NotificationStepFragment extends Fragment {
+        @SuppressLint("ObsoleteSdkInt")
         @Nullable
         @Override
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -250,7 +253,7 @@ public class StartActivity extends AppCompatActivity {
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                    @SuppressLint("BatteryLife") Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                     intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
                     startActivityForResult(intent, REQUEST_OPTIMIZATION);
                 }

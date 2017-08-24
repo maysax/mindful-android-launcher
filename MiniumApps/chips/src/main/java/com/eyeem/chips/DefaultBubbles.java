@@ -1,5 +1,6 @@
 package com.eyeem.chips;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ public class DefaultBubbles {
     public static int GREEN = 4;
     public static int CITY_COUNTRY = 5;
 
+    @SuppressLint("UseSparseArrays")
     private static HashMap<Integer, BubbleStyle[]> defaults = new HashMap<Integer, BubbleStyle[]>();
 
     public static int v_spacing;
@@ -42,6 +44,7 @@ public class DefaultBubbles {
         return defaults.get(textSize)[type];
     }
 
+    @SuppressLint("LogConditional")
     public static BubbleStyle[] init(Context context, int textSize) {
         context = context.getApplicationContext();
         Resources r = context.getResources();

@@ -9,6 +9,7 @@ import co.siempo.phone.old.OldMenuFragment_;
  * Created by Shahab on 2/23/2017.
  */
 
+@SuppressWarnings("ALL")
 public class MainSlidePagerAdapter extends FragmentStatePagerAdapter {
 
     public MainSlidePagerAdapter(FragmentManager fm) {

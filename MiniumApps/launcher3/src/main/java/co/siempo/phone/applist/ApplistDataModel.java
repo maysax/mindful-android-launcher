@@ -8,6 +8,7 @@ import co.siempo.phone.kiss.utils.UserHandle;
  * Created by tkb on 2017-04-21.
  */
 
+@SuppressWarnings("ALL")
 public class ApplistDataModel {
     private String name;
     private String packageName;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/relativeLayout"
@@ -23,7 +24,8 @@
         android:textSize="@dimen/text.size.xl"
         android:maxLines="1"
         android:textColor="@color/black_95"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,7 +40,8 @@
         android:textSize="@dimen/text.size.medium"
         android:maxLines="5"
         android:textColor="@color/black_95"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        tools:ignore="RtlHardcoded" />
 
     <ImageButton
         android:layout_width="36dp"
@@ -50,6 +53,7 @@
         android:background="@color/transparent"
         android:contentDescription="@string/label.favorite"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_star_border_black_24dp" />
+        android:src="@drawable/ic_star_border_black_24dp"
+        tools:ignore="RtlHardcoded" />
 
 </RelativeLayout>

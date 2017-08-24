@@ -7,6 +7,7 @@ import android.view.MotionEvent;
  * Created by itc on 25/02/17.
  */
 
+@SuppressWarnings("ALL")
 public class GestureListener extends GestureDetector.SimpleOnGestureListener {
     private static final String TAG = "GestureListener";
     private Listener mListener;

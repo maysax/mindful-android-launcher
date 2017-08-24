@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:showDividers="none">
@@ -10,7 +11,8 @@
         android:layout_marginTop="18dp"
         android:id="@+id/row3"
         android:gravity="center_vertical"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:ignore="UnusedIds,UselessParent">
 
         <TextView
             android:text="Sound"
@@ -20,7 +22,8 @@
             android:textSize="14sp"
             android:fontFamily="sans-serif"
             android:textColor="#de000000"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="HardcodedText" />
 
         <CheckBox
             android:id="@+id/check_day"
@@ -28,7 +31,8 @@
             android:gravity="right"
             android:paddingRight="10dp"
             android:buttonTint="#705c7f"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            tools:ignore="RtlSymmetry" />
 
 
     </TableRow>

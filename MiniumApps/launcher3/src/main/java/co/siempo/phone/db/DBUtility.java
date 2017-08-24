@@ -2,9 +2,6 @@ package co.siempo.phone.db;
 
 import co.siempo.phone.app.Launcher3App_;
 
-/**
- * Created by tkb on 2017-03-16.
- */
 
 public class DBUtility {
     private DBUtility() {
