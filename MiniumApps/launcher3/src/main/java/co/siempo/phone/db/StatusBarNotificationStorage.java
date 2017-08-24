@@ -4,9 +4,6 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
-/**
- * Created by Shahab on 4/21/2017.
- */
 
 @Entity
 public class StatusBarNotificationStorage {

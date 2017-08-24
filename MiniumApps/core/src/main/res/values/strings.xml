@@ -66,5 +66,10 @@
     <string name="label.title">Title</string>
     <string name="label.note">Note</string>
     <string name="label.favorite">Favorite</string>
+    <string name="make_siempo_your_default_home_app">Make Siempo your default home app:</string>
+    <string name="select">Select</string>
+    <string name="select_your_prefered_home_app">Select your prefered Home app</string>
+    <string name="tap_always">"Tap Always"</string>
+    <string name="ok">OK</string>
 
 </resources>

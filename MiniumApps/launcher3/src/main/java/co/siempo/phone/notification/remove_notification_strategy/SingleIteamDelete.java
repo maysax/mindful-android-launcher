@@ -9,6 +9,7 @@ import co.siempo.phone.notification.Notification;
  * Created by tkb on 2017-04-03.
  */
 
+@SuppressWarnings("ALL")
 public class SingleIteamDelete implements DeleteStrategy {
     @Override
     public void delete(Notification notification) {

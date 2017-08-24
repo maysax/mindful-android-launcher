@@ -11,6 +11,7 @@ import minium.co.core.log.Tracer;
  * Created by Shahab on 11/4/2016.
  */
 
+@SuppressWarnings("ALL")
 @EBean
 public class VibrationUtils {
 

@@ -4,9 +4,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
-/**
- * Created by tkb on 2017-03-16.
- */
+
 @Entity
 public class ActivitiesStorage {
     @Id

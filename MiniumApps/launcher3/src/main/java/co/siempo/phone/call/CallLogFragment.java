@@ -27,6 +27,7 @@ import co.siempo.phone.R;
 /**
  * Created by Shahab on 5/26/2016.
  */
+@SuppressWarnings("ALL")
 @EFragment(R.layout.fragment_call_log)
 public class CallLogFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 

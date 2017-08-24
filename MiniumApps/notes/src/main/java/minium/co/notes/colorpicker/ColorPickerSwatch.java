@@ -1,5 +1,6 @@
 package minium.co.notes.colorpicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import minium.co.notes.R;
 /**
  * Creates a circular swatch of a specified color.  Adds a checkmark if marked as checked
  */
+@SuppressLint("ViewConstructor")
 public class ColorPickerSwatch extends FrameLayout implements View.OnClickListener {
     private int mColor;
     private ImageView mSwatchImage;

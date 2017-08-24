@@ -5,7 +5,8 @@
     android:id="@+id/pauseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.siempo.phone.pause.PauseActivity">
+    tools:context="co.siempo.phone.pause.PauseActivity"
+    tools:ignore="UnusedIds">
 
     <include layout="@layout/siempo_toolbar" />
 

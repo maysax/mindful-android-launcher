@@ -1,5 +1,6 @@
 package co.siempo.phone.applist;
 
+import android.annotation.SuppressLint;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import minium.co.core.log.LogConfig;
 /**
  * Created by tkb on 2017-04-27.
  */
+@SuppressWarnings("ALL")
 @EBean
 public class AppListLoader extends AsyncTaskLoader<List<ApplistDataModel>> {
 
@@ -146,6 +148,7 @@ public class AppListLoader extends AsyncTaskLoader<List<ApplistDataModel>> {
     }
 
 
+    @SuppressLint("LogConditional")
     @Trace(tag = LogConfig.LOG_TAG)
     ArrayList<ApplistDataModel> getInstalledAppList(Context context) {
         long start = System.currentTimeMillis();

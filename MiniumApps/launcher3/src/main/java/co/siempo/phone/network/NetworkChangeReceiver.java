@@ -16,6 +16,7 @@ import static co.siempo.phone.network.NetworkUtil.isAirplaneModeOn;
  * Created by Shahab on 5/2/2017.
  */
 
+@SuppressWarnings("ALL")
 @EReceiver
 public class NetworkChangeReceiver extends BroadcastReceiver {
     @Override

@@ -15,6 +15,7 @@ import minium.co.core.ui.CoreActivity;
 /**
  * Created by Shahab on 5/17/2017.
  */
+@SuppressWarnings("ALL")
 @EService
 public class SiempoDndService extends Service {
 

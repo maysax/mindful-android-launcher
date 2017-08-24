@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground">
+        android:background="?attr/selectableItemBackground"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/title"
@@ -16,7 +18,8 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="SelectableText" />
 
         <com.james.status.views.IconStyleImageView
             android:id="@+id/icon"

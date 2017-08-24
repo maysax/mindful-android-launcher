@@ -8,6 +8,7 @@ import android.content.IntentFilter;
  * Created by Shahab on 5/26/2017.
  */
 
+@SuppressWarnings("ALL")
 public interface IDynamicStatus {
     public IntentFilter getIntentFilter();
 

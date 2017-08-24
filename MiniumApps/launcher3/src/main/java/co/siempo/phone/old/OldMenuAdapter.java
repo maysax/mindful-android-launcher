@@ -21,6 +21,7 @@ import co.siempo.phone.model.MainListItem;
  * Created by Shahab on 2/23/2017.
  */
 
+@SuppressWarnings("ALL")
 public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
 
     private Context context;

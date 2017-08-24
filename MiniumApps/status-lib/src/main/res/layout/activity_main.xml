@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,7 +9,8 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimary"
+        tools:ignore="InconsistentLayout">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -27,14 +29,16 @@
                     android:layout_width="0dp"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_weight="1"
-                    app:title="@string/app_name" />
+                    app:title="@string/app_name"
+                    tools:ignore="InconsistentLayout" />
 
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/serviceEnabled"
                     android:layout_width="wrap_content"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp" />
+                    android:layout_marginRight="16dp"
+                    tools:ignore="InconsistentLayout,RtlHardcoded" />
 
             </LinearLayout>
 
@@ -47,7 +51,8 @@
             android:layout_gravity="bottom"
             android:background="@null"
             app:tabSelectedTextColor="@color/textColorPrimary"
-            app:tabTextColor="@color/textColorSecondary" />
+            app:tabTextColor="@color/textColorSecondary"
+            tools:ignore="InconsistentLayout" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -55,7 +60,8 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:ignore="InconsistentLayout" />
 
     <FrameLayout
         android:id="@+id/bottomSheet"
@@ -65,7 +71,8 @@
         android:orientation="vertical"
         app:behavior_hideable="true"
         app:behavior_peekHeight="64dp"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        tools:ignore="InconsistentLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -97,7 +104,8 @@
                     android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    tools:ignore="InconsistentLayout,SelectableText" />
 
                 <com.james.status.views.SquareImageView
                     android:id="@+id/expand"
@@ -106,7 +114,8 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_arrow_up" />
+                    app:srcCompat="@drawable/ic_arrow_up"
+                    tools:ignore="InconsistentLayout" />
 
             </LinearLayout>
 
@@ -117,7 +126,8 @@
                 android:layout_margin="4dp"
                 android:alpha="0"
                 android:textColor="?android:textColorSecondary"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="InconsistentLayout,SelectableText" />
 
         </LinearLayout>
 

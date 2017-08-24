@@ -1,5 +1,6 @@
 package com.james.status.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -35,6 +36,7 @@ public class GeneralPreferenceFragment extends SimpleFragment implements Prefere
 
     private PreferenceSectionAdapter adapter;
 
+    @SuppressLint("ObsoleteSdkInt")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

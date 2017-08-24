@@ -1,35 +1,35 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Siempo</string>
 
-    <string name="format.battery">%1$s %2$d%%</string>
-    <string name="format.signal">{fa-signal 12dp} %1$s {fa-wifi 12dp}</string>
+    <string name="format.battery" tools:ignore="UnusedResources">%1$s %2$d%%</string>
+    <string name="format.signal" tools:ignore="UnusedResources">{fa-signal 12dp} %1$s {fa-wifi 12dp}</string>
     <string name="format.duration">(Duration: %1$s)</string>
 
-    <string name="title.text">Text</string>
+    <string name="title.text" tools:ignore="UnusedResources">Text</string>
     <string name="title.call">Call</string>
-    <string name="title.note">Note</string>
+    <string name="title.note" tools:ignore="UnusedResources">Note</string>
     <string name="title.messages">Messages</string>
-    <string name="title.callLog">Call Log</string>
+    <string name="title.callLog" tools:ignore="UnusedResources">Call Log</string>
     <string name="title.calls">Calls</string>
     <string name="title.contacts">Contacts</string>
     <string name="title.pause">Pause</string>
-    <string name="title.voicemail">Voicemail</string>
+    <string name="title.voicemail" tools:ignore="UnusedResources">Voicemail</string>
     <string name="title.notes">Notes</string>
     <string name="title.clock">Clock</string>
     <string name="title.settings">Settings</string>
-    <string name="title.theme">Theme</string>
+    <string name="title.theme" tools:ignore="UnusedResources">Theme</string>
     <string name="title.map">Map</string>
     <string name="title.email">Email</string>
     <string name="title.feedback">Feedback</string>
-    <string name="title.inbox">Google Inbox</string>
+    <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Switch Home app</string>
-    <string name="title_tracking">Tracking</string>
+    <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
     <string name="title.version">Version: %1$s</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
     <string name="title.mindfulMorning">Mindful Morning</string>
-    <string name="title.mindfulMorningAlarm">Mindful Morning Alarm</string>
+    <string name="title.mindfulMorningAlarm" tools:ignore="UnusedResources">Mindful Morning Alarm</string>
     <string name="title.sendAsSMS">Send as SMS</string>
     <string name="title.saveNote">Save Note</string>
     <string name="title.createContact">Create Contact</string>
@@ -45,10 +45,10 @@
     <string name="hint.intentionField">What\'s your intention?</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" tools:ignore="UnusedResources">Hello blank fragment</string>
     <string name="title_activity_installed_app_list">Installed App List</string>
     <string name="msg_tempo_inactive">Turn on Tempo to batch notifications at set intervals</string>
-    <string name="msg_tempo_active">"Notifications now come batched every %1$d minutes, starting at the top of the hour"</string>
+    <string name="msg_tempo_active" tools:ignore="PluralsCandidate">"Notifications now come batched every %1$d minutes, starting at the top of the hour"</string>
     <string name="msg_siempo_active_title">Siempo</string>
     <string name="msg_siempo_active_text">Siempo is running</string>
     <string name="title_photos">Photos</string>
@@ -59,7 +59,7 @@
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
+    <string name="pref_header_general" tools:ignore="UnusedResources">General</string>
 
     <string name="pref_title_social_recommendations">Enable social recommendations</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
@@ -82,7 +82,7 @@
     </string-array>
 
     <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync" tools:ignore="UnusedResources">Data &amp; sync</string>
 
     <string name="pref_title_sync_frequency">Sync frequency</string>
     <string-array name="pref_sync_frequency_titles">
@@ -102,24 +102,24 @@
         <item>-1</item>
     </string-array>
 
-    <string-array name="list_preference_entries">
+    <string-array name="list_preference_entries" tools:ignore="UnusedResources">
         <item>Entry 1</item>
         <item>Entry 2</item>
         <item>Entry 3</item>
     </string-array>
 
-    <string-array name="list_preference_entry_values">
+    <string-array name="list_preference_entry_values" tools:ignore="UnusedResources">
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
+    <string name="pref_header_notifications" tools:ignore="UnusedResources">Notifications</string>
 
     <string name="pref_title_new_message_notifications">New message notifications</string>
 
@@ -187,4 +187,5 @@
     <string name="str_siempo_alphasettings">Siempo Alpha Settings</string>
     <string name="str_keyboard_configuration">Always show the keyboard  on the home screen</string>
     <string name="view_save_note">View saved note</string>
+    <string name="phone_replace_regex">\-</string>
 </resources>

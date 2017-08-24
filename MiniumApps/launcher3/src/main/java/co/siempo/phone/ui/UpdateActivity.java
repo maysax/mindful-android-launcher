@@ -1,5 +1,6 @@
 package co.siempo.phone.ui;
 
+import android.annotation.SuppressLint;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -25,6 +26,7 @@ public class UpdateActivity extends CoreActivity {
     @ViewById
     ProgressBar pBar;
 
+    @SuppressLint("SetJavaScriptEnabled")
     @AfterViews
     void afterViews() {
         WebSettings webSettings = webView.getSettings();

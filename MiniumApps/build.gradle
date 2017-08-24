@@ -76,6 +76,7 @@ project.ext {
     // greendao database version
     databaseVersion = 3
 
+
     // get the current build SHA
     gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
@@ -88,6 +89,8 @@ project.ext {
     versionPatch = 9
     versionBuild = 9 // bump for internal builds, public betas, etc.
 }
+
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

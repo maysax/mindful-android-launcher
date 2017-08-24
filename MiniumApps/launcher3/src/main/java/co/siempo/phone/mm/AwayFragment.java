@@ -19,6 +19,7 @@ import minium.co.core.ui.CoreFragment;
  * Created by tkb on 2017-03-13.
  */
 
+@SuppressWarnings("ALL")
 @EFragment(R.layout.away_fragment)
 public class AwayFragment extends CoreFragment {
 

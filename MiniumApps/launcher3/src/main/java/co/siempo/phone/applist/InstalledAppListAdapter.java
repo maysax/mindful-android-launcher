@@ -1,5 +1,6 @@
 package co.siempo.phone.applist;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import minium.co.core.log.Tracer;
  * Created by tkb on 2017-04-21.
  */
 
+@SuppressWarnings("ALL")
 public class InstalledAppListAdapter extends ArrayAdapter<ApplistDataModel> {
 
     private final Activity context;
@@ -42,7 +44,7 @@ public class InstalledAppListAdapter extends ArrayAdapter<ApplistDataModel> {
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.installed_app_list_row, null, false);
+        @SuppressLint({"InflateParams", "ViewHolder"}) View rowView = inflater.inflate(R.layout.installed_app_list_row, null, false);
         TextView txt_app_name = (TextView) rowView.findViewById(R.id.txt_app_name);
         ImageView imv_appicon = (ImageView) rowView.findViewById(R.id.imv_appicon);
         try {

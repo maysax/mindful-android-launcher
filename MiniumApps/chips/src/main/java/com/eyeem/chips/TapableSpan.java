@@ -1,5 +1,6 @@
 package com.eyeem.chips;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
  * Time: 4:15 PM
  * To change this template use File | Settings | File Templates.
  */
+@SuppressLint("ParcelCreator")
 public class TapableSpan extends StyleSpan implements BubbleSpan {
     private Object data;
     private ForegroundColorSpan activeSpan;

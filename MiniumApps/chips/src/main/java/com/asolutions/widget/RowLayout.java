@@ -1,5 +1,6 @@
 package com.asolutions.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -36,14 +37,15 @@ public class RowLayout extends ViewGroup {
         styledAttributes.recycle();
     }
 
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         final int maxInternalWidth = MeasureSpec.getSize(widthMeasureSpec) - getHorizontalPadding();
         final int maxInternalHeight = MeasureSpec.getSize(heightMeasureSpec) - getVerticalPadding();
-        List<RowMeasurement> rows = new ArrayList<RowMeasurement>();
-        RowMeasurement currentRow = new RowMeasurement(maxInternalWidth, widthMode);
+        @SuppressLint("DrawAllocation") List<RowMeasurement> rows = new ArrayList<RowMeasurement>();
+        @SuppressLint("DrawAllocation") RowMeasurement currentRow = new RowMeasurement(maxInternalWidth, widthMode);
         rows.add(currentRow);
         for (View child : getLayoutChildren()) {
             LayoutParams childLayoutParams = child.getLayoutParams();

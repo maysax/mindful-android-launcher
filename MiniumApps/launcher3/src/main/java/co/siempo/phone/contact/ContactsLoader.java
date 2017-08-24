@@ -15,9 +15,10 @@ import co.siempo.phone.model.ContactListItem;
 /**
  * Created by Shahab on 6/27/2016.
  */
+@SuppressWarnings("ALL")
 public class ContactsLoader {
 
-    @SuppressLint("InlinedApi")
+    @SuppressLint({"InlinedApi", "ObsoleteSdkInt"})
     private static String DISPLAY_NAME_COMPAT = Build.VERSION.SDK_INT
             >= Build.VERSION_CODES.HONEYCOMB ?
             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY :

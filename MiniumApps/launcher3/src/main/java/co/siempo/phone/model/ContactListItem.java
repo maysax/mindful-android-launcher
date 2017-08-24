@@ -7,6 +7,7 @@ import java.util.List;
  * Created by Shahab on 2/16/2017.
  */
 
+@SuppressWarnings("ALL")
 public class ContactListItem extends MainListItem {
 
     private long contactId;

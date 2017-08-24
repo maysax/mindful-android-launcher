@@ -29,7 +29,8 @@
         android:layout_alignParentBottom="true"
         android:layout_below="@id/toolbarMain"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        tools:ignore="RtlHardcoded" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -42,7 +43,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:tint="@color/white"
-        android:src="@drawable/ic_add_circle_outline_black_24dp" />
+        android:src="@drawable/ic_add_circle_outline_black_24dp"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -60,7 +62,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_centerInParent="true"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        tools:ignore="RtlHardcoded" />
 
     <View
         android:layout_width="match_parent"
@@ -68,6 +71,7 @@
         android:layout_below="@id/toolbarMain"
         android:layout_alignParentRight="true"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/drop_shadow" />
+        android:background="@drawable/drop_shadow"
+        tools:ignore="RtlHardcoded" />
 
 </RelativeLayout>

@@ -21,21 +21,13 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
-    <!-- <uses-permission android:name="android.permission.READ_CALL_LOG" /> -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <!-- <uses-permission android:name="android.permission.NFC" /> -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_LOCATION" /> -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" /> -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_GPS" /> -->
-    <!-- <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" /> -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <!-- Becoming default SMS app -->
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
@@ -48,6 +40,10 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
 
     <application
         android:name=".app.Launcher3App_"
@@ -137,7 +133,8 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".receiver.DndStartStopReceiver_">
+        <receiver android:name=".receiver.DndStartStopReceiver_"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="siempo.intent.action.DND_START_STOP" />
             </intent-filter>

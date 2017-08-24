@@ -1,6 +1,7 @@
 package com.james.status.data.icon;
 
 import android.animation.LayoutTransition;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -105,6 +106,7 @@ public class NotificationsIconData extends IconData<NotificationsIconData.Notifi
         return preferences;
     }
 
+    @SuppressLint("ObsoleteSdkInt")
     @Override
     public void register() {
         super.register();

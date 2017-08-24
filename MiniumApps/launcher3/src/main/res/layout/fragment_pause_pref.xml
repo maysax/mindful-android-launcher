@@ -10,4 +10,5 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="co.siempo.phone.pause.PausePreferenceFragment"
-    tools:listitem="@layout/fragment_pause_item" />
+    tools:listitem="@layout/fragment_pause_item"
+    tools:ignore="UnusedIds,UnusedResources" />

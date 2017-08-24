@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/pause_background"
-    tools:context="co.siempo.phone.pause.PauseActivity">
+    tools:context="co.siempo.phone.pause.PauseActivity"
+    tools:ignore="Overdraw">
 
     <!-- <ImageView
          android:id="@+id/imgBackground"
@@ -49,7 +50,8 @@
                 android:textSize="20sp"
                 android:textColor="#ffffff"
                 android:fontFamily="sans-serif-medium"
-                android:text="Mindful Morning" />
+                android:text="Mindful Morning"
+                tools:ignore="HardcodedText" />
 
             <ImageView
                 android:id="@+id/settingsActionBar"
@@ -58,7 +60,8 @@
                 android:padding="4dp"
                 android:src="@drawable/icon_settings"
                 android:layout_marginEnd="18dp"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"
+                tools:ignore="UnusedIds" />
 
         </LinearLayout>
 
@@ -74,7 +77,8 @@
         android:id="@+id/pause_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="65dp" />
+        android:layout_marginBottom="65dp"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/txtAlarmTime"
@@ -87,7 +91,8 @@
         android:textColor="#FFFFFF"
         android:layout_marginTop="83.1dp"
         android:layout_below="@+id/toolbar"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        tools:ignore="HardcodedText,ObsoleteLayoutParam" />
 
     <TextView
         android:id="@+id/txtAmPm"
@@ -101,7 +106,8 @@
         android:fontFamily="sans-serif"
         android:text="AM"
         android:textColor="#FFFFFF"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        tools:ignore="HardcodedText,ObsoleteLayoutParam,UnusedIds" />
 
 
 </RelativeLayout>

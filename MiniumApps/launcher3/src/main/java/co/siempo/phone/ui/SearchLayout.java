@@ -39,6 +39,7 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 /**
  * Created by Shahab on 2/16/2017.
  */
+@SuppressWarnings("ALL")
 @EViewGroup(R.layout.search_layout)
 public class SearchLayout extends CardView {
 

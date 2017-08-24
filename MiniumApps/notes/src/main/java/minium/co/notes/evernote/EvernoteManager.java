@@ -24,6 +24,7 @@ import static minium.co.notes.utils.DataUtils.NOTE_TITLE;
 /**
  * Created by Shahab on 2/7/2017.
  */
+@SuppressWarnings("DefaultFileTemplate")
 public class EvernoteManager {
 
     public void createSiempoNotebook() {

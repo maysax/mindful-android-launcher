@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -62,7 +63,8 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/textColorPrimary"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        tools:ignore="Deprecated,SelectableText" />
 
                     <TextView
                         android:id="@+id/appPackage"
@@ -73,7 +75,8 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="@color/textColorSecondary"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="Deprecated,SelectableText" />
 
                 </LinearLayout>
 
@@ -108,7 +111,8 @@
                     android:singleLine="true"
                     android:text="@string/preference_status_color"
                     android:textColor="?android:textColorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tools:ignore="Deprecated" />
 
                 <com.james.status.views.CircleImageView
                     android:id="@+id/colorView"
@@ -134,7 +138,8 @@
                 android:singleLine="true"
                 android:text="@string/preference_fullscreen"
                 android:textColor="?android:textColorPrimary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="Deprecated" />
 
             <android.support.v7.widget.SwitchCompat
                 android:id="@+id/notificationSwitch"
@@ -149,7 +154,8 @@
                 android:singleLine="true"
                 android:text="@string/preference_notifications"
                 android:textColor="?android:textColorPrimary"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:ignore="Deprecated" />
 
         </LinearLayout>
 

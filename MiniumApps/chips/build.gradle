@@ -34,7 +34,8 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     lintOptions {
-        abortOnError false
+        disable 'GoogleAppIndexingApiWarning','IconDensities','Registered','MissingTranslation','SetTextI18n','RtlHardcoded','SelectableText','PermissionImpliesUnsupportedHardware'
+        ignoreWarnings true
     }
 }
 

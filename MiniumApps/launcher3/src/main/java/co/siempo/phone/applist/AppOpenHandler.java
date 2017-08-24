@@ -12,6 +12,7 @@ import de.greenrobot.event.EventBus;
  * Created by Shahab on 5/11/2017.
  */
 
+@SuppressWarnings("ALL")
 public class AppOpenHandler {
 
     public void handle(Context context, AppOpenEvent event) {

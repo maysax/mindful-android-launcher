@@ -13,6 +13,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Shahab on 2/16/2017.
  */
+@SuppressWarnings("ALL")
 @EBean(scope = EBean.Scope.Singleton)
 public class TokenManager {
 

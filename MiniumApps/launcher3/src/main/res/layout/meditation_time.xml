@@ -5,7 +5,8 @@
     android:id="@+id/pauseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.siempo.phone.pause.PauseActivity">
+    tools:context="co.siempo.phone.pause.PauseActivity"
+    tools:ignore="UnusedIds">
 
     <ImageView
         android:id="@+id/imgBackground"
@@ -41,7 +42,8 @@
                 android:textColor="#de000000"
                 android:layout_centerInParent="true"
                 android:fontFamily="sans-serif-medium"
-                android:text="Activities" />
+                android:text="Activities"
+                tools:ignore="HardcodedText" />
 
             <ImageView
                 android:id="@+id/crossActionBar"
@@ -51,7 +53,8 @@
                 android:layout_marginTop="20dp"
                 android:contentDescription="@null"
                 android:layout_alignBottom="@+id/titleActionBar"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                tools:ignore="PrivateResource" />
 
 
         </RelativeLayout>
@@ -107,7 +110,8 @@
             android:textSize="14sp"
             android:fontFamily="sans-serif"
             android:text="Ending at "
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/txtEndingTime"
@@ -131,7 +135,8 @@
         android:textColor="#212121"
         android:textSize="14sp"
         android:fontFamily="sans-serif-medium"
-        android:id="@+id/pause_button" />
+        android:id="@+id/pause_button"
+        tools:ignore="HardcodedText" />
 
 
 </RelativeLayout>

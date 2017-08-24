@@ -1,5 +1,6 @@
 package co.siempo.phone.ui.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -19,6 +20,7 @@ import co.siempo.phone.R;
  * Created by Shahab on 3/30/2017.
  */
 
+@SuppressWarnings("ALL")
 public class SiempoSlider extends View {
 
     private static final String STATE_PARENT = "parent";
@@ -145,7 +147,7 @@ public class SiempoSlider extends View {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.siempo_slider, defStyleAttr, defStyleRes);
+        @SuppressLint("Recycle") final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.siempo_slider, defStyleAttr, defStyleRes);
 
     }
 

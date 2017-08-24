@@ -1,5 +1,6 @@
 package minium.co.settings;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
@@ -28,6 +29,8 @@ import java.util.List;
 /**
  * Created by shahab on 12/6/16.
  */
+@SuppressWarnings("DefaultFileTemplate")
+@SuppressLint("Registered")
 @Fullscreen
 @EActivity
 public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
@@ -259,6 +262,7 @@ public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class ConnectionFragment extends PreferenceFragment {
+        @SuppressWarnings("RedundantCast")
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -300,6 +304,7 @@ public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class DeviceSettingsFragment extends PreferenceFragment {
+        @SuppressWarnings("RedundantCast")
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -341,6 +346,7 @@ public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class PersonalSettingsFragment extends PreferenceFragment {
+        @SuppressWarnings("RedundantCast")
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

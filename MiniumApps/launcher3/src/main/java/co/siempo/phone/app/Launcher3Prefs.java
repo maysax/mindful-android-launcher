@@ -11,6 +11,7 @@ import static co.siempo.phone.app.Constants.DEFAULT_TEMPO_MINUTE;
 /**
  * Created by Shahab on 2/16/2017.
  */
+@SuppressWarnings("ALL")
 @SharedPref(SharedPref.Scope.UNIQUE)
 public interface Launcher3Prefs {
 

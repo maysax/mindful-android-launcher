@@ -24,6 +24,7 @@ import minium.co.core.ui.CoreFragment;
  * Created by tkb on 2017-03-10.
  */
 
+@SuppressWarnings("ALL")
 @EFragment(R.layout.activities_layout)
 public class RepeatFragment extends CoreFragment implements RepeatAdapter.IteamAccess {
     List<DaysOfWeekWhichWasSetAlarm> daysOfWeekCheckedList;

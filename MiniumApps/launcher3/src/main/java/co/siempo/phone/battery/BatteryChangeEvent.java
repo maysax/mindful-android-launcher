@@ -3,6 +3,7 @@ package co.siempo.phone.battery;
 /**
  * Created by shahab on 3/16/16.
  */
+@SuppressWarnings("ALL")
 public class BatteryChangeEvent {
 
     private int level;

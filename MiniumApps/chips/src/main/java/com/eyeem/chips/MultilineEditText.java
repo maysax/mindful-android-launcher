@@ -1,5 +1,6 @@
 package com.eyeem.chips;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.inputmethod.EditorInfo;
@@ -13,6 +14,7 @@ import android.widget.EditText;
  * Time: 5:46 PM
  * To change this template use File | Settings | File Templates.
  */
+@SuppressLint("AppCompatCustomView")
 public class MultilineEditText extends EditText {
     public MultilineEditText(Context context) {
         super(context);

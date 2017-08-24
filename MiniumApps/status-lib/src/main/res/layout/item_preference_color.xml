@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -7,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/title"
@@ -22,7 +24,8 @@
             android:paddingRight="12dp"
             android:singleLine="true"
             android:textColor="?android:textColorPrimary"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="Deprecated,SelectableText" />
 
         <com.james.status.views.ColorImageView
             android:id="@+id/color"

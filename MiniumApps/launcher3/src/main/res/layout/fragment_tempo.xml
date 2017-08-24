@@ -5,7 +5,8 @@
     android:id="@+id/activity_pause"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.siempo.phone.pause.PauseActivity">
+    tools:context="co.siempo.phone.pause.PauseActivity"
+    tools:ignore="UnusedIds">
 
     <include layout="@layout/siempo_toolbar" />
 
@@ -17,7 +18,8 @@
         android:fontFamily="sans-serif"
         android:layout_marginBottom="30dp"
         android:layout_centerHorizontal="true"
-        tools:text="30 minute" />
+        tools:text="30 minute"
+        tools:ignore="UnusedIds" />
 
     <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
         android:layout_centerInParent="true"
@@ -47,7 +49,8 @@
         android:orientation="horizontal"
         android:layout_marginBottom="60dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        tools:ignore="UselessLeaf">
 
     </LinearLayout>
 
@@ -64,7 +67,8 @@
         android:layout_marginTop="28dp"
         android:paddingBottom="69.3dp"
         android:gravity="center"
-        android:id="@+id/text_status" />
+        android:id="@+id/text_status"
+        tools:ignore="HardcodedText,UnknownIdInLayout" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -82,7 +86,8 @@
             android:background="@null"
             android:textSize="14sp"
             android:textColor="#332d6d"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            tools:ignore="ButtonStyle,HardcodedText" />
 
         <Button
             android:text="ON"
@@ -92,7 +97,8 @@
             android:background="@null"
             android:textSize="14sp"
             android:textColor="#4d332d6d"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            tools:ignore="ButtonStyle,HardcodedText" />
     </LinearLayout>
 
 

@@ -4,7 +4,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="54dp"
-    tools:background="@color/material.core.cyan">
+    tools:background="@color/material.core.cyan"
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
         android:id="@+id/icon"

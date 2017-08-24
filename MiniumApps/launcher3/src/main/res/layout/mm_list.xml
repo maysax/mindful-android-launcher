@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/pause_background">
+    android:background="@drawable/pause_background"
+    tools:ignore="Overdraw">
 
     <!--<ImageView
         android:id="@+id/imgBackground"
@@ -24,7 +26,8 @@
         android:id="@+id/included"
         layout="@layout/custom_toolbar_with_settings"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:ignore="DuplicateIncludedIds" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -36,7 +39,8 @@
         android:minHeight="?attr/actionBarSize"
         android:visibility="gone"
         app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        tools:ignore="DuplicateIncludedIds">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +55,8 @@
                 android:layout_marginStart="18dp"
                 android:contentDescription="@null"
                 android:padding="4dp"
-                android:src="@drawable/icon_close_app" />
+                android:src="@drawable/icon_close_app"
+                tools:ignore="DuplicateIncludedIds" />
 
             <TextView
                 android:id="@+id/titleActionBar"
@@ -62,7 +67,8 @@
                 android:gravity="center"
                 android:text="Mindful Morning"
                 android:textColor="#ffffff"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="DuplicateIncludedIds,HardcodedText" />
 
             <ImageView
                 android:id="@+id/settingsActionBar"
@@ -71,7 +77,8 @@
                 android:layout_marginEnd="18dp"
                 android:contentDescription="@null"
                 android:padding="4dp"
-                android:src="@drawable/icon_settings" />
+                android:src="@drawable/icon_settings"
+                tools:ignore="DuplicateIncludedIds,UnusedIds" />
 
         </LinearLayout>
 

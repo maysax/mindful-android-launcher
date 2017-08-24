@@ -28,6 +28,7 @@ import minium.co.core.ui.CoreActivity;
 /**
  * Created by itc on 02/03/17.
  */
+@SuppressWarnings("ALL")
 public class StatusBarHandler {
 
 

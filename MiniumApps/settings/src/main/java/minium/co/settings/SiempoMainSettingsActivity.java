@@ -1,5 +1,6 @@
 package minium.co.settings;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
@@ -31,6 +32,7 @@ import java.util.List;
 import minium.co.core.ui.CoreActivity;
 
 
+@SuppressLint("Registered")
 public class SiempoMainSettingsActivity extends CoreActivity{
 
     private ListView lst_settings;
@@ -40,16 +42,16 @@ public class SiempoMainSettingsActivity extends CoreActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_main);
+        //setContentView(R.layout.settings_main);
         initView();
-    }
+    }//
 
     public void initView(){
-        lst_settings=(ListView)findViewById(R.id.lst_settings);
-        arr_menuList=new ArrayList<>();
-        arr_menuList.add(getString(R.string.str_phonesettings));
-        arr_menuList.add(getString(R.string.str_siemposettings));
-        arr_menuList.add(getString(R.string.str_siempo_alphasettings));
+//        lst_settings=(ListView)findViewById(R.id.lst_settings);
+//        arr_menuList=new ArrayList<>();
+//        arr_menuList.add(getString(R.string.str_phonesettings));
+//        arr_menuList.add(getString(R.string.str_siemposettings));
+//        arr_menuList.add(getString(R.string.str_siempo_alphasettings));
 
         adapter = new SettingsAdapter(this, arr_menuList);
         lst_settings.setAdapter(adapter);

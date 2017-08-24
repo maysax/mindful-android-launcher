@@ -1,5 +1,6 @@
 package minium.co.core.helper;
 
+import android.annotation.SuppressLint;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ public final class Validate {
 
     private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final String PASSWORD_REGEX = "^[0-9a-zA-Z@#$%]{8,}$";
+    @SuppressLint("StaticFieldLeak")
     public static View errorView;
 
     private Validate() {

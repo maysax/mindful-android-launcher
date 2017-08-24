@@ -4,6 +4,7 @@ package co.siempo.phone.notification;
  * Created by itc on 20/02/17.
  */
 
+@SuppressWarnings("ALL")
 public class Notification {
     private Long id;
     private String _text;
