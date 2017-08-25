@@ -172,10 +172,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @UiThread(delay = 500)
     void loadViews() {
-        statusBarHandler = new StatusBarHandler(this);
-        if (statusBarHandler != null && !statusBarHandler.isActive()) {
-            statusBarHandler.requestStatusBarCustomization();
-        }
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
 
@@ -220,6 +216,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         @Override
         public void onPermissionGranted() {
             loadViews();
+            loadStatusBar();
         }
 
         @Override
@@ -249,6 +246,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @SuppressWarnings("ConstantConditions")
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
+        Log.d(TAG,"ACTION HOME PRESS");
         if (event.isVisible()) {
             if (StatusBarHandler.isNotificationTrayVisible) {
 
@@ -263,6 +261,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
+    @UiThread(delay = 1000)
+    void loadStatusBar() {
+        statusBarHandler = new StatusBarHandler(MainActivity.this);
+        if (statusBarHandler != null && !statusBarHandler.isActive()) {
+            Log.d(TAG, "LOAD STATUSBAR ::: ACTION PREVENT");
+            statusBarHandler.requestStatusBarCustomization();
+        }
+    }
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
@@ -337,7 +343,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onDestroy();
         MainActivity.isTextLenghGreater = "";
         try {
-            statusBarHandler.restoreStatusBarExpansion();
+            Log.d(TAG,"DESTROY ::: ACTION RESTORE");
+            if(statusBarHandler!=null) {
+                statusBarHandler.restoreStatusBarExpansion();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -367,10 +376,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onStop() {
         super.onStop();
         //currentIndex = 0;
-        try{
-            statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+        if(statusBarHandler!=null){
+            try{
+                Log.d(TAG,"ONSTOP ::: ACTION RESTORE");
+                statusBarHandler.restoreStatusBarExpansion();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -386,32 +400,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
       //  currentIndex = currentItem;
-        if (statusBarHandler != null && !statusBarHandler.isActive()) {
-            statusBarHandler.requestStatusBarCustomization();
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG,"ACTION ONPAUSE");
         enableNfc(false);
-        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-        try {
-            if (statusBarHandler != null)
-                statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         currentItem = 0;
+        Log.d(TAG,"ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             EventBus.getDefault().post(new NFCEvent(true, tag));
         }
+        loadStatusBar();
     }
 
     private void enableNfc(boolean isEnable) {
@@ -442,6 +449,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void onBackPressed() {
         try{
         if (StatusBarHandler.isNotificationTrayVisible) {
+            Log.d(TAG,"onBackPressed");
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
             if (f!=null && f instanceof NotificationFragment)
             {
@@ -463,8 +471,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(statusBarHandler!=null){
-            statusBarHandler = new StatusBarHandler(this);
-        }
+        Log.d(TAG,"RESTART ::: ACTION RESTART");
+        loadStatusBar();
     }
+
+
 }

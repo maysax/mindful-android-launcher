@@ -12,6 +12,7 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.UiThread;
 
 import java.util.ArrayList;
+
 import co.siempo.phone.R;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.model.SettingsData;
@@ -104,15 +105,17 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        statusBarHandler = new StatusBarHandler(SiempoMainSettingsActivity.this);
-//        statusBarHandler.requestStatusBarCustomization();
-        if (statusBarHandler != null && !statusBarHandler.isActive())
-            statusBarHandler.requestStatusBarCustomization();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
             if (statusBarHandler != null)
@@ -121,7 +124,6 @@ public class SiempoMainSettingsActivity extends CoreActivity {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void onBackPressed() {
@@ -144,9 +146,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        if(statusBarHandler!=null){
-            statusBarHandler = new StatusBarHandler(this);
-        }
+        loadStatusBar();
     }
+
 }
