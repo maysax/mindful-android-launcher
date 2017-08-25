@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
@@ -30,16 +32,18 @@ import co.siempo.phone.pause.PauseActivity;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
 @Fullscreen
 @EActivity(R.layout.activity_installed_app_list)
-public class AppDrawerActivity extends CoreActivity implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>> {
+public class AppDrawerActivity extends CoreActivity {
+        //implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>> {
 
     StatusBarHandler statusBarHandler;
 
-    ArrayList<ApplistDataModel> arrayList = new ArrayList<>();
+    List<ApplicationInfo> arrayList = new ArrayList<>();
     @ViewById
     GridView activity_grid_view;
 
@@ -63,18 +67,19 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
 
         settingsActionBar.setVisibility(View.INVISIBLE);
         titleActionBar.setText(getString(R.string.title_apps));
-        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+//        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+//        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         //List<ResolveInfo> pkgAppsList = getPackageManager().queryIntentActivities( mainIntent, 0);
         activity_grid_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 try {
-                    Tracer.i("Opening package: " + arrayList.get(i).getPackageName());
-                    Intent intent = getPackageManager().getLaunchIntentForPackage(arrayList.get(i).getPackageName());
-                    startActivity(intent);
-                    EventBus.getDefault().post(new AppOpenEvent(arrayList.get(i).getPackageName()));
+                    Tracer.i("Opening package: " + arrayList.get(i).packageName);
+//                    Intent intent = getPackageManager().getLaunchIntentForPackage(arrayList.get(i).getPackageName());
+//                    startActivity(intent);
+                    new ActivityHelper(AppDrawerActivity.this).openGMape(arrayList.get(i).packageName);
+                    EventBus.getDefault().post(new AppOpenEvent(arrayList.get(i).packageName));
                 } catch (Exception e) {
                     // returns null if application is not installed
                     Tracer.e(e, e.getMessage());
@@ -116,10 +121,11 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
             }
         }
         */
-
-        installedAppListAdapter = new InstalledAppListAdapter(AppDrawerActivity.this);
+        arrayList = CoreApplication.getInstance().getPackagesList();
+        installedAppListAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList);
+        //installedAppListAdapter.setAppInfo(arrayList);
         activity_grid_view.setAdapter(installedAppListAdapter);
-        getLoaderManager().initLoader(0, null, this);
+       // getLoaderManager().initLoader(0, null, this);
         loadTopBar();
         loadStatusBar();
 
@@ -132,22 +138,24 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
             statusBarHandler.requestStatusBarCustomization();
         }
     }
-    @Override
-    public Loader<List<ApplistDataModel>> onCreateLoader(int i, Bundle bundle) {
-        return AppListLoader_.getInstance_(this);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<ApplistDataModel>> loader, List<ApplistDataModel> applistDataModels) {
-        arrayList.clear();
-        arrayList.addAll(applistDataModels);
-        installedAppListAdapter.setAppInfo(applistDataModels);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<ApplistDataModel>> loader) {
-        installedAppListAdapter.setAppInfo(null);
-    }
+//    @Override
+//    public Loader<List<ApplistDataModel>> onCreateLoader(int i, Bundle bundle) {
+//        return AppListLoader_.getInstance_(this);
+//    }
+//
+//
+//
+//    @Override
+//    public void onLoadFinished(Loader<List<ApplistDataModel>> loader, List<ApplistDataModel> applistDataModels) {
+//        arrayList.clear();
+//        arrayList.addAll(applistDataModels);
+//        installedAppListAdapter.setAppInfo(applistDataModels);
+//    }
+//
+//    @Override
+//    public void onLoaderReset(Loader<List<ApplistDataModel>> loader) {
+//        installedAppListAdapter.setAppInfo(null);
+//    }
 
     @Subscribe
     public void appOpenEvent(AppOpenEvent event) {

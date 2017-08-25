@@ -3,8 +3,13 @@ package minium.co.core.app;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
+import android.content.pm.LauncherActivityInfo;
+import android.content.pm.LauncherApps;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.UserManager;
 import android.support.multidex.MultiDexApplication;
 
 import com.androidnetworking.AndroidNetworking;
@@ -15,6 +20,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
@@ -24,6 +30,7 @@ import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
 import minium.co.core.util.FontUtils;
+import minium.co.core.util.UserHandle;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -46,7 +53,13 @@ public abstract class CoreApplication extends MultiDexApplication {
     private RefWatcher refWatcher;
 
 
+    UserManager userManager;
+
+
+    LauncherApps launcherApps;
+
     private List<ApplicationInfo> packagesList = new ArrayList<>();
+    public HashMap<String, Bitmap> iconList = new HashMap<>();
 
     @Override
     public void onCreate() {
@@ -58,7 +71,8 @@ public abstract class CoreApplication extends MultiDexApplication {
             return;
         }
         refWatcher = LeakCanary.install(this);
-
+        userManager = (UserManager) getSystemService(Context.USER_SERVICE);
+        launcherApps = (LauncherApps) getSystemService(Context.LAUNCHER_APPS_SERVICE);
         sInstance = this;
         init();
         getAllApplicationPackageName();
@@ -132,7 +146,22 @@ public abstract class CoreApplication extends MultiDexApplication {
 
         @Override
         protected List<ApplicationInfo> doInBackground(Object... params) {
-            List<ApplicationInfo> applist = checkForLaunchIntent(getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA));
+            List<ApplicationInfo> applist = new ArrayList<>();
+            for (android.os.UserHandle profile : userManager.getUserProfiles()) {
+                UserHandle user = new UserHandle(userManager.getSerialNumberForUser(profile), profile);
+                for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
+                    ApplicationInfo appInfo = activityInfo.getApplicationInfo();
+                    if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
+                        Drawable drawable = appInfo.loadIcon(getPackageManager());
+                        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                        iconList.put(appInfo.loadLabel(getPackageManager()).toString(), bitmap);
+                        applist.add(appInfo);
+                    }
+                }
+            }
+
+
+            //List<ApplicationInfo> applist = checkForLaunchIntent(getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA));
             return applist;
         }
 
@@ -147,7 +176,7 @@ public abstract class CoreApplication extends MultiDexApplication {
             ArrayList<ApplicationInfo> applist = new ArrayList<ApplicationInfo>();
             for (ApplicationInfo info : list) {
                 try {
-                    if (null != getPackageManager().getLaunchIntentForPackage(info.packageName)) {
+                    if (null != getPackageManager().getLaunchIntentForPackage(info.packageName) && isSystemPackage(info)) {
                         applist.add(info);
                     }
                 } catch (Exception e) {
@@ -157,6 +186,11 @@ public abstract class CoreApplication extends MultiDexApplication {
 
             return applist;
         }
+
+        private boolean isSystemPackage(ApplicationInfo packageInfo) {
+            return ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+        }
+
 
     }
 }

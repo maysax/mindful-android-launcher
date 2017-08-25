@@ -21,9 +21,7 @@ public class TokenParser {
             manager.clear();
         } else if (str.equals("@") && !manager.hasCompleted(TokenItemType.CONTACT)) {
             router.setCurrent(new TokenItem(TokenItemType.CONTACT));
-        }  else if (str.equals("/") && !manager.hasCompleted(TokenItemType.CONTACT)) {
-            router.setCurrent(new TokenItem(TokenItemType.APPS));
-        } else {
+        }else {
             for (TokenItem item : manager.getItems()) {
                 if (item.getCompleteType() == TokenCompleteType.FULL) {
                     str = str.substring(item.getTitle().length() + 1);

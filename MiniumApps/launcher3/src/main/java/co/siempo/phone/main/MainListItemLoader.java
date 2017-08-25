@@ -1,12 +1,16 @@
 package co.siempo.phone.main;
 
+import android.app.Fragment;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.support.annotation.StringRes;
 
 import java.util.List;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.applist.AppDrawerActivity_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.mm.MMTimePickerActivity_;
@@ -32,7 +36,7 @@ public class MainListItemLoader {
         this.context = context;
     }
 
-    public void loadItems(List<MainListItem> items) {
+    public void loadItems(List<MainListItem> items, Fragment fragment) {
         items.add(new MainListItem(2, context.getString(R.string.title_calls), "fa-phone", R.drawable.icon_call, MainListItemType.ACTION));
         items.add(new MainListItem(1, getString(R.string.title_messages), "fa-users", R.drawable.icon_sms, MainListItemType.ACTION));
         items.add(new MainListItem(20, getString(R.string.title_calendar), "fa-calendar"));
@@ -66,9 +70,21 @@ public class MainListItemLoader {
         // items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
         //items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
 //        items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
-
-
+        if(fragment instanceof MainFragment) {
+            try {
+                if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
+                    for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
+                        String appName = applicationInfo.loadLabel(fragment.getActivity().getPackageManager()).toString();
+                        items.add(new MainListItem(-1, appName, applicationInfo));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+
 
     private final String getString(@StringRes int resId, Object... formatArgs) {
         return context.getString(resId, formatArgs);
@@ -145,5 +161,7 @@ public class MainListItemLoader {
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
                 break;
         }
+        MainActivity.isTextLenghGreater="";
+
     }
 }

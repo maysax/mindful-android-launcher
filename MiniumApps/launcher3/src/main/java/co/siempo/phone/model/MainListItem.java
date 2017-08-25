@@ -18,11 +18,12 @@ public class MainListItem {
     private MainListItemType itemType = MainListItemType.ACTION;
     private String icon;
     private int iconRes;
-    private ApplicationInfo applicationInfo;
+    private ApplicationInfo applicationInfo=null;
 
-    public MainListItem(String title,MainListItemType itemType, ApplicationInfo applicationInfo) {
+
+    public MainListItem(int id, String title, ApplicationInfo applicationInfo) {
+        this.id = id;
         this.title = title;
-        this.itemType = itemType;
         this.applicationInfo = applicationInfo;
     }
 

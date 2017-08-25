@@ -43,7 +43,7 @@ public class OldMenuFragment extends CoreFragment {
 
     private void loadData() {
         items = new ArrayList<>();
-        new MainListItemLoader(getActivity()).loadItems(items);
+        new MainListItemLoader(getActivity()).loadItems(items,this);
         adapter = new OldMenuAdapter(getActivity(), items);
         listView.setAdapter(adapter);
     }

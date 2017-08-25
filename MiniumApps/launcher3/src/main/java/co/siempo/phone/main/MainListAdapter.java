@@ -37,6 +37,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private List<MainListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
     PackageManager packageManager;
+
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
@@ -103,13 +104,10 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             case CONTACT:
                 convertView = getContactItemView(position, convertView, parent);
                 break;
-            case APPS:
-                convertView = getActionItemView(position, convertView, parent, MainListItemType.APPS);
-                break;
             case ACTION:
             case DEFAULT:
             case NUMBERS:
-                convertView = getActionItemView(position, convertView, parent, MainListItemType.NUMBERS);
+                convertView = getActionItemView(position, convertView, parent);
         }
 
         return convertView;
@@ -196,7 +194,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         return view;
     }
 
-    private View getActionItemView(int position, View view, ViewGroup parent, MainListItemType numbers) {
+    private View getActionItemView(int position, View view, ViewGroup parent) {
         ActionViewHolder holder;
 
         if (view == null) {
@@ -215,7 +213,10 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         MainListItem item = getItem(position);
 
         if (item != null) {
-            if(item.getItemType() == MainListItemType.NUMBERS) {
+            if (item.getId() == -1) {
+                holder.icon.setImageDrawable(item.getApplicationInfo().loadIcon(packageManager));
+                holder.text.setText(item.getApplicationInfo().loadLabel(packageManager));
+            } else {
                 if (item.getIcon() != null) {
                     holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
                             .colorRes(R.color.text_primary)
@@ -224,14 +225,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                     holder.icon.setImageResource(item.getIconRes());
                 }
                 holder.text.setText(item.getTitle());
-            }else{
-                if (item.getApplicationInfo() != null) {
-                    holder.icon.setImageDrawable(item.getApplicationInfo().loadIcon(packageManager));
-                } else {
-                    holder.icon.setImageResource(item.getIconRes());
-                }
-                holder.text.setText(item.getTitle());
             }
+
         }
 
         return view;
@@ -296,12 +291,17 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             break;
                         case ACTION:
                             filterableString = originalData.get(i).getTitle();
-                            splits = filterableString.split(" ");
-
-                            for (String str : splits) {
-                                if (str.toLowerCase().startsWith(searchString)) {
+                            if (originalData.get(i).getApplicationInfo() == null) {
+                                splits = filterableString.split(" ");
+                                for (String str : splits) {
+                                    if (str.toLowerCase().startsWith(searchString)) {
+                                        buildData.add(originalData.get(i));
+                                        break;
+                                    }
+                                }
+                            } else {
+                                if (originalData.get(i).getTitle().toLowerCase().startsWith(searchString.toLowerCase())) {
                                     buildData.add(originalData.get(i));
-                                    break;
                                 }
                             }
                             break;
@@ -309,9 +309,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             buildData.add(originalData.get(i));
                             break;
                         case NUMBERS:
-                            buildData.add(originalData.get(i));
-                            break;
-                        case APPS:
                             buildData.add(originalData.get(i));
                             break;
                     }
@@ -332,9 +329,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             } else {
                 filteredData = new ArrayList<>(originalData);
             }
-
             EventBus.getDefault().post(new MainListAdapterEvent(filteredData.size()));
-
             notifyDataSetChanged();
         }
     }
