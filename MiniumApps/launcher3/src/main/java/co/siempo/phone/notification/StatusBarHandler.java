@@ -102,6 +102,7 @@ public class StatusBarHandler {
 
                 manager.addView(blockingView, localLayoutParams);
                 blockingViewCollection.add(blockingView);
+                Log.d(TAG,"PREVENT NATIVE NOTIFICATION..........");
                 isActive = true;
 
             }
@@ -185,6 +186,8 @@ public class StatusBarHandler {
 
         b.destroyDrawingCache();
         blockingViewCollection.remove(b);
+        Log.d(TAG,"RESTORE NATIVE NOTIFICATION .......... ");
+
 
     }
     }

@@ -52,13 +52,16 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(statusBarHandler!=null && !statusBarHandler.isActive())
-        statusBarHandler.requestStatusBarCustomization();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
             if (statusBarHandler != null)
@@ -71,9 +74,6 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        if(statusBarHandler!=null){
-            statusBarHandler = new StatusBarHandler(this);
-        }
+        loadStatusBar();
     }
 }

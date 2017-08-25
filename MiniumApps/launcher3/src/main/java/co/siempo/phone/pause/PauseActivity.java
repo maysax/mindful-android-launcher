@@ -135,6 +135,14 @@ public class PauseActivity extends CoreActivity {
             }
         }
 
+        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+        try {
+            if(statusBarHandler!=null)
+                statusBarHandler.restoreStatusBarExpansion();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
 
     }
@@ -200,22 +208,13 @@ public class PauseActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
 
-
-        if (statusBarHandler != null && !statusBarHandler.isActive())
-            statusBarHandler.requestStatusBarCustomization();
  }
 
     @Override
     protected void onPause() {
         super.onPause();
-        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-        try {
-            if(statusBarHandler!=null)
-                statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
+
 
     @Override
     protected void onDestroy() {
@@ -225,8 +224,6 @@ public class PauseActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(statusBarHandler!=null){
-            statusBarHandler = new StatusBarHandler(this);
-        }
+        loadStatusBar();
     }
 }

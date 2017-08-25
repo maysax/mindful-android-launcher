@@ -26,7 +26,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
-import co.siempo.phone.pause.PauseActivity;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -160,8 +159,6 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
     protected void onResume() {
         super.onResume();
 
-        if (statusBarHandler != null && !statusBarHandler.isActive())
-            statusBarHandler.requestStatusBarCustomization();
     }
 
     private void loadTopBar() {
@@ -172,6 +169,12 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
     @Override
     protected void onPause() {
         super.onPause();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
             if(statusBarHandler!=null)
@@ -203,8 +206,7 @@ public class AppDrawerActivity extends CoreActivity implements LoaderManager.Loa
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(statusBarHandler!=null){
-            statusBarHandler = new StatusBarHandler(this);
-        }
+        loadStatusBar();
     }
+
 }

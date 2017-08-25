@@ -122,19 +122,13 @@ public class SiempoSettingsActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
         currentIndex =1;
-        if (statusBarHandler != null && !statusBarHandler.isActive())
-            statusBarHandler.requestStatusBarCustomization();
     }
 
     @Override
     protected void onStop() {
+
         super.onStop();
         currentIndex =0;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
         NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
         try {
             if (statusBarHandler != null)
@@ -145,11 +139,13 @@ public class SiempoSettingsActivity extends CoreActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
-
-        if(statusBarHandler!=null){
-            statusBarHandler = new StatusBarHandler(this);
-        }
+        loadStatusBar();
     }
 }
