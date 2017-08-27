@@ -1,0 +1,29 @@
+<resources>
+
+    <style name="ListItem">
+        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
+        <item name="android:paddingLeft">@dimen/margin.6</item>
+        <item name="android:paddingRight">@dimen/margin.6</item>
+    </style>
+
+    <style name="tweetName">
+        <item name="android:textColor">@color/primary_text_default_material_light</item>
+        <item name="android:textSize">20sp</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:shadowColor">#44000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
+    </style>
+
+    <style name="tweetText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColorLink">#778085</item>
+    </style>
+
+    <style name="tweetDate">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#FFAAAAAA</item>
+    </style>
+
+</resources>

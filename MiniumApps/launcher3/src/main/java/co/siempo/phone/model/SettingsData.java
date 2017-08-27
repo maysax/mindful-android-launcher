@@ -1,0 +1,28 @@
+package co.siempo.phone.model;
+
+/**
+ * Created by hardik on 17/8/17.
+ */
+
+@SuppressWarnings("ALL")
+public class SettingsData {
+
+    private String settingType;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getSettingType() {
+        return settingType;
+    }
+
+    public void setSettingType(String settingType) {
+        this.settingType = settingType;
+    }
+}

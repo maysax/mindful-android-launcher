@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Core</string>
 
     <!-- errors -->
@@ -19,6 +19,10 @@
 
     <!-- messages -->
     <string name="msg.not.yet.implemented">Not yet implemented</string>
+    <string name="msg.noteSaved">Your note has been saved.</string>
+
+    <!-- Icons -->
+    <string name="ic_comment">{fa-comment 48sp}</string>
 
     <string-array name="appNames">
         <item>Contacts</item>
@@ -43,5 +47,29 @@
         <item>{fa-heart-o 36dp}\n\nFavorites</item>
         <item>{fa-cogs 36dp}\n\nSettings</item>
     </string-array>
+
+    <string name="demo.text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui augue, volutpat vel euismod quis, eleifend non elit. Cras ut cursus eros, placerat ornare ante. Aliquam scelerisque, risus sit amet tincidunt eleifend, diam est vestibulum nisl, at faucibus turpis nisi id lacus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras commodo turpis placerat, luctus justo non, rutrum risus. Fusce et felis et erat suscipit fermentum. Aliquam aliquet maximus consectetur. Praesent nec dictum lorem, non vehicula velit. Pellentesque vel augue tristique, consectetur sem ac, tempor ex. Suspendisse feugiat dictum egestas. Nullam non tortor fermentum, euismod orci bibendum, blandit eros. Quisque dictum rutrum purus eget porta. Fusce sagittis non sem nec aliquam. Nulla id suscipit magna.</string>
+    <string name="demo.text.2">Integer faucibus mattis nunc eget finibus. Sed diam nisl, euismod id urna egestas, laoreet porta felis. Quisque a dolor ultricies, gravida nisl sit amet, accumsan diam. Suspendisse nisi tellus, scelerisque id consectetur nec, malesuada eleifend magna. Vestibulum in tortor facilisis, dapibus massa non, molestie risus. Aliquam erat volutpat. Nam auctor elementum dolor, sodales mattis eros bibendum at. Praesent iaculis risus nec lobortis congue. Ut dapibus sagittis lectus nec condimentum. Quisque ligula arcu, finibus et suscipit id, pharetra ut lectus. Nulla quis gravida nibh, sed sodales purus. Donec molestie tortor nec posuere ullamcorper.</string>
+    <string name="demo.text.3">Integer vel sapien nec sapien pharetra venenatis in a mi. Aliquam at varius arcu. Integer condimentum nec risus et mattis. Phasellus nec erat tempor, venenatis mauris vitae, lacinia metus. Aenean vestibulum venenatis massa. Mauris congue porttitor purus, in congue nulla commodo eu. Nulla blandit dui at felis tempor rhoncus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In mollis aliquam neque nec ullamcorper. Nulla posuere tortor suscipit, mattis nulla quis, dignissim tortor. Vivamus nunc tellus, convallis eu erat malesuada, feugiat ultrices neque. Mauris feugiat eu erat ac eleifend. Fusce sed consectetur lacus. Donec non efficitur quam. Praesent pretium urna quis dolor semper efficitur. Etiam ac nibh feugiat, porta arcu in, consectetur dolor.</string>
+    <string name="demo.text.4">Vestibulum sed tortor id felis pharetra tincidunt in ut risus. Suspendisse iaculis, ex ac vehicula commodo, arcu mauris condimentum tortor, sed porta erat arcu vulputate massa. Nulla dignissim justo sed cursus molestie. Nulla et metus sapien. In faucibus luctus dictum. Aliquam dapibus volutpat urna, a sollicitudin orci placerat vitae. Quisque massa orci, interdum nec hendrerit sed, tincidunt quis ante. Vestibulum lobortis pretium ultricies. Cras eget ex a enim iaculis fringilla et mollis est. Fusce ac commodo eros. Sed ultrices iaculis urna. In pharetra tellus non nulla ullamcorper condimentum.</string>
+    <string name="demo.text.5">Donec placerat ipsum augue. Nulla ex felis, luctus a mauris vel, tincidunt egestas dolor. Nullam in lacinia magna. In aliquet nisi non nulla iaculis placerat quis nec enim. Cras sed ante in dui rhoncus porttitor vel a massa. Donec non posuere diam. Curabitur finibus, augue sed blandit auctor, mi turpis maximus magna, vel semper magna ex at sapien. Sed a tortor nec risus ultricies mollis id non risus. Praesent ut dolor turpis. Sed justo lacus, tincidunt at rhoncus eget, pellentesque sed risus. Nulla at mauris a nibh laoreet pulvinar sit amet eu tellus. Integer ut interdum arcu. Vestibulum aliquam dolor in libero porta, in placerat ipsum semper. Curabitur ex ante, dignissim mattis porta quis, cursus sit amet elit. Sed ultrices, lorem id pretium tincidunt, metus turpis lobortis felis, a pellentesque nibh ligula vel orci. Pellentesque dictum diam ac lacus fermentum, id tempor arcu fermentum.</string>
+
+    <string name="label.yes">Yes</string>
+    <string name="label.no">No</string>
+    <string name="label.search">Search</string>
+    <string name="label.rateApp">Rate app</string>
+    <string name="label.backup">Backup</string>
+    <string name="label.restore">Restore</string>
+    <string name="label.color">Color</string>
+    <string name="label.delete">Delete</string>
+    <string name="label.fontSize">Font size</string>
+    <string name="label.title">Title</string>
+    <string name="label.note">Note</string>
+    <string name="label.favorite">Favorite</string>
+    <string name="make_siempo_your_default_home_app">Make Siempo your default home app:</string>
+    <string name="select">Select</string>
+    <string name="select_your_prefered_home_app">Select your preferred Home app</string>
+    <string name="tap_always" tools:ignore="TypographyQuotes">Tap \"Always\"</string>
+    <string name="ok">OK</string>
 
 </resources>

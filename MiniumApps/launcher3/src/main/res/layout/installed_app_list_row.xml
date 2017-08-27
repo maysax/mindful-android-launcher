@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:showDividers="none"
+    android:gravity="center"
+    android:padding="5dp"
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:id="@+id/imv_appicon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/abc_btn_check_material"
+        tools:ignore="ContentDescription,PrivateResource" />
+
+    <TextView
+        android:id="@+id/txt_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="Sound"
+        android:textColor="#000000"
+        android:lines="1"
+        android:ellipsize="end"
+        android:padding="4dp"
+        android:textSize="14sp"
+        tools:ignore="HardcodedText" />
+
+
+</LinearLayout>

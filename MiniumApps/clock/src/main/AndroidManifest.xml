@@ -7,16 +7,13 @@
     More info: https://developer.android.com/preview/backup/index.html
     -->
 
-    <application
-        android:name=".app.App_"
-        android:allowBackup="true" android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name" android:supportsRtl="true"
-        android:theme="@style/CoreTheme">
+    <application android:name=".app.ClockApp_" android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
+        android:supportsRtl="true" android:theme="@style/CoreTheme">
 
         <!-- Fabric configuration -->
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="3a18ba28dbf20cf77b809a2a21ad29d0593404a2" />
+        <meta-data android:name="io.fabric.ApiKey"
+            android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
 
         <activity android:name=".ui.MainActivity_">
             <intent-filter>

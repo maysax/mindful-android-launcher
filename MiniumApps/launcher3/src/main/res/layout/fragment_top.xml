@@ -1,0 +1,79 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/margin.1"
+    android:paddingRight="@dimen/margin.1"
+    tools:context=".ui.TopFragment">
+
+    <ImageView
+        android:id="@+id/imgNotification"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/system_notification"
+        android:padding="6dp"
+        android:layout_alignParentStart="true"
+        android:visibility="gone"
+        android:contentDescription="@null" />
+
+    <ImageView
+        android:id="@+id/imgTempo"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/system_tempo"
+        android:padding="6dp"
+        android:layout_toEndOf="@id/imgNotification"
+        android:visibility="gone"
+        android:contentDescription="@null"
+        tools:ignore="UnusedIds" />
+
+    <ImageView
+        android:id="@+id/imgBattery"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/system_battery"
+        android:padding="6dp"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@null" />
+
+    <ImageView
+        android:id="@+id/imgSignal"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/system_reception"
+        android:padding="6dp"
+        android:layout_toStartOf="@id/imgBattery"
+        android:contentDescription="@null" />
+
+    <ImageView
+        android:id="@+id/imgWifi"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/system_wifi"
+        android:padding="6dp"
+        android:layout_toStartOf="@id/imgSignal"
+        android:contentDescription="@null" />
+
+    <ImageView
+        android:id="@+id/imgAirplane"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:src="@drawable/ic_airplane"
+        android:padding="6dp"
+        android:layout_toStartOf="@id/imgWifi"
+        android:contentDescription="@null"
+        tools:ignore="UnusedIds" />
+
+    <TextClock
+        android:id="@+id/iTxt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/text.size.large"
+        android:fontFamily="sans-serif"
+        android:textColor="#b3000000"
+        tools:text="SELECT"
+        tools:ignore="RelativeOverlap,UnusedIds" />
+
+
+</RelativeLayout>

@@ -7,7 +7,7 @@ import java.util.Locale;
 
 /**
  * Decide the format of log will be written to the file.
- *
+ * <p>
  * Created by hui.yang on 2014/11/16.
  */
 public abstract class LogFormatter {
@@ -24,43 +24,36 @@ public abstract class LogFormatter {
     /**
      * Eclipse Style
      */
-    public static class EclipseFormatter extends LogFormatter{
+    public static class EclipseFormatter extends LogFormatter {
         private final SimpleDateFormat formatter;
 
-        public EclipseFormatter(){
+        public EclipseFormatter() {
             formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.US);
         }
 
-        public EclipseFormatter(String formatOfTime){
-            if (TextUtils.isEmpty(formatOfTime)){
+        public EclipseFormatter(String formatOfTime) {
+            if (TextUtils.isEmpty(formatOfTime)) {
                 formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ", Locale.US);
-            }else{
+            } else {
                 formatter = new SimpleDateFormat(formatOfTime, Locale.US);
             }
         }
 
         @Override
         public String format(LEVEL level, String tag, String msg, Throwable tr) {
-            if (level == null || TextUtils.isEmpty(tag) || TextUtils.isEmpty(msg)){
+            if (TextUtils.isEmpty(msg)) {
                 return "";
             }
 
             StringBuffer buffer = new StringBuffer();
-            buffer.append(level.getLevelString());
-            buffer.append("\t");
             buffer.append(formatter.format(System.currentTimeMillis()));
-            buffer.append("\t");
-            buffer.append(android.os.Process.myPid());
-            buffer.append("\t");
-            buffer.append(android.os.Process.myTid());
-            buffer.append("\t");
-            buffer.append(tag);
             buffer.append("\t");
             buffer.append(msg);
             if (tr != null) {
                 buffer.append(System.getProperty("line.separator"));
                 buffer.append(android.util.Log.getStackTraceString(tr));
             }
+            buffer.append("\n");
 
             return buffer.toString();
         }

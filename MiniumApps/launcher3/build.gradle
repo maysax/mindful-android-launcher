@@ -1,0 +1,110 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'io.fabric'
+apply plugin: 'org.greenrobot.greendao'
+
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    lintOptions {
+        disable 'GoogleAppIndexingApiWarning','IconDensities','Registered','MissingTranslation','SetTextI18n','RtlHardcoded','SelectableText','PermissionImpliesUnsupportedHardware'
+        ignoreWarnings true
+    }
+    defaultConfig {
+        applicationId "co.siempo.phone"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode "${versionMajor}".toInteger() * 1000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}-${buildTime}"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable false
+            // RELEASE: true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+
+    }
+    dexOptions {
+        jumboMode true
+    }
+
+    // workaround for "duplicate files during packaging of APK" issue
+    // see https://groups.google.com/d/msg/adt-dev/bl5Rc4Szpzg/wC8cylTWuIEJ
+    packagingOptions {
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven {
+        url 'https://maven.google.com'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    /**
+     * =================== Test suit  ===================
+     */
+    testCompile "junit:junit:$junitVersion"
+
+    androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile project(':chips')
+    // compile project(':color-picker')
+    compile project(':notes')
+    compile project(':halo-circle-seekbar')
+    compile project(':horizontal-timepicker')
+    compile project(':status-lib')
+
+    //compile "com.github.satyan:sugar:$sugarOrmVersion"
+    compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
+    compile("com.github.paolorotolo:appintro:$appIntroVersion") {
+        exclude module: 'appcompat-v7'
+    }
+    apt "org.androidannotations:androidannotations:$annotationsVersion"
+
+
+    compile "org.greenrobot:greendao:$greenDaoVersion"
+    compile "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:$keyboardvisibilityEventVersion"
+    compile "com.github.bumptech.glide:glide:$glideVersion"
+    compile "com.github.yuweiguocn:GreenDaoUpgradeHelper:$greenDaoUpgradeHelperVersion"
+    compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+    debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
+    compile 'com.google.firebase:firebase-core:10.2.4'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.github.javiersantos:AppUpdater:2.6.3'
+}
+greendao {
+    schemaVersion "${databaseVersion}".toInteger()
+    //daoPackage 'com.android.daolib.ttt'
+}
+apt {
+    arguments {
+        // RELEASE: comment it out
+        trace 'true'
+    }
+}
+
+// ADD THIS AT THE BOTTOM
+apply plugin: 'com.google.gms.google-services'

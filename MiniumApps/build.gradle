@@ -10,7 +10,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0-beta7'
+        classpath 'com.android.tools.build:gradle:2.2.3'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -22,6 +22,15 @@ buildscript {
         // Fabric
         // https://twittersdk.artifactoryonline.com/twittersdk/public/io/fabric/tools/gradle/
         classpath 'io.fabric.tools:gradle:1.21.2'
+
+        classpath 'me.tatarka:gradle-retrolambda:3.2.2'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+
+        //greeendao
+        classpath "org.greenrobot:greendao-gradle-plugin:3.2.0"
+
+        classpath 'com.google.gms:google-services:3.0.0'
+
     }
 }
 
@@ -32,31 +41,56 @@ allprojects {
 }
 
 project.ext {
-    compileSdkVersion = 23
-    buildToolsVersion = "23.0.2"
-    minSdkVersion = 19  // Targeting kitkat for now, might upgrade to Lollipop
-    targetSdkVersion = 23
+    compileSdkVersion = 25
+    buildToolsVersion = "25.0.3"
+    minSdkVersion = 21  // Targeting lollipop
+    targetSdkVersion = 25
 
-    supportVersion = "23.2.1"
+    supportVersion = "25.3.1"
     annotationsVersion = "4.0.0"
     iconifyVersion = "2.2.1"
     calligraphyVersion = "2.1.0@aar"
     eventbusVersion = "3.0.0-beta1"
-
+    loggerVersion = "1.11"
+    crashlyticsVersion = "2.5.5@aar"
+    baseRecyclerViewAdapterHelperVersion = "2.2.0"
+    sugarOrmVersion = "1.5"
+    greenDaoVersion = "3.2.0"
+    tedPermissionVersion = "1.0.2"
+    fastAndroidNetworkingVersion = "0.3.0"
+    espressoVersion = "2.2.2"
+    multidexVersion = "1.0.1"
+    circleImageViewVersion = "2.0.0"
+    couchbaseVersion = "1.4.0"
+    appIntroVersion = "4.1.0"
+    debugDBVersion = "0.3.0"
+    constraintLayoutVersion = "1.0.2"
+    greenDaoUpgradeHelperVersion = "v1.3.0"
+    glideVersion = "3.7.0"
+    keyboardvisibilityEventVersion = "2.0.1"
+    leakCanaryVersion = "1.5"
     junitVersion = "4.12"
+    steppersVersion = "0.3.3-SNAPSHOT"
+    signalStrengthVersion = "0.0.4"
+
+    // greendao database version
+    databaseVersion = 3
+
 
     // get the current build SHA
     gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
     // get the current build time
-    buildTime = new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
+    buildTime = new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
 
     // Manifest version information!
     versionMajor = 0
     versionMinor = 0
-    versionPatch = 0
-    versionBuild = 1 // bump for internal builds, public betas, etc.
+    versionPatch = 9
+    versionBuild = 9 // bump for internal builds, public betas, etc.
 }
+
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

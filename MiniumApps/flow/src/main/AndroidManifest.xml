@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="minium.co.flow">
+
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+
+    <!--
+On SDK version 23 and up, your app data will be automatically backed up and restored on app install.
+Consider adding the attribute `android:fullBackupContent` to specify an `@xml` resource
+which configures which files to backup.
+More info: https://developer.android.com/preview/backup/index.html
+-->
+
+    <application android:name=".app.FlowApp_" android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher" android:label="@string/app_name"
+        android:supportsRtl="true" android:theme="@style/CoreTheme">
+
+        <!-- Fabric configuration -->
+        <meta-data android:name="io.fabric.ApiKey"
+            android:value="6a700e064d3ba9dbf81d871dd3c0b3081ab158f7" />
+
+        <activity android:name=".ui.MainActivity_">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service android:name=".NotificationListener_" android:exported="true"
+            android:enabled="true" android:label="@string/service_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

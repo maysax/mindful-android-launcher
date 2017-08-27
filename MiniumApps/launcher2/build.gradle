@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'io.fabric'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode "${versionMajor}".toInteger() * 1000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}-${buildTime}"
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable false
+            // RELEASE: true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+    }
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    /**
+     * =================== Test suit  ===================
+     */
+    testCompile "junit:junit:$junitVersion"
+
+    compile project(':chips')
+    compile project(':color-picker')
+    compile project(':settings')
+    compile project(':notes')
+    //compile project (':core')
+
+    compile 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'
+    compile "com.github.satyan:sugar:$sugarOrmVersion"
+    compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
+    compile('com.github.paolorotolo:appintro:4.1.0') {
+        exclude module: 'appcompat-v7'
+    }
+    apt "org.androidannotations:androidannotations:$annotationsVersion"
+
+    debugCompile 'com.amitshekhar.android:debug-db:0.3.0'
+
+}
+
+apt {
+    arguments {
+        // RELEASE: comment it out
+        trace 'true'
+    }
+}

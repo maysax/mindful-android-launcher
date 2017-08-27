@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 
 android {
@@ -8,32 +9,52 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode rootProject.ext.versionMajor * 10000 + rootProject.ext.versionMinor * 1000 + rootProject.ext.versionPatch * 100 + rootProject.ext.versionBuild
+        versionCode rootProject.ext.versionMajor * 1000 + rootProject.ext.versionMinor * 1000 + rootProject.ext.versionPatch * 100 + rootProject.ext.versionBuild
 
         versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}"
 
         buildConfigField "String", project.KEY_GIT_SHA, "\"${gitSha}\""
         buildConfigField "String", project.KEY_BUILD_TIME, "\"${buildTime}\""
+
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
+        debug {
+            minifyEnabled true
+            shrinkResources true
+            ext.enableCrashlytics = false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
+    // workaround for "duplicate files during packaging of APK" issue
+    // see https://groups.google.com/d/msg/adt-dev/bl5Rc4Szpzg/wC8cylTWuIEJ
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/services/javax.annotation.processing.Processor'
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 
     lintOptions {
-        abortOnError false
-        textReport true
-        textOutput 'stdout'
-        fatal 'UnusedResources'
+        disable 'GoogleAppIndexingApiWarning','IconDensities','Registered','MissingTranslation','SetTextI18n','RtlHardcoded','SelectableText','PermissionImpliesUnsupportedHardware'
+        ignoreWarnings true
+//        textReport true
+//        textOutput 'stdout'
+//        fatal 'UnusedResources'
+    }
+
+    dexOptions {
+        jumboMode true
     }
 }
 
@@ -49,7 +70,6 @@ dependencies {
      */
     testCompile "junit:junit:$junitVersion"
 
-
     /**
      * =================== Support libraries ===================
      */
@@ -57,6 +77,12 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:gridlayout-v7:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+    compile "com.android.support:support-v13:$supportVersion"
+    compile "com.android.support:palette-v7:$supportVersion"
+    compile "com.android.support:support-v4:$supportVersion"
+    compile "com.android.support:multidex:$multidexVersion"
 
     /**
      * =================== Framework ===================
@@ -64,28 +90,32 @@ dependencies {
     // https://github.com/excilys/androidannotations
     compile "org.androidannotations:androidannotations-api:$annotationsVersion"
 
-
     /**
      * =================== UI ===================
      */
     // https://github.com/chrisjenx/Calligraphy
-    compile 'uk.co.chrisjenx:calligraphy:2.1.0@aar'
+    compile "uk.co.chrisjenx:calligraphy:$calligraphyVersion"
 
     // http://joanzapata.com/android-iconify/
     compile "com.joanzapata.iconify:android-iconify-fontawesome:$iconifyVersion"
 
+    compile "de.hdodenhof:circleimageview:$circleImageViewVersion"
 
     /**
      * =================== Debug/Log ===================
      */
     // https://fabric.io
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    compile("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion") {
         transitive = true;
     }
 
     // https://github.com/orhanobut/logger
-    compile 'com.orhanobut:logger:1.11'
+    compile "com.orhanobut:logger:$loggerVersion"
 
+    // https://github.com/square/leakcanary
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
 
     /**
      * =================== EVENTS ===================
@@ -93,4 +123,26 @@ dependencies {
     // https://github.com/greenrobot/EventBus
     compile "de.greenrobot:eventbus:$eventbusVersion"
 
+    /**
+     * =================== PERMISSIONS ===================
+     */
+    // https://github.com/ParkSangGwon/TedPermission
+    compile "gun0912.ted:tedpermission:$tedPermissionVersion"
+
+    /**
+     * =================== UTIL ===================
+     */
+    // https://github.com/Blankj/AndroidUtilCode
+    compile 'com.blankj:utilcode:1.5.0'
+
+    apt "org.androidannotations:androidannotations:$annotationsVersion"
+
+    compile "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
+}
+
+apt {
+    arguments {
+        // RELEASE: comment it out
+        trace 'true'
+    }
 }

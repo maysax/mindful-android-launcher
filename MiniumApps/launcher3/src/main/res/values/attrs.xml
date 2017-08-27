@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="siempo_slider">
+        <attr name="wheel_start_angle" format="float" />
+        <attr name="wheel_angle" format="float" />
+        <attr name="wheel_border_thickness" format="dimension" />
+        <attr name="wheel_border_color" format="color" />
+        <attr name="wheel_active_color" format="string" />
+        <attr name="wheel_inactive_color" format="string" />
+        <attr name="wheel_title_color" format="string" />
+        <attr name="wheel_subTitle_color" format="string" />
+        <attr name="wheel_center_text_color" format="string" />
+        <attr name="wheel_title_size" format="dimension" />
+        <attr name="wheel_subTitle_size" format="dimension" />
+        <attr name="wheel_center_text_size" format="dimension" />
+        <attr name="thumb_size" format="dimension" />
+        <attr name="thumb_image" format="reference" />
+        <attr name="thumb_color" format="color" />
+        <attr name="thumb_visible" format="boolean" />
+        <attr name="thumb_init_position" format="integer" />
+    </declare-styleable>
+
+</resources>

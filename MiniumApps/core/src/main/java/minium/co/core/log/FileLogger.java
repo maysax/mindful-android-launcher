@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import minium.co.core.app.CoreApplication;
-import minium.co.core.config.Config;
 
 /**
  * Created by shahabuddin on 10/29/15.
@@ -116,7 +115,7 @@ public class FileLogger {
 
     public static void log(String message, Throwable tr) {
         LogFormatter.EclipseFormatter formatter = new LogFormatter.EclipseFormatter();
-        String formatMsg = formatter.format(LogFormatter.LEVEL.DEBUG, Config.LOG_TAG, message, tr);
+        String formatMsg = formatter.format(LogFormatter.LEVEL.DEBUG, LogConfig.LOG_TAG, message, tr);
         String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
         File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
         if (externalFilesDir != null) {

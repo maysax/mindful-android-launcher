@@ -38,14 +38,14 @@ public class BatteryChangeReceiver extends BroadcastReceiver {
 
             UIUtils.toast(context, msg);
 
-        } else if (intent.getAction().equals(Intent.ACTION_POWER_DISCONNECTED)){
+        } else if (intent.getAction().equals(Intent.ACTION_POWER_DISCONNECTED)) {
             UIUtils.toast(context, "Charger unplugged");
 
         }
 
         int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-        float batteryPct = level / (float)scale;
+        float batteryPct = level / (float) scale;
 
         EventBus.getDefault().post(new BatteryChangeEvent(level));
     }

@@ -1,5 +1,6 @@
 package minium.co.core.helper;
 
+import android.annotation.SuppressLint;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.EditText;
@@ -16,12 +17,15 @@ public final class Validate {
 
     private static final String EMAIL_REGEX = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final String PASSWORD_REGEX = "^[0-9a-zA-Z@#$%]{8,}$";
+    @SuppressLint("StaticFieldLeak")
     public static View errorView;
 
-    private Validate() {}
+    private Validate() {
+    }
 
     /**
      * Validates that the object is not null
+     *
      * @param obj object to test
      */
     public static void notNull(Object obj) {
@@ -31,6 +35,7 @@ public final class Validate {
 
     /**
      * Validates that the object is not null
+     *
      * @param obj object to test
      * @param msg message to output if validation fails
      */
@@ -41,6 +46,7 @@ public final class Validate {
 
     /**
      * Validates that the value is true
+     *
      * @param val object to test
      */
     public static void isTrue(boolean val) {
@@ -50,6 +56,7 @@ public final class Validate {
 
     /**
      * Validates that the value is true
+     *
      * @param val object to test
      * @param msg message to output if validation fails
      */
@@ -60,6 +67,7 @@ public final class Validate {
 
     /**
      * Validates that the value is false
+     *
      * @param val object to test
      */
     public static void isFalse(boolean val) {
@@ -69,6 +77,7 @@ public final class Validate {
 
     /**
      * Validates that the value is false
+     *
      * @param val object to test
      * @param msg message to output if validation fails
      */
@@ -79,6 +88,7 @@ public final class Validate {
 
     /**
      * Validates that the array contains no null elements
+     *
      * @param objects the array to test
      */
     public static void noNullElements(Object[] objects) {
@@ -87,8 +97,9 @@ public final class Validate {
 
     /**
      * Validates that the array contains no null elements
+     *
      * @param objects the array to test
-     * @param msg message to output if validation fails
+     * @param msg     message to output if validation fails
      */
     public static void noNullElements(Object[] objects, String msg) {
         for (Object obj : objects)
@@ -98,6 +109,7 @@ public final class Validate {
 
     /**
      * Validates that the string is not empty
+     *
      * @param string the string to test
      */
     public static void notEmpty(String string) {
@@ -107,8 +119,9 @@ public final class Validate {
 
     /**
      * Validates that the string is not empty
+     *
      * @param string the string to test
-     * @param msg message to output if validation fails
+     * @param msg    message to output if validation fails
      */
     public static void notEmpty(String string, String msg) {
         if (string == null || string.length() == 0)
@@ -116,8 +129,9 @@ public final class Validate {
     }
 
     /**
-     Cause a failure.
-     @param msg message to output.
+     * Cause a failure.
+     *
+     * @param msg message to output.
      */
     public static void fail(String msg) {
         throw new IllegalArgumentException(msg);
@@ -142,7 +156,6 @@ public final class Validate {
     }
 
     /**
-     *
      * @param editTextLayout
      * @return true, if validation passed
      */
@@ -153,7 +166,8 @@ public final class Validate {
                 setError(editTextLayout, R.string.error_requiredField);
                 return false;
             }
-        } return true;
+        }
+        return true;
     }
 
     public static boolean isValidEmail(TextInputLayout editTextLayout) {
@@ -163,7 +177,8 @@ public final class Validate {
                 setError(editTextLayout, R.string.error_invalidEmail);
                 return false;
             }
-        } return true;
+        }
+        return true;
     }
 
     public static boolean isValidPassword(TextInputLayout editTextLayout) {
@@ -173,7 +188,8 @@ public final class Validate {
                 setError(editTextLayout, R.string.error_invalidPassword);
                 return false;
             }
-        } return true;
+        }
+        return true;
     }
 
     public static boolean isPasswordMismatch(TextInputLayout editTextLayout, TextInputLayout follower) {
@@ -184,6 +200,7 @@ public final class Validate {
                 setError(follower, R.string.error_mismatchPassword);
                 return false;
             }
-        } return true;
+        }
+        return true;
     }
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pauseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    tools:context="co.siempo.phone.pause.PauseActivity"
+    tools:ignore="UnusedIds">
+
+    <ImageView
+        android:id="@+id/imgBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/pause_background"
+        android:contentDescription="@null" />
+
+    <include layout="@layout/siempo_toolbar" />
+
+    <TextView
+        android:id="@+id/txtRemainingTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        android:layout_marginTop="105dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        tools:text="30 minute" />
+
+    <com.jesusm.holocircleseekbar.lib.HoloCircleSeekBar
+        android:layout_centerInParent="true"
+        android:id="@+id/seekbar"
+        android:layout_width="285dp"
+        android:layout_height="290dp"
+        app:max="60"
+        app:init_position="0"
+        app:title_color="@color/white"
+        app:title_size="90sp"
+        app:subTitle_color="@color/white"
+        app:subTitle_size="14sp"
+        app:show_title="true"
+        app:text_size="24sp"
+        app:text_color="@color/white"
+        app:show_thumb="false"
+        app:is_touchable="false"
+        app:wheel_active_color="@color/white"
+        app:wheel_unactive_color="@color/pauseSeekBarInactive" />
+
+    <LinearLayout
+        android:id="@+id/endingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:text="Ending at "
+            android:textColor="@color/white"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/txtEndingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            tools:text="01:00 pm" />
+    </LinearLayout>
+
+
+</RelativeLayout>

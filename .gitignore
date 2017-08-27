@@ -39,3 +39,12 @@ captures/
 
 # Keystore files
 *.jks
+
+fabric.properties
+keys/
+
+gradlew.bat
+
+crashlytics-build.*
+
+import-summary.txt

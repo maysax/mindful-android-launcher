@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/device_settings_key"
+    android:summary="@string/device_settings_summary"
+    android:title="@string/device_settings_title">
+
+    <Preference
+        android:title="@string/pref_home"
+        android:key="@string/home_key"
+        android:summary="@string/device_settings_summary">
+        <intent android:action="android.settings.HOME_SETTINGS" />
+    </Preference>
+
+    <Preference android:title="@string/pref_display">
+        <intent android:action="android.settings.DISPLAY_SETTINGS" />
+    </Preference>
+
+    <Preference android:title="@string/pref_notification">
+        <intent android:action="android.settings.SOUND_SETTINGS" />
+    </Preference>
+
+    <Preference android:title="@string/pref_apps">
+        <intent android:action="android.settings.MANAGE_APPLICATIONS_SETTINGS" />
+    </Preference>
+
+    <Preference android:title="@string/pref_storage_usb">
+        <intent android:action="android.settings.MEMORY_CARD_SETTINGS" />
+    </Preference>
+
+    <Preference
+        android:title="@string/pref_battery"
+        android:key="@string/key_battery"></Preference>
+
+    <Preference
+        android:title="@string/pref_memory"
+        android:key="@string/key_memory"></Preference>
+
+    <Preference android:title="@string/pref_users">
+        <intent android:action="android.settings.USER_SETTINGS" />
+    </Preference>
+
+    <Preference android:title="@string/pref_tap_pay">
+        <intent android:action="android.settings.NFC_PAYMENT_SETTINGS" />
+    </Preference>
+
+
+</PreferenceScreen>

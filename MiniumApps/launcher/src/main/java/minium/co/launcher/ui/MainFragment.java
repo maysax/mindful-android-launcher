@@ -18,8 +18,9 @@ import java.util.Locale;
 
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
-import minium.co.core.config.Config;
+import minium.co.core.log.LogConfig;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.DateUtils;
 import minium.co.core.util.UIUtils;
 import minium.co.launcher.R;
 import minium.co.launcher.clock.ClockTicker;
@@ -33,7 +34,7 @@ import minium.co.launcher.helper.ActivityHelper;
 @EFragment(R.layout.fragment_main)
 public class MainFragment extends CoreFragment {
 
-    protected final String TRACE_TAG = Config.TRACE_TAG + "MainFragment";
+    protected final String TRACE_TAG = LogConfig.TRACE_TAG + "MainFragment";
 
     @ViewById
     TextView txtTime;
@@ -57,8 +58,8 @@ public class MainFragment extends CoreFragment {
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
-        sdfTime = new SimpleDateFormat(Config.TIME_FORMAT, Locale.US);
-        sdfDate = new SimpleDateFormat(Config.DATE_FORMAT, Locale.US);
+        sdfTime = new SimpleDateFormat(DateUtils.TIME_FORMAT, Locale.US);
+        sdfDate = new SimpleDateFormat(DateUtils.DATE_FORMAT, Locale.US);
         new ClockTicker().start();
         setupViews();
     }

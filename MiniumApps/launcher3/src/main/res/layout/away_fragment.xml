@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:elevation="8dp"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="18dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:id="@+id/titleActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="#de000000"
+                android:layout_centerInParent="true"
+                android:fontFamily="sans-serif-medium"
+                android:text="Away Message"
+                tools:ignore="HardcodedText" />
+
+            <ImageView
+                android:id="@+id/crossActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/abc_ic_ab_back_material"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@null"
+                android:layout_alignBottom="@+id/titleActionBar"
+                android:layout_alignParentStart="true"
+                tools:ignore="PrivateResource" />
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_below="@+id/toolbar"
+        android:elevation="8dp"
+        android:id="@+id/linear_switch"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="27dp">
+
+        <TextView
+            android:id="@+id/text_away_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textColor="#de000000"
+            android:layout_marginLeft="21.6dp"
+            android:text="Away Message"
+            tools:ignore="HardcodedText,UnusedIds" />
+
+
+        <Switch
+            android:id="@+id/switch_away"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="18dp"
+            tools:ignore="UnusedIds" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear_switch"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#8a000000"
+        android:layout_marginLeft="21.6dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="24dp"
+        android:text="This message will be displayed to your contacts if they contact you during your Mindful Morning."
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/text_update_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_details"
+        android:textSize="14sp"
+        android:fontFamily="sans-serif"
+        android:textColor="#de000000"
+        android:layout_marginLeft="21.6dp"
+        android:layout_marginRight="18dp"
+        android:text="Stephanie has snoozed notifications."
+        android:layout_marginBottom="12.5dp"
+        tools:ignore="HardcodedText,LabelFor,TextFields" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2.3dp"
+        android:layout_below="@id/text_update_message"
+        android:layout_marginLeft="21.6dp"
+        android:layout_marginRight="18dp"
+        android:visibility="gone"
+        android:background="#979797" />
+</RelativeLayout>

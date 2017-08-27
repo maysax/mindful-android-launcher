@@ -34,11 +34,19 @@ public class ActivityHelper {
 
     public boolean openMessagingApp() {
         try {
+            getContext().startActivity(getContext().getPackageManager().getLaunchIntentForPackage("minium.co.messages"));
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, "Minium-Messages app not found : " + e.getMessage());
+        }
+
+        try {
             getContext().startActivity(new Intent().setAction(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_MESSAGING));
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
+
         return false;
     }
 

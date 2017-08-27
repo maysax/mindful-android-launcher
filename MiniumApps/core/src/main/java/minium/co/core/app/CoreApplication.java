@@ -1,31 +1,41 @@
 package minium.co.core.app;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
+import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
-import org.androidannotations.annotations.EApplication;
-import org.androidannotations.annotations.Trace;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
 import minium.co.core.config.Config;
+import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
+import minium.co.core.ui.LifecycleHandler;
+import minium.co.core.util.FontUtils;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Each application should contain an {@link Application} class instance
  * All applications of this project should extend their own application from this class
  * This will be first class where we can initialize all necessary first time configurations
- *
+ * <p>
  * Created by shahab on 3/17/16.
  */
-@EApplication
-public abstract class CoreApplication extends Application {
+public abstract class CoreApplication extends MultiDexApplication {
 
-    private final String TRACE_TAG = Config.TRACE_TAG + "CoreApplication";
+    private final String TRACE_TAG = LogConfig.TRACE_TAG + "CoreApplication";
 
     private static CoreApplication sInstance;
 
@@ -33,22 +43,52 @@ public abstract class CoreApplication extends Application {
         return sInstance;
     }
 
+    private RefWatcher refWatcher;
+    private List<ApplicationInfo> packagesList = new ArrayList<>();
+
     @Override
     public void onCreate() {
         super.onCreate();
 
-        sInstance = this;
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        refWatcher = LeakCanary.install(this);
 
+        sInstance = this;
         init();
+        getAllApplicationPackageName();
     }
 
-    @Trace(tag = TRACE_TAG)
+    /**
+     * This method is used for fetch all installed application package list.
+     */
+    private void getAllApplicationPackageName() {
+        // broadcast reciever for taking over volume key
+        final PackageManager pm = getPackageManager();
+        //get a list of installed apps.
+        packagesList.addAll(pm.getInstalledApplications(PackageManager.GET_META_DATA));
+
+    }
+
     protected void init() {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-        configFabric();
+       // configFabric();
         configIconify();
+        configureLifecycle();
+        configureNetworking();
+    }
+
+    private void configureNetworking() {
+        AndroidNetworking.initialize(getApplicationContext());
+    }
+
+    private void configureLifecycle() {
+        registerActivityLifecycleCallbacks(new LifecycleHandler());
     }
 
     private void configTracer() {
@@ -58,7 +98,7 @@ public abstract class CoreApplication extends Application {
     private void configCalligraphy() {
         CalligraphyConfig
                 .initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath(getString(Config.DEFAULT_FONT_PATH_RES))
+                        .setDefaultFontPath(getString(FontUtils.DEFAULT_FONT_PATH_RES))
                         .setFontAttrId(R.attr.fontPath)
                         .build());
     }
@@ -74,5 +114,14 @@ public abstract class CoreApplication extends Application {
 
     private void configIconify() {
         Iconify.with(new FontAwesomeModule());
+    }
+
+    public static RefWatcher getRefWatcher(Context context) {
+        CoreApplication application = (CoreApplication) context.getApplicationContext();
+        return application.refWatcher;
+    }
+
+    public List<ApplicationInfo> getPackagesList() {
+        return packagesList;
     }
 }

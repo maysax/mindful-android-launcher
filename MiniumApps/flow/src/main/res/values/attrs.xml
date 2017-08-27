@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="VerticalProgressBar">
+        <attr name="vpb_percent" format="float" />
+        <attr name="vpb_fill_color" format="color" />
+        <attr name="vpb_background_color" format="color" />
+        <attr name="vpb_flat" format="boolean" />
+    </declare-styleable>
+
+</resources>

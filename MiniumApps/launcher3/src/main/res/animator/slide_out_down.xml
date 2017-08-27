@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--suppress XmlWrongFileType, AndroidElementNotAllowed -->
+<set xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="UnusedResources">
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@android:integer/config_longAnimTime" android:fromYDelta="0%p"
+    android:toYDelta="100%p" />
+    </set>
