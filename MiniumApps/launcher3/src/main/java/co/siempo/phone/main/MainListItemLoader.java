@@ -3,8 +3,10 @@ package co.siempo.phone.main;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.provider.Settings;
 import android.support.annotation.StringRes;
 
+import java.util.Arrays;
 import java.util.List;
 
 import co.siempo.phone.MainActivity;
@@ -31,7 +33,7 @@ import minium.co.core.util.UIUtils;
 public class MainListItemLoader {
 
     private Context context;
-
+    Fragment fragment;
     public MainListItemLoader(Context context) {
         this.context = context;
     }
@@ -70,12 +72,27 @@ public class MainListItemLoader {
         // items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
         //items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
 //        items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
-        if(fragment instanceof MainFragment) {
+        if (fragment instanceof MainFragment) {
             try {
                 if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
                     for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
-                        String appName = applicationInfo.loadLabel(fragment.getActivity().getPackageManager()).toString();
-                        items.add(new MainListItem(-1, appName, applicationInfo));
+                        String defDialerApp = Settings.Secure.getString(context.getContentResolver(), "dialer_default_application");
+                        String defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
+                        String packageName = applicationInfo.packageName;
+                        if (!packageName.equalsIgnoreCase(defDialerApp)
+                                && !packageName.equalsIgnoreCase(defSMSApp)
+                                && !packageName.equalsIgnoreCase(Constants.SETTINGS_APP_PACKAGE)
+                                && !packageName.equalsIgnoreCase(Constants.CALL_APP_PACKAGE)
+                                && !packageName.equalsIgnoreCase(Constants.CONTACT_APP_PACKAGE)
+                                && !packageName.equalsIgnoreCase(Constants.GOOGLE_GMAIL_PACKAGE)
+                                && !packageName.equalsIgnoreCase(Constants.GOOGLE_MAP_PACKAGE)
+                                && !packageName.equalsIgnoreCase(Constants.GOOGLE_PHOTOS)
+                                && !Arrays.asList(Constants.CALENDAR_APP_PACKAGES).contains(packageName)
+                                && !Arrays.asList(Constants.CALL_APP_PACKAGES).contains(packageName)
+                                && !Arrays.asList(Constants.CLOCK_APP_PACKAGES).contains(packageName)) {
+                            String appName = applicationInfo.loadLabel(fragment.getActivity().getPackageManager()).toString();
+                            items.add(new MainListItem(-1, appName, applicationInfo));
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -83,7 +100,6 @@ public class MainListItemLoader {
             }
         }
     }
-
 
 
     private final String getString(@StringRes int resId, Object... formatArgs) {
@@ -161,7 +177,7 @@ public class MainListItemLoader {
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
                 break;
         }
-        MainActivity.isTextLenghGreater="";
+        MainActivity.isTextLenghGreater = "";
 
     }
 }

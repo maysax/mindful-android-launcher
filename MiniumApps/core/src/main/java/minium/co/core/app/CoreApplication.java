@@ -2,15 +2,21 @@ package minium.co.core.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.UserManager;
+import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.Crashlytics;
@@ -20,6 +26,8 @@ import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -139,6 +147,12 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void setPackagesList(List<ApplicationInfo> packagesList) {
+        Collections.sort(packagesList, new Comparator<ApplicationInfo>() {
+            public int compare(ApplicationInfo v1, ApplicationInfo v2) {
+
+                return (v1.loadLabel(getPackageManager()).toString()).compareTo(v2.loadLabel(getPackageManager()).toString());
+            }
+        });
         this.packagesList = packagesList;
     }
 
@@ -153,7 +167,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                     ApplicationInfo appInfo = activityInfo.getApplicationInfo();
                     if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
                         Drawable drawable = appInfo.loadIcon(getPackageManager());
-                        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                        Bitmap bitmap = drawableToBitmap(drawable);
                         iconList.put(appInfo.loadLabel(getPackageManager()).toString(), bitmap);
                         applist.add(appInfo);
                     }
@@ -164,6 +178,8 @@ public abstract class CoreApplication extends MultiDexApplication {
             //List<ApplicationInfo> applist = checkForLaunchIntent(getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA));
             return applist;
         }
+
+
 
         @Override
         protected void onPostExecute(List<ApplicationInfo> applicationInfos) {
@@ -191,6 +207,27 @@ public abstract class CoreApplication extends MultiDexApplication {
             return ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
         }
 
+        public  Bitmap drawableToBitmap (Drawable drawable) {
+            Bitmap bitmap = null;
+
+            if (drawable instanceof BitmapDrawable) {
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+                if(bitmapDrawable.getBitmap() != null) {
+                    return bitmapDrawable.getBitmap();
+                }
+            }
+
+            if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+                bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+            } else {
+                bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            }
+
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+            drawable.draw(canvas);
+            return bitmap;
+        }
 
     }
 }

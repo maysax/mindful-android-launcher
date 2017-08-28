@@ -297,7 +297,7 @@ public class ActivityHelper {
      *
      * @return package name
      */
-    private String checkDialerApp() {
+    public String checkDialerApp() {
         for (String strLocal : Constants.CALL_APP_PACKAGES) {
             for (ApplicationInfo packageInfo : CoreApplication.getInstance().getPackagesList()) {
                 if (strLocal.equalsIgnoreCase(packageInfo.packageName)) {
@@ -314,7 +314,7 @@ public class ActivityHelper {
      *
      * @return package name
      */
-    private String checkCalenderApp() {
+    public String checkCalenderApp() {
         for (String strLocal : Constants.CALENDAR_APP_PACKAGES) {
             for (ApplicationInfo packageInfo : CoreApplication.getInstance().getPackagesList()) {
                 if (strLocal.equalsIgnoreCase(packageInfo.packageName)) {
@@ -331,7 +331,7 @@ public class ActivityHelper {
      *
      * @return package name
      */
-    private String checkClockApp() {
+    public String checkClockApp() {
         for (String strLocal : Constants.CLOCK_APP_PACKAGES) {
             for (ApplicationInfo packageInfo : CoreApplication.getInstance().getPackagesList()) {
                 if (strLocal.equalsIgnoreCase(packageInfo.packageName)) {

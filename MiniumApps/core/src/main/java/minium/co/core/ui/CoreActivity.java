@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
@@ -117,6 +118,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
 
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -138,12 +141,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         public void onReceive(Context arg0, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
                 if (mTestView != null && mTestView.getVisibility() == View.INVISIBLE) {
-                    if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
+                    //if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
                         Intent startMain = new Intent(Intent.ACTION_MAIN);
                         startMain.addCategory(Intent.CATEGORY_HOME);
                         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(startMain);
-                    }
+                  //  }
                     mTestView.setVisibility(View.VISIBLE);
                 } else {
                     if (mTestView != null)
@@ -158,9 +161,10 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     public void loadDialog() {
         if (mTestView == null) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.RGBA_8888;
             layoutParams.gravity = Gravity.TOP | Gravity.START;
             layoutParams.flags =
@@ -189,6 +193,15 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     return true;
                 }
             });
+            mTestView.findViewById(R.id.linSecond).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mTestView != null)
+                        windowManager.removeView(mTestView);
+                    mTestView = null;
+                }
+            });
+
             mTestView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

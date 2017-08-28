@@ -55,9 +55,8 @@ class MainFragmentMediator {
     }
 
     private void loadActions() {
-        new MainListItemLoader(fragment.getActivity()).loadItems(items,fragment);
+        new MainListItemLoader(fragment.getActivity()).loadItems(items, fragment);
     }
-
 
 
     private void loadAppList() {
@@ -126,11 +125,11 @@ class MainFragmentMediator {
                 router.contactPicked((ContactListItem) getAdapter().getItem(position));
                 break;
             case ACTION:
-
-                if(getAdapter().getItem(position).getApplicationInfo()!=null){
+                if (getAdapter().getItem(position).getApplicationInfo() != null) {
+                    UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                     new ActivityHelper(fragment.getActivity()).openGMape(getAdapter().getItem(position).getApplicationInfo().packageName);
-                    MainActivity.isTextLenghGreater="";
-                }else {
+                    MainActivity.isTextLenghGreater = "";
+                } else {
                     position = getAdapter().getItem(position).getId();
                     new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                 }
@@ -202,4 +201,7 @@ class MainFragmentMediator {
         getAdapter().loadData(items);
         getAdapter().notifyDataSetChanged();
     }
+
+
+
 }
