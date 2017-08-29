@@ -51,13 +51,13 @@ public class InstalledAppListAdapter extends BaseAdapter {
         return position;
     }
 
-    @NonNull
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        @SuppressLint({"InflateParams", "ViewHolder"})
+
         ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.installed_app_list_row, null);
+            convertView = mInflater.inflate(R.layout.installed_app_list_row, parent,false);
             holder = new ViewHolder();
             holder.txt_app_name = (TextView) convertView.findViewById(R.id.txt_app_name);
             holder.imv_appicon = (ImageView) convertView.findViewById(R.id.imv_appicon);

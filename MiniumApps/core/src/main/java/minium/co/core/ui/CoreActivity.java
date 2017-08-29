@@ -210,15 +210,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     mTestView = null;
                 }
             });
-            Button btnOk = (Button) mTestView.findViewById(R.id.btnOk);
-            btnOk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mTestView != null)
-                        windowManager.removeView(mTestView);
-                    mTestView = null;
-                }
-            });
             windowManager.addView(mTestView, layoutParams);
         }
     }

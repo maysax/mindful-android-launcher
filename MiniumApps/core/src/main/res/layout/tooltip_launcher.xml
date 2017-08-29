@@ -136,14 +136,6 @@
                 android:textColor="@android:color/black" />
 
         </LinearLayout>
-        <Button
-            android:id="@+id/btnOk"
-            android:layout_gravity="right"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ok"
-            tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
     <LinearLayout

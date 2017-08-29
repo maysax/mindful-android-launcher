@@ -1,5 +1,6 @@
 package co.siempo.phone.applist;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Intent;
@@ -67,17 +68,12 @@ public class AppDrawerActivity extends CoreActivity {
 
         settingsActionBar.setVisibility(View.INVISIBLE);
         titleActionBar.setText(getString(R.string.title_apps));
-//        Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-//        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        //List<ResolveInfo> pkgAppsList = getPackageManager().queryIntentActivities( mainIntent, 0);
         activity_grid_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 try {
                     Tracer.i("Opening package: " + arrayList.get(i).packageName);
-//                    Intent intent = getPackageManager().getLaunchIntentForPackage(arrayList.get(i).getPackageName());
-//                    startActivity(intent);
                     new ActivityHelper(AppDrawerActivity.this).openGMape(arrayList.get(i).packageName);
                     EventBus.getDefault().post(new AppOpenEvent(arrayList.get(i).packageName));
                 } catch (Exception e) {
@@ -87,40 +83,6 @@ public class AppDrawerActivity extends CoreActivity {
             }
         });
 
-        /*
-        PackageManager pm = getPackageManager();
-       // List<ApplicationInfo> apps = pm.getInstalledApplications(0);
-        List<ApplicationInfo> apps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-
-        //List<ApplicationInfo> installedApps = new ArrayList<>();
-        ArrayList<ApplistDataModel> arrayList = new ArrayList<>();
-        ApplistDataModel applistDataModel;
-        for(ApplicationInfo app : apps) {
-            applistDataModel  =new ApplistDataModel();
-            //checks for flags; if flagged, check if updated system app
-            if((app.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                //installedApps.add(app);
-                //it's a system app, not interested
-            } else if ((app.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                //Discard this one
-                //in this case, it should be a user-installed app
-                //installedApps.add(app);
-                try{
-
-                }
-                String appname = getPackageManager().getApplicationLabel(app).toString();
-                Drawable icon =  getPackageManager().getApplicationIcon(app.packageName);
-                applistDataModel.setName(appname);
-                applistDataModel.setIcon(icon);
-                arrayList.add(applistDataModel);
-            }
-            else {
-               // installedApps.add(app);
-               // installedApps.add(app);
-
-            }
-        }
-        */
         arrayList = CoreApplication.getInstance().getPackagesList();
         installedAppListAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList);
         //installedAppListAdapter.setAppInfo(arrayList);
@@ -138,24 +100,6 @@ public class AppDrawerActivity extends CoreActivity {
             statusBarHandler.requestStatusBarCustomization();
         }
     }
-//    @Override
-//    public Loader<List<ApplistDataModel>> onCreateLoader(int i, Bundle bundle) {
-//        return AppListLoader_.getInstance_(this);
-//    }
-//
-//
-//
-//    @Override
-//    public void onLoadFinished(Loader<List<ApplistDataModel>> loader, List<ApplistDataModel> applistDataModels) {
-//        arrayList.clear();
-//        arrayList.addAll(applistDataModels);
-//        installedAppListAdapter.setAppInfo(applistDataModels);
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<List<ApplistDataModel>> loader) {
-//        installedAppListAdapter.setAppInfo(null);
-//    }
 
     @Subscribe
     public void appOpenEvent(AppOpenEvent event) {
@@ -187,6 +131,7 @@ public class AppDrawerActivity extends CoreActivity {
         }
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -201,7 +146,7 @@ public class AppDrawerActivity extends CoreActivity {
             }
         }
         catch (Exception e){
-            Log.d(TAG,"Exception onBackPressed :: "+e.toString());
+            e.printStackTrace();
         }
     }
 
