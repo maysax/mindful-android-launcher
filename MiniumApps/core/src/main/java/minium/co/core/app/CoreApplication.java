@@ -2,20 +2,20 @@ package minium.co.core.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.UserManager;
-import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
@@ -165,20 +165,33 @@ public abstract class CoreApplication extends MultiDexApplication {
                 UserHandle user = new UserHandle(userManager.getSerialNumberForUser(profile), profile);
                 for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
                     ApplicationInfo appInfo = activityInfo.getApplicationInfo();
+                    appInfo.name = activityInfo.getLabel().toString();
                     if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
-                        Drawable drawable = appInfo.loadIcon(getPackageManager());
+                        Drawable drawable;
+                        try {
+                            Resources resourcesForApplication = getPackageManager().getResourcesForApplication(appInfo);
+                            Configuration config = resourcesForApplication.getConfiguration();
+                            Configuration originalConfig = new Configuration(config);
+
+                            DisplayMetrics displayMetrics = resourcesForApplication.getDisplayMetrics();
+                            DisplayMetrics originalDisplayMetrics = resourcesForApplication.getDisplayMetrics();
+                            displayMetrics.densityDpi = DisplayMetrics.DENSITY_HIGH;
+                            resourcesForApplication.updateConfiguration(config, displayMetrics);
+
+                            drawable = resourcesForApplication.getDrawable(appInfo.icon);
+                            resourcesForApplication.updateConfiguration(originalConfig, originalDisplayMetrics);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            Log.e("check", "error getting Hi Res Icon :", e);
+                            drawable = appInfo.loadIcon(getPackageManager());
+                        }
                         Bitmap bitmap = drawableToBitmap(drawable);
-                        iconList.put(appInfo.loadLabel(getPackageManager()).toString(), bitmap);
+                        iconList.put(activityInfo.getLabel().toString(), bitmap);
                         applist.add(appInfo);
                     }
                 }
             }
-
-
-            //List<ApplicationInfo> applist = checkForLaunchIntent(getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA));
             return applist;
         }
-
 
 
         @Override

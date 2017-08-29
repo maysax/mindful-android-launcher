@@ -29,7 +29,7 @@ import minium.co.core.util.UIUtils;
  * Created by Shahab on 5/4/2017.
  */
 
-@SuppressWarnings("ALL")
+
 public class MainListItemLoader {
 
     private Context context;
@@ -90,7 +90,7 @@ public class MainListItemLoader {
                                 && !Arrays.asList(Constants.CALENDAR_APP_PACKAGES).contains(packageName)
                                 && !Arrays.asList(Constants.CALL_APP_PACKAGES).contains(packageName)
                                 && !Arrays.asList(Constants.CLOCK_APP_PACKAGES).contains(packageName)) {
-                            String appName = applicationInfo.loadLabel(fragment.getActivity().getPackageManager()).toString();
+                            String appName = applicationInfo.name;
                             items.add(new MainListItem(-1, appName, applicationInfo));
                         }
                     }
