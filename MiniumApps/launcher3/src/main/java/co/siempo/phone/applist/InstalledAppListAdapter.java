@@ -17,11 +17,9 @@ import java.util.List;
 import co.siempo.phone.R;
 import minium.co.core.app.CoreApplication;
 
-/**
- * Created by tkb on 2017-04-21.
- */
 
-@SuppressWarnings("ALL")
+
+
 public class InstalledAppListAdapter extends BaseAdapter {
 
     private final Activity context;
