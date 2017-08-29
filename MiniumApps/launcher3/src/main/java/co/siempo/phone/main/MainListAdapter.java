@@ -1,6 +1,7 @@
 package co.siempo.phone.main;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -15,7 +16,10 @@ import com.bumptech.glide.Glide;
 import com.joanzapata.iconify.IconDrawable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import co.siempo.phone.R;
 import co.siempo.phone.model.ContactListItem;
@@ -35,10 +39,12 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private List<MainListItem> originalData = null;
     private List<MainListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
+    PackageManager packageManager;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
+        packageManager = context.getPackageManager();
         loadData(items);
     }
 
@@ -210,15 +216,20 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         MainListItem item = getItem(position);
 
         if (item != null) {
-            if(item.getIcon()!=null){
-                holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
-                        .colorRes(R.color.text_primary)
-                        .sizeDp(18));
+            if (item.getId() == -1) {
+                holder.icon.setImageDrawable(item.getApplicationInfo().loadIcon(packageManager));
+                holder.text.setText(item.getApplicationInfo().loadLabel(packageManager));
+            } else {
+                if (item.getIcon() != null) {
+                    holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
+                            .colorRes(R.color.text_primary)
+                            .sizeDp(18));
+                } else {
+                    holder.icon.setImageResource(item.getIconRes());
+                }
+                holder.text.setText(item.getTitle());
             }
-            else{
-                holder.icon.setImageResource(item.getIconRes());
-            }
-            holder.text.setText(item.getTitle());
+
         }
 
         return view;
@@ -246,60 +257,82 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 // blank
             } else {
                 for (int i = 0; i < count; i++) {
-
                     String filterableString;
                     String[] splits;
-
-                    switch (originalData.get(i).getItemType()) {
-                        case CONTACT:
-                            if (searchString.equals("@")) {
-                                buildData.add(originalData.get(i));
-                            } else {
-                                /**
-                                 * A blank space was added with searchString2. After using trim the search problem is resolved
-                                 */
-                                String searchString2 = searchString.replaceAll("@", "").trim();
-                                ContactListItem item = (ContactListItem) originalData.get(i);
-                                filterableString = item.getContactName();
-                                boolean isAdded = false;
-                                if (filterableString.toString().toLowerCase().contains(searchString2)) {
+                    if (searchString.startsWith("/")) {
+                        if (searchString.length() == 1 && searchString.equalsIgnoreCase("/")) {
+                            buildData.clear();
+                            for (MainListItem menuMainListItem : originalData) {
+                                if (!(menuMainListItem instanceof ContactListItem)) {
+                                    buildData.add(menuMainListItem);
+                                }
+                            }
+                        } else {
+                            String strSearch = searchString.substring(1).toLowerCase();
+                            if (originalData.get(i).getItemType() == MainListItemType.ACTION
+                                    && originalData.get(i).getTitle().toLowerCase().startsWith(strSearch)) {
+                                if (!checkDuplicate(buildData, strSearch))
                                     buildData.add(originalData.get(i));
-                                    isAdded = true;
+                            }
+                        }
+                    } else {
+                        switch (originalData.get(i).getItemType()) {
+                            case CONTACT:
+                                if (searchString.equals("@")) {
+                                    buildData.add(originalData.get(i));
+                                } else {
+                                    /**
+                                     * A blank space was added with searchString2. After using trim the search problem is resolved
+                                     */
+                                    String searchString2 = searchString.replaceAll("@", "").trim();
+                                    ContactListItem item = (ContactListItem) originalData.get(i);
+                                    filterableString = item.getContactName();
+                                    boolean isAdded = false;
+                                    if (filterableString.toString().toLowerCase().contains(searchString2)) {
+                                        buildData.add(originalData.get(i));
+                                        isAdded = true;
+                                    }
+
+                                    if (!isAdded) {
+                                        searchString2 = phoneNumberString(searchString);
+                                        List<ContactListItem.ContactNumber> numbers = item.getNumbers();
+                                        for (ContactListItem.ContactNumber number : numbers) {
+                                            String phoneNum = phoneNumberString(number.getNumber());
+                                            if (phoneNum.contains(searchString2)) {
+                                                buildData.add(originalData.get(i));
+                                                break;
+                                            }
+                                        }
+                                    }
                                 }
 
-                                if (!isAdded) {
-                                    searchString2 = phoneNumberString(searchString);
-                                    List<ContactListItem.ContactNumber> numbers = item.getNumbers();
-                                    for (ContactListItem.ContactNumber number : numbers) {
-                                        String phoneNum = phoneNumberString(number.getNumber());
-                                        if (phoneNum.contains(searchString2)) {
+                                break;
+                            case ACTION:
+                                filterableString = originalData.get(i).getTitle();
+                                if (originalData.get(i).getApplicationInfo() == null) {
+                                    splits = filterableString.split(" ");
+                                    for (String str : splits) {
+                                        if (str.toLowerCase().startsWith(searchString)) {
                                             buildData.add(originalData.get(i));
                                             break;
                                         }
                                     }
+                                } else {
+                                    if (originalData.get(i).getTitle().toLowerCase().startsWith(searchString.toLowerCase())) {
+                                        if (!checkDuplicate(buildData, searchString.toLowerCase().toLowerCase()))
+                                            buildData.add(originalData.get(i));
+                                    }
                                 }
-                            }
-
-                            break;
-                        case ACTION:
-                            filterableString = originalData.get(i).getTitle();
-                            splits = filterableString.split(" ");
-
-                            for (String str : splits) {
-                                if (str.toLowerCase().startsWith(searchString)) {
+                                break;
+                            case DEFAULT:
+                                if (!checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase()))
                                     buildData.add(originalData.get(i));
-                                    break;
-                                }
-                            }
-                            break;
-                        case DEFAULT:
-                            buildData.add(originalData.get(i));
-                            break;
-                        case NUMBERS:
-                            buildData.add(originalData.get(i));
-                            break;
+                                break;
+                            case NUMBERS:
+                                buildData.add(originalData.get(i));
+                                break;
+                        }
                     }
-
                 }
             }
 
@@ -316,11 +349,18 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             } else {
                 filteredData = new ArrayList<>(originalData);
             }
-
             EventBus.getDefault().post(new MainListAdapterEvent(filteredData.size()));
-
             notifyDataSetChanged();
         }
+    }
+
+    private boolean checkDuplicate(List<MainListItem> buildData, String str) {
+        for (MainListItem mainListItem : buildData) {
+            if (mainListItem.getTitle().toLowerCase().toString().equalsIgnoreCase(str)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String phoneNumberString(String str) {
