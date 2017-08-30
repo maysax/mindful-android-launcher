@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:paddingTop="15dp"
         android:paddingLeft="15dp"
+        android:paddingBottom="15dp"
         tools:ignore="RtlHardcoded,RtlSymmetry">
 
         <TextView

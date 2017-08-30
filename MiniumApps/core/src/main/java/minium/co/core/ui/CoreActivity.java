@@ -54,7 +54,7 @@ import minium.co.core.util.UIUtils;
  * <p>
  * Created by shahab on 3/17/16.
  */
-@SuppressWarnings("JavaDoc")
+
 @EActivity
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
@@ -117,9 +117,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
-
-
-
+    UserPresentBroadcastReceiver userPresentBroadcastReceiver;
     @Override
     protected void onResume() {
         super.onResume();
@@ -128,7 +126,8 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(new UserPresentBroadcastReceiver(), intentFilter);
+        userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
+        registerReceiver(userPresentBroadcastReceiver, intentFilter);
     }
 
     /**
@@ -264,6 +263,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onPause() {
         super.onPause();
         if (mHomeWatcher != null) mHomeWatcher.stopWatch();
+        unregisterReceiver(userPresentBroadcastReceiver);
     }
 
     /**

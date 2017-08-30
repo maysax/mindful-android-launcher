@@ -26,12 +26,13 @@ import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 2/16/2017.
  */
 
-@SuppressWarnings("ALL")
+
 public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
     private Context context;
@@ -217,8 +218,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             if (item.getId() == -1) {
-                holder.icon.setImageDrawable(item.getApplicationInfo().loadIcon(packageManager));
-                holder.text.setText(item.getApplicationInfo().loadLabel(packageManager));
+                holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().name));
+                holder.text.setText(item.getApplicationInfo().name);
             } else {
                 if (item.getIcon() != null) {
                     holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())

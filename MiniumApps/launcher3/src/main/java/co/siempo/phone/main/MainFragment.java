@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,7 +46,6 @@ import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.ui.SearchLayout;
-import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
@@ -210,6 +208,9 @@ public class MainFragment extends CoreFragment {
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
         try {
+            if (event.getString().equalsIgnoreCase("") || event.getString().equalsIgnoreCase("/")) {
+                listView.smoothScrollToPosition(0);
+            }
             emptyChecker(event.getString());
             parser.parse(event.getString());
             adapter.getFilter().filter(manager.getCurrent().getTitle());
