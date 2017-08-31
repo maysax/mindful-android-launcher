@@ -17,11 +17,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.AppUpdaterUtils;
+import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
+import com.github.javiersantos.appupdater.objects.Update;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
@@ -54,12 +55,11 @@ import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.event.NFCEvent;
-import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
-
+import com.github.javiersantos.appupdater.enums.Display;
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
 @Fullscreen
@@ -250,11 +250,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
+        Log.d(TAG,"Check Version event...");
         Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
         if (event.getVersion() > BuildConfig.VERSION_CODE) {
             NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
             if (activeNetwork != null) { // connected to the internet
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                     UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -264,11 +264,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                             }
                         }
                     });
-                } else {
-                    UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
-                }
             } else {
-                Log.i(LogConfig.LOG_TAG, getString(R.string.nointernetconnection));
+                Log.d(TAG, getString(R.string.nointernetconnection));
             }
         }
     }
@@ -336,20 +333,37 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStart() {
         super.onStart();
-        //if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-            new AppUpdater(this)
-                    .setDisplay(Display.DIALOG)
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            Log.d(TAG,"Active network..");
+            AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                    .showEvery(5)
-                    .setTitleOnUpdateAvailable("Update available")
-                    .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
-                    .setTitleOnUpdateNotAvailable("Update not available")
-                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
-                    .setButtonUpdate("Update")
-                    .setButtonDismiss("Maybe later")
-                    .start();
-        //}
+                    .withListener(new AppUpdaterUtils.UpdateListener() {
+                        @Override
+                        public void onSuccess(Update update, Boolean isUpdateAvailable) {
+                            Log.d(TAG,"on success");
+                            if (update.getLatestVersionCode() != null) {
+                                Log.d(TAG,"check version from AppUpdater library");
+                                checkVersionFromAppUpdater();
+                            } else {
+                                Log.d(TAG,"check version from AWS");
+                                ApiClient_.getInstance_(MainActivity.this).checkAppVersion();
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(AppUpdaterError error) {
+                            Log.d(TAG," AppUpdater Error ::: "+error.toString());
+
+                        }
+                    });
+
+            appUpdaterUtils.start();
+        } else {
+            Log.d(TAG, getString(R.string.nointernetconnection));
+        }
     }
+
 
     @Override
     protected void onStop() {
@@ -454,5 +468,18 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         loadStatusBar();
     }
 
+    public void checkVersionFromAppUpdater(){
+        new AppUpdater(this)
+                .setDisplay(Display.DIALOG)
+                .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+                .showEvery(5)
+                .setTitleOnUpdateAvailable("Update available")
+                .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
+                .setTitleOnUpdateNotAvailable("Update not available")
+                .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
+                .setButtonUpdate("Update")
+                .setButtonDismiss("Maybe later")
+                .start();
+    }
 
 }
