@@ -327,13 +327,11 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
             @Override
             public void onAnimationStart(Animation animation) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-                // TODO Auto-generated method stub
 
             }
 
@@ -342,7 +340,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 try {
                     linSecond.setClickable(true);
                     EventBus.getDefault().post(new NotificationTrayEvent(false));
-                    getActivity().getFragmentManager().popBackStack();
+//                    getActivity().getFragmentManager().popBackStack();
                     getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
                     Config.isNotificationAlive = false;
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
@@ -351,8 +349,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 }
             }
         });
-        //noinspection ConstantConditions
-        getView().startAnimation(trans);
+        if (getView() != null) {
+            getView().startAnimation(trans);
+        }
     }
 
 
