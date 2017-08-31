@@ -43,7 +43,12 @@ import com.github.javiersantos.appupdater.enums.Display;
  * Created by hardik on 17/8/17.
  */
 
-@SuppressWarnings("ALL")
+/**
+ * This class contain all the siempo settings feature.
+ *  1. Switc home app
+ *  2. Keyboard hide & show in IF Screen when launch
+ *  3. Version of Current App & update
+ */
 @Fullscreen
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
@@ -190,6 +195,10 @@ public class SiempoSettingsActivity extends CoreActivity {
         loadStatusBar();
     }
 
+    /**
+     * This function is use to check current app version with play store version
+     * and display alert if update is available using Appupdater library.
+     */
     public void checkVersionFromAppUpdater(){
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
