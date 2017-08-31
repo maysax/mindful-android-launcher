@@ -31,7 +31,10 @@ import co.siempo.phone.R;
 /**
  * Created by shahab on 12/6/16.
  */
-@SuppressWarnings("ALL")
+
+/**
+ * This class contain all the native settings feature.
+ */
 @Fullscreen
 @EActivity
 public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
@@ -39,7 +42,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
-    private static String TAG="SiempoPhoneSettingsActivity";
+    private static String TAG="SiempoPhoneSettings";
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -331,6 +334,10 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             process_usage_preference.setIntent(intent_data_usage);
 
+            /**
+             * Below validation is use to check if memory screen is available in device or not
+             * if it is not available, Memory label is hide for that particular device.
+             */
             boolean activityExists = intent_data_usage.resolveActivityInfo(getActivity().getPackageManager(), 0) != null;
             if(!activityExists){
                 PreferenceScreen preferenceScreen = getPreferenceScreen();
@@ -339,7 +346,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                 }
             }
             else{
-                Log.d(TAG,"Memory screen is available");
+                Log.d(TAG,"Memory Screen is available");
             }
 
         }
