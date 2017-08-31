@@ -4,16 +4,12 @@ import android.Manifest;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.support.v4.view.ViewPager;
@@ -31,7 +27,6 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
-import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
@@ -39,7 +34,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
@@ -52,7 +46,6 @@ import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
-import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.EventBus;
@@ -129,20 +122,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 }
             });
         }
-
-
-
-        final BroadcastReceiver vReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                //your code here
-                System.out.println("Volume key pressed");
-            }
-        };
-
-        registerReceiver(vReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
-
-        // NotificationBlockerService_.intent(this).extra("start", true).start();
 
         FirebaseHelper firebaseHelper = new FirebaseHelper(this);
         firebaseHelper.testEvent1();
@@ -463,7 +442,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         }
         catch (Exception e){
-            Log.d(TAG,"Exception onBackPressed MainActivity:: "+e.toString());
+            Log.d(TAG,"Exception"+e.toString());
         }
 
     }

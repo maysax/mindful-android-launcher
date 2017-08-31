@@ -117,7 +117,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     }
 
-    UserPresentBroadcastReceiver userPresentBroadcastReceiver;
     @Override
     protected void onResume() {
         super.onResume();
@@ -126,8 +125,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
-        registerReceiver(userPresentBroadcastReceiver, intentFilter);
+        registerReceiver(new UserPresentBroadcastReceiver(), intentFilter);
     }
 
     /**
@@ -263,7 +261,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onPause() {
         super.onPause();
         if (mHomeWatcher != null) mHomeWatcher.stopWatch();
-        unregisterReceiver(userPresentBroadcastReceiver);
     }
 
     /**
@@ -323,10 +320,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     }
 
     private void handleBackPress() {
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            this.finish();
-        } else {
-            getFragmentManager().popBackStack();
+        try {
+            if (getFragmentManager().getBackStackEntryCount() == 0) {
+                this.finish();
+            } else {
+                getFragmentManager().popBackStack();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

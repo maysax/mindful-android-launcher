@@ -177,8 +177,11 @@ public abstract class CoreApplication extends MultiDexApplication {
                             DisplayMetrics originalDisplayMetrics = resourcesForApplication.getDisplayMetrics();
                             displayMetrics.densityDpi = DisplayMetrics.DENSITY_HIGH;
                             resourcesForApplication.updateConfiguration(config, displayMetrics);
-
-                            drawable = resourcesForApplication.getDrawable(appInfo.icon);
+                            if (appInfo.icon != 0) {
+                                drawable = resourcesForApplication.getDrawable(appInfo.icon, null);
+                            } else {
+                                drawable = appInfo.loadIcon(getPackageManager());
+                            }
                             resourcesForApplication.updateConfiguration(originalConfig, originalDisplayMetrics);
                         } catch (PackageManager.NameNotFoundException e) {
                             Log.e("check", "error getting Hi Res Icon :", e);
@@ -220,17 +223,17 @@ public abstract class CoreApplication extends MultiDexApplication {
             return ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
         }
 
-        public  Bitmap drawableToBitmap (Drawable drawable) {
+        public Bitmap drawableToBitmap(Drawable drawable) {
             Bitmap bitmap = null;
 
             if (drawable instanceof BitmapDrawable) {
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
-                if(bitmapDrawable.getBitmap() != null) {
+                if (bitmapDrawable.getBitmap() != null) {
                     return bitmapDrawable.getBitmap();
                 }
             }
 
-            if(drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
                 bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
             } else {
                 bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
