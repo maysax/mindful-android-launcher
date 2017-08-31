@@ -290,16 +290,17 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     final int SWIPE_THRESHOLD_VELOCITY = 200;
 
                     try {
-
-                        if (Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_OFF_PATH)
-                            return false;
-                        if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
-                                && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-                            Log.i(TAG, "Down to Top");
-                            animateOut();
-                        } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
-                                && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-                            Log.i(TAG, "Top to Down");
+                        if (e1 != null && e2 != null) {
+                            if (Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_OFF_PATH)
+                                return false;
+                            if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                                Log.i(TAG, "Down to Top");
+                                animateOut();
+                            } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                                Log.i(TAG, "Top to Down");
+                            }
                         }
                     } catch (Exception e) {
                         // nothing
@@ -405,7 +406,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         super.onResume();
         try {
             //noinspection ConstantConditions
-            UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
+            if (getActivity() != null)
+                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }

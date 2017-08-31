@@ -78,16 +78,16 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         Notification notification = notificationList.get(position);
-        holder._name.setText(notification.getNotificationContactModel().getName());
-        holder._text.setText(notification.get_text());
-        holder._time.setText(notification.get_time());
+        holder.txtUserName.setText(notification.getNotificationContactModel().getName());
+        holder.txtMessage.setText(notification.get_text());
+        holder.txtTime.setText(notification.get_time());
         //holder.thumbnail.setImageResource(notification.get_image());
         try {
             if (notification.getNotificationContactModel().getImage() != null && !notification.getNotificationContactModel().getImage().equals("")) {
                 Glide.with(mContext)
                         .load(Uri.parse(notification.getNotificationContactModel().getImage()))
                         .placeholder(R.drawable.ic_person_black_24dp)
-                        .into(holder.thumbnail);
+                        .into(holder.imgUserImage);
             }
 
         } catch (Exception e) {
@@ -130,17 +130,26 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
      */
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
-        public TextView _name, _text, _time;
-        public ImageView overflow;
-        public CircleImageView thumbnail;
+//        public TextView _name, _text, _time;
+//        public ImageView overflow;
+//        public CircleImageView thumbnail;
+//
+        public ImageView imgAppIcon,imgUserImage;
+        public TextView txtAppName,txtTime,txtUserName,txtMessage;
 
         public ItemViewHolder(View view) {
             super(view);
-            _name = (TextView) view.findViewById(R.id.text_name_notification);
-            _text = (TextView) view.findViewById(R.id.text_mesage_notification);
-            _time = (TextView) view.findViewById(R.id.text_time_notification);
-            thumbnail = (CircleImageView) view.findViewById(R.id.thumbnail_notification);
-            overflow = (ImageView) view.findViewById(R.id.image_checked_notification);
+//            _name = (TextView) view.findViewById(R.id.text_name_notification);
+//            _text = (TextView) view.findViewById(R.id.text_mesage_notification);
+//            _time = (TextView) view.findViewById(R.id.text_time_notification);
+//            thumbnail = (CircleImageView) view.findViewById(R.id.thumbnail_notification);
+//            overflow = (ImageView) view.findViewById(R.id.image_checked_notification);
+            imgAppIcon = (ImageView) view.findViewById(R.id.imgAppIcon);
+            imgUserImage = (ImageView) view.findViewById(R.id.imgUserImage);
+            txtAppName = (TextView) view.findViewById(R.id.txtAppName);
+            txtTime = (TextView) view.findViewById(R.id.txtTime);
+            txtUserName = (TextView) view.findViewById(R.id.txtUserName);
+            txtMessage = (TextView) view.findViewById(R.id.txtMessage);
         }
 
         @Override

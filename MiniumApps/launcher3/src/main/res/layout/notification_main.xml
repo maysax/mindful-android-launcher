@@ -12,15 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        android:orientation="vertical"
-        android:paddingLeft="18dp"
-        android:paddingRight="18dp">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView_notification_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
             android:text="@string/string_notification_title"
             android:textColor="#de000000"
             android:textSize="28sp"
@@ -28,12 +28,12 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
-            android:paddingBottom="48dp"
             android:clipToPadding="false"
+            android:paddingBottom="48dp"
             android:visibility="visible"
             tools:ignore="UnusedIds" />
 
@@ -44,6 +44,8 @@
             android:layout_margin="@dimen/dp_10"
             android:gravity="center"
             android:padding="@dimen/dp_10"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
             android:text="@string/msg.notificationEmpty"
             android:textSize="@dimen/text.size.medium"
             tools:ignore="UnusedIds" />
