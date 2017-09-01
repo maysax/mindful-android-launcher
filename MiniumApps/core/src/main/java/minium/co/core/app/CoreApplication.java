@@ -156,6 +156,21 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.packagesList = packagesList;
     }
 
+    /**
+     * This method is used for the return tht application name from based on its package name.
+     *
+     * @param packagename
+     * @return application name
+     */
+    public String getApplicationNameFromPackageName(String packagename) {
+        for (ApplicationInfo applicationInfo : getPackagesList()) {
+            if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
+                return applicationInfo.name;
+            }
+        }
+        return "";
+    }
+
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
 
         @Override
@@ -246,5 +261,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
 
     }
+
 
 }

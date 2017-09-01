@@ -19,7 +19,9 @@ package co.siempo.phone.notification;
 import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +42,7 @@ import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
 import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
 import de.greenrobot.event.EventBus;
-import de.hdodenhof.circleimageview.CircleImageView;
+import minium.co.core.app.CoreApplication;
 
 
 public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.ItemViewHolder>
@@ -50,12 +52,13 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     private List<Notification> notificationList = new ArrayList<>();
 
     private final OnStartDragListener mDragStartListener;
+    String defSMSApp;
 
     public RecyclerListAdapter(Context context, List<Notification> notificationList, OnStartDragListener dragStartListener) {
         mContext = context;
         mDragStartListener = dragStartListener;
         this.notificationList = notificationList;
-        System.out.println("Notification fragment calling adapter");
+        defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
     }
 
 
@@ -63,6 +66,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         mContext = context;
         mDragStartListener = null;
         this.notificationList = notificationList;
+        defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
     }
 
     @Override
@@ -79,9 +83,17 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         Notification notification = notificationList.get(position);
         holder.txtUserName.setText(notification.getNotificationContactModel().getName());
+        if (notification.get_text().equalsIgnoreCase("Missed call")) {
+            holder.imgAppIcon.setBackground(null);
+            holder.imgAppIcon.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.sym_call_missed, null));
+            holder.txtAppName.setText("Phone");
+        } else {
+            holder.imgAppIcon.setBackground(null);
+            holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp));
+            holder.imgAppIcon.setImageBitmap(CoreApplication.getInstance().iconList.get(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp)));
+        }
         holder.txtMessage.setText(notification.get_text());
         holder.txtTime.setText(notification.get_time());
-        //holder.thumbnail.setImageResource(notification.get_image());
         try {
             if (notification.getNotificationContactModel().getImage() != null && !notification.getNotificationContactModel().getImage().equals("")) {
                 Glide.with(mContext)
@@ -130,20 +142,11 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
      */
     public static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
-//        public TextView _name, _text, _time;
-//        public ImageView overflow;
-//        public CircleImageView thumbnail;
-//
-        public ImageView imgAppIcon,imgUserImage;
-        public TextView txtAppName,txtTime,txtUserName,txtMessage;
+        public ImageView imgAppIcon, imgUserImage;
+        public TextView txtAppName, txtTime, txtUserName, txtMessage;
 
         public ItemViewHolder(View view) {
             super(view);
-//            _name = (TextView) view.findViewById(R.id.text_name_notification);
-//            _text = (TextView) view.findViewById(R.id.text_mesage_notification);
-//            _time = (TextView) view.findViewById(R.id.text_time_notification);
-//            thumbnail = (CircleImageView) view.findViewById(R.id.thumbnail_notification);
-//            overflow = (ImageView) view.findViewById(R.id.image_checked_notification);
             imgAppIcon = (ImageView) view.findViewById(R.id.imgAppIcon);
             imgUserImage = (ImageView) view.findViewById(R.id.imgUserImage);
             txtAppName = (TextView) view.findViewById(R.id.txtAppName);
