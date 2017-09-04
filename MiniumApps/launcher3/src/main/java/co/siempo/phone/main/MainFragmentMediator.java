@@ -10,6 +10,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.contact.ContactsLoader;
 import co.siempo.phone.event.CreateNoteEvent;
+import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
@@ -150,6 +151,8 @@ class MainFragmentMediator {
                         break;
                     case 4:
                         router.call(fragment.getActivity());
+                        MainActivity.isTextLenghGreater = "";
+                        EventBus.getDefault().post(new SendSmsEvent(true,"",""));
                         break;
                     default:
                         UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));

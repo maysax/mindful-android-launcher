@@ -4,17 +4,16 @@ package co.siempo.phone.notification;
  * Created by itc on 20/02/17.
  */
 
-@SuppressWarnings("ALL")
 public class Notification {
     private Long id;
     private String _text;
     private boolean _status;
     private String _time;
-    private co.siempo.phone.notification.NotificationContactModel notificationContactModel;
+    private NotificationContactModel notificationContactModel;
     private int notificationType;
     private String number;
 
-    public Notification(co.siempo.phone.notification.NotificationContactModel notificationContactModel, Long id, String number, String _text, String _time, boolean _status, int notificationType) {
+    public Notification(NotificationContactModel notificationContactModel, Long id, String number, String _text, String _time, boolean _status, int notificationType) {
         this.notificationContactModel = notificationContactModel;
         this.id = id;
         this._text = _text;

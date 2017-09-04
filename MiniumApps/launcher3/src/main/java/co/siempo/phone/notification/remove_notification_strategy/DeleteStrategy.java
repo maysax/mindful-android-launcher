@@ -6,7 +6,7 @@ import co.siempo.phone.notification.Notification;
  * Created by tkb on 2017-04-03.
  */
 
-@SuppressWarnings("ALL")
+
 public interface DeleteStrategy {
     void delete(Notification notification);
 }
