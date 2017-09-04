@@ -2,6 +2,7 @@ package co.siempo.phone.db;
 
 /**
  * Created by rajeshjadi on 4/9/17.
+ * This class is used when user clear notification from adapter class.
  */
 
 public class NotificationSwipeEvent {

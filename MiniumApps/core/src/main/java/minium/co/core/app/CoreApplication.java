@@ -157,7 +157,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     /**
-     * This method is used for the return tht application name from based on its package name.
+     * Return the application name by providing it's package name.
      *
      * @param packagename
      * @return application name

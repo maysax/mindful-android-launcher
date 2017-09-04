@@ -82,10 +82,10 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         Notification notification = notificationList.get(position);
         holder.txtUserName.setText(notification.getNotificationContactModel().getName());
-        if (notification.get_text().equalsIgnoreCase("Missed call")) {
+        if (notification.get_text().equalsIgnoreCase(mContext.getString(R.string.missed_call))) {
             holder.imgAppIcon.setBackground(null);
             holder.imgAppIcon.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.sym_call_missed, null));
-            holder.txtAppName.setText("Phone");
+            holder.txtAppName.setText(R.string.phone);
         } else {
             holder.imgAppIcon.setBackground(null);
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp));
