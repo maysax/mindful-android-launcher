@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
+        android:layout_marginBottom="50dp"
         android:orientation="vertical">
 
         <TextView
@@ -51,11 +52,12 @@
             tools:ignore="UnusedIds" />
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/linSecond"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical">
+
+    </LinearLayout>
 </LinearLayout>

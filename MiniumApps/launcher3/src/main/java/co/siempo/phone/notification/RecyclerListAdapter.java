@@ -21,7 +21,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.event.TopBarUpdateEvent;
+import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.main.ItemTouchHelperAdapter;
 import co.siempo.phone.main.ItemTouchHelperViewHolder;
 import co.siempo.phone.main.OnStartDragListener;
@@ -105,9 +104,6 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //  }
-//        Glide.with(mContext).load(notification.getNotificationContactModel().getImage()).into(holder.thumbnail);
     }
 
     @Override
@@ -120,7 +116,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         notifyItemRemoved(position);
 
         if (notificationList.isEmpty())
-            EventBus.getDefault().post(new TopBarUpdateEvent());
+            EventBus.getDefault().post(new NotificationSwipeEvent(true));
     }
 
 

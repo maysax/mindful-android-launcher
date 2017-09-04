@@ -208,7 +208,8 @@ public class MainFragment extends CoreFragment {
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
         try {
-            if (event.getString().equalsIgnoreCase("") || event.getString().equalsIgnoreCase("/")) {
+            if (event.getString().equalsIgnoreCase("") || event.getString().equalsIgnoreCase("/")
+                    || (event.getString().startsWith("/") && event.getString().length() == 2)) {
                 listView.smoothScrollToPosition(0);
             }
             emptyChecker(event.getString());
