@@ -149,6 +149,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                             yEnd = (int) event.getY();
                             break;
                     }
+
+                    /**
+                     * @Rajesh has to check this and remove if not needed.
+                     */
 //                    if (isLastItemDisplaying(recyclerView) && Math.abs(yStart - yEnd) > 300) {
 //                        animateOut();
 //                    }
