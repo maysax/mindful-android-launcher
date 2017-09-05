@@ -63,7 +63,7 @@ import minium.co.core.util.UIUtils;
 import com.github.javiersantos.appupdater.enums.Display;
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
-
+@Fullscreen
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
