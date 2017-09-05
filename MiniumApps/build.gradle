@@ -87,7 +87,7 @@ project.ext {
     versionMajor = 0
     versionMinor = 0
     versionPatch = 10
-    versionBuild = 1 // bump for internal builds, public betas, etc.
+    versionBuild = 2 // bump for internal builds, public betas, etc.
 }
 
 
