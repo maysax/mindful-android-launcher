@@ -222,6 +222,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 if(!TextUtils.isEmpty(item.getApplicationInfo().packageName)){
                     holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
                 }
+//                if(!TextUtils.isEmpty(item.getApplicationInfo().packageName)){
+//                    holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
+//                }
                 holder.text.setText(item.getApplicationInfo().name);
             } else {
                 if (item.getIcon() != null) {
@@ -250,7 +253,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
-            String searchString = constraint.toString();
+            String searchString = constraint.toString().toLowerCase();
 
             FilterResults ret = new FilterResults();
 
@@ -316,7 +319,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 if (originalData.get(i).getApplicationInfo() == null) {
                                     splits = filterableString.split(" ");
                                     for (String str : splits) {
-                                        if (str.startsWith(searchString)) {
+                                        if (str.toLowerCase().startsWith(searchString)) {
                                             buildData.add(originalData.get(i));
                                             break;
                                         }
