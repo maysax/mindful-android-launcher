@@ -63,7 +63,7 @@ import minium.co.core.util.UIUtils;
 import com.github.javiersantos.appupdater.enums.Display;
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
-@Fullscreen
+
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
@@ -92,9 +92,17 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public static String isTextLenghGreater = "";
 
+    private ActivityState state;
+
+    private enum ActivityState {
+        NORMAL,
+        ONHOMEPRESS
+    }
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
+        Log.d(TAG,"afterViews event called");
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
@@ -209,8 +217,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
+            Log.d(TAG,"Permission granted");
             loadViews();
             loadStatusBar();
+            if (!launcherPrefs.isAppInstalledFirstTime().get()) {
+                Log.d(TAG,"Display upgrade dialog.");
+                checkUpgradeVersion();
+            }
         }
 
         @Override
@@ -241,6 +254,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         Log.d(TAG,"ACTION HOME PRESS");
+        state=ActivityState.ONHOMEPRESS;
         if (event.isVisible()) {
             if (StatusBarHandler.isNotificationTrayVisible) {
 
@@ -347,36 +361,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @SuppressWarnings("deprecation")
     @Override
     protected void onStart() {
+        Log.d(TAG,"onStart Event Call : "+state);
         super.onStart();
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null) {
-            Log.d(TAG,"Active network..");
-            AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
-                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                    .withListener(new AppUpdaterUtils.UpdateListener() {
-                        @Override
-                        public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                            Log.d(TAG,"on success");
-                            if (update.getLatestVersionCode() != null) {
-                                Log.d(TAG,"check version from AppUpdater library");
-                                checkVersionFromAppUpdater();
-                            } else {
-                                Log.d(TAG,"check version from AWS");
-                                ApiClient_.getInstance_(MainActivity.this).checkAppVersion();
-                            }
-                        }
 
-                        @Override
-                        public void onFailed(AppUpdaterError error) {
-                            Log.d(TAG," AppUpdater Error ::: "+error.toString());
-
-                        }
-                    });
-
-            appUpdaterUtils.start();
-        } else {
-            Log.d(TAG, getString(R.string.nointernetconnection));
+        if(state==ActivityState.ONHOMEPRESS){
+            checkUpgradeVersion();
+            state=ActivityState.NORMAL;
         }
+
     }
 
 
@@ -496,5 +488,43 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setButtonDismiss("Maybe later")
                 .start();
     }
+
+    /**
+     * Below function is use to check if latest version is available from play store or not
+     * 1) It will check first with Appupdater library if it fails to identify then
+     * 2) It will check with AWS logic.
+     */
+    public  void checkUpgradeVersion(){
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            Log.d(TAG,"Active network..");
+            AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
+                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+                    .withListener(new AppUpdaterUtils.UpdateListener() {
+                        @Override
+                        public void onSuccess(Update update, Boolean isUpdateAvailable) {
+                            Log.d(TAG,"on success");
+                            if (update.getLatestVersionCode() != null) {
+                                Log.d(TAG,"check version from AppUpdater library");
+                                checkVersionFromAppUpdater();
+                            } else {
+                                Log.d(TAG,"check version from AWS");
+                                ApiClient_.getInstance_(MainActivity.this).checkAppVersion();
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(AppUpdaterError error) {
+                            Log.d(TAG," AppUpdater Error ::: "+error.toString());
+
+                        }
+                    });
+
+            appUpdaterUtils.start();
+        } else {
+            Log.d(TAG, getString(R.string.nointernetconnection));
+        }
+    }
+
 
 }
