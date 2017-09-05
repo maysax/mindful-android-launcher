@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -218,7 +219,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             if (item.getId() == -1) {
-                holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().name));
+                if(!TextUtils.isEmpty(item.getApplicationInfo().packageName)){
+                    holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
+                }
                 holder.text.setText(item.getApplicationInfo().name);
             } else {
                 if (item.getIcon() != null) {
@@ -247,7 +250,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
-            String searchString = constraint.toString().toLowerCase();
+            String searchString = constraint.toString();
 
             FilterResults ret = new FilterResults();
 
@@ -313,7 +316,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 if (originalData.get(i).getApplicationInfo() == null) {
                                     splits = filterableString.split(" ");
                                     for (String str : splits) {
-                                        if (str.toLowerCase().startsWith(searchString)) {
+                                        if (str.startsWith(searchString)) {
                                             buildData.add(originalData.get(i));
                                             break;
                                         }

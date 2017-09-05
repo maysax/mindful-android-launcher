@@ -1,5 +1,6 @@
 package co.siempo.phone.settings;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
@@ -11,6 +12,8 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
@@ -59,6 +62,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     private LinearLayout ln_launcher,ln_version;
     private CheckBox chk_keyboard;
     private String TAG = "SiempoSettingsActivity";
+    private ProgressDialog pd;
 
     @SystemService
     ConnectivityManager connectivityManager;
@@ -134,6 +138,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                                         checkVersionFromAppUpdater();
                                     } else {
                                         Log.d(TAG,"check version from AWS");
+                                        initProgressDialog();
                                         ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion();
                                     }
                                 }
@@ -207,7 +212,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .setTitleOnUpdateAvailable("Update available")
                 .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
                 .setTitleOnUpdateNotAvailable("Update not available")
-                .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
+                .setContentOnUpdateNotAvailable("Your application is up to date")
                 .setButtonUpdate("Update")
                 .setButtonDismiss("Maybe later")
                 .start();
@@ -215,6 +220,9 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
+        if(pd!=null){
+            pd.dismiss();
+        }
         Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
         if (event.getVersion() > BuildConfig.VERSION_CODE) {
             NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -231,7 +239,16 @@ public class SiempoSettingsActivity extends CoreActivity {
             } else {
                 Log.d(TAG, getString(R.string.nointernetconnection));
             }
+        }else{
+            Toast.makeText(getApplicationContext(),"Your application is up to date",Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void initProgressDialog(){
+        pd = new ProgressDialog(SiempoSettingsActivity.this,R.style.ProgressTheme);
+        pd.setCancelable(false);
+        pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
+        pd.show();
     }
 
 }
