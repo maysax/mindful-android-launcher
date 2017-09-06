@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:paddingTop="15dp"
         android:paddingLeft="15dp"
+        android:paddingBottom="15dp"
         tools:ignore="RtlHardcoded,RtlSymmetry">
 
         <TextView
@@ -136,21 +137,13 @@
                 android:textColor="@android:color/black" />
 
         </LinearLayout>
-        <Button
-            android:id="@+id/btnOk"
-            android:layout_gravity="right"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ok"
-            tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linSecond"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@android:color/transparent">
 
     </LinearLayout>

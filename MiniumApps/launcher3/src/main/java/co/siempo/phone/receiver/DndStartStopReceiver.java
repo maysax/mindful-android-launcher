@@ -19,7 +19,8 @@ import static android.media.AudioManager.RINGER_MODE_SILENT;
 /**
  * Created by Shahab on 5/16/2017.
  */
-@SuppressWarnings("ALL")
+
+
 @EReceiver
 public class DndStartStopReceiver extends BroadcastReceiver {
     @Pref

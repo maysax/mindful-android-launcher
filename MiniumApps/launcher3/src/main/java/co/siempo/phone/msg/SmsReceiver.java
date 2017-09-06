@@ -29,7 +29,6 @@ import minium.co.core.log.Tracer;
 /**
  * Created by Shahab on 7/29/2016.
  */
-@SuppressWarnings("ALL")
 @EReceiver
 public class SmsReceiver extends BroadcastReceiver {
 

@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,7 +46,6 @@ import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.ui.SearchLayout;
-import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
@@ -210,9 +208,13 @@ public class MainFragment extends CoreFragment {
     @Subscribe
     public void searchLayoutEvent(SearchLayoutEvent event) {
         try {
+            if (event.getString().equalsIgnoreCase("") || event.getString().equalsIgnoreCase("/")
+                    || (event.getString().startsWith("/") && event.getString().length() == 2)) {
+                listView.smoothScrollToPosition(0);
+            }
             emptyChecker(event.getString());
             parser.parse(event.getString());
-            adapter.getFilter().filter(manager.getCurrent().getTitle());
+           if(adapter!=null) adapter.getFilter().filter(manager.getCurrent().getTitle());
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -221,12 +223,12 @@ public class MainFragment extends CoreFragment {
     @Subscribe
     public void sendSmsEvent(SendSmsEvent event) {
         try {
-           if(event.isSendSms()){
-               MainActivity.isTextLenghGreater="";
-               afterEffectLayout.setVisibility(View.GONE);
-               moveSearchBar(true, null);
-              // manager.clear();
-           }
+            if (event.isSendSms()) {
+                MainActivity.isTextLenghGreater = "";
+                afterEffectLayout.setVisibility(View.GONE);
+                moveSearchBar(true, null);
+                // manager.clear();
+            }
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -257,13 +259,13 @@ public class MainFragment extends CoreFragment {
             } else if (current.getItemType() == TokenItemType.DATA) {
                 if (manager.get(0).getItemType() == TokenItemType.DATA) {
                     mediator.resetData();
-                    adapter.getFilter().filter(current.getTitle());
+                    if (adapter != null) adapter.getFilter().filter(current.getTitle());
                 } else {
                     mediator.resetData();
                     if (current.getTitle().trim().isEmpty()) {
-                        adapter.getFilter().filter("^");
+                        if (adapter != null) adapter.getFilter().filter("^");
                     } else {
-                        adapter.getFilter().filter(current.getTitle());
+                        if (adapter != null) adapter.getFilter().filter(current.getTitle());
                     }
 
                 }

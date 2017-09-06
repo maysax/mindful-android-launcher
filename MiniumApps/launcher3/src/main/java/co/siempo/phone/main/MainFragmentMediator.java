@@ -1,11 +1,17 @@
 package co.siempo.phone.main;
 
+import android.content.pm.ApplicationInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.contact.ContactsLoader;
 import co.siempo.phone.event.CreateNoteEvent;
+import co.siempo.phone.event.SendSmsEvent;
+import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
@@ -50,8 +56,24 @@ class MainFragmentMediator {
     }
 
     private void loadActions() {
-        new MainListItemLoader(fragment.getActivity()).loadItems(items);
+        new MainListItemLoader(fragment.getActivity()).loadItems(items, fragment);
     }
+
+
+    private void loadAppList() {
+        try {
+            if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
+                items.clear();
+                for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
+                    String appName = applicationInfo.loadLabel(fragment.getActivity().getPackageManager()).toString();
+//                    items.add(new MainListItem(appName,MainListItemType.APPS,applicationInfo));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void loadContacts() {
         try {
@@ -100,13 +122,18 @@ class MainFragmentMediator {
         MainListItemType type = getAdapter().getItem(position).getItemType();
 
         switch (type) {
-
             case CONTACT:
                 router.contactPicked((ContactListItem) getAdapter().getItem(position));
                 break;
             case ACTION:
-                position = getAdapter().getItem(position).getId();
-                new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                if (getAdapter().getItem(position).getApplicationInfo() != null) {
+                    UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
+                    new ActivityHelper(fragment.getActivity()).openGMape(getAdapter().getItem(position).getApplicationInfo().packageName);
+                    MainActivity.isTextLenghGreater = "";
+                } else {
+                    position = getAdapter().getItem(position).getId();
+                    new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                }
                 break;
             case DEFAULT:
                 position = getAdapter().getItem(position).getId();
@@ -124,6 +151,8 @@ class MainFragmentMediator {
                         break;
                     case 4:
                         router.call(fragment.getActivity());
+                        MainActivity.isTextLenghGreater = "";
+                        EventBus.getDefault().post(new SendSmsEvent(true,"",""));
                         break;
                     default:
                         UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
@@ -145,9 +174,7 @@ class MainFragmentMediator {
     }
 
     public void contactNumberPicker(int selectedContactId) {
-
         items.clear();
-
         for (ContactListItem item : contactItems) {
             if (item.getContactId() == selectedContactId) {
                 for (ContactListItem.ContactNumber number : item.getNumbers()) {
@@ -169,4 +196,15 @@ class MainFragmentMediator {
         getAdapter().loadData(items);
         getAdapter().notifyDataSetChanged();
     }
+
+
+    public void installedApplicationList() {
+        items.clear();
+        loadAppList();
+        getAdapter().loadData(items);
+        getAdapter().notifyDataSetChanged();
+    }
+
+
+
 }

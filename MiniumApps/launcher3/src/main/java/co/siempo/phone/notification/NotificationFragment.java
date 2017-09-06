@@ -31,6 +31,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
+import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NotificationTrayEvent;
@@ -67,6 +68,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     @ViewById
     LinearLayout linSecond;
 
+//    @ViewById
+//    Button btnClearAll;
+
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         try {
@@ -97,15 +101,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
         smsDao = DBUtility.getNotificationDao();
         callStorageDao = DBUtility.getCallStorageDao();
-
-
-//      adapter = new NotificationAdapter(this,notificationList);
-        prepareNotifications();
-
-        // .queryBuilder().where(ActivitiesStorageDao.Properties.Time.notEq(0)).list();
-        // query all notes, sorted a-z by their text
-//        smsQuery = smsDao.queryBuilder().orderAsc(TableNotificationSmsDao.Properties._contact_title).build();
-
         loadData();
 
         adapter = new RecyclerListAdapter(getActivity(), notificationList);
@@ -120,15 +115,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-
-//        linSecond.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                animateOut();
-//                return false;
-//
-//            }
-//        });
         emptyView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,9 +134,28 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             @SuppressLint("LogConditional")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d(TAG, "1 :::::   " + count);
-                if (isLastItemDisplaying(recyclerView) && event.getAction() == MotionEvent.ACTION_UP && count >= 2) {
-                    animateOut();
+                boolean isShown = false;
+                if (linSecond != null) {
+                    isShown = linSecond.isShown();
+                }
+                if (isShown) {
+                    int yStart = 0;
+                    int yEnd = 0;
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            yStart = (int) event.getY();
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            yEnd = (int) event.getY();
+                            break;
+                    }
+
+                    /**
+                     * @Rajesh has to check this and remove if not needed.
+                     */
+//                    if (isLastItemDisplaying(recyclerView) && Math.abs(yStart - yEnd) > 300) {
+//                        animateOut();
+//                    }
                 }
                 return gesture.onTouchEvent(event);
             }
@@ -200,6 +205,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
         });
 
+        // This feature included in feature sprint.
 //        ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
 //            @Override
 //            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
@@ -233,9 +239,11 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
         if (items.size() == 0) {
             recyclerView.setVisibility(View.GONE);
+            //  btnClearAll.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
+            //  btnClearAll.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
 
@@ -290,16 +298,17 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     final int SWIPE_THRESHOLD_VELOCITY = 200;
 
                     try {
-
-                        if (Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_OFF_PATH)
-                            return false;
-                        if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
-                                && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-                            Log.i(TAG, "Down to Top");
-                            animateOut();
-                        } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
-                                && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-                            Log.i(TAG, "Top to Down");
+                        if (e1 != null && e2 != null) {
+                            if (Math.abs(e1.getX() - e2.getX()) > SWIPE_MAX_OFF_PATH)
+                                return false;
+                            if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                                Log.i(TAG, "Down to Top");
+                                animateOut();
+                            } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
+                                    && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
+                                Log.i(TAG, "Top to Down");
+                            }
                         }
                     } catch (Exception e) {
                         // nothing
@@ -310,12 +319,14 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             });
 
     private boolean isLastItemDisplaying(RecyclerView recyclerView) {
-        if (recyclerView.getAdapter().getItemCount() != 0) {
-            int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
-            if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1)
-                return true;
+        if (recyclerView != null && recyclerView.getAdapter() != null) {
+            if (recyclerView.getAdapter().getItemCount() != 0) {
+                int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                if (lastVisibleItemPosition != RecyclerView.NO_POSITION && lastVisibleItemPosition == recyclerView.getAdapter().getItemCount() - 1)
+                    return true;
+            }
+            count = 1;
         }
-        count = 1;
         return false;
     }
 
@@ -327,13 +338,11 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
             @Override
             public void onAnimationStart(Animation animation) {
-                // TODO Auto-generated method stub
 
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-                // TODO Auto-generated method stub
 
             }
 
@@ -342,7 +351,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 try {
                     linSecond.setClickable(true);
                     EventBus.getDefault().post(new NotificationTrayEvent(false));
-                    getActivity().getFragmentManager().popBackStack();
+//                    getActivity().getFragmentManager().popBackStack();
                     getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
                     Config.isNotificationAlive = false;
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
@@ -351,47 +360,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 }
             }
         });
-        //noinspection ConstantConditions
-        getView().startAnimation(trans);
-    }
-
-
-    private void prepareNotifications() {
-
-//        Notification n = new Notification("Jaineel Shah","Haha. Sure! 7.",R.drawable.ic_person_black_24dp  ,"12:52 pm",false);
-//        notificationList.add(n);
-//
-//        n = new Notification("Stephanie Wise","Excellent example of the",R.drawable.ic_person_black_24dp  ,"12:45 pm",false);
-//        notificationList.add(n);
-//
-//        n = new Notification("Hilah Lucida","Good call, I'll do the same",R.drawable.ic_person_black_24dp  ,"12:31 pm",false);
-//        notificationList.add(n);
-
-        //      adapter.notifyDataSetChanged();
-/*
-        TableNotificationSms smsNoti = new TableNotificationSms();
-        smsNoti.set_contact_id(1);
-        smsNoti.set_contact_title("Jaineel Shah");
-        smsNoti.set_message("Haha. Sure! 7 :-)");
-        smsNoti.set_sms_id(1);
-        smsNoti.set_date(new Date());
-        smsNoti.set_snooze_time(30l);
-        smsNoti.set_is_read(false);
-        smsDao.insert(smsNoti);
-        Log.d(TAG, "Inserted new sms noti , ID: " + smsNoti.getId());
-
-        smsNoti = new TableNotificationSms();
-        smsNoti.set_contact_id(2);
-        smsNoti.set_contact_title("Leigh Wasson");
-        smsNoti.set_message("Thank you");
-        smsNoti.set_sms_id(2);
-        smsNoti.set_date(new Date());
-        smsNoti.set_snooze_time(30l);
-        smsNoti.set_is_read(false);
-        smsDao.insert(smsNoti);
-        Log.d(TAG, "Inserted new sms noti , ID: " + smsNoti.getId());*/
-
-
+        if (getView() != null) {
+            getView().startAnimation(trans);
+        }
     }
 
 
@@ -406,65 +377,34 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         super.onResume();
         try {
             //noinspection ConstantConditions
-            UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
+            if (getActivity() != null)
+                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
     }
 
+    /**
+     * This method is called from adapter when there is no notification reamaning in list.
+     * @param event
+     */
+    @Subscribe
+    public void notificationSwipeEvent(NotificationSwipeEvent event) {
+        try {
+            if (event.isNotificationListNull()) {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+                //    btnClearAll.setVisibility(View.GONE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                //  btnClearAll.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-    //    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
-//
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//
-//        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-//    }
-
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                mDownX = ev.getX();
-//                mDownY = ev.getY();
-//                mSwipe = mSwipeDirection.NONE;
-//                mSwiping = false;
-//                break;
-//            case MotionEvent.ACTION_CANCEL:
-//            case MotionEvent.ACTION_UP:
-//                if(mSwiping) {
-//                    swipeScreen(mSwipe); //if action recognized as swipe then swipe
-//
-//                }
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                float x = ev.getX();
-//                float y = ev.getY();
-//                float xDelta = Math.abs(x - mDownX);
-//                float yDelta = Math.abs(y - mDownY);
-//                if(mDownY-y<=100)
-//                    mSwipe = mSwipeDirection.DOWN;
-//                else if(mDownY - y > 100)
-//                    mSwipe = mSwipeDirection.UP;
-//                else
-//                    mSwipe = mSwipeDirection.NONE;
-//
-//                if (yDelta > mSlop && yDelta / 2 > xDelta) {
-//                    mSwiping = true;
-//                    return true;
-//                }
-//                break;
-//        }
-//
-//
-//        return super.dispatchTouchEvent(ev);
-//    }
 
     private void swipeScreen(mSwipeDirection mSwipe) {
         //if(mSwipe == mSwipeDirection.UP)

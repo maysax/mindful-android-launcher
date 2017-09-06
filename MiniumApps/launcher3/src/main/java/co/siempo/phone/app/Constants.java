@@ -12,6 +12,8 @@ public class Constants {
     public static final String GOOGLE_PHOTOS = "com.google.android.apps.photos";
     public static final String CALL_APP_PACKAGE = "com.google.android.dialer";
     public static final String GOOGLE_GMAIL_PACKAGE = "com.google.android.gm";
+    public static final String CONTACT_APP_PACKAGE = "com.android.contacts";
+    public static final String SETTINGS_APP_PACKAGE = "com.android.settings";
 
     public static final int DEFAULT_TEMPO_MINUTE = 15;
     public static final String[] CALL_APP_PACKAGES = new String[]{"com.google.android.dialer","com.android.dialer"};

@@ -14,10 +14,12 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
@@ -29,7 +31,10 @@ import co.siempo.phone.R;
 /**
  * Created by shahab on 12/6/16.
  */
-@SuppressWarnings("ALL")
+
+/**
+ * This class contain all the native settings feature.
+ */
 @Fullscreen
 @EActivity
 public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
@@ -37,6 +42,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
      */
+    private static String TAG="SiempoPhoneSettings";
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -327,6 +333,22 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$MemorySettingsActivity"));
             //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             process_usage_preference.setIntent(intent_data_usage);
+
+            /**
+             * Below validation is use to check if memory screen is available in device or not
+             * if it is not available, Memory label is hide for that particular device.
+             */
+            boolean activityExists = intent_data_usage.resolveActivityInfo(getActivity().getPackageManager(), 0) != null;
+            if(!activityExists){
+                PreferenceScreen preferenceScreen = getPreferenceScreen();
+                if (preferenceScreen != null) {
+                    preferenceScreen.removePreference(process_usage_preference);
+                }
+            }
+            else{
+                Log.d(TAG,"Memory Screen is available");
+            }
+
         }
 
         @Override
@@ -338,6 +360,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
     }
 
 

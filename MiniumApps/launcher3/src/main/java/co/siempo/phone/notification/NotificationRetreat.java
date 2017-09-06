@@ -24,7 +24,7 @@ import minium.co.core.log.Tracer;
  * Created by Shahab on 4/21/2017.
  */
 
-@SuppressWarnings("ALL")
+
 @EBean
 public class NotificationRetreat {
 

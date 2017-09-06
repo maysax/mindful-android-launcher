@@ -4,16 +4,12 @@ import android.Manifest;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.support.v4.view.ViewPager;
@@ -21,17 +17,17 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.Display;
+import com.github.javiersantos.appupdater.AppUpdaterUtils;
+import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
+import com.github.javiersantos.appupdater.objects.Update;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
-import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
@@ -39,7 +35,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
@@ -52,7 +47,6 @@ import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
-import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.EventBus;
@@ -61,12 +55,11 @@ import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.event.NFCEvent;
-import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
-
+import com.github.javiersantos.appupdater.enums.Display;
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
 @Fullscreen
@@ -98,9 +91,17 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public static String isTextLenghGreater = "";
 
+    private ActivityState state;
+
+    private enum ActivityState {
+        NORMAL,
+        ONHOMEPRESS
+    }
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
+        Log.d(TAG,"afterViews event called");
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
@@ -129,20 +130,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 }
             });
         }
-
-
-
-        final BroadcastReceiver vReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                //your code here
-                System.out.println("Volume key pressed");
-            }
-        };
-
-        registerReceiver(vReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
-
-        // NotificationBlockerService_.intent(this).extra("start", true).start();
 
         FirebaseHelper firebaseHelper = new FirebaseHelper(this);
         firebaseHelper.testEvent1();
@@ -215,8 +202,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
+            Log.d(TAG,"Permission granted");
             loadViews();
             loadStatusBar();
+            if (!launcherPrefs.isAppInstalledFirstTime().get()) {
+                Log.d(TAG,"Display upgrade dialog.");
+                checkUpgradeVersion();
+            }
         }
 
         @Override
@@ -247,6 +239,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         Log.d(TAG,"ACTION HOME PRESS");
+        state=ActivityState.ONHOMEPRESS;
         if (event.isVisible()) {
             if (StatusBarHandler.isNotificationTrayVisible) {
 
@@ -271,11 +264,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
+        Log.d(TAG,"Check Version event...");
         Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
         if (event.getVersion() > BuildConfig.VERSION_CODE) {
             NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
             if (activeNetwork != null) { // connected to the internet
-                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                     UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -285,11 +278,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                             }
                         }
                     });
-                } else {
-                    UIUtils.toast(this, "New version found! Skipping for now because of metered connection");
-                }
             } else {
-                Log.i(LogConfig.LOG_TAG, getString(R.string.nointernetconnection));
+                Log.d(TAG, getString(R.string.nointernetconnection));
             }
         }
     }
@@ -356,21 +346,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @SuppressWarnings("deprecation")
     @Override
     protected void onStart() {
+        Log.d(TAG,"onStart Event Call : "+state);
         super.onStart();
-        //if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected()) {
-            new AppUpdater(this)
-                    .setDisplay(Display.DIALOG)
-                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                    .showEvery(5)
-                    .setTitleOnUpdateAvailable("Update available")
-                    .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
-                    .setTitleOnUpdateNotAvailable("Update not available")
-                    .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
-                    .setButtonUpdate("Update")
-                    .setButtonDismiss("Maybe later")
-                    .start();
-        //}
+
+        if(state==ActivityState.ONHOMEPRESS){
+            checkUpgradeVersion();
+            state=ActivityState.NORMAL;
+        }
+
     }
+
 
     @Override
     protected void onStop() {
@@ -463,7 +448,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         }
         catch (Exception e){
-            Log.d(TAG,"Exception onBackPressed MainActivity:: "+e.toString());
+            Log.d(TAG,"Exception"+e.toString());
         }
 
     }
@@ -473,6 +458,57 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onRestart();
         Log.d(TAG,"RESTART ::: ACTION RESTART");
         loadStatusBar();
+    }
+
+    public void checkVersionFromAppUpdater(){
+        new AppUpdater(this)
+                .setDisplay(Display.DIALOG)
+                .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+                .showEvery(5)
+                .setTitleOnUpdateAvailable("Update available")
+                .setContentOnUpdateAvailable("New version found! Would you like to update Siempo?")
+                .setTitleOnUpdateNotAvailable("Update not available")
+                .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
+                .setButtonUpdate("Update")
+                .setButtonDismiss("Maybe later")
+                .start();
+    }
+
+    /**
+     * Below function is use to check if latest version is available from play store or not
+     * 1) It will check first with Appupdater library if it fails to identify then
+     * 2) It will check with AWS logic.
+     */
+    public  void checkUpgradeVersion(){
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            Log.d(TAG,"Active network..");
+            AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
+                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+                    .withListener(new AppUpdaterUtils.UpdateListener() {
+                        @Override
+                        public void onSuccess(Update update, Boolean isUpdateAvailable) {
+                            Log.d(TAG,"on success");
+                            if (update.getLatestVersionCode() != null) {
+                                Log.d(TAG,"check version from AppUpdater library");
+                                checkVersionFromAppUpdater();
+                            } else {
+                                Log.d(TAG,"check version from AWS");
+                                ApiClient_.getInstance_(MainActivity.this).checkAppVersion();
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(AppUpdaterError error) {
+                            Log.d(TAG," AppUpdater Error ::: "+error.toString());
+
+                        }
+                    });
+
+            appUpdaterUtils.start();
+        } else {
+            Log.d(TAG, getString(R.string.nointernetconnection));
+        }
     }
 
 

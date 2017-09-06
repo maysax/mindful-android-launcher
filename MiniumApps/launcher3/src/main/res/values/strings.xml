@@ -188,4 +188,6 @@
     <string name="str_keyboard_configuration">Always show the keyboard  on the home screen</string>
     <string name="view_save_note">View saved note</string>
     <string name="phone_replace_regex">\-</string>
+    <string name="missed_call">Missed call</string>
+    <string name="phone">Phone</string>
 </resources>

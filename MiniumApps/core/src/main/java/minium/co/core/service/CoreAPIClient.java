@@ -1,5 +1,6 @@
 package minium.co.core.service;
 
+import android.app.ProgressDialog;
 import android.os.Environment;
 
 import com.androidnetworking.AndroidNetworking;
@@ -42,7 +43,12 @@ public abstract class CoreAPIClient {
         }
     };
 
+    /**
+     * This function is use to check current app version with play store version
+     * and display alert if update is available using AWS API's.
+     */
     public void checkAppVersion() {
+
 
         AndroidNetworking.get(String.format(Locale.US, "%s/%s/version", AWS_HOST, getAppName()))
                 .setTag("test")
@@ -58,6 +64,7 @@ public abstract class CoreAPIClient {
 
                     @Override
                     public void onError(ANError anError) {
+                        EventBus.getDefault().post(new CheckVersionEvent(-1000));
                         Tracer.e(anError.getCause(), anError.getErrorDetail());
                     }
                 });
