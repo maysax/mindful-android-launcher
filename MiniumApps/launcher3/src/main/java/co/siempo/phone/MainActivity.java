@@ -1,6 +1,7 @@
 package co.siempo.phone;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -118,15 +119,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .check();
 
         if (!isEnabled(this)) {
-            UIUtils.confirmWithCancel(this, null, "Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
+            UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_dialog), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (which == -2) {
-                        checkAppLoadFirstTime();
-                    } else {
-                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
-                    }
-
+                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
                 }
             });
         }
@@ -152,8 +148,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100) {
+        if (requestCode == 100 && isEnabled(this)) {
             checkAppLoadFirstTime();
+        }else{
+            UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                }
+            });
         }
     }
 
@@ -343,12 +346,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-    @SuppressWarnings("deprecation")
+
     @Override
     protected void onStart() {
-        Log.d(TAG,"onStart Event Call : "+state);
         super.onStart();
-
         if(state==ActivityState.ONHOMEPRESS){
             checkUpgradeVersion();
             state=ActivityState.NORMAL;
@@ -448,7 +449,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         }
         catch (Exception e){
-            Log.d(TAG,"Exception"+e.toString());
+            e.printStackTrace();
         }
 
     }
@@ -500,8 +501,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
                         @Override
                         public void onFailed(AppUpdaterError error) {
-                            Log.d(TAG," AppUpdater Error ::: "+error.toString());
-
+                            if(BuildConfig.DEBUG) {
+                                Log.d(TAG, " AppUpdater Error ::: " + error.toString());
+                            }
                         }
                     });
 
