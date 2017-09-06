@@ -74,12 +74,28 @@ public class UIUtils {
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }
-    public static void confirmWithCancel(Context context, String title, String msg, DialogInterface.OnClickListener listener) {
+
+    /**
+     * Global method to access dialog with ok button text.
+     * @param context
+     * @param title
+     * @param msg
+     * @param listener
+     */
+    public static void confirmWithSingleButton(Context context, String title, String msg, DialogInterface.OnClickListener listener) {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
                 .setPositiveButton(android.R.string.ok, listener)
-                .setNegativeButton(android.R.string.cancel, listener)
+                .show();
+    }
+
+    public static void confirmWithCancel(Context context, String title, String msg, DialogInterface.OnClickListener listener,DialogInterface.OnClickListener listenerNo) {
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(msg)
+                .setPositiveButton(android.R.string.ok, listener)
+                .setNegativeButton(android.R.string.cancel, listenerNo)
                 .show();
     }
 

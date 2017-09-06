@@ -70,7 +70,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public View mTestView = null;
     public WindowManager windowManager = null;
     private boolean isOnStopCalled = false;
-
+    UserPresentBroadcastReceiver userPresentBroadcastReceiver;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +78,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
+        registerReceiver(userPresentBroadcastReceiver, intentFilter);
 
-        Log.d("CoreActivity", "CoreActivity");
         if (prefs != null && prefs.selectedThemeId().get() != 0) {
             setTheme(prefs.selectedThemeId().get());
         }
@@ -122,10 +126,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         super.onResume();
         if (mHomeWatcher != null) mHomeWatcher.startWatch();
         isOnStopCalled = false;
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
-        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(new UserPresentBroadcastReceiver(), intentFilter);
     }
 
     /**
@@ -261,6 +261,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onPause() {
         super.onPause();
         if (mHomeWatcher != null) mHomeWatcher.stopWatch();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(userPresentBroadcastReceiver!=null){
+            unregisterReceiver(userPresentBroadcastReceiver);
+        }
     }
 
     /**
