@@ -223,14 +223,17 @@ public class PauseActivity extends CoreActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && !MainActivity.isEnabled(this)) {
-            UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
+            UIUtils.confirmWithCancel(this, null, getString(R.string.msg_noti_service_dialog), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 101);
+                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
                 }
             });
-        } else if (requestCode == 101 && !MainActivity.isEnabled(this)) {
-            finish();
         }
     }
 

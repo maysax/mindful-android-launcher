@@ -86,6 +86,7 @@ public class UIUtils {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
+                .setCancelable(false)
                 .setPositiveButton(android.R.string.ok, listener)
                 .show();
     }
@@ -94,6 +95,7 @@ public class UIUtils {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
+                .setCancelable(false)
                 .setPositiveButton(android.R.string.ok, listener)
                 .setNegativeButton(android.R.string.cancel, listenerNo)
                 .show();
