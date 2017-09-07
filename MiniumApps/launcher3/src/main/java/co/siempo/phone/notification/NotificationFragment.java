@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
@@ -105,7 +107,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
         adapter = new RecyclerListAdapter(getActivity(), notificationList);
 
-        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -129,38 +130,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             }
         });
 
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-
-            @SuppressLint("LogConditional")
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                boolean isShown = false;
-                if (linSecond != null) {
-                    isShown = linSecond.isShown();
-                }
-                if (isShown) {
-                    int yStart = 0;
-                    int yEnd = 0;
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            yStart = (int) event.getY();
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            yEnd = (int) event.getY();
-                            break;
-                    }
-
-                    /**
-                     * @Rajesh has to check this and remove if not needed.
-                     */
-//                    if (isLastItemDisplaying(recyclerView) && Math.abs(yStart - yEnd) > 300) {
-//                        animateOut();
-//                    }
-                }
-                return gesture.onTouchEvent(event);
-            }
-        });
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -171,7 +140,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                             count++;
                         }
                     }, 500);
-
                     Log.d(TAG, "" + count);
                 }
 
@@ -183,15 +151,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                // do it
-                // Toast.makeText(getActivity().getApplicationContext(), "Item clicked at position " + notificationList.get(position).getNotificationContactModel().getImage(), Toast.LENGTH_SHORT).show();
                 if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
-
-                   /* Uri uri = Uri.parse("smsto:"+notificationList.get(position).getNotificationContactModel().getNumber());
-                    Intent it = new Intent(Intent.ACTION_SENDTO, uri);
-                    startActivity(it);*/
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null)));
-
                 } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
                     startActivity(intent);
@@ -204,7 +165,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
 
         });
-
         // This feature included in feature sprint.
 //        ItemClickSupport.addTo(recyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
 //            @Override
@@ -218,13 +178,55 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     private void loadData() {
         List<TableNotificationSms> SMSItems = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties._date).build().list();
-        //List<CallStorage> callItems = callStorageDao.queryBuilder().orderDesc(CallStorageDao.Properties._date).build().list();
-
-        //List<TableNotificationSms> items = smsDao.loadAll();
         setUpNotifications(SMSItems);
         EventBus.getDefault().post(new TopBarUpdateEvent());
     }
 
+    /**
+     * Event bus notifier when new message or call comes.
+     * @param tableNotificationSms
+     */
+    @Subscribe
+    public void newNotificationEvent(NewNotificationEvent tableNotificationSms) {
+        Log.d("hardikkamothi", "Receive notification event");
+        System.out.println("NotificationFragment.newNotificationEvent" + tableNotificationSms);
+        if (tableNotificationSms != null) {
+            if (!checkNotificationExistsOrNot(tableNotificationSms.getTopTableNotificationSmsDao().getId())) {
+                DateFormat sdf = new SimpleDateFormat("hh:mm a");
+                String time = sdf.format(tableNotificationSms.getTopTableNotificationSmsDao().get_date());
+                Notification n = new Notification(gettingNameAndImageFromPhoneNumber(tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title()),
+                        tableNotificationSms.getTopTableNotificationSmsDao().getId(), tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title(),
+                        tableNotificationSms.getTopTableNotificationSmsDao().get_message(), time, false, tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type());
+                notificationList.add(0,n);
+                adapter.notifyDataSetChanged();
+
+
+                if (notificationList.size() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    //  btnClearAll.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.VISIBLE);
+                } else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    //  btnClearAll.setVisibility(View.VISIBLE);
+                    emptyView.setVisibility(View.GONE);
+                }
+            }
+        }
+    }
+
+    /**
+     * Check to see whether the new notification data already exist in list or not.
+     * @param id
+     * @return
+     */
+    private boolean checkNotificationExistsOrNot(Long id) {
+        for (Notification notification : notificationList) {
+            if (notification.getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void setUpNotifications(List<TableNotificationSms> items) {
 

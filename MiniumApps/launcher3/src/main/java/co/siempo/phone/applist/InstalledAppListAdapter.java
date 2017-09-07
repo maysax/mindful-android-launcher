@@ -67,10 +67,10 @@ public class InstalledAppListAdapter extends BaseAdapter {
         ApplicationInfo applicationInfo = (ApplicationInfo) getItem(position);
 
         holder.txt_app_name.setText(applicationInfo.name);
-        if(CoreApplication.getInstance().iconList.get(applicationInfo.name)==null){
+        if(CoreApplication.getInstance().iconList.get(applicationInfo.packageName)==null){
             holder.imv_appicon.setImageDrawable(applicationInfo.loadIcon(packageManager));
         }else {
-            holder.imv_appicon.setImageBitmap(CoreApplication.getInstance().iconList.get(applicationInfo.name));
+            holder.imv_appicon.setImageBitmap(CoreApplication.getInstance().iconList.get(applicationInfo.packageName));
         }
 
         return convertView;

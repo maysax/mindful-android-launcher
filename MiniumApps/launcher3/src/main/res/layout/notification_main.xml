@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:clickable="true"
     tools:ignore="UnusedIds">
 
 
     <LinearLayout
+        android:id="@+id/topmost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
@@ -33,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="50dp"
             android:clipToPadding="false"
-            android:paddingBottom="48dp"
             android:visibility="visible"
             tools:ignore="UnusedIds" />
 
@@ -52,12 +54,12 @@
             tools:ignore="UnusedIds" />
     </LinearLayout>
 
-    <LinearLayout
+    <ImageView
         android:id="@+id/linSecond"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/transparent"
-        android:orientation="vertical">
-
-    </LinearLayout>
+        android:orientation="vertical"
+        tools:ignore="ContentDescription">
+    </ImageView>
 </LinearLayout>
