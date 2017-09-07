@@ -89,7 +89,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         } else {
             holder.imgAppIcon.setBackground(null);
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp));
-            holder.imgAppIcon.setImageBitmap(CoreApplication.getInstance().iconList.get(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp)));
+            holder.imgAppIcon.setImageBitmap(CoreApplication.getInstance().iconList.get(defSMSApp));
         }
         holder.txtMessage.setText(notification.get_text());
         holder.txtTime.setText(notification.get_time());
@@ -149,6 +149,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
             txtTime = (TextView) view.findViewById(R.id.txtTime);
             txtUserName = (TextView) view.findViewById(R.id.txtUserName);
             txtMessage = (TextView) view.findViewById(R.id.txtMessage);
+
         }
 
         @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.android.internal.telephony.ITelephony;
 
@@ -20,10 +21,12 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.VibrationUtils;
 import de.greenrobot.event.EventBus;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 
 @EReceiver
@@ -104,9 +107,9 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
         sms.set_date(date);
         sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
         sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
-        notificationSmsDao.insert(sms);
-
-        EventBus.getDefault().post(new TopBarUpdateEvent());
+        long id =   notificationSmsDao.insert(sms);
+        sms.setId(id);
+        EventBus.getDefault().post(new NewNotificationEvent(sms));
     }
 
     // Keep this method as it is
