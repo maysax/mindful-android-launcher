@@ -68,7 +68,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     LinearLayout layout_notification;
 
     @ViewById
-    LinearLayout linSecond;
+    ImageView linSecond;
 
 //    @ViewById
 //    Button btnClearAll;
@@ -192,6 +192,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         System.out.println("NotificationFragment.newNotificationEvent" + tableNotificationSms);
         if (tableNotificationSms != null) {
             if (!checkNotificationExistsOrNot(tableNotificationSms.getTopTableNotificationSmsDao().getId())) {
+                @SuppressLint("SimpleDateFormat")
                 DateFormat sdf = new SimpleDateFormat("hh:mm a");
                 String time = sdf.format(tableNotificationSms.getTopTableNotificationSmsDao().get_date());
                 Notification n = new Notification(gettingNameAndImageFromPhoneNumber(tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title()),
