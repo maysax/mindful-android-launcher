@@ -245,10 +245,16 @@ public class SiempoSettingsActivity extends CoreActivity {
     }
 
     public void initProgressDialog(){
-        pd = new ProgressDialog(SiempoSettingsActivity.this,R.style.ProgressTheme);
-        pd.setCancelable(false);
-        pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
-        pd.show();
+        try{
+            pd = new ProgressDialog(SiempoSettingsActivity.this,R.style.ProgressTheme);
+            pd.setCancelable(false);
+            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
+            pd.show();
+        }
+        catch (Exception e){
+            //WindowManager$BadTokenException will be caught here
+            e.printStackTrace();
+        }
     }
 
 }
