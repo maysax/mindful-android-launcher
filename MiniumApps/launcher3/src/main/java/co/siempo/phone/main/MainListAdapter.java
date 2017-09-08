@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -218,7 +219,12 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             if (item.getId() == -1) {
-                holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().name));
+                if(!TextUtils.isEmpty(item.getApplicationInfo().packageName)){
+                    holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
+                }
+//                if(!TextUtils.isEmpty(item.getApplicationInfo().packageName)){
+//                    holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
+//                }
                 holder.text.setText(item.getApplicationInfo().name);
             } else {
                 if (item.getIcon() != null) {

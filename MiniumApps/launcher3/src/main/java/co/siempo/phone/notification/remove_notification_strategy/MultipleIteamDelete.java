@@ -11,15 +11,19 @@ import co.siempo.phone.notification.Notification;
  * Created by tkb on 2017-04-03.
  */
 
-@SuppressWarnings("ALL")
+
 public class MultipleIteamDelete implements DeleteStrategy {
     @Override
     public void delete(Notification notification) {
-        List<TableNotificationSms> notificationSmsesList = DBUtility.getNotificationDao().queryBuilder()
-                .where(TableNotificationSmsDao.Properties._contact_title.eq(notification.getNumber()),
-                        TableNotificationSmsDao.Properties.Notification_type.eq(notification.getNotificationType()))
-                .list();
+        try {
+            List<TableNotificationSms> notificationSmsesList = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties._contact_title.eq(notification.getNumber()),
+                            TableNotificationSmsDao.Properties.Notification_type.eq(notification.getNotificationType()))
+                    .list();
 
-        DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
+            DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

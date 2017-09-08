@@ -15,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.UserManager;
 import android.support.multidex.MultiDexApplication;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -67,7 +68,9 @@ public abstract class CoreApplication extends MultiDexApplication {
     LauncherApps launcherApps;
 
     private List<ApplicationInfo> packagesList = new ArrayList<>();
+
     public HashMap<String, Bitmap> iconList = new HashMap<>();
+
 
     @Override
     public void onCreate() {
@@ -156,6 +159,21 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.packagesList = packagesList;
     }
 
+    /**
+     * Return the application name by providing it's package name.
+     *
+     * @param packagename
+     * @return application name
+     */
+    public String getApplicationNameFromPackageName(String packagename) {
+        for (ApplicationInfo applicationInfo : getPackagesList()) {
+            if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
+                return applicationInfo.name;
+            }
+        }
+        return "";
+    }
+
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
 
         @Override
@@ -188,7 +206,9 @@ public abstract class CoreApplication extends MultiDexApplication {
                             drawable = appInfo.loadIcon(getPackageManager());
                         }
                         Bitmap bitmap = drawableToBitmap(drawable);
-                        iconList.put(activityInfo.getLabel().toString(), bitmap);
+                        if(!TextUtils.isEmpty(activityInfo.getApplicationInfo().packageName)){
+                            iconList.put(activityInfo.getApplicationInfo().packageName, bitmap);
+                        }
                         applist.add(appInfo);
                     }
                 }
@@ -246,4 +266,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
 
     }
+
+
 }

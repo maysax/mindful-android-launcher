@@ -188,4 +188,8 @@
     <string name="str_keyboard_configuration">Always show the keyboard  on the home screen</string>
     <string name="view_save_note">View saved note</string>
     <string name="phone_replace_regex">\-</string>
+    <string name="missed_call">Missed call</string>
+    <string name="phone">Phone</string>
+    <string name="msg_noti_service_dialog">Siempo Notification service is not enabled. Please allow Siempo to access notification service</string>
+    <string name="msg_noti_service_force_dialog">Siempo Notification service is not enabled.It\'s required to use app features.</string>
 </resources>

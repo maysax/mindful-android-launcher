@@ -1,5 +1,6 @@
 package minium.co.core.service;
 
+import android.app.ProgressDialog;
 import android.os.Environment;
 
 import com.androidnetworking.AndroidNetworking;
@@ -48,6 +49,7 @@ public abstract class CoreAPIClient {
      */
     public void checkAppVersion() {
 
+
         AndroidNetworking.get(String.format(Locale.US, "%s/%s/version", AWS_HOST, getAppName()))
                 .setTag("test")
                 .setPriority(Priority.MEDIUM)
@@ -62,6 +64,7 @@ public abstract class CoreAPIClient {
 
                     @Override
                     public void onError(ANError anError) {
+                        EventBus.getDefault().post(new CheckVersionEvent(-1000));
                         Tracer.e(anError.getCause(), anError.getErrorDetail());
                     }
                 });

@@ -2,6 +2,7 @@ package co.siempo.phone.pause;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Handler;
@@ -19,13 +20,13 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.io.IOException;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.PauseStartEvent;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
-import co.siempo.phone.tempo.TempoActivity;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.log.Tracer;
@@ -42,7 +43,7 @@ public class PauseActivity extends CoreActivity {
     private String TAG="PauseActivity";
 
     @Pref
-  public   Launcher3Prefs_ launcherPrefs;
+    public Launcher3Prefs_ launcherPrefs;
 
     @Extra
     Tag tag;
@@ -52,15 +53,32 @@ public class PauseActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
+        // To check the notification service is enable or not.
+        if (!MainActivity.isEnabled(this)) {
+            UIUtils.confirmWithCancel(this, null, getString(R.string.msg_noti_service_dialog), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+        }
+
         Tracer.d("afterviews PauseActivity");
         init();
         loadTopBar();
         loadStatusBar();
     }
+
+
     @UiThread(delay = 1000)
     void loadStatusBar() {
         statusBarHandler = new StatusBarHandler(PauseActivity.this);
-        if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+        if (statusBarHandler != null && !statusBarHandler.isActive()) {
             statusBarHandler.requestStatusBarCustomization();
         }
     }
@@ -90,20 +108,17 @@ public class PauseActivity extends CoreActivity {
             super.onBackPressed();
         }
 
-        try{
-
-            if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+        try {
+            if (statusBarHandler != null && statusBarHandler.isNotificationTrayVisible) {
                 Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
                 if (f instanceof NotificationFragment) ;
                 {
                     statusBarHandler.isNotificationTrayVisible = false;
                     ((NotificationFragment) f).animateOut();
-
                 }
             }
-        }
-        catch (Exception e){
-            Log.d(TAG,"Exception e");
+        } catch (Exception e) {
+            Log.d(TAG, "Exception e");
         }
     }
 
@@ -205,10 +220,22 @@ public class PauseActivity extends CoreActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
- }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && !MainActivity.isEnabled(this)) {
+            UIUtils.confirmWithCancel(this, null, getString(R.string.msg_noti_service_dialog), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+        }
+    }
 
     @Override
     protected void onPause() {

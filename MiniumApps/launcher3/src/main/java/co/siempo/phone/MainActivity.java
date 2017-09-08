@@ -1,6 +1,7 @@
 package co.siempo.phone;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -91,9 +92,17 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public static String isTextLenghGreater = "";
 
+    private ActivityState state;
+
+    private enum ActivityState {
+        NORMAL,
+        ONHOMEPRESS
+    }
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
+        Log.d(TAG,"afterViews event called");
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
@@ -110,15 +119,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .check();
 
         if (!isEnabled(this)) {
-            UIUtils.confirmWithCancel(this, null, "Siempo Notification service is not enabled. Please allow Siempo to access notification service", new DialogInterface.OnClickListener() {
+            UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_dialog), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (which == -2) {
-                        checkAppLoadFirstTime();
-                    } else {
-                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
-                    }
-
+                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
                 }
             });
         }
@@ -144,8 +148,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100) {
+        if (requestCode == 100 && isEnabled(this)) {
             checkAppLoadFirstTime();
+        }else{
+            UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                }
+            });
         }
     }
 
@@ -194,8 +205,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
+            Log.d(TAG,"Permission granted");
             loadViews();
             loadStatusBar();
+            if (!launcherPrefs.isAppInstalledFirstTime().get()) {
+                Log.d(TAG,"Display upgrade dialog.");
+                checkUpgradeVersion();
+            }
         }
 
         @Override
@@ -226,6 +242,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         Log.d(TAG,"ACTION HOME PRESS");
+        state=ActivityState.ONHOMEPRESS;
         if (event.isVisible()) {
             if (StatusBarHandler.isNotificationTrayVisible) {
 
@@ -329,39 +346,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-    @SuppressWarnings("deprecation")
+
     @Override
     protected void onStart() {
         super.onStart();
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null) {
-            Log.d(TAG,"Active network..");
-            AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
-                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                    .withListener(new AppUpdaterUtils.UpdateListener() {
-                        @Override
-                        public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                            Log.d(TAG,"on success");
-                            if (update.getLatestVersionCode() != null) {
-                                Log.d(TAG,"check version from AppUpdater library");
-                                checkVersionFromAppUpdater();
-                            } else {
-                                Log.d(TAG,"check version from AWS");
-                                ApiClient_.getInstance_(MainActivity.this).checkAppVersion();
-                            }
-                        }
-
-                        @Override
-                        public void onFailed(AppUpdaterError error) {
-                            Log.d(TAG," AppUpdater Error ::: "+error.toString());
-
-                        }
-                    });
-
-            appUpdaterUtils.start();
-        } else {
-            Log.d(TAG, getString(R.string.nointernetconnection));
+        if(state==ActivityState.ONHOMEPRESS){
+            checkUpgradeVersion();
+            state=ActivityState.NORMAL;
         }
+
     }
 
 
@@ -456,7 +449,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         }
         catch (Exception e){
-            Log.d(TAG,"Exception"+e.toString());
+            e.printStackTrace();
         }
 
     }
@@ -481,5 +474,44 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setButtonDismiss("Maybe later")
                 .start();
     }
+
+    /**
+     * Below function is use to check if latest version is available from play store or not
+     * 1) It will check first with Appupdater library if it fails to identify then
+     * 2) It will check with AWS logic.
+     */
+    public  void checkUpgradeVersion(){
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null) {
+            Log.d(TAG,"Active network..");
+            AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
+                    .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
+                    .withListener(new AppUpdaterUtils.UpdateListener() {
+                        @Override
+                        public void onSuccess(Update update, Boolean isUpdateAvailable) {
+                            Log.d(TAG,"on success");
+                            if (update.getLatestVersionCode() != null) {
+                                Log.d(TAG,"check version from AppUpdater library");
+                                checkVersionFromAppUpdater();
+                            } else {
+                                Log.d(TAG,"check version from AWS");
+                                ApiClient_.getInstance_(MainActivity.this).checkAppVersion();
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(AppUpdaterError error) {
+                            if(BuildConfig.DEBUG) {
+                                Log.d(TAG, " AppUpdater Error ::: " + error.toString());
+                            }
+                        }
+                    });
+
+            appUpdaterUtils.start();
+        } else {
+            Log.d(TAG, getString(R.string.nointernetconnection));
+        }
+    }
+
 
 }

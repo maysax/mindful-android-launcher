@@ -364,7 +364,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     @Override
     public void onBackPressed() {
         // New note -> show 'Save changes?' dialog
-        if (bundle.getInt(NOTE_REQUEST_CODE) == NEW_NOTE_REQUEST)
+        if (bundle != null && bundle.getInt(NOTE_REQUEST_CODE) == NEW_NOTE_REQUEST)
             saveChangesDialog.show();
 
             // Existing note
@@ -375,7 +375,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
              *  If not -> hide keyboard if showing and finish
              */
             if (!isEmpty(titleEdit)) {
-                if (!(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE))) ||
+                if (bundle != null && !(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE))) ||
                         !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY))) ||
                         !(colour.equals(bundle.getString(NOTE_COLOUR))) ||
                         fontSize != bundle.getInt(NOTE_FONT_SIZE) ||
