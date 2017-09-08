@@ -16,8 +16,8 @@ Build:
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew assembleDebug
-    - mkdir /opt/release/$(date +'%m%d%Y')/$CI_BUILD_REF
-    - cp -R launcher3/build/outputs/apk/launcher3-debug.apk /opt/release/$(date +'%m%d%Y')/$CI_BUILD_REF/
+    - sudo mkdir /opt/release/$(date +'%m%d%Y')/$CI_BUILD_REF
+    - sudo cp -R launcher3/build/outputs/apk/launcher3-debug.apk /opt/release/$(date +'%m%d%Y')/$CI_BUILD_REF/
 
 #stages:
 #  - build
