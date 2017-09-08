@@ -230,7 +230,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     }
 
     private void setUpNotifications(List<TableNotificationSms> items) {
-
+        notificationList.clear();
         for (int i = 0; i < items.size(); i++) {
             //DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
 
@@ -378,6 +378,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     @Override
     public void onResume() {
         super.onResume();
+        loadData();
         try {
             //noinspection ConstantConditions
             if (getActivity() != null)
