@@ -261,7 +261,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-   // @UiThread(delay = 1000)
+
     void loadStatusBar() {
         statusBarHandler = new StatusBarHandler(MainActivity.this);
         if (!statusBarHandler.isActive()) {
