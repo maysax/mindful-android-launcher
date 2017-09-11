@@ -9,6 +9,9 @@ Lint:
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew lint -p launcher3/
+  artifacts:
+    paths:
+    - launcher3/build/outputs/lint-results-debug.html
 
 Build:
   script:
