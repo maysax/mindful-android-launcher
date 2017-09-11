@@ -10,23 +10,17 @@ Lint:
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew lint -p launcher3/
-    - echo ${CI_BUILD_REF}
-    - echo ${BUILD_HOME}
-    - pwd 
-    - ls -lah
   artifacts:
     paths:
     - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
 
 Build:
   script:
-    - echo ${CI_BUILD_REF}
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew assembleDebug
   artifacts:
     paths:
-    - launcher3/build/outputs/apk/launcher3-debug.apk
     - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/launcher3-debug.apk
   
 
