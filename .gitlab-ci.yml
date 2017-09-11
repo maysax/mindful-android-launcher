@@ -16,18 +16,19 @@ Lint:
     - ls -lah
   artifacts:
     paths:
-    - $BUILD_HOME/MiniumApps/launcher3/build/outputs/lint-results-debug.html
+    - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
 
-#Build:
-#  artifacts:
-#    paths:
-#    - launcher3/build/outputs/apk/launcher3-debug.apk
-#    - /home/gitlab-runner/builds/${CI_BUILD_REF_SLUG}/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/launcher3-debug.apk
-#  script:
-#    - echo ${CI_BUILD_REF}
-#    - cd MiniumApps
-#    - chmod +x ./gradlew
-#    - ./gradlew assembleDebug
+Build:
+  script:
+    - echo ${CI_BUILD_REF}
+    - cd MiniumApps
+    - chmod +x ./gradlew
+    - ./gradlew assembleDebug
+  artifacts:
+    paths:
+    - launcher3/build/outputs/apk/launcher3-debug.apk
+    - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/launcher3-debug.apk
+  
 
 #stages:
 #  - build
