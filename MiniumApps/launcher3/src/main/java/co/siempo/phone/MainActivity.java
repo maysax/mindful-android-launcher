@@ -11,11 +11,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
@@ -114,8 +117,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.READ_PHONE_STATE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_NETWORK_STATE,
-                        Manifest.permission.SYSTEM_ALERT_WINDOW)
+                        Manifest.permission.ACCESS_NETWORK_STATE)
                 .check();
 
         if (!isEnabled(this)) {
@@ -148,15 +150,18 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && isEnabled(this)) {
-            checkAppLoadFirstTime();
-        }else{
-            UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
-                }
-            });
+        if (requestCode == 100){
+            if(isEnabled(this))
+            {
+                checkAppLoadFirstTime();
+            }else {
+                UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                    }
+                });
+            }
         }
     }
 
@@ -245,7 +250,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         state=ActivityState.ONHOMEPRESS;
         if (event.isVisible()) {
             if (StatusBarHandler.isNotificationTrayVisible) {
-
                 Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
                 if (f instanceof NotificationFragment)
                 {
@@ -257,11 +261,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-    @UiThread(delay = 1000)
+
     void loadStatusBar() {
         statusBarHandler = new StatusBarHandler(MainActivity.this);
-        if (statusBarHandler != null && !statusBarHandler.isActive()) {
-            Log.d(TAG, "LOAD STATUSBAR ::: ACTION PREVENT");
+        if (!statusBarHandler.isActive()) {
             statusBarHandler.requestStatusBarCustomization();
         }
     }

@@ -207,10 +207,17 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     mTestView = null;
                 }
             });
-            windowManager.addView(mTestView, layoutParams);
+            if (android.os.Build.VERSION.SDK_INT >= 23)
+            {
+                if (Settings.canDrawOverlays(this)) {
+                    windowManager.addView(mTestView, layoutParams);
+                }
+            }else{
+                windowManager.addView(mTestView, layoutParams);
+            }
+
         }
     }
-
 
     private void onCreateAnimation(Bundle savedInstanceState) {
         onStartCount = 1;
