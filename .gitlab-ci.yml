@@ -6,9 +6,6 @@ before_script:
     - "export BUILD_HOME=$PWD"
 
 Lint:
-  artifacts:
-    paths:
-    - /home/gitlab-runner/builds/${BUILD_HOME}/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
   script:
     - cd MiniumApps
     - chmod +x ./gradlew
@@ -17,7 +14,9 @@ Lint:
     - echo ${BUILD_HOME}
     - pwd 
     - ls -lah
-
+  artifacts:
+    paths:
+    - $BUILD_HOME/MiniumApps/launcher3/build/outputs/lint-results-debug.html
 
 #Build:
 #  artifacts:
