@@ -3,17 +3,18 @@
 
 before_script:
     - "export ANDROID_HOME=\"/android-sdk-linux\""
+    - "export BUILD_HOME=$PWD"
 
 Lint:
   artifacts:
     paths:
-    - /home/gitlab-runner/builds/${CI_RUNNER_ID}/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
+    - /home/gitlab-runner/builds/${BUILD_HOME}/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
   script:
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew lint -p launcher3/
     - echo ${CI_BUILD_REF}
-    - echo ${CI_RUNNER_ID}
+    - echo ${BUILD_HOME}
     - pwd 
     - ls -lah
 
