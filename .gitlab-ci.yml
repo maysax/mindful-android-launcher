@@ -7,13 +7,13 @@ before_script:
 Lint:
   artifacts:
     paths:
-    - /home/gitlab-runner/builds/${CI_BUILD_REF_SLUG}/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
+    - /home/gitlab-runner/builds/${CI_RUNNER_ID}/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
   script:
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew lint -p launcher3/
     - echo ${CI_BUILD_REF}
-    - echo ${CI_BUILD_REF_SLUG}
+    - echo ${CI_RUNNER_ID}
     - pwd 
     - ls -lah
 
