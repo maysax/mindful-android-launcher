@@ -9,6 +9,8 @@ Lint:
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew lint -p launcher3/
+    - echo $CI_COMMIT_SHA
+    - echo $CI_BUILD_REF_SLUG
   artifacts:
     paths:
     - /home/gitlab-runner/builds/$CI_BUILD_REF_SLUG/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
