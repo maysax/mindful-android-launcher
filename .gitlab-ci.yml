@@ -16,6 +16,8 @@ Build:
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew assembleDebug
+    - pwd 
+    - ls -lah
   artifacts:
     paths:
     - launcher3/build/outputs/apk/launcher3-debug.apk
