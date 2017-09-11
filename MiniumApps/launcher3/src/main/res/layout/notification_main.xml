@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_notification"
     android:layout_width="match_parent"
@@ -8,13 +8,25 @@
     android:clickable="true"
     tools:ignore="UnusedIds">
 
-
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:id="@+id/linSecond"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/topmost"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        android:layout_marginBottom="50dp"
+        tools:ignore="ContentDescription">
+    </ImageView>
     <LinearLayout
         android:id="@+id/topmost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
-        android:layout_marginBottom="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="100dp"
         android:orientation="vertical">
 
         <TextView
@@ -35,7 +47,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="50dp"
             android:clipToPadding="false"
             android:visibility="visible"
             tools:ignore="UnusedIds" />
@@ -47,6 +58,7 @@
             android:layout_margin="@dimen/dp_10"
             android:gravity="center"
             android:padding="@dimen/dp_10"
+            android:visibility="visible"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
             android:text="@string/msg.notificationEmpty"
@@ -54,12 +66,5 @@
             tools:ignore="UnusedIds" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/linSecond"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:orientation="vertical"
-        tools:ignore="ContentDescription">
-    </ImageView>
-</LinearLayout>
+
+</RelativeLayout>
