@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
@@ -28,7 +29,7 @@ import minium.co.core.ui.CoreActivity;
 /**
  * Created by itc on 02/03/17.
  */
-@SuppressWarnings("ALL")
+
 public class StatusBarHandler {
 
 
@@ -43,22 +44,20 @@ public class StatusBarHandler {
 
     public static boolean isNotificationTrayVisible = false;
     private Context mContext;
-    protected static customViewGroup blockingView;
+    private static customViewGroup blockingView;
     private int status_bar_height = 0;
     private static List<customViewGroup> blockingViewCollection = new ArrayList<>();
-
-    //MainActivity.OnVisibilityListener onVisibilityListener;
     public StatusBarHandler(Context context) {
         mContext = context;
         blockingView = new customViewGroup(context);
-        //this.onVisibilityListener = mCallback;
     }
 
     public void requestStatusBarCustomization() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(mContext)) {
-                Toast.makeText(mContext, TAG + " User can access system settings without this permission!", Toast.LENGTH_SHORT).show();
-                preventStatusBarExpansion();
+                Toast.makeText(mContext, R.string.msg_overlay_settings,  Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + mContext.getPackageName()));
+                mContext.startActivity(intent);
             } else {
                 preventStatusBarExpansion();
             }
@@ -66,7 +65,6 @@ public class StatusBarHandler {
             preventStatusBarExpansion();
     }
 
-    // preventStatusBarExpansion
 
     private void preventStatusBarExpansion() {
         try {
@@ -99,10 +97,8 @@ public class StatusBarHandler {
                 localLayoutParams.height = result;
 
                 localLayoutParams.format = PixelFormat.TRANSPARENT;
-
                 manager.addView(blockingView, localLayoutParams);
                 blockingViewCollection.add(blockingView);
-                Log.d(TAG,"PREVENT NATIVE NOTIFICATION..........");
                 isActive = true;
 
             }
@@ -192,7 +188,7 @@ public class StatusBarHandler {
     }
     }
 
-    public void showSiempoNotification(MotionEvent event){
+    private void showSiempoNotification(MotionEvent event){
         if (!isNotificationTrayVisible) {
             System.out.println(TAG + " y position on Touch on notification tray " + event.getY() + "status_bar_height " + status_bar_height);
             //Intent intent = new Intent(mContext, NotificationFragment.class);

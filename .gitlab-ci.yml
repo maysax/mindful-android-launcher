@@ -3,23 +3,30 @@
 
 before_script:
     - "export ANDROID_HOME=\"/android-sdk-linux\""
+    - "export BUILD_HOME=$PWD"
 
 Lint:
   script:
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew lint -p launcher3/
+  artifacts:
+    expire_in: "4 week"
+    name: "siempo_commit_${CI_BUILD_REF}"
+    paths:
+    - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
 
 Build:
   script:
-    - echo ${CI_BUILD_REF}
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew assembleDebug
-#    - mkdir /opt/staging/$(date +'%m%d%Y')
-#    - mkdir /opt/staging/$(date +'%m%d%Y')/$CI_BUILD_REF
-#    - cp -R launcher3/build/outputs/apk/launcher3-debug.apk /opt/staging/$(date +'%m%d%Y')/$CI_BUILD_REF/
-#    - cp -R launcher3/build/outputs/apk/launcher3-debug.apk /opt/staging/
+  artifacts:
+    expire_in: "4 week"
+    name: "siempo_commit_${CI_BUILD_REF}"
+    paths:
+    - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/launcher3-debug.apk
+  
 
 #stages:
 #  - build
