@@ -502,6 +502,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             /**
              *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
              */
+            if (pager!=null && pager.getCurrentItem() == 1) {
+                pager.setCurrentItem(0);
+            }
+
             if (statusBarHandler!=null && StatusBarHandler.isNotificationTrayVisible) {
                 Log.d(TAG, "onBackPressed");
                 Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
@@ -510,9 +514,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 } else if (f != null && f.isAdded() && f instanceof NotificationFragment) {
                     StatusBarHandler.isNotificationTrayVisible = false;
                     ((NotificationFragment) f).animateOut();
-                } else if (pager.getCurrentItem() == 1) {
-                    pager.setCurrentItem(0);
                 }
+
+
             }
         }
         catch (Exception e){
