@@ -94,6 +94,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     private ActivityState state;
 
+    /**
+     * Activitystate is use to identify state whether the screen is coming from
+     * after homepress event or from normal flow.
+     */
     private enum ActivityState {
         NORMAL,
         ONHOMEPRESS
@@ -207,10 +211,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         public void onPermissionGranted() {
             Log.d(TAG,"Permission granted");
             loadViews();
-            loadStatusBar();
             if (!launcherPrefs.isAppInstalledFirstTime().get()) {
                 Log.d(TAG,"Display upgrade dialog.");
                 checkUpgradeVersion();
+            }
+            else{
+                /**
+                 * Restrict native status bar and load siempo status bar when first time app launch
+                 */
+                Log.d(TAG,"App installed first time");
+                loadStatusBar();
             }
         }
 
@@ -244,25 +254,59 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         Log.d(TAG,"ACTION HOME PRESS");
         state=ActivityState.ONHOMEPRESS;
         if (event.isVisible()) {
-            if (StatusBarHandler.isNotificationTrayVisible) {
+            /**
+             *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
+             */
+            if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
 
                 Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-                if (f instanceof NotificationFragment)
+                if(f == null){
+                    Log.d(TAG,"Notification Fragment is NULL");
+                }
+                else if (f!=null && f.isAdded() && f instanceof NotificationFragment)
                 {
+                    Log.d(TAG,"Remove Notification fragment");
                     StatusBarHandler.isNotificationTrayVisible = false;
                     ((NotificationFragment) f).animateOut();
+                }
 
+            }
+
+            /**
+             *  Below snippet is use to remove siempo status bar
+             */
+            if(statusBarHandler!=null){
+                NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+                try{
+                    Log.d(TAG,"Restore statusbar");
+                    statusBarHandler.restoreStatusBarExpansion();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
+
         }
     }
 
-    @UiThread(delay = 1000)
-    void loadStatusBar() {
-        statusBarHandler = new StatusBarHandler(MainActivity.this);
-        if (statusBarHandler != null && !statusBarHandler.isActive()) {
-            Log.d(TAG, "LOAD STATUSBAR ::: ACTION PREVENT");
-            statusBarHandler.requestStatusBarCustomization();
+    /**
+     *  Below snippet is use to first check if siempo status bar is restricted from another activity,
+     *  then it first remove siempo status bar and restrict siempo status bar with reference to this activity
+     */
+    synchronized void loadStatusBar() {
+        try {
+            statusBarHandler = new StatusBarHandler(MainActivity.this);
+            NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+            if (statusBarHandler != null) {
+                Log.d(TAG, "LOAD STATUSBAR ::: RESTORE PREVENT");
+                statusBarHandler.restoreStatusBarExpansion();
+            }
+            if (statusBarHandler != null && !statusBarHandler.isActive()) {
+                Log.d(TAG, "LOAD STATUSBAR ::: ACTION PREVENT");
+                statusBarHandler.requestStatusBarCustomization();
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
     @Subscribe
@@ -350,33 +394,41 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG,"onStart...");
         if(state==ActivityState.ONHOMEPRESS){
             checkUpgradeVersion();
             state=ActivityState.NORMAL;
         }
+        /**
+         * Restrict native status bar and load siempo status bar
+         *  when activity restart OR activity launch from siempo launcher
+         */
+        if (!launcherPrefs.isAppInstalledFirstTime().get()) {
+            loadStatusBar();
+        }
 
     }
-
 
     @Override
     protected void onStop() {
         super.onStop();
-        //currentIndex = 0;
-
-        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-        if(statusBarHandler!=null){
-            try{
-                Log.d(TAG,"ONSTOP ::: ACTION RESTORE");
-                statusBarHandler.restoreStatusBarExpansion();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        currentIndex=0;
     }
+
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume.. ");
+
+        /**
+         * Below snippet is use to load siempo status bar when launch from background.
+         */
+        if(state==ActivityState.ONHOMEPRESS){
+            if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+                statusBarHandler.requestStatusBarCustomization();
+            }
+        }
 
         try {
             enableNfc(true);
@@ -404,7 +456,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             EventBus.getDefault().post(new NFCEvent(true, tag));
         }
-        loadStatusBar();
     }
 
     private void enableNfc(boolean isEnable) {
@@ -433,19 +484,21 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     public void onBackPressed() {
-        try{
-        if (StatusBarHandler.isNotificationTrayVisible) {
-            Log.d(TAG,"onBackPressed");
-            Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if (f!=null && f instanceof NotificationFragment)
-            {
-                StatusBarHandler.isNotificationTrayVisible = false;
-                //noinspection ConstantConditions
-                ((NotificationFragment) f).animateOut();
-
+        try {
+            /**
+             *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
+             */
+            if (statusBarHandler!=null && StatusBarHandler.isNotificationTrayVisible) {
+                Log.d(TAG, "onBackPressed");
+                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+                if (f == null) {
+                    Log.d(TAG, "Fragment is null");
+                } else if (f != null && f.isAdded() && f instanceof NotificationFragment) {
+                    StatusBarHandler.isNotificationTrayVisible = false;
+                    ((NotificationFragment) f).animateOut();
+                } else if (pager.getCurrentItem() == 1) {
+                    pager.setCurrentItem(0);
                 }
-            } else if (pager.getCurrentItem() == 1) {
-                pager.setCurrentItem(0);
             }
         }
         catch (Exception e){
@@ -457,8 +510,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG,"RESTART ::: ACTION RESTART");
-        loadStatusBar();
+        Log.d(TAG,"Restart ... ");
     }
 
     public void checkVersionFromAppUpdater(){
@@ -514,4 +566,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
+    public void restoreSiempoNotificationBar(){
+        try {
+            statusBarHandler = new StatusBarHandler(MainActivity.this);
+            NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+            if (statusBarHandler != null) {
+                statusBarHandler.restoreStatusBarExpansion();
+            }
+
+            if (StatusBarHandler.isNotificationTrayVisible) {
+                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+                if (f == null) {
+                } else if (f != null && f.isAdded() && f instanceof NotificationFragment) {
+                    StatusBarHandler.isNotificationTrayVisible = false;
+                    ((NotificationFragment) f).animateOut();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
