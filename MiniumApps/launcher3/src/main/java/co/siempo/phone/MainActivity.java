@@ -146,8 +146,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             launcherPrefs.isAppInstalledFirstTime().put(false);
             ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
-                state = ActivityState.ONACTIVITYRESULT;
                 restoreSiempoNotificationBar();
+                state = ActivityState.ONACTIVITYRESULT;
                 activityHelper.handleDefaultLauncher(MainActivity.this);
                 loadDialog();
             }
@@ -585,6 +585,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public void restoreSiempoNotificationBar(){
 
+        state = ActivityState.ONHOMEPRESS;
         /**
          *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
          */
