@@ -102,10 +102,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         notificationList = new ArrayList<>();
         recyclerView.setNestedScrollingEnabled(false);
 
-        smsDao = DBUtility.getNotificationDao();
-        callStorageDao = DBUtility.getCallStorageDao();
-        loadData();
-
         adapter = new RecyclerListAdapter(getActivity(), notificationList);
 
         recyclerView.setAdapter(adapter);
@@ -189,7 +185,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
      */
     @Subscribe
     public void newNotificationEvent(NewNotificationEvent tableNotificationSms) {
-        Log.d("hardikkamothi", "Receive notification event");
         System.out.println("NotificationFragment.newNotificationEvent" + tableNotificationSms);
         if (tableNotificationSms != null) {
             if (!checkNotificationExistsOrNot(tableNotificationSms.getTopTableNotificationSmsDao().getId())) {
@@ -246,6 +241,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             //  btnClearAll.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         } else {
+            adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.VISIBLE);
             //  btnClearAll.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
@@ -379,6 +375,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     @Override
     public void onResume() {
         super.onResume();
+        smsDao = DBUtility.getNotificationDao();
+        callStorageDao = DBUtility.getCallStorageDao();
         loadData();
         try {
             //noinspection ConstantConditions
