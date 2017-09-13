@@ -1,11 +1,13 @@
 package co.siempo.phone.service;
 
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
 import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
@@ -30,6 +32,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @Pref
     Launcher3Prefs_ prefs;
 
+    @SystemService
+    AudioManager audioManager;
+
     @Override
     public IBinder onBind(Intent intent) {
         return super.onBind(intent);
@@ -49,7 +54,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
         } else {
             if (PackageUtil.isCallPackage(notification.getPackageName()) || PackageUtil.isMsgPackage(notification.getPackageName())) {
                 // should pass
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
                     cancelNotification(notification.getKey());
                     saveNotification(notification.getPackageName(), notification.getPostTime(),
