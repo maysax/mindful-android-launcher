@@ -84,8 +84,7 @@ public class TopFragment extends CoreFragment {
             FontAwesomeIcons.fa_battery_1,
             FontAwesomeIcons.fa_battery_2,
             FontAwesomeIcons.fa_battery_3,
-            FontAwesomeIcons.fa_battery_4,
-            FontAwesomeIcons.fa_bluetooth
+            FontAwesomeIcons.fa_battery_4
     };
 
     TelephonyManager telephonyManager;
