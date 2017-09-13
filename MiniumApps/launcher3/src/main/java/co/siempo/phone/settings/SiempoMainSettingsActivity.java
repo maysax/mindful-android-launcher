@@ -209,7 +209,6 @@ public class SiempoMainSettingsActivity extends CoreActivity {
                     Log.d(TAG, "Fragment is null");
                 } else if (f != null && f.isAdded() && f instanceof NotificationFragment) {
                     StatusBarHandler.isNotificationTrayVisible = false;
-                    //noinspection ConstantConditions
                     ((NotificationFragment) f).animateOut();
                 }
             }

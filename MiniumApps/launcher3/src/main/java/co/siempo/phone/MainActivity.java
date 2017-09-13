@@ -422,7 +422,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStop() {
         super.onStop();
-        //currentIndex=0;
     }
 
 
