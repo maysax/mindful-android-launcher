@@ -334,38 +334,18 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         return false;
     }
 
+    /**
+     * Below snippet is use to remove notification fragment
+     */
     public void animateOut() {
-        TranslateAnimation trans = new TranslateAnimation(0, 0, 0, -500 * UIUtils.getDensity(getActivity()));
-        trans.setFillAfter(true);
-        trans.setDuration(500);
-        trans.setAnimationListener(new Animation.AnimationListener() {
-
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                try {
-                    linSecond.setClickable(true);
-                    EventBus.getDefault().post(new NotificationTrayEvent(false));
-//                    getActivity().getFragmentManager().popBackStack();
-                    getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
-                    Config.isNotificationAlive = false;
-                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
-                } catch (Exception e) {
-                    Tracer.e(e, e.getMessage());
-                }
-            }
-        });
-        if (getView() != null) {
-            getView().startAnimation(trans);
+        try {
+            linSecond.setClickable(true);
+            EventBus.getDefault().post(new NotificationTrayEvent(false));
+            getActivity().getFragmentManager().beginTransaction().remove(NotificationFragment.this).commit();
+            Config.isNotificationAlive = false;
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
         }
     }
 

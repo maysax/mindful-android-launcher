@@ -11,14 +11,18 @@
         <ignore path="src/main/res/drawable/bg_siempo.png" />
         <ignore path="src/main/res/drawable/icon_tempo.png" />
     </issue>
+    <issue id="InvalidAnalyticsName" severity="ignore" />
+    <issue id="Layo" severity="ignore" />
+    <issue id="Registered" severity="ignore" />
     <issue id="UnusedResources">
+        <ignore path="src/main/res/drawable-hdpi/check.png" />
+        <ignore path="src/main/res/drawable-mdpi/check.png" />
         <ignore path="src/main/res/drawable-mdpi/hibernate_50.png" />
+        <ignore path="src/main/res/drawable-xhdpi/check.png" />
         <ignore path="src/main/res/drawable-xhdpi/hibernate_50.png" />
+        <ignore path="src/main/res/drawable-xxhdpi/check.png" />
         <ignore path="src/main/res/drawable-xxhdpi/hibernate_50.png" />
+        <ignore path="src/main/res/drawable-xxxhdpi/check.png" />
         <ignore path="src/main/res/drawable-xxxhdpi/hibernate_50.png" />
     </issue>
-    <issue id="Registered" severity="ignore"/>
-    <issue id="InvalidAnalyticsName" severity="ignore"/>
-    <issue id="Layo" severity="ignore"/>
-
 </lint>
