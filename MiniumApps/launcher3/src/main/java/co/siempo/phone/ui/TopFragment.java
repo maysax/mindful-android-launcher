@@ -1,6 +1,7 @@
 package co.siempo.phone.ui;
 
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -22,15 +23,21 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.battery.BatteryChangeEvent;
 import co.siempo.phone.db.DBUtility;
+import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.event.ConnectivityEvent;
+import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationSchedulerEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.network.NetworkUtil;
+import co.siempo.phone.notification.Notification;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
@@ -122,6 +129,35 @@ public class TopFragment extends CoreFragment {
     public void onResume() {
         super.onResume();
         onTempoEvent(new TempoEvent(launcherPrefs.isTempoActive().get()));
+    }
+
+
+    /**
+     * Event bus notifier when new message or call comes.
+     * @param tableNotificationSms
+     */
+    @Subscribe
+    public void newNotificationEvent(NewNotificationEvent tableNotificationSms) {
+        if (tableNotificationSms != null) {
+            imgNotification.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Event bus notifier when notification becomes null.Hide the blue dot
+     * @param tableNotificationSms
+     */
+    @Subscribe
+    public void notificationSwipeEvent(NotificationSwipeEvent event) {
+        try {
+            if (event.isNotificationListNull()) {
+                imgNotification.setVisibility(View.GONE);
+            } else {
+                imgNotification.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
