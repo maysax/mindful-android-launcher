@@ -1,15 +1,23 @@
 package co.siempo.phone.service;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 
 import org.androidannotations.annotations.EService;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBClient;
@@ -30,6 +38,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @Pref
     Launcher3Prefs_ prefs;
 
+    @SystemService
+    AudioManager audioManager;
+
     @Override
     public IBinder onBind(Intent intent) {
         return super.onBind(intent);
@@ -49,14 +60,39 @@ public class SiempoNotificationListener extends NotificationListenerService {
         } else {
             if (PackageUtil.isCallPackage(notification.getPackageName()) || PackageUtil.isMsgPackage(notification.getPackageName())) {
                 // should pass
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             } else {
-                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                Log.d("Raja", "Test :: " + getLauncherPackageName());
+                if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     cancelNotification(notification.getKey());
                     saveNotification(notification.getPackageName(), notification.getPostTime(),
                             notification.getNotification().tickerText);
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             }
         }
+    }
+
+    private boolean isAppOnForeground(String appPackageName) {
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+        if (!tasks.isEmpty()) {
+            ComponentName topActivity = tasks.get(0).topActivity;
+            if (!topActivity.getPackageName().equals(getPackageName())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public String getLauncherPackageName() {
+        PackageManager localPackageManager = getPackageManager();
+        Intent intent = new Intent("android.intent.action.MAIN");
+        intent.addCategory("android.intent.category.HOME");
+        return localPackageManager.resolveActivity(intent,
+                PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
     }
 
     private void saveNotification(String packageName, long postTime, CharSequence tickerText) {

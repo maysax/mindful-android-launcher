@@ -1,6 +1,7 @@
 package co.siempo.phone.call;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
@@ -40,6 +41,9 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
 
     @Bean
     VibrationUtils vibration;
+
+    @SystemService
+    AudioManager audioManager;
 
     @Override
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
@@ -100,16 +104,20 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
 
     private void saveCall(String address, Date date) {
 
-        TableNotificationSmsDao notificationSmsDao = DBUtility.getNotificationDao();
+        try {
+            TableNotificationSmsDao notificationSmsDao = DBUtility.getNotificationDao();
 
-        TableNotificationSms sms = new TableNotificationSms();
-        sms.set_contact_title(address);
-        sms.set_date(date);
-        sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
-        sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
-        long id =   notificationSmsDao.insert(sms);
-        sms.setId(id);
-        EventBus.getDefault().post(new NewNotificationEvent(sms));
+            TableNotificationSms sms = new TableNotificationSms();
+            sms.set_contact_title(address);
+            sms.set_date(date);
+            sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
+            sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
+            long id =   notificationSmsDao.insert(sms);
+            sms.setId(id);
+            EventBus.getDefault().post(new NewNotificationEvent(sms));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // Keep this method as it is

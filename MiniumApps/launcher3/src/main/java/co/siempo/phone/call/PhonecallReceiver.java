@@ -3,7 +3,10 @@ package co.siempo.phone.call;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.telephony.TelephonyManager;
+
+import org.androidannotations.annotations.SystemService;
 
 import java.util.Date;
 
@@ -20,13 +23,15 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static boolean isIncoming;
     private static String savedNumber;  //because the passed incoming is only valid in ringing
 
+    AudioManager audioManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        audioManager = ((AudioManager) context.getApplicationContext().getSystemService(Context.AUDIO_SERVICE));
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
             savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         } else {
             String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
             String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
@@ -94,6 +99,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 } else {
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                 }
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 break;
         }
         lastState = state;
