@@ -7,12 +7,17 @@ import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -40,13 +45,13 @@ import minium.co.core.ui.CoreActivity;
 @Fullscreen
 @EActivity(R.layout.activity_installed_app_list)
 public class AppDrawerActivity extends CoreActivity {
-        //implements LoaderManager.LoaderCallbacks<List<ApplistDataModel>> {
 
     StatusBarHandler statusBarHandler;
 
     List<ApplicationInfo> arrayList = new ArrayList<>();
+
     @ViewById
-    GridView activity_grid_view;
+    RecyclerView activity_grid_view;
 
     @ViewById
     ImageView crossActionBar;
@@ -58,13 +63,21 @@ public class AppDrawerActivity extends CoreActivity {
 
     @ViewById
     TextView titleActionBar;
+
     @ViewById
     ImageView settingsActionBar;
+
+    @ViewById
+    ImageView btnListOrGrid;
+
     InstalledAppListAdapter installedAppListAdapter;
+
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private String TAG="AppDrawerActivity";
 
 
-    private ActivityState state;
+    public ActivityState state;
 
 
     /**
@@ -72,7 +85,7 @@ public class AppDrawerActivity extends CoreActivity {
      * after homepress event or from normal flow.
      */
 
-    private enum ActivityState {
+    public enum ActivityState {
         NORMAL,
         ONHOMEPRESS
     }
@@ -88,32 +101,47 @@ public class AppDrawerActivity extends CoreActivity {
     @AfterViews
     void afterViews() {
 
-        settingsActionBar.setVisibility(View.INVISIBLE);
+        settingsActionBar.setVisibility(View.GONE);
         titleActionBar.setText(getString(R.string.title_apps));
-        activity_grid_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        arrayList = CoreApplication.getInstance().getPackagesList();
+        btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-th")
+                .colorRes(R.color.text_primary)
+                .sizeDp(20));
+        btnListOrGrid.setVisibility(View.VISIBLE);
+        mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
+        activity_grid_view.setLayoutManager(mLayoutManager);
+        mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList,true);
+        activity_grid_view.setAdapter(mAdapter);
 
-                try {
-                    state=ActivityState.ONHOMEPRESS;
-                    restoreSiempoNotificationBar();
-                    Tracer.i("Opening package: " + arrayList.get(i).packageName);
-                    new ActivityHelper(AppDrawerActivity.this).openGMape(arrayList.get(i).packageName);
-                    EventBus.getDefault().post(new AppOpenEvent(arrayList.get(i).packageName));
-                } catch (Exception e) {
-                    // returns null if application is not installed
-                    Tracer.e(e, e.getMessage());
+        loadTopBar();
+        loadStatusBar();
+        // Listener for the grid and list icon.
+        btnListOrGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(btnListOrGrid.getTag().toString().equalsIgnoreCase("1")){
+                    btnListOrGrid.setTag("0");
+                    btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-th")
+                            .colorRes(R.color.text_primary)
+                            .sizeDp(20));
+                    mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
+                    activity_grid_view.setLayoutManager(mLayoutManager);
+                    mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList,true);
+                    activity_grid_view.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }else{
+                    btnListOrGrid.setTag("1");
+                    btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-list")
+                            .colorRes(R.color.text_primary)
+                            .sizeDp(20));
+                    mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                    activity_grid_view.setLayoutManager(mLayoutManager);
+                    mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList,false);
+                    activity_grid_view.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 }
             }
         });
-
-        arrayList = CoreApplication.getInstance().getPackagesList();
-        installedAppListAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList);
-        //installedAppListAdapter.setAppInfo(arrayList);
-        activity_grid_view.setAdapter(installedAppListAdapter);
-       // getLoaderManager().initLoader(0, null, this);
-        loadTopBar();
-        loadStatusBar();
 
     }
 

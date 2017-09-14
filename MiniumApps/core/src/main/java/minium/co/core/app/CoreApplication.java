@@ -153,7 +153,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         Collections.sort(packagesList, new Comparator<ApplicationInfo>() {
             public int compare(ApplicationInfo v1, ApplicationInfo v2) {
 
-                return (v1.loadLabel(getPackageManager()).toString()).compareTo(v2.loadLabel(getPackageManager()).toString());
+                return (v1.name).compareTo(v2.name);
             }
         });
         this.packagesList = packagesList;
