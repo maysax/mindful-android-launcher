@@ -13,11 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.joanzapata.iconify.IconDrawable;
 
@@ -40,6 +38,7 @@ import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
@@ -77,6 +76,28 @@ public class AppDrawerActivity extends CoreActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private String TAG="AppDrawerActivity";
 
+
+    public ActivityState state;
+
+
+    /**
+     * Activitystate is use to identify state whether the screen is coming from
+     * after homepress event or from normal flow.
+     */
+
+    public enum ActivityState {
+        NORMAL,
+        ONHOMEPRESS
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(state== ActivityState.ONHOMEPRESS){
+            state= ActivityState.NORMAL;
+        }
+    }
     @AfterViews
     void afterViews() {
 
@@ -124,11 +145,24 @@ public class AppDrawerActivity extends CoreActivity {
 
     }
 
-    @UiThread(delay = 1000)
-    void loadStatusBar() {
-        statusBarHandler = new StatusBarHandler(AppDrawerActivity.this);
-        if(statusBarHandler!=null && !statusBarHandler.isActive()) {
-            statusBarHandler.requestStatusBarCustomization();
+    /**
+     *  Below snippet is use to first check if siempo status bar is restricted from another activity,
+     *  then it first remove siempo status bar and restrict siempo status bar with reference to this activity
+     */
+    synchronized void loadStatusBar() {
+        try {
+            statusBarHandler = new StatusBarHandler(AppDrawerActivity.this);
+            NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+            if (statusBarHandler != null) {
+                statusBarHandler.restoreStatusBarExpansion();
+            }
+
+            if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+                statusBarHandler.requestStatusBarCustomization();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -140,6 +174,14 @@ public class AppDrawerActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        /**
+         * Below snippet is use to load siempo status bar when launch from background.
+         */
+        if(state== ActivityState.ONHOMEPRESS){
+            if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+                statusBarHandler.requestStatusBarCustomization();
+            }
+        }
 
     }
 
@@ -157,31 +199,31 @@ public class AppDrawerActivity extends CoreActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-        try {
-            if(statusBarHandler!=null)
-                statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        try{
-            if (statusBarHandler.isNotificationTrayVisible) {
-                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-                if (f instanceof NotificationFragment) ;
-                {
-                    statusBarHandler.isNotificationTrayVisible = false;
-                    ((NotificationFragment) f).animateOut();
-                }
+        /**
+         *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
+         */
+        if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+            Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+            if(f == null){
+                super.onBackPressed();
+            }
+            else if (f!=null && f instanceof NotificationFragment && f.isAdded())
+            {
+                statusBarHandler.isNotificationTrayVisible = false;
+                ((NotificationFragment) f).animateOut();
+                super.onBackPressed();
+            }
+            else{
+                super.onBackPressed();
             }
         }
-        catch (Exception e){
-            e.printStackTrace();
+        else{
+            super.onBackPressed();
         }
     }
 
@@ -192,4 +234,44 @@ public class AppDrawerActivity extends CoreActivity {
         loadStatusBar();
     }
 
+
+    @SuppressWarnings("ConstantConditions")
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        Log.d(TAG,"ACTION HOME PRESS");
+        state= ActivityState.ONHOMEPRESS;
+        if (event.isVisible()) {
+            restoreSiempoNotificationBar();
+        }
+    }
+
+    public void restoreSiempoNotificationBar(){
+        /**
+         *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
+         */
+        if (StatusBarHandler.isNotificationTrayVisible) {
+
+            Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+            if(f == null){
+                Log.d(TAG,"Fragment is null");
+            }
+            else if (f!=null && f.isAdded() && f instanceof NotificationFragment)
+            {
+                StatusBarHandler.isNotificationTrayVisible = false;
+                ((NotificationFragment) f).animateOut();
+
+            }
+        }
+        /**
+         *  Below snippet is use to remove siempo status bar
+         */
+        if(statusBarHandler!=null){
+            NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+            try{
+                statusBarHandler.restoreStatusBarExpansion();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

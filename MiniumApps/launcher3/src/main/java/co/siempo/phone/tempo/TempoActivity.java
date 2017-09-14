@@ -17,7 +17,10 @@ import co.siempo.phone.R;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
+import co.siempo.phone.pause.PauseActivity;
 import co.siempo.phone.ui.TopFragment_;
+import de.greenrobot.event.Subscribe;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
@@ -26,6 +29,24 @@ import minium.co.core.util.UIUtils;
 public class TempoActivity extends CoreActivity {
     private StatusBarHandler statusBarHandler;
     private String TAG = "TempoActivity";
+
+    private ActivityState state;
+    /**
+     * Activitystate is use to identify state whether the screen is coming from
+     * after homepress event or from normal flow.
+     */
+    private enum ActivityState {
+        NORMAL,
+        ONHOMEPRESS
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(state== ActivityState.ONHOMEPRESS){
+            state= ActivityState.NORMAL;
+        }
+    }
 
     @AfterViews
     void afterViews() {
@@ -68,13 +89,26 @@ public class TempoActivity extends CoreActivity {
             });
         }
     }
-
-    @UiThread(delay = 1000)
+    /**
+     *  Below snippet is use to first check if siempo status bar is restricted from another activity,
+     *  then it first remove siempo status bar and restrict siempo status bar with reference to this activity
+     */
     void loadStatusBar() {
-        statusBarHandler = new StatusBarHandler(TempoActivity.this);
-        if (statusBarHandler != null && !statusBarHandler.isActive()) {
-            statusBarHandler.requestStatusBarCustomization();
+        try {
+            statusBarHandler = new StatusBarHandler(TempoActivity.this);
+            NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+            if (statusBarHandler != null) {
+                statusBarHandler.restoreStatusBarExpansion();
+            }
+
+            if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+                statusBarHandler.requestStatusBarCustomization();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     private void loadTopBar() {
@@ -84,7 +118,13 @@ public class TempoActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
-    }
+
+            if(state== ActivityState.ONHOMEPRESS){
+                if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+                    statusBarHandler.requestStatusBarCustomization();
+                }
+            }
+        }
 
     @Override
     protected void onPause() {
@@ -94,30 +134,28 @@ public class TempoActivity extends CoreActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-        try {
-            if (statusBarHandler != null)
-                statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        try {
-            if (statusBarHandler.isNotificationTrayVisible) {
-                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-                if (f instanceof NotificationFragment) ;
-                {
-                    statusBarHandler.isNotificationTrayVisible = false;
-                    ((NotificationFragment) f).animateOut();
-                }
+        if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+            Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+            if(f == null){
+                Log.d(TAG," Fragment is null");
+                super.onBackPressed();
             }
-        } catch (Exception e) {
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "Exception onBackPressed.." + e.toString());
+            else if (f!=null && f instanceof NotificationFragment && f.isAdded())
+            {
+                statusBarHandler.isNotificationTrayVisible = false;
+                ((NotificationFragment) f).animateOut();
+                super.onBackPressed();
+            }
+            else{
+                super.onBackPressed();
+            }
+        }
+        else{
+            super.onBackPressed();
         }
     }
 
@@ -125,5 +163,43 @@ public class TempoActivity extends CoreActivity {
     protected void onRestart() {
         super.onRestart();
         loadStatusBar();
+    }
+
+
+
+    @SuppressWarnings("ConstantConditions")
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        Log.d(TAG,"ACTION HOME PRESS");
+        state= ActivityState.ONHOMEPRESS;
+        if (event.isVisible()) {
+            /**
+             *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
+             */
+            if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+
+                Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
+                if(f == null){
+                    Log.d(TAG,"Fragment is null");
+                }
+                else if (f!=null && f.isAdded() && f instanceof NotificationFragment)
+                {
+                    StatusBarHandler.isNotificationTrayVisible = false;
+                    ((NotificationFragment) f).animateOut();
+
+                }
+            }
+            /**
+             *  Below snippet is use to remove siempo status bar
+             */
+            if(statusBarHandler!=null){
+                NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
+                try{
+                    statusBarHandler.restoreStatusBarExpansion();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
