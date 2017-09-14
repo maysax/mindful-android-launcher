@@ -27,7 +27,6 @@ import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.PackageUtil;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 
 /**
  * Created by Shahab on 5/16/2017.
@@ -63,27 +62,21 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 // should pass
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             } else {
-                Log.d("Raja","Test :: "+getLauncherPackageName());
-
-                if(isAppOnForeground(getPackageName())){
+                Log.d("Raja", "Test :: " + getLauncherPackageName());
+                if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                }else{
-                    if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                        cancelNotification(notification.getKey());
-                        saveNotification(notification.getPackageName(), notification.getPostTime(),
-                                notification.getNotification().tickerText);
-                    }else{
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    }
+                    cancelNotification(notification.getKey());
+                    saveNotification(notification.getPackageName(), notification.getPostTime(),
+                            notification.getNotification().tickerText);
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
-
             }
         }
     }
 
     private boolean isAppOnForeground(String appPackageName) {
-        ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
         if (!tasks.isEmpty()) {
             ComponentName topActivity = tasks.get(0).topActivity;
@@ -94,7 +87,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         return true;
     }
 
-    public  String getLauncherPackageName() {
+    public String getLauncherPackageName() {
         PackageManager localPackageManager = getPackageManager();
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.HOME");
