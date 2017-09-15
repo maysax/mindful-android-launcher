@@ -1,9 +1,14 @@
 package co.siempo.phone.notification;
 
 import android.annotation.SuppressLint;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.hardware.Camera;
+import android.media.AudioManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,15 +19,15 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
 import java.text.DateFormat;
@@ -66,10 +71,25 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     private List<Notification> notificationList;
 
     @ViewById
-    RelativeLayout layout_notification;
+    RelativeLayout layout_notification, relWifi, relBle, relDND, relAirPlane, relFlash;
 
     @ViewById
     ImageView linSecond;
+
+    @SystemService
+    WifiManager wifiManager;
+
+    @SystemService
+    BluetoothAdapter bluetoothadapter;
+
+
+    @SystemService
+    AudioManager audioManager;
+
+
+    boolean isFlashOn = false;
+    private Camera camera;
+    private Camera.Parameters params;
 
 //    @ViewById
 //    Button btnClearAll;
@@ -98,6 +118,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     @AfterViews
     void afterViews() {
+
+
+        statusOfQuickSettings();
+
 
         notificationList = new ArrayList<>();
         recyclerView.setNestedScrollingEnabled(false);
@@ -173,6 +197,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     }
 
+    private void statusOfQuickSettings() {
+
+    }
+
     private void loadData() {
         List<TableNotificationSms> SMSItems = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties._date).build().list();
         setUpNotifications(SMSItems);
@@ -181,6 +209,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     /**
      * Event bus notifier when new message or call comes.
+     *
      * @param tableNotificationSms
      */
     @Subscribe
@@ -194,7 +223,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 Notification n = new Notification(gettingNameAndImageFromPhoneNumber(tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title()),
                         tableNotificationSms.getTopTableNotificationSmsDao().getId(), tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title(),
                         tableNotificationSms.getTopTableNotificationSmsDao().get_message(), time, false, tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type());
-                notificationList.add(0,n);
+                notificationList.add(0, n);
                 adapter.notifyDataSetChanged();
 
 
@@ -213,6 +242,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     /**
      * Check to see whether the new notification data already exist in list or not.
+     *
      * @param id
      * @return
      */
@@ -369,6 +399,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     /**
      * This method is called from adapter when there is no notification reamaning in list.
+     *
      * @param event
      */
     @Subscribe
@@ -394,4 +425,88 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         //finish();
     }
 
+
+    @Click({R.id.relWifi, R.id.relBle, R.id.relDND, R.id.relAirPlane, R.id.relFlash})
+    void clickListener(View view) {
+        switch (view.getId()) {
+            case R.id.relWifi:
+                Toast.makeText(getActivity(), "Hi", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.relBle:
+                break;
+            case R.id.relDND:
+                break;
+            case R.id.relAirPlane:
+                break;
+            case R.id.relFlash:
+                break;
+
+        }
+    }
+
+    private boolean statusDND() {
+        boolean status = false;
+        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+            status = true;
+        }
+        return status;
+    }
+
+    private boolean isFlashOn() {
+        boolean hasFlash = getActivity().getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+        if (hasFlash) {
+
+        }
+        return false;
+    }
+
+    /**
+     *  getting camera parameters
+     */
+
+    private void getCamera() {
+        if (camera == null) {
+            try {
+                camera = Camera.open();
+                params = camera.getParameters();
+            } catch (RuntimeException e) {
+                Log.e("Camera Error ", e.getMessage());
+            }
+        }
+    }
+
+
+    /**
+     * Turning Off flash
+     */
+    private void turnOffFlash() {
+        if (isFlashOn) {
+            if (camera == null || params == null) {
+                return;
+            }
+
+            params = camera.getParameters();
+            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            camera.setParameters(params);
+            camera.stopPreview();
+            isFlashOn = false;
+        }
+    }
+
+    /**
+     * Turning On flash
+    */
+    private void turnOnFlash() {
+        if (!isFlashOn) {
+            if (camera == null || params == null) {
+                return;
+            }
+            params = camera.getParameters();
+            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            camera.setParameters(params);
+            camera.startPreview();
+            isFlashOn = true;
+        }
+    }
 }

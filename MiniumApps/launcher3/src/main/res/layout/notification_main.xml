@@ -4,42 +4,133 @@
     android:id="@+id/layout_notification"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:clickable="true"
+    android:orientation="vertical"
     tools:ignore="UnusedIds">
 
     <ImageView
-        android:layout_alignParentBottom="true"
         android:id="@+id/linSecond"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_below="@+id/topmost"
-        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
         android:background="@android:color/transparent"
         android:orientation="vertical"
-        android:layout_marginBottom="50dp"
-        tools:ignore="ContentDescription">
-    </ImageView>
+        tools:ignore="ContentDescription"></ImageView>
+
     <LinearLayout
         android:id="@+id/topmost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="100dp"
+        android:background="#FFFFFF"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView_notification_title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif"
+            android:orientation="vertical"
             android:paddingLeft="18dp"
-            android:paddingRight="18dp"
-            android:text="@string/string_notification_title"
-            android:textColor="#de000000"
-            android:textSize="28sp"
-            tools:ignore="UnusedIds" />
+            android:paddingRight="18dp">
+
+            <TextView
+                android:id="@+id/textView_notification_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="@string/string_notification_title"
+                android:textColor="#de000000"
+                android:textSize="28sp"
+                tools:ignore="UnusedIds" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <RelativeLayout
+                    android:id="@+id/relWifi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_10">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_signal_wifi_off_black_24dp"
+                        android:padding="@dimen/dp_15" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relBle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_10">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_bluetooth"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_15" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relDND"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_10">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_do_not_disturb_off_black_24dp"
+                        android:padding="@dimen/dp_15" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relAirPlane"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_10">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_airplanemode_inactive_black_24dp"
+                        android:padding="@dimen/dp_15" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relFlash"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_10">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_flash_off_black_24dp"
+                        android:padding="@dimen/dp_15" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -58,11 +149,11 @@
             android:layout_margin="@dimen/dp_10"
             android:gravity="center"
             android:padding="@dimen/dp_10"
-            android:visibility="visible"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
             android:text="@string/msg.notificationEmpty"
             android:textSize="@dimen/text.size.medium"
+            android:visibility="visible"
             tools:ignore="UnusedIds" />
     </LinearLayout>
 

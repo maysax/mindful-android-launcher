@@ -19,7 +19,9 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}-${buildTime}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        defaultConfig {
+            vectorDrawables.useSupportLibrary = true
+        }
     }
     buildTypes {
         debug {
