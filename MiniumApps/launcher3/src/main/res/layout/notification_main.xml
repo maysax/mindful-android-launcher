@@ -1,161 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_notification"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clickable="true"
-    android:orientation="vertical"
-    tools:ignore="UnusedIds">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/linSecond"
+    <RelativeLayout
+        android:id="@+id/layout_notification"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_below="@+id/topmost"
-        android:layout_marginBottom="50dp"
-        android:background="@android:color/transparent"
+        android:clickable="true"
         android:orientation="vertical"
-        tools:ignore="ContentDescription"></ImageView>
+        tools:ignore="UnusedIds">
 
-    <LinearLayout
-        android:id="@+id/topmost"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="100dp"
-        android:background="#FFFFFF"
-        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/linSecond"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:layout_below="@+id/topmost"
+            android:layout_marginBottom="50dp"
+            android:background="@android:color/transparent"
+            android:orientation="vertical"
+            tools:ignore="ContentDescription"></ImageView>
 
         <LinearLayout
+            android:id="@+id/topmost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp">
-
-            <TextView
-                android:id="@+id/textView_notification_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:text="@string/string_notification_title"
-                android:textColor="#de000000"
-                android:textSize="28sp"
-                tools:ignore="UnusedIds" />
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="100dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingTop="10dp">
+                android:orientation="vertical"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp">
 
-                <RelativeLayout
-                    android:id="@+id/relWifi"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/textView_notification_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_10">
+                    android:fontFamily="sans-serif"
+                    android:text="@string/string_notification_title"
+                    android:textColor="#de000000"
+                    android:textSize="28sp"
+                    tools:ignore="UnusedIds" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_signal_wifi_off_black_24dp"
-                        android:padding="@dimen/dp_15" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/relBle"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_10">
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:baselineAligned="false">
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_bluetooth"
+                    <RelativeLayout
+                        android:id="@+id/relWifi"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:gravity="center"
-                        android:padding="@dimen/dp_15" />
-                </RelativeLayout>
+                        android:padding="@dimen/dp_10">
 
-                <RelativeLayout
-                    android:id="@+id/relDND"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_10">
+                        <ImageView
+                            android:id="@+id/imgWifi"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_signal_wifi_off_black_24dp"
+                            android:padding="@dimen/dp_15"
+                            tools:ignore="ContentDescription" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_do_not_disturb_off_black_24dp"
-                        android:padding="@dimen/dp_15" />
-                </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/relBle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_10">
 
-                <RelativeLayout
-                    android:id="@+id/relAirPlane"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_10">
+                        <ImageView
+                            android:id="@+id/imgBle"
+                            android:layout_width="30dp"
+                            tools:ignore="ContentDescription"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_bluetooth_disabled_black_24dp"
+                            android:gravity="center"
+                            android:padding="@dimen/dp_15" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_airplanemode_inactive_black_24dp"
-                        android:padding="@dimen/dp_15" />
-                </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/relDND"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_10">
 
-                <RelativeLayout
-                    android:id="@+id/relFlash"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="@dimen/dp_10">
+                        <ImageView
+                            android:id="@+id/imgDnd"
+                            tools:ignore="ContentDescription"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_do_not_disturb_off_black_24dp"
+                            android:padding="@dimen/dp_15" />
+                    </RelativeLayout>
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/ic_flash_off_black_24dp"
-                        android:padding="@dimen/dp_15" />
-                </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/relAirPlane"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_10">
 
+                        <ImageView
+                            android:id="@+id/imgAirplane"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            tools:ignore="ContentDescription"
+                            android:background="@drawable/ic_airplanemode_inactive_black_24dp"
+                            android:padding="@dimen/dp_15" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relFlash"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="@dimen/dp_10">
+
+                        <ImageView
+                            android:id="@+id/imgFlash"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            tools:ignore="ContentDescription"
+                            android:background="@drawable/ic_flash_off_black_24dp"
+                            android:padding="@dimen/dp_15" />
+                    </RelativeLayout>
+
+                </LinearLayout>
             </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false"
+                android:visibility="visible"
+                tools:ignore="UnusedIds" />
+
+            <TextView
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10"
+                android:gravity="center"
+                android:padding="@dimen/dp_10"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="@string/msg.notificationEmpty"
+                android:textSize="@dimen/text.size.medium"
+                android:visibility="visible"
+                tools:ignore="UnusedIds" />
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
-            android:clipToPadding="false"
-            android:visibility="visible"
-            tools:ignore="UnusedIds" />
 
-        <TextView
-            android:id="@+id/emptyView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/dp_10"
-            android:gravity="center"
-            android:padding="@dimen/dp_10"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp"
-            android:text="@string/msg.notificationEmpty"
-            android:textSize="@dimen/text.size.medium"
-            android:visibility="visible"
-            tools:ignore="UnusedIds" />
-    </LinearLayout>
-
-
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

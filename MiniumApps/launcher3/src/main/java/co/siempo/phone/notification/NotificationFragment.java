@@ -2,12 +2,16 @@ package co.siempo.phone.notification;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -22,7 +26,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -74,14 +77,17 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     RelativeLayout layout_notification, relWifi, relBle, relDND, relAirPlane, relFlash;
 
     @ViewById
-    ImageView linSecond;
+    ImageView linSecond, imgWifi, imgBle, imgDnd, imgAirplane, imgFlash;
 
     @SystemService
     WifiManager wifiManager;
 
-    @SystemService
-    BluetoothAdapter bluetoothadapter;
+    WifiSingal wifiSingal;
+    BleSingal bleSingal;
+    int currentModeDeviceMode;
 
+//    @SystemService
+//    BluetoothAdapter bluetoothadapter;
 
     @SystemService
     AudioManager audioManager;
@@ -91,8 +97,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     private Camera camera;
     private Camera.Parameters params;
 
-//    @ViewById
-//    Button btnClearAll;
 
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
@@ -110,7 +114,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         return false;
     }
 
-    private enum mSwipeDirection {UP, DOWN, NONE}
+    private enum mSwipeDirection {
+        UP, DOWN, NONE
+    }
 
     TableNotificationSmsDao smsDao;
     CallStorageDao callStorageDao;
@@ -118,11 +124,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     @AfterViews
     void afterViews() {
-
-
         statusOfQuickSettings();
-
-
         notificationList = new ArrayList<>();
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -198,6 +200,32 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     }
 
     private void statusOfQuickSettings() {
+        if (!wifiManager.isWifiEnabled()) {
+            imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
+        } else {
+            wifiSingal = new WifiSingal();
+            getActivity().registerReceiver(wifiSingal, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
+            imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_0));
+        }
+
+
+        if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
+        } else {
+            imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
+            bleSingal =new BleSingal();
+            getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+        }
+
+        currentModeDeviceMode = audioManager.getMode();
+        if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
+        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
+            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
+        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
+        }
+
 
     }
 
@@ -380,6 +408,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     public void onDestroy() {
         super.onDestroy();
         StatusBarHandler.isNotificationTrayVisible = false;
+        if (wifiSingal != null) getActivity().unregisterReceiver(wifiSingal);
+        if (bleSingal != null) getActivity().unregisterReceiver(bleSingal);
     }
 
     @Override
@@ -389,12 +419,17 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         callStorageDao = DBUtility.getCallStorageDao();
         loadData();
         try {
-            //noinspection ConstantConditions
             if (getActivity() != null)
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
     }
 
     /**
@@ -430,11 +465,29 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     void clickListener(View view) {
         switch (view.getId()) {
             case R.id.relWifi:
-                Toast.makeText(getActivity(), "Hi", Toast.LENGTH_SHORT).show();
+                turnOnOffWIFI();
                 break;
             case R.id.relBle:
+                if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                    BluetoothAdapter.getDefaultAdapter().disable();
+                } else {
+                    BluetoothAdapter.getDefaultAdapter().enable();
+                    bleSingal =new BleSingal();
+                    getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+                }
                 break;
             case R.id.relDND:
+                if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+                    imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
+                } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
+                }
+                currentModeDeviceMode = audioManager.getMode();
                 break;
             case R.id.relAirPlane:
                 break;
@@ -462,7 +515,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     }
 
     /**
-     *  getting camera parameters
+     * getting camera parameters
      */
 
     private void getCamera() {
@@ -496,7 +549,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     /**
      * Turning On flash
-    */
+     */
     private void turnOnFlash() {
         if (!isFlashOn) {
             if (camera == null || params == null) {
@@ -509,4 +562,90 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             isFlashOn = true;
         }
     }
+
+    /**
+     * Turning On/Off WIFI
+     */
+    private void turnOnOffWIFI() {
+        if (!wifiManager.isWifiEnabled()) {
+            wifiManager.setWifiEnabled(true);
+            wifiSingal = new WifiSingal();
+            getActivity().registerReceiver(wifiSingal, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
+        } else {
+            wifiManager.setWifiEnabled(false);
+            imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
+            if (wifiSingal != null) getActivity().unregisterReceiver(wifiSingal);
+
+        }
+    }
+
+
+    private void initializeWiFiListener() {
+        if (!wifiManager.isWifiEnabled()) {
+            wifiSingal = new WifiSingal();
+            getActivity().registerReceiver(wifiSingal, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
+        }
+    }
+
+    class WifiSingal extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (wifiManager.isWifiEnabled()) {
+                WifiInfo info = wifiManager.getConnectionInfo();
+                int level = WifiManager.calculateSignalLevel(info.getRssi(), 5);
+                if (level == 0) {
+                    if (imgWifi != null) {
+                        imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_0));
+                    }
+                } else if (level == 1) {
+                    if (imgWifi != null) {
+                        imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_1));
+                    }
+                } else if (level == 2) {
+                    if (imgWifi != null) {
+                        imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_2));
+                    }
+                } else if (level == 3) {
+                    if (imgWifi != null) {
+                        imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_3));
+                    }
+                } else if (level == 4) {
+                    if (imgWifi != null) {
+                        imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_4));
+                    }
+                }
+            }
+        }
+    }
+
+    class BleSingal extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                if (imgBle != null) {
+                    switch (state) {
+                        case BluetoothAdapter.STATE_OFF:
+                            imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
+                            break;
+                        case BluetoothAdapter.STATE_TURNING_OFF:
+                            imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
+                            break;
+                        case BluetoothAdapter.STATE_ON:
+                            imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
+                            break;
+                        case BluetoothAdapter.STATE_TURNING_ON:
+                            imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
+                            break;
+                    }
+
+                }
+
+            }
+        }
+    }
+
 }
