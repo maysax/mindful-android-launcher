@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.service.SiempoDndService;
 
 /**
@@ -20,6 +21,10 @@ public class PackageUtil {
 
     public static boolean isMsgPackage(String pkg) {
         return pkg.contains("messaging");
+    }
+
+    public static boolean isCalenderPackage(String pkg) {
+        return pkg.contains("com.google.android.calendar") || pkg.contains("com.android.calendar");
     }
 
     public static boolean isSiempoLauncher(Context context) {
