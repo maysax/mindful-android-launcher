@@ -58,9 +58,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
             cancelNotification(notification.getKey());
             // saving the information in other place
         } else {
-            if (PackageUtil.isCallPackage(notification.getPackageName()) || PackageUtil.isMsgPackage(notification.getPackageName())) {
-                // should pass
+            if (PackageUtil.isCallPackage(notification.getPackageName())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            } else if (PackageUtil.isMsgPackage(notification.getPackageName())
+                    || PackageUtil.isCalenderPackage(notification.getPackageName())) {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
             } else {
                 Log.d("Raja", "Test :: " + getLauncherPackageName());
                 if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
