@@ -248,6 +248,7 @@ public class ActivityHelper {
                 context.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/")));
             }
             catch (ActivityNotFoundException e){
+                UIUtils.alert(context, "Application not found");
                 e.printStackTrace();
             }
         } else {
