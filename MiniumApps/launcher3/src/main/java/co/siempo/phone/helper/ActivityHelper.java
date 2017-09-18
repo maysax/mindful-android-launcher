@@ -1,5 +1,6 @@
 package co.siempo.phone.helper;
 
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.provider.AlarmClock;
 import android.provider.ContactsContract;
 import android.provider.Telephony;
+import android.util.Log;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -39,6 +41,8 @@ public class ActivityHelper {
     public Context getContext() {
         return context;
     }
+
+    public String TAG="ActivityHelper";
 
     public boolean openContactsApp() {
         try {
@@ -240,7 +244,13 @@ public class ActivityHelper {
      */
     public void openCalenderApp() {
         if (checkCalenderApp().isEmpty()) {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/")));
+            try {
+                context.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/")));
+            }
+            catch (ActivityNotFoundException e){
+                UIUtils.alert(context, "Application not found");
+                e.printStackTrace();
+            }
         } else {
             openGMape(checkCalenderApp());
         }
