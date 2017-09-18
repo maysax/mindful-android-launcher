@@ -21,7 +21,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static int lastState = TelephonyManager.CALL_STATE_IDLE;
     private static Date callStartTime;
     private static boolean isIncoming;
-    private static String savedNumber;  //because the passed incoming is only valid in ringing
+    private static String savedNumber="";  //because the passed incoming is only valid in ringing
 
     AudioManager audioManager;
 
@@ -30,12 +30,19 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
         audioManager = ((AudioManager) context.getApplicationContext().getSystemService(Context.AUDIO_SERVICE));
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
-            savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+            if(intent.getExtras()!=null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")){
+                savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+            }
             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         } else {
-            String stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
-            String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+            String stateStr="",number="";
             int state = 0;
+            if(intent.getExtras()!=null && intent.getExtras().containsKey(TelephonyManager.EXTRA_STATE)){
+                stateStr=intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
+            }
+            if(intent.getExtras()!=null && intent.getExtras().containsKey(TelephonyManager.EXTRA_INCOMING_NUMBER)){
+                number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+            }
             if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
                 state = TelephonyManager.CALL_STATE_IDLE;
             } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
