@@ -104,9 +104,10 @@ public class AppDrawerActivity extends CoreActivity {
         settingsActionBar.setVisibility(View.GONE);
         titleActionBar.setText(getString(R.string.title_apps));
         arrayList = CoreApplication.getInstance().getPackagesList();
-        btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-th")
+        btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-list")
                 .colorRes(R.color.text_primary)
                 .sizeDp(20));
+        btnListOrGrid.setTag("0");
         btnListOrGrid.setVisibility(View.VISIBLE);
         mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
         activity_grid_view.setLayoutManager(mLayoutManager);
@@ -121,7 +122,7 @@ public class AppDrawerActivity extends CoreActivity {
             public void onClick(View v) {
                 if(btnListOrGrid.getTag().toString().equalsIgnoreCase("1")){
                     btnListOrGrid.setTag("0");
-                    btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-th")
+                    btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-list")
                             .colorRes(R.color.text_primary)
                             .sizeDp(20));
                     mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
@@ -131,7 +132,7 @@ public class AppDrawerActivity extends CoreActivity {
                     mAdapter.notifyDataSetChanged();
                 }else{
                     btnListOrGrid.setTag("1");
-                    btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-list")
+                    btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-th")
                             .colorRes(R.color.text_primary)
                             .sizeDp(20));
                     mLayoutManager = new LinearLayoutManager(getApplicationContext());
