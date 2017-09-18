@@ -120,8 +120,13 @@ public class MainFragment extends CoreFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            boolean isVisible = intent.getBooleanExtra("IsNotificationVisible", false);
-            searchLayout.getTxtSearchBox().setNotificationVisible(isVisible);
+            boolean isVisible = false;
+            if(intent.hasExtra("IsNotificationVisible")){
+                isVisible = intent.getBooleanExtra("IsNotificationVisible", false);
+            }
+            if(searchLayout!=null && searchLayout.getTxtSearchBox()!=null){
+                searchLayout.getTxtSearchBox().setNotificationVisible(isVisible);
+            }
             if (isVisible) {
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
             }
