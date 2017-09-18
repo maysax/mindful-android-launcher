@@ -9,15 +9,12 @@ import android.util.Log;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
-import org.androidannotations.annotations.UiThread;
 
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
-import co.siempo.phone.pause.PauseActivity;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.HomePressEvent;
@@ -31,6 +28,7 @@ public class TempoActivity extends CoreActivity {
     private String TAG = "TempoActivity";
 
     private ActivityState state;
+
     /**
      * Activitystate is use to identify state whether the screen is coming from
      * after homepress event or from normal flow.
@@ -43,8 +41,8 @@ public class TempoActivity extends CoreActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(state== ActivityState.ONHOMEPRESS){
-            state= ActivityState.NORMAL;
+        if (state == ActivityState.ONHOMEPRESS) {
+            state = ActivityState.NORMAL;
         }
     }
 
@@ -89,9 +87,10 @@ public class TempoActivity extends CoreActivity {
             });
         }
     }
+
     /**
-     *  Below snippet is use to first check if siempo status bar is restricted from another activity,
-     *  then it first remove siempo status bar and restrict siempo status bar with reference to this activity
+     * Below snippet is use to first check if siempo status bar is restricted from another activity,
+     * then it first remove siempo status bar and restrict siempo status bar with reference to this activity
      */
     void loadStatusBar() {
         try {
@@ -101,7 +100,7 @@ public class TempoActivity extends CoreActivity {
                 statusBarHandler.restoreStatusBarExpansion();
             }
 
-            if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+            if (statusBarHandler != null && !statusBarHandler.isActive()) {
                 statusBarHandler.requestStatusBarCustomization();
             }
 
@@ -119,12 +118,16 @@ public class TempoActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
 
-            if(state== ActivityState.ONHOMEPRESS){
-                if(statusBarHandler!=null && !statusBarHandler.isActive()) {
-                    statusBarHandler.requestStatusBarCustomization();
-                }
+        if (state == ActivityState.ONHOMEPRESS) {
+            if (statusBarHandler != null && !statusBarHandler.isActive()) {
+                statusBarHandler.requestStatusBarCustomization();
             }
         }
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
+        }
+    }
 
     @Override
     protected void onPause() {
@@ -138,23 +141,19 @@ public class TempoActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
-        if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+        if (statusBarHandler != null && statusBarHandler.isNotificationTrayVisible) {
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if(f == null){
-                Log.d(TAG," Fragment is null");
+            if (f == null) {
+                Log.d(TAG, " Fragment is null");
                 super.onBackPressed();
-            }
-            else if (f!=null && f instanceof NotificationFragment && f.isAdded())
-            {
+            } else if (f != null && f instanceof NotificationFragment && f.isAdded()) {
                 statusBarHandler.isNotificationTrayVisible = false;
                 ((NotificationFragment) f).animateOut();
                 super.onBackPressed();
-            }
-            else{
+            } else {
                 super.onBackPressed();
             }
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -166,24 +165,21 @@ public class TempoActivity extends CoreActivity {
     }
 
 
-
     @SuppressWarnings("ConstantConditions")
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
-        Log.d(TAG,"ACTION HOME PRESS");
-        state= ActivityState.ONHOMEPRESS;
+        Log.d(TAG, "ACTION HOME PRESS");
+        state = ActivityState.ONHOMEPRESS;
         if (event.isVisible()) {
             /**
              *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
              */
-            if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+            if (statusBarHandler != null && statusBarHandler.isNotificationTrayVisible) {
 
                 Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-                if(f == null){
-                    Log.d(TAG,"Fragment is null");
-                }
-                else if (f!=null && f.isAdded() && f instanceof NotificationFragment)
-                {
+                if (f == null) {
+                    Log.d(TAG, "Fragment is null");
+                } else if (f != null && f.isAdded() && f instanceof NotificationFragment) {
                     StatusBarHandler.isNotificationTrayVisible = false;
                     ((NotificationFragment) f).animateOut();
 
@@ -192,9 +188,9 @@ public class TempoActivity extends CoreActivity {
             /**
              *  Below snippet is use to remove siempo status bar
              */
-            if(statusBarHandler!=null){
+            if (statusBarHandler != null) {
                 NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-                try{
+                try {
                     statusBarHandler.restoreStatusBarExpansion();
                 } catch (Exception e) {
                     e.printStackTrace();

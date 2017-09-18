@@ -139,6 +139,10 @@ public class SiempoMainSettingsActivity extends CoreActivity {
                 statusBarHandler.requestStatusBarCustomization();
             }
         }
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
+        }
     }
 
     @Override

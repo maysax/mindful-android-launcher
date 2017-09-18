@@ -451,6 +451,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
       //  currentIndex = currentItem;
+
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
+        }
     }
 
     @Override

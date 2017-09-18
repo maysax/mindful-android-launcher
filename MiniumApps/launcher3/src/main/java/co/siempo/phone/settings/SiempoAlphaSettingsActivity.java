@@ -23,7 +23,7 @@ import minium.co.core.ui.CoreActivity;
  */
 
 
-@SuppressWarnings("ALL")
+
 @Fullscreen
 @EActivity(R.layout.activity_siempo_alpha_settings)
 public class SiempoAlphaSettingsActivity extends CoreActivity {
@@ -88,6 +88,10 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
             if(statusBarHandler!=null && !statusBarHandler.isActive()) {
                 statusBarHandler.requestStatusBarCustomization();
             }
+        }
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
         }
     }
 
