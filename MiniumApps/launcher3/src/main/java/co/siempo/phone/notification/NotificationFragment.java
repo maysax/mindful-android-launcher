@@ -15,6 +15,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,10 +49,12 @@ import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
+import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.config.Config;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
@@ -91,11 +94,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     @SystemService
     AudioManager audioManager;
-
-
-    boolean isFlashOn = false;
-    private Camera camera;
-    private Camera.Parameters params;
 
 
     @Subscribe
@@ -213,7 +211,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
         } else {
             imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
-            bleSingal =new BleSingal();
+            bleSingal = new BleSingal();
             getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         }
 
@@ -222,11 +220,18 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
         } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
             imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
-        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
-            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
         }
+//        else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+//            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
+//        }
 
-
+//        if (NetworkUtil.isAirplaneModeOn(getActivity())) {
+//            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplane));
+//        } else {
+//            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
+//
+//        }
+        checkFlashOn();
     }
 
     private void loadData() {
@@ -472,15 +477,12 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     BluetoothAdapter.getDefaultAdapter().disable();
                 } else {
                     BluetoothAdapter.getDefaultAdapter().enable();
-                    bleSingal =new BleSingal();
+                    bleSingal = new BleSingal();
                     getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
                 }
                 break;
             case R.id.relDND:
                 if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
-                    imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
                 } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
@@ -490,8 +492,24 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 currentModeDeviceMode = audioManager.getMode();
                 break;
             case R.id.relAirPlane:
+                if (NetworkUtil.isAirplaneModeOn(getActivity())) {
+                    imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
+                    Settings.Global.putInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0);
+                } else {
+                    imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplane));
+                    Settings.Global.putInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 1);
+                }
+
                 break;
             case R.id.relFlash:
+                if (CoreApplication.getInstance().getCamera()!=null &&
+                        CoreApplication.getInstance().getParams().getFlashMode().equals("torch")) {
+                    turnONOffFlash(false);
+                    imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
+                } else {
+                    turnONOffFlash(true);
+                    imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
+                }
                 break;
 
         }
@@ -505,63 +523,39 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         return status;
     }
 
-    private boolean isFlashOn() {
+    private void checkFlashOn() {
+        CoreApplication.getInstance().getCameraInstance();
         boolean hasFlash = getActivity().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
         if (hasFlash) {
-
-        }
-        return false;
-    }
-
-    /**
-     * getting camera parameters
-     */
-
-    private void getCamera() {
-        if (camera == null) {
-            try {
-                camera = Camera.open();
-                params = camera.getParameters();
-            } catch (RuntimeException e) {
-                Log.e("Camera Error ", e.getMessage());
+            relFlash.setVisibility(View.VISIBLE);
+            if (CoreApplication.getInstance().getCamera()!=null &&
+                    CoreApplication.getInstance().getParams().getFlashMode().equals("torch")) {
+                imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
+            } else {
+                imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
             }
+        } else {
+            relFlash.setVisibility(View.GONE);
         }
+
     }
 
 
     /**
-     * Turning Off flash
+     * Turning On/Off flash
      */
-    private void turnOffFlash() {
-        if (isFlashOn) {
-            if (camera == null || params == null) {
-                return;
-            }
-
-            params = camera.getParameters();
-            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-            camera.setParameters(params);
-            camera.stopPreview();
-            isFlashOn = false;
+    private void turnONOffFlash(boolean isOnOFF) {
+        CoreApplication.getInstance().setParams(CoreApplication.getInstance().getCamera().getParameters());
+        if (!isOnOFF) {
+            CoreApplication.getInstance().getParams().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+        } else {
+            CoreApplication.getInstance().getParams().setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
         }
+        CoreApplication.getInstance().getCamera().setParameters(CoreApplication.getInstance().getParams());
+        CoreApplication.getInstance().getCamera().stopPreview();
     }
 
-    /**
-     * Turning On flash
-     */
-    private void turnOnFlash() {
-        if (!isFlashOn) {
-            if (camera == null || params == null) {
-                return;
-            }
-            params = camera.getParameters();
-            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-            camera.setParameters(params);
-            camera.startPreview();
-            isFlashOn = true;
-        }
-    }
 
     /**
      * Turning On/Off WIFI

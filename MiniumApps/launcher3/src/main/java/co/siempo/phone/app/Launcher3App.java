@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import com.evernote.client.android.EvernoteSession;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -52,8 +54,6 @@ public class Launcher3App extends CoreApplication {
 
     @Bean
     TokenManager manager;
-
-
 
     private FirebaseAnalytics mFirebaseAnalytics;
 

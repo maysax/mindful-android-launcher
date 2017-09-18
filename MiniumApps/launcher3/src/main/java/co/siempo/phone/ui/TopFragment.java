@@ -111,8 +111,10 @@ public class TopFragment extends CoreFragment {
     void afterViews() {
         // Default text
         //updateBatteryText(50);
-        updateUI();
+//        updateUI();
     }
+
+
 
     private void updateUI() {
         imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
@@ -128,6 +130,7 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateUI();
         onTempoEvent(new TempoEvent(launcherPrefs.isTempoActive().get()));
     }
 

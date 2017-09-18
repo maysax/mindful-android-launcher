@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.UserManager;
 import android.support.multidex.MultiDexApplication;
@@ -71,6 +72,38 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public HashMap<String, Bitmap> iconList = new HashMap<>();
 
+    private Camera camera;
+    private Camera.Parameters params;
+
+    /**
+     * getting camera parameters
+     */
+    public void getCameraInstance() {
+        if (getCamera() == null) {
+            try {
+                setCamera(Camera.open());
+                setParams(camera.getParameters());
+            } catch (RuntimeException e) {
+                Log.e("Camera Error ", e.getMessage());
+            }
+        }
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public Camera.Parameters getParams() {
+        return params;
+    }
+
+    public void setParams(Camera.Parameters params) {
+        this.params = params;
+    }
 
     @Override
     public void onCreate() {
