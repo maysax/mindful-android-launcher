@@ -52,6 +52,8 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
         if ((launcherPrefs.isPauseActive().get() && !launcherPrefs.isPauseAllowCallsChecked().get()) ||
                 (launcherPrefs.isTempoActive().get() && !launcherPrefs.tempoAllowCalls().get())) {
             rejectCalls(ctx, number, start);
+        }else{
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         }
         /*else if (prefs.isNotificationSchedulerEnabled().get()) {
             if (prefs.notificationSchedulerSupressCalls().get()) {
@@ -67,23 +69,27 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
     @Override
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onOutgoingCallStarted()");
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     @Override
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onIncomingCallEnded()");
         vibration.cancel();
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     @Override
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onOutgoingCallEnded()");
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
         Tracer.d("onMissedCall()");
         saveCall(number, start);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     private void rejectCalls(Context ctx, String number, Date start) {

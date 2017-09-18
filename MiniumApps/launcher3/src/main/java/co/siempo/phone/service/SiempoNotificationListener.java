@@ -63,18 +63,25 @@ public class SiempoNotificationListener extends NotificationListenerService {
             } else if (PackageUtil.isMsgPackage(notification.getPackageName())
                     || PackageUtil.isCalenderPackage(notification.getPackageName())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                Log.d("Raja","Calender or message Condition");
             } else {
                 Log.d("Raja", "Test :: " + getLauncherPackageName());
-                if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
+                if (getLauncherPackageName().contains("android") && !isAppOnForeground(getPackageName())) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    Log.d("Raja","Not In Default Launcher Condition");
+                } else if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     cancelNotification(notification.getKey());
                     saveNotification(notification.getPackageName(), notification.getPostTime(),
                             notification.getNotification().tickerText);
+                    Log.d("Raja","In Siempo Condition");
                 } else {
+                    Log.d("Raja","Not In Siempo Condition");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             }
         }
+
     }
 
     private boolean isAppOnForeground(String appPackageName) {
@@ -100,7 +107,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
     private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
         try {
             StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
-
             StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
             storage.setContent(tickerText.toString());
             storage.setPackageName(packageName);
@@ -129,4 +135,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 + " Details: " + notification.getNotification().toString()
                 + " Ticker: " + notification.getNotification().tickerText;
     }
+
+
 }

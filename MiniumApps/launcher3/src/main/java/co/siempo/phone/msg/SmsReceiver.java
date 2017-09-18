@@ -56,7 +56,7 @@ public class SmsReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Tracer.d("Messages: onReceive in Launcher3");
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
