@@ -183,6 +183,11 @@ public class AppDrawerActivity extends CoreActivity {
             }
         }
 
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
+        }
+
     }
 
     private void loadTopBar() {
