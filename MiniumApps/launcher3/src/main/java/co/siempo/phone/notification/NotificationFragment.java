@@ -2,6 +2,7 @@ package co.siempo.phone.notification;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -89,13 +90,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     BleSingal bleSingal;
     int currentModeDeviceMode;
 
-    Camera camera;
-    Camera.Parameters parameters;
-
-
     @SystemService
     AudioManager audioManager;
-
 
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
@@ -123,7 +119,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     @AfterViews
     void afterViews() {
-        statusOfQuickSettings();
+
         notificationList = new ArrayList<>();
         recyclerView.setNestedScrollingEnabled(false);
 
@@ -198,6 +194,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     }
 
+    /**
+     * This method used for load the current status of Wifi/BF/DND/Airplane/FlashLight.
+     */
     private void statusOfQuickSettings() {
         if (!wifiManager.isWifiEnabled()) {
             imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
@@ -215,29 +214,26 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             bleSingal = new BleSingal();
             getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         }
-
-        currentModeDeviceMode = audioManager.getMode();
+        currentModeDeviceMode = audioManager.getRingerMode();
         if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
             imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
         } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
             imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
+        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
         }
-//        else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
-//            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
-//        }
 
-//        if (NetworkUtil.isAirplaneModeOn(getActivity())) {
-//            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplane));
-//        } else {
-//            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
-//
-//        }
+        if (NetworkUtil.isAirplaneModeOn(getActivity())) {
+            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplane));
+        } else {
+            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
 
+        }
 
         boolean hasFlash = getActivity().getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
         if (hasFlash) {
-            getCameraInstance();
+            CoreApplication.getInstance().getCameraInstance();
             relFlash.setVisibility(View.VISIBLE);
             if (CoreApplication.getInstance().isFlashOn()) {
                 imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
@@ -250,6 +246,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     }
 
+    /**
+     * Load the notificaiton data from database
+     */
     private void loadData() {
         List<TableNotificationSms> SMSItems = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties._date).build().list();
         setUpNotifications(SMSItems);
@@ -304,6 +303,11 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         return false;
     }
 
+    /**
+     * Filter the notification and hide and show message view based on the list size.
+     *
+     * @param items
+     */
     private void setUpNotifications(List<TableNotificationSms> items) {
         notificationList.clear();
         for (int i = 0; i < items.size(); i++) {
@@ -328,6 +332,12 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     }
 
+    /**
+     * This method is used for fetch the user image from local content provider of contacts.
+     *
+     * @param number
+     * @return
+     */
     private NotificationContactModel gettingNameAndImageFromPhoneNumber(String number) {
 
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
@@ -397,6 +407,12 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 }
             });
 
+    /**
+     * This is used for to decide if user reach the last item position in view.
+     *
+     * @param recyclerView
+     * @return
+     */
     private boolean isLastItemDisplaying(RecyclerView recyclerView) {
         if (recyclerView != null && recyclerView.getAdapter() != null) {
             if (recyclerView.getAdapter().getItemCount() != 0) {
@@ -424,18 +440,22 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         }
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         StatusBarHandler.isNotificationTrayVisible = false;
-        if (wifiSingal != null) getActivity().unregisterReceiver(wifiSingal);
-        if (bleSingal != null) getActivity().unregisterReceiver(bleSingal);
+        try {
+            if (wifiSingal != null) getActivity().unregisterReceiver(wifiSingal);
+            if (bleSingal != null) getActivity().unregisterReceiver(bleSingal);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        statusOfQuickSettings();
         smsDao = DBUtility.getNotificationDao();
         callStorageDao = DBUtility.getCallStorageDao();
         loadData();
@@ -445,11 +465,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
 
     }
 
@@ -475,13 +490,16 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         }
     }
 
-
     private void swipeScreen(mSwipeDirection mSwipe) {
         //if(mSwipe == mSwipeDirection.UP)
         //finish();
     }
 
-
+    /**
+     * This is onclick listener for all the widget.
+     *
+     * @param view
+     */
     @Click({R.id.relWifi, R.id.relBle, R.id.relDND, R.id.relAirPlane, R.id.relFlash})
     void clickListener(View view) {
         switch (view.getId()) {
@@ -499,46 +517,33 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 break;
             case R.id.relDND:
                 if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
+                } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
                 } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                     imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
                 }
-                currentModeDeviceMode = audioManager.getMode();
+                currentModeDeviceMode = audioManager.getRingerMode();
                 break;
             case R.id.relAirPlane:
-                if (NetworkUtil.isAirplaneModeOn(getActivity())) {
-                    imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
-                    Settings.Global.putInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 0);
-                } else {
-                    imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplane));
-                    Settings.Global.putInt(context.getContentResolver(), Settings.Global.AIRPLANE_MODE_ON, 1);
+                try {
+                    // No root permission, just show the Airplane / Flight mode setting screen.
+                    Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
-
                 break;
             case R.id.relFlash:
                 if (CoreApplication.getInstance().isFlashOn()) {
-                    getCameraInstance();
-                    if (camera == null || parameters == null) {
-                        return;
-                    }
-                    parameters = camera.getParameters();
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                    camera.setParameters(parameters);
-                    camera.stopPreview();
-                    CoreApplication.getInstance().setFlashOn(false);
+                    turnONOffFlash(false);
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
                 } else {
-                    getCameraInstance();
-                    if (camera == null || parameters == null) {
-                        return;
-                    }
-                    parameters = camera.getParameters();
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                    camera.setParameters(parameters);
-                    camera.startPreview();
-                    CoreApplication.getInstance().setFlashOn(true);
+                    turnONOffFlash(true);
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
                 }
                 break;
@@ -546,29 +551,31 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         }
     }
 
-
-    private boolean statusDND() {
-        boolean status = false;
-        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
-            status = true;
-        }
-        return status;
-    }
-
     /**
-     * getting camera parameters
+     * Turning On/Off flash
      */
-    public void getCameraInstance() {
-        if (camera == null) {
-            try {
-                camera = Camera.open();
-                parameters= camera.getParameters();
-            } catch (RuntimeException e) {
-                Log.e("Failed to Open. Error: ", e.getMessage());
+    private void turnONOffFlash(boolean isOnOFF) {
+        if (!isOnOFF) {
+            if (CoreApplication.getInstance().getCamera() == null) {
+                return;
             }
+            Camera.Parameters p = CoreApplication.getInstance().getCamera().getParameters();
+            p.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            CoreApplication.getInstance().getCamera().setParameters(p);
+            CoreApplication.getInstance().getCamera().startPreview();
+            CoreApplication.getInstance().setFlashOn(isOnOFF);
+        } else {
+            if (CoreApplication.getInstance().getCamera() == null) {
+                return;
+            }
+            Camera.Parameters p = CoreApplication.getInstance().getCamera().getParameters();
+            p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            CoreApplication.getInstance().getCamera().setParameters(p);
+            CoreApplication.getInstance().getCamera().startPreview();
+            CoreApplication.getInstance().setFlashOn(isOnOFF);
         }
-    }
 
+    }
 
     /**
      * Turning On/Off WIFI
@@ -586,14 +593,18 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         }
     }
 
-
+    /**
+     * To initialize the wifi listener.
+     */
     private void initializeWiFiListener() {
         if (!wifiManager.isWifiEnabled()) {
             wifiSingal = new WifiSingal();
             getActivity().registerReceiver(wifiSingal, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
         }
     }
-
+    /**
+     * Broadcast Receiver for the Wifi single.
+     */
     class WifiSingal extends BroadcastReceiver {
 
         @Override
@@ -626,6 +637,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         }
     }
 
+    /**
+     * Broadcast Receiver for the Blutooth single.
+     */
     class BleSingal extends BroadcastReceiver {
 
         @Override
@@ -648,7 +662,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                             imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
                             break;
                     }
-
                 }
 
             }
