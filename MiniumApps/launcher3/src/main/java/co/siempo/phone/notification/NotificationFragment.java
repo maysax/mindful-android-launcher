@@ -89,8 +89,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     BleSingal bleSingal;
     int currentModeDeviceMode;
 
-//    @SystemService
-//    BluetoothAdapter bluetoothadapter;
+    Camera camera;
+    Camera.Parameters parameters;
+
 
     @SystemService
     AudioManager audioManager;
@@ -231,7 +232,22 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 //            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
 //
 //        }
-        checkFlashOn();
+
+
+        boolean hasFlash = getActivity().getPackageManager()
+                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+        if (hasFlash) {
+            getCameraInstance();
+            relFlash.setVisibility(View.VISIBLE);
+            if (CoreApplication.getInstance().isFlashOn()) {
+                imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
+            } else {
+                imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
+            }
+        } else {
+            relFlash.setVisibility(View.GONE);
+        }
+
     }
 
     private void loadData() {
@@ -502,18 +518,34 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
                 break;
             case R.id.relFlash:
-                if (CoreApplication.getInstance().getCamera()!=null &&
-                        CoreApplication.getInstance().getParams().getFlashMode().equals("torch")) {
-                    turnONOffFlash(false);
+                if (CoreApplication.getInstance().isFlashOn()) {
+                    getCameraInstance();
+                    if (camera == null || parameters == null) {
+                        return;
+                    }
+                    parameters = camera.getParameters();
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    camera.setParameters(parameters);
+                    camera.stopPreview();
+                    CoreApplication.getInstance().setFlashOn(false);
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
                 } else {
-                    turnONOffFlash(true);
+                    getCameraInstance();
+                    if (camera == null || parameters == null) {
+                        return;
+                    }
+                    parameters = camera.getParameters();
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    camera.setParameters(parameters);
+                    camera.startPreview();
+                    CoreApplication.getInstance().setFlashOn(true);
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
                 }
                 break;
 
         }
     }
+
 
     private boolean statusDND() {
         boolean status = false;
@@ -523,37 +555,18 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         return status;
     }
 
-    private void checkFlashOn() {
-        CoreApplication.getInstance().getCameraInstance();
-        boolean hasFlash = getActivity().getPackageManager()
-                .hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
-        if (hasFlash) {
-            relFlash.setVisibility(View.VISIBLE);
-            if (CoreApplication.getInstance().getCamera()!=null &&
-                    CoreApplication.getInstance().getParams().getFlashMode().equals("torch")) {
-                imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
-            } else {
-                imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
-            }
-        } else {
-            relFlash.setVisibility(View.GONE);
-        }
-
-    }
-
-
     /**
-     * Turning On/Off flash
+     * getting camera parameters
      */
-    private void turnONOffFlash(boolean isOnOFF) {
-        CoreApplication.getInstance().setParams(CoreApplication.getInstance().getCamera().getParameters());
-        if (!isOnOFF) {
-            CoreApplication.getInstance().getParams().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-        } else {
-            CoreApplication.getInstance().getParams().setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+    public void getCameraInstance() {
+        if (camera == null) {
+            try {
+                camera = Camera.open();
+                parameters= camera.getParameters();
+            } catch (RuntimeException e) {
+                Log.e("Failed to Open. Error: ", e.getMessage());
+            }
         }
-        CoreApplication.getInstance().getCamera().setParameters(CoreApplication.getInstance().getParams());
-        CoreApplication.getInstance().getCamera().stopPreview();
     }
 
 

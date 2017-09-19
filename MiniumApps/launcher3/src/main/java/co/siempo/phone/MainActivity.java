@@ -117,6 +117,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setPermissions(Manifest.permission.READ_CONTACTS,
                         Manifest.permission.WRITE_CONTACTS,
                         Manifest.permission.SEND_SMS,
+                        Manifest.permission.CAMERA,
                         Manifest.permission.RECEIVE_SMS,
                         Manifest.permission.RECEIVE_MMS,
                         Manifest.permission.READ_PHONE_STATE,
