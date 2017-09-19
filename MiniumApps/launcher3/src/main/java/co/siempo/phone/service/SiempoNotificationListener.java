@@ -129,6 +129,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
             prefs.isNotificationBlockerRunning().put(false);
         } else if (PackageUtil.isMsgPackage(notification.getPackageName())) {
             new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
+        }else if(PackageUtil.isCallPackage(notification.getPackageName())){
+            new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
         }
     }
 
