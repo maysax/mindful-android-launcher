@@ -35,6 +35,9 @@ import minium.co.core.log.Tracer;
 @EService
 public class SiempoNotificationListener extends NotificationListenerService {
 
+    public static final String TAG = SiempoNotificationListener.class.getName();
+
+
     @Pref
     Launcher3Prefs_ prefs;
 
@@ -63,20 +66,20 @@ public class SiempoNotificationListener extends NotificationListenerService {
             } else if (PackageUtil.isMsgPackage(notification.getPackageName())
                     || PackageUtil.isCalenderPackage(notification.getPackageName())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                Log.d("Raja","Calender or message Condition");
+                Log.d("Suppress Notification",TAG + "  Calender or message Condition");
             } else {
-                Log.d("Raja", "Test :: " + getLauncherPackageName());
+                Log.d("Suppress Notification",TAG  + getLauncherPackageName());
                 if (getLauncherPackageName().contains("android") && !isAppOnForeground(getPackageName())) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    Log.d("Raja","Not In Default Launcher Condition");
+                    Log.d("Suppress Notification",TAG + "  Not In Default Launcher Condition");
                 } else if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     cancelNotification(notification.getKey());
                     saveNotification(notification.getPackageName(), notification.getPostTime(),
                             notification.getNotification().tickerText);
-                    Log.d("Raja","In Siempo Condition");
+                    Log.d("Suppress Notification",TAG + "  In Siempo Condition");
                 } else {
-                    Log.d("Raja","Not In Siempo Condition");
+                    Log.d("Suppress Notification",TAG + "  Not In Siempo Condition");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             }

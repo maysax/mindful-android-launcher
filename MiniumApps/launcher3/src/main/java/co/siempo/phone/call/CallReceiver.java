@@ -55,14 +55,6 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
         }else{
             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         }
-        /*else if (prefs.isNotificationSchedulerEnabled().get()) {
-            if (prefs.notificationSchedulerSupressCalls().get()) {
-                rejectCalls(ctx, number, start);
-            } else {
-                vibration.callVibration();
-            }
-
-        }*/
     }
 
 
