@@ -106,7 +106,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 } else {
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                 }
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 break;
         }
         lastState = state;

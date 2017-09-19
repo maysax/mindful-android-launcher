@@ -35,6 +35,9 @@ import minium.co.core.log.Tracer;
 @EService
 public class SiempoNotificationListener extends NotificationListenerService {
 
+    public static final String TAG = SiempoNotificationListener.class.getName();
+
+
     @Pref
     Launcher3Prefs_ prefs;
 
@@ -63,18 +66,25 @@ public class SiempoNotificationListener extends NotificationListenerService {
             } else if (PackageUtil.isMsgPackage(notification.getPackageName())
                     || PackageUtil.isCalenderPackage(notification.getPackageName())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                Log.d("Suppress Notification",TAG + "  Calender or message Condition");
             } else {
-                Log.d("Raja", "Test :: " + getLauncherPackageName());
-                if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
+                Log.d("Suppress Notification",TAG  + getLauncherPackageName());
+                if (getLauncherPackageName().contains("android") && !isAppOnForeground(getPackageName())) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    Log.d("Suppress Notification",TAG + "  Not In Default Launcher Condition");
+                } else if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     cancelNotification(notification.getKey());
                     saveNotification(notification.getPackageName(), notification.getPostTime(),
                             notification.getNotification().tickerText);
+                    Log.d("Suppress Notification",TAG + "  In Siempo Condition");
                 } else {
+                    Log.d("Suppress Notification",TAG + "  Not In Siempo Condition");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             }
         }
+
     }
 
     private boolean isAppOnForeground(String appPackageName) {
@@ -100,7 +110,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
     private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
         try {
             StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
-
             StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
             storage.setContent(tickerText.toString());
             storage.setPackageName(packageName);
@@ -129,4 +138,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 + " Details: " + notification.getNotification().toString()
                 + " Ticker: " + notification.getNotification().tickerText;
     }
+
+
 }
