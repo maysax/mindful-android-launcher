@@ -193,7 +193,6 @@ public class TopFragment extends CoreFragment {
     public void onDetach() {
         super.onDetach();
         try{
-
             airplaneModeDataReceiver.unregister(context);
             batteryDataReceiver.unregister(context);
             networkDataReceiver.unregister(context);

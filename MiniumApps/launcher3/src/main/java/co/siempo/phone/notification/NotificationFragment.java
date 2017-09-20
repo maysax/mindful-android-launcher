@@ -46,6 +46,7 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
@@ -198,21 +199,26 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
      * This method used for load the current status of Wifi/BF/DND/Airplane/FlashLight.
      */
     private void statusOfQuickSettings() {
-        if (!wifiManager.isWifiEnabled()) {
-            imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
+        if (NetworkUtil.isAirplaneModeOn(getActivity())) {
+            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplane));
         } else {
-            wifiSingal = new WifiSingal();
-            getActivity().registerReceiver(wifiSingal, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
-            imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_0));
-        }
+            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
 
+            if (!wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(getActivity())) {
+                imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
+            } else {
+                wifiSingal = new WifiSingal();
+                getActivity().registerReceiver(wifiSingal, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
+                imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_0));
+            }
 
-        if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-            imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
-        } else {
-            imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
-            bleSingal = new BleSingal();
-            getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
+            } else {
+                imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
+                bleSingal = new BleSingal();
+                getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+            }
         }
         currentModeDeviceMode = audioManager.getRingerMode();
         if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
@@ -221,13 +227,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
         } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
             imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
-        }
-
-        if (NetworkUtil.isAirplaneModeOn(getActivity())) {
-            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplane));
-        } else {
-            imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
-
         }
 
         boolean hasFlash = getActivity().getPackageManager()
@@ -243,6 +242,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         } else {
             relFlash.setVisibility(View.GONE);
         }
+
 
     }
 
@@ -583,6 +583,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     private void turnOnOffWIFI() {
         if (!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
+            imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_0));
+            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, 0));
             wifiSingal = new WifiSingal();
             getActivity().registerReceiver(wifiSingal, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
         } else {
@@ -602,6 +604,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             getActivity().registerReceiver(wifiSingal, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
         }
     }
+
     /**
      * Broadcast Receiver for the Wifi single.
      */
@@ -612,6 +615,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             if (wifiManager.isWifiEnabled()) {
                 WifiInfo info = wifiManager.getConnectionInfo();
                 int level = WifiManager.calculateSignalLevel(info.getRssi(), 5);
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
                 if (level == 0) {
                     if (imgWifi != null) {
                         imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_0));
