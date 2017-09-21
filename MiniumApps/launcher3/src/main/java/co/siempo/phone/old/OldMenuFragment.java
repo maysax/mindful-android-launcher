@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.model.MainListItem;
 import minium.co.core.log.Tracer;
@@ -38,6 +39,7 @@ public class OldMenuFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         loadData();
     }
 

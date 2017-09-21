@@ -10,6 +10,7 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.UiThread;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
@@ -71,6 +72,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         }
     }
     public void initView() {
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         context = SiempoAlphaSettingsActivity.this;
     }
 
@@ -104,12 +106,14 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         loadStatusBar();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         if(state== ActivityState.ONHOMEPRESS){
             state= ActivityState.NORMAL;
         }
@@ -117,6 +121,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
+        Launcher3App.getInstance().setSiempoBarLaunch(false);
         if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
             /**
              *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen

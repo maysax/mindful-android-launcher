@@ -32,6 +32,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.contact.PhoneNumbersAdapter;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
@@ -103,6 +104,7 @@ public class MainFragment extends CoreFragment {
     @AfterViews
     void afterViews() {
 
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         listViewLayout.setVisibility(View.GONE);
         afterEffectLayout.setVisibility(View.GONE);
         KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {
@@ -302,6 +304,7 @@ public class MainFragment extends CoreFragment {
     void text() {
         String id = (String) text.getTag();
         if (id.equals("1")) {
+            Launcher3App.getInstance().setSiempoBarLaunch(false);
             new ActivityHelper(getActivity()).openNotesApp(true);
         }
         afterEffectLayout.setVisibility(View.GONE);

@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.PauseStartEvent;
 import co.siempo.phone.notification.NotificationFragment;
@@ -65,6 +66,7 @@ public class PauseActivity extends CoreActivity {
     @AfterViews
     void afterViews() {
         // To check the notification service is enable or not.
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         if (!MainActivity.isEnabled(this)) {
             UIUtils.confirmWithCancel(this, null, getString(R.string.msg_noti_service_dialog), new DialogInterface.OnClickListener() {
                 @Override
@@ -126,6 +128,7 @@ public class PauseActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
+        Launcher3App.getInstance().setSiempoBarLaunch(false);
         if (launcherPrefs.isPauseActive().get()) {
             onStopPause();
         } else {
@@ -157,6 +160,7 @@ public class PauseActivity extends CoreActivity {
     protected void onStart() {
         super.onStart();
         Tracer.d("onStart PauseActivity");
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         if(state== ActivityState.ONHOMEPRESS){
             state= ActivityState.NORMAL;
         }
@@ -274,6 +278,7 @@ public class PauseActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         loadStatusBar();
     }
 
