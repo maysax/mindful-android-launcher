@@ -39,7 +39,7 @@ public class SiempoDndService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent.hasExtra(KEY_START)){
+        if(intent!=null && intent.hasExtra(KEY_START)){
             String start = intent.getStringExtra(KEY_START);
             if (start != null) {
                 showNotification();

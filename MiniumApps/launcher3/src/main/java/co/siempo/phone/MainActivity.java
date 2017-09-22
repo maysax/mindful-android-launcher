@@ -36,6 +36,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
@@ -107,6 +108,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @AfterViews
     void afterViews() {
         Log.d(TAG,"afterViews event called");
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
@@ -133,7 +135,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         FirebaseHelper firebaseHelper = new FirebaseHelper(this);
         firebaseHelper.testEvent1();
         firebaseHelper.testEvent2();
-
         launcherPrefs.updatePrompt().put(true);
     }
 
@@ -399,6 +400,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStart() {
         super.onStart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         Log.d(TAG, "onStart..."+state);
         if (state == ActivityState.ONHOMEPRESS) {
             checkUpgradeVersion();
@@ -464,6 +466,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onNewIntent(Intent intent) {
         currentItem = 0;
+
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         Log.d(TAG,"ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
@@ -499,6 +503,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     public void onBackPressed() {
         try {
+
             /**
              *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
              */
@@ -528,6 +533,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onRestart() {
         super.onRestart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         Log.d(TAG,"Restart ... ");
     }
 

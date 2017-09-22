@@ -12,6 +12,7 @@ import org.androidannotations.annotations.Fullscreen;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
@@ -41,13 +42,15 @@ public class TempoActivity extends CoreActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (state == ActivityState.ONHOMEPRESS) {
-            state = ActivityState.NORMAL;
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
+        if(state== ActivityState.ONHOMEPRESS){
+            state= ActivityState.NORMAL;
         }
     }
 
     @AfterViews
     void afterViews() {
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         // To check the notification service is enable or not.
         if (!MainActivity.isEnabled(this)) {
             UIUtils.confirmWithCancel(this, null, getString(R.string.msg_noti_service_dialog), new DialogInterface.OnClickListener() {
@@ -141,7 +144,8 @@ public class TempoActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
-        if (statusBarHandler != null && statusBarHandler.isNotificationTrayVisible) {
+        Launcher3App.getInstance().setSiempoBarLaunch(false);
+        if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
             if (f == null) {
                 Log.d(TAG, " Fragment is null");
@@ -161,6 +165,7 @@ public class TempoActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         loadStatusBar();
     }
 

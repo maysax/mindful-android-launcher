@@ -40,6 +40,7 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
 import minium.co.core.util.FontUtils;
 import minium.co.core.util.UserHandle;
+import android.os.Handler;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -60,6 +61,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private RefWatcher refWatcher;
+    public boolean siempoBarLaunch=true;
 
 
     UserManager userManager;
@@ -70,6 +72,8 @@ public abstract class CoreApplication extends MultiDexApplication {
     private List<ApplicationInfo> packagesList = new ArrayList<>();
 
     public HashMap<String, Bitmap> iconList = new HashMap<>();
+
+    Handler handler;
 
 
     @Override
@@ -267,5 +271,28 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     }
 
+    public void setSiempoBarLaunch(final boolean value){
 
+        if(value == true){
+            if(handler!=null && handler.hasMessages(1)){
+                return;
+            }
+            else{
+                handler = new Handler();
+                handler.sendEmptyMessage(1);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        siempoBarLaunch=value;
+                        handler.sendEmptyMessage(0);
+                    }
+                },700);
+            }
+
+        }
+        else{
+            siempoBarLaunch=value;
+        }
+
+    }
 }

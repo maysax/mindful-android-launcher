@@ -14,6 +14,7 @@ import org.androidannotations.annotations.UiThread;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.model.SettingsData;
 import co.siempo.phone.notification.NotificationFragment;
@@ -87,9 +88,11 @@ public class SiempoMainSettingsActivity extends CoreActivity {
                             new ActivityHelper(context).openPhoneSettingsApp();
                             break;
                         case 2:
+                            Launcher3App.getInstance().setSiempoBarLaunch(false);
                             new ActivityHelper(context).openSiempoSettingsApp();
                             break;
                         case 3:
+                            Launcher3App.getInstance().setSiempoBarLaunch(false);
                             new ActivityHelper(context).openSiempoAlphaSettingsApp();
                             break;
                         default:
@@ -101,6 +104,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     }
 
     public void initView() {
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         context = SiempoMainSettingsActivity.this;
         lst_settings = (ListView) findViewById(R.id.lst_settings);
 
@@ -158,6 +162,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
+        Launcher3App.getInstance().setSiempoBarLaunch(false);
         if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
             /**
              *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
@@ -188,6 +193,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         loadStatusBar();
     }
 
@@ -261,6 +267,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         if(state== ActivityState.ONHOMEPRESS){
             state= ActivityState.NORMAL;
         }

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.pause.PauseActivity;
 import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
@@ -189,7 +190,7 @@ public class StatusBarHandler {
     }
 
     private void showSiempoNotification(MotionEvent event){
-        if (!isNotificationTrayVisible) {
+        if (Launcher3App.getInstance().siempoBarLaunch && !isNotificationTrayVisible) {
             System.out.println(TAG + " y position on Touch on notification tray " + event.getY() + "status_bar_height " + status_bar_height);
             //Intent intent = new Intent(mContext, NotificationFragment.class);
             //mContext. startActivity(intent);
