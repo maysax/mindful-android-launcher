@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.UserManager;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -40,7 +41,6 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
 import minium.co.core.util.FontUtils;
 import minium.co.core.util.UserHandle;
-import android.os.Handler;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -61,7 +61,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private RefWatcher refWatcher;
-    public boolean siempoBarLaunch=true;
+    public boolean siempoBarLaunch = true;
 
 
     UserManager userManager;
@@ -105,7 +105,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-        // configFabric();
+        configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();
@@ -210,7 +210,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                             drawable = appInfo.loadIcon(getPackageManager());
                         }
                         Bitmap bitmap = drawableToBitmap(drawable);
-                        if(!TextUtils.isEmpty(activityInfo.getApplicationInfo().packageName)){
+                        if (!TextUtils.isEmpty(activityInfo.getApplicationInfo().packageName)) {
                             iconList.put(activityInfo.getApplicationInfo().packageName, bitmap);
                         }
                         applist.add(appInfo);
@@ -271,27 +271,25 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     }
 
-    public void setSiempoBarLaunch(final boolean value){
+    public void setSiempoBarLaunch(final boolean value) {
 
-        if(value == true){
-            if(handler!=null && handler.hasMessages(1)){
+        if (value == true) {
+            if (handler != null && handler.hasMessages(1)) {
                 return;
-            }
-            else{
+            } else {
                 handler = new Handler();
                 handler.sendEmptyMessage(1);
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        siempoBarLaunch=value;
+                        siempoBarLaunch = value;
                         handler.sendEmptyMessage(0);
                     }
-                },700);
+                }, 700);
             }
 
-        }
-        else{
-            siempoBarLaunch=value;
+        } else {
+            siempoBarLaunch = value;
         }
 
     }

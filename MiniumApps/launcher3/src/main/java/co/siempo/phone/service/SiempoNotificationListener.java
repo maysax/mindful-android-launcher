@@ -61,26 +61,13 @@ public class SiempoNotificationListener extends NotificationListenerService {
             cancelNotification(notification.getKey());
             // saving the information in other place
         } else {
-            if (PackageUtil.isCallPackage(notification.getPackageName())) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            } else if (PackageUtil.isMsgPackage(notification.getPackageName())
-                    || PackageUtil.isCalenderPackage(notification.getPackageName())) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                Log.d("Suppress Notification",TAG + "  Calender or message Condition");
+            if (PackageUtil.isCallPackage(notification.getPackageName()) || PackageUtil.isMsgPackage(notification.getPackageName())) {
+                // should pass
             } else {
-                Log.d("Suppress Notification",TAG  + getLauncherPackageName());
-                if (getLauncherPackageName().contains("android") && !isAppOnForeground(getPackageName())) {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    Log.d("Suppress Notification",TAG + "  Not In Default Launcher Condition");
-                } else if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
                     cancelNotification(notification.getKey());
                     saveNotification(notification.getPackageName(), notification.getPostTime(),
                             notification.getNotification().tickerText);
-                    Log.d("Suppress Notification",TAG + "  In Siempo Condition");
-                } else {
-                    Log.d("Suppress Notification",TAG + "  Not In Siempo Condition");
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             }
         }
