@@ -305,6 +305,12 @@ public class MainFragment extends CoreFragment {
         String id = (String) text.getTag();
         if (id.equals("1")) {
             Launcher3App.getInstance().setSiempoBarLaunch(false);
+            if(getActivity()!=null && getActivity() instanceof  MainActivity){
+                MainActivity mainActivity = (MainActivity)getActivity();
+                if(mainActivity!=null) {
+                    mainActivity.restoreSiempoNotificationBar();
+                }
+            }
             new ActivityHelper(getActivity()).openNotesApp(true);
         }
         afterEffectLayout.setVisibility(View.GONE);
