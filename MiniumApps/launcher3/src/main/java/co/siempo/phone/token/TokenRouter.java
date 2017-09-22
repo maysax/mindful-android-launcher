@@ -13,6 +13,7 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
+
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
@@ -109,6 +110,14 @@ public class TokenRouter {
                 smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
                 Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
                 String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
+
+                if(context!=null && context instanceof MainActivity){
+                    MainActivity mainActivity = (MainActivity)context;
+                    if(mainActivity!=null) {
+                        mainActivity.restoreSiempoNotificationBar();
+                    }
+                }
+
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(strNumber)));
                 if (defaultSmsPackageName != null) // Can be null in case that there is no default, then the user would be able to choose any app that supports this intent.
                 {
@@ -140,6 +149,12 @@ public class TokenRouter {
             return;
         }
         try {
+            if(activity!=null  && activity instanceof  MainActivity){
+                MainActivity mainActivity = (MainActivity)activity;
+                if(mainActivity!=null) {
+                    mainActivity.restoreSiempoNotificationBar();
+                }
+            }
             activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.get(TokenItemType.CONTACT).getExtra2())));
         } catch (Exception e) {
             e.printStackTrace();
