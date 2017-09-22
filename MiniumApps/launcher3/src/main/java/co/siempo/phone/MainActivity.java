@@ -1,7 +1,6 @@
 package co.siempo.phone;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,14 +10,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
@@ -453,6 +449,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
       //  currentIndex = currentItem;
+
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
+        }
     }
 
     @Override

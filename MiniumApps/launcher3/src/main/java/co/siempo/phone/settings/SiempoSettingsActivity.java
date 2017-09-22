@@ -215,6 +215,10 @@ public class SiempoSettingsActivity extends CoreActivity {
             }
             state= ActivityState.NORMAL;
         }
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
+        }
     }
     @Override
     protected void onStop() {
