@@ -3,10 +3,7 @@ package co.siempo.phone.call;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.telephony.TelephonyManager;
-
-import org.androidannotations.annotations.SystemService;
 
 import java.util.Date;
 
@@ -21,38 +18,36 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static int lastState = TelephonyManager.CALL_STATE_IDLE;
     private static Date callStartTime;
     private static boolean isIncoming;
-    private static String savedNumber="";  //because the passed incoming is only valid in ringing
+    private static String savedNumber = "";  //because the passed incoming is only valid in ringing
 
-    AudioManager audioManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        audioManager = ((AudioManager) context.getApplicationContext().getSystemService(Context.AUDIO_SERVICE));
+
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
-        if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
-            if(intent.getExtras()!=null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")){
-                savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+        if (intent != null) {
+            if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
+                if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
+                    savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+                }
+            } else {
+                String stateStr = "", number = "";
+                int state = 0;
+                if (intent.getExtras() != null && intent.getExtras().containsKey(TelephonyManager.EXTRA_STATE)) {
+                    stateStr = intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
+                }
+                if (intent.getExtras() != null && intent.getExtras().containsKey(TelephonyManager.EXTRA_INCOMING_NUMBER)) {
+                    number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
+                }
+                if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
+                    state = TelephonyManager.CALL_STATE_IDLE;
+                } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+                    state = TelephonyManager.CALL_STATE_OFFHOOK;
+                } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+                    state = TelephonyManager.CALL_STATE_RINGING;
+                }
+                onCallStateChanged(context, state, number);
             }
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        } else {
-            String stateStr="",number="";
-            int state = 0;
-            if(intent.getExtras()!=null && intent.getExtras().containsKey(TelephonyManager.EXTRA_STATE)){
-                stateStr=intent.getExtras().getString(TelephonyManager.EXTRA_STATE);
-            }
-            if(intent.getExtras()!=null && intent.getExtras().containsKey(TelephonyManager.EXTRA_INCOMING_NUMBER)){
-                number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
-            }
-            if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
-                state = TelephonyManager.CALL_STATE_IDLE;
-            } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
-                state = TelephonyManager.CALL_STATE_OFFHOOK;
-            } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
-                state = TelephonyManager.CALL_STATE_RINGING;
-            }
-
-
-            onCallStateChanged(context, state, number);
         }
     }
 
@@ -106,7 +101,6 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 } else {
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                 }
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 break;
         }
         lastState = state;

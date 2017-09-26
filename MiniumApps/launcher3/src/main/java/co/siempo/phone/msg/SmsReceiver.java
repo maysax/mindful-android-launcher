@@ -5,13 +5,11 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
 import org.androidannotations.annotations.EReceiver;
-import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.Date;
@@ -48,15 +46,12 @@ public class SmsReceiver extends BroadcastReceiver {
 
     TableNotificationSmsDao smsDao;
 
-    @SystemService
-    AudioManager audioManager;
-
     public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Tracer.d("Messages: onReceive in Launcher3");
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {

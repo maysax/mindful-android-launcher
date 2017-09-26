@@ -1,7 +1,6 @@
 package co.siempo.phone.call;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
@@ -42,9 +41,6 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
     @Bean
     VibrationUtils vibration;
 
-    @SystemService
-    AudioManager audioManager;
-
     @Override
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
@@ -52,36 +48,39 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
         if ((launcherPrefs.isPauseActive().get() && !launcherPrefs.isPauseAllowCallsChecked().get()) ||
                 (launcherPrefs.isTempoActive().get() && !launcherPrefs.tempoAllowCalls().get())) {
             rejectCalls(ctx, number, start);
-        }else{
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         }
+        // Below logic will use in future
+        /*else if (prefs.isNotificationSchedulerEnabled().get()) {
+            if (prefs.notificationSchedulerSupressCalls().get()) {
+                rejectCalls(ctx, number, start);
+            } else {
+                vibration.callVibration();
+            }
+
+        }*/
     }
 
 
     @Override
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onOutgoingCallStarted()");
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     @Override
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onIncomingCallEnded()");
         vibration.cancel();
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     @Override
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onOutgoingCallEnded()");
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
         Tracer.d("onMissedCall()");
         saveCall(number, start);
-        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     private void rejectCalls(Context ctx, String number, Date start) {

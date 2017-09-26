@@ -298,7 +298,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
      *  Below snippet is use to first check if siempo status bar is restricted from another activity,
      *  then it first remove siempo status bar and restrict siempo status bar with reference to this activity
      */
-    synchronized void loadStatusBar() {
+    public synchronized void loadStatusBar() {
         try {
             statusBarHandler = new StatusBarHandler(MainActivity.this);
             NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
