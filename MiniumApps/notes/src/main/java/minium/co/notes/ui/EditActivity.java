@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -375,11 +376,11 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
              *  If not -> hide keyboard if showing and finish
              */
             if (!isEmpty(titleEdit)) {
-                if (bundle != null && !(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE))) ||
-                        !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY))) ||
-                        !(colour.equals(bundle.getString(NOTE_COLOUR))) ||
-                        fontSize != bundle.getInt(NOTE_FONT_SIZE) ||
-                        hideBody != bundle.getBoolean(NOTE_HIDE_BODY)) {
+                if (bundle != null && !(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE,""))) ||
+                        !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY,""))) ||
+                        !(colour.equals(bundle.getString(NOTE_COLOUR,"#FFFFFF"))) ||
+                        fontSize != bundle.getInt(NOTE_FONT_SIZE,18) ||
+                        hideBody != bundle.getBoolean(NOTE_HIDE_BODY,false)) {
 
                     saveChanges();
                 } else {
