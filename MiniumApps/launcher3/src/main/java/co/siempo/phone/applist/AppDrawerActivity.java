@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
@@ -58,6 +59,7 @@ public class AppDrawerActivity extends CoreActivity {
 
     @Click
     void crossActionBar() {
+        Launcher3App.getInstance().setSiempoBarLaunch(false);
         this.finish();
     }
 
@@ -94,19 +96,21 @@ public class AppDrawerActivity extends CoreActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         if(state== ActivityState.ONHOMEPRESS){
             state= ActivityState.NORMAL;
         }
     }
     @AfterViews
     void afterViews() {
-
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         settingsActionBar.setVisibility(View.GONE);
         titleActionBar.setText(getString(R.string.title_apps));
         arrayList = CoreApplication.getInstance().getPackagesList();
         btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-list")
                 .colorRes(R.color.text_primary)
                 .sizeDp(20));
+        btnListOrGrid.setTag("0");
         btnListOrGrid.setVisibility(View.VISIBLE);
         btnListOrGrid.setTag("0");
         mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
@@ -184,6 +188,11 @@ public class AppDrawerActivity extends CoreActivity {
             }
         }
 
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
+        }
+
     }
 
     private void loadTopBar() {
@@ -208,6 +217,7 @@ public class AppDrawerActivity extends CoreActivity {
         /**
          *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
          */
+        Launcher3App.getInstance().setSiempoBarLaunch(false);
         if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
             if(f == null){
@@ -232,6 +242,7 @@ public class AppDrawerActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         loadStatusBar();
     }
 

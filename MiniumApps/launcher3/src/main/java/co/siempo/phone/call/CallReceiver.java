@@ -1,7 +1,6 @@
 package co.siempo.phone.call;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
@@ -41,9 +40,6 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
 
     @Bean
     VibrationUtils vibration;
-
-    @SystemService
-    AudioManager audioManager;
 
     @Override
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {

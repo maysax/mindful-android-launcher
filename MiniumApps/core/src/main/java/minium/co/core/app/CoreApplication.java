@@ -14,6 +14,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.UserManager;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -61,6 +62,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private RefWatcher refWatcher;
+    public boolean siempoBarLaunch = true;
 
 
     UserManager userManager;
@@ -72,38 +74,40 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public HashMap<String, Bitmap> iconList = new HashMap<>();
 
-    private Camera camera;
-    private boolean isFlashOn = false;
+//    private Camera camera;
+//    private boolean isFlashOn = false;
+//
+//    public boolean isFlashOn() {
+//        return isFlashOn;
+//    }
+//
+//    public void setFlashOn(boolean flashOn) {
+//        isFlashOn = flashOn;
+//    }
+//
+//    /**
+//     * getting camera parameters
+//     */
+//    public void getCameraInstance() {
+//        if (camera == null) {
+//            try {
+//                camera = Camera.open();
+//                setCamera(camera);
+//            } catch (RuntimeException e) {
+//                Log.e("Camera Error ", e.getMessage());
+//            }
+//        }
+//    }
+//
+//    public Camera getCamera() {
+//        return camera;
+//    }
+//
+//    public void setCamera(Camera camera) {
+//        this.camera = camera;
+//    }
+    Handler handler;
 
-    public boolean isFlashOn() {
-        return isFlashOn;
-    }
-
-    public void setFlashOn(boolean flashOn) {
-        isFlashOn = flashOn;
-    }
-
-    /**
-     * getting camera parameters
-     */
-    public void getCameraInstance() {
-        if (camera == null) {
-            try {
-                camera = Camera.open();
-                setCamera(camera);
-            } catch (RuntimeException e) {
-                Log.e("Camera Error ", e.getMessage());
-            }
-        }
-    }
-
-    public Camera getCamera() {
-        return camera;
-    }
-
-    public void setCamera(Camera camera) {
-        this.camera = camera;
-    }
 
     @Override
     public void onCreate() {
@@ -134,7 +138,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-        // configFabric();
+         configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();
@@ -161,11 +165,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(Config.DEBUG)
-                .build();
-        Fabric.with(fabric);
+//        final Fabric fabric = new Fabric.Builder(this)
+//                .kits(new Crashlytics())
+//                .debuggable(Config.DEBUG)
+//                .build();
+//        Fabric.with(fabric);
     }
 
 
@@ -239,7 +243,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                             drawable = appInfo.loadIcon(getPackageManager());
                         }
                         Bitmap bitmap = drawableToBitmap(drawable);
-                        if(!TextUtils.isEmpty(activityInfo.getApplicationInfo().packageName)){
+                        if (!TextUtils.isEmpty(activityInfo.getApplicationInfo().packageName)) {
                             iconList.put(activityInfo.getApplicationInfo().packageName, bitmap);
                         }
                         applist.add(appInfo);
@@ -300,5 +304,26 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     }
 
+    public void setSiempoBarLaunch(final boolean value) {
 
+        if (value == true) {
+            if (handler != null && handler.hasMessages(1)) {
+                return;
+            } else {
+                handler = new Handler();
+                handler.sendEmptyMessage(1);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        siempoBarLaunch = value;
+                        handler.sendEmptyMessage(0);
+                    }
+                }, 700);
+            }
+
+        } else {
+            siempoBarLaunch = value;
+        }
+
+    }
 }

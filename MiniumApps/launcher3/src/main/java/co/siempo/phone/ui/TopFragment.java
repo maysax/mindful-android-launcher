@@ -1,9 +1,12 @@
 package co.siempo.phone.ui;
 
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
@@ -11,6 +14,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.Icon;
@@ -23,9 +27,6 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.battery.BatteryChangeEvent;
@@ -37,7 +38,6 @@ import co.siempo.phone.event.NotificationSchedulerEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.network.NetworkUtil;
-import co.siempo.phone.notification.Notification;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
@@ -81,10 +81,25 @@ public class TopFragment extends CoreFragment {
     ImageView imgWifi;
 
     @ViewById
+    TextView txtType;
+
+    @ViewById
+    ImageView imgBluetooth;
+
+    @ViewById
+    ImageView imgDND;
+
+    @ViewById
     ImageView imgAirplane;
 
     @SystemService
     WifiManager wifiManager;
+
+    @SystemService
+    AudioManager audioManager;
+
+    @SystemService
+    ConnectivityManager connectivityManager;
 
     FontAwesomeIcons[] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
@@ -104,27 +119,65 @@ public class TopFragment extends CoreFragment {
     IDynamicStatus wifiDataReceiver;
 
     public TopFragment() {
-        // Required empty public constructor
     }
 
     @AfterViews
     void afterViews() {
-        // Default text
-        //updateBatteryText(50);
-//        updateUI();
+        airplaneModeDataReceiver = new AirplaneModeDataReceiver();
+        airplaneModeDataReceiver.register(context);
+        wifiDataReceiver = new WifiDataReceiver();
+        wifiDataReceiver.register(context);
+        batteryDataReceiver = new BatteryDataReceiver();
+        batteryDataReceiver.register(context);
+        networkDataReceiver = new NetworkDataReceiver(context);
+        networkDataReceiver.register(context);
     }
 
-
-
     private void updateUI() {
-        imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
-        imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
-        imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
-        imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
-        imgWifi.setImageResource(getWifiIcon(WifiManager.calculateSignalLevel(wifiManager.getConnectionInfo().getRssi(), 5)));
+        if (NetworkUtil.isAirplaneModeOn(context)) {
+            imgAirplane.setVisibility(View.VISIBLE);
+            imgSignal.setVisibility(View.GONE);
+            txtType.setVisibility(View.GONE);
+            imgWifi.setVisibility(View.GONE);
+            imgBluetooth.setVisibility(View.GONE);
+            imgDND.setVisibility(View.GONE);
+        } else {
+            imgAirplane.setVisibility(View.GONE);
+            imgSignal.setVisibility(View.VISIBLE);
+            txtType.setVisibility(View.VISIBLE);
+            if (wifiManager.isWifiEnabled()) {
+                imgWifi.setVisibility(View.VISIBLE);
+                imgWifi.setImageResource(getWifiIcon(WifiManager.calculateSignalLevel(wifiManager.getConnectionInfo().getRssi(), 5)));
+            } else {
+                imgWifi.setVisibility(View.GONE);
+            }
 
+            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                imgBluetooth.setVisibility(View.VISIBLE);
+                imgBluetooth.setImageResource(R.drawable.ic_bluetooth_on);
+            } else {
+                imgBluetooth.setVisibility(View.GONE);
+                // imgBluetooth.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
+            }
+            bindDnd();
+        }
         long notifCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
         imgNotification.setVisibility(notifCount == 0 ? View.GONE : View.VISIBLE);
+
+
+    }
+
+    private void bindDnd() {
+        int currentModeDeviceMode = audioManager.getRingerMode();
+        if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+            imgDND.setVisibility(View.GONE);
+        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
+            imgDND.setVisibility(View.VISIBLE);
+            imgDND.setImageResource(R.drawable.ic_do_not_disturb_on_black_24dp);
+        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+            imgDND.setVisibility(View.VISIBLE);
+            imgDND.setImageResource(R.drawable.ic_vibration_black_24dp);
+        }
     }
 
     @Override
@@ -137,6 +190,7 @@ public class TopFragment extends CoreFragment {
 
     /**
      * Event bus notifier when new message or call comes.
+     *
      * @param tableNotificationSms
      */
     @Subscribe
@@ -148,6 +202,7 @@ public class TopFragment extends CoreFragment {
 
     /**
      * Event bus notifier when notification becomes null.Hide the blue dot
+     *
      * @param tableNotificationSms
      */
     @Subscribe
@@ -178,28 +233,19 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        airplaneModeDataReceiver = new AirplaneModeDataReceiver();
-        airplaneModeDataReceiver.register(context);
 
-        wifiDataReceiver = new WifiDataReceiver();
-        wifiDataReceiver.register(context);
-        batteryDataReceiver = new BatteryDataReceiver();
-        batteryDataReceiver.register(context);
-        networkDataReceiver = new NetworkDataReceiver(context);
-        networkDataReceiver.register(context);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        try{
+        try {
             airplaneModeDataReceiver.unregister(context);
             batteryDataReceiver.unregister(context);
             networkDataReceiver.unregister(context);
             wifiDataReceiver.unregister(context);
-        }
-        catch (Exception e){
-            Log.d(TAG,"onDetach Call");
+        } catch (Exception e) {
+            Log.d(TAG, "onDetach Call");
         }
     }
 
@@ -281,33 +327,61 @@ public class TopFragment extends CoreFragment {
             imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
             imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
         } else if (event.getState() == ConnectivityEvent.WIFI) {
-            imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
-            imgWifi.setImageResource(getWifiIcon(event.getValue()));
+
+            if (wifiManager.isWifiEnabled()) {
+                txtType.setText("");
+                txtType.setVisibility(View.GONE);
+                imgWifi.setVisibility(View.VISIBLE);
+                imgWifi.setImageResource(getWifiIcon(event.getValue()));
+            } else {
+                imgWifi.setVisibility(View.GONE);
+            }
+            if (event.getValue() == -1) {
+                imgWifi.setVisibility(View.GONE);
+            }
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
             imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
-            imgSignal.setImageResource(getNetworkIcon(event.getValue()));
+            if (event.getValue() == -1) {
+                imgSignal.setImageResource(R.drawable.ic_signal_0);
+                txtType.setText("");
+                txtType.setVisibility(View.GONE);
+            } else {
+                imgSignal.setImageResource(getNetworkIcon(event.getValue()));
+                NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+                if (!wifiManager.isWifiEnabled() && networkInfo.isConnected()) {
+                    txtType.setText(event.getType());
+                    txtType.setVisibility(View.VISIBLE);
+                } else {
+                    txtType.setText("");
+                    txtType.setVisibility(View.GONE);
+                }
+            }
+        } else if (event.getState() == ConnectivityEvent.DND) {
+            bindDnd();
+        } else if (event.getState() == ConnectivityEvent.BLE) {
+            imgBluetooth.setVisibility(event.getValue() == 0 ? View.GONE : View.VISIBLE);
         }
     }
 
     private int getBatteryIcon2(int level) {
         int icons[] = {
                 IconStyleData.TYPE_VECTOR,
-                com.james.status.R.drawable.ic_battery_alert,
-                com.james.status.R.drawable.ic_battery_20,
-                com.james.status.R.drawable.ic_battery_30,
-                com.james.status.R.drawable.ic_battery_50,
-                com.james.status.R.drawable.ic_battery_60,
-                com.james.status.R.drawable.ic_battery_80,
-                com.james.status.R.drawable.ic_battery_90,
-                com.james.status.R.drawable.ic_battery_full,
-                com.james.status.R.drawable.ic_battery_charging_20,
-                com.james.status.R.drawable.ic_battery_charging_30,
-                com.james.status.R.drawable.ic_battery_charging_50,
-                com.james.status.R.drawable.ic_battery_charging_60,
-                com.james.status.R.drawable.ic_battery_charging_80,
-                com.james.status.R.drawable.ic_battery_charging_90,
-                com.james.status.R.drawable.ic_battery_charging_full
+                R.drawable.ic_battery_alert,
+                R.drawable.ic_battery_20,
+                R.drawable.ic_battery_30,
+                R.drawable.ic_battery_50,
+                R.drawable.ic_battery_60,
+                R.drawable.ic_battery_80,
+                R.drawable.ic_battery_90,
+                R.drawable.ic_battery_full,
+                R.drawable.ic_battery_charging_20,
+                R.drawable.ic_battery_charging_30,
+                R.drawable.ic_battery_charging_50,
+                R.drawable.ic_battery_charging_60,
+                R.drawable.ic_battery_charging_80,
+                R.drawable.ic_battery_charging_90,
+                R.drawable.ic_battery_charging_full
         };
 
         return icons[level + 1];
@@ -316,11 +390,11 @@ public class TopFragment extends CoreFragment {
     private int getWifiIcon(int level) {
         int icons[] = {
                 IconStyleData.TYPE_VECTOR,
-                com.james.status.R.drawable.ic_wifi_triangle_0,
-                com.james.status.R.drawable.ic_wifi_triangle_1,
-                com.james.status.R.drawable.ic_wifi_triangle_2,
-                com.james.status.R.drawable.ic_wifi_triangle_3,
-                com.james.status.R.drawable.ic_wifi_triangle_4
+                R.drawable.ic_wifi_0,
+                R.drawable.ic_wifi_1,
+                R.drawable.ic_wifi_2,
+                R.drawable.ic_wifi_3,
+                R.drawable.ic_wifi_4
         };
 
         return icons[level + 1];
@@ -329,11 +403,11 @@ public class TopFragment extends CoreFragment {
     private int getNetworkIcon(int level) {
         int icons[] = {
                 IconStyleData.TYPE_VECTOR,
-                com.james.status.R.drawable.ic_signal_0,
-                com.james.status.R.drawable.ic_signal_1,
-                com.james.status.R.drawable.ic_signal_2,
-                com.james.status.R.drawable.ic_signal_3,
-                com.james.status.R.drawable.ic_signal_4
+                R.drawable.ic_signal_0,
+                R.drawable.ic_signal_1,
+                R.drawable.ic_signal_2,
+                R.drawable.ic_signal_3,
+                R.drawable.ic_signal_4
         };
 
         return icons[level + 1];

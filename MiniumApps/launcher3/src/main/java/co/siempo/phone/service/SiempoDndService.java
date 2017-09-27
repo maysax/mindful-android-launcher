@@ -39,13 +39,17 @@ public class SiempoDndService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String start = intent.getStringExtra(KEY_START);
-        if (start != null) {
-            showNotification();
-        } else {
+        if(intent!=null && intent.hasExtra(KEY_START)){
+            String start = intent.getStringExtra(KEY_START);
+            if (start != null) {
+                showNotification();
+            } else {
+                stopForeground(true);
+            }
+        }
+        else{
             stopForeground(true);
         }
-
         return super.onStartCommand(intent, flags, startId);
     }
 

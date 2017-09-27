@@ -62,6 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -69,8 +70,27 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/ic_signal_wifi_off_black_24dp"
-                        android:padding="@dimen/dp_15" />
+                        android:padding="@dimen/dp_15"
+                        tools:ignore="ContentDescription" />
                 </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/relMobileData"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/dp_10">
+
+                    <ImageView
+                        android:id="@+id/imgData"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_data_on_black_24dp"
+                        android:padding="@dimen/dp_15"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
 
                 <RelativeLayout
                     android:id="@+id/relBle"
@@ -78,6 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -86,7 +107,8 @@
                         android:layout_height="30dp"
                         android:background="@drawable/ic_bluetooth_disabled_black_24dp"
                         android:gravity="center"
-                        android:padding="@dimen/dp_15" />
+                        android:padding="@dimen/dp_15"
+                        tools:ignore="ContentDescription" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -95,6 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -102,7 +125,8 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/ic_do_not_disturb_off_black_24dp"
-                        android:padding="@dimen/dp_15" />
+                        android:padding="@dimen/dp_15"
+                        tools:ignore="ContentDescription" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -111,6 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -118,7 +143,8 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/ic_airplanemode_inactive_black_24dp"
-                        android:padding="@dimen/dp_15" />
+                        android:padding="@dimen/dp_15"
+                        tools:ignore="ContentDescription" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -126,6 +152,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center"
                     android:padding="@dimen/dp_10">
 
@@ -134,7 +161,8 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@drawable/ic_flash_off_black_24dp"
-                        android:padding="@dimen/dp_15" />
+                        android:padding="@dimen/dp_15"
+                        tools:ignore="ContentDescription" />
                 </RelativeLayout>
 
             </LinearLayout>

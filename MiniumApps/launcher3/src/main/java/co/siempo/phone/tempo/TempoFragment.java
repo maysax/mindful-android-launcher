@@ -19,6 +19,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -72,6 +73,7 @@ public class TempoFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
         titleActionBar.setText(R.string.title_tempo);
 
@@ -93,6 +95,7 @@ public class TempoFragment extends CoreFragment {
 
     @Click
     void imgLeft() {
+        Launcher3App.getInstance().setSiempoBarLaunch(false);
         getActivity().finish();
     }
 

@@ -30,6 +30,7 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.notification.NotificationFragment;
@@ -122,6 +123,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     }
 
     public void initView() {
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         context = SiempoSettingsActivity.this;
         icon_launcher = (ImageView) findViewById(R.id.icon_launcher);
         icon_version = (ImageView) findViewById(R.id.icon_version);
@@ -213,6 +215,10 @@ public class SiempoSettingsActivity extends CoreActivity {
             }
             state= ActivityState.NORMAL;
         }
+        // If status bar view becomes null,reload the statusbar
+        if (getSupportFragmentManager().findFragmentById(R.id.statusView) == null) {
+            loadTopBar();
+        }
     }
     @Override
     protected void onStop() {
@@ -229,6 +235,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         loadStatusBar();
     }
 
@@ -291,6 +298,7 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
+        Launcher3App.getInstance().setSiempoBarLaunch(false);
         if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
             /**
              *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
@@ -317,6 +325,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Launcher3App.getInstance().setSiempoBarLaunch(true);
         if(state== ActivityState.ONHOMEPRESS){
             state= ActivityState.NORMAL;
         }

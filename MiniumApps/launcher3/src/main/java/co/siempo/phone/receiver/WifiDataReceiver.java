@@ -48,7 +48,11 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
                 Tracer.d("WifiDataReceiver, label: " + level);
-                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
+                if(wifiManager.isWifiEnabled()) {
+                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
+                }else{
+                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, -1));
+                }
             }
         } catch (Exception e) {
             Tracer.e(e);

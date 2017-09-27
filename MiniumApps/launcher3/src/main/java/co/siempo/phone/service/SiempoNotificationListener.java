@@ -35,6 +35,9 @@ import minium.co.core.log.Tracer;
 @EService
 public class SiempoNotificationListener extends NotificationListenerService {
 
+    public static final String TAG = SiempoNotificationListener.class.getName();
+
+
     @Pref
     Launcher3Prefs_ prefs;
 
@@ -58,23 +61,17 @@ public class SiempoNotificationListener extends NotificationListenerService {
             cancelNotification(notification.getKey());
             // saving the information in other place
         } else {
-            if (PackageUtil.isCallPackage(notification.getPackageName())) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            } else if (PackageUtil.isMsgPackage(notification.getPackageName())
-                    || PackageUtil.isCalenderPackage(notification.getPackageName())) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            if (PackageUtil.isCallPackage(notification.getPackageName()) || PackageUtil.isMsgPackage(notification.getPackageName())) {
+                // should pass
             } else {
-                Log.d("Raja", "Test :: " + getLauncherPackageName());
-                if (PackageUtil.isSiempoLauncher(getApplicationContext()) || isAppOnForeground(getPackageName())) {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
                     cancelNotification(notification.getKey());
                     saveNotification(notification.getPackageName(), notification.getPostTime(),
                             notification.getNotification().tickerText);
-                } else {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             }
         }
+
     }
 
     private boolean isAppOnForeground(String appPackageName) {
@@ -100,7 +97,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
     private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
         try {
             StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
-
             StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
             storage.setContent(tickerText.toString());
             storage.setPackageName(packageName);
@@ -120,6 +116,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
             prefs.isNotificationBlockerRunning().put(false);
         } else if (PackageUtil.isMsgPackage(notification.getPackageName())) {
             new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
+        }else if(PackageUtil.isCallPackage(notification.getPackageName())){
+            new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
         }
     }
 
@@ -129,4 +127,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 + " Details: " + notification.getNotification().toString()
                 + " Ticker: " + notification.getNotification().tickerText;
     }
+
+
 }
