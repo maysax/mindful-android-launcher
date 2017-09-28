@@ -49,6 +49,7 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
                 (launcherPrefs.isTempoActive().get() && !launcherPrefs.tempoAllowCalls().get())) {
             rejectCalls(ctx, number, start);
         }
+        // Below logic will use in future
         /*else if (prefs.isNotificationSchedulerEnabled().get()) {
             if (prefs.notificationSchedulerSupressCalls().get()) {
                 rejectCalls(ctx, number, start);

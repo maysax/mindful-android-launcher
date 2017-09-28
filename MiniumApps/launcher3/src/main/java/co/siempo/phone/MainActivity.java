@@ -116,6 +116,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Manifest.permission.READ_CONTACTS,
                         Manifest.permission.WRITE_CONTACTS,
+                        Manifest.permission.READ_CALL_LOG,
+                        Manifest.permission.WRITE_CALL_LOG,
                         Manifest.permission.SEND_SMS,
                         Manifest.permission.CAMERA,
                         Manifest.permission.RECEIVE_SMS,
@@ -297,7 +299,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
      * Below snippet is use to first check if siempo status bar is restricted from another activity,
      * then it first remove siempo status bar and restrict siempo status bar with reference to this activity
      */
-    synchronized void loadStatusBar() {
+    public synchronized void loadStatusBar() {
         try {
             statusBarHandler = new StatusBarHandler(MainActivity.this);
             NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
