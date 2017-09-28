@@ -37,9 +37,9 @@ public class StatusBarService extends Service {
 //        myObserver= new MyObserver(new Handler());
 //        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
 //                myObserver);
-        cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
         EventBus.getDefault().register(this);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
             try {
                 mCameraId = cameraManager.getCameraIdList()[0];
             } catch (CameraAccessException e) {
