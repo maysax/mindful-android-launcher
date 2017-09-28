@@ -1,17 +1,15 @@
 package co.siempo.phone.service;
 
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
-import android.provider.ContactsContract;
-import android.util.Log;
 
 import co.siempo.phone.event.TourchOnOff;
 import de.greenrobot.event.EventBus;
@@ -27,9 +25,8 @@ public class StatusBarService extends Service {
     private Camera camera;
     private Camera.Parameters parameters;
     public static boolean isFlashOn = false;
-    private CameraManager.TorchCallback mTorchCallback;
-   // private MyObserver myObserver;// Quick setting feature reference
 
+    // private MyObserver myObserver;// Quick setting feature reference
     @Override
     public void onCreate() {
         super.onCreate();
@@ -45,7 +42,7 @@ public class StatusBarService extends Service {
             } catch (CameraAccessException e) {
                 e.printStackTrace();
             }
-            mTorchCallback = new CameraManager.TorchCallback() {
+            CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
 
                 @Override
                 public void onTorchModeChanged(String cameraId, boolean enabled) {
@@ -64,7 +61,6 @@ public class StatusBarService extends Service {
             parameters = camera.getParameters();
         }
     }
-
 
 
     public StatusBarService() {
