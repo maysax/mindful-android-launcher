@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.Settings;
@@ -29,6 +30,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.james.status.data.IconStyleData;
@@ -47,7 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
@@ -63,6 +64,7 @@ import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import co.siempo.phone.receiver.IDynamicStatus;
 import co.siempo.phone.receiver.WifiDataReceiver;
+import co.siempo.phone.service.StatusBarService;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.config.Config;
@@ -81,16 +83,21 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     RecyclerView recyclerView;
 
     @ViewById
-    TextView emptyView;
+    TextView emptyView, textView_notification_title;
 
     RecyclerListAdapter adapter;
     private List<Notification> notificationList;
 
     @ViewById
-    RelativeLayout layout_notification, relWifi, relMobileData, relBle, relDND, relAirPlane, relFlash;
+    SeekBar seekbarBrightness;
+    //Variable to store brightness value
+    private int brightness;
 
     @ViewById
-    ImageView linSecond, imgWifi, imgData, imgBle, imgDnd, imgAirplane, imgFlash;
+    RelativeLayout layout_notification, relWifi, relMobileData, relBle, relDND, relAirPlane, relFlash, relBrightness;
+
+    @ViewById
+    ImageView linSecond, imgWifi, imgData, imgBle, imgDnd, imgAirplane, imgFlash, imgBrightness;
 
     @SystemService
     WifiManager wifiManager;
@@ -205,11 +212,83 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 //                return false;
 //            }
 //        });
+
+        bindBrighnessControl();
+
+
         wifiDataReceiver = new WifiDataReceiver();
         wifiDataReceiver.register(context);
 
         bleSingal = new BleSingal();
         getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+
+
+    }
+
+    private void bindBrighnessControl() {
+        try {
+            //Get the current system brightness
+            brightness = Settings.System.getInt(
+                    getActivity().getContentResolver(),
+                    Settings.System.SCREEN_BRIGHTNESS,
+                    0);
+        } catch (Exception e) {
+            //Throw an error case it couldn't be retrieved
+            e.printStackTrace();
+        }
+
+        seekbarBrightness.setMax(255);
+        //Set the progress of the seek bar based on the system's brightness
+        seekbarBrightness.setProgress(brightness);
+
+        //Register OnSeekBarChangeListener, so it can actually change values
+        seekbarBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                try {
+                    if (i >= 0 && i <= 255) {
+                        screenBrightness(i, getActivity());
+                    }
+                    //Get the current system brightness
+                    brightness = Settings.System.getInt(
+                            getActivity().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
+                } catch (Exception e) {
+                    //Throw an error case it couldn't be retrieved
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    boolean screenBrightness(int level, Context context) {
+
+        try {
+            android.provider.Settings.System.putInt(
+                    context.getContentResolver(),
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS, level);
+            android.provider.Settings.System.putInt(context.getContentResolver(),
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE,
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+            android.provider.Settings.System.putInt(
+                    context.getContentResolver(),
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS,
+                    level);
+            return true;
+        } catch (Exception e) {
+            Log.e("Screen Brightness", "error changing screen brightness");
+            return false;
+        }
     }
 
     /**
@@ -314,10 +393,13 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     recyclerView.setVisibility(View.GONE);
                     //  btnClearAll.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
+                    textView_notification_title.setVisibility(View.GONE);
+
                 } else {
                     recyclerView.setVisibility(View.VISIBLE);
                     //  btnClearAll.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
+                    textView_notification_title.setVisibility(View.GONE);
                 }
             }
         }
@@ -358,11 +440,13 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             recyclerView.setVisibility(View.GONE);
             //  btnClearAll.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
+            textView_notification_title.setVisibility(View.GONE);
         } else {
             adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.VISIBLE);
             //  btnClearAll.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
+            textView_notification_title.setVisibility(View.VISIBLE);
         }
 
     }
@@ -520,6 +604,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             }
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             if (!NetworkUtil.isAirplaneModeOn(getActivity())) {
+                relMobileData.setEnabled(true);
                 checkMobileData();
             }
         }
@@ -574,10 +659,12 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 recyclerView.setVisibility(View.GONE);
                 emptyView.setVisibility(View.VISIBLE);
                 //    btnClearAll.setVisibility(View.GONE);
+                textView_notification_title.setVisibility(View.GONE);
             } else {
                 recyclerView.setVisibility(View.VISIBLE);
                 emptyView.setVisibility(View.GONE);
                 //  btnClearAll.setVisibility(View.VISIBLE);
+                textView_notification_title.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -594,7 +681,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
      *
      * @param view
      */
-    @Click({R.id.relWifi, R.id.relBle, R.id.relMobileData, R.id.relDND, R.id.relAirPlane, R.id.relFlash})
+    @Click({R.id.relWifi, R.id.relBle, R.id.relMobileData, R.id.relDND, R.id.relAirPlane, R.id.relFlash, R.id.relBrightness})
     void clickListener(View view) {
         switch (view.getId()) {
             case R.id.relMobileData:
@@ -653,6 +740,26 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
                 }
                 break;
+            case R.id.relBrightness:
+                if (checkSystemWritePermission()) {
+                    if (seekbarBrightness.getVisibility() == View.VISIBLE) {
+                        seekbarBrightness.setVisibility(View.GONE);
+                        imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
+                    } else {
+                        seekbarBrightness.setVisibility(View.VISIBLE);
+                        imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_on_black_24dp));
+                    }
+                } else {
+                    Intent intent = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
+                        startActivity(intent);
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -672,6 +779,15 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private boolean checkSystemWritePermission() {
+        boolean retVal = true;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            retVal = Settings.System.canWrite(getActivity());
+        }
+        return retVal;
     }
 
     public boolean isMobileDataEnable() {

@@ -80,17 +80,17 @@ public class TopFragment extends CoreFragment {
     @ViewById
     ImageView imgWifi;
 
-    @ViewById
-    TextView txtType;
+//    @ViewById
+//    TextView txtType; // SSA-206 Quick Setting for feature reference.
+
+//    @ViewById
+//    ImageView imgBluetooth; // SSA-206 Quick Setting for feature reference.
+
+//    @ViewById
+//    ImageView imgDND; // SSA-206 Quick Setting for feature reference.
 
     @ViewById
-    ImageView imgBluetooth;
-
-    @ViewById
-    ImageView imgDND;
-
-    @ViewById
-    ImageView imgAirplane;
+    ImageView imgAirplane; // SSA-206 Quick Setting for feature reference.
 
     @SystemService
     WifiManager wifiManager;
@@ -135,50 +135,49 @@ public class TopFragment extends CoreFragment {
 
     private void updateUI() {
         if (NetworkUtil.isAirplaneModeOn(context)) {
-            imgAirplane.setVisibility(View.VISIBLE);
+            imgAirplane.setVisibility(View.VISIBLE);// SSA-206 Quick Setting for feature reference.
             imgSignal.setVisibility(View.GONE);
-            txtType.setVisibility(View.GONE);
+            //txtType.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
             imgWifi.setVisibility(View.GONE);
-            imgBluetooth.setVisibility(View.GONE);
-            imgDND.setVisibility(View.GONE);
+            //imgBluetooth.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
+            //imgDND.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
         } else {
-            imgAirplane.setVisibility(View.GONE);
+            imgAirplane.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
             imgSignal.setVisibility(View.VISIBLE);
-            txtType.setVisibility(View.VISIBLE);
+           // txtType.setVisibility(View.VISIBLE);// SSA-206 Quick Setting for feature reference.
             if (wifiManager.isWifiEnabled()) {
                 imgWifi.setVisibility(View.VISIBLE);
                 imgWifi.setImageResource(getWifiIcon(WifiManager.calculateSignalLevel(wifiManager.getConnectionInfo().getRssi(), 5)));
             } else {
                 imgWifi.setVisibility(View.GONE);
             }
-
-            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                imgBluetooth.setVisibility(View.VISIBLE);
-                imgBluetooth.setImageResource(R.drawable.ic_bluetooth_on);
-            } else {
-                imgBluetooth.setVisibility(View.GONE);
-                // imgBluetooth.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
-            }
-            bindDnd();
+// SSA-206 Quick Setting for feature reference.
+//            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+//                imgBluetooth.setVisibility(View.VISIBLE);
+//                imgBluetooth.setImageResource(R.drawable.ic_bluetooth_on);
+//            } else {
+//                imgBluetooth.setVisibility(View.GONE);
+//            }
+//            bindDnd();
         }
         long notifCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
         imgNotification.setVisibility(notifCount == 0 ? View.GONE : View.VISIBLE);
 
 
     }
-
-    private void bindDnd() {
-        int currentModeDeviceMode = audioManager.getRingerMode();
-        if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
-            imgDND.setVisibility(View.GONE);
-        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
-            imgDND.setVisibility(View.VISIBLE);
-            imgDND.setImageResource(R.drawable.ic_do_not_disturb_on_black_24dp);
-        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
-            imgDND.setVisibility(View.VISIBLE);
-            imgDND.setImageResource(R.drawable.ic_vibration_black_24dp);
-        }
-    }
+// SSA-206 Quick Setting for feature reference.
+//    private void bindDnd() {
+//        int currentModeDeviceMode = audioManager.getRingerMode();
+//        if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+//            imgDND.setVisibility(View.GONE);
+//        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
+//            imgDND.setVisibility(View.VISIBLE);
+//            imgDND.setImageResource(R.drawable.ic_do_not_disturb_on_black_24dp);
+//        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+//            imgDND.setVisibility(View.VISIBLE);
+//            imgDND.setImageResource(R.drawable.ic_vibration_black_24dp);
+//        }
+//    }
 
     @Override
     public void onResume() {
@@ -325,12 +324,12 @@ public class TopFragment extends CoreFragment {
         if (event.getState() == ConnectivityEvent.AIRPLANE) {
             imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
             imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
-            imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
+            imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);// SSA-206 Quick Setting for feature reference.
         } else if (event.getState() == ConnectivityEvent.WIFI) {
 
             if (wifiManager.isWifiEnabled()) {
-                txtType.setText("");
-                txtType.setVisibility(View.GONE);
+                //txtType.setText("");// SSA-206 Quick Setting for feature reference.
+                //txtType.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
                 imgWifi.setVisibility(View.VISIBLE);
                 imgWifi.setImageResource(getWifiIcon(event.getValue()));
             } else {
@@ -344,23 +343,24 @@ public class TopFragment extends CoreFragment {
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             if (event.getValue() == -1) {
                 imgSignal.setImageResource(R.drawable.ic_signal_0);
-                txtType.setText("");
-                txtType.setVisibility(View.GONE);
+                //txtType.setText("");// SSA-206 Quick Setting for feature reference.
+                //txtType.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
             } else {
                 imgSignal.setImageResource(getNetworkIcon(event.getValue()));
                 NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-                if (!wifiManager.isWifiEnabled() && networkInfo.isConnected()) {
-                    txtType.setText(event.getType());
-                    txtType.setVisibility(View.VISIBLE);
-                } else {
-                    txtType.setText("");
-                    txtType.setVisibility(View.GONE);
-                }
+// SSA-206 Quick Setting for feature reference.
+//                if (!wifiManager.isWifiEnabled() && networkInfo.isConnected()) {
+//                    txtType.setText(event.getType());
+//                    txtType.setVisibility(View.VISIBLE);
+//                } else {
+//                    txtType.setText("");
+//                    txtType.setVisibility(View.GONE);
+//                }
             }
         } else if (event.getState() == ConnectivityEvent.DND) {
-            bindDnd();
+           // bindDnd();// SSA-206 Quick Setting for feature reference.
         } else if (event.getState() == ConnectivityEvent.BLE) {
-            imgBluetooth.setVisibility(event.getValue() == 0 ? View.GONE : View.VISIBLE);
+//            imgBluetooth.setVisibility(event.getValue() == 0 ? View.GONE : View.VISIBLE);// SSA-206 Quick Setting for feature reference.
         }
     }
 

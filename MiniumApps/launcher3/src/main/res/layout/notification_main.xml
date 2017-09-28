@@ -34,19 +34,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView_notification_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:text="@string/string_notification_title"
-                android:textColor="#de000000"
-                android:textSize="28sp"
-                tools:ignore="UnusedIds" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,8 +50,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -73,13 +62,15 @@
                         android:padding="@dimen/dp_15"
                         tools:ignore="ContentDescription" />
                 </RelativeLayout>
+
+
                 <RelativeLayout
                     android:id="@+id/relMobileData"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -97,8 +88,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -116,8 +107,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -134,8 +125,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
                     android:padding="@dimen/dp_10">
 
                     <ImageView
@@ -165,8 +156,51 @@
                         tools:ignore="ContentDescription" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/relBrightness"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:padding="@dimen/dp_10">
+
+                    <ImageView
+                        android:id="@+id/imgBrightness"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_brightness_off_black_24dp"
+                        android:padding="@dimen/dp_15"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
             </LinearLayout>
+
+            <SeekBar
+                android:visibility="gone"
+                android:id="@+id/seekbarBrightness"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:thumb="@drawable/ic_brightness_on_black_24dp"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_10"
+                tools:ignore="InefficientWeight" />
+
+            <TextView
+                android:id="@+id/textView_notification_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="@string/string_notification_title"
+                android:textColor="#de000000"
+                android:textSize="28sp"
+                tools:ignore="UnusedIds" />
         </LinearLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"

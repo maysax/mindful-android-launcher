@@ -3,11 +3,15 @@ package co.siempo.phone.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.ContactsContract;
+import android.util.Log;
 
 import co.siempo.phone.event.TourchOnOff;
 import de.greenrobot.event.EventBus;
@@ -21,11 +25,14 @@ public class StatusBarService extends Service {
     private Camera.Parameters parameters;
     public static boolean isFlashOn = false;
     private CameraManager.TorchCallback mTorchCallback;
-
+    private MyObserver myObserver;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        myObserver= new MyObserver(new Handler());
+        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
+                myObserver);
         cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
         EventBus.getDefault().register(this);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -53,6 +60,8 @@ public class StatusBarService extends Service {
             parameters = camera.getParameters();
         }
     }
+
+
 
     public StatusBarService() {
     }
@@ -129,10 +138,29 @@ public class StatusBarService extends Service {
         return false;
     }
 
+    class MyObserver extends ContentObserver {
+        public MyObserver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            this.onChange(selfChange, null);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            // do s.th.
+            // depending on the handler you might be on the UI
+            // thread, so be cautious!
+            Log.d("Raja","Rajajajajajaj");
+        }
+    }
 
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+        getContentResolver().unregisterContentObserver(myObserver);
         super.onDestroy();
     }
 }
