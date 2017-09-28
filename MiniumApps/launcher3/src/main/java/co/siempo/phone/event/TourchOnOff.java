@@ -2,6 +2,7 @@ package co.siempo.phone.event;
 
 /**
  * Created by Shahab on 8/12/2016.
+ * Used for the tourch enable/disable.
  */
 public class TourchOnOff {
 

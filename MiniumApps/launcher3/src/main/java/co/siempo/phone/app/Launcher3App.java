@@ -40,7 +40,6 @@ import minium.co.core.util.DateUtils;
 /**
  * Created by Shahab on 2/16/2017.
  */
-@SuppressWarnings("ALL")
 @EApplication
 public class Launcher3App extends CoreApplication {
 
@@ -54,6 +53,8 @@ public class Launcher3App extends CoreApplication {
 
     @Bean
     TokenManager manager;
+
+
 
     private FirebaseAnalytics mFirebaseAnalytics;
 

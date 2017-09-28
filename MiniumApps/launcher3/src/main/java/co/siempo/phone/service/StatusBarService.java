@@ -17,6 +17,9 @@ import co.siempo.phone.event.TourchOnOff;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
+/**
+ * This background service used for detect tourch status and feature used for any other background status.
+ */
 public class StatusBarService extends Service {
 
     private CameraManager cameraManager;
@@ -25,14 +28,15 @@ public class StatusBarService extends Service {
     private Camera.Parameters parameters;
     public static boolean isFlashOn = false;
     private CameraManager.TorchCallback mTorchCallback;
-    private MyObserver myObserver;
+   // private MyObserver myObserver;// Quick setting feature reference
 
     @Override
     public void onCreate() {
         super.onCreate();
-        myObserver= new MyObserver(new Handler());
-        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
-                myObserver);
+        // Quick setting feature reference
+//        myObserver= new MyObserver(new Handler());
+//        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
+//                myObserver);
         cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
         EventBus.getDefault().register(this);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -137,30 +141,30 @@ public class StatusBarService extends Service {
         }
         return false;
     }
-
-    class MyObserver extends ContentObserver {
-        public MyObserver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            this.onChange(selfChange, null);
-        }
-
-        @Override
-        public void onChange(boolean selfChange, Uri uri) {
-            // do s.th.
-            // depending on the handler you might be on the UI
-            // thread, so be cautious!
-            Log.d("Raja","Rajajajajajaj");
-        }
-    }
+//    Used for SSA-206 Quick settings for feature reference.
+//    class MyObserver extends ContentObserver {
+//        public MyObserver(Handler handler) {
+//            super(handler);
+//        }
+//
+//        @Override
+//        public void onChange(boolean selfChange) {
+//            this.onChange(selfChange, null);
+//        }
+//
+//        @Override
+//        public void onChange(boolean selfChange, Uri uri) {
+//            // do s.th.
+//            // depending on the handler you might be on the UI
+//            // thread, so be cautious!
+//            Log.d("Raja","Rajajajajajaj");
+//        }
+//    }
 
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        getContentResolver().unregisterContentObserver(myObserver);
+//        getContentResolver().unregisterContentObserver(myObserver);//reference for quick setting
         super.onDestroy();
     }
 }

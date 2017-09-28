@@ -12,7 +12,6 @@ import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.util.Log;
 
-
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;

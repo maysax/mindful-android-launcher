@@ -112,7 +112,6 @@ public class AppDrawerActivity extends CoreActivity {
                 .sizeDp(20));
         btnListOrGrid.setTag("0");
         btnListOrGrid.setVisibility(View.VISIBLE);
-        btnListOrGrid.setTag("0");
         mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
         activity_grid_view.setLayoutManager(mLayoutManager);
         mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList,true);

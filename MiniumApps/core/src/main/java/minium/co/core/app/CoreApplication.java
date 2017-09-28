@@ -74,38 +74,6 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public HashMap<String, Bitmap> iconList = new HashMap<>();
 
-//    private Camera camera;
-//    private boolean isFlashOn = false;
-//
-//    public boolean isFlashOn() {
-//        return isFlashOn;
-//    }
-//
-//    public void setFlashOn(boolean flashOn) {
-//        isFlashOn = flashOn;
-//    }
-//
-//    /**
-//     * getting camera parameters
-//     */
-//    public void getCameraInstance() {
-//        if (camera == null) {
-//            try {
-//                camera = Camera.open();
-//                setCamera(camera);
-//            } catch (RuntimeException e) {
-//                Log.e("Camera Error ", e.getMessage());
-//            }
-//        }
-//    }
-//
-//    public Camera getCamera() {
-//        return camera;
-//    }
-//
-//    public void setCamera(Camera camera) {
-//        this.camera = camera;
-//    }
     Handler handler;
 
 

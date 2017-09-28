@@ -781,7 +781,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         }
     }
 
-
+    /**
+     * Used for check the Write permission
+     * @return
+     */
     private boolean checkSystemWritePermission() {
         boolean retVal = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
