@@ -27,6 +27,7 @@ public class StatusBarService extends Service {
     public static boolean isFlashOn = false;
 
     // private MyObserver myObserver;// Quick setting feature reference
+    @TargetApi(23)
     @Override
     public void onCreate() {
         super.onCreate();
