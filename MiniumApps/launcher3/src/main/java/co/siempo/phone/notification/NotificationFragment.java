@@ -48,6 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -113,6 +114,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     @SystemService
     AudioManager audioManager;
+    private StatusBarHandler statusBarHandler;
 
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
@@ -140,6 +142,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     @AfterViews
     void afterViews() {
+        statusBarHandler = new StatusBarHandler(getActivity());
         telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         notificationList = new ArrayList<>();
         recyclerView.setNestedScrollingEnabled(false);
@@ -191,8 +194,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
+                    removeStatusbar();
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null)));
                 } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
+                    removeStatusbar();
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
                     startActivity(intent);
                 }
@@ -686,6 +691,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         switch (view.getId()) {
             case R.id.relMobileData:
                 try {
+                    seekbarBrightness.setVisibility(View.GONE);
+                    imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
+                    removeStatusbar();
                     Intent intent = new Intent();
                     intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                     startActivity(intent);
@@ -694,9 +702,13 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 }
                 break;
             case R.id.relWifi:
+                seekbarBrightness.setVisibility(View.GONE);
+                imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 turnOnOffWIFI();
                 break;
             case R.id.relBle:
+                seekbarBrightness.setVisibility(View.GONE);
+                imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                     BluetoothAdapter.getDefaultAdapter().disable();
                     EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
@@ -708,6 +720,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 }
                 break;
             case R.id.relDND:
+                seekbarBrightness.setVisibility(View.GONE);
+                imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
                     imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
@@ -724,6 +738,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             case R.id.relAirPlane:
                 try {
                     // No root permission, just show the Airplane / Flight mode setting screen.
+                    removeStatusbar();
+                    seekbarBrightness.setVisibility(View.GONE);
+                    imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
                     Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivityForResult(intent, 90);
@@ -732,6 +749,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 }
                 break;
             case R.id.relFlash:
+                seekbarBrightness.setVisibility(View.GONE);
+                imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (StatusBarService.isFlashOn) {
                     EventBus.getDefault().post(new TourchOnOff(false));
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
@@ -752,6 +771,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 } else {
                     Intent intent = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        removeStatusbar();
                         intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                         intent.setData(Uri.parse("package:" + getActivity().getPackageName()));
                         startActivity(intent);
@@ -760,6 +780,14 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 break;
             default:
                 break;
+        }
+    }
+
+    private void removeStatusbar() {
+        NotificationRetreat_.getInstance_(getActivity()).retreat();
+        if (statusBarHandler != null) {
+            Log.d(TAG, "LOAD STATUSBAR ::: RESTORE PREVENT");
+            statusBarHandler.restoreStatusBarExpansion();
         }
     }
 
