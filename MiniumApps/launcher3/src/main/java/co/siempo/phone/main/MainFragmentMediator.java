@@ -127,12 +127,6 @@ class MainFragmentMediator {
                 break;
             case ACTION:
                 if (getAdapter().getItem(position).getApplicationInfo() != null) {
-                    if(fragment!=null && fragment.getActivity()!=null && fragment.getActivity() instanceof  MainActivity){
-                        MainActivity mainActivity = (MainActivity)fragment.getActivity();
-                        if(mainActivity!=null) {
-                            mainActivity.restoreSiempoNotificationBar();
-                        }
-                    }
                     UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                     new ActivityHelper(fragment.getActivity()).openGMape(getAdapter().getItem(position).getApplicationInfo().packageName);
                     MainActivity.isTextLenghGreater = "";
@@ -153,12 +147,6 @@ class MainFragmentMediator {
                         EventBus.getDefault().post(new CreateNoteEvent());
                         break;
                     case 3:
-                        if(fragment!=null && fragment.getActivity()!=null && fragment.getActivity() instanceof  MainActivity){
-                            MainActivity mainActivity = (MainActivity)fragment.getActivity();
-                            if(mainActivity!=null) {
-                                mainActivity.restoreSiempoNotificationBar();
-                            }
-                        }
                         router.createContact(fragment.getActivity());
                         break;
                     case 4:

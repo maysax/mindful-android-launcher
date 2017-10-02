@@ -39,7 +39,6 @@ public class OldMenuFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        Launcher3App.getInstance().setSiempoBarLaunch(true);
         loadData();
     }
 

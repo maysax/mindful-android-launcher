@@ -349,7 +349,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        StatusBarHandler.isNotificationTrayVisible = false;
+//        StatusBarHandler.isNotificationTrayVisible = false;
     }
 
     @Override

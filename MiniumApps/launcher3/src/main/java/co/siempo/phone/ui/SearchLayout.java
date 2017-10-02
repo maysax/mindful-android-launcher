@@ -6,7 +6,6 @@ import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
@@ -24,7 +23,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
-import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -140,11 +138,9 @@ public class SearchLayout extends CardView {
     private Runnable showKeyboardRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!StatusBarHandler.isNotificationTrayVisible) {
                 if(launcherPrefs.isKeyBoardDisplay().get()) {
                     UIUtils.showKeyboard(txtSearchBox);
                 }
-            }
         }
     };
 

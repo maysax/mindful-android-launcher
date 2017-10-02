@@ -199,6 +199,8 @@
         <activity android:name=".settings.SiempoMainSettingsActivity_"/>
         <activity android:name=".settings.SiempoAlphaSettingsActivity_"/>
 
+        <service android:name=".ViewService_" />
+
     </application>
 
 </manifest>

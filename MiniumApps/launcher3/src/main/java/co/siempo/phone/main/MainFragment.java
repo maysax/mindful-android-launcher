@@ -38,7 +38,6 @@ import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
-import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -48,7 +47,6 @@ import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.ui.SearchLayout;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
@@ -78,8 +76,6 @@ public class MainFragment extends CoreFragment {
     @ViewById
     TextView text;
 
-    @Pref
-    DroidPrefs_ prefs;
 
     @Bean
     TokenManager manager;
@@ -104,7 +100,6 @@ public class MainFragment extends CoreFragment {
     @AfterViews
     void afterViews() {
 
-        Launcher3App.getInstance().setSiempoBarLaunch(true);
         listViewLayout.setVisibility(View.GONE);
         afterEffectLayout.setVisibility(View.GONE);
         KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {
@@ -141,13 +136,6 @@ public class MainFragment extends CoreFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
                 new IntentFilter("IsNotificationVisible"));
         if (adapter != null) adapter.getFilter().filter("");
-        if (StatusBarHandler.isNotificationTrayVisible) {
-            searchLayout.clearFocus();
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", true));
-        } else {
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
-            searchLayout.askFocus();
-        }
     }
 
     @Override
@@ -304,13 +292,6 @@ public class MainFragment extends CoreFragment {
     void text() {
         String id = (String) text.getTag();
         if (id.equals("1")) {
-            Launcher3App.getInstance().setSiempoBarLaunch(false);
-            if(getActivity()!=null && getActivity() instanceof  MainActivity){
-                MainActivity mainActivity = (MainActivity)getActivity();
-                if(mainActivity!=null) {
-                    mainActivity.restoreSiempoNotificationBar();
-                }
-            }
             new ActivityHelper(getActivity()).openNotesApp(true);
         }
         afterEffectLayout.setVisibility(View.GONE);
