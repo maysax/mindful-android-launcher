@@ -146,6 +146,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void checkAppLoadFirstTime() {
         if (launcherPrefs.isAppInstalledFirstTime().get()) {
             launcherPrefs.isAppInstalledFirstTime().put(false);
+            launcherPrefs.getCurrentProfile().put(0);
             ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
                 restoreSiempoNotificationBar();

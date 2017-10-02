@@ -1,6 +1,7 @@
 package co.siempo.phone.service;
 
 import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +10,8 @@ import android.media.AudioManager;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
-import android.util.Log;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -26,6 +27,8 @@ import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.PackageUtil;
+import co.siempo.phone.util.VibrationUtils;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
 /**
@@ -44,6 +47,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @SystemService
     AudioManager audioManager;
 
+    @SystemService
+    NotificationManager notificationManager;
+
+    @Bean
+    VibrationUtils vibrationUtils;
+
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
+
+
     @Override
     public IBinder onBind(Intent intent) {
         return super.onBind(intent);
@@ -53,26 +66,30 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
         Tracer.d("Notification posted: " + getNotificationToString(notification));
-
-        if (PackageUtil.isSiempoBlocker(notification.getId())) {
-            requestInterruptionFilter(INTERRUPTION_FILTER_NONE);
-            prefs.isNotificationBlockerRunning().put(true);
-        } else if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
-            cancelNotification(notification.getKey());
-            // saving the information in other place
-        } else {
-            if (PackageUtil.isCallPackage(notification.getPackageName()) || PackageUtil.isMsgPackage(notification.getPackageName())) {
-                // should pass
-            } else {
-                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+        if (PackageUtil.isSiempoLauncher(this)
+                || SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
+            if (launcherPrefs.getCurrentProfile().get() == 0) {
+                if (PackageUtil.isSiempoBlocker(notification.getId())) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    prefs.isNotificationBlockerRunning().put(true);
+                } else if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
                     cancelNotification(notification.getKey());
-                    saveNotification(notification.getPackageName(), notification.getPostTime(),
-                            notification.getNotification().tickerText);
+                    // saving the information in other place
+                } else if (CoreApplication.getInstance().getNormalModeList().contains(notification.getPackageName())) {
+
+                } else {
+                    cancelNotification(notification.getKey());
+                    if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        vibrationUtils.vibrate(500);
+                    } else if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    }
                 }
             }
         }
-
     }
+
 
     private boolean isAppOnForeground(String appPackageName) {
         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -116,7 +133,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             prefs.isNotificationBlockerRunning().put(false);
         } else if (PackageUtil.isMsgPackage(notification.getPackageName())) {
             new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
-        }else if(PackageUtil.isCallPackage(notification.getPackageName())){
+        } else if (PackageUtil.isCallPackage(notification.getPackageName())) {
             new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
         }
     }
