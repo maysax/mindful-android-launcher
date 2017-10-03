@@ -38,7 +38,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import minium.co.core.R;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
@@ -120,7 +122,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * This method is used for fetch all installed application package list.
      */
-    private void getAllApplicationPackageName() {
+    public void getAllApplicationPackageName() {
         new LoadApplications().execute();
     }
 
@@ -283,6 +285,7 @@ public abstract class CoreApplication extends MultiDexApplication {
             super.onPostExecute(applicationInfos);
             packagesList.clear();
             setPackagesList(applicationInfos);
+            EventBus.getDefault().post(new AppInstalledEvent(true));
         }
 
         private List<ApplicationInfo> checkForLaunchIntent(List<ApplicationInfo> list) {

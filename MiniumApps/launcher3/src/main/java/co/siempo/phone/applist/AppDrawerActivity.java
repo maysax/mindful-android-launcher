@@ -1,6 +1,7 @@
 package co.siempo.phone.applist;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.pm.ApplicationInfo;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.ui.TopFragment_;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
@@ -67,6 +69,7 @@ public class AppDrawerActivity extends CoreActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private String TAG = "AppDrawerActivity";
     public ActivityState state;
+    ProgressDialog progressDialog;
 
     /**
      * Activitystate is use to identify state whether the screen is coming from
@@ -194,6 +197,11 @@ public class AppDrawerActivity extends CoreActivity {
             loadTopBar();
         }
 
+        if (prefs.isAppUpdated().get()) {
+            progressDialog = ProgressDialog.show(this, "", "Loading....");
+            CoreApplication.getInstance().getAllApplicationPackageName();
+        }
+
     }
 
     private void loadTopBar() {
@@ -251,6 +259,19 @@ public class AppDrawerActivity extends CoreActivity {
         state = ActivityState.ONHOMEPRESS;
         if (event.isVisible()) {
             restoreSiempoNotificationBar();
+        }
+    }
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
+            arrayList = CoreApplication.getInstance().getPackagesList();
+            if (prefs.isGrid().get()) {
+                bindAsGrid();
+            } else {
+                bindAsList();
+            }
         }
     }
 

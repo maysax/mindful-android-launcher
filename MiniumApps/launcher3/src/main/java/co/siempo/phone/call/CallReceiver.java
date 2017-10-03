@@ -21,7 +21,6 @@ import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.notification.NotificationUtility;
-import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.util.VibrationUtils;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;

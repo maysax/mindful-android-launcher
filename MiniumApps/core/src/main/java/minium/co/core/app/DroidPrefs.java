@@ -73,5 +73,10 @@ public interface DroidPrefs {
     @DefaultBoolean(true)
     boolean isGrid();
 
+    @DefaultBoolean(true)
+    boolean isContactUpdate();
+
+    @DefaultBoolean(false)
+    boolean isAppUpdated();
 
 }

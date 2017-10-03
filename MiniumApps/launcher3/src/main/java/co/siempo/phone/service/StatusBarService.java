@@ -2,39 +2,53 @@ package co.siempo.phone.service;
 
 import android.annotation.TargetApi;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.database.ContentObserver;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
-import android.os.Build;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import co.siempo.phone.event.TourchOnOff;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 
 /**
- * This background service used for detect tourch status and feature used for any other background status.
+ * This background service used for detect torch status and feature used for any other background status.
  */
+
 public class StatusBarService extends Service {
 
     private CameraManager cameraManager;
     private String mCameraId;
+    @SuppressWarnings("deprecation")
     private Camera camera;
+    @SuppressWarnings("deprecation")
     private Camera.Parameters parameters;
     public static boolean isFlashOn = false;
 
-    // private MyObserver myObserver;// Quick setting feature reference
+    SharedPreferences sharedPreferences;
+    private MyObserver myObserver;
+    private AppInstallUninstall appInstallUninstall;
+
     @TargetApi(23)
     @Override
     public void onCreate() {
         super.onCreate();
-        // Quick setting feature reference
-//        myObserver= new MyObserver(new Handler());
-//        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
-//                myObserver);
+        sharedPreferences = getSharedPreferences("DroidPrefs", 0);
+        registerObserverForContact();
+        registerObserverForAppInstallUninstall();
+
         EventBus.getDefault().register(this);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
@@ -46,21 +60,43 @@ public class StatusBarService extends Service {
             CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
 
                 @Override
-                public void onTorchModeChanged(String cameraId, boolean enabled) {
+                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
                     super.onTorchModeChanged(cameraId, enabled);
                     isFlashOn = enabled;
                 }
 
                 @Override
-                public void onTorchModeUnavailable(String cameraId) {
+                public void onTorchModeUnavailable(@NonNull String cameraId) {
                     super.onTorchModeUnavailable(cameraId);
                 }
             };
             cameraManager.registerTorchCallback(mTorchCallback, new Handler());
         } else {
+            //noinspection deprecation
             camera = Camera.open();
             parameters = camera.getParameters();
         }
+    }
+
+    /**
+     * Observer for when installing new app or uninstalling the app.
+     */
+    private void registerObserverForAppInstallUninstall() {
+        appInstallUninstall = new AppInstallUninstall();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addDataScheme("package");
+        registerReceiver(appInstallUninstall, intentFilter);
+    }
+
+    /**
+     * Observer for when new contact adding or updating any exiting contact.
+     */
+    private void registerObserverForContact() {
+        myObserver = new MyObserver(new Handler());
+        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
+                myObserver);
     }
 
 
@@ -119,49 +155,49 @@ public class StatusBarService extends Service {
         isFlashOn = false;
     }
 
-    /**
-     * Turning On flash
-     */
-    private boolean checkFlashOnOFF() {
-        if (camera == null) {
-            camera = Camera.open();
-            parameters = camera.getParameters();
+
+    private class MyObserver extends ContentObserver {
+        MyObserver(Handler handler) {
+            super(handler);
         }
-        if (parameters.getFlashMode().equals(android.hardware.Camera.Parameters.FLASH_MODE_ON)) {
-            return true;
-        } else if (parameters.getFlashMode().equals(android.hardware.Camera.Parameters.FLASH_MODE_OFF)) {
-            return false;
-        } else if (parameters.getFlashMode().equals(android.hardware.Camera.Parameters.FLASH_MODE_TORCH)) {
-            return true;
-        } else if (parameters.getFlashMode().equals(android.hardware.Camera.Parameters.FLASH_MODE_AUTO)) {
-            return false;
+
+        @Override
+        public void onChange(boolean selfChange) {
+            this.onChange(selfChange, null);
         }
-        return false;
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            // do s.th.
+            // depending on the handler you might be on the UI
+            // thread, so be cautious!
+
+            sharedPreferences.edit().putBoolean("isContactUpdate", true).commit();
+        }
     }
-//    Used for SSA-206 Quick settings for feature reference.
-//    class MyObserver extends ContentObserver {
-//        public MyObserver(Handler handler) {
-//            super(handler);
-//        }
-//
-//        @Override
-//        public void onChange(boolean selfChange) {
-//            this.onChange(selfChange, null);
-//        }
-//
-//        @Override
-//        public void onChange(boolean selfChange, Uri uri) {
-//            // do s.th.
-//            // depending on the handler you might be on the UI
-//            // thread, so be cautious!
-//            Log.d("Raja","Rajajajajajaj");
-//        }
-//    }
+
+    class AppInstallUninstall extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            CoreApplication.getInstance().getAllApplicationPackageName();
+            if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
+                String installPackageName = intent.getData().getEncodedSchemeSpecificPart();
+                Log.d("Testing with device.", "Added" + installPackageName);
+            } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+                String uninstallPackageName = intent.getData().getSchemeSpecificPart();
+                Log.d("Testing with device.", "Removed" + uninstallPackageName);
+            }
+            sharedPreferences.edit().putBoolean("isAppUpdated", true).commit();
+        }
+    }
+
 
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-//        getContentResolver().unregisterContentObserver(myObserver);//reference for quick setting
+        getContentResolver().unregisterContentObserver(myObserver);//reference for quick setting
+        unregisterReceiver(appInstallUninstall);
         super.onDestroy();
     }
 }
