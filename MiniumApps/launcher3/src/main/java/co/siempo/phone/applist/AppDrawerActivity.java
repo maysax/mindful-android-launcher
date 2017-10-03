@@ -267,6 +267,7 @@ public class AppDrawerActivity extends CoreActivity {
         if (event.isRunning()) {
             if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
             arrayList = CoreApplication.getInstance().getPackagesList();
+            prefs.isAppUpdated().put(false);
             if (prefs.isGrid().get()) {
                 bindAsGrid();
             } else {
