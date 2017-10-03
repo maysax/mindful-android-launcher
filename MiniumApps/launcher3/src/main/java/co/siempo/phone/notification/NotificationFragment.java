@@ -139,6 +139,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     TableNotificationSmsDao smsDao;
     CallStorageDao callStorageDao;
     int count = 1;
+    boolean isWiFiOn = false;
 
     @AfterViews
     void afterViews() {
@@ -312,6 +313,11 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             relMobileData.setEnabled(true);
             checkMobileData();
             imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
+            if (isWiFiOn) {
+                wifiManager.setWifiEnabled(true);
+            } else {
+                isWiFiOn = false;
+            }
             if (!wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(getActivity())) {
                 imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
             } else {
@@ -743,9 +749,13 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     removeStatusbar();
                     seekbarBrightness.setVisibility(View.GONE);
                     imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
+                    if (wifiManager.isWifiEnabled()) {
+                        isWiFiOn = true;
+                    }
                     Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivityForResult(intent, 90);
+
                 } catch (ActivityNotFoundException e) {
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
