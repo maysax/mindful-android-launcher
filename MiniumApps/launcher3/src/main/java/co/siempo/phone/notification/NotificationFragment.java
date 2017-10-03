@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.james.status.data.IconStyleData;
 
 import org.androidannotations.annotations.AfterViews;
@@ -48,7 +49,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -610,13 +610,15 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             if (!NetworkUtil.isAirplaneModeOn(getActivity())) {
                 relMobileData.setEnabled(true);
+
                 checkMobileData();
             }
         }
     }
 
     private void checkMobileData() {
-        if (Settings.Global.getInt(context.getContentResolver(), "mobile_data", 1) == 0) {
+        Log.d("Raja", "" + NetworkUtils.getDataEnabled());
+        if (NetworkUtil.getConnectivityStatus(getActivity()) == ConnectivityManager.TYPE_MOBILE) {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
         } else {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_off_black_24dp));
@@ -811,6 +813,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     /**
      * Used for check the Write permission
+     *
      * @return
      */
     private boolean checkSystemWritePermission() {
