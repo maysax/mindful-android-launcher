@@ -341,8 +341,7 @@ public abstract class CoreApplication extends MultiDexApplication {
 //                    mMediaPlayer.setLooping(true);
                     mMediaPlayer.prepare();
                     mMediaPlayer.start();
-                    if (!vibrator.hasVibrator())
-                        vibrator.vibrate(pattern, 0);
+                    vibrator.vibrate(pattern, 0);
                 }
             }
         } catch (Exception e) {
