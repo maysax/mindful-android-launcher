@@ -113,6 +113,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     TelephonyManager telephonyManager;
 
     IDynamicStatus wifiDataReceiver;
+
+    AudioChangeReceiver audioChangeReceiver;
     BleSingal bleSingal;
     int currentModeDeviceMode;
 
@@ -228,11 +230,24 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         wifiDataReceiver = new WifiDataReceiver();
         wifiDataReceiver.register(context);
 
+
+        audioChangeReceiver = new AudioChangeReceiver();
+        getActivity().registerReceiver(audioChangeReceiver, new IntentFilter(
+                AudioManager.RINGER_MODE_CHANGED_ACTION));
+
         bleSingal = new BleSingal();
         getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 
 
     }
+
+    private class AudioChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            bindDND();
+        }
+    }
+
 
     private void bindBrighnessControl() {
         try {
@@ -583,6 +598,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         try {
             wifiDataReceiver.unregister(context);
             if (bleSingal != null) getActivity().unregisterReceiver(bleSingal);
+            if (audioChangeReceiver != null) getActivity().unregisterReceiver(audioChangeReceiver);
         } catch (Exception e) {
             e.printStackTrace();
         }

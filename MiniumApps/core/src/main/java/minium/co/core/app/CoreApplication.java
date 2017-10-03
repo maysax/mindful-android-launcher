@@ -282,7 +282,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         protected void onPostExecute(List<ApplicationInfo> applicationInfos) {
             super.onPostExecute(applicationInfos);
             packagesList.clear();
-            getVibrateList().add("com.google.android.calendar");
             setPackagesList(applicationInfos);
         }
 
