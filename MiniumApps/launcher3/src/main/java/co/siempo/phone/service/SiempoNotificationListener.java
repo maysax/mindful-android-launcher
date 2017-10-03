@@ -86,6 +86,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     }
                 }
+            } else if (launcherPrefs.getCurrentProfile().get() == 1) {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            } else if (launcherPrefs.getCurrentProfile().get() == 2) {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             }
         }
     }
@@ -140,6 +144,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
     private String getNotificationToString(StatusBarNotification notification) {
         return "package: " + notification.getPackageName()
+                + "Id: " + notification.getId()
                 + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
                 + " Details: " + notification.getNotification().toString()
                 + " Ticker: " + notification.getNotification().tickerText;

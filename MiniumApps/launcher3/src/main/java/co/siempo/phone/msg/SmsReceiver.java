@@ -53,6 +53,7 @@ public class SmsReceiver extends BroadcastReceiver {
         Tracer.d("Messages: onReceive in Launcher3");
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
+            Tracer.d("Notification posted: " + bundle.toString());
             if (bundle != null) {
                 Object messages[] = (Object[]) bundle.get("pdus");
                 SmsMessage smsMessage[] = new SmsMessage[messages.length];

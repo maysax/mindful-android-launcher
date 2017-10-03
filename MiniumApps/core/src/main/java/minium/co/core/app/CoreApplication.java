@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.UserManager;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -82,7 +83,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<String> normalModeList = new ArrayList<>();
 
     public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
+        if (mMediaPlayer == null) {
+            vibrator.cancel();
+        }
         this.mMediaPlayer = mMediaPlayer;
+
     }
 
     public MediaPlayer mMediaPlayer;
@@ -90,14 +95,14 @@ public abstract class CoreApplication extends MultiDexApplication {
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
     }
-
-
-
+    // include the vibration pattern when call ringing
+    Vibrator vibrator;
+    long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
@@ -337,10 +342,12 @@ public abstract class CoreApplication extends MultiDexApplication {
 //                    mMediaPlayer.setLooping(true);
                     mMediaPlayer.prepare();
                     mMediaPlayer.start();
-
+                    if (!vibrator.hasVibrator())
+                        vibrator.vibrate(pattern, 0);
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
