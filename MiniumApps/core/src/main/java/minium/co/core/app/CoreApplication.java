@@ -67,17 +67,11 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     private RefWatcher refWatcher;
     public boolean siempoBarLaunch = true;
-
-
     UserManager userManager;
-
-
     LauncherApps launcherApps;
 
     private List<ApplicationInfo> packagesList = new ArrayList<>();
-
     public HashMap<String, Bitmap> iconList = new HashMap<>();
-
     Handler handler;
 
     private ArrayList<String> silentList = new ArrayList<>();
@@ -97,6 +91,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
     }
+
     // include the vibration pattern when call ringing
     Vibrator vibrator;
     long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
@@ -123,6 +118,8 @@ public abstract class CoreApplication extends MultiDexApplication {
      * This method is used for fetch all installed application package list.
      */
     public void getAllApplicationPackageName() {
+        iconList.clear();
+        packagesList.clear();
         new LoadApplications().execute();
     }
 

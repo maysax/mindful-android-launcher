@@ -199,6 +199,7 @@ public class AppDrawerActivity extends CoreActivity {
 
         if (prefs.isAppUpdated().get()) {
             progressDialog = ProgressDialog.show(this, "", "Loading....");
+            Log.d("Testing","Loading");
             CoreApplication.getInstance().getAllApplicationPackageName();
         }
 
