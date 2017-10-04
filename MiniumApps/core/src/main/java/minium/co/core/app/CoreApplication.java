@@ -27,6 +27,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
+import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
@@ -38,7 +39,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
+import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
