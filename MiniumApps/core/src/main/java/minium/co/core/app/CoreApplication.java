@@ -12,9 +12,15 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.UserManager;
+import android.os.Vibrator;
+import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -75,11 +81,37 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     Handler handler;
 
+    private ArrayList<String> silentList = new ArrayList<>();
+    private ArrayList<String> vibrateList = new ArrayList<>();
+    private ArrayList<String> normalModeList = new ArrayList<>();
+
+    public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
+        this.mMediaPlayer = mMediaPlayer;
+
+    }
+
+    public MediaPlayer mMediaPlayer;
+
+    public MediaPlayer getMediaPlayer() {
+        return mMediaPlayer;
+    }
+
+    public Vibrator getVibrator() {
+        return vibrator;
+    }
+
+    public void setVibrator(Vibrator vibrator) {
+        this.vibrator = vibrator;
+    }
+
+    // include the vibration pattern when call ringing
+    private Vibrator vibrator;
+    long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
@@ -178,6 +210,30 @@ public abstract class CoreApplication extends MultiDexApplication {
         return "";
     }
 
+    public ArrayList<String> getSilentList() {
+        return silentList;
+    }
+
+    public void setSilentList(ArrayList<String> silentList) {
+        this.silentList = silentList;
+    }
+
+    public ArrayList<String> getVibrateList() {
+        return vibrateList;
+    }
+
+    public void setVibrateList(ArrayList<String> vibrateList) {
+        this.vibrateList = vibrateList;
+    }
+
+    public ArrayList<String> getNormalModeList() {
+        return normalModeList;
+    }
+
+    public void setNormalModeList(ArrayList<String> normalModeList) {
+        this.normalModeList = normalModeList;
+    }
+
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
 
         @Override
@@ -188,6 +244,16 @@ public abstract class CoreApplication extends MultiDexApplication {
                 for (LauncherActivityInfo activityInfo : launcherApps.getActivityList(null, profile)) {
                     ApplicationInfo appInfo = activityInfo.getApplicationInfo();
                     appInfo.name = activityInfo.getLabel().toString();
+                    String defSMSApp = Settings.Secure.getString(getContentResolver(), "sms_default_application");
+                    String defDialerApp = Settings.Secure.getString(getContentResolver(), "dialer_default_application");
+
+                    if (appInfo.packageName.equalsIgnoreCase(defSMSApp) || appInfo.packageName.contains("com.google.android.calendar")) {
+                        getVibrateList().add(appInfo.packageName);
+                    } else if (appInfo.packageName.contains("telecom") || appInfo.packageName.contains("dialer")) {
+                        getNormalModeList().add(appInfo.packageName);
+                    } else {
+                        getSilentList().add(appInfo.packageName);
+                    }
                     if (!appInfo.packageName.equalsIgnoreCase("co.siempo.phone")) {
                         Drawable drawable;
                         try {
@@ -271,6 +337,27 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     }
 
+    public void playAudio() {
+        try {
+            Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+            Log.d("Raja", "Raja");
+            if (mMediaPlayer == null) {
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setDataSource(this, alert);
+                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+//                    mMediaPlayer.setLooping(true);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                    vibrator.vibrate(pattern, 0);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setSiempoBarLaunch(final boolean value) {
 
         if (value == true) {
@@ -291,6 +378,13 @@ public abstract class CoreApplication extends MultiDexApplication {
         } else {
             siempoBarLaunch = value;
         }
+    }
 
+    public void addToSilentList(String strPackageName) {
+        getSilentList().add(strPackageName);
+    }
+
+    public void addToVibrateList(String strPackageName) {
+        getVibrateList().add(strPackageName);
     }
 }

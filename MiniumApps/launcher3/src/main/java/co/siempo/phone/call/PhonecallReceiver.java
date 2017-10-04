@@ -3,9 +3,14 @@ package co.siempo.phone.call;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.util.Date;
+
+import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 7/27/2016.
@@ -20,11 +25,22 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static boolean isIncoming;
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
 
+    int currentProfile = -1;
+    AudioManager audioManager;
+    boolean isCallisRunning = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        SharedPreferences sharedPref =
+                context.getSharedPreferences("Launcher3Prefs", 0);
+        currentProfile = sharedPref.getInt("getCurrentProfile", 0);
+        if (currentProfile == 0 || currentProfile == 2) {
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        } else if (currentProfile == 1) {
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+        }
         if (intent != null) {
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
@@ -39,32 +55,43 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 if (intent.getExtras() != null && intent.getExtras().containsKey(TelephonyManager.EXTRA_INCOMING_NUMBER)) {
                     number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
                 }
-                if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
-                    state = TelephonyManager.CALL_STATE_IDLE;
-                } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
-                    state = TelephonyManager.CALL_STATE_OFFHOOK;
-                } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
-                    state = TelephonyManager.CALL_STATE_RINGING;
+                if (stateStr != null) {
+                    if (stateStr.equals(TelephonyManager.EXTRA_STATE_IDLE)) {
+                        state = TelephonyManager.CALL_STATE_IDLE;
+                    } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+                        state = TelephonyManager.CALL_STATE_OFFHOOK;
+                    } else if (stateStr.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+                        state = TelephonyManager.CALL_STATE_RINGING;
+                    }
                 }
+                Log.d("Testing State", "" + state);
                 onCallStateChanged(context, state, number);
             }
         }
     }
 
+
     //Derived classes should override these to respond to specific events of interest
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
+        if (CoreApplication.getInstance().getMediaPlayer() != null) {
+            CoreApplication.getInstance().getMediaPlayer().stop();
+            CoreApplication.getInstance().setmMediaPlayer(null);
+            CoreApplication.getInstance().getVibrator().cancel();
+        }
     }
 
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
     }
 
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
+        isCallisRunning = false;
     }
 
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end) {
     }
 
     protected void onMissedCall(Context ctx, String number, Date start) {
+        isCallisRunning = false;
     }
 
     //Deals with actual events
@@ -76,15 +103,25 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
             //No change, debounce extras
             return;
         }
+
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
                 isIncoming = true;
                 callStartTime = new Date();
                 savedNumber = number;
+                if (currentProfile == 0 && !isCallisRunning) {
+                    CoreApplication.getInstance().playAudio();
+                    isCallisRunning = true;
+                }
                 onIncomingCallStarted(context, number, callStartTime);
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
                 //Transition of ringing->offhook are pickups of incoming calls.  Nothing done on them
+                if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                    CoreApplication.getInstance().getMediaPlayer().stop();
+                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().getVibrator().cancel();
+                }
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     isIncoming = false;
                     callStartTime = new Date();
@@ -92,6 +129,12 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
+                if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                    CoreApplication.getInstance().getMediaPlayer().stop();
+                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().getVibrator().cancel();
+                }
+                isCallisRunning =false;
                 //Went to idle-  this is the end of a call.  What type depends on previous state(s)
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
                     //Ring but no pickup-  a miss

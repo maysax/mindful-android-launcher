@@ -1,19 +1,12 @@
 package co.siempo.phone.applist;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.app.LoaderManager;
-import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.ApplicationInfo;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +16,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
-import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -31,16 +23,13 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.ui.TopFragment_;
-import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.HomePressEvent;
-import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
 @Fullscreen
@@ -76,11 +65,8 @@ public class AppDrawerActivity extends CoreActivity {
 
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String TAG="AppDrawerActivity";
-
-
+    private String TAG = "AppDrawerActivity";
     public ActivityState state;
-
 
     /**
      * Activitystate is use to identify state whether the screen is coming from
@@ -97,25 +83,23 @@ public class AppDrawerActivity extends CoreActivity {
     protected void onStart() {
         super.onStart();
         Launcher3App.getInstance().setSiempoBarLaunch(true);
-        if(state== ActivityState.ONHOMEPRESS){
-            state= ActivityState.NORMAL;
+        if (state == ActivityState.ONHOMEPRESS) {
+            state = ActivityState.NORMAL;
         }
     }
+
     @AfterViews
     void afterViews() {
         Launcher3App.getInstance().setSiempoBarLaunch(true);
         settingsActionBar.setVisibility(View.GONE);
         titleActionBar.setText(getString(R.string.title_apps));
         arrayList = CoreApplication.getInstance().getPackagesList();
-        btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-list")
-                .colorRes(R.color.text_primary)
-                .sizeDp(20));
-        btnListOrGrid.setTag("0");
-        btnListOrGrid.setVisibility(View.VISIBLE);
-        mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
-        activity_grid_view.setLayoutManager(mLayoutManager);
-        mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList,true);
-        activity_grid_view.setAdapter(mAdapter);
+
+        if (prefs.isGrid().get()) {
+            bindAsGrid();
+        } else {
+            bindAsList();
+        }
 
         loadTopBar();
         loadStatusBar();
@@ -123,26 +107,10 @@ public class AppDrawerActivity extends CoreActivity {
         btnListOrGrid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(btnListOrGrid.getTag().toString().equalsIgnoreCase("1")){
-                    btnListOrGrid.setTag("0");
-                    btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-list")
-                            .colorRes(R.color.text_primary)
-                            .sizeDp(20));
-                    mLayoutManager = new GridLayoutManager(getApplicationContext(),3);
-                    activity_grid_view.setLayoutManager(mLayoutManager);
-                    mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList,true);
-                    activity_grid_view.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-                }else{
-                    btnListOrGrid.setTag("1");
-                    btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-th")
-                            .colorRes(R.color.text_primary)
-                            .sizeDp(20));
-                    mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                    activity_grid_view.setLayoutManager(mLayoutManager);
-                    mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this,arrayList,false);
-                    activity_grid_view.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                if (btnListOrGrid.getTag().toString().equalsIgnoreCase("1")) {
+                    bindAsGrid();
+                } else {
+                    bindAsList();
                 }
             }
         });
@@ -150,8 +118,42 @@ public class AppDrawerActivity extends CoreActivity {
     }
 
     /**
-     *  Below snippet is use to first check if siempo status bar is restricted from another activity,
-     *  then it first remove siempo status bar and restrict siempo status bar with reference to this activity
+     * Bind View As Listing View.
+     */
+    private void bindAsList() {
+        btnListOrGrid.setTag("1");
+        btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-th")
+                .colorRes(R.color.text_primary)
+                .sizeDp(20));
+        btnListOrGrid.setVisibility(View.VISIBLE);
+        mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        activity_grid_view.setLayoutManager(mLayoutManager);
+        mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this, arrayList, false);
+        activity_grid_view.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+        prefs.isGrid().put(false);
+
+    }
+
+    /**
+     * Bind View As Grid View.
+     */
+    private void bindAsGrid() {
+        btnListOrGrid.setImageDrawable(new IconDrawable(AppDrawerActivity.this, "fa-list")
+                .colorRes(R.color.text_primary)
+                .sizeDp(20));
+        btnListOrGrid.setTag("0");
+        btnListOrGrid.setVisibility(View.VISIBLE);
+        mLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
+        activity_grid_view.setLayoutManager(mLayoutManager);
+        mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this, arrayList, true);
+        activity_grid_view.setAdapter(mAdapter);
+        prefs.isGrid().put(true);
+    }
+
+    /**
+     * Below snippet is use to first check if siempo status bar is restricted from another activity,
+     * then it first remove siempo status bar and restrict siempo status bar with reference to this activity
      */
     synchronized void loadStatusBar() {
         try {
@@ -161,7 +163,7 @@ public class AppDrawerActivity extends CoreActivity {
                 statusBarHandler.restoreStatusBarExpansion();
             }
 
-            if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+            if (statusBarHandler != null && !statusBarHandler.isActive()) {
                 statusBarHandler.requestStatusBarCustomization();
             }
 
@@ -181,8 +183,8 @@ public class AppDrawerActivity extends CoreActivity {
         /**
          * Below snippet is use to load siempo status bar when launch from background.
          */
-        if(state== ActivityState.ONHOMEPRESS){
-            if(statusBarHandler!=null && !statusBarHandler.isActive()) {
+        if (state == ActivityState.ONHOMEPRESS) {
+            if (statusBarHandler != null && !statusBarHandler.isActive()) {
                 statusBarHandler.requestStatusBarCustomization();
             }
         }
@@ -217,22 +219,18 @@ public class AppDrawerActivity extends CoreActivity {
          *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
          */
         Launcher3App.getInstance().setSiempoBarLaunch(false);
-        if (statusBarHandler!=null && statusBarHandler.isNotificationTrayVisible) {
+        if (statusBarHandler != null && statusBarHandler.isNotificationTrayVisible) {
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if(f == null){
+            if (f == null) {
                 super.onBackPressed();
-            }
-            else if (f!=null && f instanceof NotificationFragment && f.isAdded())
-            {
+            } else if (f != null && f instanceof NotificationFragment && f.isAdded()) {
                 statusBarHandler.isNotificationTrayVisible = false;
                 ((NotificationFragment) f).animateOut();
                 super.onBackPressed();
-            }
-            else{
+            } else {
                 super.onBackPressed();
             }
-        }
-        else{
+        } else {
             super.onBackPressed();
         }
     }
@@ -249,25 +247,23 @@ public class AppDrawerActivity extends CoreActivity {
     @SuppressWarnings("ConstantConditions")
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
-        Log.d(TAG,"ACTION HOME PRESS");
-        state= ActivityState.ONHOMEPRESS;
+        Log.d(TAG, "ACTION HOME PRESS");
+        state = ActivityState.ONHOMEPRESS;
         if (event.isVisible()) {
             restoreSiempoNotificationBar();
         }
     }
 
-    public void restoreSiempoNotificationBar(){
+    public void restoreSiempoNotificationBar() {
         /**
          *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
          */
         if (StatusBarHandler.isNotificationTrayVisible) {
 
             Fragment f = getFragmentManager().findFragmentById(R.id.mainView);
-            if(f == null){
-                Log.d(TAG,"Fragment is null");
-            }
-            else if (f!=null && f.isAdded() && f instanceof NotificationFragment)
-            {
+            if (f == null) {
+                Log.d(TAG, "Fragment is null");
+            } else if (f != null && f.isAdded() && f instanceof NotificationFragment) {
                 StatusBarHandler.isNotificationTrayVisible = false;
                 ((NotificationFragment) f).animateOut();
 
@@ -276,9 +272,9 @@ public class AppDrawerActivity extends CoreActivity {
         /**
          *  Below snippet is use to remove siempo status bar
          */
-        if(statusBarHandler!=null){
+        if (statusBarHandler != null) {
             NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-            try{
+            try {
                 statusBarHandler.restoreStatusBarExpansion();
             } catch (Exception e) {
                 e.printStackTrace();

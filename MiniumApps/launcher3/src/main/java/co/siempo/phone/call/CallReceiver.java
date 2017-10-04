@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.android.internal.telephony.ITelephony;
 
@@ -17,16 +16,14 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
-import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.notification.NotificationUtility;
+import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.util.VibrationUtils;
 import de.greenrobot.event.EventBus;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 
 @EReceiver
@@ -64,23 +61,27 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
     @Override
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onOutgoingCallStarted()");
+
     }
 
     @Override
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onIncomingCallEnded()");
         vibration.cancel();
+
     }
 
     @Override
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onOutgoingCallEnded()");
+
     }
 
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
         Tracer.d("onMissedCall()");
         saveCall(number, start);
+
     }
 
     private void rejectCalls(Context ctx, String number, Date start) {
@@ -109,7 +110,7 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
             sms.set_date(date);
             sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
             sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
-            long id =   notificationSmsDao.insert(sms);
+            long id = notificationSmsDao.insert(sms);
             sms.setId(id);
             EventBus.getDefault().post(new NewNotificationEvent(sms));
         } catch (Exception e) {

@@ -41,6 +41,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
@@ -80,6 +82,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
 
     private static final String TAG = "NotificationFragment";
 
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
+
     @ViewById
     RecyclerView recyclerView;
 
@@ -109,6 +114,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     TelephonyManager telephonyManager;
 
     IDynamicStatus wifiDataReceiver;
+
+    AudioChangeReceiver audioChangeReceiver;
     BleSingal bleSingal;
     int currentModeDeviceMode;
 
@@ -225,11 +232,24 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         wifiDataReceiver = new WifiDataReceiver();
         wifiDataReceiver.register(context);
 
+
+        audioChangeReceiver = new AudioChangeReceiver();
+        getActivity().registerReceiver(audioChangeReceiver, new IntentFilter(
+                AudioManager.RINGER_MODE_CHANGED_ACTION));
+
         bleSingal = new BleSingal();
         getActivity().registerReceiver(bleSingal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 
 
     }
+
+    private class AudioChangeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            bindDND();
+        }
+    }
+
 
     private void bindBrighnessControl() {
         try {
@@ -345,14 +365,22 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     }
 
     private void bindDND() {
-        currentModeDeviceMode = audioManager.getRingerMode();
-        if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+        currentModeDeviceMode = launcherPrefs.getCurrentProfile().get();
+        if (launcherPrefs.getCurrentProfile().get() == 0) {
             imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
-        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
-            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
-        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+        } else if (launcherPrefs.getCurrentProfile().get() == 1) {
             imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
+        } else if (launcherPrefs.getCurrentProfile().get() == 2) {
+            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
         }
+//        currentModeDeviceMode = audioManager.getRingerMode();
+//        if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+//            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
+//        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
+//            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
+//        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+//            imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
+//        }
     }
 
     private void bindFlash() {
@@ -577,6 +605,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         try {
             wifiDataReceiver.unregister(context);
             if (bleSingal != null) getActivity().unregisterReceiver(bleSingal);
+            if (audioChangeReceiver != null) getActivity().unregisterReceiver(audioChangeReceiver);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -730,17 +759,30 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             case R.id.relDND:
                 seekbarBrightness.setVisibility(View.GONE);
                 imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+//                if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+//                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+//                    imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
+//                } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+//                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+//                    imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
+//                } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
+//                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+//                    imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
+//                }
+                if (currentModeDeviceMode == 0) {
+                    launcherPrefs.getCurrentProfile().put(1);
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
                     imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_vibration_black_24dp));
-                } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+                } else if (currentModeDeviceMode == 1) {
+                    launcherPrefs.getCurrentProfile().put(2);
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
-                } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                } else if (currentModeDeviceMode == 2) {
+                    launcherPrefs.getCurrentProfile().put(0);
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     imgDnd.setBackground(getActivity().getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
                 }
-                currentModeDeviceMode = audioManager.getRingerMode();
+                currentModeDeviceMode = launcherPrefs.getCurrentProfile().get();
                 EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.DND, 0));
                 break;
             case R.id.relAirPlane:
