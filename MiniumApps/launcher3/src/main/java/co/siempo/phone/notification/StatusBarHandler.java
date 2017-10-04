@@ -86,15 +86,12 @@ public class StatusBarHandler {
             accessibilityEnabled = Settings.Secure.getInt(
                     mContext.getApplicationContext().getContentResolver(),
                     android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
-            // Log.v(TAG, "accessibilityEnabled = " + accessibilityEnabled);
         } catch (Settings.SettingNotFoundException e) {
-//            Log.e(TAG, "Error finding setting, default accessibility to not found: "
-//                    + e.getMessage());
+            e.printStackTrace();
         }
         TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
 
         if (accessibilityEnabled == 1) {
-            // Log.v(TAG, "***ACCESSIBILITY IS ENABLED*** -----------------");
             String settingValue = Settings.Secure.getString(
                     mContext.getApplicationContext().getContentResolver(),
                     Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
@@ -102,10 +99,7 @@ public class StatusBarHandler {
                 mStringColonSplitter.setString(settingValue);
                 while (mStringColonSplitter.hasNext()) {
                     String accessibilityService = mStringColonSplitter.next();
-
-                    //Log.v(TAG, "-------------- > accessibilityService :: " + accessibilityService + " " + service);
                     if (accessibilityService.equalsIgnoreCase(service)) {
-                        //  Log.v(TAG, "We've found the correct setting - accessibility is switched on!");
                         return true;
                     }
                 }
