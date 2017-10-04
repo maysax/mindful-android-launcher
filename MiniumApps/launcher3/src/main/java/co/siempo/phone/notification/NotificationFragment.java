@@ -58,7 +58,7 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
-import co.siempo.phone.event.TourchOnOff;
+import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
@@ -764,10 +764,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 seekbarBrightness.setVisibility(View.GONE);
                 imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (StatusBarService.isFlashOn) {
-                    EventBus.getDefault().post(new TourchOnOff(false));
+                    EventBus.getDefault().post(new TorchOnOff(false));
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
                 } else {
-                    EventBus.getDefault().post(new TourchOnOff(true));
+                    EventBus.getDefault().post(new TorchOnOff(true));
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
                 }
                 break;

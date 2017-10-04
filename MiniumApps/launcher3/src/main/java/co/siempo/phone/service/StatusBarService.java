@@ -7,11 +7,10 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 
-import co.siempo.phone.event.TourchOnOff;
+import co.siempo.phone.event.TorchOnOff;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -68,8 +67,8 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
-    public void tourchOnOff(TourchOnOff tourchOnOFF) {
-        if (tourchOnOFF.isRunning()) {
+    public void tourchOnOff(TorchOnOff torchOnOFF) {
+        if (torchOnOFF.isRunning()) {
             turnONFlash();
         } else {
             turnOffFlash();

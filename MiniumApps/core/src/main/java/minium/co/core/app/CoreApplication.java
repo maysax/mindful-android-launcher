@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.UserManager;
@@ -106,7 +105,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-         configFabric();
+        configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();
@@ -133,11 +132,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-//        final Fabric fabric = new Fabric.Builder(this)
-//                .kits(new Crashlytics())
-//                .debuggable(Config.DEBUG)
-//                .build();
-//        Fabric.with(fabric);
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(Config.DEBUG)
+                .build();
+        Fabric.with(fabric);
     }
 
 
