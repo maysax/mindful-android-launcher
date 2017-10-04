@@ -161,11 +161,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-//        final Fabric fabric = new Fabric.Builder(this)
-//                .kits(new Crashlytics())
-//                .debuggable(Config.DEBUG)
-//                .build();
-//        Fabric.with(fabric);
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(Config.DEBUG)
+                .build();
+        Fabric.with(fabric);
     }
 
 

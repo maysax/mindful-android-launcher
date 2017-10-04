@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.james.status.data.IconStyleData;
 
 import org.androidannotations.annotations.AfterViews;
@@ -59,7 +60,7 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
-import co.siempo.phone.event.TourchOnOff;
+import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
@@ -145,6 +146,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     TableNotificationSmsDao smsDao;
     CallStorageDao callStorageDao;
     int count = 1;
+    boolean isWiFiOn = false;
 
     @AfterViews
     void afterViews() {
@@ -331,6 +333,11 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             relMobileData.setEnabled(true);
             checkMobileData();
             imgAirplane.setBackground(getActivity().getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
+            if (isWiFiOn) {
+                wifiManager.setWifiEnabled(true);
+            } else {
+                isWiFiOn = false;
+            }
             if (!wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(getActivity())) {
                 imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
             } else {
@@ -638,13 +645,15 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             if (!NetworkUtil.isAirplaneModeOn(getActivity())) {
                 relMobileData.setEnabled(true);
+
                 checkMobileData();
             }
         }
     }
 
     private void checkMobileData() {
-        if (Settings.Global.getInt(context.getContentResolver(), "mobile_data", 1) == 0) {
+        Log.d("Raja", "" + NetworkUtils.getDataEnabled());
+        if (NetworkUtil.getConnectivityStatus(getActivity()) == ConnectivityManager.TYPE_MOBILE) {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
         } else {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_off_black_24dp));
@@ -782,9 +791,13 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     removeStatusbar();
                     seekbarBrightness.setVisibility(View.GONE);
                     imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
+                    if (wifiManager.isWifiEnabled()) {
+                        isWiFiOn = true;
+                    }
                     Intent intent = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivityForResult(intent, 90);
+
                 } catch (ActivityNotFoundException e) {
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
@@ -793,10 +806,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 seekbarBrightness.setVisibility(View.GONE);
                 imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (StatusBarService.isFlashOn) {
-                    EventBus.getDefault().post(new TourchOnOff(false));
+                    EventBus.getDefault().post(new TorchOnOff(false));
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_off_black_24dp));
                 } else {
-                    EventBus.getDefault().post(new TourchOnOff(true));
+                    EventBus.getDefault().post(new TorchOnOff(true));
                     imgFlash.setBackground(getActivity().getDrawable(R.drawable.ic_flash_on_black_24dp));
                 }
                 break;

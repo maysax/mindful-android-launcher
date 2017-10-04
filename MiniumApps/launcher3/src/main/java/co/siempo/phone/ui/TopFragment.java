@@ -202,7 +202,7 @@ public class TopFragment extends CoreFragment {
     /**
      * Event bus notifier when notification becomes null.Hide the blue dot
      *
-     * @param tableNotificationSms
+     * @param event
      */
     @Subscribe
     public void notificationSwipeEvent(NotificationSwipeEvent event) {
