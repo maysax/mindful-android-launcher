@@ -39,6 +39,7 @@ import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.notification.StatusBarHandler;
+import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -48,6 +49,7 @@ import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.ui.SearchLayout;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
@@ -103,7 +105,7 @@ public class MainFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-
+        getActivity().startService(new Intent(getActivity(), StatusBarService.class));
         Launcher3App.getInstance().setSiempoBarLaunch(true);
         listViewLayout.setVisibility(View.GONE);
         afterEffectLayout.setVisibility(View.GONE);
@@ -147,6 +149,11 @@ public class MainFragment extends CoreFragment {
         } else {
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
             searchLayout.askFocus();
+        }
+        // If new app installed or if any contact is update/create this booleans
+        // becomes true from StatusService class.
+        if(prefs.isContactUpdate().get() || prefs.isAppUpdated().get()){
+            loadData();
         }
     }
 
@@ -207,6 +214,8 @@ public class MainFragment extends CoreFragment {
         }
 
     }
+
+
 
     public MainListAdapter getAdapter() {
         return adapter;
