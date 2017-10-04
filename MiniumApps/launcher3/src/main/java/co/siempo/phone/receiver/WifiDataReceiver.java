@@ -17,7 +17,6 @@ import minium.co.core.log.Tracer;
  * Created by Shahab on 5/26/2017.
  */
 
-@SuppressWarnings("ALL")
 public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatus {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -43,25 +42,17 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
     public void handleIntent(Context context, Intent intent) {
         try {
             NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-       /* if (networkInfo == null){
-            // networkInfo = icon.connectivityManager.getActiveNetworkInfo();
-        }
-
-        if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI && networkInfo.isConnected()){
-            // icon.onDrawableUpdate(WifiManager.calculateSignalLevel(icon.wifiManager.getConnectionInfo().getRssi(), 5));
-        }
-        else {
-            //icon.onDrawableUpdate(-1);
-        }*/
-            //UIUtils.toast(context,"network changed");
             if (networkInfo != null) {
-                @SuppressLint("WifiManagerPotentialLeak") WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 int numberOfLevels = 5;
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
                 Tracer.d("WifiDataReceiver, label: " + level);
-                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
-
+                if(wifiManager.isWifiEnabled()) {
+                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
+                }else{
+                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, -1));
+                }
             }
         } catch (Exception e) {
             Tracer.e(e);

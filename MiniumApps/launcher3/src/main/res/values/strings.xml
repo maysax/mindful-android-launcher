@@ -193,4 +193,5 @@
     <string name="msg_noti_service_dialog">Siempo Notification service is not enabled. Please allow Siempo to access notification service</string>
     <string name="msg_noti_service_force_dialog">Siempo Notification service is not enabled.It\'s required to use app features.</string>
     <string name="msg_overlay_settings">Siempo needs overlay permission enabled mandatorily.</string>
+    <string name="icon.ble">&#xf1fe;</string>
 </resources>

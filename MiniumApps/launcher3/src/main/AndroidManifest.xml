@@ -30,11 +30,23 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
     <!-- Becoming default SMS app -->
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <!-- TODO: using it for flow, we might not need this -->
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
@@ -45,7 +57,6 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
-
 
     <application
         android:name=".app.Launcher3App_"
@@ -135,7 +146,8 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".receiver.DndStartStopReceiver_"
+        <receiver
+            android:name=".receiver.DndStartStopReceiver_"
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="siempo.intent.action.DND_START_STOP" />
@@ -190,15 +202,20 @@
                     tools:ignore="BatteryLife" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
                 <action android:name="android.intent.action.AIRPLANE_MODE" />
+                <action android:name="android.net.wifi.RSSI_CHANGED" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.UpdateActivity_"></activity>
+        <activity android:name=".ui.UpdateActivity_" />
         <activity android:name=".settings.SiempoPhoneSettingsActivity_" />
         <activity android:name=".settings.SiempoSettingsActivity_" />
-        <activity android:name=".settings.SiempoMainSettingsActivity_"/>
-        <activity android:name=".settings.SiempoAlphaSettingsActivity_"/>
+        <activity android:name=".settings.SiempoMainSettingsActivity_" />
+        <activity android:name=".settings.SiempoAlphaSettingsActivity_" />
 
+        <service
+            android:name=".service.StatusBarService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>

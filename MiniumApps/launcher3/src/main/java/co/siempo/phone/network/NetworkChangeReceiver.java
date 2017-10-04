@@ -16,7 +16,6 @@ import static co.siempo.phone.network.NetworkUtil.isAirplaneModeOn;
  * Created by Shahab on 5/2/2017.
  */
 
-@SuppressWarnings("ALL")
 @EReceiver
 public class NetworkChangeReceiver extends BroadcastReceiver {
     @Override
@@ -24,7 +23,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("android.net.conn.CONNECTIVITY_CHANGE") ||
                 intent.getAction().equals("android.net.wifi.WIFI_STATE_CHANGED")) {
             Tracer.i(NetworkUtil.getConnectivityStatusString(context));
-            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, 0));
+            //EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, 0));
         } else if (intent.getAction().equals(Intent.ACTION_AIRPLANE_MODE_CHANGED)) {
             Tracer.i("Airplane mode: " + isAirplaneModeOn(context));
             EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.AIRPLANE, 0));

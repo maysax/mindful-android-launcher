@@ -19,10 +19,12 @@ import android.view.KeyEvent;
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
+import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
@@ -60,7 +62,7 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
-import com.github.javiersantos.appupdater.enums.Display;
+
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
 @Fullscreen
@@ -107,7 +109,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
-        Log.d(TAG,"afterViews event called");
+        Log.d(TAG, "afterViews event called");
         Launcher3App.getInstance().setSiempoBarLaunch(true);
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
@@ -117,6 +119,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.READ_CALL_LOG,
                         Manifest.permission.WRITE_CALL_LOG,
                         Manifest.permission.SEND_SMS,
+                        Manifest.permission.CAMERA,
                         Manifest.permission.RECEIVE_SMS,
                         Manifest.permission.RECEIVE_MMS,
                         Manifest.permission.READ_PHONE_STATE,
@@ -156,12 +159,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100){
-            if(isEnabled(this))
-            {
-                Log.d(TAG,"onActivity Result..");
+        if (requestCode == 100) {
+            if (isEnabled(this)) {
+                Log.d(TAG, "onActivity Result..");
                 checkAppLoadFirstTime();
-            }else {
+            } else {
                 UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -403,7 +405,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onStart() {
         super.onStart();
         Launcher3App.getInstance().setSiempoBarLaunch(true);
-        Log.d(TAG, "onStart..."+state);
+        if (BuildConfig.DEBUG) Log.d(TAG, "onStart..." + state);
         if (state == ActivityState.ONHOMEPRESS) {
             checkUpgradeVersion();
             state = ActivityState.NORMAL;
