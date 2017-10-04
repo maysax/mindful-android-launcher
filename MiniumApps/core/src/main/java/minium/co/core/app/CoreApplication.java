@@ -83,9 +83,6 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<String> normalModeList = new ArrayList<>();
 
     public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
-        if (mMediaPlayer == null) {
-            vibrator.cancel();
-        }
         this.mMediaPlayer = mMediaPlayer;
 
     }
@@ -95,8 +92,17 @@ public abstract class CoreApplication extends MultiDexApplication {
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
     }
+
+    public Vibrator getVibrator() {
+        return vibrator;
+    }
+
+    public void setVibrator(Vibrator vibrator) {
+        this.vibrator = vibrator;
+    }
+
     // include the vibration pattern when call ringing
-    Vibrator vibrator;
+    private Vibrator vibrator;
     long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
 
     @Override
