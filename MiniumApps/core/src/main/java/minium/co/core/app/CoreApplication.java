@@ -27,6 +27,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
+import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
@@ -41,6 +42,11 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import minium.co.core.R;
 import minium.co.core.event.AppInstalledEvent;
+
+import io.fabric.sdk.android.Fabric;
+import minium.co.core.R;
+import minium.co.core.config.Config;
+
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
@@ -79,9 +85,6 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<String> normalModeList = new ArrayList<>();
 
     public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
-        if (mMediaPlayer == null) {
-            vibrator.cancel();
-        }
         this.mMediaPlayer = mMediaPlayer;
 
     }
@@ -92,8 +95,16 @@ public abstract class CoreApplication extends MultiDexApplication {
         return mMediaPlayer;
     }
 
+    public Vibrator getVibrator() {
+        return vibrator;
+    }
+
+    public void setVibrator(Vibrator vibrator) {
+        this.vibrator = vibrator;
+    }
+
     // include the vibration pattern when call ringing
-    Vibrator vibrator;
+    private Vibrator vibrator;
     long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
 
     @Override
@@ -154,11 +165,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-//        final Fabric fabric = new Fabric.Builder(this)
-//                .kits(new Crashlytics())
-//                .debuggable(Config.DEBUG)
-//                .build();
-//        Fabric.with(fabric);
+        final Fabric fabric = new Fabric.Builder(this)
+                .kits(new Crashlytics())
+                .debuggable(Config.DEBUG)
+                .build();
+        Fabric.with(fabric);
     }
 
 

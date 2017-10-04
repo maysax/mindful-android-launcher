@@ -1,14 +1,14 @@
 package co.siempo.phone.event;
 
 /**
- * Created by Shahab on 8/12/2016.
- * Used for the tourch enable/disable.
+ * Created by Rajesh Jadi on 8/12/2016.
+ * Used for the torch enable/disable.
  */
-public class TourchOnOff {
+public class TorchOnOff {
 
     private boolean isRunning;
 
-    public TourchOnOff(boolean isRunning) {
+    public TorchOnOff(boolean isRunning) {
         this.isRunning = isRunning;
     }
 

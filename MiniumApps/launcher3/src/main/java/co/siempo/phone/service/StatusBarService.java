@@ -18,7 +18,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import co.siempo.phone.event.TourchOnOff;
+import co.siempo.phone.event.TorchOnOff;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
@@ -104,8 +104,8 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
-    public void tourchOnOff(TourchOnOff tourchOnOFF) {
-        if (tourchOnOFF.isRunning()) {
+    public void tourchOnOff(TorchOnOff torchOnOFF) {
+        if (torchOnOFF.isRunning()) {
             turnONFlash();
         } else {
             turnOffFlash();
