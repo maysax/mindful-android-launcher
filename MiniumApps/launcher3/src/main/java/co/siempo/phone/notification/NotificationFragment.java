@@ -625,9 +625,9 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     private void checkMobileData() {
         Log.d("Raja", "" + NetworkUtils.getDataEnabled());
         if (NetworkUtil.getConnectivityStatus(getActivity()) == ConnectivityManager.TYPE_MOBILE) {
-            imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
-        } else {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_off_black_24dp));
+        } else {
+            imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
         }
     }
 
