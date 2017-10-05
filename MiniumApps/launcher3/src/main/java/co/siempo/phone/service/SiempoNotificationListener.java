@@ -68,14 +68,17 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Tracer.d("Notification posted: " + getNotificationToString(notification));
         if (PackageUtil.isSiempoLauncher(this)
                 || SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
-            if (launcherPrefs.getCurrentProfile().get() == 0) {
-                if (PackageUtil.isSiempoBlocker(notification.getId())) {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    prefs.isNotificationBlockerRunning().put(true);
-                } else if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
-                    cancelNotification(notification.getKey());
-                    // saving the information in other place
-                } else if (CoreApplication.getInstance().getNormalModeList().contains(notification.getPackageName())) {
+            if (PackageUtil.isSiempoBlocker(notification.getId())) {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                launcherPrefs.getCurrentProfile().put(0);
+                prefs.isNotificationBlockerRunning().put(true);
+            } else if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
+                cancelNotification(notification.getKey());
+                saveNotification(notification.getPackageName(), notification.getPostTime(),
+                        notification.getNotification().tickerText);
+                // saving the information in other place
+            } else if (launcherPrefs.getCurrentProfile().get() == 0) {
+                if (CoreApplication.getInstance().getNormalModeList().contains(notification.getPackageName())) {
 
                 } else {
                     cancelNotification(notification.getKey());
