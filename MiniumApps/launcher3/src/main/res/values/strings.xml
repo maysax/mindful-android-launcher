@@ -52,6 +52,7 @@
     <string name="msg_siempo_active_title">Siempo</string>
     <string name="msg_siempo_active_text">Siempo is running</string>
     <string name="title_photos">Photos</string>
+    <string name="title_camera">Camera</string>
     <string name="msg.notificationEmpty">Nothing new. Feel free to take a breath and look at your surroundings.</string>
     <string name="nointernetconnection">No internet connection available</string>
 

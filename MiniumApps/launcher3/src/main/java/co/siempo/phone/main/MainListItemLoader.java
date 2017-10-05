@@ -2,7 +2,9 @@ package co.siempo.phone.main;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.ResolveInfo;
 import android.provider.Settings;
 import android.support.annotation.StringRes;
 
@@ -48,6 +50,7 @@ public class MainListItemLoader {
 
         //if (new ActivityHelper(context).isAppInstalled(GOOGLE_PHOTOS))
         items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
+        items.add(new MainListItem(23, getString(R.string.title_camera), "fa-camera"));
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
@@ -87,6 +90,8 @@ public class MainListItemLoader {
                                 && !packageName.equalsIgnoreCase(Constants.GOOGLE_GMAIL_PACKAGE)
                                 && !packageName.equalsIgnoreCase(Constants.GOOGLE_MAP_PACKAGE)
                                 && !packageName.equalsIgnoreCase(Constants.GOOGLE_PHOTOS)
+                                && !applicationInfo.name.equalsIgnoreCase("Camera")
+                                && (!packageName.equalsIgnoreCase(Constants.GOOGLE_CAMERA))
                                 && !Arrays.asList(Constants.CALENDAR_APP_PACKAGES).contains(packageName)
                                 && !Arrays.asList(Constants.CALL_APP_PACKAGES).contains(packageName)
                                 && !Arrays.asList(Constants.CLOCK_APP_PACKAGES).contains(packageName)) {
@@ -99,6 +104,17 @@ public class MainListItemLoader {
                 e.printStackTrace();
             }
         }
+        getPackageName();
+    }
+
+    // get all default application package name
+    private String getPackageName() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo res : listCam) {
+//            Log.e("Camera Application Package Name and Activity Name",res.activityInfo.packageName + " " + res.activityInfo.name);
+        }
+        return "";
     }
 
 
@@ -232,7 +248,16 @@ public class MainListItemLoader {
                 if(mainActivity!=null) {
                     mainActivity.restoreSiempoNotificationBar();
                 }
-                new ActivityHelper(context).openPhotsApp();
+                new ActivityHelper(context).openPhotosApp();
+                break;
+            case 23:
+                /**
+                 *  Load native status bar
+                 */
+                if (mainActivity != null) {
+                    mainActivity.restoreSiempoNotificationBar();
+                }
+                new ActivityHelper(context).openCameraApp();
                 break;
             default:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
