@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.nfc.NfcAdapter;
@@ -36,6 +38,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
@@ -62,7 +65,6 @@ import minium.co.core.util.UIUtils;
 import com.github.javiersantos.appupdater.enums.Display;
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
-@Fullscreen
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
@@ -72,6 +74,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public static int currentItem = 0;
     @ViewById
     ViewPager pager;
+
 
     MainSlidePagerAdapter sliderAdapter;
 
@@ -87,12 +90,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+
+
     public static String isTextLenghGreater = "";
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
         Log.d(TAG,"afterViews event called");
+
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        String currentHomePackage = resolveInfo.activityInfo.packageName;
+
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
@@ -195,6 +206,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         @Override
         public void onPermissionGranted() {
             Log.d(TAG,"Permission granted");
+            ViewService_.intent(getApplication()).showMask().start();
             loadViews();
             if (!launcherPrefs.isAppInstalledFirstTime().get()) {
                 Log.d(TAG,"Display upgrade dialog.");

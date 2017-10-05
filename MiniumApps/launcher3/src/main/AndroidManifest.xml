@@ -30,6 +30,15 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <!-- Becoming default SMS app -->
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
@@ -199,8 +208,9 @@
         <activity android:name=".settings.SiempoMainSettingsActivity_"/>
         <activity android:name=".settings.SiempoAlphaSettingsActivity_"/>
 
-        <service android:name=".ViewService_" />
+        <service android:name=".SiempoNotificationBar.ViewService_" />
 
+        <service android:name=".service.StatusBarService"/>
     </application>
 
 </manifest>

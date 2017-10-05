@@ -19,7 +19,6 @@ import minium.co.core.ui.CoreActivity;
 
 import static android.view.View.GONE;
 
-@Fullscreen
 @EActivity
 public class SiempoMapActivity extends CoreActivity {
     String HOME_PAGE = "https://www.google.com/maps";

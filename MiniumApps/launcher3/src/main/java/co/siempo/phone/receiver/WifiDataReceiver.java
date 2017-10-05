@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import co.siempo.phone.event.ConnectivityEvent;
 import de.greenrobot.event.EventBus;
@@ -42,6 +43,7 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
     @Override
     public void handleIntent(Context context, Intent intent) {
         try {
+            Log.d("hardikkamothi","Wifi change");
             NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
        /* if (networkInfo == null){
             // networkInfo = icon.connectivityManager.getActiveNetworkInfo();
@@ -60,6 +62,7 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
                 Tracer.d("WifiDataReceiver, label: " + level);
+                Log.d("hardikkamothi","Event bus call");
                 EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
 
             }

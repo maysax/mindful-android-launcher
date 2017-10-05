@@ -54,7 +54,6 @@ import com.github.javiersantos.appupdater.enums.Display;
  *  2. Keyboard hide & show in IF Screen when launch
  *  3. Version of Current App & update
  */
-@Fullscreen
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;

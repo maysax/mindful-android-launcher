@@ -21,7 +21,6 @@ import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
-@Fullscreen
 @EActivity(R.layout.activity_tempo)
 public class TempoActivity extends CoreActivity {
     private String TAG = "TempoActivity";

@@ -33,7 +33,6 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
-@Fullscreen
 @EActivity(R.layout.activity_pause)
 public class PauseActivity extends CoreActivity {
 

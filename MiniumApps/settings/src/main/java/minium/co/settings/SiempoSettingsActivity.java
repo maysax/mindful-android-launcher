@@ -31,7 +31,6 @@ import java.util.List;
  */
 @SuppressWarnings("DefaultFileTemplate")
 @SuppressLint("Registered")
-@Fullscreen
 @EActivity
 public class SiempoSettingsActivity extends AppCompatPreferenceActivity {
     /**

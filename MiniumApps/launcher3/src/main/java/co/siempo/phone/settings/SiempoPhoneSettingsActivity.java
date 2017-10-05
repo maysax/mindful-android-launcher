@@ -35,7 +35,6 @@ import co.siempo.phone.R;
 /**
  * This class contain all the native settings feature.
  */
-@Fullscreen
 @EActivity
 public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
     /**

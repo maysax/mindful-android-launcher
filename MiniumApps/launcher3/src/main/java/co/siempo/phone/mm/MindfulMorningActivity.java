@@ -13,7 +13,6 @@ import minium.co.core.ui.CoreActivity;
  * Created by tkb on 2017-03-17.
  */
 @SuppressWarnings("ALL")
-@Fullscreen
 @EActivity(R.layout.mindful_morning_activity)
 
 public class MindfulMorningActivity extends CoreActivity {

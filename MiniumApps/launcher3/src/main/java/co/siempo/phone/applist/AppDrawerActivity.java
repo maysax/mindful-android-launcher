@@ -31,7 +31,6 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
-@Fullscreen
 @EActivity(R.layout.activity_installed_app_list)
 public class AppDrawerActivity extends CoreActivity {
 

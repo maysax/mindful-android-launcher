@@ -97,7 +97,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * This method is used for fetch all installed application package list.
      */
-    private void getAllApplicationPackageName() {
+    public void getAllApplicationPackageName() {
         new LoadApplications().execute();
     }
 
@@ -105,7 +105,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-        configFabric();
+//        configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();

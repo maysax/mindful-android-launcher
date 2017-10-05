@@ -24,7 +24,6 @@ import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
 
-@Fullscreen
 @EActivity(R.layout.activity_settings_main)
 public class SiempoMainSettingsActivity extends CoreActivity {
 

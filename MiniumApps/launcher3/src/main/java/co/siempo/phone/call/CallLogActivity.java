@@ -8,7 +8,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.ui.TopFragment_;
 import minium.co.core.ui.CoreActivity;
 
-@Fullscreen
 @EActivity(R.layout.activity_call_log)
 public class CallLogActivity extends CoreActivity {
 
