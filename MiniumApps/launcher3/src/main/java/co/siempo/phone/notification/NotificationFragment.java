@@ -613,20 +613,22 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             if (event.getValue() == -1) {
                 imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
             }
+            checkMobileData();
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             if (!NetworkUtil.isAirplaneModeOn(getActivity())) {
                 relMobileData.setEnabled(true);
-
                 checkMobileData();
             }
         }
     }
 
     private void checkMobileData() {
-        Log.d("NotificationFragment", "" + NetworkUtils.getDataEnabled());
-        if (NetworkUtil.getConnectivityStatus(getActivity()) == ConnectivityManager.TYPE_MOBILE) {
+        Log.d("NotificationFragment", "" + NetworkUtil.getConnectivityStatus(getActivity()));
+        if (NetworkUtil.getConnectivityStatus(getActivity()) == NetworkUtil.TYPE_MOBILE) {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_off_black_24dp));
-        } else {
+        } else if (NetworkUtil.getConnectivityStatus(getActivity()) == NetworkUtil.TYPE_WIFI) {
+            imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
+        } else if (NetworkUtil.getConnectivityStatus(getActivity()) == NetworkUtil.TYPE_NOT_CONNECTED) {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
         }
     }
@@ -815,6 +817,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 wifiManager.setWifiEnabled(false);
                 imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
                 EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, -1));
+            }
+            if (!NetworkUtil.isAirplaneModeOn(getActivity())) {
+                relMobileData.setEnabled(true);
+                checkMobileData();
             }
         } catch (Exception e) {
             e.printStackTrace();
