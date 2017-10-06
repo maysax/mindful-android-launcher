@@ -11,6 +11,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
+import co.siempo.phone.util.PackageUtil;
 import minium.co.core.ui.CoreActivity;
 
 import static android.view.View.GONE;
@@ -54,5 +55,11 @@ public class GoogleInboxActivity extends CoreActivity {
         });
 
         webView.loadUrl(HOME_PAGE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PackageUtil.checkPermission(this);
     }
 }

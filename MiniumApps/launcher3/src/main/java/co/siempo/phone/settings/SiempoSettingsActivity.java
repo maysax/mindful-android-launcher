@@ -35,6 +35,7 @@ import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.ui.TopFragment_;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.HomePressEvent;
@@ -162,6 +163,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        PackageUtil.checkPermission(this);
     }
     @Override
     protected void onStop() {

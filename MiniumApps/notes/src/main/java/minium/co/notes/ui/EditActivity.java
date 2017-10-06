@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -65,7 +66,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
 
         // Android version >= 18 -> set orientation fullUser
@@ -90,6 +91,14 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
         // Init layout components
         toolbar = (Toolbar) findViewById(R.id.toolbarEdit);
+        int statusbarheight=retrieveStatusBarHeight();
+
+//
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0,statusbarheight,0,0);
+        toolbar.setLayoutParams(params);
+//
+
         titleEdit = (EditText) findViewById(R.id.titleEdit);
         bodyEdit = (EditText) findViewById(R.id.bodyEdit);
         relativeLayoutEdit = (RelativeLayout) findViewById(R.id.relativeLayoutEdit);
@@ -452,5 +461,14 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
             saveChangesDialog.dismiss();
 
         super.onConfigurationChanged(newConfig);
+    }
+
+    public int retrieveStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

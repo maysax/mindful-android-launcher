@@ -217,6 +217,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
 
         }
+
     }
 
     private void onCreateAnimation(Bundle savedInstanceState) {

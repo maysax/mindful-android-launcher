@@ -43,7 +43,6 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
     @Override
     public void handleIntent(Context context, Intent intent) {
         try {
-            Log.d("hardikkamothi","Wifi change");
             NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
        /* if (networkInfo == null){
             // networkInfo = icon.connectivityManager.getActiveNetworkInfo();
@@ -62,7 +61,6 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
                 Tracer.d("WifiDataReceiver, label: " + level);
-                Log.d("hardikkamothi","Event bus call");
                 EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
 
             }

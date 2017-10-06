@@ -12,11 +12,16 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
@@ -38,6 +43,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.SiempoNotificationBar.ViewService;
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -47,11 +53,14 @@ import co.siempo.phone.main.MainSlidePagerAdapter;
 import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
+import co.siempo.phone.pause.PauseActivity;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
+import co.siempo.phone.service.SiempoAccessibilityService;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.ui.TopFragment_;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
@@ -63,6 +72,7 @@ import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
 import com.github.javiersantos.appupdater.enums.Display;
+
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
 @EActivity(R.layout.activity_main)
@@ -99,10 +109,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     void afterViews() {
         Log.d(TAG,"afterViews event called");
 
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        String currentHomePackage = resolveInfo.activityInfo.packageName;
 
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
@@ -133,6 +139,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         firebaseHelper.testEvent1();
         firebaseHelper.testEvent2();
         launcherPrefs.updatePrompt().put(true);
+
+
+
     }
 
     private void checkAppLoadFirstTime() {
@@ -206,12 +215,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         @Override
         public void onPermissionGranted() {
             Log.d(TAG,"Permission granted");
-            ViewService_.intent(getApplication()).showMask().start();
             loadViews();
+
             if (!launcherPrefs.isAppInstalledFirstTime().get()) {
                 Log.d(TAG,"Display upgrade dialog.");
                 checkUpgradeVersion();
             }
+            PackageUtil.checkPermission(MainActivity.this);
         }
 
         @Override
@@ -320,6 +330,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onResume() {
         super.onResume();
         Log.d(TAG,"onResume.. ");
+
+        PackageUtil.checkPermission(this);
 
         try {
             enableNfc(true);
@@ -450,6 +462,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
+
 
 
 }

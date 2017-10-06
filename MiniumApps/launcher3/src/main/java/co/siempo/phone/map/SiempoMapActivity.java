@@ -15,6 +15,7 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
+import co.siempo.phone.util.PackageUtil;
 import minium.co.core.ui.CoreActivity;
 
 import static android.view.View.GONE;
@@ -111,6 +112,11 @@ public class SiempoMapActivity extends CoreActivity {
         mWebView.loadUrl(HOME_PAGE);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PackageUtil.checkPermission(this);
+    }
 
     /**
      * WebChromeClient subclass handles UI-related calls

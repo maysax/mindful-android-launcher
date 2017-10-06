@@ -1,13 +1,3 @@
-/*
- * Simiasque
- * Copyright (C) 2015 Orange
- * Authors: arnaud.ruffin@orange.com
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
 package co.siempo.phone.SiempoNotificationBar;
 
 import android.Manifest;
@@ -1078,6 +1068,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener{
                 } else {
                     Intent intent = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        hide();
                         intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
                         intent.setData(Uri.parse("package:" + context.getPackageName()));
                         context.startActivity(intent);

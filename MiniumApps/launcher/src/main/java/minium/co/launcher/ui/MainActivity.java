@@ -14,7 +14,6 @@ import minium.co.core.ui.CoreActivity;
 import minium.co.launcher.R;
 import minium.co.launcher.battery.BatteryChangeReceiver_;
 
-@Fullscreen
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity {
 

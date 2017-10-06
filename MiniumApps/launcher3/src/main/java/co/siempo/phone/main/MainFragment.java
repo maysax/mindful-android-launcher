@@ -136,6 +136,9 @@ public class MainFragment extends CoreFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
                 new IntentFilter("IsNotificationVisible"));
         if (adapter != null) adapter.getFilter().filter("");
+        if(searchLayout!=null) {
+            searchLayout.askFocus();
+        }
     }
 
     @Override

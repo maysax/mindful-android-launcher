@@ -1,18 +1,9 @@
-/*
- * Simiasque
- * Copyright (C) 2015 Orange
- * Authors: arnaud.ruffin@orange.com
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-
 package co.siempo.phone.SiempoNotificationBar;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -38,16 +29,18 @@ public class ViewService extends IntentService {
     @Bean
     protected ViewHolder holder;
 
+
+    SharedPreferences preferences;
     public ViewService() {
         super(ViewService.class.getSimpleName());
     }
 
     @AfterInject
     public void init() {
-        if (holder.getCurrentOverlay() == null) {
-            Log.d("hardikkamothi","OverLay");
+
+
+        if (holder.getCurrentOverlay() == null ) {
             View overlayView = new OverlayView(getApplicationContext());
-            Log.d("hardikkamothi","Add View...");
             windowManager.addView(overlayView, OverlayView.createLayoutParams(retrieveStatusBarHeight() + SAFETY_MARGIN));
             holder.setCurrentOverlay(overlayView);
         }
@@ -71,6 +64,7 @@ public class ViewService extends IntentService {
 
     @ServiceAction
     protected void hideMask() {
+
         holder.hideView();
     }
 
