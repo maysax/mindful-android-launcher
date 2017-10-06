@@ -33,7 +33,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.NetworkUtils;
 import com.james.status.data.IconStyleData;
 
 import org.androidannotations.annotations.AfterViews;
@@ -344,7 +343,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_0));
             }
 
-            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
             } else {
                 imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
@@ -642,6 +641,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             if (event.getValue() == -1) {
                 imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
             }
+            checkMobileData();
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             if (!NetworkUtil.isAirplaneModeOn(getActivity())) {
                 relMobileData.setEnabled(true);
@@ -651,7 +651,6 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
     }
 
     private void checkMobileData() {
-        Log.d("NotificationFragment", "" + NetworkUtil.getConnectivityStatus(getActivity()));
         if (NetworkUtil.getConnectivityStatus(getActivity()) == NetworkUtil.TYPE_MOBILE) {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_off_black_24dp));
         } else if (NetworkUtil.getConnectivityStatus(getActivity()) == NetworkUtil.TYPE_WIFI) {
@@ -747,14 +746,15 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             case R.id.relBle:
                 seekbarBrightness.setVisibility(View.GONE);
                 imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                     BluetoothAdapter.getDefaultAdapter().disable();
                     EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
                 } else {
+                    if(BluetoothAdapter.getDefaultAdapter()!=null){
                     BluetoothAdapter.getDefaultAdapter().enable();
                     relBle.setEnabled(false);
                     imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
+                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));}
                 }
                 break;
             case R.id.relDND:
@@ -858,6 +858,10 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 wifiManager.setWifiEnabled(false);
                 imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
                 EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, -1));
+            }
+            if (!NetworkUtil.isAirplaneModeOn(getActivity())) {
+                relMobileData.setEnabled(true);
+                checkMobileData();
             }
         } catch (Exception e) {
             e.printStackTrace();
