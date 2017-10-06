@@ -9,8 +9,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.AlarmClock;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.provider.Telephony;
-import android.util.Log;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -324,22 +324,35 @@ public class ActivityHelper {
     }
 
     /**
+     * Open the Camera application from device.
+     */
+    public void openCameraApp() {
+        try {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            context.startActivity(takePictureIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            openGalleryApp();
+        }
+    }
+
+    /**
      * Open the Photos application from device.
      */
-    public void openPhotsApp() {
+    public void openPhotosApp() {
         try {
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(Constants.GOOGLE_PHOTOS);
             context.startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
-            openGallaryApp();
+            openGalleryApp();
         }
     }
 
     /**
-     * Open the Default Gallary application from device.
+     * Open the Default Gallery application from device.
      */
-    private void openGallaryApp() {
+    private void openGalleryApp() {
         try {
             Intent mediaChooser = new Intent(Intent.ACTION_GET_CONTENT);
             mediaChooser.setType("video/*, image/*");
@@ -421,9 +434,9 @@ public class ActivityHelper {
             SiempoPhoneSettingsActivity_.intent(getContext()).start();
             return true;
         } catch (Exception e) {
-            if(context!=null){
-                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                if(mainActivity!=null){
+            if (context != null) {
+                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity) context;
+                if (mainActivity != null) {
                     mainActivity.loadStatusBar();
                 }
             }

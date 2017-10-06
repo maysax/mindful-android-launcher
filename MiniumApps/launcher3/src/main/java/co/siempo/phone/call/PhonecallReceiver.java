@@ -84,14 +84,14 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     }
 
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
-        isCallisRunning = false;
+
     }
 
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end) {
     }
 
     protected void onMissedCall(Context ctx, String number, Date start) {
-        isCallisRunning = false;
+
     }
 
     //Deals with actual events
@@ -129,12 +129,6 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
-                if (CoreApplication.getInstance().getMediaPlayer() != null) {
-                    CoreApplication.getInstance().getMediaPlayer().stop();
-                    CoreApplication.getInstance().setmMediaPlayer(null);
-                    CoreApplication.getInstance().getVibrator().cancel();
-                }
-                isCallisRunning =false;
                 //Went to idle-  this is the end of a call.  What type depends on previous state(s)
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
                     //Ring but no pickup-  a miss
@@ -144,6 +138,12 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 } else {
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                 }
+                if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                    CoreApplication.getInstance().getMediaPlayer().stop();
+                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().getVibrator().cancel();
+                }
+                isCallisRunning =false;
                 break;
         }
         lastState = state;
