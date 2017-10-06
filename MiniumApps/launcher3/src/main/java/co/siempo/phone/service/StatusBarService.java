@@ -41,7 +41,7 @@ public class StatusBarService extends Service {
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
 
-    @TargetApi(23)
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -95,6 +95,7 @@ public class StatusBarService extends Service {
     /**
      * Turning On flash
      */
+    @TargetApi(23)
     private void turnONFlash() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
