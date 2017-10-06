@@ -48,34 +48,8 @@ public class StatusBarService extends Service {
         sharedPreferences = getSharedPreferences("DroidPrefs", 0);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
-
         EventBus.getDefault().register(this);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
-            try {
-                mCameraId = cameraManager.getCameraIdList()[0];
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
-            CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
 
-                @Override
-                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
-                    super.onTorchModeChanged(cameraId, enabled);
-                    isFlashOn = enabled;
-                }
-
-                @Override
-                public void onTorchModeUnavailable(@NonNull String cameraId) {
-                    super.onTorchModeUnavailable(cameraId);
-                }
-            };
-            cameraManager.registerTorchCallback(mTorchCallback, new Handler());
-        } else {
-            //noinspection deprecation
-            camera = Camera.open();
-            parameters = camera.getParameters();
-        }
     }
 
     /**
@@ -123,16 +97,34 @@ public class StatusBarService extends Service {
      */
     private void turnONFlash() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
             try {
+                mCameraId = cameraManager.getCameraIdList()[0];
                 cameraManager.setTorchMode(mCameraId, true);
             } catch (CameraAccessException e) {
                 e.printStackTrace();
             }
+            CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
+
+                @Override
+                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
+                    super.onTorchModeChanged(cameraId, enabled);
+                    isFlashOn = enabled;
+                }
+
+                @Override
+                public void onTorchModeUnavailable(@NonNull String cameraId) {
+                    super.onTorchModeUnavailable(cameraId);
+                }
+            };
+            cameraManager.registerTorchCallback(mTorchCallback, new Handler());
         } else {
+            //noinspection deprecation
+            camera = Camera.open();
+            parameters = camera.getParameters();
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
             camera.setParameters(parameters);
             camera.startPreview();
-
         }
         isFlashOn = true;
     }
@@ -151,6 +143,10 @@ public class StatusBarService extends Service {
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             camera.setParameters(parameters);
             camera.stopPreview();
+            if (camera != null) {
+                camera.release();
+                camera = null;
+            }
         }
         isFlashOn = false;
     }
