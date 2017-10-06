@@ -645,18 +645,19 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             if (!NetworkUtil.isAirplaneModeOn(getActivity())) {
                 relMobileData.setEnabled(true);
-
                 checkMobileData();
             }
         }
     }
 
     private void checkMobileData() {
-        Log.d("Raja", "" + NetworkUtils.getDataEnabled());
-        if (NetworkUtil.getConnectivityStatus(getActivity()) == ConnectivityManager.TYPE_MOBILE) {
-            imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
-        } else {
+        Log.d("NotificationFragment", "" + NetworkUtil.getConnectivityStatus(getActivity()));
+        if (NetworkUtil.getConnectivityStatus(getActivity()) == NetworkUtil.TYPE_MOBILE) {
             imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_off_black_24dp));
+        } else if (NetworkUtil.getConnectivityStatus(getActivity()) == NetworkUtil.TYPE_WIFI) {
+            imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
+        } else if (NetworkUtil.getConnectivityStatus(getActivity()) == NetworkUtil.TYPE_NOT_CONNECTED) {
+            imgData.setBackground(getActivity().getDrawable(R.drawable.ic_data_on_black_24dp));
         }
     }
 
