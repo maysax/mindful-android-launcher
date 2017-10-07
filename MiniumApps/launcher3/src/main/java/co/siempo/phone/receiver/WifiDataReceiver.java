@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.util.Log;
 
 import co.siempo.phone.event.ConnectivityEvent;
 import de.greenrobot.event.EventBus;
@@ -18,8 +17,9 @@ import minium.co.core.log.Tracer;
  * Created by Shahab on 5/26/2017.
  */
 
-@SuppressWarnings("ALL")
 public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatus {
+    int level = 0;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         handleIntent(context, intent);
@@ -44,26 +44,17 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
     public void handleIntent(Context context, Intent intent) {
         try {
             NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-       /* if (networkInfo == null){
-            // networkInfo = icon.connectivityManager.getActiveNetworkInfo();
-        }
-
-        if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI && networkInfo.isConnected()){
-            // icon.onDrawableUpdate(WifiManager.calculateSignalLevel(icon.wifiManager.getConnectionInfo().getRssi(), 5));
-        }
-        else {
-            //icon.onDrawableUpdate(-1);
-        }*/
-            //UIUtils.toast(context,"network changed");
             if (networkInfo != null) {
-                @SuppressLint("WifiManagerPotentialLeak") WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                @SuppressLint("WifiManagerPotentialLeak")
+                WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 int numberOfLevels = 5;
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
+                level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
                 Tracer.d("WifiDataReceiver, label: " + level);
-                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
-
+            } else {
+                level = 0;
             }
+            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
         } catch (Exception e) {
             Tracer.e(e);
         }
