@@ -262,9 +262,15 @@ public class ActivityHelper {
      */
     public void openClockApp() {
         if (checkClockApp().isEmpty()) {
-            Intent mClockIntent = new Intent(AlarmClock.ACTION_SHOW_ALARMS);
-            mClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(mClockIntent);
+            try {
+                Intent mClockIntent = new Intent(AlarmClock.ACTION_SHOW_ALARMS);
+                mClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(mClockIntent);
+            }
+            catch (ActivityNotFoundException e){
+                UIUtils.alert(context, "Application not found");
+                e.printStackTrace();
+            }
         } else {
             openGMape(checkClockApp());
         }

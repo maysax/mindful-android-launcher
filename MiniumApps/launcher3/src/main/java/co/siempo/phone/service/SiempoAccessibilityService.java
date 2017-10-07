@@ -40,17 +40,15 @@ public class SiempoAccessibilityService extends AccessibilityService {
             }
 
 
-            long time= System.currentTimeMillis();
-
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(this)) {
 
-                    siempoNotificationBarStatus(time);
+                    siempoNotificationBarStatus();
                 }
             }
             else{
-                siempoNotificationBarStatus(time);
+                siempoNotificationBarStatus();
             }
 
         }
@@ -68,13 +66,11 @@ public class SiempoAccessibilityService extends AccessibilityService {
         }
     }
 
-    public synchronized void siempoNotificationBarStatus(long time){
-        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()) && (!TextUtils.isEmpty(activityName) && !activityName.contains("SiempoPhoneSettingsActivity")))) {
-            long currentTime=System.currentTimeMillis();
-            long timediff = currentTime - time;
-            ViewService_.intent(getApplication()).showMask().start();
-        } else {
-            ViewService_.intent(getApplication()).hideMask().start();
-        }
+    public synchronized void siempoNotificationBarStatus(){
+            if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()) && (!TextUtils.isEmpty(activityName) && !activityName.contains("SiempoPhoneSettingsActivity")))) {
+                ViewService_.intent(getApplication()).showMask().start();
+            } else {
+                ViewService_.intent(getApplication()).hideMask().start();
+            }
     }
 }

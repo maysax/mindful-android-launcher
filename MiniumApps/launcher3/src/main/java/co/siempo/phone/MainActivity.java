@@ -161,8 +161,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (requestCode == 100){
             if(isEnabled(this))
             {
-                Log.d(TAG,"onActivity Result..");
-                checkAppLoadFirstTime();
+
+                if (!isAccessibilitySettingsOn(this)) {
+                    Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
+                    Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    startActivityForResult(intent1,101);
+                }
+
             }else {
                 UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
                     @Override
@@ -170,6 +175,40 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
                     }
                 });
+            }
+        }
+        if(requestCode == 101){
+            if (!isAccessibilitySettingsOn(this)) {
+                Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                startActivityForResult(intent1,101);
+            }
+            else{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    // Show alert dialog to the user saying a separate permission is needed
+                    // Launch the settings activity if the user prefers
+                    if (!Settings.canDrawOverlays(this)) {
+                        Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(intent,102);
+                    } else {
+                        ViewService_.intent(this).showMask().start();
+                    }
+                }
+            }
+        }
+        if(requestCode==102){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // Show alert dialog to the user saying a separate permission is needed
+                // Launch the settings activity if the user prefers
+                if (!Settings.canDrawOverlays(this)) {
+                    Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent,102);
+                } else {
+                    ViewService_.intent(this).showMask().start();
+                    checkAppLoadFirstTime();
+                }
             }
         }
     }
@@ -463,6 +502,36 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
+
+    private static boolean isAccessibilitySettingsOn(Context mContext) {
+        int accessibilityEnabled = 0;
+        final String service = mContext.getPackageName() + "/" + SiempoAccessibilityService.class.getCanonicalName();
+        try {
+            accessibilityEnabled = Settings.Secure.getInt(
+                    mContext.getApplicationContext().getContentResolver(),
+                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
+
+        if (accessibilityEnabled == 1) {
+            String settingValue = Settings.Secure.getString(
+                    mContext.getApplicationContext().getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                mStringColonSplitter.setString(settingValue);
+                while (mStringColonSplitter.hasNext()) {
+                    String accessibilityService = mStringColonSplitter.next();
+                    if (accessibilityService.equalsIgnoreCase(service)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
 
 }

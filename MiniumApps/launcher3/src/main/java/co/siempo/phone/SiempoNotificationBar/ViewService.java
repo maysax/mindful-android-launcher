@@ -38,13 +38,11 @@ public class ViewService extends IntentService {
     @AfterInject
     public void init() {
 
-
         if (holder.getCurrentOverlay() == null ) {
             View overlayView = new OverlayView(getApplicationContext());
             windowManager.addView(overlayView, OverlayView.createLayoutParams(retrieveStatusBarHeight() + SAFETY_MARGIN));
             holder.setCurrentOverlay(overlayView);
         }
-        holder.hideView();
     }
 
     public int retrieveStatusBarHeight() {
