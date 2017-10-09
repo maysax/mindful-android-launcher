@@ -6,10 +6,10 @@ import java.util.ArrayList;
  * Created by tkb on 2017-04-26.
  */
 
-@SuppressWarnings("ALL")
 public class Constants {
     public static final String GOOGLE_MAP_PACKAGE = "com.google.android.apps.maps";
     public static final String GOOGLE_PHOTOS = "com.google.android.apps.photos";
+    public static final String GOOGLE_CAMERA = " com.android.camera";
     public static final String CALL_APP_PACKAGE = "com.google.android.dialer";
     public static final String GOOGLE_GMAIL_PACKAGE = "com.google.android.gm";
     public static final String CONTACT_APP_PACKAGE = "com.android.contacts";

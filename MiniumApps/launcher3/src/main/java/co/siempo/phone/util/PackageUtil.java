@@ -20,7 +20,6 @@ import co.siempo.phone.service.SiempoDndService;
  * Created by Shahab on 5/17/2017.
  */
 
-@SuppressWarnings("ALL")
 public class PackageUtil {
 
     public static boolean isCallPackage(String pkg) {
@@ -28,7 +27,7 @@ public class PackageUtil {
     }
 
     public static boolean isMsgPackage(String pkg) {
-        return pkg.contains("messaging");
+        return pkg.contains("messaging") || pkg.contains("com.android.mms");
     }
 
     public static boolean isCalenderPackage(String pkg) {

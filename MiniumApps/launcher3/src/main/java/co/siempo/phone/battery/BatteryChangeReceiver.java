@@ -13,7 +13,6 @@ import minium.co.core.util.UIUtils;
 /**
  * Created by shahab on 3/16/16.
  */
-@SuppressWarnings("ALL")
 @EReceiver
 public class BatteryChangeReceiver extends BroadcastReceiver {
     @Override

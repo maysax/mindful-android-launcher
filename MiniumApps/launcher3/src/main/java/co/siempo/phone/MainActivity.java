@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
@@ -21,15 +22,18 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
+import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
@@ -47,6 +51,8 @@ import co.siempo.phone.SiempoNotificationBar.ViewService;
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.db.DBUtility;
+import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainSlidePagerAdapter;
@@ -57,6 +63,7 @@ import co.siempo.phone.pause.PauseActivity;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoAccessibilityService;
+import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.ui.TopFragment_;
@@ -71,7 +78,9 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
+
 import com.github.javiersantos.appupdater.enums.Display;
+
 
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
@@ -101,15 +110,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     Launcher3Prefs_ launcherPrefs;
 
 
-
     public static String isTextLenghGreater = "";
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
-        Log.d(TAG,"afterViews event called");
-
-
+        Log.d(TAG, "afterViews event called");
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
@@ -118,6 +124,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.READ_CALL_LOG,
                         Manifest.permission.WRITE_CALL_LOG,
                         Manifest.permission.SEND_SMS,
+                        Manifest.permission.CAMERA,
                         Manifest.permission.RECEIVE_SMS,
                         Manifest.permission.RECEIVE_MMS,
                         Manifest.permission.READ_PHONE_STATE,
@@ -139,14 +146,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         firebaseHelper.testEvent1();
         firebaseHelper.testEvent2();
         launcherPrefs.updatePrompt().put(true);
-
-
-
     }
 
     private void checkAppLoadFirstTime() {
         if (launcherPrefs.isAppInstalledFirstTime().get()) {
             launcherPrefs.isAppInstalledFirstTime().put(false);
+            launcherPrefs.getCurrentProfile().put(0);
             ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
                 activityHelper.handleDefaultLauncher(MainActivity.this);
@@ -158,17 +163,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100){
-            if(isEnabled(this))
-            {
+        if (requestCode == 100) {
+            if (isEnabled(this)) {
 
                 if (!isAccessibilitySettingsOn(this)) {
                     Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
                     Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                    startActivityForResult(intent1,101);
+                    startActivityForResult(intent1, 101);
                 }
 
-            }else {
+            } else {
                 UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -177,34 +181,33 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 });
             }
         }
-        if(requestCode == 101){
+        if (requestCode == 101) {
             if (!isAccessibilitySettingsOn(this)) {
                 Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
                 Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                startActivityForResult(intent1,101);
-            }
-            else{
+                startActivityForResult(intent1, 101);
+            } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // Show alert dialog to the user saying a separate permission is needed
                     // Launch the settings activity if the user prefers
                     if (!Settings.canDrawOverlays(this)) {
                         Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent,102);
+                        startActivityForResult(intent, 102);
                     } else {
                         ViewService_.intent(this).showMask().start();
                     }
                 }
             }
         }
-        if(requestCode==102){
+        if (requestCode == 102) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Show alert dialog to the user saying a separate permission is needed
                 // Launch the settings activity if the user prefers
                 if (!Settings.canDrawOverlays(this)) {
                     Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent,102);
+                    startActivityForResult(intent, 102);
                 } else {
                     ViewService_.intent(this).showMask().start();
                     checkAppLoadFirstTime();
@@ -226,7 +229,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             @Override
             public void onPageSelected(int position) {
                 currentItem = position;
-              //  currentIndex = currentItem;
+                //  currentIndex = currentItem;
                 try {
                     if (position == 1)
                         //noinspection ConstantConditions
@@ -253,11 +256,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
-            Log.d(TAG,"Permission granted");
+            Log.d(TAG, "Permission granted");
             loadViews();
 
             if (!launcherPrefs.isAppInstalledFirstTime().get()) {
-                Log.d(TAG,"Display upgrade dialog.");
+                Log.d(TAG, "Display upgrade dialog.");
                 checkUpgradeVersion();
             }
             PackageUtil.checkPermission(MainActivity.this);
@@ -297,20 +300,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
-        Log.d(TAG,"Check Version event...");
+        Log.d(TAG, "Check Version event...");
         Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
         if (event.getVersion() > BuildConfig.VERSION_CODE) {
             NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
             if (activeNetwork != null) { // connected to the internet
-                    UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which == DialogInterface.BUTTON_POSITIVE) {
-                                launcherPrefs.updatePrompt().put(false);
-                                new ActivityHelper(MainActivity.this).openBecomeATester();
-                            }
+                UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            launcherPrefs.updatePrompt().put(false);
+                            new ActivityHelper(MainActivity.this).openBecomeATester();
                         }
-                    });
+                    }
+                });
             } else {
                 Log.d(TAG, getString(R.string.nointernetconnection));
             }
@@ -335,7 +338,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 //            defineIntent.setType("vnd.android-dir/mms-sms");
 //            defineIntent.addCategory(Intent.CATEGORY_DEFAULT);
 //            startActivity(defineIntent);
-             //manager.clear();
+        //manager.clear();
 //        } catch (Exception e) {
 //            Tracer.e(e, e.getMessage());
 //        }
@@ -350,7 +353,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             e.printStackTrace();
         }
     }
-
 
 
     @Override
@@ -368,7 +370,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume.. ");
+        try {
+            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+            Log.d("Raja:::::::::::::", "onResume.. "+pInfo.versionCode);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "onResume.. ");
 
         PackageUtil.checkPermission(this);
 
@@ -379,22 +388,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
-      //  currentIndex = currentItem;
+        //  currentIndex = currentItem;
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG,"ACTION ONPAUSE");
+        Log.d(TAG, "ACTION ONPAUSE");
         enableNfc(false);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         currentItem = 0;
-
-        Log.d(TAG,"ACTION onNewIntent");
+        long notificationCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
+        if (notificationCount == 0) {
+            EventBus.getDefault().post(new NotificationSwipeEvent(true));
+        }
+        Log.d(TAG, "ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -433,12 +445,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             /**
              *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
              */
-            if (pager!=null && pager.getCurrentItem() == 1) {
+            if (pager != null && pager.getCurrentItem() == 1) {
                 pager.setCurrentItem(0);
             }
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -447,10 +458,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG,"Restart ... ");
+        Log.d(TAG, "Restart ... ");
     }
 
-    public void checkVersionFromAppUpdater(){
+    public void checkVersionFromAppUpdater() {
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -469,28 +480,28 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
      * 1) It will check first with Appupdater library if it fails to identify then
      * 2) It will check with AWS logic.
      */
-    public  void checkUpgradeVersion(){
+    public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
-            Log.d(TAG,"Active network..");
+            Log.d(TAG, "Active network..");
             AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                     .withListener(new AppUpdaterUtils.UpdateListener() {
                         @Override
                         public void onSuccess(Update update, Boolean isUpdateAvailable) {
-                            Log.d(TAG,"on success");
+                            Log.d(TAG, "on success");
                             if (update.getLatestVersionCode() != null) {
-                                Log.d(TAG,"check version from AppUpdater library");
+                                Log.d(TAG, "check version from AppUpdater library");
                                 checkVersionFromAppUpdater();
                             } else {
-                                Log.d(TAG,"check version from AWS");
+                                Log.d(TAG, "check version from AWS");
                                 ApiClient_.getInstance_(MainActivity.this).checkAppVersion();
                             }
                         }
 
                         @Override
                         public void onFailed(AppUpdaterError error) {
-                            if(BuildConfig.DEBUG) {
+                            if (BuildConfig.DEBUG) {
                                 Log.d(TAG, " AppUpdater Error ::: " + error.toString());
                             }
                         }

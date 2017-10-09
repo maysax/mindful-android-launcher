@@ -385,11 +385,11 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
              *  If not -> hide keyboard if showing and finish
              */
             if (!isEmpty(titleEdit)) {
-                if (bundle != null && !(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE,""))) ||
-                        !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY,""))) ||
-                        !(colour.equals(bundle.getString(NOTE_COLOUR,"#FFFFFF"))) ||
-                        fontSize != bundle.getInt(NOTE_FONT_SIZE,18) ||
-                        hideBody != bundle.getBoolean(NOTE_HIDE_BODY,false)) {
+                if (bundle != null && !(titleEdit.getText().toString().equals(bundle.getString(NOTE_TITLE))) ||
+                        !(bodyEdit.getText().toString().equals(bundle.getString(NOTE_BODY))) ||
+                        !(colour.equals(bundle.getString(NOTE_COLOUR))) ||
+                        fontSize != bundle.getInt(NOTE_FONT_SIZE) ||
+                        hideBody != bundle.getBoolean(NOTE_HIDE_BODY)) {
 
                     saveChanges();
                 } else {

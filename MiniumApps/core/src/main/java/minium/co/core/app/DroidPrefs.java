@@ -65,5 +65,18 @@ public interface DroidPrefs {
     @DefaultBoolean(false)
     boolean hasShownIntroScreen();
 
+    /**
+     * This preference is used for store user preference for Grid/List in App Listing View.
+     *
+     * @return
+     */
+    @DefaultBoolean(true)
+    boolean isGrid();
+
+    @DefaultBoolean(true)
+    boolean isContactUpdate();
+
+    @DefaultBoolean(false)
+    boolean isAppUpdated();
 
 }

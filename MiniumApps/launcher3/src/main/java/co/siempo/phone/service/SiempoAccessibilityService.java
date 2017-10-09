@@ -6,10 +6,15 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.view.accessibility.AccessibilityEvent;
+
+import org.androidannotations.annotations.SystemService;
+
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
+
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.util.PackageUtil;
 
@@ -19,13 +24,13 @@ import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CH
 public class SiempoAccessibilityService extends AccessibilityService {
 
     public static String packageName = "";
-    String activityName ="";
+    String activityName = "";
 
     AudioManager audioManager;
-    @Override
-    public synchronized void onAccessibilityEvent(AccessibilityEvent event) {
 
-        audioManager = (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
+    @Override
+    public void onAccessibilityEvent(AccessibilityEvent event) {
+        audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         if (event.getEventType() == TYPE_WINDOW_STATE_CHANGED) {
             ComponentName componentName = new ComponentName(event.getPackageName().toString(), event.getClassName().toString());
             ActivityInfo activityInfo = getActivityInfo(componentName);
@@ -38,16 +43,12 @@ public class SiempoAccessibilityService extends AccessibilityService {
             if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             }
-
-
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(this)) {
 
                     siempoNotificationBarStatus();
                 }
-            }
-            else{
+            } else {
                 siempoNotificationBarStatus();
             }
 
@@ -56,7 +57,9 @@ public class SiempoAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
+
     }
+
 
     private ActivityInfo getActivityInfo(ComponentName componentName) {
         try {
@@ -66,11 +69,11 @@ public class SiempoAccessibilityService extends AccessibilityService {
         }
     }
 
-    public synchronized void siempoNotificationBarStatus(){
-            if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()) && (!TextUtils.isEmpty(activityName) && !activityName.contains("SiempoPhoneSettingsActivity")))) {
-                ViewService_.intent(getApplication()).showMask().start();
-            } else {
-                ViewService_.intent(getApplication()).hideMask().start();
-            }
+    public synchronized void siempoNotificationBarStatus() {
+        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()) && (!TextUtils.isEmpty(activityName) && !activityName.contains("SiempoPhoneSettingsActivity")))) {
+            ViewService_.intent(getApplication()).showMask().start();
+        } else {
+            ViewService_.intent(getApplication()).hideMask().start();
+        }
     }
 }

@@ -1,6 +1,5 @@
 package co.siempo.phone.receiver;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,12 +44,16 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
         try {
             NetworkInfo networkInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
             if (networkInfo != null) {
-                @SuppressLint("WifiManagerPotentialLeak")
-                WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+                WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 int numberOfLevels = 5;
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
                 Tracer.d("WifiDataReceiver, label: " + level);
+                if (wifiManager.isWifiEnabled()) {
+                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
+                } else {
+                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, -1));
+                }
             } else {
                 level = 0;
             }
