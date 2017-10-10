@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
 import org.androidannotations.annotations.SystemService;
@@ -39,7 +40,8 @@ public class SiempoAccessibilityService extends AccessibilityService {
                 packageName = activityInfo.packageName;
                 activityName = componentName.flattenToShortString();
             }
-
+            Log.d("Package Name",packageName);
+            Log.d("ActivityName Name",activityName);
             if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             }

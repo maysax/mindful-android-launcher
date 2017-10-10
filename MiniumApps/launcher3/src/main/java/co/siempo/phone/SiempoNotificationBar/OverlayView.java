@@ -55,6 +55,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
@@ -64,6 +65,7 @@ import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NewNotificationEvent;
+import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.event.TorchOnOff;
@@ -86,6 +88,7 @@ import co.siempo.phone.service.StatusBarService;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.HomeWatcher;
+import minium.co.core.ui.CoreActivity;
 
 import static android.graphics.PixelFormat.TRANSLUCENT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -203,6 +206,26 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 PixelFormat.TRANSLUCENT);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        UserPresentBroadcastReceiver userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
+        context.registerReceiver(userPresentBroadcastReceiver, intentFilter);
+    }
+
+    /**
+     * This BroadcastReceiver is included for the when user press home button and lock the screen.
+     * when it comes back we have to show launcher dialog,toottip window.
+     */
+    public class UserPresentBroadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context arg0, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
+            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                hide();
+            }
+        }
 
     }
 
@@ -323,6 +346,11 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     }
 
     @Subscribe
+    public void object(Object object) {
+
+    }
+
+    @Subscribe
     public void updateTopBar(TopBarUpdateEvent event) {
         updateStatusBarUI();
     }
@@ -363,6 +391,12 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     }
 
 
+    @Subscribe
+    public void notificationHideEvent(NotificationTrayEvent event) {
+        if (event.isVisible())
+            hide();
+    }
+
     /**
      * StatusBar : Connectivity Change Listener
      */
@@ -374,18 +408,18 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             if (imgAirplane != null)
                 imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
         } else if (event.getState() == ConnectivityEvent.WIFI) {
-            if(event.getValue()==0){
-                if(wifiManager.getWifiState()==WifiManager.WIFI_STATE_DISABLING
-                        || wifiManager.getWifiState()==WifiManager.WIFI_STATE_DISABLED){
+            if (event.getValue() == 0) {
+                if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLING
+                        || wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLED) {
                     if (imgWifi != null) imgWifi.setVisibility(View.GONE);
                     if (img_notification_Wifi != null)
                         img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
                 }
-            }else if(event.getValue()==-1){
+            } else if (event.getValue() == -1) {
                 if (imgWifi != null) imgWifi.setVisibility(View.GONE);
                 if (img_notification_Wifi != null)
                     img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
-            }else{
+            } else {
                 int level = event.getValue();
                 wifilevel = level;
                 bindWiFiImage(level);
@@ -581,7 +615,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         if (event.getY() > (retrieveStatusBarHeight() + 10) && !siempoNotificationBar) {
 
             siempoNotificationBar = true;
-
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
             seekbarBrightness.setVisibility(View.GONE);
             WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.WRAP_CONTENT,
@@ -603,13 +637,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             };
 
             mWinManager.addView(mParentView, params);
-
             final Animation in = AnimationUtils.loadAnimation(context, R.anim.slide_down);
             layout_notification.setVisibility(VISIBLE);
             layout_notification.startAnimation(in);
             updateNotificationComponents();
-
-
         }
     }
 

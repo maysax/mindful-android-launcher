@@ -11,8 +11,11 @@ import android.util.Log;
 import java.util.Date;
 
 import co.siempo.phone.R;
+import co.siempo.phone.SiempoNotificationBar.ViewService_;
+import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.service.SiempoAccessibilityService;
 import co.siempo.phone.util.PackageUtil;
+import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 
 /**
@@ -47,6 +50,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
                     isCallisRunning = true;
+                    EventBus.getDefault().post(new NotificationTrayEvent(true));
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             } else {
@@ -133,6 +137,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 callStartTime = new Date();
                 savedNumber = number;
                 if (currentProfile == 0 && !isCallisRunning) {
+                    EventBus.getDefault().post(new NotificationTrayEvent(true));
                     CoreApplication.getInstance().playAudio();
                     isCallisRunning = true;
                 }
