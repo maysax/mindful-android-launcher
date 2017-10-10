@@ -243,6 +243,78 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 AudioManager.RINGER_MODE_CHANGED_ACTION));
 
         updateStatusBarUI();
+
+
+
+
+        /**
+         * Initialization components of Siempo NotificationBar
+         */
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        seekbarBrightness = (SeekBar) inflateLayout.findViewById(R.id.seekbarBrightness);
+        recyclerView = (RecyclerView) inflateLayout.findViewById(R.id.recyclerView);
+        emptyView = (TextView) inflateLayout.findViewById(R.id.emptyView);
+        img_background = (ImageView) inflateLayout.findViewById(R.id.img_background);
+        textView_notification_title = (TextView) inflateLayout.findViewById(R.id.textView_notification_title);
+        relWifi = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationWifi);
+        relBle = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBle);
+        relDND = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationDND);
+        relAirPlane = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationAirPlane);
+        relBrightness = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBrightness);
+        relFlash = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationFlash);
+        relMobileData = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationMobileData);
+        img_notification_Wifi = (ImageView) inflateLayout.findViewById(R.id.imgNotificationWifi);
+        img_notification_Data = (ImageView) inflateLayout.findViewById(R.id.imgNotificationData);
+        img_notification_Ble = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBle);
+        img_notification_Dnd = (ImageView) inflateLayout.findViewById(R.id.imgNotificationDnd);
+        img_notification_Airplane = (ImageView) inflateLayout.findViewById(R.id.imgNotificationAirplane);
+        img_notification_Flash = (ImageView) inflateLayout.findViewById(R.id.imgNotificationFlash);
+        img_notification_Brightness = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBrightness);
+        relWifi.setOnClickListener(this);
+        relBle.setOnClickListener(this);
+        relMobileData.setOnClickListener(this);
+        relDND.setOnClickListener(this);
+        relAirPlane.setOnClickListener(this);
+        relFlash.setOnClickListener(this);
+        relBrightness.setOnClickListener(this);
+        layout_notification.setFocusable(true);
+        layout_notification.setVisibility(GONE);
+
+        layout_notification.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    hide();
+                }
+                if (event.getKeyCode() == KeyEvent.KEYCODE_APP_SWITCH) {
+                    hide();
+                }
+                return false;
+            }
+        });
+
+
+        notificationList = new ArrayList<>();
+        recyclerView.setNestedScrollingEnabled(false);
+        adapter = new RecyclerListAdapter(context, notificationList);
+        recyclerView.setAdapter(adapter);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, context);
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+        smsDao = DBUtility.getNotificationDao();
+        callStorageDao = DBUtility.getCallStorageDao();
+        loadData();
+        bindBrightnessControl();
+        bleSignal = new BleSignal();
+        context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+
+
     }
 
     private class AudioChangeReceiver extends BroadcastReceiver {
@@ -508,7 +580,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
             siempoNotificationBar = true;
 
-
+            seekbarBrightness.setVisibility(View.GONE);
             WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     1,
@@ -530,55 +602,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
             mWinManager.addView(mParentView, params);
 
-
-            /**
-             * Initialization components of Siempo NotificationBar
-             */
-            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-            telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            seekbarBrightness = (SeekBar) inflateLayout.findViewById(R.id.seekbarBrightness);
-            recyclerView = (RecyclerView) inflateLayout.findViewById(R.id.recyclerView);
-            emptyView = (TextView) inflateLayout.findViewById(R.id.emptyView);
-            img_background = (ImageView) inflateLayout.findViewById(R.id.img_background);
-            textView_notification_title = (TextView) inflateLayout.findViewById(R.id.textView_notification_title);
-            relWifi = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationWifi);
-            relBle = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBle);
-            relDND = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationDND);
-            relAirPlane = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationAirPlane);
-            relBrightness = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBrightness);
-            relFlash = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationFlash);
-            relMobileData = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationMobileData);
-            img_notification_Wifi = (ImageView) inflateLayout.findViewById(R.id.imgNotificationWifi);
-            img_notification_Data = (ImageView) inflateLayout.findViewById(R.id.imgNotificationData);
-            img_notification_Ble = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBle);
-            img_notification_Dnd = (ImageView) inflateLayout.findViewById(R.id.imgNotificationDnd);
-            img_notification_Airplane = (ImageView) inflateLayout.findViewById(R.id.imgNotificationAirplane);
-            img_notification_Flash = (ImageView) inflateLayout.findViewById(R.id.imgNotificationFlash);
-            img_notification_Brightness = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBrightness);
-            relWifi.setOnClickListener(this);
-            relBle.setOnClickListener(this);
-            relMobileData.setOnClickListener(this);
-            relDND.setOnClickListener(this);
-            relAirPlane.setOnClickListener(this);
-            relFlash.setOnClickListener(this);
-            relBrightness.setOnClickListener(this);
-            layout_notification.setFocusable(true);
-            layout_notification.setVisibility(GONE);
-
-            layout_notification.setOnKeyListener(new OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                        hide();
-                    }
-                    if (event.getKeyCode() == KeyEvent.KEYCODE_APP_SWITCH) {
-                        hide();
-                    }
-                    return false;
-                }
-            });
-
             final Animation in = AnimationUtils.loadAnimation(context, R.anim.slide_down);
             layout_notification.setVisibility(VISIBLE);
             layout_notification.startAnimation(in);
@@ -590,16 +613,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
 
     public void updateNotificationComponents() {
-        notificationList = new ArrayList<>();
-        recyclerView.setNestedScrollingEnabled(false);
-        adapter = new RecyclerListAdapter(context, notificationList);
-        recyclerView.setAdapter(adapter);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(mLayoutManager);
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter, context);
-        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(recyclerView);
 
         emptyView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -659,12 +672,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
         });
 
-        smsDao = DBUtility.getNotificationDao();
-        callStorageDao = DBUtility.getCallStorageDao();
-        loadData();
-        bindBrightnessControl();
-        bleSignal = new BleSignal();
-        context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         statusOfQuickSettings();
     }
 
@@ -1116,6 +1123,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         hide();
                         intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.setData(Uri.parse("package:" + context.getPackageName()));
                         context.startActivity(intent);
                     }

@@ -197,6 +197,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         startActivityForResult(intent, 102);
                     } else {
                         ViewService_.intent(this).showMask().start();
+                        checkAppLoadFirstTime();
                     }
                 }
             }
