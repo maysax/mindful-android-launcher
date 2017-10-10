@@ -1153,7 +1153,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 if (checkSystemWritePermission()) {
                     if (seekbarBrightness.getVisibility() == View.VISIBLE) {
                         seekbarBrightness.setVisibility(View.GONE);
-
+                        img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
                     } else {
                         bindBrightnessControl();
                         seekbarBrightness.setVisibility(View.VISIBLE);
