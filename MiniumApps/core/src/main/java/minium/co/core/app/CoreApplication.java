@@ -342,7 +342,6 @@ public abstract class CoreApplication extends MultiDexApplication {
     public void playAudio() {
         try {
             Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            Log.d("Raja", "Raja");
             if (mMediaPlayer == null) {
                 mMediaPlayer = new MediaPlayer();
                 mMediaPlayer.setDataSource(this, alert);

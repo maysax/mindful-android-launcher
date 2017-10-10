@@ -124,7 +124,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
-        Log.d(TAG, "afterViews event called");
         state = ActivityState.AFTERVIEW;
         Log.d(TAG,"afterViews event called");
 
@@ -168,8 +167,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100) {
-            if (isEnabled(this)) {
+
         if (requestCode == 100){
             if(isEnabled(MainActivity.this))
             {
@@ -181,13 +179,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 }
 
             } else {
-                UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_force_dialog), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
-                    }
-                });
-            }else {
                 notificatoinAccessDialog();
             }
         }
@@ -406,13 +397,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            Log.d("Raja:::::::::::::", "onResume.. "+pInfo.versionCode);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+
         Log.d(TAG, "onResume.. ");
 
 
@@ -441,7 +426,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (notificationCount == 0) {
             EventBus.getDefault().post(new NotificationSwipeEvent(true));
         }
-         Log.d(TAG,"ACTION onNewIntent");
+        Log.d(TAG,"ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);

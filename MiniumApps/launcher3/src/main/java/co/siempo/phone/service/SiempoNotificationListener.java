@@ -84,7 +84,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 if (CoreApplication.getInstance().getNormalModeList().contains(notification.getPackageName())) {
 
                 } else {
-                    cancelNotification(notification.getKey());
+                    //cancelNotification(notification.getKey());
                     if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
                         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                         vibrationUtils.vibrate(500);

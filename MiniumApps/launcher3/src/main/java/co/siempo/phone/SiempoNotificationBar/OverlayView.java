@@ -106,8 +106,8 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     private Context context;
     private FrameLayout mParentView;
     private WindowManager mWinManager;
-    private boolean siempoNotificationBar=false;
-    private String TAG="OverlayView";
+    private boolean siempoNotificationBar = false;
+    private String TAG = "OverlayView";
     private static final int SAFETY_MARGIN = 20;
 
 
@@ -216,15 +216,14 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
          */
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        imgNotification=(ImageView)inflateLayout.findViewById(R.id.imgNotification);
-        imgTempo=(ImageView)inflateLayout.findViewById(R.id.imgTempo);
-        imgBattery=(ImageView)inflateLayout.findViewById(R.id.imgBattery);
-        imgSignal=(ImageView)inflateLayout.findViewById(R.id.imgSignal);
-        imgWifi=(ImageView)inflateLayout.findViewById(R.id.imgWifi);
-        imgAirplane=(ImageView)inflateLayout.findViewById(R.id.imgAirplane);
-        iTxt2=(TextClock)inflateLayout.findViewById(R.id.iTxt2);
+        imgNotification = (ImageView) inflateLayout.findViewById(R.id.imgNotification);
+        imgTempo = (ImageView) inflateLayout.findViewById(R.id.imgTempo);
+        imgBattery = (ImageView) inflateLayout.findViewById(R.id.imgBattery);
+        imgSignal = (ImageView) inflateLayout.findViewById(R.id.imgSignal);
+        imgWifi = (ImageView) inflateLayout.findViewById(R.id.imgWifi);
+        imgAirplane = (ImageView) inflateLayout.findViewById(R.id.imgAirplane);
+        iTxt2 = (TextClock) inflateLayout.findViewById(R.id.iTxt2);
         layout_notification = (RelativeLayout) inflateLayout.findViewById(R.id.layout_notification);
-
 
 
         /**
@@ -286,10 +285,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     public void onTempoEvent(TempoEvent event) {
         if (event.isStarting()) {
             imgTempo.setVisibility(View.VISIBLE);
-            launcherPrefs.edit().putBoolean("isTempoActive",true).commit();
+            launcherPrefs.edit().putBoolean("isTempoActive", true).commit();
         } else {
             imgTempo.setVisibility(View.GONE);
-            launcherPrefs.edit().putBoolean("isTempoActive",false).commit();
+            launcherPrefs.edit().putBoolean("isTempoActive", false).commit();
         }
     }
 
@@ -482,8 +481,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     }
 
 
-
-
     @Override
     public void setOnClickListener(OnClickListener l) {
         super.setOnClickListener(l);
@@ -492,11 +489,11 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     /**
      * Hides view
      */
-    public synchronized  void hide() {
-        if(siempoNotificationBar) {
+    public synchronized void hide() {
+        if (siempoNotificationBar) {
             siempoNotificationBar = false;
             layout_notification.setVisibility(View.GONE);
-            if(mWinManager!=null && mParentView!=null && mParentView.getParent()!=null) {
+            if (mWinManager != null && mParentView != null && mParentView.getParent() != null) {
                 mWinManager.removeView(mParentView);
             }
         }
@@ -506,10 +503,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     /**
      * Load and Display Siempo Notification bar when swipe down
      */
-    public synchronized  void addSiempoNotificationBar(MotionEvent event){
-        if (event.getY() > (retrieveStatusBarHeight()+10) && !siempoNotificationBar) {
+    public synchronized void addSiempoNotificationBar(MotionEvent event) {
+        if (event.getY() > (retrieveStatusBarHeight() + 10) && !siempoNotificationBar) {
 
-            siempoNotificationBar= true;
+            siempoNotificationBar = true;
 
 
             WindowManager.LayoutParams params = new WindowManager.LayoutParams(
@@ -518,7 +515,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     WindowManager.LayoutParams.TYPE_PHONE,
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                     PixelFormat.TRANSLUCENT);
-            mParentView = new FrameLayout(context){
+            mParentView = new FrameLayout(context) {
                 @Override
                 public boolean dispatchKeyEvent(KeyEvent event) {
                     if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
@@ -537,28 +534,28 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             /**
              * Initialization components of Siempo NotificationBar
              */
-            audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            seekbarBrightness=(SeekBar) inflateLayout.findViewById(R.id.seekbarBrightness);
-            recyclerView=(RecyclerView) inflateLayout.findViewById(R.id.recyclerView);
-            emptyView=(TextView)inflateLayout.findViewById(R.id.emptyView);
+            seekbarBrightness = (SeekBar) inflateLayout.findViewById(R.id.seekbarBrightness);
+            recyclerView = (RecyclerView) inflateLayout.findViewById(R.id.recyclerView);
+            emptyView = (TextView) inflateLayout.findViewById(R.id.emptyView);
             img_background = (ImageView) inflateLayout.findViewById(R.id.img_background);
             textView_notification_title = (TextView) inflateLayout.findViewById(R.id.textView_notification_title);
-            relWifi = (RelativeLayout)inflateLayout.findViewById(R.id.relNotificationWifi);
-            relBle = (RelativeLayout)inflateLayout.findViewById(R.id.relNotificationBle);
-            relDND = (RelativeLayout)inflateLayout.findViewById(R.id.relNotificationDND);
-            relAirPlane =(RelativeLayout)inflateLayout.findViewById(R.id.relNotificationAirPlane);
-            relBrightness = (RelativeLayout)inflateLayout.findViewById(R.id.relNotificationBrightness);
-            relFlash = (RelativeLayout)inflateLayout.findViewById(R.id.relNotificationFlash);
-            relMobileData = (RelativeLayout)inflateLayout.findViewById(R.id.relNotificationMobileData);
-            img_notification_Wifi = (ImageView)inflateLayout.findViewById(R.id.imgNotificationWifi);
-            img_notification_Data = (ImageView)inflateLayout.findViewById(R.id.imgNotificationData);
-            img_notification_Ble = (ImageView)inflateLayout.findViewById(R.id.imgNotificationBle);
-            img_notification_Dnd = (ImageView)inflateLayout.findViewById(R.id.imgNotificationDnd);
-            img_notification_Airplane = (ImageView)inflateLayout.findViewById(R.id.imgNotificationAirplane);
-            img_notification_Flash = (ImageView)inflateLayout.findViewById(R.id.imgNotificationFlash);
-            img_notification_Brightness= (ImageView)inflateLayout.findViewById(R.id.imgNotificationBrightness);
+            relWifi = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationWifi);
+            relBle = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBle);
+            relDND = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationDND);
+            relAirPlane = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationAirPlane);
+            relBrightness = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBrightness);
+            relFlash = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationFlash);
+            relMobileData = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationMobileData);
+            img_notification_Wifi = (ImageView) inflateLayout.findViewById(R.id.imgNotificationWifi);
+            img_notification_Data = (ImageView) inflateLayout.findViewById(R.id.imgNotificationData);
+            img_notification_Ble = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBle);
+            img_notification_Dnd = (ImageView) inflateLayout.findViewById(R.id.imgNotificationDnd);
+            img_notification_Airplane = (ImageView) inflateLayout.findViewById(R.id.imgNotificationAirplane);
+            img_notification_Flash = (ImageView) inflateLayout.findViewById(R.id.imgNotificationFlash);
+            img_notification_Brightness = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBrightness);
             relWifi.setOnClickListener(this);
             relBle.setOnClickListener(this);
             relMobileData.setOnClickListener(this);
@@ -592,7 +589,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     }
 
 
-    public void updateNotificationComponents(){
+    public void updateNotificationComponents() {
         notificationList = new ArrayList<>();
         recyclerView.setNestedScrollingEnabled(false);
         adapter = new RecyclerListAdapter(context, notificationList);
@@ -643,11 +640,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     hide();
                 } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
                     if (
-                            ContextCompat.checkSelfPermission( context, android.Manifest.permission.READ_CALL_LOG ) != PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission( context, Manifest.permission.WRITE_CALL_LOG ) != PackageManager.PERMISSION_GRANTED ) {
+                            ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                                    && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
 
-                    }
-                    else{
+                    } else {
                         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
@@ -860,11 +856,12 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
     /**
      * Check to see whether the new notification data already exist in list or not.
+     *
      * @param id
      * @return
      */
     private boolean checkNotificationExistsOrNot(Long id) {
-        if(notificationList!=null) {
+        if (notificationList != null) {
             for (Notification notification : notificationList) {
                 if (notification.getId() == id) {
                     return true;
