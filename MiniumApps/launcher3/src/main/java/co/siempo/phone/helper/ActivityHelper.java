@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.provider.AlarmClock;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Telephony;
+
+import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -42,7 +45,7 @@ public class ActivityHelper {
         return context;
     }
 
-    public String TAG="ActivityHelper";
+    public String TAG = "ActivityHelper";
 
     public boolean openContactsApp() {
         try {
@@ -246,8 +249,7 @@ public class ActivityHelper {
         if (checkCalenderApp().isEmpty()) {
             try {
                 context.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/")));
-            }
-            catch (ActivityNotFoundException e){
+            } catch (ActivityNotFoundException e) {
                 UIUtils.alert(context, "Application not found");
                 e.printStackTrace();
             }
@@ -265,8 +267,7 @@ public class ActivityHelper {
                 Intent mClockIntent = new Intent(AlarmClock.ACTION_SHOW_ALARMS);
                 mClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(mClockIntent);
-            }
-            catch (ActivityNotFoundException e){
+            } catch (ActivityNotFoundException e) {
                 UIUtils.alert(context, "Application not found");
                 e.printStackTrace();
             }
@@ -280,12 +281,22 @@ public class ActivityHelper {
      */
     public void openCameraApp() {
         try {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            context.startActivity(takePictureIntent);
+            String packageName = getCameraPackageName();
+            openGMape(packageName);
         } catch (Exception e) {
             e.printStackTrace();
-            openGalleryApp();
+//            openGalleryApp();
         }
+    }
+
+    // get all default application package name
+    private String getCameraPackageName() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo res : listCam) {
+            return res.activityInfo.packageName;
+        }
+        return "";
     }
 
     /**
