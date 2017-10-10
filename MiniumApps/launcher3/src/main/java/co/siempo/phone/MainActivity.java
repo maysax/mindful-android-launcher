@@ -112,6 +112,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public enum ActivityState {
         AFTERVIEW,
         RESTART,
+        ACTIVITY_RESULT,
         STOP
     }
 
@@ -168,6 +169,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        state = ActivityState.ACTIVITY_RESULT;
+
         if (requestCode == 100){
             if(isEnabled(MainActivity.this))
             {
@@ -191,7 +194,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // Show alert dialog to the user saying a separate permission is needed
                     // Launch the settings activity if the user prefers
+
                     if (!Settings.canDrawOverlays(this)) {
+
                         Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                         startActivityForResult(intent, 102);
@@ -206,6 +211,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Show alert dialog to the user saying a separate permission is needed
                 // Launch the settings activity if the user prefers
+
                 if (!Settings.canDrawOverlays(this)) {
                     Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
@@ -260,17 +266,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         public void onPermissionGranted() {
             Log.d(TAG, "Permission granted");
             loadViews();
-
-            if (!launcherPrefs.isAppInstalledFirstTime().get()) {
-                Log.d(TAG, "Display upgrade dialog.");
-                checkUpgradeVersion();
-            }
-
-
-            if (!isEnabled(MainActivity.this)) {
-
-                notificatoinAccessDialog();
-            }
+            checknavigatePermissions();
 
         }
 
@@ -481,23 +477,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(state != ActivityState.AFTERVIEW){
-            new TedPermission(MainActivity.this)
-                    .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                    .setPermissions(Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.WRITE_CONTACTS,
-                            Manifest.permission.READ_CALL_LOG,
-                            Manifest.permission.WRITE_CALL_LOG,
-                            Manifest.permission.SEND_SMS,
-                            Manifest.permission.RECEIVE_SMS,
-                            Manifest.permission.RECEIVE_MMS,
-                            Manifest.permission.READ_PHONE_STATE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.ACCESS_NETWORK_STATE)
-                    .check();
-//        PackageUtil.checkPermission(this);
+        if(state != ActivityState.AFTERVIEW && state != ActivityState.ACTIVITY_RESULT){
+
+           checkAllPermissions();
 
             Log.d(TAG,"Restart ... ");
         }
@@ -600,6 +582,67 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     }
                 })
                 .show();
+    }
+
+    public void checknavigatePermissions(){
+        if (!launcherPrefs.isAppInstalledFirstTime().get()) {
+            Log.d(TAG, "Display upgrade dialog.");
+            checkUpgradeVersion();
+        }
+
+
+        if (!isEnabled(MainActivity.this)) {
+
+            notificatoinAccessDialog();
+        }
+        else if(!isAccessibilitySettingsOn(MainActivity.this)) {
+            Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            startActivityForResult(intent1, 101);
+        }
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Show alert dialog to the user saying a separate permission is needed
+            // Launch the settings activity if the user prefers
+            if (!Settings.canDrawOverlays(MainActivity.this)) {
+                Toast.makeText(MainActivity.this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                startActivityForResult(intent, 102);
+            } else {
+                ViewService_.intent(MainActivity.this).showMask().start();
+                checkAppLoadFirstTime();
+            }
+        }
+    }
+
+
+    public void checkAllPermissions(){
+        new TedPermission(MainActivity.this)
+                .setPermissionListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+
+                        checknavigatePermissions();
+
+                    }
+
+                    @Override
+                    public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                        UIUtils.toast(MainActivity.this, "Permission denied");
+                        checkAllPermissions();
+                    }
+                })
+                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+                .setPermissions(Manifest.permission.READ_CONTACTS,
+                        Manifest.permission.WRITE_CONTACTS,
+                        Manifest.permission.READ_CALL_LOG,
+                        Manifest.permission.WRITE_CALL_LOG,
+                        Manifest.permission.SEND_SMS,
+                        Manifest.permission.RECEIVE_SMS,
+                        Manifest.permission.RECEIVE_MMS,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_NETWORK_STATE)
+                .check();
     }
 
 }
