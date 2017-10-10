@@ -1164,6 +1164,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         hide();
                         intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.setData(Uri.parse("package:" + context.getPackageName()));
                         context.startActivity(intent);
                     }
