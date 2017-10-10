@@ -146,6 +146,7 @@ public class SiempoSettingsActivity extends CoreActivity {
 
                     appUpdaterUtils.start();
                 } else {
+                    Toast.makeText(getApplicationContext(),getString(R.string.nointernetconnection),Toast.LENGTH_LONG).show();
                     Log.d(TAG, getString(R.string.nointernetconnection));
                 }
             }

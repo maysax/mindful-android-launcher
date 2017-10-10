@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
@@ -19,6 +18,7 @@ import android.nfc.Tag;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -109,6 +109,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    public enum ActivityState {
+        AFTERVIEW,
+        RESTART,
+        STOP
+    }
+
+    ActivityState state;
+
+    private AlertDialog notificationDialog;
 
     public static String isTextLenghGreater = "";
 
@@ -116,6 +125,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @AfterViews
     void afterViews() {
         Log.d(TAG, "afterViews event called");
+        state = ActivityState.AFTERVIEW;
+        Log.d(TAG,"afterViews event called");
+
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
@@ -133,14 +145,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.ACCESS_NETWORK_STATE)
                 .check();
 
-        if (!isEnabled(this)) {
-            UIUtils.confirmWithSingleButton(this, null, getString(R.string.msg_noti_service_dialog), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
-                }
-            });
-        }
+
 
         FirebaseHelper firebaseHelper = new FirebaseHelper(this);
         firebaseHelper.testEvent1();
@@ -165,6 +170,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100) {
             if (isEnabled(this)) {
+        if (requestCode == 100){
+            if(isEnabled(MainActivity.this))
+            {
 
                 if (!isAccessibilitySettingsOn(this)) {
                     Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
@@ -179,6 +187,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
                     }
                 });
+            }else {
+                notificatoinAccessDialog();
             }
         }
         if (requestCode == 101) {
@@ -263,12 +273,33 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 Log.d(TAG, "Display upgrade dialog.");
                 checkUpgradeVersion();
             }
-            PackageUtil.checkPermission(MainActivity.this);
+
+
+            if (!isEnabled(MainActivity.this)) {
+
+                notificatoinAccessDialog();
+            }
+
         }
 
         @Override
         public void onPermissionDenied(ArrayList<String> deniedPermissions) {
             UIUtils.toast(MainActivity.this, "Permission denied");
+            new TedPermission(MainActivity.this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+                    .setPermissions(Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.WRITE_CONTACTS,
+                            Manifest.permission.READ_CALL_LOG,
+                            Manifest.permission.WRITE_CALL_LOG,
+                            Manifest.permission.SEND_SMS,
+                            Manifest.permission.RECEIVE_SMS,
+                            Manifest.permission.RECEIVE_MMS,
+                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.ACCESS_NETWORK_STATE)
+                    .check();
         }
     };
 
@@ -355,6 +386,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -363,6 +395,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Override
     protected void onStop() {
+        state = ActivityState.STOP;
+        if(notificationDialog!=null && notificationDialog.isShowing()){
+            notificationDialog.dismiss();
+        }
         super.onStop();
     }
 
@@ -379,7 +415,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
         Log.d(TAG, "onResume.. ");
 
-        PackageUtil.checkPermission(this);
 
         try {
             enableNfc(true);
@@ -406,7 +441,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (notificationCount == 0) {
             EventBus.getDefault().post(new NotificationSwipeEvent(true));
         }
-        Log.d(TAG, "ACTION onNewIntent");
+         Log.d(TAG,"ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -455,13 +490,35 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     }
 
+
+
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "Restart ... ");
+        if(state != ActivityState.AFTERVIEW){
+            new TedPermission(MainActivity.this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+                    .setPermissions(Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.WRITE_CONTACTS,
+                            Manifest.permission.READ_CALL_LOG,
+                            Manifest.permission.WRITE_CALL_LOG,
+                            Manifest.permission.SEND_SMS,
+                            Manifest.permission.RECEIVE_SMS,
+                            Manifest.permission.RECEIVE_MMS,
+                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.ACCESS_NETWORK_STATE)
+                    .check();
+//        PackageUtil.checkPermission(this);
+
+            Log.d(TAG,"Restart ... ");
+        }
+
     }
 
-    public void checkVersionFromAppUpdater() {
+    public void checkVersionFromAppUpdater(){
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -544,5 +601,19 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         return false;
     }
 
+    public void notificatoinAccessDialog(){
+        notificationDialog=new AlertDialog.Builder(MainActivity.this)
+                .setTitle(null)
+                .setMessage(getString(R.string.msg_noti_service_dialog))
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok,  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 100);
+                    }
+                })
+                .show();
+    }
 
 }
