@@ -245,8 +245,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         updateStatusBarUI();
 
 
-
-
         /**
          * Initialization components of Siempo NotificationBar
          */
@@ -371,30 +369,34 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     @Subscribe
     public void onConnectivityEvent(ConnectivityEvent event) {
         if (event.getState() == ConnectivityEvent.AIRPLANE) {
-            imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
-            imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
+            if (imgSignal != null)
+                imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
+            if (imgAirplane != null)
+                imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
         } else if (event.getState() == ConnectivityEvent.WIFI) {
-            if (event.getValue() != -1) {
-                if (event.getValue() == 0 && !wifiManager.isWifiEnabled()) {
+            if(event.getValue()==0){
+                if(wifiManager.getWifiState()==WifiManager.WIFI_STATE_DISABLING
+                        || wifiManager.getWifiState()==WifiManager.WIFI_STATE_DISABLED){
                     if (imgWifi != null) imgWifi.setVisibility(View.GONE);
                     if (img_notification_Wifi != null)
                         img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
-                } else if (wifiManager.isWifiEnabled()) {
-                    int level = event.getValue();
-                    wifilevel = level;
-                    bindWiFiImage(level);
                 }
-            } else {
+            }else if(event.getValue()==-1){
                 if (imgWifi != null) imgWifi.setVisibility(View.GONE);
-                img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
+                if (img_notification_Wifi != null)
+                    img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
+            }else{
+                int level = event.getValue();
+                wifilevel = level;
+                bindWiFiImage(level);
             }
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
-            imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
+            if (imgBattery != null) imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             /**
              * Update status bar network icon
              */
-            imgSignal.setImageResource(getNetworkIcon(event.getValue()));
+            if (imgSignal != null) imgSignal.setImageResource(getNetworkIcon(event.getValue()));
             /**
              * Update notification bar network icon
              */
@@ -672,11 +674,18 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
         });
 
+        smsDao = DBUtility.getNotificationDao();
+        callStorageDao = DBUtility.getCallStorageDao();
+        loadData();
+        bindBrightnessControl();
+        bleSignal = new BleSignal();
+        context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         statusOfQuickSettings();
     }
 
 
     private void bindBrightnessControl() {
+        img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
         try {
             //Get the current system brightness
             brightness = Settings.System.getInt(
@@ -1115,6 +1124,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         seekbarBrightness.setVisibility(View.GONE);
 
                     } else {
+                        bindBrightnessControl();
                         seekbarBrightness.setVisibility(View.VISIBLE);
                         img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_on_black_24dp));
                     }
@@ -1123,7 +1133,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         hide();
                         intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.setData(Uri.parse("package:" + context.getPackageName()));
                         context.startActivity(intent);
                     }
@@ -1133,7 +1142,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 break;
         }
     }
-
 
     /**
      * Turning On/Off WIFI
@@ -1145,8 +1153,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
             } else {
                 wifiManager.setWifiEnabled(false);
-                img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
-//                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, -1));
+                if (imgWifi != null) imgWifi.setVisibility(View.GONE);
+                if (img_notification_Wifi != null)
+                    img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
+                //EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, -1));
             }
             if (!NetworkUtil.isAirplaneModeOn(context)) {
                 relMobileData.setEnabled(true);
