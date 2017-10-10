@@ -157,10 +157,17 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (launcherPrefs.isAppInstalledFirstTime().get()) {
             launcherPrefs.isAppInstalledFirstTime().put(false);
             launcherPrefs.getCurrentProfile().put(0);
-            ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
+            final ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
-                activityHelper.handleDefaultLauncher(MainActivity.this);
-                loadDialog();
+
+                android.os.Handler handler = new android.os.Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        activityHelper.handleDefaultLauncher(MainActivity.this);
+                        loadDialog();
+                    }
+                },1000);
             }
         }
     }
