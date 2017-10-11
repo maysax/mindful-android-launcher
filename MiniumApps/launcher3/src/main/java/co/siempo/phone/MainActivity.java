@@ -84,6 +84,7 @@ import com.github.javiersantos.appupdater.enums.Display;
 
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
+@Fullscreen
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
@@ -215,11 +216,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         }
         if (requestCode == 102) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // Show alert dialog to the user saying a separate permission is needed
-                // Launch the settings activity if the user prefers
-
-                if (!Settings.canDrawOverlays(this)) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                ViewService_.intent(this).showMask().start();
+                checkAppLoadFirstTime();
+            }
+            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if (!Settings.canDrawOverlays(MainActivity.this)) {
                     Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 102);

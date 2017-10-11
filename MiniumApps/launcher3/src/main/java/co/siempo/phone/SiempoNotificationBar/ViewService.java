@@ -4,9 +4,13 @@ import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EIntentService;
@@ -38,8 +42,15 @@ public class ViewService extends IntentService {
     @AfterInject
     public void init() {
         if (holder.getCurrentOverlay() == null ) {
-            View overlayView = new OverlayView(getApplicationContext());
-            windowManager.addView(overlayView, OverlayView.createLayoutParams(retrieveStatusBarHeight() + SAFETY_MARGIN));
+            View overlayView;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                overlayView = new OreoOverlay(getApplicationContext());
+                windowManager.addView(overlayView, OreoOverlay.createLayoutParams(retrieveStatusBarHeight() + SAFETY_MARGIN));
+            }
+            else{
+                overlayView = new OverlayView(getApplicationContext());
+                windowManager.addView(overlayView, OverlayView.createLayoutParams(retrieveStatusBarHeight() + SAFETY_MARGIN));
+            }
             holder.setCurrentOverlay(overlayView);
         }
     }

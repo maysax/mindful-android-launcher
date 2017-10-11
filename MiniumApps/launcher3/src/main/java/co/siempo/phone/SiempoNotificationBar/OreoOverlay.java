@@ -2,7 +2,6 @@ package co.siempo.phone.SiempoNotificationBar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -13,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.PixelFormat;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -27,7 +25,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.telephony.TelephonyManager;
-import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -45,7 +42,6 @@ import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.NetworkUtils;
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -55,7 +51,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
@@ -96,22 +91,29 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR;
 import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+import static android.view.WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+import static android.view.WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
+import static android.view.WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+import static android.view.WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY;
+import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
 /**
  * The layout that will be used to display the custom status bar and notification bar
  */
-class OverlayView extends FrameLayout implements View.OnClickListener {
+class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private static final String TRACE_TAG = "";
     private View inflateLayout;
     private Context context;
-    private FrameLayout mParentView;
     private WindowManager mWinManager;
     private boolean siempoNotificationBar = false;
-    private String TAG = "OverlayView";
+    private String TAG = "OreoOverlayView";
     private static final int SAFETY_MARGIN = 20;
+
+    private RelativeLayout topbar;
 
 
     /**
@@ -165,7 +167,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     AudioChangeReceiver audioChangeReceiver;
 
 
-    public OverlayView(Context context) {
+    public OreoOverlay(Context context) {
         super(context);
         this.context = context;
         siempoNotificationBar = false;
@@ -200,12 +202,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         });
         mHomeWatcher.startWatch();
 
-        WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                1,
-                WindowManager.LayoutParams.TYPE_PHONE,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                PixelFormat.TRANSLUCENT);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -246,7 +242,19 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         imgWifi = (ImageView) inflateLayout.findViewById(R.id.imgWifi);
         imgAirplane = (ImageView) inflateLayout.findViewById(R.id.imgAirplane);
         iTxt2 = (TextClock) inflateLayout.findViewById(R.id.iTxt2);
+        topbar=inflateLayout.findViewById(R.id.topbar);
         layout_notification = (RelativeLayout) inflateLayout.findViewById(R.id.layout_notification);
+
+
+        topbar.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    addSiempoNotificationBar(motionEvent);
+                }
+                return false;
+            }
+        });
 
 
         /**
@@ -561,23 +569,43 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     }
 
     static WindowManager.LayoutParams createLayoutParams(int height) {
-        final WindowManager.LayoutParams params =
-                new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
-                        | FLAG_LAYOUT_IN_SCREEN
-                        | FLAG_LAYOUT_NO_LIMITS
-                        | FLAG_NOT_TOUCH_MODAL
-                        | FLAG_LAYOUT_INSET_DECOR
-                        , TRANSLUCENT);
-        params.gravity = Gravity.TOP;
+        final WindowManager.LayoutParams params;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            params =
+                    new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_APPLICATION_OVERLAY, FLAG_NOT_FOCUSABLE
+                            | FLAG_LAYOUT_IN_SCREEN
+                            | FLAG_LAYOUT_NO_LIMITS
+                            | FLAG_NOT_TOUCH_MODAL
+                            | FLAG_WATCH_OUTSIDE_TOUCH
+                            , TRANSLUCENT);
+
+            params.gravity = Gravity.TOP;
+        }
+        else{
+            params =
+                    new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
+                            | FLAG_LAYOUT_IN_SCREEN
+                            | FLAG_LAYOUT_NO_LIMITS
+                            | FLAG_NOT_TOUCH_MODAL
+                            | FLAG_LAYOUT_INSET_DECOR
+                            , TRANSLUCENT);
+            params.gravity = Gravity.TOP;
+        }
+
         return params;
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        addSiempoNotificationBar(event);
-        return super.onTouchEvent(event);
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            hide();
+        }
+        if (event.getKeyCode() == KeyEvent.KEYCODE_APP_SWITCH) {
+            hide();
+        }
+        return super.dispatchKeyEvent(event);
     }
+
 
     public int retrieveStatusBarHeight() {
         int result = 0;
@@ -601,9 +629,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         if (siempoNotificationBar) {
             siempoNotificationBar = false;
             layout_notification.setVisibility(View.GONE);
-            if (mWinManager != null && mParentView != null && mParentView.getParent() != null) {
-                mWinManager.removeView(mParentView);
-            }
+            WindowManager.LayoutParams params =
+                    new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_APPLICATION_OVERLAY, FLAG_NOT_FOCUSABLE
+                            | FLAG_LAYOUT_IN_SCREEN
+                            | FLAG_LAYOUT_NO_LIMITS
+                            | FLAG_NOT_TOUCH_MODAL
+                            | FLAG_WATCH_OUTSIDE_TOUCH
+                            , TRANSLUCENT);
+            params.gravity = Gravity.TOP;
+            mWinManager.updateViewLayout(this,params);
         }
     }
 
@@ -612,34 +646,25 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      * Load and Display Siempo Notification bar when swipe down
      */
     public synchronized void addSiempoNotificationBar(MotionEvent event) {
-        if (event.getY() > (retrieveStatusBarHeight() + 10) && !siempoNotificationBar) {
+
+        int height = retrieveStatusBarHeight() + 10;
+        boolean result=event.getY() > height;
+        if (!siempoNotificationBar) {
+            WindowManager.LayoutParams  params = new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_APPLICATION_OVERLAY, FLAG_LAYOUT_NO_LIMITS
+                    , TRANSLUCENT);
+            params.gravity = Gravity.TOP;
+            mWinManager.updateViewLayout(this,params);
 
             siempoNotificationBar = true;
             img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
             seekbarBrightness.setVisibility(View.GONE);
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    1,
-                    WindowManager.LayoutParams.TYPE_PHONE,
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    PixelFormat.TRANSLUCENT);
-            mParentView = new FrameLayout(context) {
-                @Override
-                public boolean dispatchKeyEvent(KeyEvent event) {
-                    if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-                        hide();
-                    }
-                    if (event.getKeyCode() == KeyEvent.KEYCODE_APP_SWITCH) {
-                        hide();
-                    }
-                    return super.dispatchKeyEvent(event);
-                }
-            };
 
-            mWinManager.addView(mParentView, params);
             final Animation in = AnimationUtils.loadAnimation(context, R.anim.slide_down);
             layout_notification.setVisibility(VISIBLE);
             layout_notification.startAnimation(in);
+            layout_notification.setFocusable(true);
+            layout_notification.setClickable(true);
+
             updateNotificationComponents();
         }
     }
@@ -656,10 +681,13 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         img_background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 img_background.setClickable(false);
                 hide();
             }
         });
+
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -814,10 +842,12 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
                 bindWiFiImage(wifilevel);
             }
-            if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_on));
-            } else {
-                img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
+            if(BluetoothAdapter.getDefaultAdapter()!=null) {
+                if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_on));
+                } else {
+                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
+                }
             }
         }
 
@@ -1099,7 +1129,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     BluetoothAdapter.getDefaultAdapter().disable();
                     EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
                 } else {
-                    if(BluetoothAdapter.getDefaultAdapter()!=null){
+                    if(BluetoothAdapter.getDefaultAdapter()!=null) {
                         BluetoothAdapter.getDefaultAdapter().enable();
                     }
                     relBle.setEnabled(false);
