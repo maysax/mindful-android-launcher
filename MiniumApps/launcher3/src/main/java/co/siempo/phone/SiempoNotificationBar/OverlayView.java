@@ -3,6 +3,7 @@ package co.siempo.phone.SiempoNotificationBar;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.KeyguardManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -209,6 +210,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         UserPresentBroadcastReceiver userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         context.registerReceiver(userPresentBroadcastReceiver, intentFilter);
     }
@@ -221,7 +223,13 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
         @Override
         public void onReceive(Context arg0, Intent intent) {
+            Log.d("Test", "intent.getAction()" + intent.getAction());
             if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
+            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+                if (myKM.isKeyguardSecure()) {
+                    hide();
+                }
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 hide();
             }
@@ -430,7 +438,21 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             /**
              * Update status bar network icon
              */
-            if (imgSignal != null) imgSignal.setImageResource(getNetworkIcon(event.getValue()));
+//            if (imgSignal != null) {
+//                if (event.getValue() == 0 || event.getValue() == -1) {
+//                    imgSignal.setImageResource(R.drawable.ic_signal_0);
+//                } else if (event.getValue() == 1) {
+//                    imgSignal.setImageResource(R.drawable.ic_signal_1);
+//                } else if (event.getValue() == 2) {
+//                    imgSignal.setImageResource(R.drawable.ic_signal_2);
+//                } else if (event.getValue() == 3) {
+//                    imgSignal.setImageResource(R.drawable.ic_signal_3);
+//                } else if (event.getValue() == 3) {
+//                    imgSignal.setImageResource(R.drawable.ic_signal_4);
+//                }
+//
+//            }
+            imgSignal.setImageResource(getNetworkIcon(event.getValue()));
             /**
              * Update notification bar network icon
              */
@@ -626,10 +648,14 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             mParentView = new FrameLayout(context) {
                 @Override
                 public boolean dispatchKeyEvent(KeyEvent event) {
+                    Log.d("getKeyCode", "" + event.getKeyCode());
                     if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
                         hide();
                     }
                     if (event.getKeyCode() == KeyEvent.KEYCODE_APP_SWITCH) {
+                        hide();
+                    }
+                    if (event.getKeyCode() == KeyEvent.KEYCODE_POWER) {
                         hide();
                     }
                     return super.dispatchKeyEvent(event);

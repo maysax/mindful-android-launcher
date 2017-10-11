@@ -54,6 +54,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             } else {
+                EventBus.getDefault().post(new NotificationTrayEvent(true));
                 String stateStr = "", number = "";
                 int state = 0;
                 if (intent.getExtras() != null && intent.getExtras().containsKey(TelephonyManager.EXTRA_STATE)) {
@@ -136,8 +137,8 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 isIncoming = true;
                 callStartTime = new Date();
                 savedNumber = number;
+
                 if (currentProfile == 0 && !isCallisRunning) {
-                    EventBus.getDefault().post(new NotificationTrayEvent(true));
                     CoreApplication.getInstance().playAudio();
                     isCallisRunning = true;
                 }

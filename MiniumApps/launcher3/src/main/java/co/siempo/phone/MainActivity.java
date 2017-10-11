@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -106,6 +107,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @SystemService
     NotificationManager notificationManager;
+    @SystemService
+    AudioManager audioManager;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
@@ -127,7 +130,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @AfterViews
     void afterViews() {
         state = ActivityState.AFTERVIEW;
-        Log.d(TAG,"afterViews event called");
+        Log.d(TAG, "afterViews event called");
 
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
@@ -145,7 +148,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_NETWORK_STATE)
                 .check();
-
 
 
         FirebaseHelper firebaseHelper = new FirebaseHelper(this);
@@ -179,9 +181,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         state = ActivityState.ACTIVITY_RESULT;
 
-        if (requestCode == 100){
-            if(isEnabled(MainActivity.this))
-            {
+        if (requestCode == 100) {
+            if (isEnabled(MainActivity.this)) {
 
                 if (!isAccessibilitySettingsOn(this)) {
                     Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
@@ -226,6 +227,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 102);
                 } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     ViewService_.intent(this).showMask().start();
                     checkAppLoadFirstTime();
                 }
@@ -383,7 +385,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -393,7 +394,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onStop() {
         state = ActivityState.STOP;
-        if(notificationDialog!=null && notificationDialog.isShowing()){
+        if (notificationDialog != null && notificationDialog.isShowing()) {
             notificationDialog.dismiss();
         }
         super.onStop();
@@ -432,7 +433,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (notificationCount == 0) {
             EventBus.getDefault().post(new NotificationSwipeEvent(true));
         }
-        Log.d(TAG,"ACTION onNewIntent");
+        Log.d(TAG, "ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
@@ -481,21 +482,19 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     }
 
-
-
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(state != ActivityState.AFTERVIEW && state != ActivityState.ACTIVITY_RESULT){
+        if (state != ActivityState.AFTERVIEW && state != ActivityState.ACTIVITY_RESULT) {
 
-           checkAllPermissions();
+            checkAllPermissions();
 
-            Log.d(TAG,"Restart ... ");
+            Log.d(TAG, "Restart ... ");
         }
 
     }
 
-    public void checkVersionFromAppUpdater(){
+    public void checkVersionFromAppUpdater() {
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -578,12 +577,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         return false;
     }
 
-    public void notificatoinAccessDialog(){
-        notificationDialog=new AlertDialog.Builder(MainActivity.this)
+    public void notificatoinAccessDialog() {
+        notificationDialog = new AlertDialog.Builder(MainActivity.this)
                 .setTitle(null)
                 .setMessage(getString(R.string.msg_noti_service_dialog))
                 .setCancelable(false)
-                .setPositiveButton(android.R.string.ok,  new DialogInterface.OnClickListener() {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -593,7 +592,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .show();
     }
 
-    public void checknavigatePermissions(){
+    public void checknavigatePermissions() {
         if (!launcherPrefs.isAppInstalledFirstTime().get()) {
             Log.d(TAG, "Display upgrade dialog.");
             checkUpgradeVersion();
@@ -603,12 +602,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (!isEnabled(MainActivity.this)) {
 
             notificatoinAccessDialog();
-        }
-        else if(!isAccessibilitySettingsOn(MainActivity.this)) {
+        } else if (!isAccessibilitySettingsOn(MainActivity.this)) {
             Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
             startActivityForResult(intent1, 101);
-        }
-        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Show alert dialog to the user saying a separate permission is needed
             // Launch the settings activity if the user prefers
             if (!Settings.canDrawOverlays(MainActivity.this)) {
@@ -623,7 +620,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-    public void checkAllPermissions(){
+    public void checkAllPermissions() {
         new TedPermission(MainActivity.this)
                 .setPermissionListener(new PermissionListener() {
                     @Override
