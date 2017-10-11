@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -105,6 +106,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @SystemService
     NotificationManager notificationManager;
+    @SystemService
+    AudioManager audioManager;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
@@ -222,6 +225,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 102);
                 } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     ViewService_.intent(this).showMask().start();
                     checkAppLoadFirstTime();
                 }
