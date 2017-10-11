@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -56,6 +57,7 @@ import minium.co.core.util.UIUtils;
  */
 
 @EActivity
+@Fullscreen
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
 

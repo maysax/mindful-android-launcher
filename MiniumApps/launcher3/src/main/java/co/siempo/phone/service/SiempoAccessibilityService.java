@@ -73,7 +73,7 @@ public class SiempoAccessibilityService extends AccessibilityService {
     }
 
     public synchronized void siempoNotificationBarStatus() {
-        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()) && (!TextUtils.isEmpty(activityName) && !activityName.contains("SiempoPhoneSettingsActivity")))) {
+        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()))) {
             ViewService_.intent(getApplication()).showMask().start();
         } else {
             ViewService_.intent(getApplication()).hideMask().start();
