@@ -55,7 +55,6 @@ public class SearchLayout extends CardView {
 
     ImageView btnClear;
 
-    TokenManager manager;
 
     private View inflateLayout;
 
@@ -82,7 +81,7 @@ public class SearchLayout extends CardView {
     private void init(Context context) {
         isWatching = true;
         inflateLayout = inflate(context, R.layout.search_layout, this);
-        manager = new TokenManager();
+
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         txtSearchBox= inflateLayout.findViewById(R.id.txtSearchBox);
         btnClear= inflateLayout.findViewById(R.id.btnClear);
@@ -224,7 +223,7 @@ public class SearchLayout extends CardView {
     private void buildFormattedText() {
         formattedTxt = "";
 
-        for (TokenItem item : manager.getItems()) {
+        for (TokenItem item : TokenManager.getInstance().getItems()) {
             if (item.getCompleteType() == TokenCompleteType.FULL) {
                 if (item.isChipable()) {
                     formattedTxt += "^";

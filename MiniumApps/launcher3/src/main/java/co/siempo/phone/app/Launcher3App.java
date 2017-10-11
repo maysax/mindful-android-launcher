@@ -44,8 +44,6 @@ public class Launcher3App extends CoreApplication {
     @Pref
     DroidPrefs_ prefs;
 
-    @Bean
-    TokenManager manager;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @SuppressLint("StaticFieldLeak")
@@ -74,7 +72,7 @@ public class Launcher3App extends CoreApplication {
 
         loadConfigurationValues();
         configureEverNote();
-        manager.init();
+
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 

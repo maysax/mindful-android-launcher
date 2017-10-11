@@ -99,8 +99,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     MainSlidePagerAdapter sliderAdapter;
 
-    @Bean
-    TokenManager manager;
+
 
     @SystemService
     ConnectivityManager connectivityManager;
