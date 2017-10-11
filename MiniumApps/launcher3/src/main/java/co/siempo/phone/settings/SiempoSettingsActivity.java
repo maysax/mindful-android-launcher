@@ -21,12 +21,15 @@ import com.github.javiersantos.appupdater.enums.AppUpdaterError;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.joanzapata.iconify.IconDrawable;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+
 import co.siempo.phone.BuildConfig;
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -42,6 +45,7 @@ import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
+
 import com.github.javiersantos.appupdater.enums.Display;
 
 
@@ -51,16 +55,16 @@ import com.github.javiersantos.appupdater.enums.Display;
 
 /**
  * This class contain all the siempo settings feature.
- *  1. Switc home app
- *  2. Keyboard hide & show in IF Screen when launch
- *  3. Version of Current App & update
+ * 1. Switc home app
+ * 2. Keyboard hide & show in IF Screen when launch
+ * 3. Version of Current App & update
  */
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
     private ImageView icon_launcher, icon_version;
     private TextView txt_version;
-    private LinearLayout ln_launcher,ln_version;
+    private LinearLayout ln_launcher, ln_version;
     private CheckBox chk_keyboard;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
@@ -82,7 +86,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        currentIndex =0;
+        currentIndex = 0;
     }
 
 
@@ -93,10 +97,10 @@ public class SiempoSettingsActivity extends CoreActivity {
         txt_version = (TextView) findViewById(R.id.txt_version);
         txt_version.setText("Version : " + BuildConfig.VERSION_NAME);
         chk_keyboard = (CheckBox) findViewById(R.id.chk_keyboard);
-        boolean isKeyboardDisplay=launcherPrefs.isKeyBoardDisplay().get();
+        boolean isKeyboardDisplay = launcherPrefs.isKeyBoardDisplay().get();
         chk_keyboard.setChecked(isKeyboardDisplay);
         ln_launcher = (LinearLayout) findViewById(R.id.ln_launcher);
-        ln_version = (LinearLayout)findViewById(R.id.ln_version);
+        ln_version = (LinearLayout) findViewById(R.id.ln_version);
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -125,28 +129,32 @@ public class SiempoSettingsActivity extends CoreActivity {
                             .withListener(new AppUpdaterUtils.UpdateListener() {
                                 @Override
                                 public void onSuccess(Update update, Boolean isUpdateAvailable) {
-
                                     if (update.getLatestVersionCode() != null) {
-                                        Log.d(TAG,"check version from AppUpdater library");
+                                        Log.d(TAG, "check version from AppUpdater library");
                                         checkVersionFromAppUpdater();
                                     } else {
-                                        Log.d(TAG,"check version from AWS");
+                                        Log.d(TAG, "check version from AWS");
                                         initProgressDialog();
-                                        ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion();
+                                        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                                            ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
+                                        } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                                            ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.BETA);
+                                        }
+
                                     }
                                 }
 
                                 @Override
                                 public void onFailed(AppUpdaterError error) {
-                                    if(BuildConfig.DEBUG)
-                                    Log.d(TAG," AppUpdater Error ::: "+error.toString());
+                                    if (BuildConfig.DEBUG)
+                                        Log.d(TAG, " AppUpdater Error ::: " + error.toString());
 
                                 }
                             });
 
                     appUpdaterUtils.start();
                 } else {
-                    Toast.makeText(getApplicationContext(),getString(R.string.nointernetconnection),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.nointernetconnection), Toast.LENGTH_LONG).show();
                     Log.d(TAG, getString(R.string.nointernetconnection));
                 }
             }
@@ -166,11 +174,12 @@ public class SiempoSettingsActivity extends CoreActivity {
         super.onResume();
         PackageUtil.checkPermission(this);
     }
+
     @Override
     protected void onStop() {
 
         super.onStop();
-        currentIndex =0;
+        currentIndex = 0;
     }
 
     @Override
@@ -187,7 +196,7 @@ public class SiempoSettingsActivity extends CoreActivity {
      * This function is use to check current app version with play store version
      * and display alert if update is available using Appupdater library.
      */
-    public void checkVersionFromAppUpdater(){
+    public void checkVersionFromAppUpdater() {
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -200,41 +209,64 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .setButtonDismiss("Maybe later")
                 .start();
     }
+// Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
+//    if (pd != null) {
+//        pd.dismiss();
+//    }
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
-        if(pd!=null){
-            pd.dismiss();
-        }
-        Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
-        if (event.getVersion() > BuildConfig.VERSION_CODE) {
-            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-            if (activeNetwork != null) { // connected to the internet
-                UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            launcherPrefs.updatePrompt().put(false);
-                            new ActivityHelper(SiempoSettingsActivity.this).openBecomeATester();
-                        }
-                    }
-                });
+        Log.d(TAG, "Check Version event...");
+
+        if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+            if (event.getVersion() > BuildConfig.VERSION_CODE) {
+                if (pd != null) {
+                    pd.dismiss();
+                }
+                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                showUpdateDialog(CheckVersionEvent.ALPHA);
             } else {
-                Log.d(TAG, getString(R.string.nointernetconnection));
+                ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
             }
-        }else{
-            Toast.makeText(getApplicationContext(),"Your application is up to date",Toast.LENGTH_LONG).show();
+        } else {
+            if (pd != null) {
+                pd.dismiss();
+            }
+            if (event.getVersion() > BuildConfig.VERSION_CODE) {
+                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                showUpdateDialog(CheckVersionEvent.BETA);
+            }else{
+                Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
-    public void initProgressDialog(){
-        try{
-            pd = new ProgressDialog(SiempoSettingsActivity.this,R.style.ProgressTheme);
+    private void showUpdateDialog(String str) {
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null) { // connected to the internet
+            UIUtils.confirm(this, str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        launcherPrefs.updatePrompt().put(false);
+                        new ActivityHelper(SiempoSettingsActivity.this).openBecomeATester();
+                    }
+                }
+            });
+        } else {
+            Log.d(TAG, getString(R.string.nointernetconnection));
+        }
+    }
+
+    public void initProgressDialog() {
+        try {
+            pd = new ProgressDialog(this);
+            pd.setMessage("Please wait...");
+//            pd = new ProgressDialog(SiempoSettingsActivity.this, R.style.ProgressTheme);
             pd.setCancelable(false);
             pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
             pd.show();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             //WindowManager$BadTokenException will be caught here
             e.printStackTrace();
         }
@@ -242,7 +274,7 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
-      super.onBackPressed();
+        super.onBackPressed();
     }
 
     @Override

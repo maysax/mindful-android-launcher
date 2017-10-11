@@ -11,6 +11,7 @@ import android.support.annotation.StringRes;
 import java.util.Arrays;
 import java.util.List;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
@@ -23,7 +24,9 @@ import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
+import co.siempo.phone.settings.SiempoSettingsActivity;
 import co.siempo.phone.tempo.TempoActivity_;
+import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
@@ -169,7 +172,11 @@ public class MainListItemLoader {
                 MindfulMorningActivity_.intent(context).start();
                 break;
             case 15:
-                ApiClient_.getInstance_(context).checkAppVersion();
+                if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                    ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.ALPHA);
+                } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                    ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.BETA);
+                }
                 break;
             case 16:
                 new ActivityHelper(context).openGmail();

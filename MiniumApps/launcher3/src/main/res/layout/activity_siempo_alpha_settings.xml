@@ -34,7 +34,7 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:text="Beta"
+                android:text="TBD"
                 android:textSize="48sp"
                 tools:ignore="HardcodedText" />
         </LinearLayout>

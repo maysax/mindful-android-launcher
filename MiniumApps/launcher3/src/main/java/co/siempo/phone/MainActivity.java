@@ -1,15 +1,12 @@
 package co.siempo.phone;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -23,7 +20,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdater;
@@ -34,11 +30,11 @@ import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.squareup.haha.perflib.Main;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
@@ -48,9 +44,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
-import co.siempo.phone.SiempoNotificationBar.ViewService;
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
@@ -58,17 +52,12 @@ import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainSlidePagerAdapter;
 import co.siempo.phone.msg.SmsObserver;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.pause.PauseActivity;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoAccessibilityService;
-import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.settings.SiempoSettingsActivity;
 import co.siempo.phone.token.TokenManager;
-import co.siempo.phone.ui.TopFragment_;
-import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.event.CheckActivityEvent;
@@ -79,8 +68,6 @@ import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
-
-import com.github.javiersantos.appupdater.enums.Display;
 
 
 import static minium.co.core.log.LogConfig.TRACE_TAG;
@@ -169,7 +156,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         activityHelper.handleDefaultLauncher(MainActivity.this);
                         loadDialog();
                     }
-                },1000);
+                }, 1000);
             }
         }
     }
@@ -313,10 +300,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         PauseActivity_.intent(this).start();
     }
 
-    void checkVersion() {
-        Tracer.d("Checking if new version is available ... ");
-        ApiClient_.getInstance_(this).checkAppVersion();
-    }
 
     @SuppressWarnings("ConstantConditions")
     @Subscribe
@@ -329,22 +312,37 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
-        Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
-        if (event.getVersion() > BuildConfig.VERSION_CODE) {
-            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-            if (activeNetwork != null) { // connected to the internet
-                UIUtils.confirm(this, "New version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            launcherPrefs.updatePrompt().put(false);
-                            new ActivityHelper(MainActivity.this).openBecomeATester();
-                        }
-                    }
-                });
+        if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+            if (event.getVersion() > BuildConfig.VERSION_CODE) {
+                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                showUpdateDialog(CheckVersionEvent.ALPHA);
             } else {
-                Log.d(TAG, getString(R.string.nointernetconnection));
+                ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
             }
+        } else {
+            if (event.getVersion() > BuildConfig.VERSION_CODE) {
+                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                showUpdateDialog(CheckVersionEvent.BETA);
+            } else {
+                Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void showUpdateDialog(String str) {
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null) { // connected to the internet
+            UIUtils.confirm(this, str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        launcherPrefs.updatePrompt().put(false);
+                        new ActivityHelper(MainActivity.this).openBecomeATester();
+                    }
+                }
+            });
+        } else {
+            Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
 
@@ -526,7 +524,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                 checkVersionFromAppUpdater();
                             } else {
                                 Log.d(TAG, "check version from AWS");
-                                ApiClient_.getInstance_(MainActivity.this).checkAppVersion();
+                                if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                                    ApiClient_.getInstance_(MainActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
+                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                                    ApiClient_.getInstance_(MainActivity.this).checkAppVersion(CheckVersionEvent.BETA);
+                                }
                             }
                         }
 
