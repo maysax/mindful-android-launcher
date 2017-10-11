@@ -35,7 +35,7 @@ import co.siempo.phone.R;
 /**
  * This class contain all the native settings feature.
  */
-@EActivity
+//@EActivity
 public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
     /**
      * A preference value change listener that updates the preference's summary

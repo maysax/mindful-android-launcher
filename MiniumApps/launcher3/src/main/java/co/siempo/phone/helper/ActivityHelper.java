@@ -12,6 +12,7 @@ import android.provider.AlarmClock;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Telephony;
+import android.util.Log;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
 import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
 import co.siempo.phone.settings.SiempoMainSettingsActivity_;
-import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
+//import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
+import co.siempo.phone.settings.SiempoPhoneSettingsActivity;
 import co.siempo.phone.settings.SiempoSettingsActivity_;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
@@ -394,7 +396,10 @@ public class ActivityHelper {
 
     public boolean openPhoneSettingsApp() {
         try {
-            SiempoPhoneSettingsActivity_.intent(getContext()).start();
+            // Below logic is use for further development
+            //SiempoPhoneSettingsActivity_.intent(getContext()).start();
+            Intent i = new Intent(getContext(), SiempoPhoneSettingsActivity.class);
+            getContext().startActivity(i);
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

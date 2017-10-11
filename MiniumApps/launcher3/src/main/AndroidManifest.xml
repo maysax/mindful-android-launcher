@@ -217,7 +217,7 @@
         </service>
 
         <activity android:name=".ui.UpdateActivity_"></activity>
-        <activity android:name=".settings.SiempoPhoneSettingsActivity_" />
+        <activity android:name=".settings.SiempoPhoneSettingsActivity" />
         <activity android:name=".settings.SiempoSettingsActivity_" />
         <activity android:name=".settings.SiempoMainSettingsActivity_" />
         <activity android:name=".settings.SiempoAlphaSettingsActivity_" />

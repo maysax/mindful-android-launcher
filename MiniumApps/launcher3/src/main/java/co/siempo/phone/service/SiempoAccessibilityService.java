@@ -25,7 +25,8 @@ import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CH
 public class SiempoAccessibilityService extends AccessibilityService {
 
     public static String packageName = "";
-    String activityName = "";
+    public static  String activityName = "";
+    private final String TAG="Accessibility";
 
     AudioManager audioManager;
 
@@ -40,8 +41,8 @@ public class SiempoAccessibilityService extends AccessibilityService {
                 packageName = activityInfo.packageName;
                 activityName = componentName.flattenToShortString();
             }
-            Log.d("Package Name",packageName);
-            Log.d("ActivityName Name",activityName);
+            Log.d(TAG,"Packag eName::"+packageName);
+            Log.d(TAG,"Activity name::"+activityName);
             if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
             }
