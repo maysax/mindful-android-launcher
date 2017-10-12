@@ -95,7 +95,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
-    public enum ActivityState {
+    private enum ActivityState {
         AFTERVIEW,
         RESTART,
         ACTIVITY_RESULT,
@@ -297,31 +297,24 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        if (event.isVisible()) {
-        }
-    }
-
-
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
         if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                Tracer.d("Installed version Alpha: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);
             } else {
                 ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
             }
         } else {
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                Tracer.d("Installed version Beta: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
-            } else {
-                Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
             }
+//            else {
+//               // Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
+//            }
         }
     }
 
@@ -370,10 +363,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onDestroy() {
         super.onDestroy();
         MainActivity.isTextLenghGreater = "";
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -460,10 +449,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     public void onBackPressed() {
         try {
-
-            /**
-             *  Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
-             */
+            //Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
             if (pager != null && pager.getCurrentItem() == 1) {
                 pager.setCurrentItem(0);
             }
@@ -478,9 +464,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onRestart() {
         super.onRestart();
         if (state != ActivityState.AFTERVIEW && state != ActivityState.ACTIVITY_RESULT) {
-
             checkAllPermissions();
-
             Log.d(TAG, "Restart ... ");
         }
 

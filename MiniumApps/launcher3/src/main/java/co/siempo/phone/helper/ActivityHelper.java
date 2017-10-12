@@ -291,12 +291,38 @@ public class ActivityHelper {
         }
     }
 
+    /**
+     * Open the Browser application from device.
+     */
+    public void openBrowserApp() {
+        try {
+            String packageName = getBrowserPackageName();
+            openGMape(packageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     // get all default application package name
     private String getCameraPackageName() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo res : listCam) {
             return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * This method used for get default browser package name.
+     * @return
+     */
+    private String getBrowserPackageName() {
+        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
+        List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo res : listCam) {
+            return res.activityInfo.packageName;
+//            Log.e("Camera Application Package Name and Activity Name",res.activityInfo.packageName + " " + res.activityInfo.name);
         }
         return "";
     }

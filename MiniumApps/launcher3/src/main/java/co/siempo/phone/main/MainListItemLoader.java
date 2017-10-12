@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.StringRes;
 
@@ -54,6 +55,7 @@ public class MainListItemLoader {
         //if (new ActivityHelper(context).isAppInstalled(GOOGLE_PHOTOS))
         items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
         items.add(new MainListItem(23, getString(R.string.title_camera), "fa-camera"));
+        items.add(new MainListItem(24, getString(R.string.title_browser), "fa-globe"));
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
@@ -66,10 +68,6 @@ public class MainListItemLoader {
 //        items.add(new MainListItem(7, getString(R.string.title_clock), "fa-clock-o"));
 //        items.add(new MainListItem(9, getString(R.string.title_theme), "fa-tint"));
         //items.add(new MainListItem(17, getString(R.string.title_inbox), "fa-inbox"));
-
-        /**
-         * SSA-101 :  Comment "Switch home Launcher" & "Version" module.
-         */
 
 //        if (!Build.MODEL.toLowerCase().contains("siempo")) {
 //            items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
@@ -85,6 +83,7 @@ public class MainListItemLoader {
                         String defDialerApp = Settings.Secure.getString(context.getContentResolver(), "dialer_default_application");
                         String defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
                         String packageCamera = getCameraPackageName();
+                        String packageBrowser = getBrowserPackageName();
                         String packageName = applicationInfo.packageName;
                         if (!packageName.equalsIgnoreCase(defDialerApp)
                                 && !packageName.equalsIgnoreCase(defSMSApp)
@@ -95,6 +94,7 @@ public class MainListItemLoader {
                                 && !packageName.equalsIgnoreCase(Constants.GOOGLE_MAP_PACKAGE)
                                 && !packageName.equalsIgnoreCase(Constants.GOOGLE_PHOTOS)
                                 && !packageName.equalsIgnoreCase(packageCamera)
+                                && !packageName.equalsIgnoreCase(packageBrowser)
                                 && !Arrays.asList(Constants.CALENDAR_APP_PACKAGES).contains(packageName)
                                 && !Arrays.asList(Constants.CALL_APP_PACKAGES).contains(packageName)
                                 && !Arrays.asList(Constants.CLOCK_APP_PACKAGES).contains(packageName)) {
@@ -120,8 +120,19 @@ public class MainListItemLoader {
         return "";
     }
 
+    // get all default application package name
+    private String getBrowserPackageName() {
+        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
+        List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo res : listCam) {
+            return res.activityInfo.packageName;
+//            Log.e("Camera Application Package Name and Activity Name",res.activityInfo.packageName + " " + res.activityInfo.name);
+        }
+        return "";
+    }
 
-    private final String getString(@StringRes int resId, Object... formatArgs) {
+
+    private String getString(@StringRes int resId, Object... formatArgs) {
         return context.getString(resId, formatArgs);
     }
 
@@ -199,6 +210,9 @@ public class MainListItemLoader {
                 break;
             case 23:
                 new ActivityHelper(context).openCameraApp();
+                break;
+            case 24:
+                new ActivityHelper(context).openBrowserApp();
                 break;
             default:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
