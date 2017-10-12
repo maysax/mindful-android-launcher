@@ -30,10 +30,8 @@ import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
-import com.squareup.haha.perflib.Main;
 
 import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.SystemService;
@@ -84,7 +82,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
 
     MainSlidePagerAdapter sliderAdapter;
-
 
 
     @SystemService
@@ -202,11 +199,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         }
         if (requestCode == 102) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 ViewService_.intent(this).showMask().start();
                 checkAppLoadFirstTime();
-            }
-            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(MainActivity.this)) {
                     Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
