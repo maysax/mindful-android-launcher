@@ -107,7 +107,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<ResolveInfo> browserPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> clockPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> emailPackageList = new ArrayList<>();
-    private String callPackage,messagePackage,calenderPackage,contactPackage,mapPackage,photosPackage,
+    public String callPackage,messagePackage,calenderPackage,contactPackage,mapPackage,photosPackage,
             cameraPackage,browserPackage,clockPackage,emailPackage;
 
     public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
@@ -265,7 +265,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         sInstance = this;
         init();
         getAllApplicationPackageName();
-        setAllDefaultMenusApplication();
+
 
     }
 
@@ -504,53 +504,10 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
 
-    private void setAllDefaultMenusApplication() {
-        callPackage = getCallPackageName();
-        if (getCallPackageName().equalsIgnoreCase(""))
-            sharedPref.edit().putString("callPackage", callPackage).apply();
-
-        messagePackage = getMesssagePackageName();
-        if (messagePackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("messagePackage", messagePackage).apply();
-
-        calenderPackage = getCalenderPackageName();
-        if (calenderPackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("calenderPackage", calenderPackage).apply();
-
-        contactPackage = getContactPackageName();
-        if (contactPackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("contactPackage", contactPackage).apply();
-
-        mapPackage = getMapPackageName();
-        if (mapPackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("mapPackage", mapPackage).apply();
-
-        photosPackage = getPhotosPackageName();
-        if (mapPackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("photosPackage", photosPackage).apply();
-
-        cameraPackage = getCameraPackageName();
-        if (cameraPackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("cameraPackage", cameraPackage).apply();
-
-        browserPackage = getBrowserPackageName();
-        if (browserPackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("browserPackage", browserPackage).apply();
-
-        clockPackage = getClockPackageName();
-        if (clockPackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("clockPackage", clockPackage).apply();
-
-        emailPackage = getMailPackageName();
-        if (emailPackage.equalsIgnoreCase(""))
-            sharedPref.edit().putString("emailPackage", emailPackage).apply();
-    }
-
-
     /**
      * get all default Call application package name
      */
-    private String getCallPackageName() {
+    public String getCallPackageName() {
         Uri number = Uri.parse("tel:");
         Intent dial = new Intent(Intent.ACTION_CALL, number);
         getCallPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
@@ -565,7 +522,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all default message application package name
      */
-    private String getMesssagePackageName() {
+    public String getMessagePackageName() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.setType("vnd.android-dir/mms-sms");
         getMessagePackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
@@ -579,7 +536,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all default Calender application package name
      */
-    private String getCalenderPackageName() {
+    public String getCalenderPackageName() {
         Intent dial = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/"));
         getCalenderPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
         for (ResolveInfo res : getCalenderPackageList()) {
@@ -593,7 +550,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all default Contact application package name
      */
-    private String getContactPackageName() {
+    public String getContactPackageName() {
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
         getContactPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getContactPackageList()) {
@@ -606,7 +563,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all default Contact application package name
      */
-    private String getMapPackageName() {
+    public String getMapPackageName() {
         Double myLatitude = 44.433106;
         Double myLongitude = 26.103687;
         String labelLocation = "Jorgesys @ Bucharest";
@@ -623,7 +580,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all default Contact application package name
      */
-    private String getPhotosPackageName() {
+    public String getPhotosPackageName() {
         Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/* video/*");
         getPhotosPackageList().addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
@@ -638,7 +595,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all default Contact application package name
      */
-    private String getCameraPackageName() {
+    public String getCameraPackageName() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         getCameraPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getCalenderPackageList()) {
@@ -651,7 +608,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all Browser application package name
      */
-    private String getBrowserPackageName() {
+    public String getBrowserPackageName() {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
         getBrowserPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getBrowserPackageList()) {
@@ -664,7 +621,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all Clock application package name
      */
-    private String getClockPackageName() {
+    public String getClockPackageName() {
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
         getClockPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getClockPackageList()) {
@@ -678,7 +635,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     /**
      * get all Mail application package name
      */
-    private String getMailPackageName() {
+    public String getMailPackageName() {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
         intent.setData(data);

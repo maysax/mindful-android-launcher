@@ -44,6 +44,9 @@ public class Launcher3App extends CoreApplication {
     @Pref
     DroidPrefs_ prefs;
 
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
+
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @SuppressLint("StaticFieldLeak")
@@ -87,6 +90,43 @@ public class Launcher3App extends CoreApplication {
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         //testCases();
+
+        if (launcherPrefs.isAppInstalledFirstTime().get()) {
+            setAllDefaultMenusApplication();
+        }
+
+    }
+
+    private void setAllDefaultMenusApplication() {
+        callPackage = getCallPackageName();
+        if (!callPackage.equalsIgnoreCase("")) prefs.callPackage().put(callPackage);
+
+        messagePackage = getMessagePackageName();
+        if (!messagePackage.equalsIgnoreCase("")) prefs.messagePackage().put(messagePackage);
+
+        calenderPackage = getCalenderPackageName();
+        if (!calenderPackage.equalsIgnoreCase("")) prefs.calenderPackage().put(calenderPackage);
+
+        contactPackage = getContactPackageName();
+        if (!contactPackage.equalsIgnoreCase("")) prefs.contactPackage().put(contactPackage);
+
+        mapPackage = getMapPackageName();
+        if (!mapPackage.equalsIgnoreCase("")) prefs.mapPackage().put(mapPackage);
+
+        photosPackage = getPhotosPackageName();
+        if (!photosPackage.equalsIgnoreCase("")) prefs.photosPackage().put(photosPackage);
+
+        cameraPackage = getCameraPackageName();
+        if (!cameraPackage.equalsIgnoreCase("")) prefs.calenderPackage().put(cameraPackage);
+
+        browserPackage = getBrowserPackageName();
+        if (!browserPackage.equalsIgnoreCase("")) prefs.browserPackage().put(browserPackage);
+
+        clockPackage = getClockPackageName();
+        if (!clockPackage.equalsIgnoreCase("")) prefs.clockPackage().put(clockPackage);
+
+        emailPackage = getMailPackageName();
+        if (!emailPackage.equalsIgnoreCase("")) prefs.emailPackage().put(emailPackage);
     }
 
 

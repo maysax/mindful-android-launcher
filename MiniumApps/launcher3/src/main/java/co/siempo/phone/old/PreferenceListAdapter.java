@@ -1,6 +1,7 @@
 package co.siempo.phone.old;
 
 import android.content.Context;
+import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -21,19 +22,15 @@ import co.siempo.phone.model.MainListItem;
  * Created by Shahab on 2/23/2017.
  */
 
-public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
+public class PreferenceListAdapter extends ArrayAdapter<ResolveInfo> {
 
     private Context context;
 
-    private List<MainListItem> data = null;
+    private List<ResolveInfo> data = null;
 
-    public OldMenuAdapter(Context context, List<MainListItem> items) {
+    public PreferenceListAdapter(Context context, List<ResolveInfo> items) {
         super(context, 0);
         this.context = context;
-        loadData(items);
-    }
-
-    private void loadData(List<MainListItem> items) {
         this.data = items;
     }
 
@@ -44,7 +41,7 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
 
     @Nullable
     @Override
-    public MainListItem getItem(int position) {
+    public ResolveInfo getItem(int position) {
         return data.get(position);
     }
 
@@ -62,23 +59,20 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
             holder = new ItemHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
 
-            convertView = inflater.inflate(R.layout.list_item, parent, false);
-            holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-            holder.text = (TextView) convertView.findViewById(R.id.text);
+            convertView = inflater.inflate(R.layout.list_item_apps, parent, false);
+            holder.icon =  convertView.findViewById(R.id.icon);
+            holder.text =  convertView.findViewById(R.id.text);
 
             convertView.setTag(holder);
         } else {
             holder = (ItemHolder) convertView.getTag();
         }
 
-        MainListItem item = getItem(position);
+        ResolveInfo item = getItem(position);
 
         if (item != null) {
-            holder.text.setText(item.getTitle());
-            holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
-                    .colorRes(R.color.text_primary)
-                    .sizeDp(18));
-
+            holder.text.setText(item.loadLabel(context.getPackageManager()));
+            holder.icon.setImageDrawable(item.loadIcon(context.getPackageManager()));
         }
 
         return convertView;
