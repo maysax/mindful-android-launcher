@@ -55,7 +55,7 @@ public class MainListItemLoader {
         //if (new ActivityHelper(context).isAppInstalled(GOOGLE_PHOTOS))
         items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
         items.add(new MainListItem(23, getString(R.string.title_camera), "fa-camera"));
-        items.add(new MainListItem(24, getString(R.string.title_browser), "fa-globe"));
+        items.add(new MainListItem(24, getString(R.string.title_browser), "fa-hand-pointer-o"));
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
