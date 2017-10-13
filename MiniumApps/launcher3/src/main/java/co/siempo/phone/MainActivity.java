@@ -320,7 +320,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
             } else {
-                Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
+                Tracer.d("Installed version: " + "Up to date.");
             }
         }
     }

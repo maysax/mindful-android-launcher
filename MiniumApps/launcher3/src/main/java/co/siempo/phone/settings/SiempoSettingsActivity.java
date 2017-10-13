@@ -124,6 +124,7 @@ public class SiempoSettingsActivity extends CoreActivity {
             public void onClick(View v) {
                 NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
                 if (activeNetwork != null) {
+                    initProgressDialog();
                     AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(SiempoSettingsActivity.this)
                             .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                             .withListener(new AppUpdaterUtils.UpdateListener() {
@@ -131,10 +132,12 @@ public class SiempoSettingsActivity extends CoreActivity {
                                 public void onSuccess(Update update, Boolean isUpdateAvailable) {
                                     if (update.getLatestVersionCode() != null) {
                                         Log.d(TAG, "check version from AppUpdater library");
+                                        if (pd != null) {
+                                            pd.dismiss();
+                                        }
                                         checkVersionFromAppUpdater();
                                     } else {
                                         Log.d(TAG, "check version from AWS");
-                                        initProgressDialog();
                                         if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
                                             ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
                                         } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
