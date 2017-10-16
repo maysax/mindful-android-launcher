@@ -26,6 +26,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
+import co.siempo.phone.token.TokenManager;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 
@@ -37,7 +38,6 @@ import minium.co.core.app.CoreApplication;
 public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
     private Context context;
-
     private List<MainListItem> originalData = null;
     private List<MainListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
@@ -161,7 +161,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
     private View getContactItemView(int position, View view, ViewGroup parent) {
         ContactViewHolder holder;
-
         if (view == null) {
             holder = new ContactViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -202,6 +201,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private View getActionItemView(int position, View view, ViewGroup parent) {
         ActionViewHolder holder;
 
+
         if (view == null) {
             holder = new ActionViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -210,6 +210,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
             holder.icon = (ImageView) view.findViewById(R.id.icon);
             holder.text = (TextView) view.findViewById(R.id.text);
+
             view.setTag(holder);
         } else {
             holder = (ActionViewHolder) view.getTag();
@@ -222,9 +223,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 if(!TextUtils.isEmpty(item.getApplicationInfo().packageName)){
                     holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
                 }
-//                if(!TextUtils.isEmpty(item.getApplicationInfo().packageName)){
-//                    holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
-//                }
                 holder.text.setText(item.getApplicationInfo().name);
             } else {
                 if (item.getIcon() != null) {
@@ -336,7 +334,10 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                     buildData.add(originalData.get(i));
                                 break;
                             case NUMBERS:
-                                buildData.add(originalData.get(i));
+                                if(searchString.matches("[0-9]+")){
+                                    TokenManager.getInstance().getCurrent().setExtra2(searchString);
+                                    buildData.add(originalData.get(i));
+                                }
                                 break;
                         }
                     }
