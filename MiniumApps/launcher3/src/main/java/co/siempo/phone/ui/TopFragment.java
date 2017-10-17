@@ -2,7 +2,11 @@ package co.siempo.phone.ui;
 
 
 import android.app.Fragment;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.media.AudioManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
@@ -10,6 +14,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.Icon;
@@ -26,7 +31,9 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.battery.BatteryChangeEvent;
 import co.siempo.phone.db.DBUtility;
+import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.event.ConnectivityEvent;
+import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationSchedulerEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
@@ -73,11 +80,26 @@ public class TopFragment extends CoreFragment {
     @ViewById
     ImageView imgWifi;
 
+//    @ViewById
+//    TextView txtType; // SSA-206 Quick Setting for feature reference.
+
+//    @ViewById
+//    ImageView imgBluetooth; // SSA-206 Quick Setting for feature reference.
+
+//    @ViewById
+//    ImageView imgDND; // SSA-206 Quick Setting for feature reference.
+
     @ViewById
-    ImageView imgAirplane;
+    ImageView imgAirplane; // SSA-206 Quick Setting for feature reference.
 
     @SystemService
     WifiManager wifiManager;
+
+    @SystemService
+    AudioManager audioManager;
+
+    @SystemService
+    ConnectivityManager connectivityManager;
 
     FontAwesomeIcons[] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
@@ -97,31 +119,102 @@ public class TopFragment extends CoreFragment {
     IDynamicStatus wifiDataReceiver;
 
     public TopFragment() {
-        // Required empty public constructor
     }
 
     @AfterViews
     void afterViews() {
-        // Default text
-        //updateBatteryText(50);
-        updateUI();
+        airplaneModeDataReceiver = new AirplaneModeDataReceiver();
+        airplaneModeDataReceiver.register(context);
+        wifiDataReceiver = new WifiDataReceiver();
+        wifiDataReceiver.register(context);
+        batteryDataReceiver = new BatteryDataReceiver();
+        batteryDataReceiver.register(context);
+        networkDataReceiver = new NetworkDataReceiver(context);
+        networkDataReceiver.register(context);
     }
 
     private void updateUI() {
-        imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
-        imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
-        imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
-        imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
-        imgWifi.setImageResource(getWifiIcon(WifiManager.calculateSignalLevel(wifiManager.getConnectionInfo().getRssi(), 5)));
-
+        if (NetworkUtil.isAirplaneModeOn(context)) {
+            imgAirplane.setVisibility(View.VISIBLE);// SSA-206 Quick Setting for feature reference.
+            imgSignal.setVisibility(View.GONE);
+            //txtType.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
+            imgWifi.setVisibility(View.GONE);
+            //imgBluetooth.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
+            //imgDND.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
+        } else {
+            imgAirplane.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
+            imgSignal.setVisibility(View.VISIBLE);
+           // txtType.setVisibility(View.VISIBLE);// SSA-206 Quick Setting for feature reference.
+            if (wifiManager.isWifiEnabled()) {
+                imgWifi.setVisibility(View.VISIBLE);
+                imgWifi.setImageResource(getWifiIcon(WifiManager.calculateSignalLevel(wifiManager.getConnectionInfo().getRssi(), 5)));
+            } else {
+                imgWifi.setVisibility(View.GONE);
+            }
+// SSA-206 Quick Setting for feature reference.
+//            if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+//                imgBluetooth.setVisibility(View.VISIBLE);
+//                imgBluetooth.setImageResource(R.drawable.ic_bluetooth_on);
+//            } else {
+//                imgBluetooth.setVisibility(View.GONE);
+//            }
+//            bindDnd();
+        }
         long notifCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
         imgNotification.setVisibility(notifCount == 0 ? View.GONE : View.VISIBLE);
+
+
     }
+// SSA-206 Quick Setting for feature reference.
+//    private void bindDnd() {
+//        int currentModeDeviceMode = audioManager.getRingerMode();
+//        if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
+//            imgDND.setVisibility(View.GONE);
+//        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
+//            imgDND.setVisibility(View.VISIBLE);
+//            imgDND.setImageResource(R.drawable.ic_do_not_disturb_on_black_24dp);
+//        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
+//            imgDND.setVisibility(View.VISIBLE);
+//            imgDND.setImageResource(R.drawable.ic_vibration_black_24dp);
+//        }
+//    }
 
     @Override
     public void onResume() {
         super.onResume();
+        updateUI();
         onTempoEvent(new TempoEvent(launcherPrefs.isTempoActive().get()));
+    }
+
+
+    /**
+     * Event bus notifier when new message or call comes.
+     *
+     * @param tableNotificationSms
+     */
+    @Subscribe
+    public void newNotificationEvent(NewNotificationEvent tableNotificationSms) {
+        if (tableNotificationSms != null) {
+            imgNotification.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Event bus notifier when notification becomes null.Hide the blue dot
+     *
+     * @param event
+     */
+    @Subscribe
+    public void notificationSwipeEvent(NotificationSwipeEvent event) {
+        try {
+            if (event.isNotificationListNull()) {
+                imgNotification.setVisibility(View.GONE);
+            } else {
+                imgNotification.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -139,29 +232,19 @@ public class TopFragment extends CoreFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        airplaneModeDataReceiver = new AirplaneModeDataReceiver();
-        airplaneModeDataReceiver.register(context);
 
-        wifiDataReceiver = new WifiDataReceiver();
-        wifiDataReceiver.register(context);
-        batteryDataReceiver = new BatteryDataReceiver();
-        batteryDataReceiver.register(context);
-        networkDataReceiver = new NetworkDataReceiver(context);
-        networkDataReceiver.register(context);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        try{
-
+        try {
             airplaneModeDataReceiver.unregister(context);
             batteryDataReceiver.unregister(context);
             networkDataReceiver.unregister(context);
             wifiDataReceiver.unregister(context);
-        }
-        catch (Exception e){
-            Log.d(TAG,"onDetach Call");
+        } catch (Exception e) {
+            Log.d(TAG, "onDetach Call");
         }
     }
 
@@ -241,35 +324,64 @@ public class TopFragment extends CoreFragment {
         if (event.getState() == ConnectivityEvent.AIRPLANE) {
             imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
             imgWifi.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
-            imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);
+            imgAirplane.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.VISIBLE : View.GONE);// SSA-206 Quick Setting for feature reference.
         } else if (event.getState() == ConnectivityEvent.WIFI) {
-            imgWifi.setVisibility(NetworkUtil.isWifiOn(context) ? View.VISIBLE : View.GONE);
-            imgWifi.setImageResource(getWifiIcon(event.getValue()));
+
+            if (wifiManager.isWifiEnabled()) {
+                //txtType.setText("");// SSA-206 Quick Setting for feature reference.
+                //txtType.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
+                imgWifi.setVisibility(View.VISIBLE);
+                imgWifi.setImageResource(getWifiIcon(event.getValue()));
+            } else {
+                imgWifi.setVisibility(View.GONE);
+            }
+            if (event.getValue() == -1) {
+                imgWifi.setVisibility(View.GONE);
+            }
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
             imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
-            imgSignal.setImageResource(getNetworkIcon(event.getValue()));
+            if (event.getValue() == -1) {
+                imgSignal.setImageResource(R.drawable.ic_signal_0);
+                //txtType.setText("");// SSA-206 Quick Setting for feature reference.
+                //txtType.setVisibility(View.GONE);// SSA-206 Quick Setting for feature reference.
+            } else {
+                imgSignal.setImageResource(getNetworkIcon(event.getValue()));
+                NetworkInfo networkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+// SSA-206 Quick Setting for feature reference.
+//                if (!wifiManager.isWifiEnabled() && networkInfo.isConnected()) {
+//                    txtType.setText(event.getType());
+//                    txtType.setVisibility(View.VISIBLE);
+//                } else {
+//                    txtType.setText("");
+//                    txtType.setVisibility(View.GONE);
+//                }
+            }
+        } else if (event.getState() == ConnectivityEvent.DND) {
+           // bindDnd();// SSA-206 Quick Setting for feature reference.
+        } else if (event.getState() == ConnectivityEvent.BLE) {
+//            imgBluetooth.setVisibility(event.getValue() == 0 ? View.GONE : View.VISIBLE);// SSA-206 Quick Setting for feature reference.
         }
     }
 
     private int getBatteryIcon2(int level) {
         int icons[] = {
                 IconStyleData.TYPE_VECTOR,
-                com.james.status.R.drawable.ic_battery_alert,
-                com.james.status.R.drawable.ic_battery_20,
-                com.james.status.R.drawable.ic_battery_30,
-                com.james.status.R.drawable.ic_battery_50,
-                com.james.status.R.drawable.ic_battery_60,
-                com.james.status.R.drawable.ic_battery_80,
-                com.james.status.R.drawable.ic_battery_90,
-                com.james.status.R.drawable.ic_battery_full,
-                com.james.status.R.drawable.ic_battery_charging_20,
-                com.james.status.R.drawable.ic_battery_charging_30,
-                com.james.status.R.drawable.ic_battery_charging_50,
-                com.james.status.R.drawable.ic_battery_charging_60,
-                com.james.status.R.drawable.ic_battery_charging_80,
-                com.james.status.R.drawable.ic_battery_charging_90,
-                com.james.status.R.drawable.ic_battery_charging_full
+                R.drawable.ic_battery_alert,
+                R.drawable.ic_battery_20,
+                R.drawable.ic_battery_30,
+                R.drawable.ic_battery_50,
+                R.drawable.ic_battery_60,
+                R.drawable.ic_battery_80,
+                R.drawable.ic_battery_90,
+                R.drawable.ic_battery_full,
+                R.drawable.ic_battery_charging_20,
+                R.drawable.ic_battery_charging_30,
+                R.drawable.ic_battery_charging_50,
+                R.drawable.ic_battery_charging_60,
+                R.drawable.ic_battery_charging_80,
+                R.drawable.ic_battery_charging_90,
+                R.drawable.ic_battery_charging_full
         };
 
         return icons[level + 1];
@@ -278,11 +390,11 @@ public class TopFragment extends CoreFragment {
     private int getWifiIcon(int level) {
         int icons[] = {
                 IconStyleData.TYPE_VECTOR,
-                com.james.status.R.drawable.ic_wifi_triangle_0,
-                com.james.status.R.drawable.ic_wifi_triangle_1,
-                com.james.status.R.drawable.ic_wifi_triangle_2,
-                com.james.status.R.drawable.ic_wifi_triangle_3,
-                com.james.status.R.drawable.ic_wifi_triangle_4
+                R.drawable.ic_wifi_0,
+                R.drawable.ic_wifi_1,
+                R.drawable.ic_wifi_2,
+                R.drawable.ic_wifi_3,
+                R.drawable.ic_wifi_4
         };
 
         return icons[level + 1];
@@ -291,11 +403,11 @@ public class TopFragment extends CoreFragment {
     private int getNetworkIcon(int level) {
         int icons[] = {
                 IconStyleData.TYPE_VECTOR,
-                com.james.status.R.drawable.ic_signal_0,
-                com.james.status.R.drawable.ic_signal_1,
-                com.james.status.R.drawable.ic_signal_2,
-                com.james.status.R.drawable.ic_signal_3,
-                com.james.status.R.drawable.ic_signal_4
+                R.drawable.ic_signal_0,
+                R.drawable.ic_signal_1,
+                R.drawable.ic_signal_2,
+                R.drawable.ic_signal_3,
+                R.drawable.ic_signal_4
         };
 
         return icons[level + 1];

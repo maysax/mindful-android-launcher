@@ -1,14 +1,20 @@
 package co.siempo.phone.helper;
 
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.provider.AlarmClock;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.provider.Telephony;
+import android.util.Log;
+
+import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -19,7 +25,8 @@ import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
 import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
 import co.siempo.phone.settings.SiempoMainSettingsActivity_;
-import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
+//import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
+import co.siempo.phone.settings.SiempoPhoneSettingsActivity;
 import co.siempo.phone.settings.SiempoSettingsActivity_;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
@@ -39,6 +46,8 @@ public class ActivityHelper {
     public Context getContext() {
         return context;
     }
+
+    public String TAG = "ActivityHelper";
 
     public boolean openContactsApp() {
         try {
@@ -240,7 +249,12 @@ public class ActivityHelper {
      */
     public void openCalenderApp() {
         if (checkCalenderApp().isEmpty()) {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/")));
+            try {
+                context.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/")));
+            } catch (ActivityNotFoundException e) {
+                UIUtils.alert(context, "Application not found");
+                e.printStackTrace();
+            }
         } else {
             openGMape(checkCalenderApp());
         }
@@ -251,31 +265,59 @@ public class ActivityHelper {
      */
     public void openClockApp() {
         if (checkClockApp().isEmpty()) {
-            Intent mClockIntent = new Intent(AlarmClock.ACTION_SHOW_ALARMS);
-            mClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(mClockIntent);
+            try {
+                Intent mClockIntent = new Intent(AlarmClock.ACTION_SHOW_ALARMS);
+                mClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(mClockIntent);
+            } catch (ActivityNotFoundException e) {
+                UIUtils.alert(context, "Application not found");
+                e.printStackTrace();
+            }
         } else {
             openGMape(checkClockApp());
         }
     }
 
     /**
+     * Open the Camera application from device.
+     */
+    public void openCameraApp() {
+        try {
+            String packageName = getCameraPackageName();
+            openGMape(packageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+//            openGalleryApp();
+        }
+    }
+
+    // get all default application package name
+    private String getCameraPackageName() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo res : listCam) {
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
      * Open the Photos application from device.
      */
-    public void openPhotsApp() {
+    public void openPhotosApp() {
         try {
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(Constants.GOOGLE_PHOTOS);
             context.startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
-            openGallaryApp();
+            openGalleryApp();
         }
     }
 
     /**
-     * Open the Default Gallary application from device.
+     * Open the Default Gallery application from device.
      */
-    private void openGallaryApp() {
+    private void openGalleryApp() {
         try {
             Intent mediaChooser = new Intent(Intent.ACTION_GET_CONTENT);
             mediaChooser.setType("video/*, image/*");
@@ -354,7 +396,10 @@ public class ActivityHelper {
 
     public boolean openPhoneSettingsApp() {
         try {
-            SiempoPhoneSettingsActivity_.intent(getContext()).start();
+            // Below logic is use for further development
+            //SiempoPhoneSettingsActivity_.intent(getContext()).start();
+            Intent i = new Intent(getContext(), SiempoPhoneSettingsActivity.class);
+            getContext().startActivity(i);
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

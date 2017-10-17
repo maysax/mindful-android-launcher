@@ -8,14 +8,13 @@ import android.content.IntentFilter;
  * Created by Shahab on 5/26/2017.
  */
 
-@SuppressWarnings("ALL")
 public interface IDynamicStatus {
-    public IntentFilter getIntentFilter();
+    IntentFilter getIntentFilter();
 
-    public void register(Context context);
+    void register(Context context);
 
-    public void unregister(Context context);
+    void unregister(Context context);
 
-    public void handleIntent(Context context, Intent intent);
+    void handleIntent(Context context, Intent intent);
 
 }

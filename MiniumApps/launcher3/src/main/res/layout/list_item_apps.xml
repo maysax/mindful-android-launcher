@@ -27,7 +27,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="54dp"
-    tools:background="@color/material.core.red">
+    tools:background="@color/material.core.red"
+    tools:ignore="UnusedResources">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/icon"

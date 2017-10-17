@@ -2,13 +2,16 @@ package co.siempo.phone.main;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.ResolveInfo;
 import android.provider.Settings;
 import android.support.annotation.StringRes;
 
 import java.util.Arrays;
 import java.util.List;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
@@ -21,7 +24,9 @@ import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
+import co.siempo.phone.settings.SiempoSettingsActivity;
 import co.siempo.phone.tempo.TempoActivity_;
+import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
@@ -48,6 +53,7 @@ public class MainListItemLoader {
 
         //if (new ActivityHelper(context).isAppInstalled(GOOGLE_PHOTOS))
         items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
+        items.add(new MainListItem(23, getString(R.string.title_camera), "fa-camera"));
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
@@ -78,6 +84,7 @@ public class MainListItemLoader {
                     for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
                         String defDialerApp = Settings.Secure.getString(context.getContentResolver(), "dialer_default_application");
                         String defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
+                        String packageCamera = getCameraPackageName();
                         String packageName = applicationInfo.packageName;
                         if (!packageName.equalsIgnoreCase(defDialerApp)
                                 && !packageName.equalsIgnoreCase(defSMSApp)
@@ -87,6 +94,7 @@ public class MainListItemLoader {
                                 && !packageName.equalsIgnoreCase(Constants.GOOGLE_GMAIL_PACKAGE)
                                 && !packageName.equalsIgnoreCase(Constants.GOOGLE_MAP_PACKAGE)
                                 && !packageName.equalsIgnoreCase(Constants.GOOGLE_PHOTOS)
+                                && !packageName.equalsIgnoreCase(packageCamera)
                                 && !Arrays.asList(Constants.CALENDAR_APP_PACKAGES).contains(packageName)
                                 && !Arrays.asList(Constants.CALL_APP_PACKAGES).contains(packageName)
                                 && !Arrays.asList(Constants.CLOCK_APP_PACKAGES).contains(packageName)) {
@@ -101,12 +109,24 @@ public class MainListItemLoader {
         }
     }
 
+    // get all default application package name
+    private String getCameraPackageName() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo res : listCam) {
+            return res.activityInfo.packageName;
+//            Log.e("Camera Application Package Name and Activity Name",res.activityInfo.packageName + " " + res.activityInfo.name);
+        }
+        return "";
+    }
+
 
     private final String getString(@StringRes int resId, Object... formatArgs) {
         return context.getString(resId, formatArgs);
     }
 
     public void listItemClicked(int id) {
+        MainActivity mainActivity = (MainActivity)context;
         switch (id) {
             case 1:
                 new ActivityHelper(context).openMessagingApp();
@@ -152,7 +172,11 @@ public class MainListItemLoader {
                 MindfulMorningActivity_.intent(context).start();
                 break;
             case 15:
-                ApiClient_.getInstance_(context).checkAppVersion();
+                if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                    ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.ALPHA);
+                } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                    ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.BETA);
+                }
                 break;
             case 16:
                 new ActivityHelper(context).openGmail();
@@ -171,7 +195,10 @@ public class MainListItemLoader {
                 new ActivityHelper(context).openClockApp();
                 break;
             case 22:
-                new ActivityHelper(context).openPhotsApp();
+                new ActivityHelper(context).openPhotosApp();
+                break;
+            case 23:
+                new ActivityHelper(context).openCameraApp();
                 break;
             default:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));

@@ -47,27 +47,64 @@ public abstract class CoreAPIClient {
      * This function is use to check current app version with play store version
      * and display alert if update is available using AWS API's.
      */
-    public void checkAppVersion() {
+    public void checkAppVersion(String versionFor) {
+        if (versionFor.equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+            AndroidNetworking.get(String.format(Locale.US, "%s/%s/version", AWS_HOST, getAppName()))
+                    .setTag("test")
+                    .setPriority(Priority.MEDIUM)
+                    .doNotCacheResponse()
+                    .build()
+                    .setAnalyticsListener(analyticsListener)
+                    .getAsString(new StringRequestListener() {
+                        @Override
+                        public void onResponse(String response) {
+                            EventBus.getDefault().post(new CheckVersionEvent(Integer.parseInt(response.trim()),CheckVersionEvent.ALPHA));
+                        }
 
+                        @Override
+                        public void onError(ANError anError) {
+                            EventBus.getDefault().post(new CheckVersionEvent(-1000));
+                            Tracer.e(anError.getCause(), anError.getErrorDetail());
+                        }
+                    });
+        } else if (versionFor.equalsIgnoreCase(CheckVersionEvent.BETA)) {
+            AndroidNetworking.get(String.format(Locale.US, "%s/%s/version-beta", AWS_HOST, getAppName()))
+                    .setTag("test")
+                    .setPriority(Priority.MEDIUM)
+                    .doNotCacheResponse()
+                    .build()
+                    .setAnalyticsListener(analyticsListener)
+                    .getAsString(new StringRequestListener() {
+                        @Override
+                        public void onResponse(String response) {
+                            EventBus.getDefault().post(new CheckVersionEvent(Integer.parseInt(response.trim()),CheckVersionEvent.BETA));
+                        }
 
-        AndroidNetworking.get(String.format(Locale.US, "%s/%s/version", AWS_HOST, getAppName()))
-                .setTag("test")
-                .setPriority(Priority.MEDIUM)
-                .doNotCacheResponse()
-                .build()
-                .setAnalyticsListener(analyticsListener)
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        EventBus.getDefault().post(new CheckVersionEvent(Integer.parseInt(response.trim())));
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        EventBus.getDefault().post(new CheckVersionEvent(-1000));
-                        Tracer.e(anError.getCause(), anError.getErrorDetail());
-                    }
-                });
+                        @Override
+                        public void onError(ANError anError) {
+                            EventBus.getDefault().post(new CheckVersionEvent(-1000));
+                            Tracer.e(anError.getCause(), anError.getErrorDetail());
+                        }
+                    });
+        }
+//        AndroidNetworking.get(String.format(Locale.US, "%s/%s/version", AWS_HOST, getAppName()))
+//                .setTag("test")
+//                .setPriority(Priority.MEDIUM)
+//                .doNotCacheResponse()
+//                .build()
+//                .setAnalyticsListener(analyticsListener)
+//                .getAsString(new StringRequestListener() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        EventBus.getDefault().post(new CheckVersionEvent(Integer.parseInt(response.trim())));
+//                    }
+//
+//                    @Override
+//                    public void onError(ANError anError) {
+//                        EventBus.getDefault().post(new CheckVersionEvent(-1000));
+//                        Tracer.e(anError.getCause(), anError.getErrorDetail());
+//                    }
+//                });
     }
 
     public void downloadApk() {

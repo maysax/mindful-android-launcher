@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,8 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         implements ItemTouchHelperAdapter {
 
     private Context mContext;
-    private List<Notification> notificationList = new ArrayList<>();
+    private List<Notification> notificationList;
+            //= new ArrayList<>();
 
     private final OnStartDragListener mDragStartListener;
     String defSMSApp;
@@ -65,6 +67,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         mContext = context;
         mDragStartListener = null;
         this.notificationList = notificationList;
+        Log.d("Test", "notificationList" + notificationList.size());
         defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
     }
 
@@ -89,7 +92,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         } else {
             holder.imgAppIcon.setBackground(null);
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp));
-            holder.imgAppIcon.setImageBitmap(CoreApplication.getInstance().iconList.get(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp)));
+            holder.imgAppIcon.setImageBitmap(CoreApplication.getInstance().iconList.get(defSMSApp));
         }
         holder.txtMessage.setText(notification.get_text());
         holder.txtTime.setText(notification.get_time());
@@ -106,17 +109,23 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         }
     }
 
+
     @Override
     public void onItemDismiss(int position) {
         //++Tarun following code will delete this item form database
-        DeleteIteam deleteIteam = new DeleteIteam(new SingleIteamDelete());
-        deleteIteam.executeDelete(notificationList.get(position));
+        try {
+            if (notificationList != null && notificationList.get(position) != null) {
+                DeleteIteam deleteIteam = new DeleteIteam(new SingleIteamDelete());
+                deleteIteam.executeDelete(notificationList.get(position));
+                notificationList.remove(position);
+                notifyItemRemoved(position);
+                if (notificationList.isEmpty())
+                    EventBus.getDefault().post(new NotificationSwipeEvent(true));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        notificationList.remove(position);
-        notifyItemRemoved(position);
-
-        if (notificationList.isEmpty())
-            EventBus.getDefault().post(new NotificationSwipeEvent(true));
     }
 
 
@@ -149,6 +158,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
             txtTime = (TextView) view.findViewById(R.id.txtTime);
             txtUserName = (TextView) view.findViewById(R.id.txtUserName);
             txtMessage = (TextView) view.findViewById(R.id.txtMessage);
+
         }
 
         @Override

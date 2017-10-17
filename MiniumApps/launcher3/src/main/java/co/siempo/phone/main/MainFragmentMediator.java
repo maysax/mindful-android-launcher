@@ -25,7 +25,6 @@ import minium.co.core.util.UIUtils;
  * Created by shahab on 2/16/17.
  */
 
-@SuppressWarnings("ALL")
 class MainFragmentMediator {
 
     private MainFragment fragment;
@@ -39,6 +38,7 @@ class MainFragmentMediator {
 
     void loadData() {
         items = new ArrayList<>();
+        contactItems = new ArrayList<>();
         loadActions();
         loadContacts();
         loadDefaults();
@@ -80,7 +80,7 @@ class MainFragmentMediator {
             if (fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                 return;
             }
-            if (contactItems == null) {
+            if (contactItems.size() == 0) {
                 contactItems = new ContactsLoader().loadContacts(fragment.getActivity());
             }
             items.addAll(contactItems);
@@ -126,13 +126,13 @@ class MainFragmentMediator {
                 router.contactPicked((ContactListItem) getAdapter().getItem(position));
                 break;
             case ACTION:
-                if (getAdapter().getItem(position).getApplicationInfo() != null) {
+                if (getAdapter().getItem(position).getApplicationInfo() == null) {
+                    position = getAdapter().getItem(position).getId();
+                    new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                } else {
                     UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                     new ActivityHelper(fragment.getActivity()).openGMape(getAdapter().getItem(position).getApplicationInfo().packageName);
                     MainActivity.isTextLenghGreater = "";
-                } else {
-                    position = getAdapter().getItem(position).getId();
-                    new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                 }
                 break;
             case DEFAULT:
@@ -165,7 +165,7 @@ class MainFragmentMediator {
         }
     }
 
-    public void contactPicker() {
+    void contactPicker() {
         items.clear();
         loadContacts();
         loadDefaults();
@@ -173,7 +173,7 @@ class MainFragmentMediator {
         getAdapter().notifyDataSetChanged();
     }
 
-    public void contactNumberPicker(int selectedContactId) {
+    void contactNumberPicker(int selectedContactId) {
         items.clear();
         for (ContactListItem item : contactItems) {
             if (item.getContactId() == selectedContactId) {
@@ -186,11 +186,11 @@ class MainFragmentMediator {
         getAdapter().notifyDataSetChanged();
     }
 
-    public void listItemClicked2(TokenRouter router, int position) {
+    void listItemClicked2(TokenRouter router, int position) {
 
     }
 
-    public void defaultData() {
+    void defaultData() {
         items.clear();
         loadDefaults();
         getAdapter().loadData(items);

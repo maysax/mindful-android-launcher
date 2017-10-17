@@ -2,9 +2,6 @@ package co.siempo.phone.app;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 
 import com.evernote.client.android.EvernoteSession;
@@ -17,9 +14,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.greenrobot.greendao.database.Database;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
@@ -38,7 +33,6 @@ import minium.co.core.util.DateUtils;
 /**
  * Created by Shahab on 2/16/2017.
  */
-@SuppressWarnings("ALL")
 @EApplication
 public class Launcher3App extends CoreApplication {
 
@@ -50,16 +44,10 @@ public class Launcher3App extends CoreApplication {
     @Pref
     DroidPrefs_ prefs;
 
-    @Bean
-    TokenManager manager;
-
-
-
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @SuppressLint("StaticFieldLeak")
     private static IconsHandler iconsPackHandler;
-
 
 
     @Trace(tag = TRACE_TAG)
@@ -84,7 +72,7 @@ public class Launcher3App extends CoreApplication {
 
         loadConfigurationValues();
         configureEverNote();
-        manager.init();
+
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 

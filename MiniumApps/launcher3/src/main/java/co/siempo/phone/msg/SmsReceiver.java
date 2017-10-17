@@ -19,6 +19,7 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.notification.NotificationUtility;
 import de.greenrobot.event.EventBus;
@@ -46,12 +47,13 @@ public class SmsReceiver extends BroadcastReceiver {
 
     public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
 
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Tracer.d("Messages: onReceive in Launcher3");
-
         if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
+            Tracer.d("Notification posted: " + bundle.toString());
             if (bundle != null) {
                 Object messages[] = (Object[]) bundle.get("pdus");
                 SmsMessage smsMessage[] = new SmsMessage[messages.length];
@@ -100,7 +102,9 @@ public class SmsReceiver extends BroadcastReceiver {
         sms.set_message(body);
         sms.set_date(date);
         sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);
-        smsDao.insert(sms);
+        long id = smsDao.insert(sms);
+        sms.setId(id);
+        EventBus.getDefault().post(new NewNotificationEvent(sms));
     }
 
     /**

@@ -32,12 +32,13 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.contact.PhoneNumbersAdapter;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
-import co.siempo.phone.notification.StatusBarHandler;
+import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -47,6 +48,7 @@ import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.ui.SearchLayout;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
@@ -80,8 +82,6 @@ public class MainFragment extends CoreFragment {
     @Pref
     DroidPrefs_ prefs;
 
-    @Bean
-    TokenManager manager;
 
     @Bean
     TokenRouter router;
@@ -102,6 +102,7 @@ public class MainFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
+        getActivity().startService(new Intent(getActivity(), StatusBarService.class));
 
         listViewLayout.setVisibility(View.GONE);
         afterEffectLayout.setVisibility(View.GONE);
@@ -120,8 +121,13 @@ public class MainFragment extends CoreFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            boolean isVisible = intent.getBooleanExtra("IsNotificationVisible", false);
-            searchLayout.getTxtSearchBox().setNotificationVisible(isVisible);
+            boolean isVisible = false;
+            if(intent.hasExtra("IsNotificationVisible")){
+                isVisible = intent.getBooleanExtra("IsNotificationVisible", false);
+            }
+            if(searchLayout!=null && searchLayout.getTxtSearchBox()!=null){
+                searchLayout.getTxtSearchBox().setNotificationVisible(isVisible);
+            }
             if (isVisible) {
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
             }
@@ -134,12 +140,13 @@ public class MainFragment extends CoreFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
                 new IntentFilter("IsNotificationVisible"));
         if (adapter != null) adapter.getFilter().filter("");
-        if (StatusBarHandler.isNotificationTrayVisible) {
-            searchLayout.clearFocus();
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", true));
-        } else {
-            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
+        if(searchLayout!=null) {
             searchLayout.askFocus();
+        }
+        // If new app installed or if any contact is update/create this booleans
+        // becomes true from StatusService class.
+        if(prefs.isContactUpdate().get() || prefs.isAppUpdated().get()){
+            loadData();
         }
     }
 
@@ -187,7 +194,7 @@ public class MainFragment extends CoreFragment {
         if (getActivity() != null) {
             adapter = new MainListAdapter(getActivity(), mediator.getItems());
             listView.setAdapter(adapter);
-            adapter.getFilter().filter(manager.getCurrent().getTitle());
+            adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
         }
     }
 
@@ -200,6 +207,8 @@ public class MainFragment extends CoreFragment {
         }
 
     }
+
+
 
     public MainListAdapter getAdapter() {
         return adapter;
@@ -214,7 +223,7 @@ public class MainFragment extends CoreFragment {
             }
             emptyChecker(event.getString());
             parser.parse(event.getString());
-           if(adapter!=null) adapter.getFilter().filter(manager.getCurrent().getTitle());
+           if(adapter!=null) adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -246,7 +255,7 @@ public class MainFragment extends CoreFragment {
     @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {
         try {
-            TokenItem current = manager.getCurrent();
+            TokenItem current = TokenManager.getInstance().getCurrent();
 
             if (current.getItemType() == TokenItemType.END_OP) {
                 mediator.defaultData();
@@ -257,7 +266,7 @@ public class MainFragment extends CoreFragment {
                     mediator.contactPicker();
                 }
             } else if (current.getItemType() == TokenItemType.DATA) {
-                if (manager.get(0).getItemType() == TokenItemType.DATA) {
+                if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
                     mediator.resetData();
                     if (adapter != null) adapter.getFilter().filter(current.getTitle());
                 } else {
@@ -333,6 +342,6 @@ public class MainFragment extends CoreFragment {
     }
 
     public TokenManager getManager() {
-        return manager;
+        return TokenManager.getInstance();
     }
 }

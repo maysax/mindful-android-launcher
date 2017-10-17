@@ -10,7 +10,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
  * Created by Shahab on 5/8/2017.
  */
 
-@SuppressWarnings("ALL")
+
 public class FirebaseHelper {
 
     private FirebaseAnalytics mFirebaseAnalytics;

@@ -1,17 +1,21 @@
 package co.siempo.phone.settings;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.util.Log;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
-import org.androidannotations.annotations.UiThread;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.ui.TopFragment_;
+import co.siempo.phone.util.PackageUtil;
+import de.greenrobot.event.Subscribe;
+import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
 /**
@@ -19,39 +23,31 @@ import minium.co.core.ui.CoreActivity;
  */
 
 
-@SuppressWarnings("ALL")
-@Fullscreen
+
 @EActivity(R.layout.activity_siempo_alpha_settings)
 public class SiempoAlphaSettingsActivity extends CoreActivity {
 
     private Context context;
-    private StatusBarHandler statusBarHandler;
+
+
+    private final String TAG="SiempoAlphaSetting";
+
 
     @AfterViews
     void afterViews() {
         initView();
-        loadTopBar();
-        loadStatusBar();
     }
 
-    @UiThread(delay = 1000)
-    void loadStatusBar() {
-        statusBarHandler = new StatusBarHandler(SiempoAlphaSettingsActivity.this);
-        if(statusBarHandler!=null && !statusBarHandler.isActive()) {
-            statusBarHandler.requestStatusBarCustomization();
-        }
-    }
+
     public void initView() {
         context = SiempoAlphaSettingsActivity.this;
     }
 
-    private void loadTopBar() {
-        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        PackageUtil.checkPermission(this);
     }
 
     @Override
@@ -62,18 +58,27 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        NotificationRetreat_.getInstance_(this.getApplicationContext()).retreat();
-        try {
-            if (statusBarHandler != null)
-                statusBarHandler.restoreStatusBarExpansion();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        loadStatusBar();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onBackPressed() {
+       super.onBackPressed();
+    }
+
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        if (event.isVisible()) {
+        }
     }
 }

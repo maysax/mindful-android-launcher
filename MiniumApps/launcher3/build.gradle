@@ -8,18 +8,20 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     lintOptions {
-        disable 'GoogleAppIndexingApiWarning','IconDensities','Registered','MissingTranslation','SetTextI18n','RtlHardcoded','SelectableText','PermissionImpliesUnsupportedHardware'
+        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware'
         ignoreWarnings true
     }
     defaultConfig {
         applicationId "co.siempo.phone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode "${versionMajor}".toInteger() * 1000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}-${buildTime}"
+//        versionCode "${versionMajor}".toInteger() * 1000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
+//        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}-${buildTime}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        defaultConfig {
+            vectorDrawables.useSupportLibrary = true
+        }
     }
     buildTypes {
         debug {
@@ -35,6 +37,18 @@ android {
 
 
     }
+
+    productFlavors {
+        alpha {
+            versionCode 10512
+            versionName "${0}.${0}.${10}.${5}-${buildTime}"
+        }
+        beta {
+            versionCode 10511
+            versionName "${0}.${0}.${10}.${5}-${buildTime}"
+        }
+    }
+
     dexOptions {
         jumboMode true
     }

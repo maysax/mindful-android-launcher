@@ -10,19 +10,17 @@ import org.androidannotations.annotations.EBean;
 @EBean
 public class TokenParser {
 
-    @Bean
-    TokenManager manager;
 
     @Bean
     TokenRouter router;
 
     public void parse(String str) {
         if (str.isEmpty()) {
-            manager.clear();
-        } else if (str.equals("@") && !manager.hasCompleted(TokenItemType.CONTACT)) {
+            TokenManager.getInstance().clear();
+        } else if (str.equals("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
             router.setCurrent(new TokenItem(TokenItemType.CONTACT));
         }else {
-            for (TokenItem item : manager.getItems()) {
+            for (TokenItem item : TokenManager.getInstance().getItems()) {
                 if (item.getCompleteType() == TokenCompleteType.FULL) {
                     str = str.substring(item.getTitle().length() + 1);
                 }
@@ -31,14 +29,14 @@ public class TokenParser {
                 return;
             }
 
-            if (str.endsWith("@") && !manager.hasCompleted(TokenItemType.CONTACT)) {
+            if (str.endsWith("@") && !TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
                 router.add(new TokenItem(TokenItemType.CONTACT));
             } else {
-                manager.getCurrent().setTitle(str);
+                TokenManager.getInstance().getCurrent().setTitle(str);
             }
 
-            if (manager.get(0).getItemType() == TokenItemType.CONTACT && manager.getCurrent().getItemType() == TokenItemType.DATA) {
-                if (!manager.getCurrent().getTitle().trim().isEmpty()) router.route();
+            if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.CONTACT && TokenManager.getInstance().getCurrent().getItemType() == TokenItemType.DATA) {
+                if (!TokenManager.getInstance().getCurrent().getTitle().trim().isEmpty()) router.route();
             }
         }
     }

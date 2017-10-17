@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -56,6 +57,7 @@ import minium.co.core.util.UIUtils;
  */
 
 @EActivity
+@Fullscreen
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
 
@@ -70,7 +72,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public View mTestView = null;
     public WindowManager windowManager = null;
     private boolean isOnStopCalled = false;
-
+    UserPresentBroadcastReceiver userPresentBroadcastReceiver;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +80,12 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
+        registerReceiver(userPresentBroadcastReceiver, intentFilter);
 
-        Log.d("CoreActivity", "CoreActivity");
         if (prefs != null && prefs.selectedThemeId().get() != 0) {
             setTheme(prefs.selectedThemeId().get());
         }
@@ -122,10 +128,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         super.onResume();
         if (mHomeWatcher != null) mHomeWatcher.startWatch();
         isOnStopCalled = false;
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
-        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(new UserPresentBroadcastReceiver(), intentFilter);
     }
 
     /**
@@ -158,8 +160,15 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     public void loadDialog() {
         if (mTestView == null) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+            WindowManager.LayoutParams layoutParams;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                layoutParams = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+            }
+            else{
+                layoutParams = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+            }
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.RGBA_8888;
@@ -207,10 +216,18 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     mTestView = null;
                 }
             });
-            windowManager.addView(mTestView, layoutParams);
-        }
-    }
+            if (android.os.Build.VERSION.SDK_INT >= 23)
+            {
+                if (Settings.canDrawOverlays(this)) {
+                    windowManager.addView(mTestView, layoutParams);
+                }
+            }else{
+                windowManager.addView(mTestView, layoutParams);
+            }
 
+        }
+
+    }
 
     private void onCreateAnimation(Bundle savedInstanceState) {
         onStartCount = 1;
@@ -261,6 +278,14 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onPause() {
         super.onPause();
         if (mHomeWatcher != null) mHomeWatcher.stopWatch();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(userPresentBroadcastReceiver!=null){
+            unregisterReceiver(userPresentBroadcastReceiver);
+        }
     }
 
     /**
