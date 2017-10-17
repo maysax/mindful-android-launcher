@@ -6,9 +6,9 @@ import org.androidannotations.annotations.Fullscreen;
 
 import co.siempo.phone.R;
 import co.siempo.phone.ui.TopFragment_;
+import co.siempo.phone.util.PackageUtil;
 import minium.co.core.ui.CoreActivity;
 
-@Fullscreen
 @EActivity(R.layout.activity_call_log)
 public class CallLogActivity extends CoreActivity {
 
@@ -16,5 +16,11 @@ public class CallLogActivity extends CoreActivity {
     void afterViews() {
         loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
         loadFragment(CallLogFragment_.builder().build(), R.id.mainView, "main");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PackageUtil.checkPermission(this);
     }
 }

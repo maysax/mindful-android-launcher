@@ -1,6 +1,5 @@
 package co.siempo.phone.receiver;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +17,8 @@ import minium.co.core.log.Tracer;
  */
 
 public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatus {
+    int level = 0;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         handleIntent(context, intent);
@@ -46,14 +47,17 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
                 WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 int numberOfLevels = 5;
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
+                level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
                 Tracer.d("WifiDataReceiver, label: " + level);
-                if(wifiManager.isWifiEnabled()) {
+                if (wifiManager.isWifiEnabled()) {
                     EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
-                }else{
+                } else {
                     EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, -1));
                 }
+            } else {
+                level = 0;
             }
+            EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
         } catch (Exception e) {
             Tracer.e(e);
         }

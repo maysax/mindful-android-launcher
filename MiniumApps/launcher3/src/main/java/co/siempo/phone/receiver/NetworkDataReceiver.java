@@ -23,7 +23,7 @@ public class NetworkDataReceiver extends PhoneStateListener implements IDynamicS
     private Context context;
     private TelephonyManager telephonyManager;
     private boolean isRegistered;
-    ConnectivityManager connectivityManager;
+    private ConnectivityManager connectivityManager;
 
     public NetworkDataReceiver(Context context) {
         this.context = context;

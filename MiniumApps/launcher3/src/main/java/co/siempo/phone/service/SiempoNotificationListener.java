@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
@@ -21,11 +22,13 @@ import java.util.Date;
 import java.util.List;
 
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.call.PhonecallReceiver;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.notification.NotificationUtility;
+import co.siempo.phone.receiver.DndStartStopReceiver;
 import co.siempo.phone.util.PackageUtil;
 import co.siempo.phone.util.VibrationUtils;
 import minium.co.core.app.CoreApplication;
@@ -81,7 +84,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 if (CoreApplication.getInstance().getNormalModeList().contains(notification.getPackageName())) {
 
                 } else {
-                    cancelNotification(notification.getKey());
+                    //cancelNotification(notification.getKey());
                     if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
                         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                         vibrationUtils.vibrate(500);
@@ -131,6 +134,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
     }
 
+
     @Override
     public void onNotificationRemoved(StatusBarNotification notification) {
         super.onNotificationRemoved(notification);
@@ -138,10 +142,14 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
         if (PackageUtil.isSiempoBlocker(notification.getId())) {
             prefs.isNotificationBlockerRunning().put(false);
-        } else if (PackageUtil.isMsgPackage(notification.getPackageName())) {
-            new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
-        } else if (PackageUtil.isCallPackage(notification.getPackageName())) {
-            new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
+        }
+        if (!PackageUtil.isSiempoLauncher(this)
+                && !SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
+            if (PackageUtil.isMsgPackage(notification.getPackageName())) {
+                new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
+            } else if (PackageUtil.isCallPackage(notification.getPackageName())) {
+                new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
+            }
         }
     }
 

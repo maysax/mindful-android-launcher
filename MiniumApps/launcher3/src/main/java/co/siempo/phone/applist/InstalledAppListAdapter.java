@@ -93,8 +93,6 @@ public class InstalledAppListAdapter extends RecyclerView.Adapter<InstalledAppLi
             @Override
             public void onClick(View v) {
                 try {
-                    ((AppDrawerActivity) context).state = AppDrawerActivity.ActivityState.ONHOMEPRESS;
-                    ((AppDrawerActivity) context).restoreSiempoNotificationBar();
                     Tracer.i("Opening package: " + applicationInfo.packageName);
                     new ActivityHelper(context).openGMape(applicationInfo.packageName);
                     EventBus.getDefault().post(new AppOpenEvent(applicationInfo.packageName));

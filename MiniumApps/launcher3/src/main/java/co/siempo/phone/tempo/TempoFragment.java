@@ -73,7 +73,6 @@ public class TempoFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        Launcher3App.getInstance().setSiempoBarLaunch(true);
         ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
         titleActionBar.setText(R.string.title_tempo);
 
@@ -95,7 +94,6 @@ public class TempoFragment extends CoreFragment {
 
     @Click
     void imgLeft() {
-        Launcher3App.getInstance().setSiempoBarLaunch(false);
         getActivity().finish();
     }
 

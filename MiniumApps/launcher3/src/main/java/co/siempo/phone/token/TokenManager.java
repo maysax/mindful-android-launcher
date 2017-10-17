@@ -13,9 +13,20 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Shahab on 2/16/2017.
  */
-@SuppressWarnings("ALL")
-@EBean(scope = EBean.Scope.Singleton)
 public class TokenManager {
+    private static TokenManager tokenManager;
+
+    public static TokenManager getInstance(){
+        if(tokenManager==null){
+            tokenManager=new TokenManager();
+        }
+        return tokenManager;
+    }
+
+    public TokenManager(){
+        init();
+    }
+
 
     private List<TokenItem> items = new ArrayList<>();
 

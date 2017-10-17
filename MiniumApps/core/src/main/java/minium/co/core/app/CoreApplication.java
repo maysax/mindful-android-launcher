@@ -342,7 +342,6 @@ public abstract class CoreApplication extends MultiDexApplication {
     public void playAudio() {
         try {
             Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            Log.d("Raja", "Raja");
             if (mMediaPlayer == null) {
                 mMediaPlayer = new MediaPlayer();
                 mMediaPlayer.setDataSource(this, alert);
@@ -360,33 +359,5 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
     }
 
-    public void setSiempoBarLaunch(final boolean value) {
 
-        if (value == true) {
-            if (handler != null && handler.hasMessages(1)) {
-                return;
-            } else {
-                handler = new Handler();
-                handler.sendEmptyMessage(1);
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        siempoBarLaunch = value;
-                        handler.sendEmptyMessage(0);
-                    }
-                }, 700);
-            }
-
-        } else {
-            siempoBarLaunch = value;
-        }
-    }
-
-    public void addToSilentList(String strPackageName) {
-        getSilentList().add(strPackageName);
-    }
-
-    public void addToVibrateList(String strPackageName) {
-        getVibrateList().add(strPackageName);
-    }
 }

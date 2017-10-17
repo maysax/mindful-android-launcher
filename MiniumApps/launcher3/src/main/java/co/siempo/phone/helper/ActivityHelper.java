@@ -6,11 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.provider.AlarmClock;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Telephony;
+import android.util.Log;
+
+import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -21,7 +25,8 @@ import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
 import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
 import co.siempo.phone.settings.SiempoMainSettingsActivity_;
-import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
+//import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
+import co.siempo.phone.settings.SiempoPhoneSettingsActivity;
 import co.siempo.phone.settings.SiempoSettingsActivity_;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
@@ -42,19 +47,13 @@ public class ActivityHelper {
         return context;
     }
 
-    public String TAG="ActivityHelper";
+    public String TAG = "ActivityHelper";
 
     public boolean openContactsApp() {
         try {
             getContext().startActivity(new Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI));
             return true;
         } catch (Exception e) {
-            if(context!=null){
-                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                if(mainActivity!=null){
-                    mainActivity.loadStatusBar();
-                }
-            }
             Tracer.e(e, e.getMessage());
         }
         return false;
@@ -72,12 +71,6 @@ public class ActivityHelper {
 
             return;
         } catch (Exception e) {
-            if(context!=null){
-                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                if(mainActivity!=null){
-                    mainActivity.loadStatusBar();
-                }
-            }
             Tracer.e(e, e.getMessage());
         }
 
@@ -91,12 +84,6 @@ public class ActivityHelper {
             getContext().startActivity(intent);
             return true;
         } catch (Exception e) {
-            if(context!=null){
-                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                if(mainActivity!=null){
-                    mainActivity.loadStatusBar();
-                }
-            }
             Tracer.e(e, e.getMessage());
         }
         return false;
@@ -171,12 +158,6 @@ public class ActivityHelper {
             emailIntent.putExtra(Intent.EXTRA_TEXT, UIUtils.getDeviceInfo(context));
             context.startActivity(emailIntent);
         } catch (Exception e) {
-            if(context!=null){
-                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                if(mainActivity!=null){
-                    mainActivity.loadStatusBar();
-                }
-            }
             UIUtils.alert(context, "No email application found in your phone");
         }
     }
@@ -197,12 +178,6 @@ public class ActivityHelper {
     }
 
     public void openBecomeATester() {
-        if(context!=null){
-            co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-            if(mainActivity!=null){
-                mainActivity.restoreSiempoNotificationBar();
-            }
-        }
         final String appPackageName = context.getPackageName(); // getPackageName() from Context or Activity object
         try {
             context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
@@ -233,12 +208,6 @@ public class ActivityHelper {
             intent.addCategory(Intent.CATEGORY_APP_EMAIL);
             context.startActivity(intent);
         } catch (Exception e) {
-            if(context!=null){
-                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                if(mainActivity!=null){
-                    mainActivity.loadStatusBar();
-                }
-            }
             UIUtils.alert(context, "No email application found in your phone");
         }
     }
@@ -252,12 +221,6 @@ public class ActivityHelper {
             context.startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
-            if(context!=null){
-                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                if(mainActivity!=null){
-                    mainActivity.loadStatusBar();
-                }
-            }
             UIUtils.alert(context, "Application not found");
         }
     }
@@ -274,12 +237,6 @@ public class ActivityHelper {
                 context.startActivity(phoneIntent);
             } catch (Exception e) {
                 e.printStackTrace();
-                if(context!=null){
-                    co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                    if(mainActivity!=null){
-                        mainActivity.loadStatusBar();
-                    }
-                }
                 UIUtils.alert(context, "Application not found");
             }
         } else {
@@ -294,14 +251,7 @@ public class ActivityHelper {
         if (checkCalenderApp().isEmpty()) {
             try {
                 context.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/")));
-            }
-            catch (ActivityNotFoundException e){
-                if(context!=null){
-                    co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity)context;
-                    if(mainActivity!=null){
-                        mainActivity.loadStatusBar();
-                    }
-                }
+            } catch (ActivityNotFoundException e) {
                 UIUtils.alert(context, "Application not found");
                 e.printStackTrace();
             }
@@ -315,9 +265,14 @@ public class ActivityHelper {
      */
     public void openClockApp() {
         if (checkClockApp().isEmpty()) {
-            Intent mClockIntent = new Intent(AlarmClock.ACTION_SHOW_ALARMS);
-            mClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(mClockIntent);
+            try {
+                Intent mClockIntent = new Intent(AlarmClock.ACTION_SHOW_ALARMS);
+                mClockIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(mClockIntent);
+            } catch (ActivityNotFoundException e) {
+                UIUtils.alert(context, "Application not found");
+                e.printStackTrace();
+            }
         } else {
             openGMape(checkClockApp());
         }
@@ -328,12 +283,22 @@ public class ActivityHelper {
      */
     public void openCameraApp() {
         try {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            context.startActivity(takePictureIntent);
+            String packageName = getCameraPackageName();
+            openGMape(packageName);
         } catch (Exception e) {
             e.printStackTrace();
-            openGalleryApp();
+//            openGalleryApp();
         }
+    }
+
+    // get all default application package name
+    private String getCameraPackageName() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo res : listCam) {
+            return res.activityInfo.packageName;
+        }
+        return "";
     }
 
     /**
@@ -431,15 +396,12 @@ public class ActivityHelper {
 
     public boolean openPhoneSettingsApp() {
         try {
-            SiempoPhoneSettingsActivity_.intent(getContext()).start();
+            // Below logic is use for further development
+            //SiempoPhoneSettingsActivity_.intent(getContext()).start();
+            Intent i = new Intent(getContext(), SiempoPhoneSettingsActivity.class);
+            getContext().startActivity(i);
             return true;
         } catch (Exception e) {
-            if (context != null) {
-                co.siempo.phone.MainActivity mainActivity = (co.siempo.phone.MainActivity) context;
-                if (mainActivity != null) {
-                    mainActivity.loadStatusBar();
-                }
-            }
             Tracer.e(e, e.getMessage());
         }
         return false;

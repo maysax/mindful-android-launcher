@@ -9,7 +9,7 @@
         android:normalScreens="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
-
+    <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -217,11 +217,11 @@
         </service>
 
         <activity android:name=".ui.UpdateActivity_"></activity>
-        <activity android:name=".settings.SiempoPhoneSettingsActivity_" />
+        <activity android:name=".settings.SiempoPhoneSettingsActivity" />
         <activity android:name=".settings.SiempoSettingsActivity_" />
         <activity android:name=".settings.SiempoMainSettingsActivity_" />
         <activity android:name=".settings.SiempoAlphaSettingsActivity_" />
-
+        <service android:name=".SiempoNotificationBar.ViewService_" />
         <service
             android:name=".service.StatusBarService"
             android:enabled="true"

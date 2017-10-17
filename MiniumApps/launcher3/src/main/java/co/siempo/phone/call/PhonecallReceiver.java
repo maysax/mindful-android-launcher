@@ -10,6 +10,12 @@ import android.util.Log;
 
 import java.util.Date;
 
+import co.siempo.phone.R;
+import co.siempo.phone.SiempoNotificationBar.ViewService_;
+import co.siempo.phone.event.NotificationTrayEvent;
+import co.siempo.phone.service.SiempoAccessibilityService;
+import co.siempo.phone.util.PackageUtil;
+import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 
 /**
@@ -24,29 +30,31 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static Date callStartTime;
     private static boolean isIncoming;
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
-
+    private static final String TAG="PhonecallReceiver";
     int currentProfile = -1;
     AudioManager audioManager;
-    boolean isCallisRunning = false;
+    static boolean isCallisRunning = false;
+    SharedPreferences sharedPref;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        SharedPreferences sharedPref =
+        sharedPref =
                 context.getSharedPreferences("Launcher3Prefs", 0);
         currentProfile = sharedPref.getInt("getCurrentProfile", 0);
-        if (currentProfile == 0 || currentProfile == 2) {
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-        } else if (currentProfile == 1) {
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-        }
+
         if (intent != null) {
+            Log.d(TAG, "Phone Call Receiver :: "+intent.getAction() + currentProfile);
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+                    isCallisRunning = true;
+                    EventBus.getDefault().post(new NotificationTrayEvent(true));
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             } else {
+                EventBus.getDefault().post(new NotificationTrayEvent(true));
                 String stateStr = "", number = "";
                 int state = 0;
                 if (intent.getExtras() != null && intent.getExtras().containsKey(TelephonyManager.EXTRA_STATE)) {
@@ -80,6 +88,26 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
         }
     }
 
+    private void changeDeviceMode(Context context) {
+        if (PackageUtil.isSiempoLauncher(context)
+                || SiempoAccessibilityService.packageName.equalsIgnoreCase(context.getPackageName())) {
+            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
+            if (currentModeDeviceMode == 0) {
+                sharedPref.edit().putInt("getCurrentProfile", 1).apply();
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            } else if (currentModeDeviceMode == 1) {
+                sharedPref.edit().putInt("getCurrentProfile", 2).apply();
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            } else if (currentModeDeviceMode == 2) {
+                sharedPref.edit().putInt("getCurrentProfile", 0).apply();
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            }
+        }else{
+            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        }
+
+    }
+
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
     }
 
@@ -109,6 +137,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 isIncoming = true;
                 callStartTime = new Date();
                 savedNumber = number;
+
                 if (currentProfile == 0 && !isCallisRunning) {
                     CoreApplication.getInstance().playAudio();
                     isCallisRunning = true;
@@ -137,13 +166,14 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
                 } else {
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
+                    changeDeviceMode(context);
                 }
                 if (CoreApplication.getInstance().getMediaPlayer() != null) {
                     CoreApplication.getInstance().getMediaPlayer().stop();
                     CoreApplication.getInstance().setmMediaPlayer(null);
                     CoreApplication.getInstance().getVibrator().cancel();
                 }
-                isCallisRunning =false;
+                isCallisRunning = false;
                 break;
         }
         lastState = state;

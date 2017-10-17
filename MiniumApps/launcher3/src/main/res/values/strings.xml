@@ -159,6 +159,7 @@
     <string name="pref_users">Users</string>
     <string name="pref_tap_pay">Tap and Pay</string>
     <string name="key_battery">key_battery</string>
+    <string name="key_tap_pay">key_tap_pay</string>
     <string name="key_memory">key_process_usage</string>
     <string name="personal_settings_key">key_personal</string>
     <string name="personal_settings_summary">Personal Settings</string>
@@ -192,7 +193,7 @@
     <string name="missed_call">Missed call</string>
     <string name="phone">Phone</string>
     <string name="msg_accessibility">Siempo Accessibility service is not enabled.\nPlease allow Siempo to access accessibility service.</string>
-    <string name="msg_accessibility2">Siempo Accessibility service is not enabled.\nIt\'s required to use app features.</string>
+    <string name="msg_accessibility2">Siempo Accessibility service is required to use app features.</string>
     <string name="msg_noti_service_dialog">Siempo Notification service is not enabled. Please allow Siempo to access notification service</string>
     <string name="msg_noti_service_force_dialog">Siempo Notification service is not enabled.It\'s required to use app features.</string>
     <string name="msg_overlay_settings">Siempo needs overlay permission enabled mandatorily.</string>

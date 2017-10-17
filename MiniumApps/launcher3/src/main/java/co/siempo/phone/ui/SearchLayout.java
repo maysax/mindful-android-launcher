@@ -1,12 +1,13 @@
 package co.siempo.phone.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.eyeem.chips.BubbleStyle;
@@ -21,10 +22,9 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
-import co.siempo.phone.app.Launcher3Prefs_;
+//import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
-import co.siempo.phone.notification.StatusBarHandler;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -39,25 +39,23 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 /**
  * Created by Shahab on 2/16/2017.
  */
-@SuppressWarnings("ALL")
-@EViewGroup(R.layout.search_layout)
 public class SearchLayout extends CardView {
 
     public ChipsEditText getTxtSearchBox() {
         return txtSearchBox;
     }
 
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
 
-    @ViewById
+
+
+    private SharedPreferences launcherPrefs;
+
     ChipsEditText txtSearchBox;
 
-    @ViewById
-    protected ImageView btnClear;
+    ImageView btnClear;
 
-    @Bean
-    TokenManager manager;
+
+    private View inflateLayout;
 
     private String formattedTxt;
     private boolean isWatching = true;
@@ -65,22 +63,34 @@ public class SearchLayout extends CardView {
 
     public SearchLayout(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public SearchLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public SearchLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
 
-    private void init() {
+    private void init(Context context) {
         isWatching = true;
+        inflateLayout = inflate(context, R.layout.search_layout, this);
+
+        launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
+        txtSearchBox= inflateLayout.findViewById(R.id.txtSearchBox);
+        btnClear= inflateLayout.findViewById(R.id.btnClear);
+        btnClear.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                txtSearchBox.setText("");
+            }
+        });
+
         setCardElevation(4.0f);
         handler = new Handler();
     }
@@ -103,7 +113,6 @@ public class SearchLayout extends CardView {
         EventBus.getDefault().unregister(this);
     }
 
-    @Trace(tag = TRACE_TAG)
     void setupViews() {
         txtSearchBox.addTextChangedListener(new TextWatcher() {
             @Override
@@ -129,7 +138,7 @@ public class SearchLayout extends CardView {
             MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
             handleAfterTextChanged(MainActivity.isTextLenghGreater);
         } else {
-            if(launcherPrefs.isKeyBoardDisplay().get())
+            if(launcherPrefs.getBoolean("isKeyBoardDisplay",false))
                  txtSearchBox.requestFocus();
             btnClear.setVisibility(INVISIBLE);
             txtSearchBox.setText("");
@@ -140,11 +149,9 @@ public class SearchLayout extends CardView {
     private Runnable showKeyboardRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!StatusBarHandler.isNotificationTrayVisible) {
-                if(launcherPrefs.isKeyBoardDisplay().get()) {
+                if(launcherPrefs.getBoolean("isKeyBoardDisplay",false)) {
                     UIUtils.showKeyboard(txtSearchBox);
                 }
-            }
         }
     };
 
@@ -160,10 +167,6 @@ public class SearchLayout extends CardView {
         }
     }
 
-    @Click
-    void btnClear() {
-        txtSearchBox.setText("");
-    }
 
     @Subscribe
     public void tokenManagerEvent(TokenUpdateEvent event) {
@@ -219,7 +222,7 @@ public class SearchLayout extends CardView {
     private void buildFormattedText() {
         formattedTxt = "";
 
-        for (TokenItem item : manager.getItems()) {
+        for (TokenItem item : TokenManager.getInstance().getItems()) {
             if (item.getCompleteType() == TokenCompleteType.FULL) {
                 if (item.isChipable()) {
                     formattedTxt += "^";

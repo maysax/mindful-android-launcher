@@ -54,6 +54,7 @@
 
             <TextView
                 android:id="@+id/txtTime"
+                android:textColor="@color/actionbar_background_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -89,6 +90,7 @@
                     android:ellipsize="end"
                     android:maxLines="2"
                     android:padding="@dimen/dp_3"
+                    android:textColor="@color/actionbar_background_start"
                     android:textSize="@dimen/sp_12"
                     tools:text="This is the sameple message which show the sample data to test the user can visit to testing the data" />
             </LinearLayout>

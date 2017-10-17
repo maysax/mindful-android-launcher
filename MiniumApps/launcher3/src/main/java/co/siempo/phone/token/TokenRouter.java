@@ -31,8 +31,6 @@ import minium.co.notes.utils.DataUtils;
 @EBean
 public class TokenRouter {
 
-    @Bean
-    TokenManager manager;
 
     void route() {
         EventBus.getDefault().post(new TokenUpdateEvent());
@@ -43,80 +41,74 @@ public class TokenRouter {
     }
 
     void setCurrent(TokenItem tokenItem) {
-        manager.setCurrent(tokenItem);
+        TokenManager.getInstance().setCurrent(tokenItem);
         route();
     }
     public void add(TokenItem tokenItem) {
-        manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
-        manager.add(tokenItem);
+        TokenManager.getInstance().getCurrent().setCompleteType(TokenCompleteType.FULL);
+        TokenManager.getInstance().add(tokenItem);
         route();
     }
 
     public void createNote(Context context) {
         context.sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES")
-                .putExtra(DataUtils.NOTE_TITLE, manager.getCurrent().getTitle()));
-        manager.clear();
+                .putExtra(DataUtils.NOTE_TITLE, TokenManager.getInstance().getCurrent().getTitle()));
+        TokenManager.getInstance().clear();
     }
 
     public void createContact(Context context) {
-        String inputStr = manager.getCurrent().getTitle();
+        String inputStr = TokenManager.getInstance().getCurrent().getTitle();
         if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
             context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
         } else {
             context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
         }
-        manager.clear();
+        TokenManager.getInstance().clear();
     }
 
     public void contactPicked(ContactListItem item) {
         if (item.hasMultipleNumber()) {
-            manager.setCurrent(new TokenItem(TokenItemType.CONTACT));
-            manager.getCurrent().setTitle(item.getContactName());
-            manager.getCurrent().setExtra1(String.valueOf(item.getContactId()));
-            manager.getCurrent().setCompleteType(TokenCompleteType.HALF);
+            TokenManager.getInstance().setCurrent(new TokenItem(TokenItemType.CONTACT));
+            TokenManager.getInstance().getCurrent().setTitle(item.getContactName());
+            TokenManager.getInstance().getCurrent().setExtra1(String.valueOf(item.getContactId()));
+            TokenManager.getInstance().getCurrent().setCompleteType(TokenCompleteType.HALF);
             route();
         } else {
-            manager.setCurrent(new TokenItem(TokenItemType.CONTACT));
-            manager.getCurrent().setTitle(item.getContactName());
-            manager.getCurrent().setExtra1(String.valueOf(item.getContactId()));
-            manager.getCurrent().setExtra2(item.getNumber().getNumber());
-            manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
+            TokenManager.getInstance().setCurrent(new TokenItem(TokenItemType.CONTACT));
+            TokenManager.getInstance().getCurrent().setTitle(item.getContactName());
+            TokenManager.getInstance().getCurrent().setExtra1(String.valueOf(item.getContactId()));
+            TokenManager.getInstance().getCurrent().setExtra2(item.getNumber().getNumber());
+            TokenManager.getInstance().getCurrent().setCompleteType(TokenCompleteType.FULL);
             contactPickedDone();
         }
     }
 
     public void contactNumberPicked(MainListItem item) {
-        manager.getCurrent().setExtra2(item.getTitle());
-        manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
+        TokenManager.getInstance().getCurrent().setExtra2(item.getTitle());
+        TokenManager.getInstance().getCurrent().setCompleteType(TokenCompleteType.FULL);
         contactPickedDone();
     }
 
     private void contactPickedDone() {
-        if (manager.hasCompleted(TokenItemType.DATA) && manager.hasCompleted(TokenItemType.CONTACT)) {
-            manager.add(new TokenItem(TokenItemType.END_OP));
-        } else if (manager.hasCompleted(TokenItemType.CONTACT)) {
-            manager.add(new TokenItem(TokenItemType.DATA));
+        if (TokenManager.getInstance().hasCompleted(TokenItemType.DATA) && TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
+            TokenManager.getInstance().add(new TokenItem(TokenItemType.END_OP));
+        } else if (TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT)) {
+            TokenManager.getInstance().add(new TokenItem(TokenItemType.DATA));
         }
         route();
     }
 
     public void sendText(Context context) {
         try {
-            if (manager.hasCompleted(TokenItemType.CONTACT) && manager.has(TokenItemType.DATA)) {
-                String strNumber  = manager.get(TokenItemType.CONTACT).getExtra2();
-                String strMessage  =  manager.get(TokenItemType.DATA).getTitle();
+            if (TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && TokenManager.getInstance().has(TokenItemType.DATA)) {
+                String strNumber  = TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2();
+                String strMessage  =  TokenManager.getInstance().get(TokenItemType.DATA).getTitle();
                 new SmsObserver(context, strNumber, strMessage).start();
                 SmsManager smsManager = SmsManager.getDefault();
                 smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
                 Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
                 String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
 
-                if(context!=null && context instanceof MainActivity){
-                    MainActivity mainActivity = (MainActivity)context;
-                    if(mainActivity!=null) {
-                        mainActivity.restoreSiempoNotificationBar();
-                    }
-                }
 
                 Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(strNumber)));
                 if (defaultSmsPackageName != null) // Can be null in case that there is no default, then the user would be able to choose any app that supports this intent.
@@ -125,9 +117,9 @@ public class TokenRouter {
                 }
                 context.startActivity(intent);
                 EventBus.getDefault().post(new SendSmsEvent(true,strNumber,strMessage));
-            } else if (!manager.has(TokenItemType.CONTACT)) {
-                manager.getCurrent().setCompleteType(TokenCompleteType.FULL);
-                manager.add(new TokenItem(TokenItemType.CONTACT));
+            } else if (!TokenManager.getInstance().has(TokenItemType.CONTACT)) {
+                TokenManager.getInstance().getCurrent().setCompleteType(TokenCompleteType.FULL);
+                TokenManager.getInstance().add(new TokenItem(TokenItemType.CONTACT));
                 route();
             }
         } catch (Exception e) {
@@ -149,13 +141,7 @@ public class TokenRouter {
             return;
         }
         try {
-            if(activity!=null  && activity instanceof  MainActivity){
-                MainActivity mainActivity = (MainActivity)activity;
-                if(mainActivity!=null) {
-                    mainActivity.restoreSiempoNotificationBar();
-                }
-            }
-            activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + manager.get(TokenItemType.CONTACT).getExtra2())));
+            activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2())));
         } catch (Exception e) {
             e.printStackTrace();
         }

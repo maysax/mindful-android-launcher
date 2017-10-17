@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -56,6 +57,7 @@ import minium.co.core.util.UIUtils;
  */
 
 @EActivity
+@Fullscreen
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
 
@@ -158,8 +160,15 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
     public void loadDialog() {
         if (mTestView == null) {
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+            WindowManager.LayoutParams layoutParams;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                layoutParams = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+            }
+            else{
+                layoutParams = new WindowManager.LayoutParams(
+                        WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+            }
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.format = PixelFormat.RGBA_8888;
@@ -217,6 +226,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
 
         }
+
     }
 
     private void onCreateAnimation(Bundle savedInstanceState) {

@@ -109,7 +109,7 @@ public class MainActivity extends CoreActivity {
     }
 
     void checkVersion() {
-        ApiClient_.getInstance_(this).checkAppVersion();
+        ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.ALPHA);
     }
 
     @Subscribe

@@ -30,7 +30,7 @@ public class NetworkUtil {
         return TYPE_NOT_CONNECTED;
     }
 
-    public static String getConnectivityStatusString(Context context) {
+    static String getConnectivityStatusString(Context context) {
         int conn = getConnectivityStatus(context);
         String status = null;
         if (conn == NetworkUtil.TYPE_WIFI) {
