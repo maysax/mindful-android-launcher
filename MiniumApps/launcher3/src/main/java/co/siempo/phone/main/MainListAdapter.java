@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -334,7 +335,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                     buildData.add(originalData.get(i));
                                 break;
                             case NUMBERS:
-                                if(searchString.matches("[0-9]+")){
+                                if(PhoneNumberUtils.isGlobalPhoneNumber(searchString)){
                                     TokenManager.getInstance().getCurrent().setExtra2(searchString);
                                     buildData.add(originalData.get(i));
                                 }
