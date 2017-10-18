@@ -3,6 +3,7 @@ package co.siempo.phone.old;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,10 @@ import com.joanzapata.iconify.IconDrawable;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.model.MainListItem;
+import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
+import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 2/23/2017.
@@ -63,8 +67,9 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
             LayoutInflater inflater = LayoutInflater.from(context);
 
             convertView = inflater.inflate(R.layout.list_item, parent, false);
-            holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-            holder.text = (TextView) convertView.findViewById(R.id.text);
+            holder.icon = convertView.findViewById(R.id.icon);
+            holder.text = convertView.findViewById(R.id.text);
+            holder.textDefaultApp = convertView.findViewById(R.id.textDefaultApp);
 
             convertView.setTag(holder);
         } else {
@@ -78,6 +83,43 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
             holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
                     .colorRes(R.color.text_primary)
                     .sizeDp(18));
+            int menuId = item.getId();
+            if (context instanceof SiempoSettingsDefaultAppActivity) {
+                holder.textDefaultApp.setVisibility(View.VISIBLE);
+                SiempoSettingsDefaultAppActivity siempoSettingsDefaultAppActivity = (SiempoSettingsDefaultAppActivity) context;
+                String packageName = "";
+                if (menuId == Constants.CALL_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.callPackage().get();
+                } else if (menuId == Constants.MESSAGE_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.messagePackage().get();
+                } else if (menuId == Constants.CALENDER_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.calenderPackage().get();
+                } else if (menuId == Constants.CONTACT_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.contactPackage().get();
+                } else if (menuId == Constants.MAP_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.mapPackage().get();
+                } else if (menuId == Constants.PHOTOS_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.photosPackage().get();
+                } else if (menuId == Constants.CAMERA_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.cameraPackage().get();
+                } else if (menuId == Constants.BROWSER_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.browserPackage().get();
+                } else if (menuId == Constants.CLOCK_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.clockPackage().get();
+                } else if (menuId == Constants.EMAIL_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.emailPackage().get();
+                }
+                String strAppName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
+                Log.d("App Name : ", strAppName);
+                if (strAppName.equalsIgnoreCase("")) {
+                    holder.textDefaultApp.setText("Default: Not Set");
+                } else {
+                    holder.textDefaultApp.setText("Default: "+strAppName);
+                }
+
+            } else {
+                holder.textDefaultApp.setVisibility(View.GONE);
+            }
 
         }
 
@@ -86,6 +128,6 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
 
     private static class ItemHolder {
         ImageView icon;
-        TextView text;
+        TextView text, textDefaultApp;
     }
 }

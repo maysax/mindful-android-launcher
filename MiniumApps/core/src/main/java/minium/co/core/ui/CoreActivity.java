@@ -64,8 +64,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     int onStartCount = 0;
     public int currentIndex = 0;
     public HomeWatcher mHomeWatcher;
+
     @Pref
-    protected DroidPrefs_ prefs;
+    public DroidPrefs_ prefs;
 
     @SystemService
     protected ActivityManager activityManager;
@@ -73,6 +74,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public WindowManager windowManager = null;
     private boolean isOnStopCalled = false;
     UserPresentBroadcastReceiver userPresentBroadcastReceiver;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,6 +168,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
             }
             else{
+                //noinspection deprecation
                 layoutParams = new WindowManager.LayoutParams(
                         WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
             }

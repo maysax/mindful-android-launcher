@@ -26,6 +26,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
@@ -62,9 +63,9 @@ import com.github.javiersantos.appupdater.enums.Display;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_version;
+    private ImageView icon_launcher, icon_version,icon_changeDefaultApp;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version;
+    private LinearLayout ln_launcher, ln_version,ln_changeDefaultApp;
     private CheckBox chk_keyboard;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
@@ -92,19 +93,25 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     public void initView() {
         context = SiempoSettingsActivity.this;
-        icon_launcher = (ImageView) findViewById(R.id.icon_launcher);
-        icon_version = (ImageView) findViewById(R.id.icon_version);
-        txt_version = (TextView) findViewById(R.id.txt_version);
+        icon_launcher = findViewById(R.id.icon_launcher);
+        icon_version = findViewById(R.id.icon_version);
+        icon_changeDefaultApp = findViewById(R.id.icon_changeDefaultApp);
+        txt_version = findViewById(R.id.txt_version);
         txt_version.setText("Version : " + BuildConfig.VERSION_NAME);
-        chk_keyboard = (CheckBox) findViewById(R.id.chk_keyboard);
+        chk_keyboard = findViewById(R.id.chk_keyboard);
         boolean isKeyboardDisplay = launcherPrefs.isKeyBoardDisplay().get();
         chk_keyboard.setChecked(isKeyboardDisplay);
-        ln_launcher = (LinearLayout) findViewById(R.id.ln_launcher);
-        ln_version = (LinearLayout) findViewById(R.id.ln_version);
+        ln_launcher = findViewById(R.id.ln_launcher);
+        ln_version = findViewById(R.id.ln_version);
+        ln_version = findViewById(R.id.ln_version);
+        ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
         icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
+                .colorRes(R.color.text_primary)
+                .sizeDp(18));
+        icon_changeDefaultApp.setImageDrawable(new IconDrawable(context, "fa-link")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
 
@@ -116,6 +123,13 @@ public class SiempoSettingsActivity extends CoreActivity {
             public void onClick(View v) {
                 new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
                 ((CoreActivity) context).loadDialog();
+            }
+        });
+
+        ln_changeDefaultApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ActivityHelper(context).openSiempoDefaultAppSettings();
             }
         });
 
@@ -235,7 +249,7 @@ public class SiempoSettingsActivity extends CoreActivity {
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
                 Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
             }
         }
@@ -260,6 +274,7 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     public void initProgressDialog() {
         try {
+            //noinspection deprecation
             pd = new ProgressDialog(this);
             pd.setMessage("Please wait...");
 //            pd = new ProgressDialog(SiempoSettingsActivity.this, R.style.ProgressTheme);

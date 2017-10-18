@@ -26,9 +26,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_marginTop="10dp"
-            >
+            android:orientation="vertical">
 
 
             <LinearLayout
@@ -78,13 +77,42 @@
                     android:checked="false"
                     android:fontFamily="sans-serif-medium"
                     android:gravity="left|center"
-                    android:paddingStart="16dp"
-                    android:textColor="@color/text_grey"
                     android:layoutDirection="rtl"
+                    android:paddingStart="16dp"
                     android:text="@string/str_keyboard_configuration"
+                    android:textColor="@color/text_grey"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ln_changeDefaultApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/icon_changeDefaultApp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="18dp"
+                    android:contentDescription="@null"
+                    android:padding="6dp" />
+
+                <TextView
+                    android:id="@+id/txt_changeDefaultApp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="18dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/title.defaultapp"
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -126,7 +154,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/statusView"
-        android:elevation="6dp"></FrameLayout>
+        android:elevation="6dp" />
 
 
 </RelativeLayout>

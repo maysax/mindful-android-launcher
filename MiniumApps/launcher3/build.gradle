@@ -5,10 +5,10 @@ apply plugin: 'org.greenrobot.greendao'
 
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     lintOptions {
-        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware'
+        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware','TypographyFractions','TypographyQuotes'
         ignoreWarnings true
     }
     defaultConfig {

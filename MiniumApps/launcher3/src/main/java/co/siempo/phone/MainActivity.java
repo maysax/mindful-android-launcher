@@ -80,9 +80,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @ViewById
     ViewPager pager;
 
-
     MainSlidePagerAdapter sliderAdapter;
-
 
     @SystemService
     ConnectivityManager connectivityManager;
@@ -136,6 +134,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         firebaseHelper.testEvent1();
         firebaseHelper.testEvent2();
         launcherPrefs.updatePrompt().put(true);
+
     }
 
     private void checkAppLoadFirstTime() {

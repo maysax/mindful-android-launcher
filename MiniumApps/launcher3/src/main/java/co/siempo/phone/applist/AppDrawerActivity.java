@@ -67,7 +67,6 @@ public class AppDrawerActivity extends CoreActivity {
     @ViewById
     ImageView btnListOrGrid;
 
-    InstalledAppListAdapter installedAppListAdapter;
 
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -157,11 +156,6 @@ public class AppDrawerActivity extends CoreActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
 
     @Override
     protected void onStop() {
@@ -179,25 +173,6 @@ public class AppDrawerActivity extends CoreActivity {
             } else {
                 bindAsList();
             }
-        }
-    }
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        Log.d(TAG,"ACTION HOME PRESS");
-        if (event.isVisible()) {
         }
     }
 

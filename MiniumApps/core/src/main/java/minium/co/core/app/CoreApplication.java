@@ -107,8 +107,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<ResolveInfo> browserPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> clockPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> emailPackageList = new ArrayList<>();
-    public String callPackage,messagePackage,calenderPackage,contactPackage,mapPackage,photosPackage,
-            cameraPackage,browserPackage,clockPackage,emailPackage;
+
 
     public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
         this.mMediaPlayer = mMediaPlayer;
@@ -129,45 +128,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.vibrator = vibrator;
     }
 
-    public String getCallPackage() {
-        return callPackage;
-    }
-
-    public String getMessagePackage() {
-        return messagePackage;
-    }
-
-    public String getCalenderPackage() {
-        return calenderPackage;
-    }
-
-    public String getContactPackage() {
-        return contactPackage;
-    }
-
-    public String getMapPackage() {
-        return mapPackage;
-    }
-
-    public String getPhotosPackage() {
-        return photosPackage;
-    }
-
-    public String getCameraPackage() {
-        return cameraPackage;
-    }
-
-    public String getBrowserPackage() {
-        return browserPackage;
-    }
-
-    public String getClockPackage() {
-        return clockPackage;
-    }
-
-    public String getEmailPackage() {
-        return emailPackage;
-    }
 
     public ArrayList<ResolveInfo> getCallPackageList() {
         return callPackageList;
@@ -347,9 +307,11 @@ public abstract class CoreApplication extends MultiDexApplication {
      * @return application name
      */
     public String getApplicationNameFromPackageName(String packagename) {
-        for (ApplicationInfo applicationInfo : getPackagesList()) {
-            if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
-                return applicationInfo.name;
+        if (packagename != null && !packagename.equalsIgnoreCase("")) {
+            for (ApplicationInfo applicationInfo : getPackagesList()) {
+                if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
+                    return applicationInfo.name;
+                }
             }
         }
         return "";
@@ -441,7 +403,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
 
         private List<ApplicationInfo> checkForLaunchIntent(List<ApplicationInfo> list) {
-            ArrayList<ApplicationInfo> applist = new ArrayList<ApplicationInfo>();
+            ArrayList<ApplicationInfo> applist = new ArrayList<>();
             for (ApplicationInfo info : list) {
                 try {
                     if (null != getPackageManager().getLaunchIntentForPackage(info.packageName) && isSystemPackage(info)) {
@@ -459,8 +421,8 @@ public abstract class CoreApplication extends MultiDexApplication {
             return ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
         }
 
-        public Bitmap drawableToBitmap(Drawable drawable) {
-            Bitmap bitmap = null;
+        Bitmap drawableToBitmap(Drawable drawable) {
+            Bitmap bitmap;
 
             if (drawable instanceof BitmapDrawable) {
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
@@ -509,10 +471,10 @@ public abstract class CoreApplication extends MultiDexApplication {
      */
     public String getCallPackageName() {
         Uri number = Uri.parse("tel:");
-        Intent dial = new Intent(Intent.ACTION_CALL, number);
+        Intent dial = new Intent(Intent.ACTION_DIAL, number);
         getCallPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
         for (ResolveInfo res : getCallPackageList()) {
-            Log.d("Default App Name", "Call : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            Log.d("Default App Name", "Call : " + res.activityInfo.name  + " :"+ res.activityInfo.packageName + " : " + res.activityInfo.name);
             return res.activityInfo.packageName;
         }
         return "";
@@ -523,8 +485,8 @@ public abstract class CoreApplication extends MultiDexApplication {
      * get all default message application package name
      */
     public String getMessagePackageName() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setType("vnd.android-dir/mms-sms");
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
+        intent.putExtra("sms_body", "Test text...");
         getMessagePackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getMessagePackageList()) {
             Log.d("Default App Name", "Message : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -598,7 +560,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     public String getCameraPackageName() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         getCameraPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-        for (ResolveInfo res : getCalenderPackageList()) {
+        for (ResolveInfo res : getCameraPackageList()) {
             Log.d("Default App Name", "Camera : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
             return res.activityInfo.packageName;
         }

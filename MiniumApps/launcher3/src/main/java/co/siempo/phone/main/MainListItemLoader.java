@@ -1,17 +1,11 @@
 package co.siempo.phone.main;
 
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.ResolveInfo;
 import android.support.annotation.StringRes;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.ListView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.BuildConfig;
@@ -20,17 +14,18 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.applist.AppDrawerActivity_;
+import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.mm.MMTimePickerActivity_;
 import co.siempo.phone.mm.MindfulMorningActivity_;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
-import co.siempo.phone.old.PreferenceListAdapter;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
+import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.tempo.TempoActivity_;
+import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -38,17 +33,27 @@ import minium.co.core.util.UIUtils;
 /**
  * Created by Shahab on 5/4/2017.
  */
-
-
 public class MainListItemLoader {
 
     private Context context;
-    Fragment fragment;
-    DroidPrefs_ prefs_;
 
     public MainListItemLoader(Context context) {
         this.context = context;
     }
+
+    public void loadItemsDefaultApp(List<MainListItem> items) {
+        items.add(new MainListItem(2, getString(R.string.title_calls), "fa-phone", R.drawable.icon_call, MainListItemType.ACTION));
+        items.add(new MainListItem(1, getString(R.string.title_messages), "fa-users", R.drawable.icon_sms, MainListItemType.ACTION));
+        items.add(new MainListItem(20, getString(R.string.title_calendar), "fa-calendar"));
+        items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user", R.drawable.icon_create_user, MainListItemType.ACTION));
+        items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
+        items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
+        items.add(new MainListItem(23, getString(R.string.title_camera), "fa-camera"));
+        items.add(new MainListItem(24, getString(R.string.title_browser), "fa-globe"));
+        items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
+        items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
+    }
+
 
     public void loadItems(List<MainListItem> items, Fragment fragment) {
         items.add(new MainListItem(2, context.getString(R.string.title_calls), "fa-phone", R.drawable.icon_call, MainListItemType.ACTION));
@@ -64,7 +69,9 @@ public class MainListItemLoader {
         items.add(new MainListItem(24, getString(R.string.title_browser), "fa-globe"));
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
-        items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
+        if (fragment instanceof MainFragment) {
+            items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
+        }
         items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
         items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell", R.drawable.icon_tempo, MainListItemType.ACTION));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
@@ -87,16 +94,16 @@ public class MainListItemLoader {
                 if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
                     for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
                         String packageName = applicationInfo.packageName;
-                        if (!packageName.equalsIgnoreCase(CoreApplication.getInstance().getCallPackage())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getMessagePackage())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getCalenderPackageName())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getContactPackage())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getMapPackageName())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getPhotosPackageName())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getCameraPackageName())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getBrowserPackageName())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getClockPackageName())
-                                && !packageName.equalsIgnoreCase(CoreApplication.getInstance().getEmailPackage())
+                        if (!packageName.equalsIgnoreCase(((MainActivity) context).prefs.callPackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.messagePackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.calenderPackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.contactPackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.mapPackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.photosPackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.cameraPackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.browserPackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.clockPackage().get())
+                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.emailPackage().get())
                                 && !packageName.equalsIgnoreCase(Constants.SETTINGS_APP_PACKAGE)) {
                             String appName = applicationInfo.name;
                             items.add(new MainListItem(-1, appName, applicationInfo));
@@ -114,32 +121,55 @@ public class MainListItemLoader {
     }
 
     public void listItemClicked(int id) {
-        MainActivity mainActivity = (MainActivity) context;
         switch (id) {
-            case 1:
-                if (prefs_.isMessageClicked().get()) {
+            case 1:// Message
+                if (context instanceof MainActivity) {
+                    if (!((MainActivity) context).prefs.isMessageClicked().get()) {
+//                        if (CoreApplication.getInstance().getMessagePackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, false);
+//                        } else {
+//                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
+//                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
+                    }
+                } else if (context instanceof SiempoSettingsDefaultAppActivity) {
                     if (CoreApplication.getInstance().getMessagePackageList().size() > 1) {
-
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, true);
                     } else {
-                        new ActivityHelper(context).openMessagingApp();
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    new ActivityHelper(context).openMessagingApp();
                 }
                 break;
-            case 2:
-                if (prefs_.isCallClicked().get()) {
+            case 2:// Call
+                if (context instanceof MainActivity) {
+                    if (!((MainActivity) context).prefs.isCallClicked().get()) {
+//                        if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
+//                        } else {
+//                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
+//                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.callPackage().get());
+                    }
+                } else if (context instanceof SiempoSettingsDefaultAppActivity) {
                     if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
-
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, true);
                     } else {
-                        new ActivityHelper(context).openCallApp();
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    new ActivityHelper(context).openCallApp();
                 }
                 break;
-            case 3:
-                new ActivityHelper(context).openContactsApp();
+            case 3:// Contact
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getContactPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 3, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.contactPackage().get());
+                }
                 break;
             case 4:
                 PauseActivity_.intent(context).start();
@@ -162,8 +192,16 @@ public class MainListItemLoader {
             case 10:
                 TempoActivity_.intent(context).start();
                 break;
-            case 11:
-                new ActivityHelper(context).openGMape(Constants.GOOGLE_MAP_PACKAGE);
+            case 11://Map
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getMapPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 11, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.mapPackage().get());
+                }
                 break;
             case 12:
                 new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
@@ -182,15 +220,23 @@ public class MainListItemLoader {
                     ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.BETA);
                 }
                 break;
-            case 16:
-                if (prefs_.isEmailClicked().get()) {
-                    if (CoreApplication.getInstance().getEmailPackageList().size() > 1) {
-
+            case 16:// Email
+                if (context instanceof MainActivity) {
+                    if (!((MainActivity) context).prefs.isEmailClicked().get()) {
+//                        if (CoreApplication.getInstance().getEmailPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 16, false);
+//                        } else {
+//                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.emailPackage().get());
+//                        }
                     } else {
-                        new ActivityHelper(context).openGmail();
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.emailPackage().get());
                     }
-                } else {
-                    new ActivityHelper(context).openGmail();
+                } else if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getEmailPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 16, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
             case 17: //new ActivityHelper(context).openGoogleInbox(); break;
@@ -200,20 +246,60 @@ public class MainListItemLoader {
             case 19:
                 AppDrawerActivity_.intent(context).start();
                 break;
-            case 20:
-                new ActivityHelper(context).openCalenderApp();
+            case 20://Calender
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getCalenderPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 20, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.calenderPackage().get());
+                }
                 break;
-            case 21:
-                new ActivityHelper(context).openClockApp();
+            case 21://Clock
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getClockPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 21, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.clockPackage().get());
+                }
                 break;
-            case 22:
-                new ActivityHelper(context).openPhotosApp();
+            case 22://Photos
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getPhotosPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 22, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.photosPackage().get());
+                }
                 break;
-            case 23:
-                new ActivityHelper(context).openCameraApp();
+            case 23:// Camera
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getCameraPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 23, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.cameraPackage().get());
+                }
                 break;
-            case 24:
-                new ActivityHelper(context).openBrowserApp();
+            case 24:// Browser
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getCameraPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 24, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.browserPackage().get());
+                }
                 break;
             default:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
@@ -223,37 +309,5 @@ public class MainListItemLoader {
 
     }
 
-    private void showPreferenceAppListDialog(Context context, ArrayList<ResolveInfo> list) {
-        // custom dialog
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_open_with);
-        ArrayList<ResolveInfo> appList = list;  // here is list
-        ListView listView = dialog.findViewById(R.id.listApps);
-        Button btnJustOnce = dialog.findViewById(R.id.btnJustOnce);
-        Button btnAlways = dialog.findViewById(R.id.btnAlways);
-        Button btnOkay = dialog.findViewById(R.id.btnOkay);
-        PreferenceListAdapter preferenceListAdapter = new PreferenceListAdapter(context,appList);
-        listView.setAdapter(preferenceListAdapter);
-        btnJustOnce.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
-        btnOkay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        btnAlways.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        dialog.show();
-
-    }
 }

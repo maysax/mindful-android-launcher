@@ -67,7 +67,21 @@ public interface DroidPrefs {
     boolean hasShownIntroScreen();
 
     /**
-     * This preference is used for store user preference for Grid/List in App Listing View.
+     * This preference is used for store
+     * user preference for Grid/List in Menu Listing View.
+     *
+     * @return
+     */
+    @DefaultBoolean(false)
+    boolean isMenuGrid();
+
+
+    @DefaultString("")
+    String sortedMenu();
+
+    /**
+     * This preference is used for store
+     * user preference for Grid/List in App Listing View.
      *
      * @return
      */
@@ -86,11 +100,17 @@ public interface DroidPrefs {
     @DefaultBoolean(false)
     boolean isCallClicked();
 
+    @DefaultBoolean(false)
+    boolean isCallClickedFirstTime();
+
     @DefaultString("")
     String messagePackage();
 
     @DefaultBoolean(false)
     boolean isMessageClicked();
+
+    @DefaultBoolean(false)
+    boolean isMessageClickedFirstTime();
 
     @DefaultString("")
     String calenderPackage();
@@ -140,5 +160,7 @@ public interface DroidPrefs {
     @DefaultBoolean(false)
     boolean isEmailClicked();
 
+    @DefaultBoolean(false)
+    boolean isEmailClickedFirstTime();
 
 }
