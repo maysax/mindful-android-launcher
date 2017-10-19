@@ -205,4 +205,5 @@
     <string name="always">Always</string>
     <string name="okay">Okay</string>
     <string name="default_apps">Default Apps</string>
+    <string name="clear_all">Clear All</string>
 </resources>
