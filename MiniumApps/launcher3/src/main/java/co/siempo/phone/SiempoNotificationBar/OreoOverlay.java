@@ -2,6 +2,7 @@ package co.siempo.phone.SiempoNotificationBar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -144,6 +145,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private RelativeLayout layout_notification, relWifi, relMobileData, relBle, relDND, relAirPlane, relFlash, relBrightness;
     private ImageView img_background, img_notification_Wifi, img_notification_Data, img_notification_Ble, img_notification_Dnd, img_notification_Airplane, img_notification_Flash, img_notification_Brightness;
     private int wifilevel;
+    private NotificationManager notificationManager;
 
 
     private enum mSwipeDirection {UP, DOWN, NONE}
@@ -166,6 +168,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         siempoNotificationBar = false;
         inflateLayout = inflate(context, R.layout.notification_statusbar, this);
         mWinManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         /**
          * Register Event Bus to get updated status of Battery, WiFi, AirPlane Mode
          */
@@ -235,7 +238,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         imgWifi = inflateLayout.findViewById(R.id.imgWifi);
         imgAirplane = inflateLayout.findViewById(R.id.imgAirplane);
         iTxt2 = inflateLayout.findViewById(R.id.iTxt2);
-        topbar=inflateLayout.findViewById(R.id.topbar);
+        topbar = inflateLayout.findViewById(R.id.topbar);
         layout_notification = inflateLayout.findViewById(R.id.layout_notification);
 
 
@@ -573,8 +576,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                             , TRANSLUCENT);
 
             params.gravity = Gravity.TOP;
-        }
-        else{
+        } else {
             params =
                     new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
                             | FLAG_LAYOUT_IN_SCREEN
@@ -630,7 +632,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                             | FLAG_WATCH_OUTSIDE_TOUCH
                             , TRANSLUCENT);
             params.gravity = Gravity.TOP;
-            mWinManager.updateViewLayout(this,params);
+            mWinManager.updateViewLayout(this, params);
         }
     }
 
@@ -641,12 +643,12 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     public synchronized void addSiempoNotificationBar(MotionEvent event) {
 
         int height = retrieveStatusBarHeight() + 10;
-        boolean result=event.getY() > height;
+        boolean result = event.getY() > height;
         if (!siempoNotificationBar) {
-            WindowManager.LayoutParams  params = new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_APPLICATION_OVERLAY, FLAG_LAYOUT_NO_LIMITS
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_APPLICATION_OVERLAY, FLAG_LAYOUT_NO_LIMITS
                     , TRANSLUCENT);
             params.gravity = Gravity.TOP;
-            mWinManager.updateViewLayout(this,params);
+            mWinManager.updateViewLayout(this, params);
 
             siempoNotificationBar = true;
             img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
@@ -814,7 +816,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             imgAirplane.setVisibility(View.VISIBLE);
             wifiManager.setWifiEnabled(false);
             img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
-            if(BluetoothAdapter.getDefaultAdapter()!=null) {
+            if (BluetoothAdapter.getDefaultAdapter() != null) {
                 BluetoothAdapter.getDefaultAdapter().disable();
             }
             img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
@@ -835,7 +837,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
                 bindWiFiImage(wifilevel);
             }
-            if(BluetoothAdapter.getDefaultAdapter()!=null) {
+            if (BluetoothAdapter.getDefaultAdapter() != null) {
                 if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                     img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_on));
                 } else {
@@ -1118,11 +1120,11 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             case R.id.relNotificationBle:
                 seekbarBrightness.setVisibility(View.GONE);
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                     BluetoothAdapter.getDefaultAdapter().disable();
                     EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
                 } else {
-                    if(BluetoothAdapter.getDefaultAdapter()!=null) {
+                    if (BluetoothAdapter.getDefaultAdapter() != null) {
                         BluetoothAdapter.getDefaultAdapter().enable();
                     }
                     relBle.setEnabled(false);
@@ -1135,15 +1137,27 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (currentModeDeviceMode == 0) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 1).apply();
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                    } else {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    }
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_vibration_black_24dp));
                 } else if (currentModeDeviceMode == 1) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 2).apply();
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                    } else {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    }
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
                 } else if (currentModeDeviceMode == 2) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 0).apply();
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                    } else {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    }
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
                 }
                 currentModeDeviceMode = launcherPrefs.getInt("getCurrentProfile", 0);

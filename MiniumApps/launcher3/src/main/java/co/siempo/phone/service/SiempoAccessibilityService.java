@@ -1,6 +1,7 @@
 package co.siempo.phone.service;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -25,14 +26,16 @@ import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CH
 public class SiempoAccessibilityService extends AccessibilityService {
 
     public static String packageName = "";
-    public static  String activityName = "";
-    private final String TAG="Accessibility";
+    public static String activityName = "";
+    private final String TAG = "Accessibility";
 
     AudioManager audioManager;
+    private NotificationManager notificationManager;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         if (event.getEventType() == TYPE_WINDOW_STATE_CHANGED) {
             ComponentName componentName = new ComponentName(event.getPackageName().toString(), event.getClassName().toString());
             ActivityInfo activityInfo = getActivityInfo(componentName);
@@ -41,10 +44,14 @@ public class SiempoAccessibilityService extends AccessibilityService {
                 packageName = activityInfo.packageName;
                 activityName = componentName.flattenToShortString();
             }
-            Log.d(TAG,"Packag eName::"+packageName);
-            Log.d(TAG,"Activity name::"+activityName);
+            Log.d(TAG, "Packag eName::" + packageName);
+            Log.d(TAG, "Activity name::" + activityName);
             if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(this)) {

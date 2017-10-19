@@ -1,17 +1,17 @@
 package co.siempo.phone.call;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.util.Date;
 
-import co.siempo.phone.R;
-import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.service.SiempoAccessibilityService;
 import co.siempo.phone.util.PackageUtil;
@@ -33,6 +33,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
 
     int currentProfile = -1;
     AudioManager audioManager;
+    NotificationManager notificationManager;
     static boolean isCallisRunning = false;
     SharedPreferences sharedPref;
 
@@ -40,6 +41,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         sharedPref =
                 context.getSharedPreferences("Launcher3Prefs", 0);
         currentProfile = sharedPref.getInt("getCurrentProfile", 0);
@@ -51,7 +53,11 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
                     isCallisRunning = true;
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                    } else {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    }
                 }
             } else {
                 EventBus.getDefault().post(new NotificationTrayEvent(true));
@@ -94,16 +100,33 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
             int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
             if (currentModeDeviceMode == 0) {
                 sharedPref.edit().putInt("getCurrentProfile", 1).apply();
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                }
             } else if (currentModeDeviceMode == 1) {
                 sharedPref.edit().putInt("getCurrentProfile", 2).apply();
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                }
             } else if (currentModeDeviceMode == 2) {
                 sharedPref.edit().putInt("getCurrentProfile", 0).apply();
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                }
             }
-        }else{
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+            } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            }
+
         }
 
     }
