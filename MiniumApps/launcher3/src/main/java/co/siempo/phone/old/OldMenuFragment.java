@@ -6,12 +6,17 @@ import android.graphics.Rect;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -34,6 +39,7 @@ import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
+import co.siempo.phone.mm.model.Utilities;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.notification.RecyclerListAdapter;
 import minium.co.core.app.DroidPrefs_;
@@ -70,12 +76,13 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     ImageView icon;
 
     @ViewById
+    CardView cardView;
+
+    @ViewById
     ImageView iconGrid;
 
     @ViewById
     RelativeLayout relMenuList,relMenuGrid;
-
-
 
     private MenuAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -89,6 +96,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     @Override
     public void onResume() {
         super.onResume();
+
         items = new ArrayList<>();
         new MainListItemLoader(getActivity()).loadItems(items, this);
         if (prefs.isMenuGrid().get()) {
@@ -124,6 +132,18 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
                 new ActivityHelper(context).openSettingsApp();
             }
         });
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        if(ViewConfiguration.get(getActivity()).hasPermanentMenuKey()){
+            Log.d("Test1","Test1111111");
+            layoutParams.setMargins(UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8));
+            cardView.setLayoutParams(layoutParams);
+        }else{
+            Log.d("Test1","Test2222222");
+            layoutParams.setMargins(UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),54));
+            cardView.setLayoutParams(layoutParams);
+        }
     }
 
     @AfterViews
@@ -232,7 +252,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_066);
         activity_grid_view.addItemDecoration(itemDecoration);
-        mAdapter = new MenuAdapter(getActivity(), launcher3Prefs_, prefs, items, false, this, this);
+        mAdapter = new MenuAdapter(getActivity(), activity_grid_view,launcher3Prefs_, prefs, items, false, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, OldMenuFragment.this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
@@ -259,9 +279,9 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         if (itemDecoration != null) {
             activity_grid_view.removeItemDecoration(itemDecoration);
         }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.activity_vertical_margin);
+        itemDecoration = new ItemOffsetDecoration(context, R.dimen.menu_grid_margin);
         activity_grid_view.addItemDecoration(itemDecoration);
-        mAdapter = new MenuAdapter(getActivity(), launcher3Prefs_, prefs, items, true, this, this);
+        mAdapter = new MenuAdapter(getActivity(),activity_grid_view, launcher3Prefs_, prefs, items, true, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, OldMenuFragment.this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
@@ -289,7 +309,6 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
         if (isVisibleToUser) {
             try {
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
