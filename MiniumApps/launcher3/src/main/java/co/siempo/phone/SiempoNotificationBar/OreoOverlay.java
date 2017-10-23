@@ -294,8 +294,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         img_notification_Airplane = inflateLayout.findViewById(R.id.imgNotificationAirplane);
         img_notification_Flash = inflateLayout.findViewById(R.id.imgNotificationFlash);
         img_notification_Brightness = inflateLayout.findViewById(R.id.imgNotificationBrightness);
-        relWifi.setOnClickListener(this);
-        relBle.setOnClickListener(this);
         relMobileData.setOnClickListener(this);
         relDND.setOnClickListener(this);
         relAirPlane.setOnClickListener(this);
@@ -733,7 +731,80 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         bleSignal = new BleSignal();
         context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         statusOfQuickSettings();
+        relWifi.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gdWifi.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
+        relBle.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gdBle.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
     }
+
+    /**
+     * Touch listener for the wifi to detect double tap and single tap
+     */
+    final GestureDetector gdWifi = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            hide();
+            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            seekbarBrightness.setVisibility(View.GONE);
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
+            turnOnOffWIFI();
+            return super.onSingleTapConfirmed(e);
+        }
+
+    });
+
+    /**
+     * Touch listener for the BLE to detect double tap and single tap
+     */
+    final GestureDetector gdBle = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            hide();
+            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        }
+
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            seekbarBrightness.setVisibility(View.GONE);
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
+            if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                BluetoothAdapter.getDefaultAdapter().disable();
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
+            } else {
+                if (BluetoothAdapter.getDefaultAdapter() != null) {
+                    BluetoothAdapter.getDefaultAdapter().enable();
+                }
+                relBle.setEnabled(false);
+                img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+
+    });
 
 
     private void bindBrightnessControl() {
@@ -1108,26 +1179,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     context.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
-                }
-                break;
-            case R.id.relNotificationWifi:
-                seekbarBrightness.setVisibility(View.GONE);
-                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                turnOnOffWIFI();
-                break;
-            case R.id.relNotificationBle:
-                seekbarBrightness.setVisibility(View.GONE);
-                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                    BluetoothAdapter.getDefaultAdapter().disable();
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
-                } else {
-                    if(BluetoothAdapter.getDefaultAdapter()!=null) {
-                        BluetoothAdapter.getDefaultAdapter().enable();
-                    }
-                    relBle.setEnabled(false);
-                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
                 }
                 break;
             case R.id.relNotificationDND:

@@ -289,8 +289,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         img_notification_Airplane = inflateLayout.findViewById(R.id.imgNotificationAirplane);
         img_notification_Flash = inflateLayout.findViewById(R.id.imgNotificationFlash);
         img_notification_Brightness = inflateLayout.findViewById(R.id.imgNotificationBrightness);
-        //  relWifi.setOnClickListener(this);
-        //  relBle.setOnClickListener(this);
         relMobileData.setOnClickListener(this);
         relDND.setOnClickListener(this);
         relAirPlane.setOnClickListener(this);
@@ -1182,26 +1180,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
-//            case relNotificationWifi:
-//                seekbarBrightness.setVisibility(View.GONE);
-//                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-//                turnOnOffWIFI();
-//                break;
-//            case R.id.relNotificationBle:
-//                seekbarBrightness.setVisibility(View.GONE);
-//                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-//                if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-//                    BluetoothAdapter.getDefaultAdapter().disable();
-//                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
-//                } else {
-//                    if (BluetoothAdapter.getDefaultAdapter() != null) {
-//                        BluetoothAdapter.getDefaultAdapter().enable();
-//                    }
-//                    relBle.setEnabled(false);
-//                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
-//                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
-//                }
-//                break;
             case R.id.relNotificationDND:
                 seekbarBrightness.setVisibility(View.GONE);
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
