@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
        android:padding="2dp"
         android:id="@+id/topbar"
         android:background="@android:color/white"
@@ -17,45 +17,47 @@
 
         <ImageView
             android:id="@+id/imgNotification"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_alignParentStart="true"
+            android:layout_margin="2dp"
             android:layout_centerVertical="true"
             android:contentDescription="@null"
-            android:layout_margin="2dp"
             android:src="@drawable/system_notification"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgTempo"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_toEndOf="@id/imgNotification"
             android:contentDescription="@null"
             android:layout_centerVertical="true"
-            android:layout_margin="2dp"
             android:src="@drawable/system_tempo"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgBattery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:contentDescription="@null" />
 
         <ImageView
             android:id="@+id/imgSignal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@id/imgBattery"
             android:contentDescription="@null"
             android:src="@drawable/system_reception" />
 
         <ImageView
             android:id="@+id/imgWifi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@id/imgSignal"
             android:contentDescription="@null"
             android:src="@drawable/ic_wifi_0"
@@ -63,8 +65,9 @@
 
         <ImageView
             android:id="@+id/imgAirplane"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
             android:layout_toStartOf="@id/imgWifi"
             android:contentDescription="@null"
             android:src="@drawable/ic_airplane" />
