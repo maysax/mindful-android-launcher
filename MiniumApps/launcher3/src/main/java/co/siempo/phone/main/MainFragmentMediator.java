@@ -163,21 +163,18 @@ class MainFragmentMediator {
                 break;
             case NUMBERS:
                 position = getAdapter().getItem(position).getId();
-                switch (position) {
-                    case 4:
-                        try {
-                            fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +  TokenManager.getInstance().getCurrent().getExtra2())));
-                            MainActivity.isTextLenghGreater = "";
-                            EventBus.getDefault().post(new SendSmsEvent(true,"",""));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    default:
-                        UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
-                        break;
+                if(position == 4){
+                    try {
+                        fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +  TokenManager.getInstance().getCurrent().getExtra2())));
+                        MainActivity.isTextLenghGreater = "";
+                        EventBus.getDefault().post(new SendSmsEvent(true,"",""));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                break;
+                else{
+                    UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
+                }
         }
     }
 
