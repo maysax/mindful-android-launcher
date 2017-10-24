@@ -275,7 +275,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         linearClearAll = inflateLayout.findViewById(R.id.linearClearAll);
         img_background = inflateLayout.findViewById(R.id.img_background);
         textView_notification_title = inflateLayout.findViewById(R.id.textView_notification_title);
-        relWifi = inflateLayout.findViewById(relNotificationWifi);
+        relWifi = inflateLayout.findViewById(R.id.relNotificationWifi);
         relBle = inflateLayout.findViewById(R.id.relNotificationBle);
         relDND = inflateLayout.findViewById(R.id.relNotificationDND);
         relAirPlane = inflateLayout.findViewById(R.id.relNotificationAirPlane);
@@ -980,7 +980,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     textView_notification_title.setVisibility(View.GONE);
                     imgNotification.setVisibility(View.GONE);
                 } else {
-                    checkClearAllExit();
                     adapter.notifyDataSetChanged();
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
@@ -1027,7 +1026,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
             imgNotification.setVisibility(View.GONE);
         } else {
-            checkClearAllExit();
             adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
