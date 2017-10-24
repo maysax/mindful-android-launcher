@@ -404,8 +404,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             Intent intenttap = new Intent(Settings.ACTION_NFC_PAYMENT_SETTINGS);
             tap_preference.setIntent(intenttap);
             PackageManager packageManager = getActivity().getPackageManager();
-            if (intenttap.resolveActivity(packageManager) != null) {
-            } else {
+            if (intenttap.resolveActivity(packageManager) == null) {
                 PreferenceScreen preferenceScreen = getPreferenceScreen();
                 if (preferenceScreen != null) {
                     preferenceScreen.removePreference(tap_preference);

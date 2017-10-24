@@ -76,6 +76,8 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     }
 
 
+
+    @SuppressWarnings("ConstantConditions")
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
         if (event.isVisible()) {

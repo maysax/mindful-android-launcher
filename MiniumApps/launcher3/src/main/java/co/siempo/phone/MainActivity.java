@@ -363,10 +363,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onDestroy() {
         super.onDestroy();
         MainActivity.isTextLenghGreater = "";
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
 
