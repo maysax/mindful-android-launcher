@@ -80,7 +80,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @ViewById
     ViewPager pager;
 
+
     MainSlidePagerAdapter sliderAdapter;
+
 
     @SystemService
     ConnectivityManager connectivityManager;
@@ -93,7 +95,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
-    private enum ActivityState {
+    public enum ActivityState {
         AFTERVIEW,
         RESTART,
         ACTIVITY_RESULT,
@@ -134,7 +136,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         firebaseHelper.testEvent1();
         firebaseHelper.testEvent2();
         launcherPrefs.updatePrompt().put(true);
-
     }
 
     private void checkAppLoadFirstTime() {
@@ -288,32 +289,32 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onUserLeaveHint();
     }
 
-
+/**
+ * Below function is use for further development when pause feature will enable.
     @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
     void volumeUpPressed() {
         Tracer.i("Volume up pressed in MainActivity");
         PauseActivity_.intent(this).start();
     }
-
+*/
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
         if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version Alpha: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);
             } else {
                 ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
             }
         } else {
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version Beta: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
+            } else {
+                Tracer.d("Installed version: " + "Up to date.");
             }
-//            else {
-//               // Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
-//            }
         }
     }
 
@@ -362,6 +363,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onDestroy() {
         super.onDestroy();
         MainActivity.isTextLenghGreater = "";
+        try {
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
