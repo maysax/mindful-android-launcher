@@ -57,8 +57,9 @@ public class MainListItemLoader {
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
-        items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
-        items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell", R.drawable.icon_tempo, MainListItemType.ACTION));
+        // Below logic is use for further development when pause and tempo feature will enable.
+       // items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
+       // items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell", R.drawable.icon_tempo, MainListItemType.ACTION));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
         items.add(new MainListItem(19, getString(R.string.title_apps), "fa-list"));
 
