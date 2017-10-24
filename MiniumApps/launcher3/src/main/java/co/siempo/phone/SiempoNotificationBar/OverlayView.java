@@ -2,7 +2,6 @@ package co.siempo.phone.SiempoNotificationBar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.KeyguardManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
@@ -24,17 +23,16 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -42,12 +40,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.NetworkUtils;
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -57,7 +55,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
@@ -76,10 +73,9 @@ import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.notification.ItemClickSupport;
 import co.siempo.phone.notification.Notification;
 import co.siempo.phone.notification.NotificationContactModel;
-import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.notification.RecyclerListAdapter;
-import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
+import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
@@ -90,7 +86,6 @@ import co.siempo.phone.service.StatusBarService;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.HomeWatcher;
-import minium.co.core.ui.CoreActivity;
 
 import static android.graphics.PixelFormat.TRANSLUCENT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -143,8 +138,9 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      */
 
     private RecyclerView recyclerView;
-    private TextView emptyView, textView_notification_title;
+    private TextView emptyView, txtClearAll, txtHide, textView_notification_title;
     private SeekBar seekbarBrightness;
+    LinearLayout linearClearAll;
     private int brightness;
     private RecyclerListAdapter adapter;
     private List<Notification> notificationList;
@@ -248,14 +244,14 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
          */
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        imgNotification = (ImageView) inflateLayout.findViewById(R.id.imgNotification);
-        imgTempo = (ImageView) inflateLayout.findViewById(R.id.imgTempo);
-        imgBattery = (ImageView) inflateLayout.findViewById(R.id.imgBattery);
-        imgSignal = (ImageView) inflateLayout.findViewById(R.id.imgSignal);
-        imgWifi = (ImageView) inflateLayout.findViewById(R.id.imgWifi);
-        imgAirplane = (ImageView) inflateLayout.findViewById(R.id.imgAirplane);
-        iTxt2 = (TextClock) inflateLayout.findViewById(R.id.iTxt2);
-        layout_notification = (RelativeLayout) inflateLayout.findViewById(R.id.layout_notification);
+        imgNotification = inflateLayout.findViewById(R.id.imgNotification);
+        imgTempo = inflateLayout.findViewById(R.id.imgTempo);
+        imgBattery = inflateLayout.findViewById(R.id.imgBattery);
+        imgSignal = inflateLayout.findViewById(R.id.imgSignal);
+        imgWifi = inflateLayout.findViewById(R.id.imgWifi);
+        imgAirplane = inflateLayout.findViewById(R.id.imgAirplane);
+        iTxt2 = inflateLayout.findViewById(R.id.iTxt2);
+        layout_notification = inflateLayout.findViewById(R.id.layout_notification);
 
 
         /**
@@ -283,25 +279,28 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        seekbarBrightness = (SeekBar) inflateLayout.findViewById(R.id.seekbarBrightness);
-        recyclerView = (RecyclerView) inflateLayout.findViewById(R.id.recyclerView);
-        emptyView = (TextView) inflateLayout.findViewById(R.id.emptyView);
-        img_background = (ImageView) inflateLayout.findViewById(R.id.img_background);
-        textView_notification_title = (TextView) inflateLayout.findViewById(R.id.textView_notification_title);
-        relWifi = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationWifi);
-        relBle = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBle);
-        relDND = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationDND);
-        relAirPlane = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationAirPlane);
-        relBrightness = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBrightness);
-        relFlash = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationFlash);
-        relMobileData = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationMobileData);
-        img_notification_Wifi = (ImageView) inflateLayout.findViewById(R.id.imgNotificationWifi);
-        img_notification_Data = (ImageView) inflateLayout.findViewById(R.id.imgNotificationData);
-        img_notification_Ble = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBle);
-        img_notification_Dnd = (ImageView) inflateLayout.findViewById(R.id.imgNotificationDnd);
-        img_notification_Airplane = (ImageView) inflateLayout.findViewById(R.id.imgNotificationAirplane);
-        img_notification_Flash = (ImageView) inflateLayout.findViewById(R.id.imgNotificationFlash);
-        img_notification_Brightness = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBrightness);
+        seekbarBrightness = inflateLayout.findViewById(R.id.seekbarBrightness);
+        recyclerView = inflateLayout.findViewById(R.id.recyclerView);
+        txtClearAll = inflateLayout.findViewById(R.id.txtClearAll);
+        txtHide = inflateLayout.findViewById(R.id.txtHide);
+        emptyView = inflateLayout.findViewById(R.id.emptyView);
+        linearClearAll = inflateLayout.findViewById(R.id.linearClearAll);
+        img_background = inflateLayout.findViewById(R.id.img_background);
+        textView_notification_title = inflateLayout.findViewById(R.id.textView_notification_title);
+        relWifi = inflateLayout.findViewById(R.id.relNotificationWifi);
+        relBle = inflateLayout.findViewById(R.id.relNotificationBle);
+        relDND = inflateLayout.findViewById(R.id.relNotificationDND);
+        relAirPlane = inflateLayout.findViewById(R.id.relNotificationAirPlane);
+        relBrightness = inflateLayout.findViewById(R.id.relNotificationBrightness);
+        relFlash = inflateLayout.findViewById(R.id.relNotificationFlash);
+        relMobileData = inflateLayout.findViewById(R.id.relNotificationMobileData);
+        img_notification_Wifi = inflateLayout.findViewById(R.id.imgNotificationWifi);
+        img_notification_Data = inflateLayout.findViewById(R.id.imgNotificationData);
+        img_notification_Ble = inflateLayout.findViewById(R.id.imgNotificationBle);
+        img_notification_Dnd = inflateLayout.findViewById(R.id.imgNotificationDnd);
+        img_notification_Airplane = inflateLayout.findViewById(R.id.imgNotificationAirplane);
+        img_notification_Flash = inflateLayout.findViewById(R.id.imgNotificationFlash);
+        img_notification_Brightness = inflateLayout.findViewById(R.id.imgNotificationBrightness);
         relWifi.setOnClickListener(this);
         relBle.setOnClickListener(this);
         relMobileData.setOnClickListener(this);
@@ -500,14 +499,17 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     public void notificationSwipeEvent(NotificationSwipeEvent event) {
         try {
             if (event.isNotificationListNull()) {
+                notificationList.clear();
                 if (recyclerView != null) recyclerView.setVisibility(View.GONE);
                 if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+                if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
                 if (textView_notification_title != null)
                     textView_notification_title.setVisibility(View.GONE);
                 if (imgNotification != null) imgNotification.setVisibility(View.GONE);
             } else {
                 if (recyclerView != null) recyclerView.setVisibility(View.VISIBLE);
                 if (emptyView != null) emptyView.setVisibility(View.GONE);
+                if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
                 if (textView_notification_title != null)
                     textView_notification_title.setVisibility(View.VISIBLE);
             }
@@ -663,6 +665,22 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 hide();
             }
         });
+        txtClearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                deleteItem.deleteAll();
+                notificationList.clear();
+                adapter.notifyDataSetChanged();
+                EventBus.getDefault().post(new NotificationSwipeEvent(true));
+            }
+        });
+        txtHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide();
+            }
+        });
         img_background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -689,27 +707,29 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
-                    hide();
-                } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
-                    if (
-                            ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
-                                    && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                if (notificationList.get(position).getId() != -1) {
+                    if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
                         hide();
+                    } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
+                        if (
+                                ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                                        && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                            hide();
+                        }
                     }
+                    // Following code will delete all notification of same user and same types.
+                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                    deleteItem.executeDelete(notificationList.get(position));
+                    loadData();
                 }
-                // Following code will delete all notification of same user and same types.
-                DeleteIteam deleteIteam = new DeleteIteam(new MultipleIteamDelete());
-                deleteIteam.executeDelete(notificationList.get(position));
-                loadData();
             }
 
 
@@ -803,7 +823,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             imgAirplane.setVisibility(View.VISIBLE);
             wifiManager.setWifiEnabled(false);
             img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
-            if(BluetoothAdapter.getDefaultAdapter()!=null) {
+            if (BluetoothAdapter.getDefaultAdapter() != null) {
                 BluetoothAdapter.getDefaultAdapter().disable();
             }
             img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
@@ -824,7 +844,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
                 bindWiFiImage(wifilevel);
             }
-            if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_on));
             } else {
                 img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
@@ -896,16 +916,17 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         tableNotificationSms.getTopTableNotificationSmsDao().get_message(), time, false, tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type());
                 notificationList.add(0, n);
                 adapter.notifyDataSetChanged();
-
                 if (notificationList.size() == 0) {
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
+                    if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
                     textView_notification_title.setVisibility(View.GONE);
                     imgNotification.setVisibility(View.GONE);
                 } else {
                     adapter.notifyDataSetChanged();
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
+                    if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
                     textView_notification_title.setVisibility(View.VISIBLE);
                     imgNotification.setVisibility(View.VISIBLE);
                 }
@@ -930,8 +951,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         return false;
     }
 
+
     private void setUpNotifications(List<TableNotificationSms> items) {
         notificationList.clear();
+
         for (int i = 0; i < items.size(); i++) {
             @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(items.get(i).get_date());
@@ -943,11 +966,13 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
             textView_notification_title.setVisibility(View.GONE);
+            if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
             imgNotification.setVisibility(View.GONE);
         } else {
             adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
+            if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
             textView_notification_title.setVisibility(View.VISIBLE);
             imgNotification.setVisibility(View.VISIBLE);
         }
@@ -1009,8 +1034,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                             if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
                                     && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                                 hide();
-                            } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
-                                    && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                             }
                         }
                     } catch (Exception e) {
@@ -1105,11 +1128,11 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             case R.id.relNotificationBle:
                 seekbarBrightness.setVisibility(View.GONE);
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                     BluetoothAdapter.getDefaultAdapter().disable();
                     EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
                 } else {
-                    if(BluetoothAdapter.getDefaultAdapter()!=null){
+                    if (BluetoothAdapter.getDefaultAdapter() != null) {
                         BluetoothAdapter.getDefaultAdapter().enable();
                     }
                     relBle.setEnabled(false);

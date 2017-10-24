@@ -26,4 +26,9 @@ public class MultipleIteamDelete implements DeleteStrategy {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void deleteAll() {
+        DBUtility.getNotificationDao().deleteAll();
+    }
 }

@@ -26,4 +26,9 @@ public class SingleIteamDelete implements DeleteStrategy {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void deleteAll() {
+
+    }
 }

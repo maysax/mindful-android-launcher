@@ -3,73 +3,73 @@
 <LinearLayout
 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/topbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-       android:padding="2dp"
-        android:id="@+id/topbar"
         android:background="@android:color/white"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imgNotification"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
             android:layout_alignParentStart="true"
-            android:layout_margin="2dp"
-            android:layout_centerVertical="true"
             android:contentDescription="@null"
+            android:padding="6dp"
             android:src="@drawable/system_notification"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgTempo"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
             android:layout_toEndOf="@id/imgNotification"
             android:contentDescription="@null"
-            android:layout_centerVertical="true"
+            android:padding="6dp"
             android:src="@drawable/system_tempo"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgBattery"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
             android:layout_alignParentEnd="true"
-            android:contentDescription="@null" />
+            android:contentDescription="@null"
+            android:padding="6dp"
+            android:src="@drawable/system_battery" />
 
         <ImageView
             android:id="@+id/imgSignal"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
             android:layout_toStartOf="@id/imgBattery"
             android:contentDescription="@null"
+            android:padding="6dp"
             android:src="@drawable/system_reception" />
 
         <ImageView
             android:id="@+id/imgWifi"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
             android:layout_toStartOf="@id/imgSignal"
             android:contentDescription="@null"
+            android:padding="6dp"
             android:src="@drawable/ic_wifi_0"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgAirplane"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
             android:layout_toStartOf="@id/imgWifi"
             android:contentDescription="@null"
+            android:padding="6dp"
             android:src="@drawable/ic_airplane" />
 
         <TextClock
@@ -79,7 +79,8 @@
             android:layout_centerInParent="true"
             android:fontFamily="sans-serif"
             android:textColor="#b3000000"
-            android:textSize="@dimen/text.size.large" />
+            android:textSize="@dimen/text.size.large"
+            tools:ignore="RelativeOverlap" />
 
     </RelativeLayout>
 
@@ -89,10 +90,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#00FFFFFF"
-
         android:clickable="true"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/img_background"
@@ -103,20 +103,21 @@
             android:layout_below="@+id/topmost"
             android:layout_marginBottom="50dp"
             android:background="@android:color/transparent"
-            android:orientation="vertical"></ImageView>
+            android:orientation="vertical"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:id="@+id/topmost"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="100dp"
-            android:background="#FFFFFF"
+            android:background="@null"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical">
 
 
@@ -141,7 +142,8 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/ic_signal_wifi_off_black_24dp"
-                            android:padding="@dimen/dp_15" />
+                            android:padding="@dimen/dp_15"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
 
@@ -158,7 +160,8 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/ic_data_on_black_24dp"
-                            android:padding="@dimen/dp_15" />
+                            android:padding="@dimen/dp_15"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
 
@@ -176,7 +179,8 @@
                             android:layout_height="30dp"
                             android:background="@drawable/ic_bluetooth_disabled_black_24dp"
                             android:gravity="center"
-                            android:padding="@dimen/dp_15" />
+                            android:padding="@dimen/dp_15"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -192,7 +196,8 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/ic_do_not_disturb_off_black_24dp"
-                            android:padding="@dimen/dp_15" />
+                            android:padding="@dimen/dp_15"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -208,7 +213,8 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/ic_airplanemode_inactive_black_24dp"
-                            android:padding="@dimen/dp_15" />
+                            android:padding="@dimen/dp_15"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -224,7 +230,8 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/ic_flash_off_black_24dp"
-                            android:padding="@dimen/dp_15" />
+                            android:padding="@dimen/dp_15"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -240,7 +247,8 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:background="@drawable/ic_brightness_off_black_24dp"
-                            android:padding="@dimen/dp_15" />
+                            android:padding="@dimen/dp_15"
+                            tools:ignore="ContentDescription" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -254,13 +262,16 @@
                     android:paddingBottom="@dimen/dp_10"
                     android:paddingTop="@dimen/dp_10"
                     android:thumb="@drawable/ic_brightness_on_black_24dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:ignore="InefficientWeight" />
 
                 <TextView
                     android:id="@+id/textView_notification_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:fontFamily="sans-serif"
+                    android:paddingBottom="12dp"
                     android:paddingLeft="18dp"
                     android:paddingRight="18dp"
                     android:text="@string/string_notification_title"
@@ -268,21 +279,47 @@
                     android:textSize="28sp" />
             </LinearLayout>
 
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="12dp"
+                android:background="@null"
                 android:clipToPadding="false"
                 android:visibility="visible" />
+            <LinearLayout
+                android:id="@+id/linearClearAll"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/tranparent"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/txtHide"
+                    android:layout_width="wrap_content"
+                    android:background="@drawable/tranparent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    tools:ignore="InefficientWeight" />
+
+                <TextView
+                    android:id="@+id/txtClearAll"
+                    android:background="@drawable/tranparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center|right"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:textAllCaps="true"
+                    android:text="@string/clear_all" />
+            </LinearLayout>
             <TextView
                 android:id="@+id/emptyView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_10"
+                android:background="@color/white"
                 android:gravity="center"
                 android:padding="@dimen/dp_10"
                 android:paddingLeft="18dp"
