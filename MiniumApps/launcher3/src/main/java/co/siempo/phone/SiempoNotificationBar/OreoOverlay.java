@@ -25,6 +25,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -433,7 +434,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 bindWiFiImage(level);
             }
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
-            if (imgBattery != null) imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
+            displayBatteryIcon(event.getValue(),event.getType());
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             /**
              * Update status bar network icon
@@ -1287,4 +1288,147 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         return true;
     }
 
+    public void displayBatteryIcon(int batteryStatus,String isCharging){
+        if(imgBattery != null){
+            if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")){
+                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+                    imgBattery.setImageResource(R.drawable.battery_alert);
+                }
+                else if(batteryStatus>=5 && batteryStatus<10){
+                    imgBattery.setImageResource(R.drawable.battery_c_05);
+                }
+                else if(batteryStatus>=10 && batteryStatus<15){
+                    imgBattery.setImageResource(R.drawable.battery_c_10);
+                }
+                else if(batteryStatus>=15 && batteryStatus<20){
+                    imgBattery.setImageResource(R.drawable.battery_c_15);
+                }
+                else if(batteryStatus>=20 && batteryStatus<25){
+                    imgBattery.setImageResource(R.drawable.battery_c_20);
+                }
+                else if(batteryStatus>=25 && batteryStatus<30){
+                    imgBattery.setImageResource(R.drawable.battery_c_25);
+                }
+                else if(batteryStatus>=30 && batteryStatus<35){
+                    imgBattery.setImageResource(R.drawable.battery_c_30);
+                }
+                else if(batteryStatus>=35 && batteryStatus<40){
+                    imgBattery.setImageResource(R.drawable.battery_c_35);
+                }
+                else if(batteryStatus>=40 && batteryStatus<45){
+                    imgBattery.setImageResource(R.drawable.battery_c_40);
+                }
+                else if(batteryStatus>=45 && batteryStatus<50){
+                    imgBattery.setImageResource(R.drawable.battery_c_45);
+                }
+                else if(batteryStatus>=50 && batteryStatus<55){
+                    imgBattery.setImageResource(R.drawable.battery_c_50);
+                }
+                else if(batteryStatus>=55 && batteryStatus<60){
+                    imgBattery.setImageResource(R.drawable.battery_c_55);
+                }
+                else if(batteryStatus>=60 && batteryStatus<65){
+                    imgBattery.setImageResource(R.drawable.battery_c_60);
+                }
+                else if(batteryStatus>=65 && batteryStatus<70){
+                    imgBattery.setImageResource(R.drawable.battery_c_65);
+                }
+                else if(batteryStatus>=70 && batteryStatus<75){
+                    imgBattery.setImageResource(R.drawable.battery_c_70);
+                }
+                else if(batteryStatus>=75 && batteryStatus<80){
+                    imgBattery.setImageResource(R.drawable.battery_c_75);
+                }
+                else if(batteryStatus>=80 && batteryStatus<85){
+                    imgBattery.setImageResource(R.drawable.battery_c_80);
+                }
+                else if(batteryStatus>=85 && batteryStatus<90){
+                    imgBattery.setImageResource(R.drawable.battery_c_85);
+                }
+                else if(batteryStatus>=90 && batteryStatus<95){
+                    imgBattery.setImageResource(R.drawable.battery_c_90);
+                }
+                else if(batteryStatus>=95 && batteryStatus<100){
+                    imgBattery.setImageResource(R.drawable.battery_c_95);
+                }
+                else if(batteryStatus>=100){
+                    imgBattery.setImageResource(R.drawable.battery_c_100);
+                }
+                else{
+                    imgBattery.setImageResource(R.drawable.battery_c_50);
+                }
+            }
+            else if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("OFF")){
+                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+                    imgBattery.setImageResource(R.drawable.battery_alert);
+                }
+                else if(batteryStatus>=5 && batteryStatus<10){
+                    imgBattery.setImageResource(R.drawable.battery_n_05);
+                }
+                else if(batteryStatus>=10 && batteryStatus<15){
+                    imgBattery.setImageResource(R.drawable.battery_n_10);
+                }
+                else if(batteryStatus>=15 && batteryStatus<20){
+                    imgBattery.setImageResource(R.drawable.battery_n_15);
+                }
+                else if(batteryStatus>=20 && batteryStatus<25){
+                    imgBattery.setImageResource(R.drawable.battery_n_20);
+                }
+                else if(batteryStatus>=25 && batteryStatus<30){
+                    imgBattery.setImageResource(R.drawable.battery_n_25);
+                }
+                else if(batteryStatus>=30 && batteryStatus<35){
+                    imgBattery.setImageResource(R.drawable.battery_n_30);
+                }
+                else if(batteryStatus>=35 && batteryStatus<40){
+                    imgBattery.setImageResource(R.drawable.battery_n_35);
+                }
+                else if(batteryStatus>=40 && batteryStatus<45){
+                    imgBattery.setImageResource(R.drawable.battery_n_40);
+                }
+                else if(batteryStatus>=45 && batteryStatus<50){
+                    imgBattery.setImageResource(R.drawable.battery_n_45);
+                }
+                else if(batteryStatus>=50 && batteryStatus<55){
+                    imgBattery.setImageResource(R.drawable.battery_n_50);
+                }
+                else if(batteryStatus>=55 && batteryStatus<60){
+                    imgBattery.setImageResource(R.drawable.battery_n_55);
+                }
+                else if(batteryStatus>=60 && batteryStatus<65){
+                    imgBattery.setImageResource(R.drawable.battery_n_60);
+                }
+                else if(batteryStatus>=65 && batteryStatus<70){
+                    imgBattery.setImageResource(R.drawable.battery_n_65);
+                }
+                else if(batteryStatus>=70 && batteryStatus<75){
+                    imgBattery.setImageResource(R.drawable.battery_n_70);
+                }
+                else if(batteryStatus>=75 && batteryStatus<80){
+                    imgBattery.setImageResource(R.drawable.battery_n_75);
+                }
+                else if(batteryStatus>=80 && batteryStatus<85){
+                    imgBattery.setImageResource(R.drawable.battery_n_80);
+                }
+                else if(batteryStatus>=85 && batteryStatus<90){
+                    imgBattery.setImageResource(R.drawable.battery_n_85);
+                }
+                else if(batteryStatus>=90 && batteryStatus<95){
+                    imgBattery.setImageResource(R.drawable.battery_n_90);
+                }
+                else if(batteryStatus>=95 && batteryStatus<100){
+                    imgBattery.setImageResource(R.drawable.battery_n_95);
+                }
+                else if(batteryStatus>=100){
+                    imgBattery.setImageResource(R.drawable.battery_n_100);
+                }
+                else{
+                    imgBattery.setImageResource(R.drawable.battery_n_50);
+                }
+            }
+            else{
+                Log.d(TAG,"Charging Status not identify");
+            }
+        }
+    }
 }
