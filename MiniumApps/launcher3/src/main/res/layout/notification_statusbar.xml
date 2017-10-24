@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -102,7 +100,6 @@
             android:layout_alignParentTop="true"
             android:layout_below="@+id/topmost"
             android:layout_marginBottom="50dp"
-            android:background="@android:color/transparent"
             android:orientation="vertical"
             tools:ignore="ContentDescription" />
 
@@ -111,7 +108,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="@color/white"
             android:orientation="vertical">
 
             <LinearLayout
@@ -120,174 +116,179 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp">
-
-                    <RelativeLayout
-                        android:id="@+id/relNotificationWifi"
-                        android:layout_width="0dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="@dimen/dp_10">
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
 
-                        <ImageView
-                            android:id="@+id/imgNotificationWifi"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/ic_signal_wifi_off_black_24dp"
-                            android:padding="@dimen/dp_15"
-                            tools:ignore="ContentDescription" />
-                    </RelativeLayout>
-
-
-                    <RelativeLayout
-                        android:id="@+id/relNotificationMobileData"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="@dimen/dp_10">
-
-                        <ImageView
-                            android:id="@+id/imgNotificationData"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/ic_data_on_black_24dp"
-                            android:padding="@dimen/dp_15"
-                            tools:ignore="ContentDescription" />
-                    </RelativeLayout>
-
-
-                    <RelativeLayout
-                        android:id="@+id/relNotificationBle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="@dimen/dp_10">
-
-                        <ImageView
-                            android:id="@+id/imgNotificationBle"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/ic_bluetooth_disabled_black_24dp"
+                        <RelativeLayout
+                            android:id="@+id/relNotificationWifi"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
-                            android:padding="@dimen/dp_15"
-                            tools:ignore="ContentDescription" />
-                    </RelativeLayout>
+                            android:padding="@dimen/dp_10">
 
-                    <RelativeLayout
-                        android:id="@+id/relNotificationDND"
-                        android:layout_width="0dp"
+                            <ImageView
+                                android:id="@+id/imgNotificationWifi"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/ic_signal_wifi_off_black_24dp"
+                                android:padding="@dimen/dp_15"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/relNotificationMobileData"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="@dimen/dp_10">
+
+                            <ImageView
+                                android:id="@+id/imgNotificationData"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/ic_data_on_black_24dp"
+                                android:padding="@dimen/dp_15"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/relNotificationBle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="@dimen/dp_10">
+
+                            <ImageView
+                                android:id="@+id/imgNotificationBle"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/ic_bluetooth_disabled_black_24dp"
+                                android:gravity="center"
+                                android:padding="@dimen/dp_15"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relNotificationDND"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="@dimen/dp_10">
+
+                            <ImageView
+                                android:id="@+id/imgNotificationDnd"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/ic_do_not_disturb_off_black_24dp"
+                                android:padding="@dimen/dp_15"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relNotificationAirPlane"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="@dimen/dp_10">
+
+                            <ImageView
+                                android:id="@+id/imgNotificationAirplane"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/ic_airplanemode_inactive_black_24dp"
+                                android:padding="@dimen/dp_15"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relNotificationFlash"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="@dimen/dp_10">
+
+                            <ImageView
+                                android:id="@+id/imgNotificationFlash"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/ic_flash_off_black_24dp"
+                                android:padding="@dimen/dp_15"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relNotificationBrightness"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:padding="@dimen/dp_10">
+
+                            <ImageView
+                                android:id="@+id/imgNotificationBrightness"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/ic_brightness_off_black_24dp"
+                                android:padding="@dimen/dp_15"
+                                tools:ignore="ContentDescription" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <SeekBar
+                        android:id="@+id/seekbarBrightness"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="@dimen/dp_10">
+                        android:paddingBottom="@dimen/dp_10"
+                        android:paddingTop="@dimen/dp_10"
+                        android:thumb="@drawable/ic_brightness_on_black_24dp"
+                        android:visibility="gone"
+                        tools:ignore="InefficientWeight" />
 
-                        <ImageView
-                            android:id="@+id/imgNotificationDnd"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/ic_do_not_disturb_off_black_24dp"
-                            android:padding="@dimen/dp_15"
-                            tools:ignore="ContentDescription" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/relNotificationAirPlane"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/textView_notification_title"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="@dimen/dp_10">
-
-                        <ImageView
-                            android:id="@+id/imgNotificationAirplane"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/ic_airplanemode_inactive_black_24dp"
-                            android:padding="@dimen/dp_15"
-                            tools:ignore="ContentDescription" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/relNotificationFlash"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="@dimen/dp_10">
-
-                        <ImageView
-                            android:id="@+id/imgNotificationFlash"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/ic_flash_off_black_24dp"
-                            android:padding="@dimen/dp_15"
-                            tools:ignore="ContentDescription" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/relNotificationBrightness"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:padding="@dimen/dp_10">
-
-                        <ImageView
-                            android:id="@+id/imgNotificationBrightness"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:background="@drawable/ic_brightness_off_black_24dp"
-                            android:padding="@dimen/dp_15"
-                            tools:ignore="ContentDescription" />
-                    </RelativeLayout>
-
+                        android:background="@color/white"
+                        android:fontFamily="sans-serif"
+                        android:paddingBottom="12dp"
+                        android:paddingLeft="18dp"
+                        android:paddingRight="18dp"
+                        android:text="@string/string_notification_title"
+                        android:textColor="#de000000"
+                        android:textSize="28sp" />
                 </LinearLayout>
 
-                <SeekBar
-                    android:id="@+id/seekbarBrightness"
-                    style="?android:attr/progressBarStyleHorizontal"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
-                    android:paddingBottom="@dimen/dp_10"
-                    android:paddingTop="@dimen/dp_10"
-                    android:thumb="@drawable/ic_brightness_on_black_24dp"
-                    android:visibility="gone"
-                    tools:ignore="InefficientWeight" />
-
-                <TextView
-                    android:id="@+id/textView_notification_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:fontFamily="sans-serif"
-                    android:paddingBottom="12dp"
-                    android:paddingLeft="18dp"
-                    android:paddingRight="18dp"
-                    android:text="@string/string_notification_title"
-                    android:textColor="#de000000"
-                    android:textSize="28sp" />
+                    android:background="@null"
+                    android:clipToPadding="false"
+                    android:visibility="visible" />
             </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:layout_gravity="center_horizontal"
-                android:background="@null"
-                android:clipToPadding="false"
-                android:visibility="visible" />
             <LinearLayout
                 android:id="@+id/linearClearAll"
                 android:layout_width="match_parent"
@@ -298,27 +299,28 @@
                 <TextView
                     android:id="@+id/txtHide"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/tranparent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="@drawable/tranparent"
                     tools:ignore="InefficientWeight" />
 
                 <TextView
                     android:id="@+id/txtClearAll"
-                    android:background="@drawable/tranparent"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:background="@drawable/tranparent"
                     android:gravity="center|right"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:textAllCaps="true"
-                    android:text="@string/clear_all" />
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:text="@string/clear_all"
+                    android:textAllCaps="true" />
             </LinearLayout>
             <TextView
                 android:id="@+id/emptyView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_10"
                 android:background="@color/white"
                 android:gravity="center"
                 android:padding="@dimen/dp_10"
@@ -329,7 +331,6 @@
                 android:textSize="@dimen/text.size.medium"
                 android:visibility="visible" />
         </LinearLayout>
-
     </RelativeLayout>
 
 

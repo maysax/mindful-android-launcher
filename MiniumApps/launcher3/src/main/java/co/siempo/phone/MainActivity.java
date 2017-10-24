@@ -165,7 +165,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         if (requestCode == 100) {
             if (isEnabled(MainActivity.this)) {
-
                 if (!isAccessibilitySettingsOn(this)) {
                     Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
                     Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
@@ -185,9 +184,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     // Show alert dialog to the user saying a separate permission is needed
                     // Launch the settings activity if the user prefers
-
                     if (!Settings.canDrawOverlays(this)) {
-
                         Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                         startActivityForResult(intent, 102);
@@ -208,10 +205,32 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, 102);
                 } else {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    ViewService_.intent(this).showMask().start();
-                    checkAppLoadFirstTime();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                        Intent intent = new Intent(
+                                android.provider.Settings
+                                        .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                        startActivityForResult(intent, 103);
+                    } else {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        ViewService_.intent(this).showMask().start();
+                        checkAppLoadFirstTime();
+                    }
                 }
+            }
+        }
+
+        if (requestCode == 103) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+                Intent intent = new Intent(
+                        android.provider.Settings
+                                .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                startActivityForResult(intent, 103);
+            } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                ViewService_.intent(this).showMask().start();
+                checkAppLoadFirstTime();
             }
         }
     }

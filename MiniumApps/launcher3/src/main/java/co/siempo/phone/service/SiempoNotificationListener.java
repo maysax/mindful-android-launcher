@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -86,16 +87,32 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 } else {
                     //cancelNotification(notification.getKey());
                     if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                                && !notificationManager.isNotificationPolicyAccessGranted()) {
+                        } else {
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        }
                         vibrationUtils.vibrate(500);
                     } else if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                                && !notificationManager.isNotificationPolicyAccessGranted()) {
+                        } else {
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        }
                     }
                 }
             } else if (launcherPrefs.getCurrentProfile().get() == 1) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                }
             } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                }
             }
         }
     }
