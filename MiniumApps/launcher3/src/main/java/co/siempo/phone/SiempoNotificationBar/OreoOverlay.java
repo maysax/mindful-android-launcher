@@ -26,6 +26,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -37,6 +38,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextClock;
@@ -137,8 +139,9 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
      */
 
     private RecyclerView recyclerView;
-    private TextView emptyView, textView_notification_title;
+    private TextView emptyView, txtClearAll, txtHide, textView_notification_title;
     private SeekBar seekbarBrightness;
+    LinearLayout linearClearAll;
     private int brightness;
     private RecyclerListAdapter adapter;
     private List<Notification> notificationList;
@@ -280,7 +283,10 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         seekbarBrightness = inflateLayout.findViewById(R.id.seekbarBrightness);
         recyclerView = inflateLayout.findViewById(R.id.recyclerView);
+        txtClearAll = inflateLayout.findViewById(R.id.txtClearAll);
+        txtHide = inflateLayout.findViewById(R.id.txtHide);
         emptyView = inflateLayout.findViewById(R.id.emptyView);
+        linearClearAll = inflateLayout.findViewById(R.id.linearClearAll);
         img_background = inflateLayout.findViewById(R.id.img_background);
         textView_notification_title = inflateLayout.findViewById(R.id.textView_notification_title);
         relWifi = inflateLayout.findViewById(R.id.relNotificationWifi);
@@ -297,8 +303,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         img_notification_Airplane = inflateLayout.findViewById(R.id.imgNotificationAirplane);
         img_notification_Flash = inflateLayout.findViewById(R.id.imgNotificationFlash);
         img_notification_Brightness = inflateLayout.findViewById(R.id.imgNotificationBrightness);
-        relWifi.setOnClickListener(this);
-        relBle.setOnClickListener(this);
         relMobileData.setOnClickListener(this);
         relDND.setOnClickListener(this);
         relAirPlane.setOnClickListener(this);
@@ -353,6 +357,9 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     public void object(Object object) {
 
     }
+
+
+
 
     @Subscribe
     public void updateTopBar(TopBarUpdateEvent event) {
@@ -429,7 +436,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 bindWiFiImage(level);
             }
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
-            if (imgBattery != null) imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
+            displayBatteryIcon(event.getValue(),event.getType());
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             /**
              * Update status bar network icon
@@ -498,14 +505,17 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     public void notificationSwipeEvent(NotificationSwipeEvent event) {
         try {
             if (event.isNotificationListNull()) {
+                notificationList.clear();
                 if (recyclerView != null) recyclerView.setVisibility(View.GONE);
                 if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+                if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
                 if (textView_notification_title != null)
                     textView_notification_title.setVisibility(View.GONE);
                 if (imgNotification != null) imgNotification.setVisibility(View.GONE);
             } else {
                 if (recyclerView != null) recyclerView.setVisibility(View.VISIBLE);
                 if (emptyView != null) emptyView.setVisibility(View.GONE);
+                if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
                 if (textView_notification_title != null)
                     textView_notification_title.setVisibility(View.VISIBLE);
             }
@@ -673,6 +683,22 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 hide();
             }
         });
+        txtClearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                deleteItem.deleteAll();
+                notificationList.clear();
+                adapter.notifyDataSetChanged();
+                EventBus.getDefault().post(new NotificationSwipeEvent(true));
+            }
+        });
+        txtHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide();
+            }
+        });
         img_background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -735,7 +761,80 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         bleSignal = new BleSignal();
         context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         statusOfQuickSettings();
+        relWifi.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gdWifi.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
+        relBle.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gdBle.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
     }
+
+    /**
+     * Touch listener for the wifi to detect double tap and single tap
+     */
+    final GestureDetector gdWifi = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            hide();
+            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            seekbarBrightness.setVisibility(View.GONE);
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
+            turnOnOffWIFI();
+            return super.onSingleTapConfirmed(e);
+        }
+
+    });
+
+    /**
+     * Touch listener for the BLE to detect double tap and single tap
+     */
+    final GestureDetector gdBle = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            hide();
+            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        }
+
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            seekbarBrightness.setVisibility(View.GONE);
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
+            if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                BluetoothAdapter.getDefaultAdapter().disable();
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
+            } else {
+                if (BluetoothAdapter.getDefaultAdapter() != null) {
+                    BluetoothAdapter.getDefaultAdapter().enable();
+                }
+                relBle.setEnabled(false);
+                img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+
+    });
 
 
     private void bindBrightnessControl() {
@@ -911,16 +1010,17 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                         tableNotificationSms.getTopTableNotificationSmsDao().get_message(), time, false, tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type());
                 notificationList.add(0, n);
                 adapter.notifyDataSetChanged();
-
                 if (notificationList.size() == 0) {
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
+                    if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
                     textView_notification_title.setVisibility(View.GONE);
                     imgNotification.setVisibility(View.GONE);
                 } else {
                     adapter.notifyDataSetChanged();
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
+                    if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
                     textView_notification_title.setVisibility(View.VISIBLE);
                     imgNotification.setVisibility(View.VISIBLE);
                 }
@@ -958,15 +1058,16 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
             textView_notification_title.setVisibility(View.GONE);
+            if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
             imgNotification.setVisibility(View.GONE);
         } else {
             adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
+            if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
             textView_notification_title.setVisibility(View.VISIBLE);
             imgNotification.setVisibility(View.VISIBLE);
         }
-
 
     }
 
@@ -1294,4 +1395,147 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         return true;
     }
 
+    public void displayBatteryIcon(int batteryStatus,String isCharging){
+        if(imgBattery != null){
+            if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")){
+                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+                    imgBattery.setImageResource(R.drawable.battery_alert);
+                }
+                else if(batteryStatus>=5 && batteryStatus<10){
+                    imgBattery.setImageResource(R.drawable.battery_c_05);
+                }
+                else if(batteryStatus>=10 && batteryStatus<15){
+                    imgBattery.setImageResource(R.drawable.battery_c_10);
+                }
+                else if(batteryStatus>=15 && batteryStatus<20){
+                    imgBattery.setImageResource(R.drawable.battery_c_15);
+                }
+                else if(batteryStatus>=20 && batteryStatus<25){
+                    imgBattery.setImageResource(R.drawable.battery_c_20);
+                }
+                else if(batteryStatus>=25 && batteryStatus<30){
+                    imgBattery.setImageResource(R.drawable.battery_c_25);
+                }
+                else if(batteryStatus>=30 && batteryStatus<35){
+                    imgBattery.setImageResource(R.drawable.battery_c_30);
+                }
+                else if(batteryStatus>=35 && batteryStatus<40){
+                    imgBattery.setImageResource(R.drawable.battery_c_35);
+                }
+                else if(batteryStatus>=40 && batteryStatus<45){
+                    imgBattery.setImageResource(R.drawable.battery_c_40);
+                }
+                else if(batteryStatus>=45 && batteryStatus<50){
+                    imgBattery.setImageResource(R.drawable.battery_c_45);
+                }
+                else if(batteryStatus>=50 && batteryStatus<55){
+                    imgBattery.setImageResource(R.drawable.battery_c_50);
+                }
+                else if(batteryStatus>=55 && batteryStatus<60){
+                    imgBattery.setImageResource(R.drawable.battery_c_55);
+                }
+                else if(batteryStatus>=60 && batteryStatus<65){
+                    imgBattery.setImageResource(R.drawable.battery_c_60);
+                }
+                else if(batteryStatus>=65 && batteryStatus<70){
+                    imgBattery.setImageResource(R.drawable.battery_c_65);
+                }
+                else if(batteryStatus>=70 && batteryStatus<75){
+                    imgBattery.setImageResource(R.drawable.battery_c_70);
+                }
+                else if(batteryStatus>=75 && batteryStatus<80){
+                    imgBattery.setImageResource(R.drawable.battery_c_75);
+                }
+                else if(batteryStatus>=80 && batteryStatus<85){
+                    imgBattery.setImageResource(R.drawable.battery_c_80);
+                }
+                else if(batteryStatus>=85 && batteryStatus<90){
+                    imgBattery.setImageResource(R.drawable.battery_c_85);
+                }
+                else if(batteryStatus>=90 && batteryStatus<95){
+                    imgBattery.setImageResource(R.drawable.battery_c_90);
+                }
+                else if(batteryStatus>=95 && batteryStatus<100){
+                    imgBattery.setImageResource(R.drawable.battery_c_95);
+                }
+                else if(batteryStatus>=100){
+                    imgBattery.setImageResource(R.drawable.battery_c_100);
+                }
+                else{
+                    imgBattery.setImageResource(R.drawable.battery_c_50);
+                }
+            }
+            else if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("OFF")){
+                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+                    imgBattery.setImageResource(R.drawable.battery_alert);
+                }
+                else if(batteryStatus>=5 && batteryStatus<10){
+                    imgBattery.setImageResource(R.drawable.battery_n_05);
+                }
+                else if(batteryStatus>=10 && batteryStatus<15){
+                    imgBattery.setImageResource(R.drawable.battery_n_10);
+                }
+                else if(batteryStatus>=15 && batteryStatus<20){
+                    imgBattery.setImageResource(R.drawable.battery_n_15);
+                }
+                else if(batteryStatus>=20 && batteryStatus<25){
+                    imgBattery.setImageResource(R.drawable.battery_n_20);
+                }
+                else if(batteryStatus>=25 && batteryStatus<30){
+                    imgBattery.setImageResource(R.drawable.battery_n_25);
+                }
+                else if(batteryStatus>=30 && batteryStatus<35){
+                    imgBattery.setImageResource(R.drawable.battery_n_30);
+                }
+                else if(batteryStatus>=35 && batteryStatus<40){
+                    imgBattery.setImageResource(R.drawable.battery_n_35);
+                }
+                else if(batteryStatus>=40 && batteryStatus<45){
+                    imgBattery.setImageResource(R.drawable.battery_n_40);
+                }
+                else if(batteryStatus>=45 && batteryStatus<50){
+                    imgBattery.setImageResource(R.drawable.battery_n_45);
+                }
+                else if(batteryStatus>=50 && batteryStatus<55){
+                    imgBattery.setImageResource(R.drawable.battery_n_50);
+                }
+                else if(batteryStatus>=55 && batteryStatus<60){
+                    imgBattery.setImageResource(R.drawable.battery_n_55);
+                }
+                else if(batteryStatus>=60 && batteryStatus<65){
+                    imgBattery.setImageResource(R.drawable.battery_n_60);
+                }
+                else if(batteryStatus>=65 && batteryStatus<70){
+                    imgBattery.setImageResource(R.drawable.battery_n_65);
+                }
+                else if(batteryStatus>=70 && batteryStatus<75){
+                    imgBattery.setImageResource(R.drawable.battery_n_70);
+                }
+                else if(batteryStatus>=75 && batteryStatus<80){
+                    imgBattery.setImageResource(R.drawable.battery_n_75);
+                }
+                else if(batteryStatus>=80 && batteryStatus<85){
+                    imgBattery.setImageResource(R.drawable.battery_n_80);
+                }
+                else if(batteryStatus>=85 && batteryStatus<90){
+                    imgBattery.setImageResource(R.drawable.battery_n_85);
+                }
+                else if(batteryStatus>=90 && batteryStatus<95){
+                    imgBattery.setImageResource(R.drawable.battery_n_90);
+                }
+                else if(batteryStatus>=95 && batteryStatus<100){
+                    imgBattery.setImageResource(R.drawable.battery_n_95);
+                }
+                else if(batteryStatus>=100){
+                    imgBattery.setImageResource(R.drawable.battery_n_100);
+                }
+                else{
+                    imgBattery.setImageResource(R.drawable.battery_n_50);
+                }
+            }
+            else{
+                Log.d(TAG,"Charging Status not identify");
+            }
+        }
+    }
 }

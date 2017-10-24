@@ -21,7 +21,6 @@ import org.androidannotations.annotations.SystemService;
  * A service is use to creating the view and hide/show it.
  *
  */
-@SuppressLint("Registered")
 @EIntentService
 public class ViewService extends IntentService {
 

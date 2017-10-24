@@ -30,7 +30,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static Date callStartTime;
     private static boolean isIncoming;
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
-
+    private static final String TAG="PhonecallReceiver";
     int currentProfile = -1;
     AudioManager audioManager;
     NotificationManager notificationManager;
@@ -47,7 +47,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
         currentProfile = sharedPref.getInt("getCurrentProfile", 0);
 
         if (intent != null) {
-            Log.d("Raja", "Raja" + intent.getAction() + currentProfile);
+            Log.d(TAG, "Phone Call Receiver :: "+intent.getAction() + currentProfile);
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
