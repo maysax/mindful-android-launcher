@@ -2,10 +2,13 @@ package minium.co.core.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -20,6 +23,8 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.UserManager;
 import android.os.Vibrator;
+import android.provider.AlarmClock;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -32,6 +37,9 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+
+import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,6 +69,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * <p>
  * Created by shahab on 3/17/16.
  */
+
 public abstract class CoreApplication extends MultiDexApplication {
 
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "CoreApplication";
@@ -76,13 +85,29 @@ public abstract class CoreApplication extends MultiDexApplication {
     UserManager userManager;
     LauncherApps launcherApps;
 
+
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
     Handler handler;
+    // include the vibration pattern when call ringing
+    private Vibrator vibrator;
+    long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
 
+    SharedPreferences sharedPref;
     private ArrayList<String> silentList = new ArrayList<>();
     private ArrayList<String> vibrateList = new ArrayList<>();
     private ArrayList<String> normalModeList = new ArrayList<>();
+    private ArrayList<ResolveInfo> callPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> messagePackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> calenderPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> contactPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> mapPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> photosPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> cameraPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> browserPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> clockPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> emailPackageList = new ArrayList<>();
+
 
     public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
         this.mMediaPlayer = mMediaPlayer;
@@ -103,13 +128,91 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.vibrator = vibrator;
     }
 
-    // include the vibration pattern when call ringing
-    private Vibrator vibrator;
-    long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
+
+    public ArrayList<ResolveInfo> getCallPackageList() {
+        return callPackageList;
+    }
+
+    public void setCallPackageList(ArrayList<ResolveInfo> callPackageList) {
+        this.callPackageList = callPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getMessagePackageList() {
+        return messagePackageList;
+    }
+
+    public void setMessagePackageList(ArrayList<ResolveInfo> messagePackageList) {
+        this.messagePackageList = messagePackageList;
+    }
+
+    public ArrayList<ResolveInfo> getCalenderPackageList() {
+        return calenderPackageList;
+    }
+
+    public void setCalenderPackageList(ArrayList<ResolveInfo> calenderPackageList) {
+        this.calenderPackageList = calenderPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getContactPackageList() {
+        return contactPackageList;
+    }
+
+    public void setContactPackageList(ArrayList<ResolveInfo> contactPackageList) {
+        this.contactPackageList = contactPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getMapPackageList() {
+        return mapPackageList;
+    }
+
+    public void setMapPackageList(ArrayList<ResolveInfo> mapPackageList) {
+        this.mapPackageList = mapPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getPhotosPackageList() {
+        return photosPackageList;
+    }
+
+    public void setPhotosPackageList(ArrayList<ResolveInfo> photosPackageList) {
+        this.photosPackageList = photosPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getCameraPackageList() {
+        return cameraPackageList;
+    }
+
+    public void setCameraPackageList(ArrayList<ResolveInfo> cameraPackageList) {
+        this.cameraPackageList = cameraPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getBrowserPackageList() {
+        return browserPackageList;
+    }
+
+    public void setBrowserPackageList(ArrayList<ResolveInfo> browserPackageList) {
+        this.browserPackageList = browserPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getClockPackageList() {
+        return clockPackageList;
+    }
+
+    public void setClockPackageList(ArrayList<ResolveInfo> clockPackageList) {
+        this.clockPackageList = clockPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getEmailPackageList() {
+        return emailPackageList;
+    }
+
+    public void setEmailPackageList(ArrayList<ResolveInfo> emailPackageList) {
+        this.emailPackageList = emailPackageList;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        sharedPref = getSharedPreferences("DroidPrefs", 0);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -122,6 +225,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         sInstance = this;
         init();
         getAllApplicationPackageName();
+
 
     }
 
@@ -138,7 +242,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-        configFabric();
+        //configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();
@@ -203,9 +307,11 @@ public abstract class CoreApplication extends MultiDexApplication {
      * @return application name
      */
     public String getApplicationNameFromPackageName(String packagename) {
-        for (ApplicationInfo applicationInfo : getPackagesList()) {
-            if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
-                return applicationInfo.name;
+        if (packagename != null && !packagename.equalsIgnoreCase("")) {
+            for (ApplicationInfo applicationInfo : getPackagesList()) {
+                if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
+                    return applicationInfo.name;
+                }
             }
         }
         return "";
@@ -297,7 +403,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
 
         private List<ApplicationInfo> checkForLaunchIntent(List<ApplicationInfo> list) {
-            ArrayList<ApplicationInfo> applist = new ArrayList<ApplicationInfo>();
+            ArrayList<ApplicationInfo> applist = new ArrayList<>();
             for (ApplicationInfo info : list) {
                 try {
                     if (null != getPackageManager().getLaunchIntentForPackage(info.packageName) && isSystemPackage(info)) {
@@ -315,8 +421,8 @@ public abstract class CoreApplication extends MultiDexApplication {
             return ((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
         }
 
-        public Bitmap drawableToBitmap(Drawable drawable) {
-            Bitmap bitmap = null;
+        Bitmap drawableToBitmap(Drawable drawable) {
+            Bitmap bitmap;
 
             if (drawable instanceof BitmapDrawable) {
                 BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
@@ -357,6 +463,150 @@ public abstract class CoreApplication extends MultiDexApplication {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * get all default Call application package name
+     */
+    public String getCallPackageName() {
+        Uri number = Uri.parse("tel:");
+        Intent dial = new Intent(Intent.ACTION_DIAL, number);
+        getCallPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
+        for (ResolveInfo res : getCallPackageList()) {
+            Log.d("Default App Name", "Call : " + res.activityInfo.name  + " :"+ res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+
+    /**
+     * get all default message application package name
+     */
+    public String getMessagePackageName() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
+        intent.putExtra("sms_body", "Test text...");
+        getMessagePackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getMessagePackageList()) {
+            Log.d("Default App Name", "Message : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default Calender application package name
+     */
+    public String getCalenderPackageName() {
+        Intent dial = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/"));
+        getCalenderPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
+        for (ResolveInfo res : getCalenderPackageList()) {
+            Log.d("Default App Name", "Calender : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+
+    /**
+     * get all default Contact application package name
+     */
+    public String getContactPackageName() {
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        getContactPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getContactPackageList()) {
+            Log.d("Default App Name", "Contact : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default Contact application package name
+     */
+    public String getMapPackageName() {
+        Double myLatitude = 44.433106;
+        Double myLongitude = 26.103687;
+        String labelLocation = "Jorgesys @ Bucharest";
+        String urlAddress = "http://maps.google.com/maps?q=" + myLatitude + "," + myLongitude + "(" + labelLocation + ")&iwloc=A&hl=es";
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
+        getMapPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getMapPackageList()) {
+            Log.d("Default App Name", "Map : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default Contact application package name
+     */
+    public String getPhotosPackageName() {
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/* video/*");
+        getPhotosPackageList().addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
+        for (ResolveInfo res : getPhotosPackageList()) {
+            Log.d("Default App Name", "Photos : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+
+    /**
+     * get all default Contact application package name
+     */
+    public String getCameraPackageName() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        getCameraPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getCameraPackageList()) {
+            Log.d("Default App Name", "Camera : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all Browser application package name
+     */
+    public String getBrowserPackageName() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
+        getBrowserPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getBrowserPackageList()) {
+            Log.d("Default App Name", "Browser : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all Clock application package name
+     */
+    public String getClockPackageName() {
+        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+        getClockPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getClockPackageList()) {
+            Log.d("Default App Name", "Clock : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+
+    /**
+     * get all Mail application package name
+     */
+    public String getMailPackageName() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
+        intent.setData(data);
+        getEmailPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getEmailPackageList()) {
+            Log.d("Default App Name", "Mail : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
     }
 
 

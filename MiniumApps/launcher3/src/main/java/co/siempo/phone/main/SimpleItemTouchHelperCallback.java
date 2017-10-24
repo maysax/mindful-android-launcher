@@ -16,6 +16,7 @@
 
 package co.siempo.phone.main;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -26,6 +27,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import co.siempo.phone.R;
+import co.siempo.phone.old.OldMenuFragment;
 import minium.co.core.util.UIUtils;
 
 /**
@@ -38,15 +40,21 @@ import minium.co.core.util.UIUtils;
  */
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    public static final float ALPHA_FULL = 1.0f;
+    private static final float ALPHA_FULL = 1.0f;
 
     private final ItemTouchHelperAdapter mAdapter;
+    private OldMenuFragment oldMenuFragment = null;
 
-    private final Context mContext;
+    private Context mContext = null;
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, Context context) {
         mAdapter = adapter;
         mContext = context;
+    }
+
+    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, OldMenuFragment oldMenuFragment) {
+        mAdapter = adapter;
+        this.oldMenuFragment = oldMenuFragment;
     }
 
     @Override
@@ -65,11 +73,19 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = 0;
-            return makeMovementFlags(dragFlags, swipeFlags);
+            if (oldMenuFragment == null) {
+                return makeMovementFlags(dragFlags, swipeFlags);
+            } else {
+                return makeMovementFlags(dragFlags, 0);
+            }
         } else {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
             final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-            return makeMovementFlags(dragFlags, swipeFlags);
+            if (oldMenuFragment == null) {
+                return makeMovementFlags(dragFlags, swipeFlags);
+            } else {
+                return makeMovementFlags(dragFlags, 0);
+            }
         }
     }
 

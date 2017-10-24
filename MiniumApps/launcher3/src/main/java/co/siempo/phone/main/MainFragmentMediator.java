@@ -123,7 +123,9 @@ class MainFragmentMediator {
     }
 
     void listItemClicked(TokenRouter router, int position) {
-        MainListItemType type = getAdapter().getItem(position).getItemType();
+        MainListItemType type;
+        type = getAdapter().getItem(position).getItemType();
+        if(type!=null)
         switch (type) {
             case CONTACT:
                 router.contactPicked((ContactListItem) getAdapter().getItem(position));
@@ -134,7 +136,7 @@ class MainFragmentMediator {
                     new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                 } else {
                     UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
-                    new ActivityHelper(fragment.getActivity()).openGMape(getAdapter().getItem(position).getApplicationInfo().packageName);
+                    new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
                     MainActivity.isTextLenghGreater = "";
                 }
                 break;

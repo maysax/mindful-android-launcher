@@ -16,9 +16,21 @@ public class Constants {
     public static final String SETTINGS_APP_PACKAGE = "com.android.settings";
 
     public static final int DEFAULT_TEMPO_MINUTE = 15;
-    public static final String[] CALL_APP_PACKAGES = new String[]{"com.google.android.dialer","com.android.dialer"};
+    public static final String[] CALL_APP_PACKAGES = new String[]{"com.google.android.dialer", "com.android.dialer"};
     public static final String[] CALENDAR_APP_PACKAGES = new String[]{"com.google.android.calendar"};
-    public static final String[] CLOCK_APP_PACKAGES = new String[]{"com.google.android.deskclock","com.asus.deskclock","com.sonyericsson.organizer","com.sonyericsson.organizer.Organizer_WorldClock",
-    "com.sec.android.app.clockpackage","com.motorola.blur.alarmclock.AlarmClock","com.android.deskclock.DeskClock","com.android.deskclock",
-    "com.htc.android.worldclock","com.htc.android.worldclock.WorldClockTabControl"};
+    public static final String[] CLOCK_APP_PACKAGES = new String[]{"com.google.android.deskclock", "com.asus.deskclock", "com.sonyericsson.organizer", "com.sonyericsson.organizer.Organizer_WorldClock",
+            "com.sec.android.app.clockpackage", "com.motorola.blur.alarmclock.AlarmClock", "com.android.deskclock.DeskClock", "com.android.deskclock",
+            "com.htc.android.worldclock", "com.htc.android.worldclock.WorldClockTabControl"};
+
+
+    public static final int CALL_PACKAGE = 2;
+    public static final int MESSAGE_PACKAGE = 1;
+    public static final int CALENDER_PACKAGE = 20;
+    public static final int CONTACT_PACKAGE = 3;
+    public static final int MAP_PACKAGE = 11;
+    public static final int PHOTOS_PACKAGE = 22;
+    public static final int CAMERA_PACKAGE = 23;
+    public static final int BROWSER_PACKAGE = 24;
+    public static final int CLOCK_PACKAGE = 21;
+    public static final int EMAIL_PACKAGE = 16;
 }

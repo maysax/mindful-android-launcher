@@ -25,6 +25,7 @@
     <string name="title.defaultLauncher">Switch Home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
     <string name="title.version">Version: %1$s</string>
+    <string name="title.defaultapp">Assign Default App</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
@@ -53,6 +54,7 @@
     <string name="msg_siempo_active_text">Siempo is running</string>
     <string name="title_photos">Photos</string>
     <string name="title_camera">Camera</string>
+    <string name="title_browser">Browser</string>
     <string name="msg.notificationEmpty">Nothing new. Feel free to take a breath and look at your surroundings.</string>
     <string name="nointernetconnection">No internet connection available</string>
 
@@ -198,4 +200,10 @@
     <string name="msg_noti_service_force_dialog">Siempo Notification service is not enabled.It\'s required to use app features.</string>
     <string name="msg_overlay_settings">Siempo needs overlay permission enabled mandatorily.</string>
     <string name="icon.ble">&#xf1fe;</string>
+    <string name="msg_no_more_application">No other option.</string>
+    <string name="open_with">Open With</string>
+    <string name="just_once">Just Once</string>
+    <string name="always">Always</string>
+    <string name="okay">Okay</string>
+    <string name="default_apps">Default Apps</string>
 </resources>
