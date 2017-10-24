@@ -28,18 +28,19 @@
     </Preference>
 
     <Preference
-        android:title="@string/pref_battery"
-        android:key="@string/key_battery"></Preference>
+        android:key="@string/key_battery"
+        android:title="@string/pref_battery"></Preference>
 
     <Preference
-        android:title="@string/pref_memory"
-        android:key="@string/key_memory"></Preference>
+        android:key="@string/key_memory"
+        android:title="@string/pref_memory"></Preference>
 
     <Preference android:title="@string/pref_users">
         <intent android:action="android.settings.USER_SETTINGS" />
     </Preference>
 
-    <Preference android:title="@string/pref_tap_pay">
+    <Preference android:title="@string/pref_tap_pay"
+        android:key="@string/key_tap_pay">
         <intent android:action="android.settings.NFC_PAYMENT_SETTINGS" />
     </Preference>
 

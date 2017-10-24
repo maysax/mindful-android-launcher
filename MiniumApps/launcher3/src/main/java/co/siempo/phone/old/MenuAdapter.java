@@ -1,7 +1,6 @@
 package co.siempo.phone.old;
 
 import android.app.Activity;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,11 +36,20 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
     private OnCustomerListChangedListener mListChangedListener;
     private Launcher3Prefs_ prefs;
     private DroidPrefs_ droidPrefs_;
+    static RecyclerView activity_grid_view;
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         if (arrayList != null && arrayList.size() > 0) {
-            Collections.swap(arrayList, fromPosition, toPosition);
+            if (fromPosition < toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(arrayList, i, i + 1);
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(arrayList, i, i - 1);
+                }
+            }
             mListChangedListener.onNoteListChanged(arrayList);
             notifyItemMoved(fromPosition, toPosition);
         }
@@ -55,12 +63,13 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    MenuAdapter(Activity context, Launcher3Prefs_ prefs, DroidPrefs_ droidPrefs_, List<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
+    MenuAdapter(Activity context, RecyclerView activity_grid_view, Launcher3Prefs_ prefs, DroidPrefs_ droidPrefs_, List<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
                 OnCustomerListChangedListener listChangedListener) {
         this.context = context;
         this.arrayList = arrayList;
         this.isGrid = isGrid;
         this.prefs = prefs;
+        this.activity_grid_view = activity_grid_view;
         this.droidPrefs_ = droidPrefs_;
         mDragStartListener = dragListener;
         mListChangedListener = listChangedListener;
@@ -109,6 +118,8 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
             public boolean onTouch(View v, MotionEvent event) {
                 if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
                     mDragStartListener.onStartDrag(holder);
+                } else if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_UP) {
+
                 }
                 return false;
             }
@@ -174,6 +185,11 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         @Override
         public void onItemClear() {
 //            itemView.setBackgroundColor(0);
+            try {
+                activity_grid_view.getAdapter().notifyDataSetChanged();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
     }

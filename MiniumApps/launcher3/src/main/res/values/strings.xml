@@ -161,6 +161,7 @@
     <string name="pref_users">Users</string>
     <string name="pref_tap_pay">Tap and Pay</string>
     <string name="key_battery">key_battery</string>
+    <string name="key_tap_pay">key_tap_pay</string>
     <string name="key_memory">key_process_usage</string>
     <string name="personal_settings_key">key_personal</string>
     <string name="personal_settings_summary">Personal Settings</string>
@@ -199,7 +200,7 @@
     <string name="msg_noti_service_force_dialog">Siempo Notification service is not enabled.It\'s required to use app features.</string>
     <string name="msg_overlay_settings">Siempo needs overlay permission enabled mandatorily.</string>
     <string name="icon.ble">&#xf1fe;</string>
-    <string name="msg_no_more_application">Not found,similar application.</string>
+    <string name="msg_no_more_application">No other option.</string>
     <string name="open_with">Open With</string>
     <string name="just_once">Just Once</string>
     <string name="always">Always</string>

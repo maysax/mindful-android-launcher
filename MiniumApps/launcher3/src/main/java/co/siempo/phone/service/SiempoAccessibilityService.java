@@ -25,8 +25,8 @@ import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CH
 public class SiempoAccessibilityService extends AccessibilityService {
 
     public static String packageName = "";
-    public static  String activityName = "";
-    private final String TAG="Accessibility";
+    public static String activityName = "";
+    private final String TAG = "Accessibility";
 
     AudioManager audioManager;
 
@@ -34,25 +34,27 @@ public class SiempoAccessibilityService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent event) {
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
         if (event.getEventType() == TYPE_WINDOW_STATE_CHANGED) {
-            ComponentName componentName = new ComponentName(event.getPackageName().toString(), event.getClassName().toString());
-            ActivityInfo activityInfo = getActivityInfo(componentName);
-            boolean isActivity = activityInfo != null;
-            if (isActivity) {
-                packageName = activityInfo.packageName;
-                activityName = componentName.flattenToShortString();
-            }
-            Log.d(TAG,"Packag eName::"+packageName);
-            Log.d(TAG,"Activity name::"+activityName);
-            if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.canDrawOverlays(this)) {
+            if (event != null && event.getPackageName() != null && event.getClass() != null) {
+                ComponentName componentName = new ComponentName(event.getPackageName().toString(), event.getClassName().toString());
+                ActivityInfo activityInfo = getActivityInfo(componentName);
+                boolean isActivity = activityInfo != null;
+                if (isActivity) {
+                    packageName = activityInfo.packageName;
+                    activityName = componentName.flattenToShortString();
+                }
+                Log.d(TAG, "Packag eName::" + packageName);
+                Log.d(TAG, "Activity name::" + activityName);
+                if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.canDrawOverlays(this)) {
 
+                        siempoNotificationBarStatus();
+                    }
+                } else {
                     siempoNotificationBarStatus();
                 }
-            } else {
-                siempoNotificationBarStatus();
             }
 
         }

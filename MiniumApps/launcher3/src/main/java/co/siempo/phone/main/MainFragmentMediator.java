@@ -1,6 +1,8 @@
 package co.siempo.phone.main;
 
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.net.Uri;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
 import co.siempo.phone.token.TokenItemType;
+import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
@@ -104,7 +107,8 @@ class MainFragmentMediator {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
                 items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
                 items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
-            }
+                 items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
+             }
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -138,7 +142,6 @@ class MainFragmentMediator {
                 break;
             case DEFAULT:
                 position = getAdapter().getItem(position).getId();
-
                 switch (position) {
                     case 1:
                         router.sendText(fragment.getActivity());
@@ -161,8 +164,19 @@ class MainFragmentMediator {
                 }
                 break;
             case NUMBERS:
-                router.contactNumberPicked(getAdapter().getItem(position));
-                break;
+                position = getAdapter().getItem(position).getId();
+                if(position == 4){
+                    try {
+                        fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +  TokenManager.getInstance().getCurrent().getExtra2())));
+                        MainActivity.isTextLenghGreater = "";
+                        EventBus.getDefault().post(new SendSmsEvent(true,"",""));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
+                }
         }
     }
 

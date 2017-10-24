@@ -125,11 +125,7 @@ public class MainListItemLoader {
             case 1:// Message
                 if (context instanceof MainActivity) {
                     if (!((MainActivity) context).prefs.isMessageClicked().get()) {
-//                        if (CoreApplication.getInstance().getMessagePackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, false);
-//                        } else {
-//                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
-//                        }
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, false);
                     } else {
                         new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
                     }
@@ -144,11 +140,7 @@ public class MainListItemLoader {
             case 2:// Call
                 if (context instanceof MainActivity) {
                     if (!((MainActivity) context).prefs.isCallClicked().get()) {
-//                        if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
-//                        } else {
-//                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
-//                        }
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
                     } else {
                         new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.callPackage().get());
                     }
@@ -223,11 +215,7 @@ public class MainListItemLoader {
             case 16:// Email
                 if (context instanceof MainActivity) {
                     if (!((MainActivity) context).prefs.isEmailClicked().get()) {
-//                        if (CoreApplication.getInstance().getEmailPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 16, false);
-//                        } else {
-//                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.emailPackage().get());
-//                        }
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 16, false);
                     } else {
                         new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.emailPackage().get());
                     }
