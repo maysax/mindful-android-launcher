@@ -169,21 +169,17 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         siempoNotificationBar = false;
         inflateLayout = inflate(context, R.layout.notification_statusbar, this);
         mWinManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        /**
-         * Register Event Bus to get updated status of Battery, WiFi, AirPlane Mode
-         */
+
+        //Register Event Bus to get updated status of Battery, WiFi, AirPlane Mode
         EventBus.getDefault().register(this);
 
-        /**
-         * StatusBar Methods to init components and update UI
-         */
+
+        //StatusBar Methods to init components and update UI
         context.startService(new Intent(context, StatusBarService.class));
         initStatusBarComponents();
 
 
-        /**
-         * Hide Notification if it is visible by press homepress key or Recent Button Key
-         */
+        //Hide Notification if it is visible by press homepress key or Recent Button Key
         HomeWatcher mHomeWatcher = new HomeWatcher(context);
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
@@ -221,8 +217,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         @Override
         public void onReceive(Context arg0, Intent intent) {
             Log.d("Test", "intent.getAction()" + intent.getAction());
-            if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
                 if (myKM.isKeyguardSecure()) {
                     hide();
@@ -239,11 +234,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      * Status Bar init components
      */
     private void initStatusBarComponents() {
-        /**
-         * Initialization of components
-         */
+
+        //Initialization of components
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
-        wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         imgNotification = inflateLayout.findViewById(R.id.imgNotification);
         imgTempo = inflateLayout.findViewById(R.id.imgTempo);
         imgBattery = inflateLayout.findViewById(R.id.imgBattery);
@@ -254,10 +248,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         layout_notification = inflateLayout.findViewById(R.id.layout_notification);
 
 
-        /**
-         * Register Airplane Mode, Wifi Receiver, Battery Reciever, Network Reciever
-         */
-
+        //Register Airplane Mode, Wifi Receiver, Battery Receiver, Network Receiver
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
         airplaneModeDataReceiver.register(context);
         wifiDataReceiver = new WifiDataReceiver();
@@ -272,10 +263,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
         updateStatusBarUI();
 
-
-        /**
-         * Initialization components of Siempo NotificationBar
-         */
+        //Initialization components of Siempo NotificationBar//
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -287,7 +275,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         linearClearAll = inflateLayout.findViewById(R.id.linearClearAll);
         img_background = inflateLayout.findViewById(R.id.img_background);
         textView_notification_title = inflateLayout.findViewById(R.id.textView_notification_title);
-        relWifi = inflateLayout.findViewById(R.id.relNotificationWifi);
+        relWifi = inflateLayout.findViewById(relNotificationWifi);
         relBle = inflateLayout.findViewById(R.id.relNotificationBle);
         relDND = inflateLayout.findViewById(R.id.relNotificationDND);
         relAirPlane = inflateLayout.findViewById(R.id.relNotificationAirPlane);
@@ -301,8 +289,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         img_notification_Airplane = inflateLayout.findViewById(R.id.imgNotificationAirplane);
         img_notification_Flash = inflateLayout.findViewById(R.id.imgNotificationFlash);
         img_notification_Brightness = inflateLayout.findViewById(R.id.imgNotificationBrightness);
-        relWifi.setOnClickListener(this);
-        relBle.setOnClickListener(this);
         relMobileData.setOnClickListener(this);
         relDND.setOnClickListener(this);
         relAirPlane.setOnClickListener(this);
@@ -345,6 +331,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
 
     }
+
 
     private class AudioChangeReceiver extends BroadcastReceiver {
         @Override
@@ -391,10 +378,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     public void onTempoEvent(TempoEvent event) {
         if (event.isStarting()) {
             imgTempo.setVisibility(View.VISIBLE);
-            launcherPrefs.edit().putBoolean("isTempoActive", true).commit();
+            launcherPrefs.edit().putBoolean("isTempoActive", true).apply();
         } else {
             imgTempo.setVisibility(View.GONE);
-            launcherPrefs.edit().putBoolean("isTempoActive", false).commit();
+            launcherPrefs.edit().putBoolean("isTempoActive", false).apply();
         }
     }
 
@@ -435,10 +422,8 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
                 displayBatteryIcon(event.getValue(),event.getType());
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
+            //Update status bar network icon
             imgSignal.setImageResource(getNetworkIcon(event.getValue()));
-            /**
-             * Update notification bar network icon
-             */
             if (!NetworkUtil.isAirplaneModeOn(context)) {
                 if (relMobileData != null) {
                     relMobileData.setEnabled(true);
@@ -742,8 +727,80 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         bleSignal = new BleSignal();
         context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         statusOfQuickSettings();
+        relWifi.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gdWifi.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
+        relBle.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gdBle.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
     }
 
+    /**
+     * Touch listener for the wifi to detect double tap and single tap
+     */
+    final GestureDetector gdWifi = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            hide();
+            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            seekbarBrightness.setVisibility(View.GONE);
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
+            turnOnOffWIFI();
+            return super.onSingleTapConfirmed(e);
+        }
+
+    });
+
+    /**
+     * Touch listener for the BLE to detect double tap and single tap
+     */
+    final GestureDetector gdBle = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            hide();
+            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        }
+
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            seekbarBrightness.setVisibility(View.GONE);
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
+            if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                BluetoothAdapter.getDefaultAdapter().disable();
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
+            } else {
+                if (BluetoothAdapter.getDefaultAdapter() != null) {
+                    BluetoothAdapter.getDefaultAdapter().enable();
+                }
+                relBle.setEnabled(false);
+                img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+
+    });
 
     private void bindBrightnessControl() {
         img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
@@ -923,6 +980,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     textView_notification_title.setVisibility(View.GONE);
                     imgNotification.setVisibility(View.GONE);
                 } else {
+                    checkClearAllExit();
                     adapter.notifyDataSetChanged();
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
@@ -969,6 +1027,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
             imgNotification.setVisibility(View.GONE);
         } else {
+            checkClearAllExit();
             adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
@@ -1120,26 +1179,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
-            case R.id.relNotificationWifi:
-                seekbarBrightness.setVisibility(View.GONE);
-                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                turnOnOffWIFI();
-                break;
-            case R.id.relNotificationBle:
-                seekbarBrightness.setVisibility(View.GONE);
-                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                    BluetoothAdapter.getDefaultAdapter().disable();
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
-                } else {
-                    if (BluetoothAdapter.getDefaultAdapter() != null) {
-                        BluetoothAdapter.getDefaultAdapter().enable();
-                    }
-                    relBle.setEnabled(false);
-                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
-                }
-                break;
             case R.id.relNotificationDND:
                 seekbarBrightness.setVisibility(View.GONE);
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
@@ -1197,7 +1236,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_on_black_24dp));
                     }
                 } else {
-                    Intent intent = null;
+                    Intent intent;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         hide();
                         intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
