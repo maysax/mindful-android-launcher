@@ -36,7 +36,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
     private OnCustomerListChangedListener mListChangedListener;
     private Launcher3Prefs_ prefs;
     private DroidPrefs_ droidPrefs_;
-    static RecyclerView activity_grid_view;
+    private static RecyclerView activity_grid_view;
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -124,13 +124,13 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         if (isGrid) {
             if (item != null) {
                 if (item.getId() == 2 && !droidPrefs_.isCallClickedFirstTime().get()) {
-                    holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
+                    holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
                 } else if (item.getId() == 1 && !droidPrefs_.isMessageClickedFirstTime().get()) {
-                    holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
+                    holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
                 } else if (item.getId() == 16 && !droidPrefs_.isEmailClickedFirstTime().get()) {
-                    holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
+                    holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
                 } else {
-                    holder.relMenu.setBackground(null);
+                    holder.imgView.setBackground(null);
                 }
             }
         } else {
@@ -158,7 +158,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
     static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
         // each data item is just a string in this case
-        ImageView icon;
+        ImageView icon,imgView;
         public View layout;
         TextView text, textDefaultApp;
         RelativeLayout relMenu;
@@ -172,6 +172,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
             text = v.findViewById(R.id.text);
             textDefaultApp = v.findViewById(R.id.textDefaultApp);
             icon = v.findViewById(R.id.icon);
+            imgView = v.findViewById(R.id.imgView);
         }
 
         @Override
