@@ -8,7 +8,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     lintOptions {
-        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware','TypographyFractions','TypographyQuotes'
+        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware','TypographyFractions','TypographyQuotes','InvalidPackage'
         ignoreWarnings true
     }
     defaultConfig {
