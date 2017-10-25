@@ -40,29 +40,29 @@ import minium.co.notes.R;
 import minium.co.notes.adapter.NoteAdapter;
 import minium.co.notes.evernote.EvernoteManager;
 
-import static minium.co.notes.utils.DataUtils.BACKUP_FILE_NAME;
-import static minium.co.notes.utils.DataUtils.BACKUP_FOLDER_PATH;
-import static minium.co.notes.utils.DataUtils.NEW_NOTE_REQUEST;
-import static minium.co.notes.utils.DataUtils.NOTES_FILE_NAME;
-import static minium.co.notes.utils.DataUtils.NOTE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_COLOUR;
-import static minium.co.notes.utils.DataUtils.NOTE_FAVOURED;
-import static minium.co.notes.utils.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.notes.utils.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_REQUEST_CODE;
-import static minium.co.notes.utils.DataUtils.NOTE_TITLE;
-import static minium.co.notes.utils.DataUtils.deleteNotes;
-import static minium.co.notes.utils.DataUtils.isExternalStorageReadable;
-import static minium.co.notes.utils.DataUtils.isExternalStorageWritable;
-import static minium.co.notes.utils.DataUtils.retrieveData;
-import static minium.co.notes.utils.DataUtils.saveData;
+import static minium.co.core.util.DataUtils.BACKUP_FILE_NAME;
+import static minium.co.core.util.DataUtils.BACKUP_FOLDER_PATH;
+import static minium.co.core.util.DataUtils.NEW_NOTE_REQUEST;
+import static minium.co.core.util.DataUtils.NOTES_FILE_NAME;
+import static minium.co.core.util.DataUtils.NOTE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_COLOUR;
+import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
+import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
+import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_REQUEST_CODE;
+import static minium.co.core.util.DataUtils.NOTE_TITLE;
+import static minium.co.core.util.DataUtils.deleteNotes;
+import static minium.co.core.util.DataUtils.isExternalStorageReadable;
+import static minium.co.core.util.DataUtils.isExternalStorageWritable;
+import static minium.co.core.util.DataUtils.retrieveData;
+import static minium.co.core.util.DataUtils.saveData;
 
 
 public class MainActivity extends CoreActivity implements AdapterView.OnItemClickListener,
         Toolbar.OnMenuItemClickListener, AbsListView.MultiChoiceModeListener,
         SearchView.OnQueryTextListener, EvernoteLoginFragment.ResultCallback {
 
-    private static File localPath, backupPath;
+//    private static File localPath, backupPath;
 
     // Layout components
     @SuppressLint("StaticFieldLeak")
@@ -77,7 +77,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     private static NoteAdapter adapter; // Custom ListView notes adapter
 
     // Array of selected positions for deletion
-    public static ArrayList<Integer> checkedArray = new ArrayList<Integer>();
+    public static ArrayList<Integer> checkedArray = new ArrayList<>();
     public static boolean deleteActive = false; // True if delete mode is active, false otherwise
 
     // For disabling long clicks, favourite clicks and modifying the item click pattern
@@ -129,10 +129,10 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         setContentView(R.layout.activity_main_notes);
 
         // Init layout components
-        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
-        listView = (ListView) findViewById(R.id.listView);
-        newNote = (FloatingActionButton) findViewById(R.id.fab);
-        noNotes = (TextView) findViewById(R.id.noNotes);
+        toolbar = findViewById(R.id.toolbarMain);
+        listView = findViewById(R.id.listView);
+        newNote = findViewById(R.id.fab);
+        noNotes = findViewById(R.id.noNotes);
 
         if (toolbar != null)
             initToolbar();
@@ -258,7 +258,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                                     listView.setLongClickable(false);
 
                                     // Init realIndexes array
-                                    realIndexesOfSearchResults = new ArrayList<Integer>();
+                                    realIndexesOfSearchResults = new ArrayList<>();
                                     for (int i = 0; i < notes.length(); i++)
                                         realIndexesOfSearchResults.add(i);
 
@@ -677,7 +677,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     // Selection ActionMode finished (delete mode ended)
     @Override
     public void onDestroyActionMode(ActionMode mode) {
-        checkedArray = new ArrayList<Integer>(); // Reset checkedArray
+        checkedArray = new ArrayList<>(); // Reset checkedArray
         deleteActive = false; // Set deleteActive to false as we finished delete mode
         newNoteButtonVisibility(true); // Show newNote button
         adapter.notifyDataSetChanged(); // Notify adapter to show favourite buttons
@@ -719,7 +719,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         if (s.length() > 0) {
             // Create new JSONArray and reset realIndexes array
             JSONArray notesFound = new JSONArray();
-            realIndexesOfSearchResults = new ArrayList<Integer>();
+            realIndexesOfSearchResults = new ArrayList<>();
 
             // Loop through main notes list
             for (int i = 0; i < notes.length(); i++) {
@@ -757,7 +757,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
         // If query text length is 0 -> re-init realIndexes array (0 to length) and reset adapter
         else {
-            realIndexesOfSearchResults = new ArrayList<Integer>();
+            realIndexesOfSearchResults = new ArrayList<>();
             for (int i = 0; i < notes.length(); i++)
                 realIndexesOfSearchResults.add(i);
 
@@ -887,7 +887,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                 }
             }
         } else if (resultCode == RESULT_CANCELED) {
-            Bundle mBundle = null;
+            Bundle mBundle;
 
             // If data is not null, has "request" extra and is new note -> get extras to bundle
             if (data != null && data.hasExtra("request") && requestCode == NEW_NOTE_REQUEST) {
@@ -899,6 +899,18 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                             getResources().getString(R.string.msg_emptyNoteDiscarded),
                             Toast.LENGTH_SHORT);
                     toast.show();
+                }
+                if (mBundle != null && mBundle.getString("request").equals("HOME")) {
+                    JSONArray tempNotes = retrieveData(localPath);
+
+                    Tracer.d("All notes: " + tempNotes);
+
+                    // If not null -> equal main notes to retrieved notes
+                    if (tempNotes != null) {
+                        notes = tempNotes;
+                        adapter.setAdapterData(notes);
+                        adapter.notifyDataSetChanged();
+                    }
                 }
             }
         }
@@ -1042,15 +1054,15 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     }
 
 
-    // Static method to return File at localPath
-    public static File getLocalPath() {
-        return localPath;
-    }
-
-    // Static method to return File at backupPath
-    public static File getBackupPath() {
-        return backupPath;
-    }
+//    // Static method to return File at localPath
+//    public static File getLocalPath() {
+//        return localPath;
+//    }
+//
+//    // Static method to return File at backupPath
+//    public static File getBackupPath() {
+//        return backupPath;
+//    }
 
     @Override
     public void onLoginFinished(boolean successful) {

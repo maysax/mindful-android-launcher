@@ -39,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.R;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.app.HomeWatcher;
 import minium.co.core.config.Config;
@@ -74,6 +75,19 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public WindowManager windowManager = null;
     private boolean isOnStopCalled = false;
     UserPresentBroadcastReceiver userPresentBroadcastReceiver;
+    public static File localPath, backupPath;
+    // Static method to return File at localPath
+    public static File getLocalPath() {
+        return localPath;
+    }
+
+    // Static method to return File at backupPath
+    public static File getBackupPath() {
+        return backupPath;
+    }
+
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,25 +110,25 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             @Override
             public void onHomePressed() {
                 UIUtils.hideSoftKeyboard(CoreActivity.this, getWindow().getDecorView().getWindowToken());
-                EventBus.getDefault().post(new HomePressEvent(true));
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                            if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
-                                loadDialog();
-                        } else {
-                            if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
-                                if (Settings.canDrawOverlays(CoreActivity.this)) {
+//                if (CoreApplication.getInstance().isEditNotOpen()) {
+//                    EventBus.getDefault().post(new HomePressEvent(true));
+//                } else {
+                    EventBus.getDefault().post(new HomePressEvent(true));
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                                if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
                                     loadDialog();
-                                }
+                            } else {
+                                if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
+                                    if (Settings.canDrawOverlays(CoreActivity.this)) {
+                                        loadDialog();
+                                    }
+                            }
                         }
-
-                    }
-                }, 1000);
-
-
+                    }, 1000);
+//                }
             }
 
             @Override
@@ -143,11 +157,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
                 if (mTestView != null && mTestView.getVisibility() == View.INVISIBLE) {
                     //if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
-                        Intent startMain = new Intent(Intent.ACTION_MAIN);
-                        startMain.addCategory(Intent.CATEGORY_HOME);
-                        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(startMain);
-                  //  }
+                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+                    startMain.addCategory(Intent.CATEGORY_HOME);
+                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(startMain);
+                    //  }
                     mTestView.setVisibility(View.VISIBLE);
                 } else {
                     if (mTestView != null)
@@ -166,8 +180,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 layoutParams = new WindowManager.LayoutParams(
                         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-            }
-            else{
+            } else {
                 //noinspection deprecation
                 layoutParams = new WindowManager.LayoutParams(
                         WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
@@ -219,12 +232,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     mTestView = null;
                 }
             });
-            if (android.os.Build.VERSION.SDK_INT >= 23)
-            {
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
                 if (Settings.canDrawOverlays(this)) {
                     windowManager.addView(mTestView, layoutParams);
                 }
-            }else{
+            } else {
                 windowManager.addView(mTestView, layoutParams);
             }
 
@@ -286,7 +298,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(userPresentBroadcastReceiver!=null){
+        if (userPresentBroadcastReceiver != null) {
             unregisterReceiver(userPresentBroadcastReceiver);
         }
     }

@@ -14,18 +14,15 @@ import android.telephony.SmsManager;
 import android.widget.Toast;
 
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 
-import co.siempo.phone.MainActivity;
-import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
-import minium.co.notes.utils.DataUtils;
+import minium.co.core.util.DataUtils;
 
 
 @EBean

@@ -95,7 +95,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
-    public enum ActivityState {
+    private enum ActivityState {
         AFTERVIEW,
         RESTART,
         ACTIVITY_RESULT,
@@ -588,7 +588,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void checknavigatePermissions() {
         if (!launcherPrefs.isAppInstalledFirstTime().get()) {
             Log.d(TAG, "Display upgrade dialog.");
-            checkUpgradeVersion();
+//            checkUpgradeVersion();
         }
 
 

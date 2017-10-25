@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,12 +25,12 @@ import static minium.co.notes.ui.MainActivity.checkedArray;
 import static minium.co.notes.ui.MainActivity.deleteActive;
 import static minium.co.notes.ui.MainActivity.searchActive;
 import static minium.co.notes.ui.MainActivity.setFavourite;
-import static minium.co.notes.utils.DataUtils.NOTE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_COLOUR;
-import static minium.co.notes.utils.DataUtils.NOTE_FAVOURED;
-import static minium.co.notes.utils.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.notes.utils.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_TITLE;
+import static minium.co.core.util.DataUtils.NOTE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_COLOUR;
+import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
+import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
+import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_TITLE;
 
 /**
  * Adapter class for custom notes ListView
@@ -89,11 +90,12 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
             convertView = this.inflater.inflate(R.layout.list_view_note, parent, false);
 
         // Initialize layout items
-        RelativeLayout relativeLayout = (RelativeLayout) convertView.findViewById(R.id.relativeLayout);
-        LayerDrawable roundedCard = (LayerDrawable) context.getResources().getDrawable(R.drawable.rounded_card);
-        TextView titleView = (TextView) convertView.findViewById(R.id.titleView);
-        TextView bodyView = (TextView) convertView.findViewById(R.id.bodyView);
-        ImageButton favourite = (ImageButton) convertView.findViewById(R.id.favourite);
+        RelativeLayout relativeLayout = convertView.findViewById(R.id.relativeLayout);
+
+        LayerDrawable roundedCard = (LayerDrawable) ContextCompat.getDrawable(context, R.drawable.rounded_card);
+        TextView titleView = convertView.findViewById(R.id.titleView);
+        TextView bodyView = convertView.findViewById(R.id.bodyView);
+        ImageButton favourite = convertView.findViewById(R.id.favourite);
 
         // Get Note object at position
         JSONObject noteObject = getItem(position);
@@ -102,7 +104,7 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
             // If noteObject not empty -> initialize variables
             String title = context.getString(R.string.label_title);
             String body = context.getString(R.string.label_note);
-            String colour = String.valueOf(context.getResources().getColor(R.color.white));
+            String colour = String.valueOf(ContextCompat.getColor(context, R.color.white));
             int fontSize = 18;
             Boolean hideBody = false;
             Boolean favoured = false;
@@ -157,7 +159,7 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
             // If current note is selected for deletion -> highlight
             if (checkedArray.contains(position)) {
                 ((GradientDrawable) roundedCard.findDrawableByLayerId(R.id.card))
-                        .setColor(context.getResources().getColor(R.color.colorPrimary));
+                        .setColor(ContextCompat.getColor(context, R.color.colorPrimary));
             }
 
             // If current note is not selected -> set background colour to normal
