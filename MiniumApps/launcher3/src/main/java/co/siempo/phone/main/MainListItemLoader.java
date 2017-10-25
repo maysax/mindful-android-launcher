@@ -49,7 +49,7 @@ public class MainListItemLoader {
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
         items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
         items.add(new MainListItem(23, getString(R.string.title_camera), "fa-camera"));
-        items.add(new MainListItem(24, getString(R.string.title_browser), "fa-globe"));
+        items.add(new MainListItem(24, getString(R.string.title_browser), "fa-hand-pointer-o"));
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
     }

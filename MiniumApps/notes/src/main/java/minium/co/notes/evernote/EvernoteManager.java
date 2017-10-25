@@ -18,8 +18,8 @@ import java.util.List;
 
 import minium.co.core.log.Tracer;
 
-import static minium.co.notes.utils.DataUtils.NOTE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_TITLE;
+import static minium.co.core.util.DataUtils.NOTE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_TITLE;
 
 /**
  * Created by Shahab on 2/7/2017.

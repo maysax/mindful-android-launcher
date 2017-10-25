@@ -14,15 +14,15 @@ import minium.co.core.log.Tracer;
 import minium.co.core.util.UIUtils;
 import minium.co.notes.R;
 
-import static minium.co.notes.utils.DataUtils.NOTES_FILE_NAME;
-import static minium.co.notes.utils.DataUtils.NOTE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_COLOUR;
-import static minium.co.notes.utils.DataUtils.NOTE_FAVOURED;
-import static minium.co.notes.utils.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.notes.utils.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_TITLE;
-import static minium.co.notes.utils.DataUtils.retrieveData;
-import static minium.co.notes.utils.DataUtils.saveData;
+import static minium.co.core.util.DataUtils.NOTES_FILE_NAME;
+import static minium.co.core.util.DataUtils.NOTE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_COLOUR;
+import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
+import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
+import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_TITLE;
+import static minium.co.core.util.DataUtils.retrieveData;
+import static minium.co.core.util.DataUtils.saveData;
 
 public class NoteEventReceiver extends BroadcastReceiver {
     public NoteEventReceiver() {
@@ -78,13 +78,11 @@ public class NoteEventReceiver extends BroadcastReceiver {
         }
 
         // If newNoteObject not null -> save notes array to local file and notify adapter
-        if (newNoteObject != null) {
 
-            Boolean saveSuccessful = saveData(localPath, notes);
+        Boolean saveSuccessful = saveData(localPath, notes);
 
-            if (saveSuccessful) {
-                UIUtils.toast(context, context.getString(R.string.msg_noteCreated));
-            }
+        if (saveSuccessful) {
+            UIUtils.toast(context, context.getString(R.string.msg_noteCreated));
         }
     }
 

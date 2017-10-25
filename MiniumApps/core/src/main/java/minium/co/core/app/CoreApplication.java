@@ -107,7 +107,15 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<ResolveInfo> browserPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> clockPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> emailPackageList = new ArrayList<>();
+    private boolean isEditNotOpen = false;
 
+    public boolean isEditNotOpen() {
+        return isEditNotOpen;
+    }
+
+    public void setEditNotOpen(boolean editNotOpen) {
+        isEditNotOpen = editNotOpen;
+    }
 
     public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
         this.mMediaPlayer = mMediaPlayer;
