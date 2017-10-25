@@ -7,17 +7,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import co.siempo.phone.Manifest;
 import co.siempo.phone.event.TorchOnOff;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -68,9 +72,19 @@ public class StatusBarService extends Service {
      * Observer for when new contact adding or updating any exiting contact.
      */
     private void registerObserverForContact() {
-        myObserver = new MyObserver(new Handler());
-        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
-                myObserver);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    android.Manifest.permission.READ_CONTACTS)
+                    == PackageManager.PERMISSION_GRANTED) {
+                myObserver = new MyObserver(new Handler());
+                getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
+                        myObserver);
+            }
+        } else {
+            myObserver = new MyObserver(new Handler());
+            getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true,
+                    myObserver);
+        }
     }
 
 
@@ -193,8 +207,10 @@ public class StatusBarService extends Service {
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        getContentResolver().unregisterContentObserver(myObserver);//reference for quick setting
-        unregisterReceiver(appInstallUninstall);
+        if (myObserver != null)
+            getContentResolver().unregisterContentObserver(myObserver);
+        if (appInstallUninstall != null)
+            unregisterReceiver(appInstallUninstall);
         super.onDestroy();
     }
 }
