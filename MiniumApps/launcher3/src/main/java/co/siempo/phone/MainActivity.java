@@ -308,14 +308,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onUserLeaveHint();
     }
 
-/**
- * Below function is use for further development when pause feature will enable.
-    @KeyDown(KeyEvent.KEYCODE_VOLUME_UP)
-    void volumeUpPressed() {
-        Tracer.i("Volume up pressed in MainActivity");
-        PauseActivity_.intent(this).start();
-    }
-*/
+    /**
+     * Below function is use for further development when pause feature will enable.
+     *
+     * @KeyDown(KeyEvent.KEYCODE_VOLUME_UP) void volumeUpPressed() {
+     * Tracer.i("Volume up pressed in MainActivity");
+     * PauseActivity_.intent(this).start();
+     * }
+     */
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
@@ -324,6 +324,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
                 Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);
+                appUpdaterUtils = null;
             } else {
                 ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
             }
@@ -331,6 +332,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
                 Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
+                appUpdaterUtils = null;
             } else {
                 Tracer.d("Installed version: " + "Up to date.");
             }
@@ -502,11 +504,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
      * 1) It will check first with Appupdater library if it fails to identify then
      * 2) It will check with AWS logic.
      */
+    AppUpdaterUtils appUpdaterUtils;
+
     public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null) {
+        if (activeNetwork != null && appUpdaterUtils==null) {
             Log.d(TAG, "Active network..");
-            AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(this)
+            appUpdaterUtils = new AppUpdaterUtils(this)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                     .withListener(new AppUpdaterUtils.UpdateListener() {
                         @Override
@@ -515,6 +519,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                             if (update.getLatestVersionCode() != null) {
                                 Log.d(TAG, "check version from AppUpdater library");
                                 checkVersionFromAppUpdater();
+                                appUpdaterUtils = null;
                             } else {
                                 Log.d(TAG, "check version from AWS");
                                 if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
@@ -588,7 +593,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void checknavigatePermissions() {
         if (!launcherPrefs.isAppInstalledFirstTime().get()) {
             Log.d(TAG, "Display upgrade dialog.");
-//            checkUpgradeVersion();
+            checkUpgradeVersion();
         }
 
 

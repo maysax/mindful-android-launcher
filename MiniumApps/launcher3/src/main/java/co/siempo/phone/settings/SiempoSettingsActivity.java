@@ -63,13 +63,13 @@ import com.github.javiersantos.appupdater.enums.Display;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_version,icon_changeDefaultApp;
+    private ImageView icon_launcher, icon_version, icon_changeDefaultApp;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version,ln_changeDefaultApp;
+    private LinearLayout ln_launcher, ln_version, ln_changeDefaultApp;
     private CheckBox chk_keyboard;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
-
+    AppUpdaterUtils appUpdaterUtils;
 
     @SystemService
     ConnectivityManager connectivityManager;
@@ -137,9 +137,9 @@ public class SiempoSettingsActivity extends CoreActivity {
             @Override
             public void onClick(View v) {
                 NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-                if (activeNetwork != null) {
+                if (activeNetwork != null && appUpdaterUtils == null) {
                     initProgressDialog();
-                    AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(SiempoSettingsActivity.this)
+                    appUpdaterUtils = new AppUpdaterUtils(SiempoSettingsActivity.this)
                             .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                             .withListener(new AppUpdaterUtils.UpdateListener() {
                                 @Override
@@ -150,6 +150,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                                             pd.dismiss();
                                         }
                                         checkVersionFromAppUpdater();
+                                        appUpdaterUtils = null;
                                     } else {
                                         Log.d(TAG, "check version from AWS");
                                         if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
@@ -226,10 +227,6 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .setButtonDismiss("Maybe later")
                 .start();
     }
-// Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
-//    if (pd != null) {
-//        pd.dismiss();
-//    }
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
@@ -239,8 +236,10 @@ public class SiempoSettingsActivity extends CoreActivity {
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
                 if (pd != null) {
                     pd.dismiss();
+                    pd = null;
                 }
                 Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.ALPHA);
             } else {
                 ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
@@ -248,9 +247,11 @@ public class SiempoSettingsActivity extends CoreActivity {
         } else {
             if (pd != null) {
                 pd.dismiss();
+                pd = null;
             }
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
                 Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.BETA);
             } else {
                 Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
@@ -278,12 +279,13 @@ public class SiempoSettingsActivity extends CoreActivity {
     public void initProgressDialog() {
         try {
             //noinspection deprecation
-            pd = new ProgressDialog(this);
-            pd.setMessage("Please wait...");
-//            pd = new ProgressDialog(SiempoSettingsActivity.this, R.style.ProgressTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
-            pd.show();
+            if (pd == null) {
+                pd = new ProgressDialog(this);
+                pd.setMessage("Please wait...");
+                pd.setCancelable(false);
+                pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
+                pd.show();
+            }
         } catch (Exception e) {
             //WindowManager$BadTokenException will be caught here
             e.printStackTrace();
