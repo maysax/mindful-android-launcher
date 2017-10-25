@@ -113,17 +113,14 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
             }
         });
 
-        holder.icon.setOnTouchListener(new View.OnTouchListener() {
+        holder.icon.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
-                } else if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_UP) {
-
-                }
+            public boolean onLongClick(View view) {
+                mDragStartListener.onStartDrag(holder);
                 return false;
             }
         });
+
         if (isGrid) {
             if (item != null) {
                 if (item.getId() == 2 && !droidPrefs_.isCallClickedFirstTime().get()) {

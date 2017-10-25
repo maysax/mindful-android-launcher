@@ -72,8 +72,8 @@ public class MainListItemLoader {
         if (fragment instanceof MainFragment) {
             items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
         }
-        items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
-        items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell", R.drawable.icon_tempo, MainListItemType.ACTION));
+       // items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
+        //items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell", R.drawable.icon_tempo, MainListItemType.ACTION));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
         items.add(new MainListItem(19, getString(R.string.title_apps), "fa-list"));
 
@@ -227,7 +227,8 @@ public class MainListItemLoader {
                     }
                 }
                 break;
-            case 17: //new ActivityHelper(context).openGoogleInbox(); break;
+            case 17: //new ActivityHelper(context).openGoogleInbox();
+                break;
             case 18:
                 new ActivityHelper(context).openFeedback();
                 break;
@@ -280,7 +281,7 @@ public class MainListItemLoader {
                 break;
             case 24:// Browser
                 if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getCameraPackageList().size() > 1) {
+                    if (CoreApplication.getInstance().getBrowserPackageList().size() > 1) {
                         ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 24, true);
                     } else {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
