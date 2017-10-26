@@ -15,6 +15,11 @@ import android.widget.Toast;
 
 
 import org.androidannotations.annotations.EBean;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
 
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.model.ContactListItem;
@@ -23,6 +28,7 @@ import co.siempo.phone.msg.SmsObserver;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DataUtils;
+import minium.co.core.util.UIUtils;
 
 
 @EBean
@@ -41,6 +47,7 @@ public class TokenRouter {
         TokenManager.getInstance().setCurrent(tokenItem);
         route();
     }
+
     public void add(TokenItem tokenItem) {
         TokenManager.getInstance().getCurrent().setCompleteType(TokenCompleteType.FULL);
         TokenManager.getInstance().add(tokenItem);
@@ -48,10 +55,12 @@ public class TokenRouter {
     }
 
     public void createNote(Context context) {
-        context.sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES")
-                .putExtra(DataUtils.NOTE_TITLE, TokenManager.getInstance().getCurrent().getTitle()));
+//        context.sendBroadcast(new Intent().setAction("minium.co.notes.CREATE_NOTES")
+//                .putExtra(DataUtils.NOTE_TITLE, TokenManager.getInstance().getCurrent().getTitle()));
+        DataUtils.saveNotes(context, TokenManager.getInstance().getCurrent().getTitle());
         TokenManager.getInstance().clear();
     }
+
 
     public void createContact(Context context) {
         String inputStr = TokenManager.getInstance().getCurrent().getTitle();
@@ -98,8 +107,8 @@ public class TokenRouter {
     public void sendText(Context context) {
         try {
             if (TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && TokenManager.getInstance().has(TokenItemType.DATA)) {
-                String strNumber  = TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2();
-                String strMessage  =  TokenManager.getInstance().get(TokenItemType.DATA).getTitle();
+                String strNumber = TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2();
+                String strMessage = TokenManager.getInstance().get(TokenItemType.DATA).getTitle();
                 new SmsObserver(context, strNumber, strMessage).start();
                 SmsManager smsManager = SmsManager.getDefault();
                 smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
@@ -113,7 +122,7 @@ public class TokenRouter {
                     intent.setPackage(defaultSmsPackageName);
                 }
                 context.startActivity(intent);
-                EventBus.getDefault().post(new SendSmsEvent(true,strNumber,strMessage));
+                EventBus.getDefault().post(new SendSmsEvent(true, strNumber, strMessage));
             } else if (!TokenManager.getInstance().has(TokenItemType.CONTACT)) {
                 TokenManager.getInstance().getCurrent().setCompleteType(TokenCompleteType.FULL);
                 TokenManager.getInstance().add(new TokenItem(TokenItemType.CONTACT));

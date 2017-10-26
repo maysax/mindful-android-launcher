@@ -1,5 +1,6 @@
 package minium.co.core.util;
 
+import android.content.Context;
 import android.os.Environment;
 
 import org.json.JSONArray;
@@ -14,6 +15,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import minium.co.core.R;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
 
@@ -280,5 +283,80 @@ public class DataUtils {
 
         return Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+    }
+
+    /**
+     * Save not from the IF field.
+     * @param context
+     * @param title
+     */
+    public static void saveNotes(Context context, String title) {
+
+        JSONObject newNoteObject = null;
+        File localPath = new File(context.getFilesDir() + "/" + DataUtils.NOTES_FILE_NAME);
+
+        // Init notes array
+        JSONArray notes = new JSONArray();
+
+        // Retrieve from local path
+        JSONArray tempNotes = DataUtils.retrieveData(localPath);
+
+        // If not null -> equal main notes to retrieved notes
+        if (tempNotes != null)
+            notes = tempNotes;
+
+        Tracer.d("All notes: ", notes);
+
+        try {
+            // Add new note to array
+            newNoteObject = new JSONObject();
+//            newNoteObject.put(NOTE_TITLE, SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(new Date()));
+            newNoteObject.put(DataUtils.NOTE_TITLE, getTitle(title));
+            // newNoteObject.put(NOTE_BODY, intent.getStringExtra(NOTE_BODY));
+            newNoteObject.put(DataUtils.NOTE_BODY, "");
+            newNoteObject.put(DataUtils.NOTE_COLOUR, "#FFFFFF");
+            newNoteObject.put(DataUtils.NOTE_FAVOURED, false);
+            newNoteObject.put(DataUtils.NOTE_FONT_SIZE, 18);
+            newNoteObject.put(DataUtils.NOTE_HIDE_BODY, false);
+
+            notes.put(newNoteObject);
+
+            Tracer.d("New note: " + newNoteObject);
+
+        } catch (JSONException e) {
+            Tracer.e(e, e.getMessage());
+        }
+
+        // If newNoteObject not null -> save notes array to local file and notify adapter
+
+        Boolean saveSuccessful = DataUtils.saveData(localPath, notes);
+
+        if (saveSuccessful) {
+            UIUtils.toast(context, context.getString(R.string.msg_noteCreated));
+        }
+    }
+
+    private static String getTitle(String body) {
+        if (body.isEmpty()) return "";
+        String[] splits = body.split(" ");
+        String ret = "";
+
+        if (splits.length > 0) {
+            ret += splits[0];
+            ret += " ";
+        }
+
+        if (splits.length > 1) {
+            ret += splits[1];
+            ret += " ";
+        }
+
+
+        if (splits.length > 2) {
+            ret += splits[2];
+        }
+
+        return ret;
+
     }
 }
