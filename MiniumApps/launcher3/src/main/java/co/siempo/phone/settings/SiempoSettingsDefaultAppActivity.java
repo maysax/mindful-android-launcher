@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.old.OldMenuAdapter;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
@@ -27,6 +30,13 @@ import minium.co.core.ui.CoreActivity;
 public class SiempoSettingsDefaultAppActivity extends CoreActivity {
     private OldMenuAdapter adapter;
     private List<MainListItem> items;
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
+    }
 
     @ViewById
     ListView listView;

@@ -18,6 +18,8 @@ import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -26,11 +28,13 @@ import minium.co.core.util.UIUtils;
 public class TempoActivity extends CoreActivity {
     private String TAG = "TempoActivity";
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
     }
+
 
     @AfterViews
     void afterViews() {
@@ -80,33 +84,6 @@ public class TempoActivity extends CoreActivity {
         PackageUtil.checkPermission(this);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onBackPressed() {
-     super.onBackPressed();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
 
 
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        Log.d(TAG, "ACTION HOME PRESS");
-        if (event.isVisible()) {
-
-        }
-    }
 }

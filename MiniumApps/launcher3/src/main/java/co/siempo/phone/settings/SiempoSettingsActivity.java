@@ -41,6 +41,8 @@ import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
@@ -63,9 +65,9 @@ import com.github.javiersantos.appupdater.enums.Display;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_version,icon_changeDefaultApp;
+    private ImageView icon_launcher, icon_version, icon_changeDefaultApp;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version,ln_changeDefaultApp;
+    private LinearLayout ln_launcher, ln_version, ln_changeDefaultApp;
     private CheckBox chk_keyboard;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
@@ -77,6 +79,12 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
+    }
 
     @AfterViews
     void afterViews() {

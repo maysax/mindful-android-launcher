@@ -22,6 +22,7 @@ import co.siempo.phone.event.TorchOnOff;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 
 /**
  * This background service used for detect torch status and feature used for any other background status.
@@ -169,7 +170,7 @@ public class StatusBarService extends Service {
             // depending on the handler you might be on the UI
             // thread, so be cautious!
 
-            sharedPreferences.edit().putBoolean("isContactUpdate", true).commit();
+            sharedPreferences.edit().putBoolean("isContactUpdate", true).apply();
         }
     }
 
@@ -185,7 +186,8 @@ public class StatusBarService extends Service {
                 String uninstallPackageName = intent.getData().getSchemeSpecificPart();
                 Log.d("Testing with device.", "Removed" + uninstallPackageName);
             }
-            sharedPreferences.edit().putBoolean("isAppUpdated", true).commit();
+            sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
+            EventBus.getDefault().post(new AppInstalledEvent(true));
         }
     }
 
