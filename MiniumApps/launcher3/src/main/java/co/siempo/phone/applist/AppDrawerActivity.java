@@ -165,6 +165,7 @@ public class AppDrawerActivity extends CoreActivity {
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
             if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
             arrayList = CoreApplication.getInstance().getPackagesList();
             prefs.isAppUpdated().put(false);

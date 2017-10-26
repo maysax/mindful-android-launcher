@@ -113,7 +113,7 @@ public class Launcher3App extends CoreApplication {
     /**
      * Configure the default application when application insatlled
      */
-    private void setAllDefaultMenusApplication() {
+    public void setAllDefaultMenusApplication() {
         String callPackage = getCallPackageName();
         if (!callPackage.equalsIgnoreCase("") && prefs.callPackage().get().equalsIgnoreCase(""))
             prefs.callPackage().put(callPackage);

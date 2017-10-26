@@ -43,6 +43,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.ArrayList;
 
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
@@ -58,6 +59,8 @@ import co.siempo.phone.settings.SiempoSettingsActivity;
 import co.siempo.phone.token.TokenManager;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.HomePressEvent;
@@ -137,6 +140,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         firebaseHelper.testEvent1();
         firebaseHelper.testEvent2();
         launcherPrefs.updatePrompt().put(true);
+    }
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
     }
 
     private void checkAppLoadFirstTime() {

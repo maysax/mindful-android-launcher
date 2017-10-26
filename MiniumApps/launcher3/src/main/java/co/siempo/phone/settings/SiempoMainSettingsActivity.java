@@ -21,6 +21,8 @@ import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
@@ -33,6 +35,13 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     private SettingsAdapter adapter;
     private Context context;
     private final String TAG="SiempoMainSetting";
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
+    }
 
     @AfterViews
     void afterViews() {
@@ -66,7 +75,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
 
     public void initView() {
         context = SiempoMainSettingsActivity.this;
-        lst_settings = (ListView) findViewById(R.id.lst_settings);
+        lst_settings = findViewById(R.id.lst_settings);
 
 
         arr_menuList = new ArrayList<>();
@@ -98,26 +107,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
 
     @Override
     protected void onDestroy() {
@@ -128,16 +118,5 @@ public class SiempoMainSettingsActivity extends CoreActivity {
 
 
 
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        if (event.isVisible()) {
 
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 }

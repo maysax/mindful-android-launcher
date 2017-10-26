@@ -38,9 +38,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
-import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.androidannotations.annotations.sharedpreferences.SharedPref;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,13 +45,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
-import minium.co.core.R;
-import minium.co.core.event.AppInstalledEvent;
-
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
 import minium.co.core.config.Config;
-
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
@@ -480,6 +474,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     public String getCallPackageName() {
         Uri number = Uri.parse("tel:");
         Intent dial = new Intent(Intent.ACTION_DIAL, number);
+        getCallPackageList().clear();
         getCallPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
         for (ResolveInfo res : getCallPackageList()) {
             Log.d("Default App Name", "Call : " + res.activityInfo.name  + " :"+ res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -495,6 +490,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     public String getMessagePackageName() {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
         intent.putExtra("sms_body", "Test text...");
+        getMessagePackageList().clear();
         getMessagePackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getMessagePackageList()) {
             Log.d("Default App Name", "Message : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -508,6 +504,7 @@ public abstract class CoreApplication extends MultiDexApplication {
      */
     public String getCalenderPackageName() {
         Intent dial = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/"));
+        getCalenderPackageList().clear();
         getCalenderPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
         for (ResolveInfo res : getCalenderPackageList()) {
             Log.d("Default App Name", "Calender : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -522,6 +519,7 @@ public abstract class CoreApplication extends MultiDexApplication {
      */
     public String getContactPackageName() {
         Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        getContactPackageList().clear();
         getContactPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getContactPackageList()) {
             Log.d("Default App Name", "Contact : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -538,6 +536,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         Double myLongitude = 26.103687;
         String labelLocation = "Jorgesys @ Bucharest";
         String urlAddress = "http://maps.google.com/maps?q=" + myLatitude + "," + myLongitude + "(" + labelLocation + ")&iwloc=A&hl=es";
+        getMapPackageList().clear();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
         getMapPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getMapPackageList()) {
@@ -553,6 +552,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     public String getPhotosPackageName() {
         Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/* video/*");
+        getPhotosPackageList().clear();
         getPhotosPackageList().addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
         for (ResolveInfo res : getPhotosPackageList()) {
             Log.d("Default App Name", "Photos : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -567,6 +567,7 @@ public abstract class CoreApplication extends MultiDexApplication {
      */
     public String getCameraPackageName() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        getCameraPackageList().clear();
         getCameraPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getCameraPackageList()) {
             Log.d("Default App Name", "Camera : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -580,6 +581,7 @@ public abstract class CoreApplication extends MultiDexApplication {
      */
     public String getBrowserPackageName() {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
+        getBrowserPackageList().clear();
         getBrowserPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getBrowserPackageList()) {
             Log.d("Default App Name", "Browser : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -593,6 +595,7 @@ public abstract class CoreApplication extends MultiDexApplication {
      */
     public String getClockPackageName() {
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+        getClockPackageList().clear();
         getClockPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getClockPackageList()) {
             Log.d("Default App Name", "Clock : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
@@ -609,6 +612,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
         intent.setData(data);
+        getEmailPackageList().clear();
         getEmailPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
         for (ResolveInfo res : getEmailPackageList()) {
             Log.d("Default App Name", "Mail : " + res.activityInfo.packageName + " : " + res.activityInfo.name);

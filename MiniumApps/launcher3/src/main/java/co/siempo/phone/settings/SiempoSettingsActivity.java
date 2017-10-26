@@ -41,6 +41,8 @@ import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
@@ -77,6 +79,12 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
+    }
 
     @AfterViews
     void afterViews() {

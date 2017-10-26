@@ -15,7 +15,11 @@ import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.util.PackageUtil;
+import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.ui.CoreActivity;
 
 import static android.view.View.GONE;
@@ -32,6 +36,14 @@ public class SiempoMapActivity extends CoreActivity {
 
 //    @ViewById
 //    ImageView imgLogo;
+
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
