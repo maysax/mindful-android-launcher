@@ -578,7 +578,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         final WindowManager.LayoutParams params;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             params =
-                    new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_APPLICATION_OVERLAY, FLAG_NOT_FOCUSABLE
+                    new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT, TYPE_APPLICATION_OVERLAY, FLAG_NOT_FOCUSABLE
                             | FLAG_LAYOUT_IN_SCREEN
                             | FLAG_LAYOUT_NO_LIMITS
                             | FLAG_NOT_TOUCH_MODAL
@@ -588,7 +588,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             params.gravity = Gravity.TOP;
         } else {
             params =
-                    new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
+                    new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
                             | FLAG_LAYOUT_IN_SCREEN
                             | FLAG_LAYOUT_NO_LIMITS
                             | FLAG_NOT_TOUCH_MODAL
@@ -655,7 +655,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         int height = retrieveStatusBarHeight() + 10;
         boolean result = event.getY() > height;
         if (!siempoNotificationBar) {
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_APPLICATION_OVERLAY, FLAG_LAYOUT_NO_LIMITS
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT, TYPE_APPLICATION_OVERLAY, FLAG_LAYOUT_NO_LIMITS
                     , TRANSLUCENT);
             params.gravity = Gravity.TOP;
             mWinManager.updateViewLayout(this, params);
