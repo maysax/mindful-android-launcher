@@ -557,7 +557,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
     static WindowManager.LayoutParams createLayoutParams(int height) {
         final WindowManager.LayoutParams params =
-                new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
+                new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
                         | FLAG_LAYOUT_IN_SCREEN
                         | FLAG_LAYOUT_NO_LIMITS
                         | FLAG_NOT_TOUCH_MODAL
@@ -569,7 +569,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         addSiempoNotificationBar(event);
         return super.onTouchEvent(event);
     }
