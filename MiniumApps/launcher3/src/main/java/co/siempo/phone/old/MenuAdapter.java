@@ -40,19 +40,24 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        if (arrayList != null && arrayList.size() > 0) {
-            if (fromPosition < toPosition) {
-                for (int i = fromPosition; i < toPosition; i++) {
-                    Collections.swap(arrayList, i, i + 1);
+        try {
+            if (arrayList != null && arrayList.size() > 0) {
+                if (fromPosition < toPosition) {
+                    for (int i = fromPosition; i < toPosition; i++) {
+                        Collections.swap(arrayList, i, i + 1);
+                    }
+                } else {
+                    for (int i = fromPosition; i > toPosition; i--) {
+                        Collections.swap(arrayList, i, i - 1);
+                    }
                 }
-            } else {
-                for (int i = fromPosition; i > toPosition; i--) {
-                    Collections.swap(arrayList, i, i - 1);
-                }
+                mListChangedListener.onNoteListChanged(arrayList);
+                notifyItemMoved(fromPosition, toPosition);
             }
-            mListChangedListener.onNoteListChanged(arrayList);
-            notifyItemMoved(fromPosition, toPosition);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         return true;
     }
 
