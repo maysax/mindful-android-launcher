@@ -20,7 +20,7 @@
     <!-- messages -->
     <string name="msg.not.yet.implemented">Not yet implemented</string>
     <string name="msg.noteSaved">Your note has been saved.</string>
-
+    <string name="msg.noteCreated">Note created</string>
     <!-- Icons -->
     <string name="ic_comment">{fa-comment 48sp}</string>
 
