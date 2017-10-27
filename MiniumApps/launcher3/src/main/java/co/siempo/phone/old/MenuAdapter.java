@@ -1,8 +1,10 @@
 package co.siempo.phone.old;
 
 import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -91,6 +93,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         return new ItemViewHolder(v);
     }
 
+
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         final MainListItem item = arrayList.get(position);
@@ -104,6 +107,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int id;
                 if (item != null) {
                     id = item.getId();
@@ -113,23 +117,28 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
             }
         });
 
-        holder.icon.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                Log.d("Raja", "Raja2");
                 mDragStartListener.onStartDrag(holder);
-                return false;
+                return true;
             }
         });
 
         if (isGrid) {
             if (item != null) {
                 if (item.getId() == 2 && !droidPrefs_.isCallClickedFirstTime().get()) {
+                    holder.imgView.setTag("1");
                     holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
                 } else if (item.getId() == 1 && !droidPrefs_.isMessageClickedFirstTime().get()) {
+                    holder.imgView.setTag("1");
                     holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
                 } else if (item.getId() == 16 && !droidPrefs_.isEmailClickedFirstTime().get()) {
                     holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu, null));
+                    holder.imgView.setTag("1");
                 } else {
+                    holder.imgView.setTag("0");
                     holder.imgView.setBackground(null);
                 }
             }
@@ -158,7 +167,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
     static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
         // each data item is just a string in this case
-        ImageView icon,imgView;
+        ImageView icon, imgView;
         public View layout;
         TextView text, textDefaultApp;
         RelativeLayout relMenu;
@@ -177,16 +186,23 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
 
         @Override
         public void onItemSelected() {
-//            layout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.white_100opacity));
+            if (linearLayout.getTag() != null && linearLayout.getTag().equals("1")) {
+                imgView.setBackground(layout.getContext().getResources().getDrawable(R.drawable.circle_menu_selected, null));
+            } else {
+                linearLayout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.darker_gray));
+            }
         }
 
         @Override
         public void onItemClear() {
-//            itemView.setBackgroundColor(0);
-            try {
-                activity_grid_view.getAdapter().notifyDataSetChanged();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (linearLayout.getTag() != null && linearLayout.getTag().equals("1")) {
+                if(imgView.getTag()!=null && imgView.getTag().equals(1)){
+                    imgView.setBackground(layout.getContext().getResources().getDrawable(R.drawable.circle_menu, null));
+                }else{
+                    imgView.setBackground(null);
+                }
+            } else {
+                linearLayout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.transparent));
             }
 
         }
