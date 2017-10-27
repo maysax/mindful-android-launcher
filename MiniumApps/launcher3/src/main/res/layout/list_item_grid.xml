@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/dp_10"
+        android:tag="1"
         tools:ignore="UseCompoundDrawables,UselessParent">
 
         <ImageView
