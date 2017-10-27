@@ -34,6 +34,16 @@
             android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/imgOnGoingCall"
+            android:layout_width="@dimen/dp_27"
+            android:layout_height="@dimen/dp_27"
+            android:layout_toEndOf="@id/imgTempo"
+            android:contentDescription="@null"
+            android:padding="6dp"
+            android:src="@drawable/ongoingcall"
+            android:visibility="gone" />
+
+        <ImageView
             android:id="@+id/imgBattery"
             android:layout_width="27dp"
             android:layout_height="27dp"
@@ -274,6 +284,18 @@
                     android:text="@string/string_notification_title"
                     android:textColor="#de000000"
                     android:textSize="28sp" />
+            </LinearLayout>
+
+            <LinearLayout
+             android:id="@+id/ln_ongoingCall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/ongoing_card" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
