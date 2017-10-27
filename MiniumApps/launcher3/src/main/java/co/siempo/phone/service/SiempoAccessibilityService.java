@@ -80,10 +80,11 @@ public class SiempoAccessibilityService extends AccessibilityService {
     }
 
     public synchronized void siempoNotificationBarStatus() {
-        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()))) {
-            ViewService_.intent(getApplication()).showMask().start();
-        } else {
-            ViewService_.intent(getApplication()).hideMask().start();
-        }
+        // below code will use for further development
+//        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()))) {
+//            ViewService_.intent(getApplication()).showMask().start();
+//        } else {
+//            ViewService_.intent(getApplication()).hideMask().start();
+//        }
     }
 }

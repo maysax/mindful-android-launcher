@@ -1,10 +1,17 @@
 package co.siempo.phone.app;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AbsListView;
@@ -26,7 +33,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.GreenDaoOpenHelper;
@@ -34,6 +43,7 @@ import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.kiss.IconsHandler;
 import co.siempo.phone.old.PreferenceListAdapter;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
@@ -42,7 +52,6 @@ import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DateUtils;
-
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -53,6 +62,7 @@ public class Launcher3App extends CoreApplication {
     private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
     public static final String DND_START_STOP_ACTION = "siempo.intent.action.DND_START_STOP";
     private DaoSession daoSession;
+    private final String TAG = "SiempoActivityLifeCycle";
 
     @Pref
     public DroidPrefs_ prefs;
@@ -108,8 +118,89 @@ public class Launcher3App extends CoreApplication {
         setAllDefaultMenusApplication();
         //}
 
+
+
+        AppLifecycleTracker handler = new AppLifecycleTracker();
+
+        registerActivityLifecycleCallbacks(handler);
+
     }
 
+
+    class AppLifecycleTracker implements Application.ActivityLifecycleCallbacks  {
+
+        private int numStarted = 0;
+
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                // app went to foreground
+                Log.d(TAG,"Siempo is on foreground");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.canDrawOverlays(getApplicationContext())) {
+                        Log.d(TAG,"Display Siempo Status bar");
+                        ViewService_.intent(getApplicationContext()).showMask().start();
+                    }
+                    else{
+                        Log.d(TAG,"Overlay is off");
+                    }
+                }
+                else{
+                    Log.d(TAG,"Display Siempo Status bar");
+                    ViewService_.intent(getApplicationContext()).showMask().start();
+                }
+
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+            if (numStarted == 0) {
+                Log.d(TAG,"Siempo is on background");
+                // app went to background
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.canDrawOverlays(getApplicationContext())) {
+                        if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                            Log.d(TAG,"Hide Siempo Status bar");
+                            ViewService_.intent(getApplicationContext()).hideMask().start();
+                        }
+                    }
+                }
+                else{
+                    Log.d(TAG,"Hide Siempo Status Bar");
+                    ViewService_.intent(getApplicationContext()).hideMask().start();
+                }
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+
+        }
+    }
     /**
      * Configure the default application when application insatlled
      */
