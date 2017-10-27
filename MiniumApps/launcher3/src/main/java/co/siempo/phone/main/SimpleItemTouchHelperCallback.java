@@ -76,7 +76,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = 0;
             if (oldMenuFragment == null) {
-                Log.d("Testting","Test");
                 return makeMovementFlags(dragFlags, swipeFlags);
             } else {
                 return makeMovementFlags(dragFlags, 0);
@@ -85,7 +84,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
             if (oldMenuFragment == null) {
-                Log.d("Testting","Test");
                 return makeMovementFlags(dragFlags, swipeFlags);
             } else {
                 return makeMovementFlags(dragFlags, 0);

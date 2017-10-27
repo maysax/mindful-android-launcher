@@ -120,7 +120,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Log.d("Raja", "Raja2");
                 mDragStartListener.onStartDrag(holder);
                 return true;
             }
