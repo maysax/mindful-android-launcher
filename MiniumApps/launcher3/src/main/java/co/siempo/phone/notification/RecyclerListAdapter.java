@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.provider.Settings;
+import android.provider.Telephony;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,16 +51,16 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     private Context mContext;
     private List<Notification> notificationList;
-            //= new ArrayList<>();
+    //= new ArrayList<>();
 
     private final OnStartDragListener mDragStartListener;
-    String defSMSApp;
+    private String defSMSApp;
 
     public RecyclerListAdapter(Context context, List<Notification> notificationList, OnStartDragListener dragStartListener) {
         mContext = context;
         mDragStartListener = dragStartListener;
         this.notificationList = notificationList;
-        defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
+        defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
     }
 
 
@@ -68,7 +69,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         mDragStartListener = null;
         this.notificationList = notificationList;
         Log.d("Test", "notificationList" + notificationList.size());
-        defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
+        defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
     }
 
     @Override
@@ -77,8 +78,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.notification_card, parent, false);
 
-        ItemViewHolder itemViewHolder = new ItemViewHolder(view);
-        return itemViewHolder;
+        return new ItemViewHolder(view);
     }
 
     @Override
