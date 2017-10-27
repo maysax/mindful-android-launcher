@@ -52,7 +52,6 @@ import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DateUtils;
-import co.siempo.phone.SiempoNotificationBar.ApplicationLifecycleHandler;
 
 /**
  * Created by Shahab on 2/16/2017.
