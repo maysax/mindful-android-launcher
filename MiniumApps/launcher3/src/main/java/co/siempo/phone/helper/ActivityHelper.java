@@ -156,6 +156,14 @@ public class ActivityHelper {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "feedback@siempo.co", null));
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME));
             emailIntent.putExtra(Intent.EXTRA_TEXT, UIUtils.getDeviceInfo(context));
+            final PackageManager pm = context.getPackageManager();
+            final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
+            ResolveInfo best = null;
+            for (final ResolveInfo info : matches)
+                if (info.activityInfo.packageName.endsWith(".gm") ||
+                        info.activityInfo.name.toLowerCase().contains("gmail")) best = info;
+            if (best != null)
+                emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
             context.startActivity(emailIntent);
         } catch (Exception e) {
             UIUtils.alert(context, "No email application found in your phone");
@@ -313,10 +321,11 @@ public class ActivityHelper {
 
     /**
      * This method used for get default browser package name.
+     *
      * @return
      */
     private String getBrowserPackageName() {
-        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
         List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
         //            Log.e("Camera Application Package Name and Activity Name",res.activityInfo.packageName + " " + res.activityInfo.name);
         for (ResolveInfo res : listCam) return res.activityInfo.packageName;
@@ -431,6 +440,7 @@ public class ActivityHelper {
 
     /**
      * Open default Setting page for default application for menu.
+     *
      * @return
      */
     public boolean openSiempoDefaultAppSettings() {
