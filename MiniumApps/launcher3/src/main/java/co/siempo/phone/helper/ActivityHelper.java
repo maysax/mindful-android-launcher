@@ -156,6 +156,7 @@ public class ActivityHelper {
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "feedback@siempo.co", null));
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME));
             emailIntent.putExtra(Intent.EXTRA_TEXT, UIUtils.getDeviceInfo(context));
+            emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             final PackageManager pm = context.getPackageManager();
             final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
             ResolveInfo best = null;
