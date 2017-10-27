@@ -17,8 +17,11 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
@@ -36,6 +39,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +48,7 @@ import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -63,6 +68,7 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
+import co.siempo.phone.event.OnGoingCallEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.event.TorchOnOff;
@@ -146,7 +152,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private RecyclerListAdapter adapter;
     private List<Notification> notificationList;
     private RelativeLayout layout_notification, relWifi, relMobileData, relBle, relDND, relAirPlane, relFlash, relBrightness;
-    private ImageView img_background, img_notification_Wifi, img_notification_Data, img_notification_Ble, img_notification_Dnd, img_notification_Airplane, img_notification_Flash, img_notification_Brightness;
+    private ImageView img_background, img_notification_Wifi, img_notification_Data, img_notification_Ble, img_notification_Dnd, img_notification_Airplane, img_notification_Flash, img_notification_Brightness,imgOnGoingCall;
     private int wifilevel;
     private NotificationManager notificationManager;
 
@@ -163,6 +169,10 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private AudioManager audioManager;
     private boolean isWiFiOn = false;
     AudioChangeReceiver audioChangeReceiver;
+    private LinearLayout ln_ongoingCall,container_hangup;
+    private TextView txtUserName,txtMessage;
+    private Chronometer chronometer;
+    private ImageView imgUserOngoingCallImage;
 
 
     public OreoOverlay(Context context) {
@@ -245,6 +255,13 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         layout_notification = inflateLayout.findViewById(R.id.layout_notification);
 
 
+        imgOnGoingCall = (ImageView) inflateLayout.findViewById(R.id.imgOnGoingCall);
+        ln_ongoingCall =(LinearLayout)inflateLayout.findViewById(R.id.ln_ongoingCall);
+        chronometer= (Chronometer)inflateLayout.findViewById(R.id.chronometer);
+        txtUserName = (TextView)inflateLayout.findViewById(R.id.txtUserName);
+        txtMessage = (TextView) inflateLayout.findViewById(R.id.txtMessage);
+        imgUserOngoingCallImage = (ImageView) inflateLayout.findViewById(R.id.imgUserOngoingCallImage);
+        container_hangup = (LinearLayout)inflateLayout.findViewById(R.id.container_hangup);
         topbar.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -367,6 +384,66 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     }
 
 
+
+    /**
+     * Below function is use to show and hide ongoing Call notification
+     */
+    @Subscribe
+    public void OnGoingCallEvent(OnGoingCallEvent event){
+        long notificationCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
+        OnGoingCallData callData=event.getCallData();
+        if(imgOnGoingCall!=null && callData.get_isCallRunning()){
+            launcherPrefs.edit().putBoolean("onGoingCall", true).commit();
+            imgOnGoingCall.setVisibility(View.VISIBLE);
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+            txtMessage.setText(callData.get_message());
+            NotificationContactModel contactDetails = gettingNameAndImageFromPhoneNumber(callData.get_contact_title());
+            txtUserName.setText(contactDetails.getName());
+            if (contactDetails.getImage() != null && !contactDetails.getImage().equals("")) {
+                Glide.with(context)
+                        .load(Uri.parse(contactDetails.getImage()))
+                        .placeholder(R.drawable.ic_person_black_24dp)
+                        .into(imgUserOngoingCallImage);
+            }
+            ln_ongoingCall.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+
+            ln_ongoingCall.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent myIntent=new Intent();
+                    myIntent.setAction(Intent.ACTION_CALL_BUTTON);
+                    myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(myIntent);
+                    hide();
+                }
+            });
+            container_hangup.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        declinePhone(context);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        if(imgOnGoingCall!=null && !callData.get_isCallRunning()){
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.stop();
+            launcherPrefs.edit().putBoolean("onGoingCall", false).commit();
+            ln_ongoingCall.setVisibility(View.GONE);
+            imgOnGoingCall.setVisibility(View.GONE);
+            if(notificationCount==0){
+                emptyView.setVisibility(View.VISIBLE);
+            }
+        }
+        if(imgNotification!=null) {
+            imgNotification.setVisibility(notificationCount == 0 ? View.GONE : View.VISIBLE);
+        }
+    }
     /**
      * Status Bar update UI
      */
@@ -507,7 +584,9 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             if (event.isNotificationListNull()) {
                 notificationList.clear();
                 if (recyclerView != null) recyclerView.setVisibility(View.GONE);
-                if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+                if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+                    if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+                }
                 if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
                 if (textView_notification_title != null)
                     textView_notification_title.setVisibility(View.GONE);
@@ -1012,7 +1091,9 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 adapter.notifyDataSetChanged();
                 if (notificationList.size() == 0) {
                     recyclerView.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
+                    if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
                     if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
                     textView_notification_title.setVisibility(View.GONE);
                     imgNotification.setVisibility(View.GONE);
@@ -1056,7 +1137,9 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
         if (items.size() == 0) {
             recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+                emptyView.setVisibility(View.VISIBLE);
+            }
             textView_notification_title.setVisibility(View.GONE);
             if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
             imgNotification.setVisibility(View.GONE);
@@ -1536,6 +1619,43 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             else{
                 Log.d(TAG,"Charging Status not identify");
             }
+        }
+    }
+
+
+    private void declinePhone(Context context) throws Exception {
+
+        try {
+            String serviceManagerName = "android.os.ServiceManager";
+            String serviceManagerNativeName = "android.os.ServiceManagerNative";
+            String telephonyName = "com.android.internal.telephony.ITelephony";
+            Class<?> telephonyClass;
+            Class<?> telephonyStubClass;
+            Class<?> serviceManagerClass;
+            Class<?> serviceManagerNativeClass;
+            Method telephonyEndCall;
+            Object telephonyObject;
+            Object serviceManagerObject;
+            telephonyClass = Class.forName(telephonyName);
+            telephonyStubClass = telephonyClass.getClasses()[0];
+            serviceManagerClass = Class.forName(serviceManagerName);
+            serviceManagerNativeClass = Class.forName(serviceManagerNativeName);
+            Method getService = // getDefaults[29];
+                    serviceManagerClass.getMethod("getService", String.class);
+            Method tempInterfaceMethod = serviceManagerNativeClass.getMethod("asInterface", IBinder.class);
+            Binder tmpBinder = new Binder();
+            tmpBinder.attachInterface(null, "fake");
+            serviceManagerObject = tempInterfaceMethod.invoke(null, tmpBinder);
+            IBinder retbinder = (IBinder) getService.invoke(serviceManagerObject, "phone");
+            Method serviceMethod = telephonyStubClass.getMethod("asInterface", IBinder.class);
+            telephonyObject = serviceMethod.invoke(null, retbinder);
+            telephonyEndCall = telephonyClass.getMethod("endCall");
+            telephonyEndCall.invoke(telephonyObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("hardikkamothi", "msg cant dissconect call...."+e.toString());
+
         }
     }
 }

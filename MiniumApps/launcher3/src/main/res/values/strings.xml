@@ -193,6 +193,8 @@
     <string name="view_save_note">View saved note</string>
     <string name="phone_replace_regex">\-</string>
     <string name="missed_call">Missed call</string>
+    <string name="ongoing_call">Ongoing call</string>
+    <string name="hangup">HANG UP</string>
     <string name="phone">Phone</string>
     <string name="msg_accessibility">Siempo Accessibility service is not enabled.\nPlease allow Siempo to access accessibility service.</string>
     <string name="msg_accessibility2">Siempo Accessibility service is required to use app features.</string>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingTop="5dp"
+        tools:ignore="Overdraw">
+    
+    
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_10"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_5">
+    
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+    
+                <ImageView
+                    android:id="@+id/imgAppIcon"
+                    android:layout_width="@dimen/dp_15"
+                    android:layout_height="@dimen/dp_15"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ongoingcall"
+                    android:scaleType="fitCenter"
+                    tools:ignore="ContentDescription" />
+    
+                <TextView
+                    android:id="@+id/txtAppName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/phone"
+                    android:layout_marginLeft="@dimen/dp_2"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="@color/black"
+                    tools:text="@string/phone" />
+    
+                <ImageView
+                    android:layout_width="@dimen/dp_3"
+                    android:layout_height="@dimen/dp_3"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp_2"
+                    android:background="@drawable/notification_dot"
+                    android:gravity="center_vertical"
+                    tools:ignore="ContentDescription" />
+    
+                <Chronometer
+                    android:id="@+id/chronometer"
+                    android:textColor="@android:color/black"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_2"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/sp_12"
+                     />
+            </LinearLayout>
+    
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_3">
+    
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_toLeftOf="@id/imgUserImage"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+    
+                    <TextView
+                        android:id="@+id/txtUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/sp_16"
+                        tools:text="User Name" />
+    
+                    <TextView
+                        android:id="@+id/txtMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:layout_marginTop="@dimen/dp_3"
+                        android:textColor="@color/text.ongoingcall"
+                        android:textSize="@dimen/sp_12"
+                        tools:text="This is the sameple message which show the sample data to test the user can visit to testing the data" />
+                </LinearLayout>
+    
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/imgUserOngoingCallImage"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_person_black_24dp"
+                    app:civ_border_color="@color/border.color"
+                    app:civ_border_width="0dp"
+                    app:civ_fill_color="@color/border.color" />
+            </RelativeLayout>
+        </LinearLayout>
+    
+    
+    
+        <LinearLayout
+            android:id="@+id/container_hangup"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="@dimen/dp_6"
+            android:gravity="center_vertical"
+            android:background="#313131">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hangup"
+                android:textStyle="bold"
+                android:layout_marginLeft="@dimen/dp_18"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text.size.medium"/>
+    
+        </LinearLayout>
+    
+    
+    </LinearLayout>

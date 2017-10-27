@@ -145,6 +145,10 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
 
     }
 
+    protected void onIncomingCallAnswered(Context context, String number, Date start){
+
+    }
+
     //Deals with actual events
 
     //Incoming call-  goes from IDLE to RINGING when it rings, to OFFHOOK when it's answered, to IDLE when its hung up
@@ -178,6 +182,11 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     isIncoming = false;
                     callStartTime = new Date();
                     onOutgoingCallStarted(context, savedNumber, callStartTime);
+                }
+                else {
+                    isIncoming = true;
+                    callStartTime = new Date();
+                    onIncomingCallAnswered(context, savedNumber, callStartTime);
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:

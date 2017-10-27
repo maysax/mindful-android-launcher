@@ -10,4 +10,6 @@
     <color name="pauseSeekBarInactive">#26000000</color>
     <color name="dim_foreground_dark_inverse">#323232</color>
     <color name="transparent">#00000000</color>
+    <color name="text.ongoingcall">#646464</color>
+    <color name="border.color">#42000000</color>"
 </resources>

@@ -15,11 +15,13 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import co.siempo.phone.SiempoNotificationBar.OnGoingCallData;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
+import co.siempo.phone.event.OnGoingCallEvent;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.VibrationUtils;
 import de.greenrobot.event.EventBus;
@@ -40,7 +42,7 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
     @Override
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onIncomingCallStarted()");
-
+        saveOnGoingCall(number, start);
         if ((launcherPrefs.isPauseActive().get() && !launcherPrefs.isPauseAllowCallsChecked().get()) ||
                 (launcherPrefs.isTempoActive().get() && !launcherPrefs.tempoAllowCalls().get())) {
             rejectCalls(ctx, number, start);
@@ -58,14 +60,21 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
 
 
     @Override
+       protected void onIncomingCallAnswered(Context context, String number, Date start) {
+        Tracer.d("onOutgoingCallStarted()");
+        saveOnGoingCall(number, start);
+    }
+
+    @Override
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
         Tracer.d("onOutgoingCallStarted()");
-
+        saveOnGoingCall(number, start);
     }
 
     @Override
     protected void onIncomingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onIncomingCallEnded()");
+        removeOngoingCall(number, start);
         vibration.cancel();
 
     }
@@ -73,12 +82,13 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
     @Override
     protected void onOutgoingCallEnded(Context ctx, String number, Date start, Date end) {
         Tracer.d("onOutgoingCallEnded()");
-
+        removeOngoingCall(number, start);
     }
 
     @Override
     protected void onMissedCall(Context ctx, String number, Date start) {
         Tracer.d("onMissedCall()");
+        removeOngoingCall(number, start);
         saveCall(number, start);
 
     }
@@ -152,4 +162,33 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
             e.printStackTrace();
         }
     }
+
+    private void saveOnGoingCall(String address, Date date) {
+        try {
+            OnGoingCallData onGoingCall = new OnGoingCallData();
+            onGoingCall.set_contact_title(address);
+            onGoingCall.set_date(date);
+            onGoingCall.set_isCallRunning(true);
+            onGoingCall.set_message(NotificationUtility.ONGOING_CALL_TEXT);
+            onGoingCall.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_ONGOING_CALL);
+            EventBus.getDefault().post(new OnGoingCallEvent(onGoingCall));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void removeOngoingCall(String address, Date date){
+        try {
+            OnGoingCallData onGoingCall = new OnGoingCallData();
+            onGoingCall.set_contact_title(address);
+            onGoingCall.set_date(date);
+            onGoingCall.set_isCallRunning(false);
+            onGoingCall.set_message(NotificationUtility.ONGOING_CALL_TEXT);
+            onGoingCall.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_ONGOING_CALL);
+            EventBus.getDefault().post(new OnGoingCallEvent(onGoingCall));
+            }
+        catch (Exception e){
+            e.printStackTrace();
+            }
+         }
 }
