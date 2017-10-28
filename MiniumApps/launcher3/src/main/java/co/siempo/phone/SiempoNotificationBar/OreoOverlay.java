@@ -172,7 +172,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private LinearLayout ln_ongoingCall,container_hangup;
     private TextView txtUserName,txtMessage;
     private Chronometer chronometer;
-    private ImageView imgUserOngoingCallImage;
+    private ImageView imgUserOngoingCallImage,img_dot;
 
 
     public OreoOverlay(Context context) {
@@ -262,6 +262,8 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         txtMessage = (TextView) inflateLayout.findViewById(R.id.txtMessage);
         imgUserOngoingCallImage = (ImageView) inflateLayout.findViewById(R.id.imgUserOngoingCallImage);
         container_hangup = (LinearLayout)inflateLayout.findViewById(R.id.container_hangup);
+        img_dot = (ImageView)inflateLayout.findViewById(R.id.img_dot);
+
         topbar.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -395,8 +397,16 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         if(imgOnGoingCall!=null && callData.get_isCallRunning()){
             launcherPrefs.edit().putBoolean("onGoingCall", true).commit();
             imgOnGoingCall.setVisibility(View.VISIBLE);
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
+            if(callData.getId() != 0) {
+                img_dot.setVisibility(View.VISIBLE);
+                chronometer.setVisibility(View.VISIBLE);
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                chronometer.start();
+            }
+            else{
+                img_dot.setVisibility(View.GONE);
+                chronometer.setVisibility(View.GONE);
+            }
             txtMessage.setText(callData.get_message());
             NotificationContactModel contactDetails = gettingNameAndImageFromPhoneNumber(callData.get_contact_title());
             txtUserName.setText(contactDetails.getName());
@@ -1482,7 +1492,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         if(imgBattery != null){
             if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")){
                 if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
-                    imgBattery.setImageResource(R.drawable.battery_alert);
+                    imgBattery.setImageResource(R.drawable.battery_c_05);
                 }
                 else if(batteryStatus>=5 && batteryStatus<10){
                     imgBattery.setImageResource(R.drawable.battery_c_05);

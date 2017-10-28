@@ -9,7 +9,7 @@ import org.greenrobot.greendao.annotation.Id;
  */
 public class OnGoingCallData {
 
-    private Long id;
+    private int id;
     private String _contact_title;
     private String _message;
     private java.util.Date _date;
@@ -20,14 +20,15 @@ public class OnGoingCallData {
     private Integer notification_type;
     private Boolean _isCallRunning;
 
+
     public OnGoingCallData() {
     }
 
-    public OnGoingCallData(Long id) {
+    public OnGoingCallData(int id) {
         this.id = id;
     }
 
-    public OnGoingCallData(Long id, String _contact_title, String _message, java.util.Date _date, Integer _contact_id, Integer _sms_id, Long _snooze_time, Boolean _is_read,
+    public OnGoingCallData(int id, String _contact_title, String _message, java.util.Date _date, Integer _contact_id, Integer _sms_id, Long _snooze_time, Boolean _is_read,
                                 Integer notification_type, Boolean _isCallRunning) {
         this.id = id;
         this._contact_title = _contact_title;
@@ -41,11 +42,11 @@ public class OnGoingCallData {
         this._isCallRunning = _isCallRunning;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -605,7 +605,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void checknavigatePermissions() {
         if (!launcherPrefs.isAppInstalledFirstTime().get()) {
             Log.d(TAG, "Display upgrade dialog.");
-            checkUpgradeVersion();
+//            checkUpgradeVersion();
         }
 
 

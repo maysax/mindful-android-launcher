@@ -46,6 +46,7 @@
                     tools:text="@string/phone" />
     
                 <ImageView
+                    android:id="@+id/img_dot"
                     android:layout_width="@dimen/dp_3"
                     android:layout_height="@dimen/dp_3"
                     android:layout_gravity="center_vertical"

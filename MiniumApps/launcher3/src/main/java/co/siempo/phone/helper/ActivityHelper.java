@@ -153,19 +153,22 @@ public class ActivityHelper {
 
     public void openFeedback() {
         try {
-            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "feedback@siempo.co", null));
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME));
-            emailIntent.putExtra(Intent.EXTRA_TEXT, UIUtils.getDeviceInfo(context));
-            emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent emailIntent = new Intent(Intent.ACTION_VIEW);
+            Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME) + "&body=" + UIUtils.getDeviceInfo(context));
+            emailIntent.setData(data);
+            emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             final PackageManager pm = context.getPackageManager();
             final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
             ResolveInfo best = null;
             for (final ResolveInfo info : matches)
                 if (info.activityInfo.packageName.endsWith(".gm") ||
                         info.activityInfo.name.toLowerCase().contains("gmail")) best = info;
-            if (best != null)
+            if (best != null) {
                 emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
-            context.startActivity(emailIntent);
+                context.startActivity(emailIntent);
+            } else {
+                UIUtils.alert(context, "No email application found in your phone");
+            }
         } catch (Exception e) {
             UIUtils.alert(context, "No email application found in your phone");
         }
