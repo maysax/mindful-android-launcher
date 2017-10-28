@@ -39,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.R;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.app.HomeWatcher;
 import minium.co.core.config.Config;
@@ -122,8 +123,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
         });
         mHomeWatcher.startWatch();
-
+        CoreApplication.getInstance().restoreDefaultApplication();
     }
+
 
     @Override
     protected void onResume() {
@@ -143,11 +145,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
                 if (mTestView != null && mTestView.getVisibility() == View.INVISIBLE) {
                     //if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
-                        Intent startMain = new Intent(Intent.ACTION_MAIN);
-                        startMain.addCategory(Intent.CATEGORY_HOME);
-                        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(startMain);
-                  //  }
+                    Intent startMain = new Intent(Intent.ACTION_MAIN);
+                    startMain.addCategory(Intent.CATEGORY_HOME);
+                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(startMain);
+                    //  }
                     mTestView.setVisibility(View.VISIBLE);
                 } else {
                     if (mTestView != null)
@@ -166,8 +168,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 layoutParams = new WindowManager.LayoutParams(
                         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-            }
-            else{
+            } else {
                 //noinspection deprecation
                 layoutParams = new WindowManager.LayoutParams(
                         WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
@@ -219,12 +220,11 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     mTestView = null;
                 }
             });
-            if (android.os.Build.VERSION.SDK_INT >= 23)
-            {
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
                 if (Settings.canDrawOverlays(this)) {
                     windowManager.addView(mTestView, layoutParams);
                 }
-            }else{
+            } else {
                 windowManager.addView(mTestView, layoutParams);
             }
 
@@ -286,7 +286,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(userPresentBroadcastReceiver!=null){
+        if (userPresentBroadcastReceiver != null) {
             unregisterReceiver(userPresentBroadcastReceiver);
         }
     }

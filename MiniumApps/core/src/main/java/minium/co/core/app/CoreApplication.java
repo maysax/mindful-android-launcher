@@ -232,6 +232,40 @@ public abstract class CoreApplication extends MultiDexApplication {
         new LoadApplications().execute();
     }
 
+
+    public void restoreDefaultApplication() {
+        String callPackage = CoreApplication.getInstance().getCallPackageName();
+        sharedPref.edit().putString("callPackage", callPackage).apply();
+
+        String messagePackage = CoreApplication.getInstance().getMessagePackageName();
+        sharedPref.edit().putString("messagePackage", messagePackage).apply();
+
+        String calenderPackage = CoreApplication.getInstance().getCalenderPackageName();
+        sharedPref.edit().putString("calenderPackage", calenderPackage).apply();
+
+        String contactPackage = CoreApplication.getInstance().getContactPackageName();
+        sharedPref.edit().putString("contactPackage", contactPackage).apply();
+
+        String mapPackage = CoreApplication.getInstance().getMapPackageName();
+        sharedPref.edit().putString("mapPackage", mapPackage).apply();
+
+        String photosPackage = CoreApplication.getInstance().getPhotosPackageName();
+        sharedPref.edit().putString("photosPackage", photosPackage).apply();
+
+        String cameraPackage = CoreApplication.getInstance().getCameraPackageName();
+        sharedPref.edit().putString("cameraPackage", cameraPackage).apply();
+
+        String browserPackage = CoreApplication.getInstance().getBrowserPackageName();
+        sharedPref.edit().putString("browserPackage", browserPackage).apply();
+
+        String clockPackage = CoreApplication.getInstance().getClockPackageName();
+        sharedPref.edit().putString("clockPackage", clockPackage).apply();
+
+        String emailPackage = CoreApplication.getInstance().getMailPackageName();
+        sharedPref.edit().putString("emailPackage", emailPackage).apply();
+    }
+
+
     protected void init() {
         // set initial configurations here
         configTracer();
@@ -469,7 +503,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         getCallPackageList().clear();
         getCallPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
         for (ResolveInfo res : getCallPackageList()) {
-            Log.d("Default App Name", "Call : " + res.activityInfo.name  + " :"+ res.activityInfo.packageName + " : " + res.activityInfo.name);
+            Log.d("Default App Name", "Call : " + res.activityInfo.name + " :" + res.activityInfo.packageName + " : " + res.activityInfo.name);
             return res.activityInfo.packageName;
         }
         return "";
