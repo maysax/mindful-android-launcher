@@ -144,12 +144,16 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         } else {
             if (item != null) {
                 if (item.getId() == 2 && !droidPrefs_.isCallClickedFirstTime().get()) {
+                    holder.imgView.setTag("1");
                     holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.rectagle_menu, null));
                 } else if (item.getId() == 1 && !droidPrefs_.isMessageClickedFirstTime().get()) {
+                    holder.imgView.setTag("1");
                     holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.rectagle_menu, null));
                 } else if (item.getId() == 16 && !droidPrefs_.isEmailClickedFirstTime().get()) {
+                    holder.imgView.setTag("1");
                     holder.relMenu.setBackground(context.getResources().getDrawable(R.drawable.rectagle_menu, null));
                 } else {
+                    holder.imgView.setTag("0");
                     holder.relMenu.setBackground(null);
                 }
             }
@@ -185,25 +189,28 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
 
         @Override
         public void onItemSelected() {
-            if (linearLayout.getTag() != null && linearLayout.getTag().equals("1")) {
-                imgView.setBackground(layout.getContext().getResources().getDrawable(R.drawable.circle_menu_selected, null));
+            if (relMenu.getTag().equals("list")) {
+                imgView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.darker_gray));
             } else {
-                linearLayout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.darker_gray));
+                imgView.setBackground(layout.getContext().getResources().getDrawable(R.drawable.circle_menu_selected, null));
             }
         }
 
         @Override
         public void onItemClear() {
-            if (linearLayout.getTag() != null && linearLayout.getTag().equals("1")) {
-                if(imgView.getTag()!=null && imgView.getTag().equals(1)){
-                    imgView.setBackground(layout.getContext().getResources().getDrawable(R.drawable.circle_menu, null));
+            if (relMenu.getTag().equals("list")) {
+                if(imgView.getTag()!=null && imgView.getTag().equals("1")){
+                    imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.rectagle_menu));
                 }else{
                     imgView.setBackground(null);
                 }
             } else {
-                linearLayout.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.transparent));
+                if(imgView.getTag()!=null && imgView.getTag().equals("1")){
+                    imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu));
+                }else{
+                    imgView.setBackground(null);
+                }
             }
-
         }
     }
 
