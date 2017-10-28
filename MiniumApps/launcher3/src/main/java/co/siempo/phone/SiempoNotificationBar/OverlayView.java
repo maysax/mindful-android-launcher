@@ -16,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -172,7 +173,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     private LinearLayout ln_ongoingCall,container_hangup;
     private TextView txtUserName,txtMessage;
     private Chronometer chronometer;
-    private ImageView imgUserOngoingCallImage;
+    private ImageView imgUserOngoingCallImage,img_dot;
 
     public OverlayView(Context context) {
         super(context);
@@ -268,6 +269,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         txtMessage = (TextView) inflateLayout.findViewById(R.id.txtMessage);
         imgUserOngoingCallImage = (ImageView) inflateLayout.findViewById(R.id.imgUserOngoingCallImage);
         container_hangup = (LinearLayout)inflateLayout.findViewById(R.id.container_hangup);
+        img_dot = (ImageView)inflateLayout.findViewById(R.id.img_dot);
         //Register Airplane Mode, Wifi Receiver, Battery Receiver, Network Receiver
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
         airplaneModeDataReceiver.register(context);
@@ -381,8 +383,16 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         if(imgOnGoingCall!=null && callData.get_isCallRunning()){
             launcherPrefs.edit().putBoolean("onGoingCall", true).commit();
             imgOnGoingCall.setVisibility(View.VISIBLE);
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
+            if(callData.getId() != 0) {
+                img_dot.setVisibility(View.VISIBLE);
+                chronometer.setVisibility(View.VISIBLE);
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                chronometer.start();
+            }
+            else{
+                img_dot.setVisibility(View.GONE);
+                chronometer.setVisibility(View.GONE);
+            }
             txtMessage.setText(callData.get_message());
             NotificationContactModel contactDetails = gettingNameAndImageFromPhoneNumber(callData.get_contact_title());
             txtUserName.setText(contactDetails.getName());
@@ -1598,7 +1608,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
             } catch (Exception e) {
             e.printStackTrace();
-            Log.d("hardikkamothi", "msg cant dissconect call...."+e.toString());
 
                     }
         }
