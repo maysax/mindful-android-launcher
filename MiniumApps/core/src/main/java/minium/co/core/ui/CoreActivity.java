@@ -136,8 +136,9 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
         });
         mHomeWatcher.startWatch();
-
+        CoreApplication.getInstance().restoreDefaultApplication();
     }
+
 
     @Override
     protected void onResume() {
