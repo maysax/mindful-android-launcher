@@ -3,6 +3,7 @@ package co.siempo.phone.old;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Parcelable;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -82,15 +83,22 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     ImageView iconGrid;
 
     @ViewById
-    RelativeLayout relMenuList,relMenuGrid;
+    RelativeLayout relMenuList, relMenuGrid;
 
     private MenuAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ItemOffsetDecoration itemDecoration;
     private ItemTouchHelper mItemTouchHelper;
+    private Parcelable mListState;
 
     public OldMenuFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mListState = mLayoutManager.onSaveInstanceState();
     }
 
     @Override
@@ -143,6 +151,9 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
             Log.d("Test1","Test2222222");
             layoutParams.setMargins(UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),54));
             cardView.setLayoutParams(layoutParams);
+        }
+        if (mListState != null) {
+            mLayoutManager.onRestoreInstanceState(mListState);
         }
     }
 
@@ -252,7 +263,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_066);
         activity_grid_view.addItemDecoration(itemDecoration);
-        mAdapter = new MenuAdapter(getActivity(), activity_grid_view,launcher3Prefs_, prefs, items, false, this, this);
+        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, launcher3Prefs_, prefs, items, false, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, OldMenuFragment.this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
@@ -281,7 +292,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         }
         itemDecoration = new ItemOffsetDecoration(context, R.dimen.menu_grid_margin);
         activity_grid_view.addItemDecoration(itemDecoration);
-        mAdapter = new MenuAdapter(getActivity(),activity_grid_view, launcher3Prefs_, prefs, items, true, this, this);
+        mAdapter = new MenuAdapter(getActivity(), activity_grid_view, launcher3Prefs_, prefs, items, true, this, this);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter, OldMenuFragment.this);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
