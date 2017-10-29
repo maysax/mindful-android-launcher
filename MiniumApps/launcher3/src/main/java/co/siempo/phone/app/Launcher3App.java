@@ -142,20 +142,21 @@ public class Launcher3App extends CoreApplication {
             if (numStarted == 0) {
                 // app went to foreground
                 Log.d(TAG,"Siempo is on foreground");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (Settings.canDrawOverlays(getApplicationContext())) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (Settings.canDrawOverlays(getApplicationContext())) {
+                            Log.d(TAG,"Display Siempo Status bar");
+                            ViewService_.intent(getApplicationContext()).showMask().start();
+                        }
+                        else{
+                            Log.d(TAG,"Overlay is off");
+                        }
+                    }
+                    else{
                         Log.d(TAG,"Display Siempo Status bar");
                         ViewService_.intent(getApplicationContext()).showMask().start();
                     }
-                    else{
-                        Log.d(TAG,"Overlay is off");
-                    }
                 }
-                else{
-                    Log.d(TAG,"Display Siempo Status bar");
-                    ViewService_.intent(getApplicationContext()).showMask().start();
-                }
-
             }
             numStarted++;
         }
@@ -176,17 +177,21 @@ public class Launcher3App extends CoreApplication {
             if (numStarted == 0) {
                 Log.d(TAG,"Siempo is on background");
                 // app went to background
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (Settings.canDrawOverlays(getApplicationContext())) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (Settings.canDrawOverlays(getApplicationContext())) {
+                            if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                                Log.d(TAG,"Hide Siempo Status bar");
+                                ViewService_.intent(getApplicationContext()).hideMask().start();
+                            }
+                        }
+                    }
+                    else{
                         if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                            Log.d(TAG,"Hide Siempo Status bar");
+                            Log.d(TAG, "Hide Siempo Status Bar");
                             ViewService_.intent(getApplicationContext()).hideMask().start();
                         }
                     }
-                }
-                else{
-                    Log.d(TAG,"Hide Siempo Status Bar");
-                    ViewService_.intent(getApplicationContext()).hideMask().start();
                 }
             }
         }
