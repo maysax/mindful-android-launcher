@@ -181,7 +181,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     isIncoming = false;
                     callStartTime = new Date();
-                    onOutgoingCallStarted(context, savedNumber, callStartTime);
+                    onOutgoingCallStarted(context, number, callStartTime);
                 }
                 else {
                     isIncoming = true;
