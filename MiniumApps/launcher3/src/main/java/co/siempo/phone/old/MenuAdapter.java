@@ -138,7 +138,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
                     holder.imgView.setTag("1");
                 } else {
                     holder.imgView.setTag("0");
-                    holder.imgView.setBackground(null);
+                    holder.imgView.setBackground(context.getResources().getDrawable(R.drawable.circle_menu_unselected, null));
                 }
             }
         } else {
@@ -208,7 +208,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
                 if(imgView.getTag()!=null && imgView.getTag().equals("1")){
                     imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu));
                 }else{
-                    imgView.setBackground(null);
+                    imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu_unselected));
                 }
             }
         }

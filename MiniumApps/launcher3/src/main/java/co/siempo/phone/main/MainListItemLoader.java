@@ -72,7 +72,7 @@ public class MainListItemLoader {
         if (fragment instanceof MainFragment) {
             items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
         }
-       // items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
+        // items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
         //items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell", R.drawable.icon_tempo, MainListItemType.ACTION));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
         items.add(new MainListItem(19, getString(R.string.title_apps), "fa-list"));
@@ -125,7 +125,12 @@ public class MainListItemLoader {
             case 1:// Message
                 if (context instanceof MainActivity) {
                     if (!((MainActivity) context).prefs.isMessageClicked().get()) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, false);
+                        if (CoreApplication.getInstance().getMessagePackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, true);
+                        } else {
+                            ((MainActivity) context).prefs.isMessageClickedFirstTime().put(true);
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
+                        }
                     } else {
                         new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
                     }
@@ -140,7 +145,12 @@ public class MainListItemLoader {
             case 2:// Call
                 if (context instanceof MainActivity) {
                     if (!((MainActivity) context).prefs.isCallClicked().get()) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
+                        if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
+                        } else {
+                            ((MainActivity) context).prefs.isCallClickedFirstTime().put(true);
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.callPackage().get());
+                        }
                     } else {
                         new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.callPackage().get());
                     }
@@ -215,7 +225,12 @@ public class MainListItemLoader {
             case 16:// Email
                 if (context instanceof MainActivity) {
                     if (!((MainActivity) context).prefs.isEmailClicked().get()) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 16, false);
+                        if (CoreApplication.getInstance().getEmailPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 16, false);
+                        } else {
+                            ((MainActivity) context).prefs.isEmailClickedFirstTime().put(true);
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.emailPackage().get());
+                        }
                     } else {
                         new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.emailPackage().get());
                     }
