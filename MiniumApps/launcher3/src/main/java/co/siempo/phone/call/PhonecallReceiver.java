@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Build;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Date;
@@ -154,9 +155,13 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     //Incoming call-  goes from IDLE to RINGING when it rings, to OFFHOOK when it's answered, to IDLE when its hung up
     //Outgoing call-  goes from IDLE to OFFHOOK when it dials out, to IDLE when hung up
     public void onCallStateChanged(Context context, int state, String number) {
+        if(TextUtils.isEmpty(number)){
+            return;
+        }
         if (lastState == state) {
             //No change, debounce extras
-            return;
+
+                return;
         }
 
         switch (state) {
@@ -172,6 +177,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 onIncomingCallStarted(context, number, callStartTime);
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
+
                 //Transition of ringing->offhook are pickups of incoming calls.  Nothing done on them
                 if (CoreApplication.getInstance().getMediaPlayer() != null) {
                     CoreApplication.getInstance().getMediaPlayer().stop();
@@ -184,19 +190,23 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     onOutgoingCallStarted(context, number, callStartTime);
                 }
                 else {
+
                     isIncoming = true;
                     callStartTime = new Date();
                     onIncomingCallAnswered(context, savedNumber, callStartTime);
                 }
                 break;
             case TelephonyManager.CALL_STATE_IDLE:
+
                 //Went to idle-  this is the end of a call.  What type depends on previous state(s)
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
                     //Ring but no pickup-  a miss
                     onMissedCall(context, savedNumber, callStartTime);
                 } else if (isIncoming) {
+
                     onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
                 } else {
+
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                     changeDeviceMode(context);
                 }
