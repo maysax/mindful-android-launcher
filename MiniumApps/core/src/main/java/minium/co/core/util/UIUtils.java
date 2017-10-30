@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Build;
@@ -77,6 +78,7 @@ public class UIUtils {
 
     /**
      * Global method to access dialog with ok button text.
+     *
      * @param context
      * @param title
      * @param msg
@@ -91,7 +93,7 @@ public class UIUtils {
                 .show();
     }
 
-    public static void confirmWithCancel(Context context, String title, String msg, DialogInterface.OnClickListener listener,DialogInterface.OnClickListener listenerNo) {
+    public static void confirmWithCancel(Context context, String title, String msg, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
         new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
@@ -134,6 +136,7 @@ public class UIUtils {
 
     /**
      * Method return true if my application is default launcher.
+     *
      * @param activity
      * @return
      */
@@ -143,6 +146,7 @@ public class UIUtils {
 
     /**
      * This method returns default launcher package name.
+     *
      * @param activity
      * @return
      */
@@ -175,7 +179,7 @@ public class UIUtils {
      */
     public static String getDeviceInfo(Context context) {
         return "\n\n\nMy Device Information is as follows:"
-                +"\nMANUFACTURER : " + Build.MANUFACTURER
+                + "\nMANUFACTURER : " + Build.MANUFACTURER
                 + "\nMODEL : " + Build.MODEL
                 + "\nVERSION : " + Build.VERSION.RELEASE
                 + "\nDISPLAY : " + getScreenDisplaySize(context);
@@ -195,5 +199,26 @@ public class UIUtils {
         int height = size.y;
         int width = size.x;
         return "" + width + "*" + height;
+    }
+
+
+    public static boolean isAppInstalled(Context context, String packageName) {
+        PackageManager packageManager = context.getPackageManager();
+        ApplicationInfo applicationInfo = null;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (applicationInfo == null) {
+            return false;
+        } else {
+            // Installed
+            if (applicationInfo.enabled) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }
