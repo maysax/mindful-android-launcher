@@ -3,6 +3,7 @@ package co.siempo.phone.main;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +95,7 @@ class MainFragmentMediator {
 
     private void loadDefaults() {
         try {
-            if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
+           if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
             } else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
@@ -142,6 +143,7 @@ class MainFragmentMediator {
                 break;
             case DEFAULT:
                 position = getAdapter().getItem(position).getId();
+
                 switch (position) {
                     case 1:
                         router.sendText(fragment.getActivity());
@@ -164,8 +166,7 @@ class MainFragmentMediator {
                 }
                 break;
             case NUMBERS:
-                position = getAdapter().getItem(position).getId();
-                if(position == 4){
+                if(getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4){
                     try {
                         fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +  TokenManager.getInstance().getCurrent().getExtra2())));
                         MainActivity.isTextLenghGreater = "";
@@ -175,7 +176,7 @@ class MainFragmentMediator {
                     }
                 }
                 else{
-                    UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
+                        router.contactNumberPicked(getAdapter().getItem(position));
                 }
         }
     }

@@ -53,13 +53,17 @@ public class SiempoAccessibilityService extends AccessibilityService {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
             }
-            // check the condition for the Marshmallow device.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (Settings.canDrawOverlays(this)) {
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+
+                // check the condition for the Marshmallow device.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.canDrawOverlays(this)) {
+                        siempoNotificationBarStatus();
+                    }
+                } else {
                     siempoNotificationBarStatus();
                 }
-            } else {
-                siempoNotificationBarStatus();
             }
 
         }
@@ -81,10 +85,10 @@ public class SiempoAccessibilityService extends AccessibilityService {
 
     public synchronized void siempoNotificationBarStatus() {
         // below code will use for further development
-//        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()))) {
-//            ViewService_.intent(getApplication()).showMask().start();
-//        } else {
-//            ViewService_.intent(getApplication()).hideMask().start();
-//        }
+        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()))) {
+            ViewService_.intent(getApplication()).showMask().start();
+        } else {
+            ViewService_.intent(getApplication()).hideMask().start();
+        }
     }
 }

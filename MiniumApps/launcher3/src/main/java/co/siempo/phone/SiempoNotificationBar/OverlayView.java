@@ -1437,7 +1437,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         if(imgBattery != null){
             if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")){
                 if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
-                    imgBattery.setImageResource(R.drawable.battery_alert);
+                    imgBattery.setImageResource(R.drawable.battery_c_05);
                 }
                 else if(batteryStatus>=5 && batteryStatus<10){
                     imgBattery.setImageResource(R.drawable.battery_c_05);

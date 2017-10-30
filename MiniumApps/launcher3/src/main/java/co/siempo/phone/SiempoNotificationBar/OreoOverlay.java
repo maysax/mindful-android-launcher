@@ -1664,7 +1664,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("hardikkamothi", "msg cant dissconect call...."+e.toString());
 
         }
     }
