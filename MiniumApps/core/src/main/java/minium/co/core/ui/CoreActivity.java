@@ -123,7 +123,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             }
         });
         mHomeWatcher.startWatch();
-        CoreApplication.getInstance().restoreDefaultApplication();
+
     }
 
 
@@ -132,6 +132,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         super.onResume();
         if (mHomeWatcher != null) mHomeWatcher.startWatch();
         isOnStopCalled = false;
+        CoreApplication.getInstance().restoreDefaultApplication();
     }
 
     /**

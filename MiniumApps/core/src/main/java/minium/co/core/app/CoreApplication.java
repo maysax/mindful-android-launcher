@@ -53,6 +53,7 @@ import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.LifecycleHandler;
 import minium.co.core.util.FontUtils;
+import minium.co.core.util.UIUtils;
 import minium.co.core.util.UserHandle;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -235,34 +236,64 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public void restoreDefaultApplication() {
         String callPackage = CoreApplication.getInstance().getCallPackageName();
-        sharedPref.edit().putString("callPackage", callPackage).apply();
+        if (!sharedPref.getString("callPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("callPackage", ""))) {
+            sharedPref.edit().putString("callPackage", callPackage).apply();
+        }
 
         String messagePackage = CoreApplication.getInstance().getMessagePackageName();
-        sharedPref.edit().putString("messagePackage", messagePackage).apply();
+        if (!sharedPref.getString("messagePackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("messagePackage", ""))) {
+            sharedPref.edit().putString("messagePackage", messagePackage).apply();
+        }
 
         String calenderPackage = CoreApplication.getInstance().getCalenderPackageName();
-        sharedPref.edit().putString("calenderPackage", calenderPackage).apply();
+        if (!sharedPref.getString("calenderPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("calenderPackage", ""))) {
+            sharedPref.edit().putString("calenderPackage", calenderPackage).apply();
+        }
 
         String contactPackage = CoreApplication.getInstance().getContactPackageName();
-        sharedPref.edit().putString("contactPackage", contactPackage).apply();
+        if (!sharedPref.getString("contactPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("contactPackage", ""))) {
+            sharedPref.edit().putString("contactPackage", contactPackage).apply();
+        }
 
         String mapPackage = CoreApplication.getInstance().getMapPackageName();
-        sharedPref.edit().putString("mapPackage", mapPackage).apply();
+        if (!sharedPref.getString("mapPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("mapPackage", ""))) {
+            sharedPref.edit().putString("mapPackage", mapPackage).apply();
+        }
 
         String photosPackage = CoreApplication.getInstance().getPhotosPackageName();
-        sharedPref.edit().putString("photosPackage", photosPackage).apply();
+        if (!sharedPref.getString("photosPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("photosPackage", ""))) {
+            sharedPref.edit().putString("photosPackage", photosPackage).apply();
+        }
 
         String cameraPackage = CoreApplication.getInstance().getCameraPackageName();
-        sharedPref.edit().putString("cameraPackage", cameraPackage).apply();
+        if (!sharedPref.getString("cameraPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("cameraPackage", ""))) {
+            sharedPref.edit().putString("cameraPackage", cameraPackage).apply();
+        }
 
         String browserPackage = CoreApplication.getInstance().getBrowserPackageName();
-        sharedPref.edit().putString("browserPackage", browserPackage).apply();
+        if (!sharedPref.getString("browserPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("browserPackage", ""))) {
+            sharedPref.edit().putString("browserPackage", browserPackage).apply();
+        }
 
         String clockPackage = CoreApplication.getInstance().getClockPackageName();
-        sharedPref.edit().putString("clockPackage", clockPackage).apply();
+        if (!sharedPref.getString("clockPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("clockPackage", ""))) {
+            sharedPref.edit().putString("clockPackage", clockPackage).apply();
+        }
 
         String emailPackage = CoreApplication.getInstance().getMailPackageName();
-        sharedPref.edit().putString("emailPackage", emailPackage).apply();
+        if (!sharedPref.getString("emailPackage", "").equalsIgnoreCase("")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("emailPackage", ""))) {
+            sharedPref.edit().putString("emailPackage", emailPackage).apply();
+        }
     }
 
 
