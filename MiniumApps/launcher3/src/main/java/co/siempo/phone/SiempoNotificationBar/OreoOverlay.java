@@ -408,13 +408,16 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 chronometer.setVisibility(View.GONE);
             }
             txtMessage.setText(callData.get_message());
-            NotificationContactModel contactDetails = gettingNameAndImageFromPhoneNumber(callData.get_contact_title());
-            txtUserName.setText(contactDetails.getName());
-            if (contactDetails.getImage() != null && !contactDetails.getImage().equals("")) {
-                Glide.with(context)
-                        .load(Uri.parse(contactDetails.getImage()))
-                        .placeholder(R.drawable.ic_person_black_24dp)
-                        .into(imgUserOngoingCallImage);
+
+            if(!TextUtils.isEmpty(callData.get_contact_title())) {
+                NotificationContactModel contactDetails = gettingNameAndImageFromPhoneNumber(callData.get_contact_title());
+                txtUserName.setText(contactDetails.getName());
+                if (contactDetails.getImage() != null && !contactDetails.getImage().equals("")) {
+                    Glide.with(context)
+                            .load(Uri.parse(contactDetails.getImage()))
+                            .placeholder(R.drawable.ic_person_black_24dp)
+                            .into(imgUserOngoingCallImage);
+                }
             }
             ln_ongoingCall.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
