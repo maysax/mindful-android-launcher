@@ -240,10 +240,16 @@ public abstract class CoreApplication extends MultiDexApplication {
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("callPackage", ""))) {
             sharedPref.edit().putString("callPackage", callPackage).apply();
         }
+        if (sharedPref.getString("callPackage", "").equalsIgnoreCase("")) {
+            sharedPref.edit().putString("callPackage", callPackage).apply();
+        }
 
         String messagePackage = CoreApplication.getInstance().getMessagePackageName();
         if (!sharedPref.getString("messagePackage", "").equalsIgnoreCase("")
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("messagePackage", ""))) {
+            sharedPref.edit().putString("messagePackage", messagePackage).apply();
+        }
+        if (sharedPref.getString("messagePackage", "").equalsIgnoreCase("")) {
             sharedPref.edit().putString("messagePackage", messagePackage).apply();
         }
 
@@ -252,10 +258,16 @@ public abstract class CoreApplication extends MultiDexApplication {
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("calenderPackage", ""))) {
             sharedPref.edit().putString("calenderPackage", calenderPackage).apply();
         }
+        if (sharedPref.getString("calenderPackage", "").equalsIgnoreCase("")) {
+            sharedPref.edit().putString("calenderPackage", calenderPackage).apply();
+        }
 
         String contactPackage = CoreApplication.getInstance().getContactPackageName();
         if (!sharedPref.getString("contactPackage", "").equalsIgnoreCase("")
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("contactPackage", ""))) {
+            sharedPref.edit().putString("contactPackage", contactPackage).apply();
+        }
+        if (sharedPref.getString("contactPackage", "").equalsIgnoreCase("")) {
             sharedPref.edit().putString("contactPackage", contactPackage).apply();
         }
 
@@ -264,10 +276,16 @@ public abstract class CoreApplication extends MultiDexApplication {
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("mapPackage", ""))) {
             sharedPref.edit().putString("mapPackage", mapPackage).apply();
         }
+        if (sharedPref.getString("mapPackage", "").equalsIgnoreCase("")) {
+            sharedPref.edit().putString("mapPackage", mapPackage).apply();
+        }
 
         String photosPackage = CoreApplication.getInstance().getPhotosPackageName();
         if (!sharedPref.getString("photosPackage", "").equalsIgnoreCase("")
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("photosPackage", ""))) {
+            sharedPref.edit().putString("photosPackage", photosPackage).apply();
+        }
+        if (sharedPref.getString("photosPackage", "").equalsIgnoreCase("")) {
             sharedPref.edit().putString("photosPackage", photosPackage).apply();
         }
 
@@ -276,22 +294,36 @@ public abstract class CoreApplication extends MultiDexApplication {
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("cameraPackage", ""))) {
             sharedPref.edit().putString("cameraPackage", cameraPackage).apply();
         }
+        if (sharedPref.getString("cameraPackage", "").equalsIgnoreCase("")) {
+            sharedPref.edit().putString("cameraPackage", cameraPackage).apply();
+        }
+
 
         String browserPackage = CoreApplication.getInstance().getBrowserPackageName();
         if (!sharedPref.getString("browserPackage", "").equalsIgnoreCase("")
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("browserPackage", ""))) {
             sharedPref.edit().putString("browserPackage", browserPackage).apply();
         }
+        if (sharedPref.getString("browserPackage", "").equalsIgnoreCase("")) {
+            sharedPref.edit().putString("browserPackage", browserPackage).apply();
+        }
+
 
         String clockPackage = CoreApplication.getInstance().getClockPackageName();
         if (!sharedPref.getString("clockPackage", "").equalsIgnoreCase("")
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("clockPackage", ""))) {
             sharedPref.edit().putString("clockPackage", clockPackage).apply();
         }
+        if (sharedPref.getString("clockPackage", "").equalsIgnoreCase("")) {
+            sharedPref.edit().putString("clockPackage", clockPackage).apply();
+        }
 
         String emailPackage = CoreApplication.getInstance().getMailPackageName();
         if (!sharedPref.getString("emailPackage", "").equalsIgnoreCase("")
                 && !UIUtils.isAppInstalled(this, sharedPref.getString("emailPackage", ""))) {
+            sharedPref.edit().putString("emailPackage", emailPackage).apply();
+        }
+        if (sharedPref.getString("emailPackage", "").equalsIgnoreCase("")) {
             sharedPref.edit().putString("emailPackage", emailPackage).apply();
         }
     }
