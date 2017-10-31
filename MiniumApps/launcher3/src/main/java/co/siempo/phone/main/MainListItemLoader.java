@@ -126,7 +126,7 @@ public class MainListItemLoader {
                 if (context instanceof MainActivity) {
                     if (!((MainActivity) context).prefs.isMessageClicked().get()) {
                         if (CoreApplication.getInstance().getMessagePackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, true);
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, false);
                         } else {
                             ((MainActivity) context).prefs.isMessageClickedFirstTime().put(true);
                             new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
