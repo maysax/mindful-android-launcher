@@ -1,6 +1,7 @@
 package co.siempo.phone.service;
 
 import android.app.ActivityManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -22,16 +23,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.call.PhonecallReceiver;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
+import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
+import co.siempo.phone.db.TableNotificationSms;
+import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.receiver.DndStartStopReceiver;
 import co.siempo.phone.util.PackageUtil;
 import co.siempo.phone.util.VibrationUtils;
+import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
@@ -72,6 +79,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Tracer.d("Notification posted: " + getNotificationToString(notification));
         if (PackageUtil.isSiempoLauncher(this)
                 || SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
+            if (notification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_EVENT)) {
+                Tracer.d("Notification posted: " + getNotificationToString(notification));
+            }
             if (PackageUtil.isSiempoBlocker(notification.getId())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 launcherPrefs.getCurrentProfile().put(0);
@@ -117,27 +127,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
     }
 
-
-    private boolean isAppOnForeground(String appPackageName) {
-        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
-        if (!tasks.isEmpty()) {
-            ComponentName topActivity = tasks.get(0).topActivity;
-            if (!topActivity.getPackageName().equals(getPackageName())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public String getLauncherPackageName() {
-        PackageManager localPackageManager = getPackageManager();
-        Intent intent = new Intent("android.intent.action.MAIN");
-        intent.addCategory("android.intent.category.HOME");
-        return localPackageManager.resolveActivity(intent,
-                PackageManager.MATCH_DEFAULT_ONLY).activityInfo.packageName;
-    }
-
     private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
         try {
             StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
@@ -149,6 +138,20 @@ public class SiempoNotificationListener extends NotificationListenerService {
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
+    }
+
+    private void saveNotificationEvent(String title, String details, Date date, int notification_type, String packageName, int content_type) {
+        DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+        TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+        TableNotificationSms sms = new TableNotificationSms();
+        sms.set_contact_title(title);
+        sms.set_message(details);
+        sms.set_date(date);
+        sms.setNotification_type(notification_type);
+        sms.setContent_type(content_type);
+        long id = smsDao.insert(sms);
+        sms.setId(id);
+        EventBus.getDefault().post(new NewNotificationEvent(sms));
     }
 
 
