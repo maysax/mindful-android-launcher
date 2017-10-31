@@ -1,6 +1,8 @@
 package co.siempo.phone.old;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
@@ -30,11 +33,12 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
     private Context context;
 
     private List<MainListItem> data = null;
-
+    public  List<ApplicationInfo> packagesList;
     public OldMenuAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
         loadData(items);
+        getInstalledPackges(context);
     }
 
     private void loadData(List<MainListItem> items) {
@@ -109,8 +113,7 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
                 } else if (menuId == Constants.EMAIL_PACKAGE) {
                     packageName = siempoSettingsDefaultAppActivity.prefs.emailPackage().get();
                 }
-                String strAppName = CoreApplication.getInstance().getApplicationNameFromPackageName(packageName);
-                Log.d("App Name : ", strAppName);
+                String strAppName = getApplicationNameFromPackageName(packageName);
                 if (strAppName.equalsIgnoreCase("")) {
                     holder.textDefaultApp.setText("Default: Not Set");
                 } else {
@@ -124,6 +127,27 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
         }
 
         return convertView;
+    }
+
+    private void getInstalledPackges(Context context){
+        packagesList = new ArrayList<>();
+        final PackageManager pm = context.getPackageManager();
+        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+        for (ApplicationInfo packageInfo : packages) {
+            packagesList.add(packageInfo);
+        }
+    }
+
+    public String getApplicationNameFromPackageName(String packagename) {
+        if (packagename != null && !packagename.equalsIgnoreCase("")) {
+            for (ApplicationInfo applicationInfo : packagesList) {
+                if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
+                    return ""+ applicationInfo.loadLabel(context.getPackageManager());
+                }
+            }
+        }
+
+        return "";
     }
 
     private static class ItemHolder {
