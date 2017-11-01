@@ -341,7 +341,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-        //configFabric();
+        configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();
