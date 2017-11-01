@@ -40,10 +40,10 @@ android {
 
     productFlavors {
         alpha {
-            versionCode 1
-            versionName "1"
-//            versionCode 10601
-//            versionName "${0}.${0}.${10}.${6}-${buildTime}"
+//            versionCode 1
+//            versionName "1"
+            versionCode 10701
+            versionName "${0}.${0}.${10}.${7}-${buildTime}"
         }
         beta {
 //            versionCode 10511

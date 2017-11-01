@@ -254,6 +254,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.BETA);
             } else {
+                appUpdaterUtils = null;
                 Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
             }
         }
