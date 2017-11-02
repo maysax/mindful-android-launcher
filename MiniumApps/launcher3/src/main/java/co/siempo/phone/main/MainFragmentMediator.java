@@ -1,6 +1,9 @@
 package co.siempo.phone.main;
 
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.net.Uri;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
 import co.siempo.phone.token.TokenItemType;
+import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
 import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
@@ -91,7 +95,7 @@ class MainFragmentMediator {
 
     private void loadDefaults() {
         try {
-            if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
+           if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
             } else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
@@ -104,7 +108,8 @@ class MainFragmentMediator {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
                 items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
                 items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
-            }
+                 items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
+             }
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -119,8 +124,9 @@ class MainFragmentMediator {
     }
 
     void listItemClicked(TokenRouter router, int position) {
-        MainListItemType type = getAdapter().getItem(position).getItemType();
-
+        MainListItemType type;
+        type = getAdapter().getItem(position).getItemType();
+        if(type!=null)
         switch (type) {
             case CONTACT:
                 router.contactPicked((ContactListItem) getAdapter().getItem(position));
@@ -131,7 +137,7 @@ class MainFragmentMediator {
                     new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                 } else {
                     UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
-                    new ActivityHelper(fragment.getActivity()).openGMape(getAdapter().getItem(position).getApplicationInfo().packageName);
+                    new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
                     MainActivity.isTextLenghGreater = "";
                 }
                 break;
@@ -160,8 +166,18 @@ class MainFragmentMediator {
                 }
                 break;
             case NUMBERS:
-                router.contactNumberPicked(getAdapter().getItem(position));
-                break;
+                if(getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4){
+                    try {
+                        fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +  TokenManager.getInstance().getCurrent().getExtra2())));
+                        MainActivity.isTextLenghGreater = "";
+                        EventBus.getDefault().post(new SendSmsEvent(true,"",""));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                        router.contactNumberPicked(getAdapter().getItem(position));
+                }
         }
     }
 

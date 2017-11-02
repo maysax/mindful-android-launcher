@@ -1,5 +1,6 @@
-package minium.co.notes.utils;
+package minium.co.core.util;
 
+import android.content.Context;
 import android.os.Environment;
 
 import org.json.JSONArray;
@@ -14,8 +15,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static minium.co.notes.ui.MainActivity.getBackupPath;
-import static minium.co.notes.ui.MainActivity.getLocalPath;
+import minium.co.core.R;
+import minium.co.core.log.Tracer;
+import minium.co.core.ui.CoreActivity;
 
 
 
@@ -38,7 +40,7 @@ import static minium.co.notes.ui.MainActivity.getLocalPath;
 public class DataUtils {
 
     public static final String NOTES_FILE_NAME = "notes.json"; // Local notes file name
-    public static final String NOTES_ARRAY_NAME = "notes"; // Root object name
+    private static final String NOTES_ARRAY_NAME = "notes"; // Root object name
 
     public static final String BACKUP_FOLDER_PATH = "/Notes"; // Backup folder path
     public static final String BACKUP_FILE_NAME = "ebbNotes_backup.json"; // Backup file name
@@ -82,7 +84,7 @@ public class DataUtils {
             return false;
 
         // If file is backup and it doesn't exist -> create file
-        if (toFile == getBackupPath()) {
+        if (toFile == CoreActivity.getBackupPath()) {
             if (isExternalStorageReadable() && isExternalStorageWritable()) {
                 if (!toFile.exists()) {
                     try {
@@ -105,7 +107,7 @@ public class DataUtils {
         }
 
         // If file is local and it doesn't exist -> create file
-        else if (toFile == getLocalPath() && !toFile.exists()) {
+        else if (toFile == CoreActivity.getLocalPath() && !toFile.exists()) {
             try {
                 Boolean created = toFile.createNewFile();
 
@@ -162,7 +164,7 @@ public class DataUtils {
         JSONArray notes = null;
 
         // If file is backup and it doesn't exist -> return null
-        if (fromFile == getBackupPath()) {
+        if (fromFile == CoreActivity.getBackupPath()) {
             if (isExternalStorageReadable() && !fromFile.exists()) {
                 return null;
             }
@@ -172,7 +174,7 @@ public class DataUtils {
          * If file is local and it doesn't exist ->
          * Initialize notes JSONArray as new and save into local file
          */
-        else if (fromFile == getLocalPath() && !fromFile.exists()) {
+        else if (fromFile == CoreActivity.getLocalPath() && !fromFile.exists()) {
             notes = new JSONArray();
 
             Boolean successfulSaveToLocal = saveData(fromFile, notes);
@@ -281,5 +283,80 @@ public class DataUtils {
 
         return Environment.MEDIA_MOUNTED.equals(state) ||
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
+    }
+
+    /**
+     * Save not from the IF field.
+     * @param context
+     * @param title
+     */
+    public static void saveNotes(Context context, String title) {
+
+        JSONObject newNoteObject = null;
+        File localPath = new File(context.getFilesDir() + "/" + DataUtils.NOTES_FILE_NAME);
+
+        // Init notes array
+        JSONArray notes = new JSONArray();
+
+        // Retrieve from local path
+        JSONArray tempNotes = DataUtils.retrieveData(localPath);
+
+        // If not null -> equal main notes to retrieved notes
+        if (tempNotes != null)
+            notes = tempNotes;
+
+        Tracer.d("All notes: ", notes);
+
+        try {
+            // Add new note to array
+            newNoteObject = new JSONObject();
+//            newNoteObject.put(NOTE_TITLE, SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT, SimpleDateFormat.SHORT).format(new Date()));
+            newNoteObject.put(DataUtils.NOTE_TITLE, getTitle(title));
+            // newNoteObject.put(NOTE_BODY, intent.getStringExtra(NOTE_BODY));
+            newNoteObject.put(DataUtils.NOTE_BODY, "");
+            newNoteObject.put(DataUtils.NOTE_COLOUR, "#FFFFFF");
+            newNoteObject.put(DataUtils.NOTE_FAVOURED, false);
+            newNoteObject.put(DataUtils.NOTE_FONT_SIZE, 18);
+            newNoteObject.put(DataUtils.NOTE_HIDE_BODY, false);
+
+            notes.put(newNoteObject);
+
+            Tracer.d("New note: " + newNoteObject);
+
+        } catch (JSONException e) {
+            Tracer.e(e, e.getMessage());
+        }
+
+        // If newNoteObject not null -> save notes array to local file and notify adapter
+
+        Boolean saveSuccessful = DataUtils.saveData(localPath, notes);
+
+        if (saveSuccessful) {
+            UIUtils.toast(context, context.getString(R.string.msg_noteCreated));
+        }
+    }
+
+    private static String getTitle(String body) {
+        if (body.isEmpty()) return "";
+        String[] splits = body.split(" ");
+        String ret = "";
+
+        if (splits.length > 0) {
+            ret += splits[0];
+            ret += " ";
+        }
+
+        if (splits.length > 1) {
+            ret += splits[1];
+            ret += " ";
+        }
+
+
+        if (splits.length > 2) {
+            ret += splits[2];
+        }
+
+        return ret;
+
     }
 }

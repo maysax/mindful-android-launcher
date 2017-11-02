@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.provider.Settings;
+import android.provider.Telephony;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,7 +40,7 @@ import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.main.ItemTouchHelperAdapter;
 import co.siempo.phone.main.ItemTouchHelperViewHolder;
 import co.siempo.phone.main.OnStartDragListener;
-import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
+import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
@@ -50,16 +51,16 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
 
     private Context mContext;
     private List<Notification> notificationList;
-            //= new ArrayList<>();
+    //= new ArrayList<>();
 
     private final OnStartDragListener mDragStartListener;
-    String defSMSApp;
+    private String defSMSApp;
 
     public RecyclerListAdapter(Context context, List<Notification> notificationList, OnStartDragListener dragStartListener) {
         mContext = context;
         mDragStartListener = dragStartListener;
         this.notificationList = notificationList;
-        defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
+        defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
     }
 
 
@@ -68,7 +69,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         mDragStartListener = null;
         this.notificationList = notificationList;
         Log.d("Test", "notificationList" + notificationList.size());
-        defSMSApp = Settings.Secure.getString(context.getContentResolver(), "sms_default_application");
+        defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
     }
 
     @Override
@@ -77,8 +78,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.notification_card, parent, false);
 
-        ItemViewHolder itemViewHolder = new ItemViewHolder(view);
-        return itemViewHolder;
+        return new ItemViewHolder(view);
     }
 
     @Override
@@ -115,8 +115,8 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         //++Tarun following code will delete this item form database
         try {
             if (notificationList != null && notificationList.get(position) != null) {
-                DeleteIteam deleteIteam = new DeleteIteam(new SingleIteamDelete());
-                deleteIteam.executeDelete(notificationList.get(position));
+                DeleteItem deleteItem = new DeleteItem(new SingleIteamDelete());
+                deleteItem.executeDelete(notificationList.get(position));
                 notificationList.remove(position);
                 notifyItemRemoved(position);
                 if (notificationList.isEmpty())
@@ -145,19 +145,19 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
      * Simple example of a view holder that implements {@link ItemTouchHelperViewHolder} and has a
      * "handle" view that initiates a drag event when touched.
      */
-    public static class ItemViewHolder extends RecyclerView.ViewHolder implements
+    static class ItemViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder {
-        public ImageView imgAppIcon, imgUserImage;
-        public TextView txtAppName, txtTime, txtUserName, txtMessage;
+        ImageView imgAppIcon, imgUserImage;
+        TextView txtAppName, txtTime, txtUserName, txtMessage;
 
-        public ItemViewHolder(View view) {
+        ItemViewHolder(View view) {
             super(view);
-            imgAppIcon = (ImageView) view.findViewById(R.id.imgAppIcon);
-            imgUserImage = (ImageView) view.findViewById(R.id.imgUserImage);
-            txtAppName = (TextView) view.findViewById(R.id.txtAppName);
-            txtTime = (TextView) view.findViewById(R.id.txtTime);
-            txtUserName = (TextView) view.findViewById(R.id.txtUserName);
-            txtMessage = (TextView) view.findViewById(R.id.txtMessage);
+            imgAppIcon = view.findViewById(R.id.imgAppIcon);
+            imgUserImage = view.findViewById(R.id.imgUserImage);
+            txtAppName = view.findViewById(R.id.txtAppName);
+            txtTime = view.findViewById(R.id.txtTime);
+            txtUserName = view.findViewById(R.id.txtUserName);
+            txtMessage = view.findViewById(R.id.txtMessage);
 
         }
 

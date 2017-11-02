@@ -15,6 +15,8 @@ import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
@@ -23,14 +25,19 @@ import minium.co.core.ui.CoreActivity;
  */
 
 
-
 @EActivity(R.layout.activity_siempo_alpha_settings)
 public class SiempoAlphaSettingsActivity extends CoreActivity {
 
     private Context context;
 
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
+    }
 
-    private final String TAG="SiempoAlphaSetting";
+    private final String TAG = "SiempoAlphaSetting";
 
 
     @AfterViews
@@ -50,35 +57,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         PackageUtil.checkPermission(this);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onBackPressed() {
-       super.onBackPressed();
-    }
 
 
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        if (event.isVisible()) {
-        }
-    }
+
 }

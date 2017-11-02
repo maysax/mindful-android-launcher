@@ -5,10 +5,10 @@ apply plugin: 'org.greenrobot.greendao'
 
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     lintOptions {
-        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware'
+        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware','TypographyFractions','TypographyQuotes','InvalidPackage'
         ignoreWarnings true
     }
     defaultConfig {
@@ -40,12 +40,14 @@ android {
 
     productFlavors {
         alpha {
-            versionCode 10512
-            versionName "${0}.${0}.${10}.${5}-${buildTime}"
+//            versionCode 1
+//            versionName "1"
+            versionCode 10701
+            versionName "${0}.${0}.${10}.${7}-${buildTime}"
         }
         beta {
-            versionCode 10511
-            versionName "${0}.${0}.${10}.${5}-${buildTime}"
+//            versionCode 10511
+//            versionName "${0}.${0}.${10}.${5}-${buildTime}"
         }
     }
 

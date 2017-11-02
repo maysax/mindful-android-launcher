@@ -2,14 +2,17 @@ package minium.co.notes.ui;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,18 +27,33 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.androidnetworking.core.Core;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.HomePressEvent;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
+import minium.co.core.util.UIUtils;
 import minium.co.notes.R;
 import minium.co.notes.colorpicker.ColorPickerDialog;
 import minium.co.notes.colorpicker.ColorPickerSwatch;
+import minium.co.notes.evernote.EvernoteManager;
 
-import static minium.co.notes.utils.DataUtils.NEW_NOTE_REQUEST;
-import static minium.co.notes.utils.DataUtils.NOTE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_COLOUR;
-import static minium.co.notes.utils.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.notes.utils.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.notes.utils.DataUtils.NOTE_REQUEST_CODE;
-import static minium.co.notes.utils.DataUtils.NOTE_TITLE;
+import static minium.co.core.util.DataUtils.NEW_NOTE_REQUEST;
+import static minium.co.core.util.DataUtils.NOTE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_COLOUR;
+import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
+import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
+import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
+import static minium.co.core.util.DataUtils.NOTE_REQUEST_CODE;
+import static minium.co.core.util.DataUtils.NOTE_TITLE;
+import static minium.co.core.util.DataUtils.retrieveData;
+import static minium.co.core.util.DataUtils.saveData;
 
 
 public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClickListener {
@@ -62,20 +80,14 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     private AlertDialog fontDialog, saveChangesDialog;
     private ColorPickerDialog colorPickerDialog;
 
-
     @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-
+        CoreApplication.getInstance().setEditNotOpen(true);
         // Android version >= 18 -> set orientation fullUser
-        if (Build.VERSION.SDK_INT >= 18)
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
-
-            // Android version < 18 -> set orientation fullSensor
-        else
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
 
         // Initialize colours and font sizes arrays
         colourArr = getResources().getStringArray(R.array.colours);
@@ -90,19 +102,19 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         setContentView(R.layout.activity_edit);
 
         // Init layout components
-        toolbar = (Toolbar) findViewById(R.id.toolbarEdit);
-        int statusbarheight=retrieveStatusBarHeight();
+        toolbar = findViewById(R.id.toolbarEdit);
+        int statusbarheight = retrieveStatusBarHeight();
 
 //
-        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0,statusbarheight,0,0);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, statusbarheight, 0, 0);
         toolbar.setLayoutParams(params);
 //
 
-        titleEdit = (EditText) findViewById(R.id.titleEdit);
-        bodyEdit = (EditText) findViewById(R.id.bodyEdit);
-        relativeLayoutEdit = (RelativeLayout) findViewById(R.id.relativeLayoutEdit);
-        ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView);
+        titleEdit = findViewById(R.id.titleEdit);
+        bodyEdit = findViewById(R.id.bodyEdit);
+        relativeLayoutEdit = findViewById(R.id.relativeLayoutEdit);
+        ScrollView scrollView = findViewById(R.id.scrollView);
 
         imm = (InputMethodManager) this.getSystemService(INPUT_METHOD_SERVICE);
 
@@ -132,6 +144,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
         if (bundle != null) {
             // If current note is not new -> initialize colour, font, hideBody and EditTexts
+            Tracer.d("Notes Edit" + bundle.getInt(NOTE_REQUEST_CODE));
             if (bundle.getInt(NOTE_REQUEST_CODE) != NEW_NOTE_REQUEST) {
                 colour = bundle.getString(NOTE_COLOUR);
                 fontSize = bundle.getInt(NOTE_FONT_SIZE);
@@ -249,7 +262,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
                         // If title not empty -> save and go back; Otherwise toast
                         if (!isEmpty(titleEdit))
                             saveChanges();
-
                         else
                             toastEditTextCannotBeEmpty();
                     }
@@ -270,6 +282,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
                             dialog.dismiss();
                             finish();
+                            CoreApplication.getInstance().setEditNotOpen(false);
                             overridePendingTransition(0, 0);
                         }
                     }
@@ -364,6 +377,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
 
         finish();
+        CoreApplication.getInstance().setEditNotOpen(false);
         overridePendingTransition(0, 0);
     }
 
@@ -396,6 +410,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
                     imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
 
                     finish();
+                    CoreApplication.getInstance().setEditNotOpen(false);
                     overridePendingTransition(0, 0);
                 }
             }
@@ -406,6 +421,11 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        CoreApplication.getInstance().setEditNotOpen(false);
+    }
 
     /**
      * Check if passed EditText text is empty or not
@@ -436,7 +456,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-
         if (!hasFocus)
             if (imm != null && titleEdit != null)
                 imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
@@ -471,4 +490,121 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         }
         return result;
     }
+
+    @Subscribe
+    public void homePressEvent(HomePressEvent event) {
+        try {
+            if (UIUtils.isMyLauncherDefault(this)) {
+                // onBackPressed();
+                if (!isEmpty(titleEdit)) {
+                    saveChanges1();
+                    Intent intent = new Intent();
+                    intent.putExtra("request", "HOME");
+                    setResult(RESULT_CANCELED, intent);
+                    imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
+                    finish();
+                    CoreApplication.getInstance().setEditNotOpen(false);
+                    overridePendingTransition(0, 0);
+                } else {
+                    toastEditTextCannotBeEmpty();
+                }
+            } else {
+                if (!isEmpty(titleEdit)) {
+                    saveChanges1();
+                    Intent intent = new Intent();
+                    intent.putExtra("request", "");
+                    setResult(RESULT_CANCELED, intent);
+                    imm.hideSoftInputFromWindow(titleEdit.getWindowToken(), 0);
+                    finish();
+                    CoreApplication.getInstance().setEditNotOpen(false);
+                    overridePendingTransition(0, 0);
+                }
+            }
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
+    private void saveChanges1() {
+        if (bundle != null) {
+            Tracer.d("Notes Edit  1" + bundle.getInt(NOTE_REQUEST_CODE));
+            JSONArray notes = new JSONArray();
+            JSONArray tempNotes = retrieveData(localPath);
+            // If not null -> equal main notes to retrieved notes
+            if (tempNotes != null)
+                notes = tempNotes;
+            // If current note is not new -> initialize colour, font, hideBody and EditTexts
+            if (bundle.getInt(NOTE_REQUEST_CODE) != NEW_NOTE_REQUEST) {
+                {
+                    JSONObject newNoteObject = null;
+
+                    try {
+
+                        // Update array item with new note data
+                        newNoteObject = notes.getJSONObject(bundle.getInt(NOTE_REQUEST_CODE));
+                        newNoteObject.put(NOTE_TITLE, titleEdit.getText().toString());
+                        newNoteObject.put(NOTE_BODY, bodyEdit.getText().toString());
+                        newNoteObject.put(NOTE_COLOUR, colour);
+                        newNoteObject.put(NOTE_FONT_SIZE, fontSize);
+                        newNoteObject.put(NOTE_HIDE_BODY, hideBody);
+
+                        // Update note at position 'requestCode'
+                        notes.put(bundle.getInt(NOTE_REQUEST_CODE), newNoteObject);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // If newNoteObject not null -> save notes array to local file and notify adapter
+                    if (newNoteObject != null) {
+                        Boolean saveSuccessful = saveData(localPath, notes);
+
+                        if (saveSuccessful) {
+                            Toast toast = Toast.makeText(getApplicationContext(),
+                                    getResources().getString(R.string.msg_noteSaved),
+                                    Toast.LENGTH_SHORT);
+                            toast.show();
+
+                        }
+                    }
+                }
+
+            }
+            // If current note is new -> request keyboard focus to note title and show keyboard
+            else if (bundle.getInt(NOTE_REQUEST_CODE) == NEW_NOTE_REQUEST) {
+                {
+                    JSONObject newNoteObject = null;
+                    try {
+                        // Add new note to array
+                        newNoteObject = new JSONObject();
+                        newNoteObject.put(NOTE_TITLE, titleEdit.getText().toString());
+                        newNoteObject.put(NOTE_BODY, bodyEdit.getText().toString());
+                        newNoteObject.put(NOTE_COLOUR, colour);
+                        newNoteObject.put(NOTE_FAVOURED, false);
+                        newNoteObject.put(NOTE_FONT_SIZE, fontSize);
+                        newNoteObject.put(NOTE_HIDE_BODY, hideBody);
+
+                        notes.put(newNoteObject);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // If newNoteObject not null -> save notes array to local file and notify adapter
+                    if (newNoteObject != null) {
+                        Boolean saveSuccessful = saveData(localPath, notes);
+                        new EvernoteManager().createNote(newNoteObject);
+                        if (saveSuccessful) {
+                            Toast toast = Toast.makeText(getApplicationContext(),
+                                    getResources().getString(R.string.msg_noteCreated),
+                                    Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }

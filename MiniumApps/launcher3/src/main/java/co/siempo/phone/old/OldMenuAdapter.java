@@ -1,8 +1,11 @@
 package co.siempo.phone.old;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,26 +15,30 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.model.MainListItem;
+import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
+import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 2/23/2017.
  */
 
-@SuppressWarnings("ALL")
 public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
 
     private Context context;
 
     private List<MainListItem> data = null;
-
+    public  List<ApplicationInfo> packagesList;
     public OldMenuAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
         loadData(items);
+        getInstalledPackges(context);
     }
 
     private void loadData(List<MainListItem> items) {
@@ -64,8 +71,9 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
             LayoutInflater inflater = LayoutInflater.from(context);
 
             convertView = inflater.inflate(R.layout.list_item, parent, false);
-            holder.icon = (ImageView) convertView.findViewById(R.id.icon);
-            holder.text = (TextView) convertView.findViewById(R.id.text);
+            holder.icon = convertView.findViewById(R.id.icon);
+            holder.text = convertView.findViewById(R.id.text);
+            holder.textDefaultApp = convertView.findViewById(R.id.textDefaultApp);
 
             convertView.setTag(holder);
         } else {
@@ -79,14 +87,71 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
             holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
                     .colorRes(R.color.text_primary)
                     .sizeDp(18));
+            int menuId = item.getId();
+            if (context instanceof SiempoSettingsDefaultAppActivity) {
+                holder.textDefaultApp.setVisibility(View.VISIBLE);
+                SiempoSettingsDefaultAppActivity siempoSettingsDefaultAppActivity = (SiempoSettingsDefaultAppActivity) context;
+                String packageName = "";
+                if (menuId == Constants.CALL_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.callPackage().get();
+                } else if (menuId == Constants.MESSAGE_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.messagePackage().get();
+                } else if (menuId == Constants.CALENDER_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.calenderPackage().get();
+                } else if (menuId == Constants.CONTACT_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.contactPackage().get();
+                } else if (menuId == Constants.MAP_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.mapPackage().get();
+                } else if (menuId == Constants.PHOTOS_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.photosPackage().get();
+                } else if (menuId == Constants.CAMERA_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.cameraPackage().get();
+                } else if (menuId == Constants.BROWSER_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.browserPackage().get();
+                } else if (menuId == Constants.CLOCK_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.clockPackage().get();
+                } else if (menuId == Constants.EMAIL_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.emailPackage().get();
+                }
+                String strAppName = getApplicationNameFromPackageName(packageName);
+                if (strAppName.equalsIgnoreCase("")) {
+                    holder.textDefaultApp.setText("Default: Not Set");
+                } else {
+                    holder.textDefaultApp.setText("Default: "+strAppName);
+                }
+
+            } else {
+                holder.textDefaultApp.setVisibility(View.GONE);
+            }
 
         }
 
         return convertView;
     }
 
+    private void getInstalledPackges(Context context){
+        packagesList = new ArrayList<>();
+        final PackageManager pm = context.getPackageManager();
+        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+        for (ApplicationInfo packageInfo : packages) {
+            packagesList.add(packageInfo);
+        }
+    }
+
+    public String getApplicationNameFromPackageName(String packagename) {
+        if (packagename != null && !packagename.equalsIgnoreCase("")) {
+            for (ApplicationInfo applicationInfo : packagesList) {
+                if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
+                    return ""+ applicationInfo.loadLabel(context.getPackageManager());
+                }
+            }
+        }
+
+        return "";
+    }
+
     private static class ItemHolder {
         ImageView icon;
-        TextView text;
+        TextView text, textDefaultApp;
     }
 }

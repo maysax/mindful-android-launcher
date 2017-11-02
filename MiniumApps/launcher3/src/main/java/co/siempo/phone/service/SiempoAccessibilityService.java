@@ -1,6 +1,7 @@
 package co.siempo.phone.service;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -29,27 +30,35 @@ public class SiempoAccessibilityService extends AccessibilityService {
     private final String TAG = "Accessibility";
 
     AudioManager audioManager;
+    private NotificationManager notificationManager;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         if (event.getEventType() == TYPE_WINDOW_STATE_CHANGED) {
-            if (event != null && event.getPackageName() != null && event.getClass() != null) {
-                ComponentName componentName = new ComponentName(event.getPackageName().toString(), event.getClassName().toString());
-                ActivityInfo activityInfo = getActivityInfo(componentName);
-                boolean isActivity = activityInfo != null;
-                if (isActivity) {
-                    packageName = activityInfo.packageName;
-                    activityName = componentName.flattenToShortString();
-                }
-                Log.d(TAG, "Packag eName::" + packageName);
-                Log.d(TAG, "Activity name::" + activityName);
-                if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
+            ComponentName componentName = new ComponentName(event.getPackageName().toString(), event.getClassName().toString());
+            ActivityInfo activityInfo = getActivityInfo(componentName);
+            boolean isActivity = activityInfo != null;
+            if (isActivity) {
+                packageName = activityInfo.packageName;
+                activityName = componentName.flattenToShortString();
+            }
+            Log.d(TAG, "Packag eName::" + packageName);
+            Log.d(TAG, "Activity name::" + activityName);
+            if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 }
+            }
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+
+                // check the condition for the Marshmallow device.
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (Settings.canDrawOverlays(this)) {
-
                         siempoNotificationBarStatus();
                     }
                 } else {
@@ -75,6 +84,7 @@ public class SiempoAccessibilityService extends AccessibilityService {
     }
 
     public synchronized void siempoNotificationBarStatus() {
+        // below code will use for further development
         if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()))) {
             ViewService_.intent(getApplication()).showMask().start();
         } else {

@@ -1,5 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
         jcenter()
@@ -10,45 +9,32 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-
-        // apt required for AndroidAnnotations
-        // https://bitbucket.org/hvisser/android-apt
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-
-        // Fabric
-        // https://twittersdk.artifactoryonline.com/twittersdk/public/io/fabric/tools/gradle/
-        classpath 'io.fabric.tools:gradle:1.21.2'
-
+        classpath 'io.fabric.tools:gradle:1.21.6'
         classpath 'me.tatarka:gradle-retrolambda:3.2.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-
-        //greeendao
         classpath "org.greenrobot:greendao-gradle-plugin:3.2.0"
-
         classpath 'com.google.gms:google-services:3.0.0'
 
     }
 }
-
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
     }
 }
-
 project.ext {
-    compileSdkVersion = 26
-    buildToolsVersion = "25.0.3"
+
     minSdkVersion = 21  // Targeting lollipop
     targetSdkVersion = 26
 
 
-    supportVersion = "25.3.1"
-    annotationsVersion = "4.0.0"
+    supportVersion = "26.0.0"
+    annotationsVersion = "4.3.1"
     iconifyVersion = "2.2.1"
     calligraphyVersion = "2.1.0@aar"
     eventbusVersion = "3.0.0-beta1"
@@ -77,7 +63,6 @@ project.ext {
     // greendao database version
     databaseVersion = 3
 
-
     // get the current build SHA
     gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
 
@@ -90,9 +75,10 @@ project.ext {
     versionPatch = 10
     versionBuild = 5 // bump for internal builds, public betas, etc.
 }
-
-
-
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+
+dependencies {
 }

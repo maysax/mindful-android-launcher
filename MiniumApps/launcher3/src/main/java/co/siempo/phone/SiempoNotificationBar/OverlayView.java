@@ -2,8 +2,8 @@ package co.siempo.phone.SiempoNotificationBar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.app.KeyguardManager;
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -16,37 +16,43 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.telephony.TelephonyManager;
-import android.text.method.KeyListener;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.NetworkUtils;
+import com.bumptech.glide.Glide;
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 
@@ -56,7 +62,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import co.siempo.phone.R;
 import co.siempo.phone.db.CallStorageDao;
@@ -67,6 +72,7 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.ConnectivityEvent;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
+import co.siempo.phone.event.OnGoingCallEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.event.TorchOnOff;
@@ -75,10 +81,9 @@ import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.notification.ItemClickSupport;
 import co.siempo.phone.notification.Notification;
 import co.siempo.phone.notification.NotificationContactModel;
-import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.notification.RecyclerListAdapter;
-import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
+import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
@@ -89,7 +94,6 @@ import co.siempo.phone.service.StatusBarService;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.HomeWatcher;
-import minium.co.core.ui.CoreActivity;
 
 import static android.graphics.PixelFormat.TRANSLUCENT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -142,14 +146,16 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      */
 
     private RecyclerView recyclerView;
-    private TextView emptyView, textView_notification_title;
+    private TextView emptyView, txtClearAll, txtHide, textView_notification_title;
     private SeekBar seekbarBrightness;
+    LinearLayout linearClearAll;
     private int brightness;
     private RecyclerListAdapter adapter;
     private List<Notification> notificationList;
     private RelativeLayout layout_notification, relWifi, relMobileData, relBle, relDND, relAirPlane, relFlash, relBrightness;
-    private ImageView img_background, img_notification_Wifi, img_notification_Data, img_notification_Ble, img_notification_Dnd, img_notification_Airplane, img_notification_Flash, img_notification_Brightness;
+    private ImageView img_background, img_notification_Wifi, img_notification_Data, img_notification_Ble, img_notification_Dnd, img_notification_Airplane, img_notification_Flash, img_notification_Brightness, imgOnGoingCall;
     private int wifilevel;
+    private NotificationManager notificationManager;
 
 
     private enum mSwipeDirection {UP, DOWN, NONE}
@@ -164,7 +170,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     private AudioManager audioManager;
     private boolean isWiFiOn = false;
     AudioChangeReceiver audioChangeReceiver;
-
+    private LinearLayout ln_ongoingCall,container_hangup;
+    private TextView txtUserName,txtMessage;
+    private Chronometer chronometer;
+    private ImageView imgUserOngoingCallImage,img_dot;
 
     public OverlayView(Context context) {
         super(context);
@@ -172,21 +181,18 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         siempoNotificationBar = false;
         inflateLayout = inflate(context, R.layout.notification_statusbar, this);
         mWinManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        /**
-         * Register Event Bus to get updated status of Battery, WiFi, AirPlane Mode
-         */
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //Register Event Bus to get updated status of Battery, WiFi, AirPlane Mode
         EventBus.getDefault().register(this);
 
-        /**
-         * StatusBar Methods to init components and update UI
-         */
+
+        //StatusBar Methods to init components and update UI
         context.startService(new Intent(context, StatusBarService.class));
         initStatusBarComponents();
 
 
-        /**
-         * Hide Notification if it is visible by press homepress key or Recent Button Key
-         */
+        //Hide Notification if it is visible by press homepress key or Recent Button Key
         HomeWatcher mHomeWatcher = new HomeWatcher(context);
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
@@ -224,8 +230,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         @Override
         public void onReceive(Context arg0, Intent intent) {
             Log.d("Test", "intent.getAction()" + intent.getAction());
-            if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
                 if (myKM.isKeyguardSecure()) {
                     hide();
@@ -242,25 +247,30 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      * Status Bar init components
      */
     private void initStatusBarComponents() {
-        /**
-         * Initialization of components
-         */
+
+        //Initialization of components
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
-        wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        imgNotification = (ImageView) inflateLayout.findViewById(R.id.imgNotification);
-        imgTempo = (ImageView) inflateLayout.findViewById(R.id.imgTempo);
-        imgBattery = (ImageView) inflateLayout.findViewById(R.id.imgBattery);
-        imgSignal = (ImageView) inflateLayout.findViewById(R.id.imgSignal);
-        imgWifi = (ImageView) inflateLayout.findViewById(R.id.imgWifi);
-        imgAirplane = (ImageView) inflateLayout.findViewById(R.id.imgAirplane);
-        iTxt2 = (TextClock) inflateLayout.findViewById(R.id.iTxt2);
-        layout_notification = (RelativeLayout) inflateLayout.findViewById(R.id.layout_notification);
+        wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        imgNotification = inflateLayout.findViewById(R.id.imgNotification);
+        imgTempo = inflateLayout.findViewById(R.id.imgTempo);
+        imgBattery = inflateLayout.findViewById(R.id.imgBattery);
+        imgSignal = inflateLayout.findViewById(R.id.imgSignal);
+        imgWifi = inflateLayout.findViewById(R.id.imgWifi);
+        imgAirplane = inflateLayout.findViewById(R.id.imgAirplane);
+        iTxt2 = inflateLayout.findViewById(R.id.iTxt2);
+        layout_notification = inflateLayout.findViewById(R.id.layout_notification);
 
 
-        /**
-         * Register Airplane Mode, Wifi Receiver, Battery Reciever, Network Reciever
-         */
 
+        imgOnGoingCall = (ImageView) inflateLayout.findViewById(R.id.imgOnGoingCall);
+        ln_ongoingCall =(LinearLayout)inflateLayout.findViewById(R.id.ln_ongoingCall);
+        chronometer= (Chronometer)inflateLayout.findViewById(R.id.chronometer);
+        txtUserName = (TextView)inflateLayout.findViewById(R.id.txtUserName);
+        txtMessage = (TextView) inflateLayout.findViewById(R.id.txtMessage);
+        imgUserOngoingCallImage = (ImageView) inflateLayout.findViewById(R.id.imgUserOngoingCallImage);
+        container_hangup = (LinearLayout)inflateLayout.findViewById(R.id.container_hangup);
+        img_dot = (ImageView)inflateLayout.findViewById(R.id.img_dot);
+        //Register Airplane Mode, Wifi Receiver, Battery Receiver, Network Receiver
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
         airplaneModeDataReceiver.register(context);
         wifiDataReceiver = new WifiDataReceiver();
@@ -275,34 +285,32 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
         updateStatusBarUI();
 
-
-        /**
-         * Initialization components of Siempo NotificationBar
-         */
+        //Initialization components of Siempo NotificationBar//
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        seekbarBrightness = (SeekBar) inflateLayout.findViewById(R.id.seekbarBrightness);
-        recyclerView = (RecyclerView) inflateLayout.findViewById(R.id.recyclerView);
-        emptyView = (TextView) inflateLayout.findViewById(R.id.emptyView);
-        img_background = (ImageView) inflateLayout.findViewById(R.id.img_background);
-        textView_notification_title = (TextView) inflateLayout.findViewById(R.id.textView_notification_title);
-        relWifi = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationWifi);
-        relBle = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBle);
-        relDND = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationDND);
-        relAirPlane = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationAirPlane);
-        relBrightness = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationBrightness);
-        relFlash = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationFlash);
-        relMobileData = (RelativeLayout) inflateLayout.findViewById(R.id.relNotificationMobileData);
-        img_notification_Wifi = (ImageView) inflateLayout.findViewById(R.id.imgNotificationWifi);
-        img_notification_Data = (ImageView) inflateLayout.findViewById(R.id.imgNotificationData);
-        img_notification_Ble = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBle);
-        img_notification_Dnd = (ImageView) inflateLayout.findViewById(R.id.imgNotificationDnd);
-        img_notification_Airplane = (ImageView) inflateLayout.findViewById(R.id.imgNotificationAirplane);
-        img_notification_Flash = (ImageView) inflateLayout.findViewById(R.id.imgNotificationFlash);
-        img_notification_Brightness = (ImageView) inflateLayout.findViewById(R.id.imgNotificationBrightness);
-        relWifi.setOnClickListener(this);
-        relBle.setOnClickListener(this);
+        seekbarBrightness = inflateLayout.findViewById(R.id.seekbarBrightness);
+        recyclerView = inflateLayout.findViewById(R.id.recyclerView);
+        txtClearAll = inflateLayout.findViewById(R.id.txtClearAll);
+        txtHide = inflateLayout.findViewById(R.id.txtHide);
+        emptyView = inflateLayout.findViewById(R.id.emptyView);
+        linearClearAll = inflateLayout.findViewById(R.id.linearClearAll);
+        img_background = inflateLayout.findViewById(R.id.img_background);
+        textView_notification_title = inflateLayout.findViewById(R.id.textView_notification_title);
+        relWifi = inflateLayout.findViewById(R.id.relNotificationWifi);
+        relBle = inflateLayout.findViewById(R.id.relNotificationBle);
+        relDND = inflateLayout.findViewById(R.id.relNotificationDND);
+        relAirPlane = inflateLayout.findViewById(R.id.relNotificationAirPlane);
+        relBrightness = inflateLayout.findViewById(R.id.relNotificationBrightness);
+        relFlash = inflateLayout.findViewById(R.id.relNotificationFlash);
+        relMobileData = inflateLayout.findViewById(R.id.relNotificationMobileData);
+        img_notification_Wifi = inflateLayout.findViewById(R.id.imgNotificationWifi);
+        img_notification_Data = inflateLayout.findViewById(R.id.imgNotificationData);
+        img_notification_Ble = inflateLayout.findViewById(R.id.imgNotificationBle);
+        img_notification_Dnd = inflateLayout.findViewById(R.id.imgNotificationDnd);
+        img_notification_Airplane = inflateLayout.findViewById(R.id.imgNotificationAirplane);
+        img_notification_Flash = inflateLayout.findViewById(R.id.imgNotificationFlash);
+        img_notification_Brightness = inflateLayout.findViewById(R.id.imgNotificationBrightness);
         relMobileData.setOnClickListener(this);
         relDND.setOnClickListener(this);
         relAirPlane.setOnClickListener(this);
@@ -343,8 +351,8 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         bleSignal = new BleSignal();
         context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 
-
     }
+
 
     private class AudioChangeReceiver extends BroadcastReceiver {
         @Override
@@ -363,6 +371,78 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         updateStatusBarUI();
     }
 
+
+
+    /**
+     * Below function is use to show and hide ongoing Call notification
+     */
+    @Subscribe
+    public void OnGoingCallEvent(OnGoingCallEvent event){
+        long notificationCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
+        OnGoingCallData callData=event.getCallData();
+        if(imgOnGoingCall!=null && callData.get_isCallRunning()){
+            launcherPrefs.edit().putBoolean("onGoingCall", true).commit();
+            imgOnGoingCall.setVisibility(View.VISIBLE);
+            if(callData.getId() != 0) {
+                img_dot.setVisibility(View.VISIBLE);
+                chronometer.setVisibility(View.VISIBLE);
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                chronometer.start();
+            }
+            else{
+                img_dot.setVisibility(View.GONE);
+                chronometer.setVisibility(View.GONE);
+            }
+            txtMessage.setText(callData.get_message());
+            if(!TextUtils.isEmpty(callData.get_contact_title())){
+                NotificationContactModel contactDetails = gettingNameAndImageFromPhoneNumber(callData.get_contact_title());
+                txtUserName.setText(contactDetails.getName());
+                if (contactDetails.getImage() != null && !contactDetails.getImage().equals("")) {
+                    Glide.with(context)
+                            .load(Uri.parse(contactDetails.getImage()))
+                            .placeholder(R.drawable.ic_person_black_24dp)
+                            .into(imgUserOngoingCallImage);
+                }
+            }
+
+            ln_ongoingCall.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+
+                    ln_ongoingCall.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent myIntent=new Intent();
+                            myIntent.setAction(Intent.ACTION_CALL_BUTTON);
+                            myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(myIntent);
+                            hide();
+                            }
+                        });
+            container_hangup.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        declinePhone(context);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    }
+                });
+            }
+        if(imgOnGoingCall!=null && !callData.get_isCallRunning()){
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.stop();
+            launcherPrefs.edit().putBoolean("onGoingCall", false).commit();
+            ln_ongoingCall.setVisibility(View.GONE);
+            imgOnGoingCall.setVisibility(View.GONE);
+            if(notificationCount==0){
+                emptyView.setVisibility(View.VISIBLE);
+                }
+            }
+        if(imgNotification!=null) {
+            imgNotification.setVisibility(notificationCount == 0 ? View.GONE : View.VISIBLE);
+        }
+    }
 
     /**
      * Status Bar update UI
@@ -391,10 +471,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     public void onTempoEvent(TempoEvent event) {
         if (event.isStarting()) {
             imgTempo.setVisibility(View.VISIBLE);
-            launcherPrefs.edit().putBoolean("isTempoActive", true).commit();
+            launcherPrefs.edit().putBoolean("isTempoActive", true).apply();
         } else {
             imgTempo.setVisibility(View.GONE);
-            launcherPrefs.edit().putBoolean("isTempoActive", false).commit();
+            launcherPrefs.edit().putBoolean("isTempoActive", false).apply();
         }
     }
 
@@ -433,29 +513,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 bindWiFiImage(level);
             }
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
-            if (imgBattery != null) imgBattery.setImageResource(getBatteryIcon2(event.getValue()));
+                displayBatteryIcon(event.getValue(),event.getType());
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
-            /**
-             * Update status bar network icon
-             */
-//            if (imgSignal != null) {
-//                if (event.getValue() == 0 || event.getValue() == -1) {
-//                    imgSignal.setImageResource(R.drawable.ic_signal_0);
-//                } else if (event.getValue() == 1) {
-//                    imgSignal.setImageResource(R.drawable.ic_signal_1);
-//                } else if (event.getValue() == 2) {
-//                    imgSignal.setImageResource(R.drawable.ic_signal_2);
-//                } else if (event.getValue() == 3) {
-//                    imgSignal.setImageResource(R.drawable.ic_signal_3);
-//                } else if (event.getValue() == 3) {
-//                    imgSignal.setImageResource(R.drawable.ic_signal_4);
-//                }
-//
-//            }
+            //Update status bar network icon
             imgSignal.setImageResource(getNetworkIcon(event.getValue()));
-            /**
-             * Update notification bar network icon
-             */
             if (!NetworkUtil.isAirplaneModeOn(context)) {
                 if (relMobileData != null) {
                     relMobileData.setEnabled(true);
@@ -516,14 +577,19 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     public void notificationSwipeEvent(NotificationSwipeEvent event) {
         try {
             if (event.isNotificationListNull()) {
+                notificationList.clear();
                 if (recyclerView != null) recyclerView.setVisibility(View.GONE);
-                if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+                if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+                    if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
+                }
+                if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
                 if (textView_notification_title != null)
                     textView_notification_title.setVisibility(View.GONE);
                 if (imgNotification != null) imgNotification.setVisibility(View.GONE);
             } else {
                 if (recyclerView != null) recyclerView.setVisibility(View.VISIBLE);
                 if (emptyView != null) emptyView.setVisibility(View.GONE);
+                if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
                 if (textView_notification_title != null)
                     textView_notification_title.setVisibility(View.VISIBLE);
             }
@@ -596,7 +662,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         addSiempoNotificationBar(event);
         return super.onTouchEvent(event);
     }
@@ -679,6 +744,22 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 hide();
             }
         });
+        txtClearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                deleteItem.deleteAll();
+                notificationList.clear();
+                adapter.notifyDataSetChanged();
+                EventBus.getDefault().post(new NotificationSwipeEvent(true));
+            }
+        });
+        txtHide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hide();
+            }
+        });
         img_background.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -705,27 +786,28 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
-                    hide();
-                } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
-                    if (
-                            ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
-                                    && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                if (notificationList.get(position).getId() != -1) {
+                    if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
                         hide();
+                    } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
+                        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                                        && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                            hide();
+                        }
                     }
+                    // Following code will delete all notification of same user and same types.
+                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                    deleteItem.executeDelete(notificationList.get(position));
+                    loadData();
                 }
-                // Following code will delete all notification of same user and same types.
-                DeleteIteam deleteIteam = new DeleteIteam(new MultipleIteamDelete());
-                deleteIteam.executeDelete(notificationList.get(position));
-                loadData();
             }
 
 
@@ -738,8 +820,80 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         bleSignal = new BleSignal();
         context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
         statusOfQuickSettings();
+        relWifi.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gdWifi.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
+        relBle.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gdBle.onTouchEvent(motionEvent);
+                return true;
+            }
+        });
     }
 
+    /**
+     * Touch listener for the wifi to detect double tap and single tap
+     */
+    final GestureDetector gdWifi = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            hide();
+            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            seekbarBrightness.setVisibility(View.GONE);
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
+            turnOnOffWIFI();
+            return super.onSingleTapConfirmed(e);
+        }
+
+    });
+
+    /**
+     * Touch listener for the BLE to detect double tap and single tap
+     */
+    final GestureDetector gdBle = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            hide();
+            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            return true;
+        }
+
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            seekbarBrightness.setVisibility(View.GONE);
+            img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
+            if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                BluetoothAdapter.getDefaultAdapter().disable();
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
+            } else {
+                if (BluetoothAdapter.getDefaultAdapter() != null) {
+                    BluetoothAdapter.getDefaultAdapter().enable();
+                }
+                relBle.setEnabled(false);
+                img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
+                EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
+            }
+            return super.onSingleTapConfirmed(e);
+        }
+
+    });
 
     private void bindBrightnessControl() {
         img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
@@ -819,7 +973,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             imgAirplane.setVisibility(View.VISIBLE);
             wifiManager.setWifiEnabled(false);
             img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
-            if(BluetoothAdapter.getDefaultAdapter()!=null) {
+            if (BluetoothAdapter.getDefaultAdapter() != null) {
                 BluetoothAdapter.getDefaultAdapter().disable();
             }
             img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
@@ -840,7 +994,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
                 bindWiFiImage(wifilevel);
             }
-            if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_on));
             } else {
                 img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
@@ -912,16 +1066,19 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         tableNotificationSms.getTopTableNotificationSmsDao().get_message(), time, false, tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type());
                 notificationList.add(0, n);
                 adapter.notifyDataSetChanged();
-
                 if (notificationList.size() == 0) {
                     recyclerView.setVisibility(View.GONE);
-                    emptyView.setVisibility(View.VISIBLE);
+                    if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
+                    if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
                     textView_notification_title.setVisibility(View.GONE);
                     imgNotification.setVisibility(View.GONE);
                 } else {
                     adapter.notifyDataSetChanged();
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
+                    if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
                     textView_notification_title.setVisibility(View.VISIBLE);
                     imgNotification.setVisibility(View.VISIBLE);
                 }
@@ -946,8 +1103,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         return false;
     }
 
+
     private void setUpNotifications(List<TableNotificationSms> items) {
         notificationList.clear();
+
         for (int i = 0; i < items.size(); i++) {
             @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(items.get(i).get_date());
@@ -957,13 +1116,17 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
         if (items.size() == 0) {
             recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
+            if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+                emptyView.setVisibility(View.VISIBLE);
+            }
             textView_notification_title.setVisibility(View.GONE);
+            if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
             imgNotification.setVisibility(View.GONE);
         } else {
             adapter.notifyDataSetChanged();
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
+            if (linearClearAll != null) linearClearAll.setVisibility(View.VISIBLE);
             textView_notification_title.setVisibility(View.VISIBLE);
             imgNotification.setVisibility(View.VISIBLE);
         }
@@ -1025,8 +1188,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                             if (e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE
                                     && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                                 hide();
-                            } else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE
-                                    && Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
                             }
                         }
                     } catch (Exception e) {
@@ -1113,40 +1274,32 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
-            case R.id.relNotificationWifi:
-                seekbarBrightness.setVisibility(View.GONE);
-                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                turnOnOffWIFI();
-                break;
-            case R.id.relNotificationBle:
-                seekbarBrightness.setVisibility(View.GONE);
-                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                    BluetoothAdapter.getDefaultAdapter().disable();
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
-                } else {
-                    if(BluetoothAdapter.getDefaultAdapter()!=null){
-                        BluetoothAdapter.getDefaultAdapter().enable();
-                    }
-                    relBle.setEnabled(false);
-                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
-                }
-                break;
             case R.id.relNotificationDND:
                 seekbarBrightness.setVisibility(View.GONE);
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (currentModeDeviceMode == 0) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 1).apply();
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                    } else {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                    }
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_vibration_black_24dp));
                 } else if (currentModeDeviceMode == 1) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 2).apply();
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                    } else {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    }
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
                 } else if (currentModeDeviceMode == 2) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 0).apply();
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+                    } else {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    }
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
                 }
                 currentModeDeviceMode = launcherPrefs.getInt("getCurrentProfile", 0);
@@ -1190,7 +1343,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_on_black_24dp));
                     }
                 } else {
-                    Intent intent = null;
+                    Intent intent;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                         hide();
                         intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
@@ -1283,4 +1436,182 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         return true;
     }
 
+    public void displayBatteryIcon(int batteryStatus,String isCharging){
+        if(imgBattery != null){
+            if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")){
+                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+                    imgBattery.setImageResource(R.drawable.battery_c_05);
+                }
+                else if(batteryStatus>=5 && batteryStatus<10){
+                    imgBattery.setImageResource(R.drawable.battery_c_05);
+                }
+                else if(batteryStatus>=10 && batteryStatus<15){
+                    imgBattery.setImageResource(R.drawable.battery_c_10);
+                }
+                else if(batteryStatus>=15 && batteryStatus<20){
+                    imgBattery.setImageResource(R.drawable.battery_c_15);
+                }
+                else if(batteryStatus>=20 && batteryStatus<25){
+                    imgBattery.setImageResource(R.drawable.battery_c_20);
+                }
+                else if(batteryStatus>=25 && batteryStatus<30){
+                    imgBattery.setImageResource(R.drawable.battery_c_25);
+                }
+                else if(batteryStatus>=30 && batteryStatus<35){
+                    imgBattery.setImageResource(R.drawable.battery_c_30);
+                }
+                else if(batteryStatus>=35 && batteryStatus<40){
+                    imgBattery.setImageResource(R.drawable.battery_c_35);
+                }
+                else if(batteryStatus>=40 && batteryStatus<45){
+                    imgBattery.setImageResource(R.drawable.battery_c_40);
+                }
+                else if(batteryStatus>=45 && batteryStatus<50){
+                    imgBattery.setImageResource(R.drawable.battery_c_45);
+                }
+                else if(batteryStatus>=50 && batteryStatus<55){
+                    imgBattery.setImageResource(R.drawable.battery_c_50);
+                }
+                else if(batteryStatus>=55 && batteryStatus<60){
+                    imgBattery.setImageResource(R.drawable.battery_c_55);
+                }
+                else if(batteryStatus>=60 && batteryStatus<65){
+                    imgBattery.setImageResource(R.drawable.battery_c_60);
+                }
+                else if(batteryStatus>=65 && batteryStatus<70){
+                    imgBattery.setImageResource(R.drawable.battery_c_65);
+                }
+                else if(batteryStatus>=70 && batteryStatus<75){
+                    imgBattery.setImageResource(R.drawable.battery_c_70);
+                }
+                else if(batteryStatus>=75 && batteryStatus<80){
+                    imgBattery.setImageResource(R.drawable.battery_c_75);
+                }
+                else if(batteryStatus>=80 && batteryStatus<85){
+                    imgBattery.setImageResource(R.drawable.battery_c_80);
+                }
+                else if(batteryStatus>=85 && batteryStatus<90){
+                    imgBattery.setImageResource(R.drawable.battery_c_85);
+                }
+                else if(batteryStatus>=90 && batteryStatus<95){
+                    imgBattery.setImageResource(R.drawable.battery_c_90);
+                }
+                else if(batteryStatus>=95 && batteryStatus<100){
+                    imgBattery.setImageResource(R.drawable.battery_c_95);
+                }
+                else if(batteryStatus>=100){
+                    imgBattery.setImageResource(R.drawable.battery_c_100);
+                }
+                else{
+                    imgBattery.setImageResource(R.drawable.battery_c_50);
+                }
+            }
+            else if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("OFF")){
+                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+                    imgBattery.setImageResource(R.drawable.battery_alert);
+                }
+                else if(batteryStatus>=5 && batteryStatus<10){
+                    imgBattery.setImageResource(R.drawable.battery_n_05);
+                }
+                else if(batteryStatus>=10 && batteryStatus<15){
+                    imgBattery.setImageResource(R.drawable.battery_n_10);
+                }
+                else if(batteryStatus>=15 && batteryStatus<20){
+                    imgBattery.setImageResource(R.drawable.battery_n_15);
+                }
+                else if(batteryStatus>=20 && batteryStatus<25){
+                    imgBattery.setImageResource(R.drawable.battery_n_20);
+                }
+                else if(batteryStatus>=25 && batteryStatus<30){
+                    imgBattery.setImageResource(R.drawable.battery_n_25);
+                }
+                else if(batteryStatus>=30 && batteryStatus<35){
+                    imgBattery.setImageResource(R.drawable.battery_n_30);
+                }
+                else if(batteryStatus>=35 && batteryStatus<40){
+                    imgBattery.setImageResource(R.drawable.battery_n_35);
+                }
+                else if(batteryStatus>=40 && batteryStatus<45){
+                    imgBattery.setImageResource(R.drawable.battery_n_40);
+                }
+                else if(batteryStatus>=45 && batteryStatus<50){
+                    imgBattery.setImageResource(R.drawable.battery_n_45);
+                }
+                else if(batteryStatus>=50 && batteryStatus<55){
+                    imgBattery.setImageResource(R.drawable.battery_n_50);
+                }
+                else if(batteryStatus>=55 && batteryStatus<60){
+                    imgBattery.setImageResource(R.drawable.battery_n_55);
+                }
+                else if(batteryStatus>=60 && batteryStatus<65){
+                    imgBattery.setImageResource(R.drawable.battery_n_60);
+                }
+                else if(batteryStatus>=65 && batteryStatus<70){
+                    imgBattery.setImageResource(R.drawable.battery_n_65);
+                }
+                else if(batteryStatus>=70 && batteryStatus<75){
+                    imgBattery.setImageResource(R.drawable.battery_n_70);
+                }
+                else if(batteryStatus>=75 && batteryStatus<80){
+                    imgBattery.setImageResource(R.drawable.battery_n_75);
+                }
+                else if(batteryStatus>=80 && batteryStatus<85){
+                    imgBattery.setImageResource(R.drawable.battery_n_80);
+                }
+                else if(batteryStatus>=85 && batteryStatus<90){
+                    imgBattery.setImageResource(R.drawable.battery_n_85);
+                }
+                else if(batteryStatus>=90 && batteryStatus<95){
+                    imgBattery.setImageResource(R.drawable.battery_n_90);
+                }
+                else if(batteryStatus>=95 && batteryStatus<100){
+                    imgBattery.setImageResource(R.drawable.battery_n_95);
+                }
+                else if(batteryStatus>=100){
+                    imgBattery.setImageResource(R.drawable.battery_n_100);
+                }
+                else{
+                    imgBattery.setImageResource(R.drawable.battery_n_50);
+                }
+            }
+            else{
+                Log.d(TAG,"Charging Status not identify");
+            }
+        }
+    }
+
+    private void declinePhone(Context context) throws Exception {
+        
+        try {
+            String serviceManagerName = "android.os.ServiceManager";
+            String serviceManagerNativeName = "android.os.ServiceManagerNative";
+            String telephonyName = "com.android.internal.telephony.ITelephony";
+            Class<?> telephonyClass;
+            Class<?> telephonyStubClass;
+            Class<?> serviceManagerClass;
+            Class<?> serviceManagerNativeClass;
+            Method telephonyEndCall;
+            Object telephonyObject;
+            Object serviceManagerObject;
+            telephonyClass = Class.forName(telephonyName);
+            telephonyStubClass = telephonyClass.getClasses()[0];
+            serviceManagerClass = Class.forName(serviceManagerName);
+            serviceManagerNativeClass = Class.forName(serviceManagerNativeName);
+            Method getService = // getDefaults[29];
+                            serviceManagerClass.getMethod("getService", String.class);
+            Method tempInterfaceMethod = serviceManagerNativeClass.getMethod("asInterface", IBinder.class);
+            Binder tmpBinder = new Binder();
+            tmpBinder.attachInterface(null, "fake");
+            serviceManagerObject = tempInterfaceMethod.invoke(null, tmpBinder);
+            IBinder retbinder = (IBinder) getService.invoke(serviceManagerObject, "phone");
+            Method serviceMethod = telephonyStubClass.getMethod("asInterface", IBinder.class);
+            telephonyObject = serviceMethod.invoke(null, retbinder);
+            telephonyEndCall = telephonyClass.getMethod("endCall");
+            telephonyEndCall.invoke(telephonyObject);
+
+            } catch (Exception e) {
+            e.printStackTrace();
+
+                    }
+        }
 }

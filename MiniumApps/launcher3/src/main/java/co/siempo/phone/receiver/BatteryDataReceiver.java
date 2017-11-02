@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import android.util.Log;
 
 import co.siempo.phone.event.ConnectivityEvent;
 import de.greenrobot.event.EventBus;
@@ -40,16 +41,22 @@ public class BatteryDataReceiver extends BroadcastReceiver implements IDynamicSt
 
     @Override
     public void handleIntent(Context context, Intent intent) {
-        int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-        int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, 1);
-        int status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0);
 
-        int iconLevel = (int) (((float) level / scale) * 6) + 1;
-
-        if (status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL)
-            iconLevel += 7;
-
-        Tracer.d("BatteryDataReceiver level: " + iconLevel);
-        EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BATTERY, iconLevel));
+        int batterystatus = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+        boolean isCharging = batterystatus == BatteryManager.BATTERY_STATUS_CHARGING ||
+                batterystatus == BatteryManager.BATTERY_STATUS_FULL;
+        int batterylevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int batteryscale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        float batteryPct = batterylevel / (float)batteryscale;
+        int batteryStatus=(int)((batteryPct)*100);
+        String chargingStatus="OFF";
+        if(isCharging){
+            chargingStatus="ON";
+        }
+        else{
+            chargingStatus="OFF";
+        }
+        Tracer.d("BatteryDataReceiver level: " + batteryStatus);
+        EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BATTERY, batteryStatus,chargingStatus));
     }
 }

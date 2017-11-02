@@ -10,9 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.provider.AlarmClock;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 import android.provider.Telephony;
-import android.util.Log;
 
 import java.util.List;
 
@@ -25,14 +23,16 @@ import co.siempo.phone.inbox.GoogleInboxActivity_;
 import co.siempo.phone.launcher.FakeLauncherActivity;
 import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
 import co.siempo.phone.settings.SiempoMainSettingsActivity_;
-//import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
 import co.siempo.phone.settings.SiempoPhoneSettingsActivity;
 import co.siempo.phone.settings.SiempoSettingsActivity_;
+import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity_;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 import minium.co.notes.ui.MainActivity;
+
+//import co.siempo.phone.settings.SiempoPhoneSettingsActivity_;
 
 
 public class ActivityHelper {
@@ -153,10 +153,22 @@ public class ActivityHelper {
 
     public void openFeedback() {
         try {
-            Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "feedback@siempo.co", null));
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME));
-            emailIntent.putExtra(Intent.EXTRA_TEXT, UIUtils.getDeviceInfo(context));
-            context.startActivity(emailIntent);
+            Intent emailIntent = new Intent(Intent.ACTION_VIEW);
+            Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME) + "&body=" + UIUtils.getDeviceInfo(context));
+            emailIntent.setData(data);
+            emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            final PackageManager pm = context.getPackageManager();
+            final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
+            ResolveInfo best = null;
+            for (final ResolveInfo info : matches)
+                if (info.activityInfo.packageName.endsWith(".gm") ||
+                        info.activityInfo.name.toLowerCase().contains("gmail")) best = info;
+            if (best != null) {
+                emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
+                context.startActivity(emailIntent);
+            } else {
+                UIUtils.alert(context, "No email application found in your phone");
+            }
         } catch (Exception e) {
             UIUtils.alert(context, "No email application found in your phone");
         }
@@ -215,7 +227,7 @@ public class ActivityHelper {
     /**
      * Open the application with predefine package name.
      */
-    public void openGMape(String packageName) {
+    public void openAppWithPackageName(String packageName) {
         try {
             Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
             context.startActivity(intent);
@@ -240,7 +252,7 @@ public class ActivityHelper {
                 UIUtils.alert(context, "Application not found");
             }
         } else {
-            openGMape(checkDialerApp());
+            openAppWithPackageName(checkDialerApp());
         }
     }
 
@@ -256,7 +268,7 @@ public class ActivityHelper {
                 e.printStackTrace();
             }
         } else {
-            openGMape(checkCalenderApp());
+            openAppWithPackageName(checkCalenderApp());
         }
     }
 
@@ -274,7 +286,7 @@ public class ActivityHelper {
                 e.printStackTrace();
             }
         } else {
-            openGMape(checkClockApp());
+            openAppWithPackageName(checkClockApp());
         }
     }
 
@@ -284,10 +296,22 @@ public class ActivityHelper {
     public void openCameraApp() {
         try {
             String packageName = getCameraPackageName();
-            openGMape(packageName);
+            openAppWithPackageName(packageName);
         } catch (Exception e) {
             e.printStackTrace();
 //            openGalleryApp();
+        }
+    }
+
+    /**
+     * Open the Browser application from device.
+     */
+    public void openBrowserApp() {
+        try {
+            String packageName = getBrowserPackageName();
+            openAppWithPackageName(packageName);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -295,9 +319,20 @@ public class ActivityHelper {
     private String getCameraPackageName() {
         Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
-        for (ResolveInfo res : listCam) {
-            return res.activityInfo.packageName;
-        }
+        for (ResolveInfo res : listCam) return res.activityInfo.packageName;
+        return "";
+    }
+
+    /**
+     * This method used for get default browser package name.
+     *
+     * @return
+     */
+    private String getBrowserPackageName() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
+        List<ResolveInfo> listCam = context.getPackageManager().queryIntentActivities(intent, 0);
+        //            Log.e("Camera Application Package Name and Activity Name",res.activityInfo.packageName + " " + res.activityInfo.name);
+        for (ResolveInfo res : listCam) return res.activityInfo.packageName;
         return "";
     }
 
@@ -337,7 +372,7 @@ public class ActivityHelper {
      *
      * @return package name
      */
-    public String checkDialerApp() {
+    private String checkDialerApp() {
         for (String strLocal : Constants.CALL_APP_PACKAGES) {
             for (ApplicationInfo packageInfo : CoreApplication.getInstance().getPackagesList()) {
                 if (strLocal.equalsIgnoreCase(packageInfo.packageName)) {
@@ -354,7 +389,7 @@ public class ActivityHelper {
      *
      * @return package name
      */
-    public String checkCalenderApp() {
+    private String checkCalenderApp() {
         for (String strLocal : Constants.CALENDAR_APP_PACKAGES) {
             for (ApplicationInfo packageInfo : CoreApplication.getInstance().getPackagesList()) {
                 if (strLocal.equalsIgnoreCase(packageInfo.packageName)) {
@@ -371,7 +406,7 @@ public class ActivityHelper {
      *
      * @return package name
      */
-    public String checkClockApp() {
+    private String checkClockApp() {
         for (String strLocal : Constants.CLOCK_APP_PACKAGES) {
             for (ApplicationInfo packageInfo : CoreApplication.getInstance().getPackagesList()) {
                 if (strLocal.equalsIgnoreCase(packageInfo.packageName)) {
@@ -400,6 +435,21 @@ public class ActivityHelper {
             //SiempoPhoneSettingsActivity_.intent(getContext()).start();
             Intent i = new Intent(getContext(), SiempoPhoneSettingsActivity.class);
             getContext().startActivity(i);
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Open default Setting page for default application for menu.
+     *
+     * @return
+     */
+    public boolean openSiempoDefaultAppSettings() {
+        try {
+            SiempoSettingsDefaultAppActivity_.intent(getContext()).start();
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

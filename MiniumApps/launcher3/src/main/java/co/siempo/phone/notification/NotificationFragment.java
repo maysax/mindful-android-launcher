@@ -62,7 +62,7 @@ import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.network.NetworkUtil;
-import co.siempo.phone.notification.remove_notification_strategy.DeleteIteam;
+import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import co.siempo.phone.receiver.IDynamicStatus;
 import co.siempo.phone.receiver.WifiDataReceiver;
@@ -209,8 +209,8 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     startActivity(intent);
                 }
                 //++Tarun , Following code will delete all notification of same user and same types.
-                DeleteIteam deleteIteam = new DeleteIteam(new MultipleIteamDelete());
-                deleteIteam.executeDelete(notificationList.get(position));
+                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                deleteItem.executeDelete(notificationList.get(position));
                 loadData();
             }
 

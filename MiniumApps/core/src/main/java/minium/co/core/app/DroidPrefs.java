@@ -6,6 +6,7 @@ import org.androidannotations.annotations.sharedpreferences.DefaultBoolean;
 import org.androidannotations.annotations.sharedpreferences.DefaultFloat;
 import org.androidannotations.annotations.sharedpreferences.DefaultInt;
 import org.androidannotations.annotations.sharedpreferences.DefaultLong;
+import org.androidannotations.annotations.sharedpreferences.DefaultString;
 import org.androidannotations.annotations.sharedpreferences.SharedPref;
 
 /**
@@ -66,7 +67,21 @@ public interface DroidPrefs {
     boolean hasShownIntroScreen();
 
     /**
-     * This preference is used for store user preference for Grid/List in App Listing View.
+     * This preference is used for store
+     * user preference for Grid/List in Menu Listing View.
+     *
+     * @return
+     */
+    @DefaultBoolean(false)
+    boolean isMenuGrid();
+
+
+    @DefaultString("")
+    String sortedMenu();
+
+    /**
+     * This preference is used for store
+     * user preference for Grid/List in App Listing View.
      *
      * @return
      */
@@ -78,5 +93,74 @@ public interface DroidPrefs {
 
     @DefaultBoolean(false)
     boolean isAppUpdated();
+
+    @DefaultString("")
+    String callPackage();
+
+    @DefaultBoolean(false)
+    boolean isCallClicked();
+
+    @DefaultBoolean(false)
+    boolean isCallClickedFirstTime();
+
+    @DefaultString("")
+    String messagePackage();
+
+    @DefaultBoolean(false)
+    boolean isMessageClicked();
+
+    @DefaultBoolean(false)
+    boolean isMessageClickedFirstTime();
+
+    @DefaultString("")
+    String calenderPackage();
+
+    @DefaultBoolean(false)
+    boolean isCalenderClicked();
+
+    @DefaultString("")
+    String contactPackage();
+
+    @DefaultBoolean(false)
+    boolean isContactClicked();
+
+    @DefaultString("")
+    String mapPackage();
+
+    @DefaultBoolean(false)
+    boolean isMapClicked();
+
+    @DefaultString("")
+    String photosPackage();
+
+    @DefaultBoolean(false)
+    boolean isPhotosClicked();
+
+    @DefaultString("")
+    String cameraPackage();
+
+    @DefaultBoolean(false)
+    boolean isCameraClicked();
+
+    @DefaultString("")
+    String browserPackage();
+
+    @DefaultBoolean(false)
+    boolean isBrowserClicked();
+
+    @DefaultString("")
+    String clockPackage();
+
+    @DefaultBoolean(false)
+    boolean isClockClicked();
+
+    @DefaultString("")
+    String emailPackage();
+
+    @DefaultBoolean(false)
+    boolean isEmailClicked();
+
+    @DefaultBoolean(false)
+    boolean isEmailClickedFirstTime();
 
 }

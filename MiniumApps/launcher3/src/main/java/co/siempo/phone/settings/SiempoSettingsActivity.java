@@ -26,6 +26,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
@@ -40,6 +41,8 @@ import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
@@ -62,13 +65,13 @@ import com.github.javiersantos.appupdater.enums.Display;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_version;
+    private ImageView icon_launcher, icon_version, icon_changeDefaultApp;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version;
+    private LinearLayout ln_launcher, ln_version, ln_changeDefaultApp;
     private CheckBox chk_keyboard;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
-
+    AppUpdaterUtils appUpdaterUtils;
 
     @SystemService
     ConnectivityManager connectivityManager;
@@ -76,6 +79,12 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
+        }
+    }
 
     @AfterViews
     void afterViews() {
@@ -92,19 +101,25 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     public void initView() {
         context = SiempoSettingsActivity.this;
-        icon_launcher = (ImageView) findViewById(R.id.icon_launcher);
-        icon_version = (ImageView) findViewById(R.id.icon_version);
-        txt_version = (TextView) findViewById(R.id.txt_version);
+        icon_launcher = findViewById(R.id.icon_launcher);
+        icon_version = findViewById(R.id.icon_version);
+        icon_changeDefaultApp = findViewById(R.id.icon_changeDefaultApp);
+        txt_version = findViewById(R.id.txt_version);
         txt_version.setText("Version : " + BuildConfig.VERSION_NAME);
-        chk_keyboard = (CheckBox) findViewById(R.id.chk_keyboard);
+        chk_keyboard = findViewById(R.id.chk_keyboard);
         boolean isKeyboardDisplay = launcherPrefs.isKeyBoardDisplay().get();
         chk_keyboard.setChecked(isKeyboardDisplay);
-        ln_launcher = (LinearLayout) findViewById(R.id.ln_launcher);
-        ln_version = (LinearLayout) findViewById(R.id.ln_version);
+        ln_launcher = findViewById(R.id.ln_launcher);
+        ln_version = findViewById(R.id.ln_version);
+        ln_version = findViewById(R.id.ln_version);
+        ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
         icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
+                .colorRes(R.color.text_primary)
+                .sizeDp(18));
+        icon_changeDefaultApp.setImageDrawable(new IconDrawable(context, "fa-link")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
 
@@ -119,13 +134,20 @@ public class SiempoSettingsActivity extends CoreActivity {
             }
         });
 
+        ln_changeDefaultApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ActivityHelper(context).openSiempoDefaultAppSettings();
+            }
+        });
+
         ln_version.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-                if (activeNetwork != null) {
+                if (activeNetwork != null && appUpdaterUtils == null) {
                     initProgressDialog();
-                    AppUpdaterUtils appUpdaterUtils = new AppUpdaterUtils(SiempoSettingsActivity.this)
+                    appUpdaterUtils = new AppUpdaterUtils(SiempoSettingsActivity.this)
                             .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                             .withListener(new AppUpdaterUtils.UpdateListener() {
                                 @Override
@@ -136,6 +158,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                                             pd.dismiss();
                                         }
                                         checkVersionFromAppUpdater();
+                                        appUpdaterUtils = null;
                                     } else {
                                         Log.d(TAG, "check version from AWS");
                                         if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
@@ -212,10 +235,6 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .setButtonDismiss("Maybe later")
                 .start();
     }
-// Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
-//    if (pd != null) {
-//        pd.dismiss();
-//    }
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
@@ -225,8 +244,10 @@ public class SiempoSettingsActivity extends CoreActivity {
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
                 if (pd != null) {
                     pd.dismiss();
+                    pd = null;
                 }
                 Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.ALPHA);
             } else {
                 ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
@@ -234,11 +255,14 @@ public class SiempoSettingsActivity extends CoreActivity {
         } else {
             if (pd != null) {
                 pd.dismiss();
+                pd = null;
             }
             if (event.getVersion() > BuildConfig.VERSION_CODE) {
                 Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.BETA);
-            }else{
+            } else {
+                appUpdaterUtils = null;
                 Toast.makeText(getApplicationContext(), "Your application is up to date", Toast.LENGTH_LONG).show();
             }
         }
@@ -263,12 +287,14 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     public void initProgressDialog() {
         try {
-            pd = new ProgressDialog(this);
-            pd.setMessage("Please wait...");
-//            pd = new ProgressDialog(SiempoSettingsActivity.this, R.style.ProgressTheme);
-            pd.setCancelable(false);
-            pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
-            pd.show();
+            //noinspection deprecation
+            if (pd == null) {
+                pd = new ProgressDialog(this);
+                pd.setMessage("Please wait...");
+                pd.setCancelable(false);
+                pd.setProgressStyle(android.R.style.Widget_ProgressBar_Large);
+                pd.show();
+            }
         } catch (Exception e) {
             //WindowManager$BadTokenException will be caught here
             e.printStackTrace();

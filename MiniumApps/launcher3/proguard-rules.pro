@@ -13,7 +13,9 @@
 # and specify the fully qualified class name to the JavaScript interface
 # class:
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
 #}
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
+-dontwarn javax.xml.bind.DatatypeConverter
+-dontwarn org.apache.commons.codec.binary.Base64
+-dontwarn org.scribe.services.DatatypeConverterEncoder
