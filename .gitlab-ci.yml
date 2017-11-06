@@ -26,7 +26,7 @@ Build:
     name: "siempo_commit_${CI_BUILD_REF}"
     paths:
     #- /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/launcher3-debug.apk
-    - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/launcher3-alpha-debug.apk
+    - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/apk/
 
 #stages:
 #  - build
