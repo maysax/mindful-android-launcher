@@ -116,6 +116,50 @@
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/ln_hideNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
+
+                <ImageView
+                    android:id="@+id/icon_hideNotification"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="18dp"
+                    android:contentDescription="@null"
+                    android:padding="6dp" />
+
+                <TextView
+                    android:id="@+id/txt_hidenotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="18dp"
+                    android:maxLines="3"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/title.lockScreenNotifications"
+                    android:textSize="14sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/swtch_notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textOff=""
+                    android:text=""
+                    android:checked="true"
+                    android:background="@android:color/transparent"
+                    android:textColor="@android:color/black"
+                    android:textOn=""
+                    android:button="@null"
+                    android:padding="20dp"/>
+
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ln_version"
                 android:layout_width="match_parent"

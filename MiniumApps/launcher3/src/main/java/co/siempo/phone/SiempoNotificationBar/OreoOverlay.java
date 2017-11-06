@@ -2,6 +2,8 @@ package co.siempo.phone.SiempoNotificationBar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.KeyguardManager;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
@@ -13,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -24,6 +27,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -87,6 +91,7 @@ import co.siempo.phone.receiver.IDynamicStatus;
 import co.siempo.phone.receiver.NetworkDataReceiver;
 import co.siempo.phone.receiver.WifiDataReceiver;
 import co.siempo.phone.service.StatusBarService;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.HomeWatcher;
@@ -214,6 +219,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         UserPresentBroadcastReceiver userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         context.registerReceiver(userPresentBroadcastReceiver, intentFilter);
     }
@@ -229,6 +235,22 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 hide();
+            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+                boolean isHideNotificationOnLockScreen=launcherPrefs.getBoolean("isHidenotificationOnLockScreen",true);
+                boolean locked = myKM.inKeyguardRestrictedInputMode();
+                if (locked && PackageUtil.isSiempoLauncher(context) && isHideNotificationOnLockScreen) {
+
+
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        NotificationUtils mNotificationUtils = new NotificationUtils(context);
+                        android.app.Notification.Builder nb = mNotificationUtils.
+                                getAndroidChannelNotification("Siempo","Siempo");
+
+                        mNotificationUtils.getManager().notify(101, nb.build());
+                    }
+                    hide();
+                }
             }
         }
 

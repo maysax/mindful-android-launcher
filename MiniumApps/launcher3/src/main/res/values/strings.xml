@@ -26,6 +26,7 @@
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
     <string name="title.version">Version: %1$s</string>
     <string name="title.defaultapp">Assign Default App</string>
+    <string name="title.lockScreenNotifications">Hide Notifications On Lock Screen</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
@@ -123,7 +124,7 @@
 
     <!-- Example settings for Notifications -->
     <string name="pref_header_notifications" tools:ignore="UnusedResources">Notifications</string>
-
+    <string name="lock_screen_label">SiempoLockScreeen</string>
     <string name="pref_title_new_message_notifications">New message notifications</string>
 
     <string name="pref_title_ringtone">Ringtone</string>
