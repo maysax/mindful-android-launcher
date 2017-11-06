@@ -14,7 +14,8 @@ Lint:
     expire_in: "4 week"
     name: "siempo_commit_${CI_BUILD_REF}"
     paths:
-    - /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
+     - /home/gitlab-runner/builds/57a3942f/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
+    #- /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
 
 Build:
   script:
