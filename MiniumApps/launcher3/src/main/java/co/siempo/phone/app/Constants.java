@@ -1,7 +1,5 @@
 package co.siempo.phone.app;
 
-import java.util.ArrayList;
-
 /**
  * Created by tkb on 2017-04-26.
  */

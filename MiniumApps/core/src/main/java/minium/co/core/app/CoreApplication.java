@@ -456,7 +456,13 @@ public abstract class CoreApplication extends MultiDexApplication {
                     String defSMSApp = Settings.Secure.getString(getContentResolver(), "sms_default_application");
                     String defDialerApp = Settings.Secure.getString(getContentResolver(), "dialer_default_application");
 
-                    if (appInfo.packageName.equalsIgnoreCase(defSMSApp) || appInfo.packageName.contains("com.google.android.calendar")) {
+                    if (appInfo.packageName.equalsIgnoreCase(defSMSApp)
+                            || appInfo.packageName.contains("com.whatsapp")
+                            || appInfo.packageName.contains("com.google.android.calendar")
+                            || appInfo.packageName.contains("com.facebook.katana")
+                            || appInfo.packageName.contains("com.facebook.orca")
+                            || appInfo.packageName.contains("com.facebook.mlite")
+                            || appInfo.packageName.contains("com.google.android.talk")) {
                         getVibrateList().add(appInfo.packageName);
                     } else if (appInfo.packageName.contains("telecom") || appInfo.packageName.contains("dialer")) {
                         getNormalModeList().add(appInfo.packageName);

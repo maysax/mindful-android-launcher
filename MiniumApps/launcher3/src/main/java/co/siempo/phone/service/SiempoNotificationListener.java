@@ -113,54 +113,54 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
 //        Tracer.d("Notification posted: " + getNotificationToString(notification));
-        printLog(notification);
-        filterByCategory(notification);
-//        if (PackageUtil.isSiempoLauncher(this)
-//                || SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
-//
-//            if (PackageUtil.isSiempoBlocker(notification.getId())) {
-//                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-//                launcherPrefs.getCurrentProfile().put(0);
-//                prefs.isNotificationBlockerRunning().put(true);
-//            } else if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
-//                cancelNotification(notification.getKey());
-//                saveNotification(notification.getPackageName(), notification.getPostTime(),
-//                        notification.getNotification().tickerText);
-//                // saving the information in other place
-//            } else if (launcherPrefs.getCurrentProfile().get() == 0) {
-//                if (CoreApplication.getInstance().getNormalModeList().contains(notification.getPackageName())) {
-//
-//                } else {
-//                    //cancelNotification(notification.getKey());
-//                    if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-//                                && !notificationManager.isNotificationPolicyAccessGranted()) {
-//                        } else {
-//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-//                        }
-//                        vibrationUtils.vibrate(500);
-//                    } else if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-//                                && !notificationManager.isNotificationPolicyAccessGranted()) {
-//                        } else {
-//                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-//                        }
-//                    }
-//                }
-//            } else if (launcherPrefs.getCurrentProfile().get() == 1) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-//                        && !notificationManager.isNotificationPolicyAccessGranted()) {
-//                } else {
-//                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-//                }
-//            } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-//                        && !notificationManager.isNotificationPolicyAccessGranted()) {
-//                } else {
-//                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-//                }
-//            }
-//        }
+
+        if (PackageUtil.isSiempoLauncher(this)
+                || SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
+            if (PackageUtil.isSiempoBlocker(notification.getId())) {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                launcherPrefs.getCurrentProfile().put(0);
+                prefs.isNotificationBlockerRunning().put(true);
+            } else if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
+                cancelNotification(notification.getKey());
+                saveNotification(notification.getPackageName(), notification.getPostTime(),
+                        notification.getNotification().tickerText);
+                // saving the information in other place
+            } else if (launcherPrefs.getCurrentProfile().get() == 0) {
+                if (CoreApplication.getInstance().getNormalModeList().contains(notification.getPackageName())) {
+
+                } else {
+                    //cancelNotification(notification.getKey());
+                    if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                                && !notificationManager.isNotificationPolicyAccessGranted()) {
+                        } else {
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        }
+                        vibrationUtils.vibrate(500);
+                    } else if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                                && !notificationManager.isNotificationPolicyAccessGranted()) {
+                        } else {
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        }
+                    }
+                }
+            } else if (launcherPrefs.getCurrentProfile().get() == 1) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                }
+            } else if (launcherPrefs.getCurrentProfile().get() == 2) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                        && !notificationManager.isNotificationPolicyAccessGranted()) {
+                } else {
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                }
+            }
+            printLog(notification);
+            filterByCategory(notification);
+        }
     }
 
 
