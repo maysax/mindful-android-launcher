@@ -13,8 +13,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.Image;
 import android.net.ConnectivityManager;
@@ -34,7 +37,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -52,6 +57,7 @@ import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -85,6 +91,7 @@ import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.notification.RecyclerListAdapter;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
+import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
@@ -103,6 +110,8 @@ import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+import static android.view.WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
 /**
@@ -117,7 +126,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     private boolean siempoNotificationBar = false;
     private String TAG = "OverlayView";
     private static final int SAFETY_MARGIN = 20;
-
+    private RelativeLayout topbar;
 
     /**
      * Status Bar Variables
@@ -258,6 +267,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         imgWifi = inflateLayout.findViewById(R.id.imgWifi);
         imgAirplane = inflateLayout.findViewById(R.id.imgAirplane);
         iTxt2 = inflateLayout.findViewById(R.id.iTxt2);
+        topbar = inflateLayout.findViewById(R.id.topbar);
         layout_notification = inflateLayout.findViewById(R.id.layout_notification);
 
 
@@ -317,6 +327,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         relFlash.setOnClickListener(this);
         relBrightness.setOnClickListener(this);
         layout_notification.setFocusable(true);
+        layout_notification.setClickable(true);
         layout_notification.setVisibility(GONE);
 
         layout_notification.setOnKeyListener(new OnKeyListener() {
@@ -332,6 +343,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             }
         });
 
+        topbar.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    addSiempoNotificationBar(motionEvent);
+                }
+                return false;
+            }
+        });
 
         notificationList = new ArrayList<>();
         recyclerView.setNestedScrollingEnabled(false);
@@ -660,11 +680,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         return params;
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        addSiempoNotificationBar(event);
-        return super.onTouchEvent(event);
-    }
+    /**
+     * Below logic will use in further development
+     * @return
+     */
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        addSiempoNotificationBar(event);
+//        return super.onTouchEvent(event);
+//    }
 
     public int retrieveStatusBarHeight() {
         int result = 0;
@@ -691,6 +715,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             if (mWinManager != null && mParentView != null && mParentView.getParent() != null) {
                 mWinManager.removeView(mParentView);
             }
+            WindowManager.LayoutParams params =
+            new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
+                    | FLAG_LAYOUT_IN_SCREEN
+                    | FLAG_LAYOUT_NO_LIMITS
+                    | FLAG_NOT_TOUCH_MODAL
+                    | FLAG_WATCH_OUTSIDE_TOUCH
+                    , TRANSLUCENT);
+            params.gravity = Gravity.TOP;
+            mWinManager.updateViewLayout(this, params);
         }
     }
 
@@ -699,12 +732,22 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      * Load and Display Siempo Notification bar when swipe down
      */
     public synchronized void addSiempoNotificationBar(MotionEvent event) {
-        if (event.getY() > (retrieveStatusBarHeight() + 10) && !siempoNotificationBar) {
+        if (!siempoNotificationBar) {
+            int navigationBarHeight=0;
+
+            WindowManager.LayoutParams params = new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
+                    | FLAG_LAYOUT_IN_SCREEN
+                    | FLAG_LAYOUT_NO_LIMITS
+                    | FLAG_NOT_TOUCH_MODAL
+                    | FLAG_WATCH_OUTSIDE_TOUCH
+                    , TRANSLUCENT);
+            params.gravity = Gravity.TOP;
+            mWinManager.updateViewLayout(this, params);
 
             siempoNotificationBar = true;
             img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
             seekbarBrightness.setVisibility(View.GONE);
-            WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+            WindowManager.LayoutParams params1 = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     1,
                     WindowManager.LayoutParams.TYPE_PHONE,
@@ -727,10 +770,13 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 }
             };
 
-            mWinManager.addView(mParentView, params);
+            mWinManager.addView(mParentView, params1);
             final Animation in = AnimationUtils.loadAnimation(context, R.anim.slide_down);
             layout_notification.setVisibility(VISIBLE);
             layout_notification.startAnimation(in);
+            layout_notification.startAnimation(in);
+            layout_notification.setFocusable(true);
+            layout_notification.setClickable(true);
             updateNotificationComponents();
         }
     }
@@ -791,6 +837,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
+
                         hide();
                     } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
                         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
@@ -807,6 +854,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
                     deleteItem.executeDelete(notificationList.get(position));
                     loadData();
+
                 }
             }
 
@@ -1614,4 +1662,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
                     }
         }
+
+
 }
