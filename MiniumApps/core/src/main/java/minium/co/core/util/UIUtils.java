@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.IBinder;
@@ -19,6 +21,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
 
 import minium.co.core.R;
 import minium.co.core.ui.CoreActivity;
@@ -220,5 +224,15 @@ public class UIUtils {
                 return false;
             }
         }
+    }
+
+    public static byte[] convertBitmapToByte(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
+
+    public static Bitmap convertBytetoBitmap(byte[] byteArray) {
+        return BitmapFactory.decodeByteArray(byteArray , 0, byteArray.length);
     }
 }

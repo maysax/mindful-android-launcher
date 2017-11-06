@@ -3,6 +3,7 @@ package co.siempo.phone;
 import android.Manifest;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -281,7 +282,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
      */
     public static boolean isEnabled(Context mContext) {
-        return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
+
+        ComponentName cn = new ComponentName(mContext, SiempoNotificationListener_.class);
+        String flat = Settings.Secure.getString(mContext.getContentResolver(), "enabled_notification_listeners");
+        return flat != null && flat.contains(cn.flattenToString());
+
+        //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
     }
 
     PermissionListener permissionlistener = new PermissionListener() {
@@ -523,7 +529,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null && appUpdaterUtils==null) {
+        if (activeNetwork != null && appUpdaterUtils == null) {
             Log.d(TAG, "Active network..");
             appUpdaterUtils = new AppUpdaterUtils(this)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)

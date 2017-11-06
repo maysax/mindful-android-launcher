@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.BuildConfig;
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
 import minium.co.core.config.Config;
@@ -368,11 +369,13 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(Config.DEBUG)
-                .build();
-        Fabric.with(fabric);
+        if (!BuildConfig.DEBUG) {
+//            final Fabric fabric = new Fabric.Builder(this)
+//                    .kits(new Crashlytics())
+//                    .debuggable(Config.DEBUG)
+//                    .build();
+//            Fabric.with(fabric);
+        }
     }
 
 
