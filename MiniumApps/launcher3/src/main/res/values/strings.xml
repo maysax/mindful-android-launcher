@@ -26,7 +26,7 @@
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
     <string name="title.version">Version: %1$s</string>
     <string name="title.defaultapp">Assign Default App</string>
-    <string name="title.lockScreenNotifications">Hide Notifications On Lock Screen</string>
+    <string name="title.lockScreenNotifications">Hide Notifications On Lock Screen </string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
