@@ -109,20 +109,24 @@ public class TokenRouter {
             if (TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && TokenManager.getInstance().has(TokenItemType.DATA)) {
                 String strNumber = TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2();
                 String strMessage = TokenManager.getInstance().get(TokenItemType.DATA).getTitle();
-                new SmsObserver(context, strNumber, strMessage).start();
-                SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
-                Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
-                String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
+                if (!strMessage.equalsIgnoreCase("")) {
+                    new SmsObserver(context, strNumber, strMessage).start();
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
+                    Toast.makeText(context, "Sending Message...", Toast.LENGTH_LONG).show();
+                    String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(context);
 
 
-                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(strNumber)));
-                if (defaultSmsPackageName != null) // Can be null in case that there is no default, then the user would be able to choose any app that supports this intent.
-                {
-                    intent.setPackage(defaultSmsPackageName);
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(strNumber)));
+                    if (defaultSmsPackageName != null) // Can be null in case that there is no default, then the user would be able to choose any app that supports this intent.
+                    {
+                        intent.setPackage(defaultSmsPackageName);
+                    }
+                    context.startActivity(intent);
+                    EventBus.getDefault().post(new SendSmsEvent(true, strNumber, strMessage));
+                }else{
+                    UIUtils.toast(context, "Please enter message.");
                 }
-                context.startActivity(intent);
-                EventBus.getDefault().post(new SendSmsEvent(true, strNumber, strMessage));
             } else if (!TokenManager.getInstance().has(TokenItemType.CONTACT)) {
                 TokenManager.getInstance().getCurrent().setCompleteType(TokenCompleteType.FULL);
                 TokenManager.getInstance().add(new TokenItem(TokenItemType.CONTACT));

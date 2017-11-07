@@ -95,7 +95,7 @@ class MainFragmentMediator {
 
     private void loadDefaults() {
         try {
-           if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
+            if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
             } else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
@@ -108,8 +108,8 @@ class MainFragmentMediator {
                 items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
                 items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
                 items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
-                 items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
-             }
+                items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
+            }
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
@@ -126,59 +126,61 @@ class MainFragmentMediator {
     void listItemClicked(TokenRouter router, int position) {
         MainListItemType type;
         type = getAdapter().getItem(position).getItemType();
-        if(type!=null)
-        switch (type) {
-            case CONTACT:
-                router.contactPicked((ContactListItem) getAdapter().getItem(position));
-                break;
-            case ACTION:
-                if (getAdapter().getItem(position).getApplicationInfo() == null) {
-                    position = getAdapter().getItem(position).getId();
-                    new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
-                } else {
-                    UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
-                    new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
-                    MainActivity.isTextLenghGreater = "";
-                }
-                break;
-            case DEFAULT:
-                position = getAdapter().getItem(position).getId();
-
-                switch (position) {
-                    case 1:
-                        router.sendText(fragment.getActivity());
-                        break;
-                    case 2:
-                        router.createNote(fragment.getActivity());
-                        EventBus.getDefault().post(new CreateNoteEvent());
-                        break;
-                    case 3:
-                        router.createContact(fragment.getActivity());
-                        break;
-                    case 4:
-                        router.call(fragment.getActivity());
+        if (type != null)
+            switch (type) {
+                case CONTACT:
+                    router.contactPicked((ContactListItem) getAdapter().getItem(position));
+                    break;
+                case ACTION:
+                    if (getAdapter().getItem(position).getApplicationInfo() == null) {
+                        position = getAdapter().getItem(position).getId();
+                        new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
+                    } else {
+                        UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
+                        new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
                         MainActivity.isTextLenghGreater = "";
-                        EventBus.getDefault().post(new SendSmsEvent(true,"",""));
-                        break;
-                    default:
-                        UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
-                        break;
-                }
-                break;
-            case NUMBERS:
-                if(getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4){
-                    try {
-                        fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" +  TokenManager.getInstance().getCurrent().getExtra2())));
-                        MainActivity.isTextLenghGreater = "";
-                        EventBus.getDefault().post(new SendSmsEvent(true,"",""));
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
-                }
-                else{
+                    break;
+                case DEFAULT:
+                    position = getAdapter().getItem(position).getId();
+
+                    switch (position) {
+                        case 1:
+                            router.sendText(fragment.getActivity());
+                            break;
+                        case 2:
+                            router.createNote(fragment.getActivity());
+                            EventBus.getDefault().post(new CreateNoteEvent());
+                            break;
+                        case 3:
+                            router.createContact(fragment.getActivity());
+                            break;
+                        case 4:
+                            router.call(fragment.getActivity());
+                            MainActivity.isTextLenghGreater = "";
+                            EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
+                            break;
+                        default:
+                            UIUtils.alert(fragment.getActivity(), fragment.getString(R.string.msg_not_yet_implemented));
+                            break;
+                    }
+                    break;
+                case NUMBERS:
+                    if (getAdapter().getItem(position).getTitle().trim().equalsIgnoreCase("call") && getAdapter().getItem(position).getId() == 4) {
+                        try {
+                            fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().getCurrent().getExtra2())));
+                            MainActivity.isTextLenghGreater = "";
+                            EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
                         router.contactNumberPicked(getAdapter().getItem(position));
-                }
-        }
+                    }
+                    break;
+                default:
+                    break;
+            }
     }
 
     void contactPicker() {
@@ -220,7 +222,6 @@ class MainFragmentMediator {
         getAdapter().loadData(items);
         getAdapter().notifyDataSetChanged();
     }
-
 
 
 }
