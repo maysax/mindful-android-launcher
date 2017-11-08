@@ -112,6 +112,7 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.app.HomeWatcher;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.UIUtils;
+import minium.co.core.util.UIUtils;
 
 import static android.graphics.PixelFormat.TRANSLUCENT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -559,6 +560,11 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      */
     @Subscribe
     public void onConnectivityEvent(ConnectivityEvent event) {
+        if(UIUtils.isDeviceHasSimCard(context)){
+            imgSignal.setVisibility(View.VISIBLE);
+        }else{
+            imgSignal.setImageResource(R.drawable.ic_no_sim_black_24dp);
+        }
         if (event.getState() == ConnectivityEvent.AIRPLANE) {
             if (imgSignal != null)
                 imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
@@ -1104,6 +1110,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             img_notification_Data.setBackground(context.getDrawable(R.drawable.ic_data_on_black_24dp));
             relMobileData.setEnabled(false);
         }
+
 
     }
 

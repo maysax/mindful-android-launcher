@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -220,6 +221,17 @@ public class UIUtils {
             } else {
                 return false;
             }
+        }
+    }
+
+    public static boolean isDeviceHasSimCard(Context context) {
+        TelephonyManager tm = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);  //gets the current TelephonyManager
+        if (tm.getSimState() != TelephonyManager.SIM_STATE_ABSENT) {
+            //the phone has a sim card
+            return true;
+        } else {
+            return false;
+            //no sim card available
         }
     }
 }
