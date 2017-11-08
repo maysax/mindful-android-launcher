@@ -1,6 +1,7 @@
 package co.siempo.phone.service;
 
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -22,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.call.PhonecallReceiver;
 import co.siempo.phone.db.DBClient;
@@ -72,6 +74,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Tracer.d("Notification posted: " + getNotificationToString(notification));
         if (PackageUtil.isSiempoLauncher(this)
                 || SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
+
+
+            KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+            if (PackageUtil.isSiempoLauncher(this) && myKM.inKeyguardRestrictedInputMode() && launcherPrefs.isHidenotificationOnLockScreen().get()) {
+                SiempoNotificationListener.this.cancelAllNotifications();
+            }
+            if(PackageUtil.isSiempoLauncher(this) && notification.getNotification().getSortKey()!=null && notification.getNotification().getSortKey().equalsIgnoreCase(getResources().getString(R.string.lock_screen_label)) &&  launcherPrefs.isHidenotificationOnLockScreen().get()){
+                SiempoNotificationListener.this.cancelAllNotifications();
+            }
+
             if (PackageUtil.isSiempoBlocker(notification.getId())) {
                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 launcherPrefs.getCurrentProfile().put(0);

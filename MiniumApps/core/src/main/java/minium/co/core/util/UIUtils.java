@@ -26,7 +26,7 @@ import minium.co.core.ui.CoreActivity;
 
 public class UIUtils {
     public static final String PACKAGE_NAME = "co.siempo.phone";
-
+    public static AlertDialog alertDialog;
     public static int dpToPx(Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 dp, context.getResources().getDisplayMetrics());
@@ -49,11 +49,12 @@ public class UIUtils {
     }
 
     public static void alert(Context context, String title, String msg) {
-        new AlertDialog.Builder(context)
+       AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+                .setPositiveButton(android.R.string.ok, null);
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     public static void alert(Context context, int layoutRes) {

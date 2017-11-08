@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -72,7 +73,8 @@ public class SiempoSettingsActivity extends CoreActivity {
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
     AppUpdaterUtils appUpdaterUtils;
-
+    private ImageView icon_hideNotification;
+    private SwitchCompat switch_notification;
     @SystemService
     ConnectivityManager connectivityManager;
 
@@ -112,8 +114,13 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_launcher = findViewById(R.id.ln_launcher);
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
+        icon_hideNotification = findViewById(R.id.icon_hideNotification);
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
+        switch_notification = findViewById(R.id.swtch_notification);
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
+                .colorRes(R.color.text_primary)
+                .sizeDp(18));
+        icon_hideNotification.setImageDrawable(new IconDrawable(context, "fa-flag")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
         icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
@@ -122,6 +129,13 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_changeDefaultApp.setImageDrawable(new IconDrawable(context, "fa-link")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
+
+        if(launcherPrefs.isHidenotificationOnLockScreen().get()){
+            switch_notification.setChecked(true);
+        }
+        else{
+            switch_notification.setChecked(false);
+        }
 
     }
 
@@ -192,6 +206,15 @@ public class SiempoSettingsActivity extends CoreActivity {
                 launcherPrefs.isKeyBoardDisplay().put(isChecked);
             }
         });
+
+        switch_notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                launcherPrefs.isHidenotificationOnLockScreen().put(isChecked);
+            }
+        });
+
+
     }
 
 
