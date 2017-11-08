@@ -262,10 +262,14 @@ public class Launcher3App extends CoreApplication {
      * @param menuId
      * @param isOkayShow
      */
+    public Dialog dialog;
     public void showPreferenceAppListDialog(final Context context, final int menuId, final boolean isOkayShow) {
         resolveInfo = null;
         pos = -1;
-        final Dialog dialog = new Dialog(context, R.style.MaterialDialogSheet);
+        if(dialog!=null && dialog.isShowing()){
+            return;
+        }
+        dialog = new Dialog(context, R.style.MaterialDialogSheet);
         dialog.setContentView(R.layout.dialog_open_with);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
