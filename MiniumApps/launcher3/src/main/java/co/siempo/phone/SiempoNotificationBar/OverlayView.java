@@ -2,6 +2,7 @@ package co.siempo.phone.SiempoNotificationBar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -75,6 +76,7 @@ import java.util.List;
 import java.util.Random;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
@@ -106,7 +108,10 @@ import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.HomeWatcher;
+import minium.co.core.log.Tracer;
+import minium.co.core.util.UIUtils;
 
 import static android.graphics.PixelFormat.TRANSLUCENT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -189,7 +194,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     private Chronometer chronometer;
     private ImageView imgUserOngoingCallImage,img_dot;
 
-    public OverlayView(Context context) {
+    public OverlayView(final Context context) {
         super(context);
         this.context = context;
         siempoNotificationBar = false;
@@ -212,6 +217,29 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             @Override
             public void onHomePressed() {
                 hide();
+                if(PackageUtil.isSiempoLauncher(context)){
+
+                    try{
+                        Dialog dialog=((Launcher3App) CoreApplication.getInstance()).dialog;
+                        if(dialog!=null && dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+
+                        if(UIUtils.alertDialog!=null && UIUtils.alertDialog.isShowing()){
+                            UIUtils.alertDialog.dismiss();
+                        }
+
+                        Intent i = new Intent();
+                        String pkg = context.getApplicationContext().getPackageName();;
+                        String cls = "co.siempo.phone.MainActivity_";
+                        i.setComponent(new ComponentName(pkg, cls));
+                        context.startActivity(i);
+                    }
+                    catch (Exception e){
+
+                        Tracer.d("Activity Not Found.");
+                    }
+                }
             }
 
             @Override
