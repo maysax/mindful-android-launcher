@@ -109,7 +109,7 @@ public class TokenRouter {
             if (TokenManager.getInstance().hasCompleted(TokenItemType.CONTACT) && TokenManager.getInstance().has(TokenItemType.DATA)) {
                 String strNumber = TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2();
                 String strMessage = TokenManager.getInstance().get(TokenItemType.DATA).getTitle();
-                if (!strMessage.equalsIgnoreCase("")) {
+                if (!strMessage.trim().equalsIgnoreCase("")) {
                     new SmsObserver(context, strNumber, strMessage).start();
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(strNumber, null, strMessage, null, null);
