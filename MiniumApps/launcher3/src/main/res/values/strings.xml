@@ -27,6 +27,7 @@
     <string name="title.version">Version: %1$s</string>
     <string name="title.defaultapp">Assign Default App</string>
     <string name="title.lockScreenNotifications">Hide Notifications On Lock Screen </string>
+    <string name="title.allowNotification">Allow Notification for Facebook App</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
@@ -190,7 +191,7 @@
     <string name="str_phonesettings">Phone Settings</string>
     <string name="str_siemposettings">Siempo Settings</string>
     <string name="str_siempo_alphasettings">Siempo Alpha Settings</string>
-    <string name="str_keyboard_configuration">Always show the keyboard  on the home screen</string>
+    <string name="str_keyboard_configuration">Always show the keyboard on the \nhome screen</string>
     <string name="view_save_note">View saved note</string>
     <string name="phone_replace_regex">\-</string>
     <string name="missed_call">Missed call</string>

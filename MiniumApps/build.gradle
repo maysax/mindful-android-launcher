@@ -61,7 +61,7 @@ project.ext {
     signalStrengthVersion = "0.0.4"
 
     // greendao database version
-    databaseVersion = 3
+    databaseVersion = 4
 
     // get the current build SHA
     gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()

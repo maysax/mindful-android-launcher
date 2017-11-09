@@ -17,12 +17,13 @@
 package co.siempo.phone.notification;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.provider.Settings;
 import android.provider.Telephony;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +32,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.main.ItemTouchHelperAdapter;
 import co.siempo.phone.main.ItemTouchHelperViewHolder;
@@ -44,6 +45,7 @@ import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.util.UIUtils;
 
 
 public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.ItemViewHolder>
@@ -72,6 +74,12 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
     }
 
+    public void updateReceiptsList(List<Notification> newlist) {
+        notificationList.clear();
+        notificationList.addAll(newlist);
+        notifyDataSetChanged();
+    }
+
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -84,28 +92,60 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
         Notification notification = notificationList.get(position);
-        holder.txtUserName.setText(notification.getNotificationContactModel().getName());
-        if (notification.get_text().equalsIgnoreCase(mContext.getString(R.string.missed_call))) {
-            holder.imgAppIcon.setBackground(null);
-            holder.imgAppIcon.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.sym_call_missed, null));
-            holder.txtAppName.setText(R.string.phone);
-        } else {
-            holder.imgAppIcon.setBackground(null);
-            holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp));
-            holder.imgAppIcon.setImageBitmap(CoreApplication.getInstance().iconList.get(defSMSApp));
-        }
-        holder.txtMessage.setText(notification.get_text());
-        holder.txtTime.setText(notification.get_time());
-        try {
-            if (notification.getNotificationContactModel().getImage() != null && !notification.getNotificationContactModel().getImage().equals("")) {
-                Glide.with(mContext)
-                        .load(Uri.parse(notification.getNotificationContactModel().getImage()))
-                        .placeholder(R.drawable.ic_person_black_24dp)
-                        .into(holder.imgUserImage);
+        if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
+            Bitmap bitmap = CoreApplication.getInstance().iconList.get(notification.getPackageName());
+            holder.imgAppIcon.setImageBitmap(bitmap);
+            holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
+            if (notification.getStrTitle().equalsIgnoreCase("")) {
+                holder.txtUserName.setText("");
+                holder.txtUserName.setVisibility(View.GONE);
+                holder.txtMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            } else {
+                holder.txtUserName.setText(notification.getStrTitle());
+                holder.txtUserName.setVisibility(View.VISIBLE);
+                holder.txtMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            holder.txtMessage.setText(notification.get_text());
+            holder.txtTime.setText(notification.get_time());
+            holder.imgUserImage.setVisibility(View.GONE);
+            if (notification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_MESSENGER_PACKAGE)
+                    || notification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)
+                    || notification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_LITE_PACKAGE)
+                    || notification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE)
+                    || notification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES)) {
+                holder.imgUserImage.setVisibility(View.VISIBLE);
+                if (notification.getUser_icon() != null) {
+                    holder.imgUserImage.setImageBitmap(UIUtils.convertBytetoBitmap(notification.getUser_icon()));
+                }else{
+                    holder.imgUserImage.setBackground(null);
+                }
+            }
+
+        } else {
+            holder.txtUserName.setText(notification.getNotificationContactModel().getName());
+            if (notification.get_text().equalsIgnoreCase(mContext.getString(R.string.missed_call))) {
+                holder.imgAppIcon.setBackground(null);
+                holder.imgAppIcon.setImageDrawable(mContext.getResources().getDrawable(android.R.drawable.sym_call_missed, null));
+                holder.txtAppName.setText(R.string.phone);
+            } else {
+                holder.imgAppIcon.setBackground(null);
+                holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(defSMSApp));
+                holder.imgAppIcon.setImageBitmap(CoreApplication.getInstance().iconList.get(defSMSApp));
+            }
+            holder.txtMessage.setText(notification.get_text());
+            holder.txtTime.setText(notification.get_time());
+            try {
+                if (notification.getNotificationContactModel().getImage() != null && !notification.getNotificationContactModel().getImage().equals("")) {
+                    Glide.with(mContext)
+                            .load(Uri.parse(notification.getNotificationContactModel().getImage()))
+                            .placeholder(R.drawable.ic_person_black_24dp)
+                            .into(holder.imgUserImage);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

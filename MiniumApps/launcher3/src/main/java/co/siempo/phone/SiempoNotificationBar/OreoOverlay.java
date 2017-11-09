@@ -62,9 +62,15 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Queue;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -78,7 +84,9 @@ import co.siempo.phone.event.OnGoingCallEvent;
 import co.siempo.phone.event.TempoEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.event.TorchOnOff;
+import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
+import co.siempo.phone.mm.model.Utilities;
 import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.notification.ItemClickSupport;
 import co.siempo.phone.notification.Notification;
@@ -87,6 +95,7 @@ import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.notification.RecyclerListAdapter;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
+import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
@@ -96,6 +105,8 @@ import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
+import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.HomeWatcher;
 import minium.co.core.log.Tracer;
@@ -163,7 +174,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private RecyclerListAdapter adapter;
     private List<Notification> notificationList;
     private RelativeLayout layout_notification, relWifi, relMobileData, relBle, relDND, relAirPlane, relFlash, relBrightness;
-    private ImageView img_background, img_notification_Wifi, img_notification_Data, img_notification_Ble, img_notification_Dnd, img_notification_Airplane, img_notification_Flash, img_notification_Brightness,imgOnGoingCall;
+    private ImageView img_background, img_notification_Wifi, img_notification_Data, img_notification_Ble, img_notification_Dnd, img_notification_Airplane, img_notification_Flash, img_notification_Brightness, imgOnGoingCall;
     private int wifilevel;
     private NotificationManager notificationManager;
 
@@ -180,10 +191,10 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private AudioManager audioManager;
     private boolean isWiFiOn = false;
     AudioChangeReceiver audioChangeReceiver;
-    private LinearLayout ln_ongoingCall,container_hangup;
-    private TextView txtUserName,txtMessage;
+    private LinearLayout ln_ongoingCall, container_hangup;
+    private TextView txtUserName, txtMessage;
     private Chronometer chronometer;
-    private ImageView imgUserOngoingCallImage,img_dot;
+    private ImageView imgUserOngoingCallImage, img_dot;
 
 
     public OreoOverlay(final Context context) {
@@ -193,20 +204,20 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         inflateLayout = inflate(context, R.layout.notification_statusbar, this);
         mWinManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        /**
-         * Register Event Bus to get updated status of Battery, WiFi, AirPlane Mode
+        /*
+          Register Event Bus to get updated status of Battery, WiFi, AirPlane Mode
          */
         EventBus.getDefault().register(this);
 
-        /**
-         * StatusBar Methods to init components and update UI
+        /*
+          StatusBar Methods to init components and update UI
          */
         context.startService(new Intent(context, StatusBarService.class));
         initStatusBarComponents();
 
 
-        /**
-         * Hide Notification if it is visible by press homepress key or Recent Button Key
+        /*
+          Hide Notification if it is visible by press homepress key or Recent Button Key
          */
         HomeWatcher mHomeWatcher = new HomeWatcher(context);
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
@@ -261,8 +272,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
         @Override
         public void onReceive(Context arg0, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 hide();
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -294,7 +304,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
          * Initialization of components
          */
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
-        wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         imgNotification = inflateLayout.findViewById(R.id.imgNotification);
         imgTempo = inflateLayout.findViewById(R.id.imgTempo);
         imgBattery = inflateLayout.findViewById(R.id.imgBattery);
@@ -306,14 +316,14 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         layout_notification = inflateLayout.findViewById(R.id.layout_notification);
 
 
-        imgOnGoingCall = (ImageView) inflateLayout.findViewById(R.id.imgOnGoingCall);
-        ln_ongoingCall =(LinearLayout)inflateLayout.findViewById(R.id.ln_ongoingCall);
-        chronometer= (Chronometer)inflateLayout.findViewById(R.id.chronometer);
-        txtUserName = (TextView)inflateLayout.findViewById(R.id.txtUserName);
-        txtMessage = (TextView) inflateLayout.findViewById(R.id.txtMessage);
-        imgUserOngoingCallImage = (ImageView) inflateLayout.findViewById(R.id.imgUserOngoingCallImage);
-        container_hangup = (LinearLayout)inflateLayout.findViewById(R.id.container_hangup);
-        img_dot = (ImageView)inflateLayout.findViewById(R.id.img_dot);
+        imgOnGoingCall = inflateLayout.findViewById(R.id.imgOnGoingCall);
+        ln_ongoingCall = inflateLayout.findViewById(R.id.ln_ongoingCall);
+        chronometer = inflateLayout.findViewById(R.id.chronometer);
+        txtUserName = inflateLayout.findViewById(R.id.txtUserName);
+        txtMessage = inflateLayout.findViewById(R.id.txtMessage);
+        imgUserOngoingCallImage = inflateLayout.findViewById(R.id.imgUserOngoingCallImage);
+        container_hangup = inflateLayout.findViewById(R.id.container_hangup);
+        img_dot = inflateLayout.findViewById(R.id.img_dot);
 
         topbar.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -326,8 +336,8 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         });
 
 
-        /**
-         * Register Airplane Mode, Wifi Receiver, Battery Reciever, Network Reciever
+        /*
+          Register Airplane Mode, Wifi Receiver, Battery Reciever, Network Reciever
          */
 
         airplaneModeDataReceiver = new AirplaneModeDataReceiver();
@@ -345,8 +355,8 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         updateStatusBarUI();
 
 
-        /**
-         * Initialization components of Siempo NotificationBar
+        /*
+          Initialization components of Siempo NotificationBar
          */
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -429,38 +439,34 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     }
 
 
-
-
     @Subscribe
     public void updateTopBar(TopBarUpdateEvent event) {
         updateStatusBarUI();
     }
 
 
-
     /**
      * Below function is use to show and hide ongoing Call notification
      */
     @Subscribe
-    public void OnGoingCallEvent(OnGoingCallEvent event){
+    public void OnGoingCallEvent(OnGoingCallEvent event) {
         long notificationCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
-        OnGoingCallData callData=event.getCallData();
-        if(imgOnGoingCall!=null && callData.get_isCallRunning()){
-            launcherPrefs.edit().putBoolean("onGoingCall", true).commit();
+        OnGoingCallData callData = event.getCallData();
+        if (imgOnGoingCall != null && callData.get_isCallRunning()) {
+            launcherPrefs.edit().putBoolean("onGoingCall", true).apply();
             imgOnGoingCall.setVisibility(View.VISIBLE);
-            if(callData.getId() != 0) {
+            if (callData.getId() != 0) {
                 img_dot.setVisibility(View.VISIBLE);
                 chronometer.setVisibility(View.VISIBLE);
                 chronometer.setBase(SystemClock.elapsedRealtime());
                 chronometer.start();
-            }
-            else{
+            } else {
                 img_dot.setVisibility(View.GONE);
                 chronometer.setVisibility(View.GONE);
             }
             txtMessage.setText(callData.get_message());
 
-            if(!TextUtils.isEmpty(callData.get_contact_title())) {
+            if (!TextUtils.isEmpty(callData.get_contact_title())) {
                 NotificationContactModel contactDetails = gettingNameAndImageFromPhoneNumber(callData.get_contact_title());
                 txtUserName.setText(contactDetails.getName());
                 if (contactDetails.getImage() != null && !contactDetails.getImage().equals("")) {
@@ -476,7 +482,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             ln_ongoingCall.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent myIntent=new Intent();
+                    Intent myIntent = new Intent();
                     myIntent.setAction(Intent.ACTION_CALL_BUTTON);
                     myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(myIntent);
@@ -494,20 +500,21 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 }
             });
         }
-        if(imgOnGoingCall!=null && !callData.get_isCallRunning()){
+        if (imgOnGoingCall != null && !callData.get_isCallRunning()) {
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.stop();
-            launcherPrefs.edit().putBoolean("onGoingCall", false).commit();
+            launcherPrefs.edit().putBoolean("onGoingCall", false).apply();
             ln_ongoingCall.setVisibility(View.GONE);
             imgOnGoingCall.setVisibility(View.GONE);
-            if(notificationCount==0){
+            if (notificationCount == 0) {
                 emptyView.setVisibility(View.VISIBLE);
             }
         }
-        if(imgNotification!=null) {
+        if (imgNotification != null) {
             imgNotification.setVisibility(notificationCount == 0 ? View.GONE : View.VISIBLE);
         }
     }
+
     /**
      * Status Bar update UI
      */
@@ -582,14 +589,14 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 bindWiFiImage(level);
             }
         } else if (event.getState() == ConnectivityEvent.BATTERY) {
-            displayBatteryIcon(event.getValue(),event.getType());
+            displayBatteryIcon(event.getValue(), event.getType());
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
-            /**
-             * Update status bar network icon
+            /*
+              Update status bar network icon
              */
             if (imgSignal != null) imgSignal.setImageResource(getNetworkIcon(event.getValue()));
-            /**
-             * Update notification bar network icon
+            /*
+              Update notification bar network icon
              */
             if (!NetworkUtil.isAirplaneModeOn(context)) {
                 if (relMobileData != null) {
@@ -653,7 +660,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             if (event.isNotificationListNull()) {
                 notificationList.clear();
                 if (recyclerView != null) recyclerView.setVisibility(View.GONE);
-                if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+                if (!launcherPrefs.getBoolean("onGoingCall", false)) {
                     if (emptyView != null) emptyView.setVisibility(View.VISIBLE);
                 }
                 if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
@@ -881,6 +888,10 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                     hide();
+                    // Following code will delete all notification of same user and same types.
+                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                    deleteItem.executeDelete(notificationList.get(position));
+                    loadData();
                 } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
                     if (
                             ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
@@ -892,11 +903,41 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                         context.startActivity(intent);
                         hide();
                     }
+                    // Following code will delete all notification of same user and same types.
+                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                    deleteItem.executeDelete(notificationList.get(position));
+                    loadData();
+                } else {
+                    String strPackageName = notificationList.get(position).getPackageName();
+                    String strTitle = notificationList.get(position).getStrTitle();
+                    List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
+                            .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
+                    DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
+                    adapter.notifyItemRemoved(position);
+                    notificationList.remove(position);
+                    hide();
+                    if(DBUtility.getTableNotificationSmsDao().count()>=1){
+                        imgNotification.setVisibility(View.VISIBLE);
+                    }else{
+                        imgNotification.setVisibility(View.GONE);
+                    }
+                    if (strPackageName.equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
+                        if (getPhoneNumber(strTitle, context).equalsIgnoreCase("")) {
+                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                        } else {
+                            Uri uri = Uri.parse("smsto:" + strTitle);
+                            Intent i = new Intent(Intent.ACTION_SENDTO, uri);
+                            i.putExtra("sms_body", "");
+                            i.setPackage("com.whatsapp");
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(i);
+                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                    }
                 }
-                // Following code will delete all notification of same user and same types.
-                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                deleteItem.executeDelete(notificationList.get(position));
-                loadData();
+
+
             }
 
 
@@ -923,6 +964,21 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 return true;
             }
         });
+    }
+
+    public String getPhoneNumber(String name, Context context) {
+        String ret = null;
+        String selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + name + "%'";
+        String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER};
+        Cursor c = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                projection, selection, null, null);
+        if (c.moveToFirst()) {
+            ret = c.getString(0);
+        }
+        c.close();
+        if (ret == null)
+            ret = "";
+        return ret;
     }
 
     /**
@@ -1144,23 +1200,38 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
      *
      * @param tableNotificationSms
      */
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MainThread)
     public void newNotificationEvent(NewNotificationEvent tableNotificationSms) {
         System.out.println("NotificationFragment.newNotificationEvent" + tableNotificationSms);
         if (tableNotificationSms != null) {
-            imgNotification.setVisibility(View.VISIBLE);
+            if (imgNotification != null) imgNotification.setVisibility(View.VISIBLE);
             if (!checkNotificationExistsOrNot(tableNotificationSms.getTopTableNotificationSmsDao().getId())) {
                 @SuppressLint("SimpleDateFormat")
                 DateFormat sdf = new SimpleDateFormat("hh:mm a");
                 String time = sdf.format(tableNotificationSms.getTopTableNotificationSmsDao().get_date());
-                Notification n = new Notification(gettingNameAndImageFromPhoneNumber(tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title()),
-                        tableNotificationSms.getTopTableNotificationSmsDao().getId(), tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title(),
-                        tableNotificationSms.getTopTableNotificationSmsDao().get_message(), time, false, tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type());
-                notificationList.add(0, n);
+                if (tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
+                    Notification notification = new Notification();
+                    notification.setId(tableNotificationSms.getTopTableNotificationSmsDao().getId());
+                    notification.setNotitification_date(tableNotificationSms.getTopTableNotificationSmsDao().getNotification_date());
+                    notification.setNotificationType(tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type());
+                    notification.setApp_icon(tableNotificationSms.getTopTableNotificationSmsDao().getApp_icon());
+                    notification.setUser_icon(tableNotificationSms.getTopTableNotificationSmsDao().getUser_icon());
+                    notification.setPackageName(tableNotificationSms.getTopTableNotificationSmsDao().getPackageName());
+                    notification.set_time(time);
+                    notification.setStrTitle(tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title());
+                    notification.set_text(tableNotificationSms.getTopTableNotificationSmsDao().get_message());
+                    notificationList.add(0, notification);
+                } else {
+                    Notification n = new Notification(gettingNameAndImageFromPhoneNumber(tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title()),
+                            tableNotificationSms.getTopTableNotificationSmsDao().getId(), tableNotificationSms.getTopTableNotificationSmsDao().get_contact_title(),
+                            tableNotificationSms.getTopTableNotificationSmsDao().get_message(), time, false, tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type());
+                    notificationList.add(0, n);
+                }
+                sortDate(notificationList);
                 adapter.notifyDataSetChanged();
                 if (notificationList.size() == 0) {
                     recyclerView.setVisibility(View.GONE);
-                    if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+                    if (!launcherPrefs.getBoolean("onGoingCall", false)) {
                         emptyView.setVisibility(View.VISIBLE);
                     }
                     if (linearClearAll != null) linearClearAll.setVisibility(View.GONE);
@@ -1174,8 +1245,50 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     textView_notification_title.setVisibility(View.VISIBLE);
                     imgNotification.setVisibility(View.VISIBLE);
                 }
+            } else {
+                updateNotification(tableNotificationSms);
             }
         }
+    }
+
+    private void updateNotification(NewNotificationEvent notificationEvent) {
+        if (notificationList != null) {
+            int pos = -1;
+            for (int i = 0; i < notificationList.size(); i++) {
+                if (notificationList.get(i).getId() == notificationEvent.getTopTableNotificationSmsDao().getId()) {
+                    pos = i;
+                    break;
+                }
+
+            }
+            if (pos != -1) {
+                DateFormat sdf = new SimpleDateFormat("hh:mm a");
+                String time = sdf.format(notificationEvent.getTopTableNotificationSmsDao().get_date());
+                Notification notification = notificationList.get(pos);
+                notification.setNotitification_date(notificationEvent.getTopTableNotificationSmsDao().getNotification_date());
+                notification.setId(notificationEvent.getTopTableNotificationSmsDao().getId());
+                notification.setNotificationType(notificationEvent.getTopTableNotificationSmsDao().getNotification_type());
+                notification.setApp_icon(notificationEvent.getTopTableNotificationSmsDao().getApp_icon());
+                notification.setUser_icon(notificationEvent.getTopTableNotificationSmsDao().getUser_icon());
+                notification.set_time(time);
+                notification.setPackageName(notificationEvent.getTopTableNotificationSmsDao().getPackageName());
+                notification.setStrTitle(notificationEvent.getTopTableNotificationSmsDao().get_contact_title());
+                notification.set_text(notificationEvent.getTopTableNotificationSmsDao().get_message());
+                notificationList.set(pos, notification);
+                sortDate(notificationList);
+                adapter.notifyDataSetChanged();
+            }
+        }
+
+
+    }
+
+    private void sortDate(List<Notification> list) {
+        Collections.sort(list, new Comparator<Notification>() {
+            public int compare(Notification o1, Notification o2) {
+                return new Date(o2.getNotitification_date()).compareTo(new Date(o1.getNotitification_date()));
+            }
+        });
     }
 
     /**
@@ -1200,13 +1313,27 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         for (int i = 0; i < items.size(); i++) {
             @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(items.get(i).get_date());
-            Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type());
-            notificationList.add(n);
+            if (items.get(i).getNotification_type() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
+                Notification notification = new Notification();
+                notification.setId(items.get(i).getId());
+                notification.setNotitification_date(items.get(i).getNotification_date());
+                notification.setNotificationType(items.get(i).getNotification_type());
+                notification.setApp_icon(items.get(i).getApp_icon());
+                notification.setUser_icon(items.get(i).getUser_icon());
+                notification.setPackageName(items.get(i).getPackageName());
+                notification.set_time(time);
+                notification.setStrTitle(items.get(i).get_contact_title());
+                notification.set_text(items.get(i).get_message());
+                notificationList.add(notification);
+            } else {
+                Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type());
+                notificationList.add(n);
+            }
         }
 
         if (items.size() == 0) {
             recyclerView.setVisibility(View.GONE);
-            if(!launcherPrefs.getBoolean("onGoingCall",false)) {
+            if (!launcherPrefs.getBoolean("onGoingCall", false)) {
                 emptyView.setVisibility(View.VISIBLE);
             }
             textView_notification_title.setVisibility(View.GONE);
@@ -1363,26 +1490,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     context.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
-                }
-                break;
-            case R.id.relNotificationWifi:
-                seekbarBrightness.setVisibility(View.GONE);
-                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                turnOnOffWIFI();
-                break;
-            case R.id.relNotificationBle:
-                seekbarBrightness.setVisibility(View.GONE);
-                img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                    BluetoothAdapter.getDefaultAdapter().disable();
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
-                } else {
-                    if (BluetoothAdapter.getDefaultAdapter() != null) {
-                        BluetoothAdapter.getDefaultAdapter().enable();
-                    }
-                    relBle.setEnabled(false);
-                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
                 }
                 break;
             case R.id.relNotificationDND:

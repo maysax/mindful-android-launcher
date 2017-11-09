@@ -1,12 +1,18 @@
 package co.siempo.phone.app;
 
-import java.util.ArrayList;
-
 /**
  * Created by tkb on 2017-04-26.
  */
 
 public class Constants {
+    public static final String WHATSAPP_PACKAGE = "com.whatsapp";
+    public static final String GOOGLE_CALENDAR_PACKAGES = "com.google.android.calendar";
+    public static final String FACEBOOK_PACKAGE = "com.facebook.katana";
+    public static final String FACEBOOK_MESSENGER_PACKAGE = "com.facebook.orca";
+    public static final String FACEBOOK_LITE_PACKAGE = "com.facebook.mlite";
+    public static final String GOOGLE_HANGOUTS_PACKAGES = "com.google.android.talk";
+
+
     public static final String GOOGLE_MAP_PACKAGE = "com.google.android.apps.maps";
     public static final String GOOGLE_PHOTOS = "com.google.android.apps.photos";
     public static final String GOOGLE_CAMERA = " com.android.camera";
@@ -33,4 +39,6 @@ public class Constants {
     public static final int BROWSER_PACKAGE = 24;
     public static final int CLOCK_PACKAGE = 21;
     public static final int EMAIL_PACKAGE = 16;
+    public static final String WHATSAPP = "WhatsApp";
+    public static final String RISALATAN = "رسالتان";
 }

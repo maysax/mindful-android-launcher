@@ -6,12 +6,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
@@ -34,7 +36,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     private ArrayList<SettingsData> arr_menuList;
     private SettingsAdapter adapter;
     private Context context;
-    private final String TAG="SiempoMainSetting";
+    private final String TAG = "SiempoMainSetting";
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -90,14 +92,18 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         s2.setId(2);
         arr_menuList.add(s2);
 
-        SettingsData s3 = new SettingsData();
-        s3.setSettingType(getString(R.string.str_siempo_alphasettings));
-        s3.setId(3);
-        arr_menuList.add(s3);
 
+        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+            SettingsData s3 = new SettingsData();
+            s3.setSettingType(getString(R.string.str_siempo_alphasettings));
+            s3.setId(3);
+            arr_menuList.add(s3);
+        }
 
         adapter = new SettingsAdapter(this, arr_menuList);
         lst_settings.setAdapter(adapter);
+
+
     }
 
     @Override
@@ -108,15 +114,11 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        currentIndex=0;
+        currentIndex = 0;
     }
-
-
-
 
 
 }

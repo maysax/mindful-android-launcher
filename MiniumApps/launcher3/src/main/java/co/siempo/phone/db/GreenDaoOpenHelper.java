@@ -18,8 +18,12 @@ public class GreenDaoOpenHelper extends co.siempo.phone.db.DaoMaster.OpenHelper 
             case 1:
                 // no statement
             case 2:
-                MigrationHelper.migrate(db, co.siempo.phone.db.StatusBarNotificationStorageDao.class);
+                MigrationHelper.migrate(db, StatusBarNotificationStorageDao.class);
             case 3:
+                MigrationHelper.migrate(db, TableNotificationSmsDao.class);
+                break;
+            case 4:
+                break;
         }
 
     }

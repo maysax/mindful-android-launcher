@@ -154,8 +154,15 @@ public class ActivityHelper {
     public void openFeedback() {
         try {
             Intent emailIntent = new Intent(Intent.ACTION_VIEW);
-            Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]", BuildConfig.VERSION_NAME) + "&body=" + UIUtils.getDeviceInfo(context));
-            emailIntent.setData(data);
+            if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]",
+                        "ALPHA-" + BuildConfig.VERSION_NAME) + "&body=" + UIUtils.getDeviceInfo(context));
+                emailIntent.setData(data);
+            } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]",
+                        "BETA-" + BuildConfig.VERSION_NAME) + "&body=" + UIUtils.getDeviceInfo(context));
+                emailIntent.setData(data);
+            }
             emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             final PackageManager pm = context.getPackageManager();
             final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);

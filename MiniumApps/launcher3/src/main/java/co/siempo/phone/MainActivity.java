@@ -3,6 +3,7 @@ package co.siempo.phone;
 import android.Manifest;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +20,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdater;
@@ -33,7 +33,6 @@ import com.gun0912.tedpermission.TedPermission;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
@@ -55,21 +54,16 @@ import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoAccessibilityService;
 import co.siempo.phone.service.SiempoNotificationListener_;
-import co.siempo.phone.settings.SiempoSettingsActivity;
-import co.siempo.phone.token.TokenManager;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.event.NFCEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.ServiceUtils;
 import minium.co.core.util.UIUtils;
-
 
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
@@ -281,7 +275,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
      */
     public static boolean isEnabled(Context mContext) {
-        return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
+
+        ComponentName cn = new ComponentName(mContext, SiempoNotificationListener_.class);
+        String flat = Settings.Secure.getString(mContext.getContentResolver(), "enabled_notification_listeners");
+        return flat != null && flat.contains(cn.flattenToString());
+
+        //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
     }
 
     PermissionListener permissionlistener = new PermissionListener() {
@@ -523,7 +522,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null && appUpdaterUtils==null) {
+        if (activeNetwork != null && appUpdaterUtils == null) {
             Log.d(TAG, "Active network..");
             appUpdaterUtils = new AppUpdaterUtils(this)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)

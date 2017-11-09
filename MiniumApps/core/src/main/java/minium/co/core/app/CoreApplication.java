@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.BuildConfig;
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
 import minium.co.core.config.Config;
@@ -368,11 +369,13 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(Config.DEBUG)
-                .build();
-        Fabric.with(fabric);
+        if (!BuildConfig.DEBUG) {
+//            final Fabric fabric = new Fabric.Builder(this)
+//                    .kits(new Crashlytics())
+//                    .debuggable(Config.DEBUG)
+//                    .build();
+//            Fabric.with(fabric);
+        }
     }
 
 
@@ -453,7 +456,13 @@ public abstract class CoreApplication extends MultiDexApplication {
                     String defSMSApp = Settings.Secure.getString(getContentResolver(), "sms_default_application");
                     String defDialerApp = Settings.Secure.getString(getContentResolver(), "dialer_default_application");
 
-                    if (appInfo.packageName.equalsIgnoreCase(defSMSApp) || appInfo.packageName.contains("com.google.android.calendar")) {
+                    if (appInfo.packageName.equalsIgnoreCase(defSMSApp)
+                            || appInfo.packageName.contains("com.whatsapp")
+                            || appInfo.packageName.contains("com.google.android.calendar")
+                            || appInfo.packageName.contains("com.facebook.katana")
+                            || appInfo.packageName.contains("com.facebook.orca")
+                            || appInfo.packageName.contains("com.facebook.mlite")
+                            || appInfo.packageName.contains("com.google.android.talk")) {
                         getVibrateList().add(appInfo.packageName);
                     } else if (appInfo.packageName.contains("telecom") || appInfo.packageName.contains("dialer")) {
                         getNormalModeList().add(appInfo.packageName);
