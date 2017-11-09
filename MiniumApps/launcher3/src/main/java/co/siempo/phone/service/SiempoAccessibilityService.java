@@ -36,12 +36,6 @@ public class SiempoAccessibilityService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-//        AccessibilityServiceInfo config = new AccessibilityServiceInfo();
-//        config.eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
-////        config.feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC;
-//        config.flags = AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS;
-//
-//        setServiceInfo(config);
     }
 
     @Override
