@@ -85,7 +85,7 @@ public class MainListItemLoader {
 //        if (!Build.MODEL.toLowerCase().contains("siempo")) {
 //            items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
 //        }
-        items.add(new MainListItem(18, getString(R.string.title_feedback), "fa-question-circle"));
+//        items.add(new MainListItem(18, getString(R.string.title_feedback), "fa-question-circle"));
         // items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
         //items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
 //        items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));

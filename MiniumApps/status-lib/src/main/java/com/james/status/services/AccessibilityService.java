@@ -44,7 +44,7 @@ public class AccessibilityService extends android.accessibilityservice.Accessibi
     private NotificationManagerCompat notificationManager;
     private List<NotificationData> notifications;
 
-    private AppData.ActivityData activityData;
+    public static AppData.ActivityData activityData;
     private VolumeReceiver volumeReceiver;
 
     private int color = Color.BLACK;

@@ -163,4 +163,13 @@ public interface DroidPrefs {
     @DefaultBoolean(false)
     boolean isEmailClickedFirstTime();
 
+    @DefaultBoolean(true)
+    boolean isFacebookAllowed();
+
+    @DefaultBoolean(true)
+    boolean isFacebooKMessangerAllowed();
+
+    @DefaultBoolean(true)
+    boolean isFacebooKMessangerLiteAllowed();
+
 }

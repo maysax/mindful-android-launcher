@@ -51,7 +51,7 @@
     <string name="error_name_exists">An item with this name already exists.</string>
     <string name="error_missing_icons">You are missing one or more required icons.</string>
 
-    <string name="service_name">Status Service</string>
+    <string name="service_name">Siempo Service</string>
     <string name="service_name_general">Accessibility Service</string>
     <string name="service_desc" tools:ignore="TypographyQuotes">\'Status Service\' needs to be enabled in order to detect window changes to update the status bar. On some phones you may need to scroll to the bottom of the screen before it becomes visible.</string>
 

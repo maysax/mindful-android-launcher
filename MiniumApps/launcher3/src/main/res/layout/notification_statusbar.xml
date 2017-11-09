@@ -59,7 +59,7 @@
             android:layout_toStartOf="@id/imgBattery"
             android:contentDescription="@null"
             android:padding="6dp"
-            android:src="@drawable/system_reception" />
+            android:src="@drawable/ic_signal_0" />
 
         <ImageView
             android:id="@+id/imgWifi"

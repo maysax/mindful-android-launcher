@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
@@ -30,7 +31,7 @@ import minium.co.core.ui.CoreActivity;
 
 public class UIUtils {
     public static final String PACKAGE_NAME = "co.siempo.phone";
-
+    public static AlertDialog alertDialog;
     public static int dpToPx(Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 dp, context.getResources().getDisplayMetrics());
@@ -53,11 +54,12 @@ public class UIUtils {
     }
 
     public static void alert(Context context, String title, String msg) {
-        new AlertDialog.Builder(context)
+       AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+                .setPositiveButton(android.R.string.ok, null);
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     public static void alert(Context context, int layoutRes) {
@@ -234,5 +236,16 @@ public class UIUtils {
 
     public static Bitmap convertBytetoBitmap(byte[] byteArray) {
         return BitmapFactory.decodeByteArray(byteArray , 0, byteArray.length);
+    }
+
+    public static boolean isDeviceHasSimCard(Context context) {
+        TelephonyManager tm = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);  //gets the current TelephonyManager
+        if (tm.getSimState() != TelephonyManager.SIM_STATE_ABSENT) {
+            //the phone has a sim card
+            return true;
+        } else {
+            return false;
+            //no sim card available
+        }
     }
 }
