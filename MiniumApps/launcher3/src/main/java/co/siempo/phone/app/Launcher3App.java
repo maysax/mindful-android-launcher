@@ -180,17 +180,13 @@ public class Launcher3App extends CoreApplication {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(getApplicationContext())) {
-                            if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                                Log.d(TAG,"Hide Siempo Status bar");
-                                ViewService_.intent(getApplicationContext()).hideMask().start();
-                            }
+                            Log.d(TAG,"Hide Siempo Status bar");
+                            ViewService_.intent(getApplicationContext()).hideMask().start();
                         }
                     }
                     else{
-                        if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
                             Log.d(TAG, "Hide Siempo Status Bar");
                             ViewService_.intent(getApplicationContext()).hideMask().start();
-                        }
                     }
                 }
             }
