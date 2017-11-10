@@ -53,6 +53,7 @@ import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
 
+import com.androidnetworking.core.Core;
 import com.bumptech.glide.Glide;
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -190,9 +191,8 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private int currentModeDeviceMode;
     private AudioManager audioManager;
     private boolean isWiFiOn = false;
-    AudioChangeReceiver audioChangeReceiver;
-    private LinearLayout ln_ongoingCall, container_hangup;
-    private TextView txtUserName, txtMessage;
+    private LinearLayout ln_ongoingCall,container_hangup;
+    private TextView txtUserName,txtMessage;
     private Chronometer chronometer;
     private ImageView imgUserOngoingCallImage, img_dot;
 
@@ -348,9 +348,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         batteryDataReceiver.register(context);
         networkDataReceiver = new NetworkDataReceiver(context);
         networkDataReceiver.register(context);
-        audioChangeReceiver = new AudioChangeReceiver();
-        context.registerReceiver(audioChangeReceiver, new IntentFilter(
-                AudioManager.RINGER_MODE_CHANGED_ACTION));
 
         updateStatusBarUI();
 
@@ -426,12 +423,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
     }
 
-    private class AudioChangeReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            bindDND();
-        }
-    }
+
 
     @Subscribe
     public void object(Object object) {
@@ -888,10 +880,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                     hide();
-                    // Following code will delete all notification of same user and same types.
-                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                    deleteItem.executeDelete(notificationList.get(position));
-                    loadData();
                 } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
                     if (
                             ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
@@ -1200,7 +1188,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
      *
      * @param tableNotificationSms
      */
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe
     public void newNotificationEvent(NewNotificationEvent tableNotificationSms) {
         System.out.println("NotificationFragment.newNotificationEvent" + tableNotificationSms);
         if (tableNotificationSms != null) {
@@ -1497,27 +1485,18 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (currentModeDeviceMode == 0) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 1).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : OreoOverlay Profile Change Vibrate");
+                    CoreApplication.getInstance().changeProfileToVibrateMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_vibration_black_24dp));
                 } else if (currentModeDeviceMode == 1) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 2).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : OreoOverlay Profile Change Silent  1");
+                    CoreApplication.getInstance().changeProfileToSilentMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
                 } else if (currentModeDeviceMode == 2) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 0).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : OreoOverlay Profile Change  2");
+                    CoreApplication.getInstance().changeProfileToSilentMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
                 }
                 currentModeDeviceMode = launcherPrefs.getInt("getCurrentProfile", 0);

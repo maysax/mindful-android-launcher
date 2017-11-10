@@ -11,6 +11,8 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.androidnetworking.core.Core;
+
 import java.util.Date;
 
 import co.siempo.phone.event.NotificationTrayEvent;
@@ -31,34 +33,26 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static Date callStartTime;
     private static boolean isIncoming;
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
-    private static final String TAG="PhonecallReceiver";
+    private static final String TAG = "PhonecallReceiver";
     int currentProfile = -1;
-    AudioManager audioManager;
-    NotificationManager notificationManager;
     static boolean isCallisRunning = false;
     SharedPreferences sharedPref;
+    boolean isAppDefaultOrFront = false;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         sharedPref =
                 context.getSharedPreferences("Launcher3Prefs", 0);
         currentProfile = sharedPref.getInt("getCurrentProfile", 0);
-
+        isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
         if (intent != null) {
-            Log.d(TAG, "Phone Call Receiver :: "+intent.getAction() + currentProfile);
+            Log.d(TAG, "Phone Call Receiver :: " + intent.getAction() + currentProfile);
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
                     isCallisRunning = true;
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    }
                 }
             } else {
                 EventBus.getDefault().post(new NotificationTrayEvent(true));
@@ -95,40 +89,17 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
         }
     }
 
-    private void changeDeviceMode(Context context) {
-        if (PackageUtil.isSiempoLauncher(context)
-                || SiempoAccessibilityService.packageName.equalsIgnoreCase(context.getPackageName())) {
-            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
-            if (currentModeDeviceMode == 0) {
-                sharedPref.edit().putInt("getCurrentProfile", 1).apply();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                        && !notificationManager.isNotificationPolicyAccessGranted()) {
-                } else {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                }
-            } else if (currentModeDeviceMode == 1) {
-                sharedPref.edit().putInt("getCurrentProfile", 2).apply();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                        && !notificationManager.isNotificationPolicyAccessGranted()) {
-                } else {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                }
-            } else if (currentModeDeviceMode == 2) {
-                sharedPref.edit().putInt("getCurrentProfile", 0).apply();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                        && !notificationManager.isNotificationPolicyAccessGranted()) {
-                } else {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                }
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-            } else {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            }
-
-        }
+    private void changeDeviceMode() {
+//        if (isAppDefaultOrFront) {
+//            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
+//            if (currentModeDeviceMode == 0 && currentModeDeviceMode == 2) {
+//                CoreApplication.getInstance().changeProfileToSilentMode();
+//            } else if (currentModeDeviceMode == 1) {
+//                CoreApplication.getInstance().changeProfileToVibrateMode();
+//            }
+//        } else {
+//            CoreApplication.getInstance().changeProfileToNormalMode();
+//        }
 
     }
 
@@ -146,7 +117,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
 
     }
 
-    protected void onIncomingCallAnswered(Context context, String number, Date start){
+    protected void onIncomingCallAnswered(Context context, String number, Date start) {
 
     }
 
@@ -188,8 +159,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     isIncoming = false;
                     callStartTime = new Date();
                     onOutgoingCallStarted(context, number, callStartTime);
-                }
-                else {
+                } else {
 
                     isIncoming = true;
                     callStartTime = new Date();
@@ -208,7 +178,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 } else {
 
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
-                    changeDeviceMode(context);
+                    changeDeviceMode();
                 }
                 if (CoreApplication.getInstance().getMediaPlayer() != null) {
                     CoreApplication.getInstance().getMediaPlayer().stop();

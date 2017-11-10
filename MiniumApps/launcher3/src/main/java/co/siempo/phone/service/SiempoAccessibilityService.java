@@ -59,13 +59,13 @@ public class SiempoAccessibilityService extends AccessibilityService {
                 }
 
 
-                if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    }
-                }
+//                if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+//                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+//                    } else {
+//                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+//                    }
+//                }
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                     // check the condition for the Marshmallow device.

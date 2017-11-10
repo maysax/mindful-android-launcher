@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import com.evernote.client.android.EvernoteSession;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.EApplication;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.greenrobot.greendao.database.Database;
@@ -75,6 +78,12 @@ public class Launcher3App extends CoreApplication {
     @SuppressLint("StaticFieldLeak")
     private static IconsHandler iconsPackHandler;
 
+    @SystemService
+    AudioManager audioManager;
+
+    @SystemService
+    NotificationManager notificationManager;
+
 
     @Trace(tag = TRACE_TAG)
     @Override
@@ -119,7 +128,6 @@ public class Launcher3App extends CoreApplication {
         //}
 
 
-
         AppLifecycleTracker handler = new AppLifecycleTracker();
 
         registerActivityLifecycleCallbacks(handler);
@@ -127,7 +135,7 @@ public class Launcher3App extends CoreApplication {
     }
 
 
-    class AppLifecycleTracker implements Application.ActivityLifecycleCallbacks  {
+    class AppLifecycleTracker implements Application.ActivityLifecycleCallbacks {
 
         private int numStarted = 0;
 
@@ -141,21 +149,19 @@ public class Launcher3App extends CoreApplication {
         public void onActivityStarted(Activity activity) {
             if (numStarted == 0) {
                 // app went to foreground
-                Log.d(TAG,"Siempo is on foreground");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (Settings.canDrawOverlays(getApplicationContext())) {
-                            Log.d(TAG,"Display Siempo Status bar");
-                            ViewService_.intent(getApplicationContext()).showMask().start();
-                        }
-                        else{
-                            Log.d(TAG,"Overlay is off");
-                        }
-                    }
-                    else{
-                        Log.d(TAG,"Display Siempo Status bar");
+                checkProfile();
+                launcherPrefs.isAppDefaultOrFront().put(true);
+                Log.d(TAG, "Siempo is on foreground");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.canDrawOverlays(getApplicationContext())) {
+                        Log.d(TAG, "Display Siempo Status bar");
                         ViewService_.intent(getApplicationContext()).showMask().start();
+                    } else {
+                        Log.d(TAG, "Overlay is off");
                     }
+                } else {
+                    Log.d(TAG, "Display Siempo Status bar");
+                    ViewService_.intent(getApplicationContext()).showMask().start();
                 }
             }
             numStarted++;
@@ -175,23 +181,24 @@ public class Launcher3App extends CoreApplication {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                Log.d(TAG,"Siempo is on background");
+                Log.d(TAG, "Siempo is on background");
                 // app went to background
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (Settings.canDrawOverlays(getApplicationContext())) {
-                            if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                                Log.d(TAG,"Hide Siempo Status bar");
-                                ViewService_.intent(getApplicationContext()).hideMask().start();
-                            }
-                        }
-                    }
-                    else{
-                        if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                            Log.d(TAG, "Hide Siempo Status Bar");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (Settings.canDrawOverlays(getApplicationContext())) {
+                        if (!PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                            Log.d(TAG, "Hide Siempo Status bar");
                             ViewService_.intent(getApplicationContext()).hideMask().start();
                         }
                     }
+                } else {
+                    Log.d(TAG, "Hide Siempo Status Bar");
+                    ViewService_.intent(getApplicationContext()).hideMask().start();
+                }
+                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                    launcherPrefs.isAppDefaultOrFront().put(true);
+                } else {
+                    launcherPrefs.isAppDefaultOrFront().put(false);
+                    changeProfileToNormalMode();
                 }
             }
         }
@@ -206,6 +213,19 @@ public class Launcher3App extends CoreApplication {
 
         }
     }
+
+
+    public void checkProfile() {
+        if (launcherPrefs.getCurrentProfile().get() == 0 || launcherPrefs.getCurrentProfile().get() == 2) {
+            Log.d("Profile Check:::", "checkProfile :" + launcherPrefs.getCurrentProfile().get());
+            changeProfileToSilentMode();
+        } else {
+            Log.d("Profile Check:::", "checkProfile : Vibrate" +launcherPrefs.getCurrentProfile().get());
+            changeProfileToVibrateMode();
+        }
+    }
+
+
     /**
      * Configure the default application when application insatlled
      */
@@ -263,10 +283,11 @@ public class Launcher3App extends CoreApplication {
      * @param isOkayShow
      */
     public Dialog dialog;
+
     public void showPreferenceAppListDialog(final Context context, final int menuId, final boolean isOkayShow) {
         resolveInfo = null;
         pos = -1;
-        if(dialog!=null && dialog.isShowing()){
+        if (dialog != null && dialog.isShowing()) {
             return;
         }
         dialog = new Dialog(context, R.style.MaterialDialogSheet);

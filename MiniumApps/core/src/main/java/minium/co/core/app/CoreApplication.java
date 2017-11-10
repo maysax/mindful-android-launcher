@@ -1,6 +1,7 @@
 package minium.co.core.app;
 
 import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.os.UserManager;
 import android.os.Vibrator;
@@ -104,6 +106,9 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<ResolveInfo> clockPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> emailPackageList = new ArrayList<>();
     private boolean isEditNotOpen = false;
+    AudioManager audioManager;
+    NotificationManager notificationManager;
+
 
     public boolean isEditNotOpen() {
         return isEditNotOpen;
@@ -213,11 +218,14 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.emailPackageList = emailPackageList;
     }
 
+
     @Override
     public void onCreate() {
         super.onCreate();
         sharedPref = getSharedPreferences("DroidPrefs", 0);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
@@ -443,6 +451,39 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.normalModeList = normalModeList;
     }
 
+    public void changeProfileToNormalMode() {
+        int currentMode = audioManager.getRingerMode();
+        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+            } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            }
+        }
+    }
+
+    public void changeProfileToVibrateMode() {
+        int currentMode = audioManager.getRingerMode();
+        if (currentMode != AudioManager.RINGER_MODE_VIBRATE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+            } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            }
+        }
+    }
+
+    public void changeProfileToSilentMode() {
+        int currentMode = audioManager.getRingerMode();
+        if (currentMode != AudioManager.RINGER_MODE_SILENT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+            } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            }
+        }
+    }
+
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
 
         @Override
@@ -555,17 +596,19 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public void playAudio() {
         try {
-            Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            if (mMediaPlayer == null) {
-                mMediaPlayer = new MediaPlayer();
-                mMediaPlayer.setDataSource(this, alert);
-                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                if (mMediaPlayer == null) {
+                    mMediaPlayer = new MediaPlayer();
+                    mMediaPlayer.setDataSource(this, alert);
+                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
 //                    mMediaPlayer.setLooping(true);
-                    mMediaPlayer.prepare();
-                    mMediaPlayer.start();
-                    vibrator.vibrate(pattern, 0);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.start();
+                        vibrator.vibrate(pattern, 0);
+                    }
                 }
             }
         } catch (Exception e) {

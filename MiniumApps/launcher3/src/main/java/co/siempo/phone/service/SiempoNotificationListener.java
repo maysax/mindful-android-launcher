@@ -121,11 +121,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
-//        Tracer.d("Notification posted: " + getNotificationToString(notification));
-
-        if (PackageUtil.isSiempoLauncher(this)
-                || SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
-
+        Tracer.d("Notification posted: " + getNotificationToString(notification));
+        if (launcherPrefs.isAppDefaultOrFront().get()) {
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
             if (PackageUtil.isSiempoLauncher(this) && myKM.inKeyguardRestrictedInputMode() && launcherPrefs.isHidenotificationOnLockScreen().get()) {
                 SiempoNotificationListener.this.cancelAllNotifications();
@@ -134,59 +131,20 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 SiempoNotificationListener.this.cancelAllNotifications();
             }
 
-            if (PackageUtil.isSiempoBlocker(notification.getId())) {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                launcherPrefs.getCurrentProfile().put(0);
-                prefs.isNotificationBlockerRunning().put(true);
-            } else if (prefs.isPauseActive().get() || prefs.isTempoActive().get()) {
-                cancelNotification(notification.getKey());
-                saveNotification(notification.getPackageName(), notification.getPostTime(),
-                        notification.getNotification().tickerText);
-                // saving the information in other place
-            } else if (launcherPrefs.getCurrentProfile().get() == 0) {
-                if (CoreApplication.getInstance().getNormalModeList().contains(notification.getPackageName())) {
-
-                } else {
-                    //cancelNotification(notification.getKey());
-                    if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                                && !notificationManager.isNotificationPolicyAccessGranted()) {
-                        } else {
-                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                        }
-                        if (notification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE)
-                                || notification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_MESSENGER_PACKAGE)
-                                || notification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_LITE_PACKAGE)) {
-                            if (droidPrefs.isFacebookAllowed().get()) {
-                                vibrationUtils.vibrate(500);
-                            }
-                        } else {
-                            vibrationUtils.vibrate(500);
-                        }
-
-                    } else if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                                && !notificationManager.isNotificationPolicyAccessGranted()) {
-                        } else {
-                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                        }
-                    }
+            if (launcherPrefs.getCurrentProfile().get() == 0) {
+                if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
+                    Log.d("Profile Check:::", "NotificationListener : getSilentList");
+                    CoreApplication.getInstance().changeProfileToSilentMode();
+                } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
+                    vibrationUtils.vibrate(500);
                 }
             } else if (launcherPrefs.getCurrentProfile().get() == 1) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                        && !notificationManager.isNotificationPolicyAccessGranted()) {
-                } else {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                }
+                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile 1");
+                CoreApplication.getInstance().changeProfileToVibrateMode();
             } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                        && !notificationManager.isNotificationPolicyAccessGranted()) {
-                } else {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                }
+                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile 2 ");
+                CoreApplication.getInstance().changeProfileToSilentMode();
             }
-            printLog(notification);
-            filterByCategory(notification);
         }
     }
 
@@ -708,79 +666,4 @@ public class SiempoNotificationListener extends NotificationListenerService {
         super.onNotificationRankingUpdate(rankingMap);
     }
 
-    private static boolean isInteger(String s, int radix) {
-        try {
-            if (s.isEmpty()) {
-                return false;
-            }
-            int i = 0;
-            while (i < s.length()) {
-                if (i == 0 && s.charAt(i) == '-') {
-                    if (s.length() == 1) {
-                        return false;
-                    }
-                } else if (Character.digit(s.charAt(i), radix) < 0) {
-                    return false;
-                }
-                i++;
-            }
-            return true;
-        } catch (Exception e) {
-            return true;
-        }
-    }
-
-    private String getNotificationTextLegacy(Notification notification, String defaultText) {
-        String notificationText = "";
-        if (!(notification == null || notification.extras == null)) {
-            CharSequence[] lines = notification.extras.getCharSequenceArray(NotificationCompat.EXTRA_TEXT_LINES);
-            if (lines != null) {
-                for (CharSequence msg : lines) {
-                    if (msg != null) {
-                        notificationText = msg.toString();
-                    }
-                }
-            }
-        }
-        if (notificationText == null || notificationText.isEmpty()) {
-            return defaultText;
-        }
-        return notificationText;
-    }
-
-    private String getTitleLegacy(String text) {
-        if (text == null || text.indexOf(":") <= 0) {
-            return text;
-        }
-        return text.substring(0, text.indexOf(":"));
-    }
-
-    private String fixTextLegacy(String text) {
-        if (text == null || text.indexOf(":") <= 0 || text.indexOf(":") == text.length() - 1) {
-            return text;
-        }
-        return text.substring(text.indexOf(":") + 1);
-    }
-
-    private String removeXnewMessageFromSender(String title) {
-        String finalTitle = title;
-        if (finalTitle == null || !finalTitle.contains("(") || !finalTitle.contains(")")) {
-            return finalTitle;
-        }
-        int lastParenthesiIndex = finalTitle.lastIndexOf("(");
-        int lastEndParenthesisIndex = finalTitle.lastIndexOf(")");
-        if (true) {
-            return "CODE_IGNORE_ME";
-        }
-        return finalTitle;
-    }
-
-    private String removeColFromTitle(String title) {
-        String finalTitle = title == null ? null : title.trim();
-        try {
-            return (finalTitle.length() <= 3 || finalTitle.charAt(finalTitle.length() - 3) != ':') ? finalTitle : finalTitle.substring(0, finalTitle.length() - 3);
-        } catch (Exception e) {
-            return title;
-        }
-    }
 }
