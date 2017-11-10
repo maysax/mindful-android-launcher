@@ -476,6 +476,27 @@ public class Launcher3App extends CoreApplication {
                         prefs.emailPackage().put(resolveInfo.activityInfo.packageName);
                         prefs.isEmailClicked().put(true);
                         prefs.isEmailClickedFirstTime().put(true);
+                    } else if (menuId == Constants.CALENDER_PACKAGE) {
+                        prefs.calenderPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isCalenderClicked().put(true);
+                    } else if (menuId == Constants.CONTACT_PACKAGE) {
+                        prefs.contactPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isContactClicked().put(true);
+                    } else if (menuId == Constants.MAP_PACKAGE) {
+                        prefs.mapPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isMapClicked().put(true);
+                    } else if (menuId == Constants.PHOTOS_PACKAGE) {
+                        prefs.photosPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isPhotosClicked().put(true);
+                    } else if (menuId == Constants.CAMERA_PACKAGE) {
+                        prefs.cameraPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isEmailClicked().put(true);
+                    } else if (menuId == Constants.BROWSER_PACKAGE) {
+                        prefs.browserPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isBrowserClicked().put(true);
+                    } else if (menuId == Constants.CLOCK_PACKAGE) {
+                        prefs.clockPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isClockClicked().put(true);
                     }
                     dialog.dismiss();
                     EventBus.getDefault().post(new DefaultAppUpdate(true));
@@ -487,16 +508,6 @@ public class Launcher3App extends CoreApplication {
             }
         });
         dialog.show();
-//        listView.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (pos != -1 && isOkayShow) {
-//                    listView.performItemClick(listView, pos, listView.getItemIdAtPosition(pos));
-//                    listView.setItemChecked(pos,true);
-//                }
-//            }
-//        },2000);
-
     }
 
 
