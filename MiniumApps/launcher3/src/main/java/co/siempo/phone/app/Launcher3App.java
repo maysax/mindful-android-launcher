@@ -185,8 +185,8 @@ public class Launcher3App extends CoreApplication {
                         }
                     }
                     else{
-                            Log.d(TAG, "Hide Siempo Status Bar");
-                            ViewService_.intent(getApplicationContext()).hideMask().start();
+                        Log.d(TAG, "Hide Siempo Status Bar");
+                        ViewService_.intent(getApplicationContext()).hideMask().start();
                     }
                 }
             }

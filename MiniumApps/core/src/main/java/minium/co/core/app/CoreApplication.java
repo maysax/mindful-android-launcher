@@ -38,6 +38,8 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -103,6 +105,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<ResolveInfo> browserPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> clockPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> emailPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> notesPackageList = new ArrayList<>();
     private boolean isEditNotOpen = false;
 
     public boolean isEditNotOpen() {
@@ -211,6 +214,14 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public void setEmailPackageList(ArrayList<ResolveInfo> emailPackageList) {
         this.emailPackageList = emailPackageList;
+    }
+
+    public ArrayList<ResolveInfo> getNotesPackageList() {
+        return notesPackageList;
+    }
+
+    public void setNotesPackageList(ArrayList<ResolveInfo> notesPackageList) {
+        this.notesPackageList = notesPackageList;
     }
 
     @Override
@@ -334,6 +345,16 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
         if (sharedPref.getString("emailPackage", "").equalsIgnoreCase("")) {
             sharedPref.edit().putString("emailPackage", emailPackage).apply();
+        }
+
+        String notesPackage = CoreApplication.getInstance().getNotesPackageName();
+        if (!sharedPref.getString("notesPackage", "").equalsIgnoreCase("")
+                && !sharedPref.getString("notesPackage", "").equalsIgnoreCase("Notes")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("notesPackage", ""))) {
+            sharedPref.edit().putString("notesPackage", notesPackage).apply();
+        }
+        if (sharedPref.getString("notesPackage", "").equalsIgnoreCase("")) {
+            sharedPref.edit().putString("notesPackage", notesPackage).apply();
         }
     }
 
@@ -723,6 +744,34 @@ public abstract class CoreApplication extends MultiDexApplication {
         for (ResolveInfo res : getEmailPackageList()) {
             Log.d("Default App Name", "Mail : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
             return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all Notes application package name
+     */
+    public String getNotesPackageName() {
+        String filepath = "mnt/sdcard/doc.txt";
+        File file = new File(filepath);
+        if(!file.exists()){
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent.setType("application/*");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.fromFile(file));
+        getNotesPackageList().clear();
+        getNotesPackageList().add(null);
+        getNotesPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getNotesPackageList()) {
+//            Log.d("Default App Name", "Notes : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res != null ? res.activityInfo.packageName : "Notes";
         }
         return "";
     }

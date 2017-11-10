@@ -71,5 +71,6 @@
     <string name="select_your_prefered_home_app">Select your preferred Home app</string>
     <string name="tap_always" tools:ignore="TypographyQuotes">Tap \"Always\"</string>
     <string name="ok">OK</string>
+    <string name="notes">Notes</string>
 
 </resources>
