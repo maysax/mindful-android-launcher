@@ -226,6 +226,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 hide();
                 if(PackageUtil.isSiempoLauncher(context)){
                     try{
+
                         Dialog dialog=((Launcher3App) CoreApplication.getInstance()).dialog;
                         if(dialog!=null && dialog.isShowing()) {
                             dialog.dismiss();
@@ -239,6 +240,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                         String pkg = context.getApplicationContext().getPackageName();;
                         String cls = "co.siempo.phone.MainActivity_";
                         i.setComponent(new ComponentName(pkg, cls));
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         context.startActivity(i);
                     }
                     catch (Exception e){
