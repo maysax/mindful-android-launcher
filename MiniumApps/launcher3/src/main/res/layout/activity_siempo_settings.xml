@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/title.defaultLauncher"
                     android:textSize="14sp"
@@ -59,47 +59,6 @@
 
             </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:paddingRight="5dp">
-
-                <ImageView
-                    android:id="@+id/icon_KeyBoardNotification"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
-                    android:contentDescription="@null"
-                    android:padding="6dp" />
-
-                <TextView
-                    android:id="@+id/txt_KeyBoardNotification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:maxLines="3"
-                    android:text="@string/str_keyboard_configuration"
-                    android:textSize="14sp" />
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/switch_KeyBoardnotification"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@android:color/transparent"
-                    android:button="@null"
-                    android:checked="true"
-                    android:gravity="center_vertical"
-                    android:textOff=""
-                    android:textOn="" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ln_changeDefaultApp"
@@ -114,7 +73,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:contentDescription="@null"
                     android:padding="6dp" />
 
@@ -123,15 +82,64 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/title.defaultapp"
                     android:textSize="14sp" />
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                android:paddingRight="5dp">
 
-            <LinearLayout
+                <ImageView
+                    android:id="@+id/icon_KeyBoardNotification"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:padding="6dp" />
+
+                <TextView
+                    android:id="@+id/txt_KeyBoardNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_toLeftOf="@+id/switch_KeyBoardnotification"
+                    android:layout_toRightOf="@id/icon_KeyBoardNotification"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="3"
+                    android:text="@string/str_keyboard_configuration"
+                    android:textSize="14sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switch_KeyBoardnotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center_vertical"
+                    android:textOff=""
+                    android:textOn="" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
                 android:id="@+id/ln_hideNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -144,8 +152,10 @@
                     android:id="@+id/icon_hideNotification"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:contentDescription="@null"
                     android:padding="6dp" />
 
@@ -153,8 +163,12 @@
                     android:id="@+id/txt_hidenotification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_toLeftOf="@+id/swtch_notification"
+                    android:layout_toRightOf="@+id/icon_hideNotification"
                     android:fontFamily="sans-serif-medium"
                     android:maxLines="3"
                     android:text="@string/title.lockScreenNotifications"
@@ -162,8 +176,10 @@
 
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/swtch_notification"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:background="@android:color/transparent"
                     android:button="@null"
@@ -171,9 +187,9 @@
                     android:textOff=""
                     android:textOn="" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/ln_AllowNotificationFacebook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -186,8 +202,10 @@
                     android:id="@+id/icon_AllowNotificationFacebook"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:contentDescription="@null"
                     android:padding="6dp" />
 
@@ -195,16 +213,23 @@
                     android:id="@+id/txt_AllownotificationFacebook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_toLeftOf="@+id/switch_AllowNotificationFacebook"
+                    android:layout_toRightOf="@+id/icon_AllowNotificationFacebook"
                     android:fontFamily="sans-serif-medium"
                     android:maxLines="3"
                     android:text="@string/title.allowNotification"
                     android:textSize="14sp" />
+
                 <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_AllowNotificationFacebook"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:background="@android:color/transparent"
                     android:button="@null"
@@ -212,7 +237,7 @@
                     android:gravity="center_vertical"
                     android:textOff=""
                     android:textOn="" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/ln_Feedback"
@@ -227,7 +252,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:contentDescription="@null"
                     android:padding="6dp" />
 
@@ -236,7 +261,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/title.feedback"
                     android:textSize="14sp" />
@@ -256,7 +281,7 @@
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:contentDescription="@null"
                     android:padding="6dp" />
 
@@ -265,7 +290,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="18dp"
+                    android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
                     android:text="@string/title.version"
                     android:textSize="14sp" />
@@ -274,14 +299,6 @@
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
-
-
-    <!--<FrameLayout-->
-    <!--android:id="@+id/mainView"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_below="@id/statusView"-->
-    <!--android:elevation="6dp" />-->
 
 
 </RelativeLayout>

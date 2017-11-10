@@ -74,10 +74,24 @@ public class PreferenceListAdapter extends ArrayAdapter<ResolveInfo> {
             holder = (ItemHolder) convertView.getTag();
         }
         ResolveInfo item = getItem(position);
-        if (item != null) {
-            holder.text.setText(item.loadLabel(context.getPackageManager()));
-            holder.icon.setImageDrawable(item.loadIcon(context.getPackageManager()));
+
+        if (pos == 6) {
+            if (item == null) {
+                holder.text.setText(context.getResources().getText(R.string.siempo_note));
+                holder.icon.setImageDrawable(context.getDrawable(R.mipmap.ic_launcher));
+            } else {
+                if (item != null) {
+                    holder.text.setText(item.loadLabel(context.getPackageManager()));
+                    holder.icon.setImageDrawable(item.loadIcon(context.getPackageManager()));
+                }
+            }
+        } else {
+            if (item != null) {
+                holder.text.setText(item.loadLabel(context.getPackageManager()));
+                holder.icon.setImageDrawable(item.loadIcon(context.getPackageManager()));
+            }
         }
+
 
         return convertView;
     }

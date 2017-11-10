@@ -157,6 +157,9 @@ public interface DroidPrefs {
     @DefaultString("")
     String emailPackage();
 
+    @DefaultString("")
+    String notesPackage();
+
     @DefaultBoolean(false)
     boolean isEmailClicked();
 
