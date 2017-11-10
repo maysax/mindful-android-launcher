@@ -602,9 +602,8 @@ public abstract class CoreApplication extends MultiDexApplication {
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setDataSource(this, alert);
                     final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-//                    mMediaPlayer.setLooping(true);
+                    if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != 0) {
+                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
                         mMediaPlayer.prepare();
                         mMediaPlayer.start();
                         vibrator.vibrate(pattern, 0);
