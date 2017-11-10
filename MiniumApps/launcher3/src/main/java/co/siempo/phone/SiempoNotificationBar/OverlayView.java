@@ -227,6 +227,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 if(PackageUtil.isSiempoLauncher(context)){
 
                     try{
+
                         Dialog dialog=((Launcher3App) CoreApplication.getInstance()).dialog;
                         if(dialog!=null && dialog.isShowing()) {
                             dialog.dismiss();
@@ -239,7 +240,9 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         Intent i = new Intent();
                         String pkg = context.getApplicationContext().getPackageName();;
                         String cls = "co.siempo.phone.MainActivity_";
+                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         i.setComponent(new ComponentName(pkg, cls));
+
                         context.startActivity(i);
                     }
                     catch (Exception e){
