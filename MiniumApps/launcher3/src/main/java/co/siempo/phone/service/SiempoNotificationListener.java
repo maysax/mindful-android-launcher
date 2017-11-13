@@ -135,9 +135,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
                     Log.d("Profile Check:::", "NotificationListener : getSilentList");
                     CoreApplication.getInstance().changeProfileToSilentMode();
+                    CoreApplication.getInstance().MuteAudio();
                 } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
                     Log.d("Profile Check:::", "NotificationListener : getVibrateList");
                     vibrationUtils.vibrate(500);
+                    CoreApplication.getInstance().MuteAudio();
                 }
             } else if (launcherPrefs.getCurrentProfile().get() == 1) {
                 Log.d("Profile Check:::", "NotificationListener : getCurrentProfile 1");

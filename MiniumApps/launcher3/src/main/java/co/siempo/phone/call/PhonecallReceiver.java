@@ -83,20 +83,20 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     }
 
     private void changeDeviceMode() {
-        if (isAppDefaultOrFront) {
-            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
-            if (currentModeDeviceMode == 0) {
-                CoreApplication.getInstance().changeProfileToSilentMode();
-            } else if (currentModeDeviceMode == 1) {
-                CoreApplication.getInstance().changeProfileToVibrateMode();
-            } else if (currentModeDeviceMode == 2) {
-                CoreApplication.getInstance().changeProfileToSilentMode();
-            }
-            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront" + currentModeDeviceMode + " :: isAppDefaultOrFront " + isAppDefaultOrFront);
-        } else {
-            CoreApplication.getInstance().changeProfileToNormalMode();
-            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront -1 :: isAppDefaultOrFront " + isAppDefaultOrFront);
-        }
+//        if (isAppDefaultOrFront) {
+//            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
+//            if (currentModeDeviceMode == 0) {
+//                CoreApplication.getInstance().changeProfileToSilentMode();
+//            } else if (currentModeDeviceMode == 1) {
+//                CoreApplication.getInstance().changeProfileToVibrateMode();
+//            } else if (currentModeDeviceMode == 2) {
+//                CoreApplication.getInstance().changeProfileToSilentMode();
+//            }
+//            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront" + currentModeDeviceMode + " :: isAppDefaultOrFront " + isAppDefaultOrFront);
+//        } else {
+//            CoreApplication.getInstance().changeProfileToNormalMode();
+//            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront -1 :: isAppDefaultOrFront " + isAppDefaultOrFront);
+//        }
 
     }
 
@@ -169,11 +169,12 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
                     //Ring but no pickup-  a miss
                     onMissedCall(context, savedNumber, callStartTime);
+                    changeDeviceMode();
                 } else if (isIncoming) {
                     onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
                 } else {
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
-//                    changeDeviceMode();
+                    changeDeviceMode();
                 }
                 if (CoreApplication.getInstance().getMediaPlayer() != null) {
                     CoreApplication.getInstance().getMediaPlayer().stop();
@@ -184,6 +185,5 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 break;
         }
         lastState = state;
-        changeDeviceMode();
     }
 }

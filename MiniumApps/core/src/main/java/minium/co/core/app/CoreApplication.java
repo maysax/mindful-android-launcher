@@ -452,14 +452,15 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void changeProfileToNormalMode() {
-        int currentMode = audioManager.getRingerMode();
-        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-            } else {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            }
-        }
+//        int currentMode = audioManager.getRingerMode();
+//        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+//            } else {
+//                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+//            }
+//        }
+        UnMuteAudio();
     }
 
     public void changeProfileToVibrateMode() {
@@ -474,14 +475,15 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void changeProfileToSilentMode() {
-        int currentMode = audioManager.getRingerMode();
-        if (currentMode != AudioManager.RINGER_MODE_SILENT) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-            } else {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-            }
-        }
+//        int currentMode = audioManager.getRingerMode();
+//        if (currentMode != AudioManager.RINGER_MODE_SILENT) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+//            } else {
+//                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+//            }
+//        }
+        MuteAudio();
     }
 
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
@@ -596,31 +598,66 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public void playAudio() {
         try {
-            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                if (mMediaPlayer == null) {
-                    mMediaPlayer = new MediaPlayer();
-                    mMediaPlayer.setDataSource(this, alert);
-                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        mMediaPlayer.setVolume(100,100);
-                        mMediaPlayer.setScreenOnWhilePlaying(true);
-                        mMediaPlayer.prepare();
-                        mMediaPlayer.start();
-                        vibrator.vibrate(pattern, 0);
-                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
-                            @Override
-                            public void onCompletion(MediaPlayer player){
-                                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 100, 0);
-                                player.release();
-                                player.stop();  }
-                        });
-                    }
-                }
-            }
+            CoreApplication.getInstance().UnMuteAudio();
+//            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+//                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+//                if (mMediaPlayer == null) {
+//                    mMediaPlayer = new MediaPlayer();
+//                    mMediaPlayer.setDataSource(this, alert);
+//                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//                    if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
+//                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                        mMediaPlayer.setVolume(100,100);
+//                        mMediaPlayer.setScreenOnWhilePlaying(true);
+//                        mMediaPlayer.prepare();
+//                        mMediaPlayer.start();
+//                        vibrator.vibrate(pattern, 0);
+//                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
+//                            @Override
+//                            public void onCompletion(MediaPlayer player){
+//                                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 100, 0);
+//                                player.release();
+//                                player.stop();  }
+//                        });
+//                    }
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void MuteAudio(){
+        AudioManager mAlramMAnager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
+        } else {
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, true);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+        }
+    }
+
+    public void UnMuteAudio(){
+        AudioManager mAlramMAnager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_UNMUTE, 0);
+            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_UNMUTE, 0);
+        } else {
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, false);
+            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
         }
     }
 
