@@ -515,7 +515,7 @@ public class Launcher3App extends CoreApplication {
                         prefs.isPhotosClicked().put(true);
                     } else if (menuId == Constants.CAMERA_PACKAGE) {
                         prefs.cameraPackage().put(resolveInfo.activityInfo.packageName);
-                        prefs.isEmailClicked().put(true);
+                        prefs.isCameraClicked().put(true);
                     } else if (menuId == Constants.BROWSER_PACKAGE) {
                         prefs.browserPackage().put(resolveInfo.activityInfo.packageName);
                         prefs.isBrowserClicked().put(true);
