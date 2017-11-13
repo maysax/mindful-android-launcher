@@ -446,6 +446,13 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         updateStatusBarUI();
     }
 
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void ReloadNotificationsEvent(OnGoingCallEvent event) {
+        smsDao = DBUtility.getNotificationDao();
+        callStorageDao = DBUtility.getCallStorageDao();
+        loadData();
+    }
+
 
     /**
      * Below function is use to show and hide ongoing Call notification

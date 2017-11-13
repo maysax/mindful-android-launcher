@@ -476,14 +476,14 @@ public abstract class CoreApplication extends MultiDexApplication {
                     appInfo.name = activityInfo.getLabel().toString();
                     String defSMSApp = Settings.Secure.getString(getContentResolver(), "sms_default_application");
                     String defDialerApp = Settings.Secure.getString(getContentResolver(), "dialer_default_application");
-
+// || appInfo.packageName.contains("com.google.android.talk")
+                    //                   || appInfo.packageName.contains("com.whatsapp")
                     if (appInfo.packageName.equalsIgnoreCase(defSMSApp)
-                            || appInfo.packageName.contains("com.whatsapp")
                             || appInfo.packageName.contains("com.google.android.calendar")
                             || appInfo.packageName.contains("com.facebook.katana")
                             || appInfo.packageName.contains("com.facebook.orca")
                             || appInfo.packageName.contains("com.facebook.mlite")
-                            || appInfo.packageName.contains("com.google.android.talk")) {
+                            ) {
                         getVibrateList().add(appInfo.packageName);
                     } else if (appInfo.packageName.contains("telecom") || appInfo.packageName.contains("dialer")) {
                         getNormalModeList().add(appInfo.packageName);
@@ -754,7 +754,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     public String getNotesPackageName() {
         String filepath = "mnt/sdcard/doc.txt";
         File file = new File(filepath);
-        if(!file.exists()){
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
@@ -762,10 +762,8 @@ public abstract class CoreApplication extends MultiDexApplication {
             }
         }
 
-//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//        intent.setType("application/*");
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.fromFile(file));
+        Intent intent = new Intent(Intent.ACTION_EDIT);
+        intent.setDataAndType(Uri.fromFile(file),"text/plain");
         getNotesPackageList().clear();
         getNotesPackageList().add(null);
         getNotesPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));

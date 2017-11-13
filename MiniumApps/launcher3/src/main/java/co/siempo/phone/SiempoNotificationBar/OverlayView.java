@@ -431,6 +431,13 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void ReloadNotificationsEvent(OnGoingCallEvent event) {
+        smsDao = DBUtility.getNotificationDao();
+        callStorageDao = DBUtility.getCallStorageDao();
+        loadData();
+    }
+
 
     private class AudioChangeReceiver extends BroadcastReceiver {
         @Override
