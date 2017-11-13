@@ -522,7 +522,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                cancelNotification(statusBarNotification.getKey());
+                //cancelNotification(statusBarNotification.getKey());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -555,7 +555,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         long id = smsDao.insert(notificationSms);
                         notificationSms.setId(id);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                        cancelNotification(statusBarNotification.getKey());
+                       // cancelNotification(statusBarNotification.getKey());
                     } else {
                         notificationSms.setPackageName(strPackageName);
                         notificationSms.set_date(date);
@@ -564,7 +564,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.set_contact_title(strTitle);
                         smsDao.update(notificationSms);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                        cancelNotification(statusBarNotification.getKey());
+                       // cancelNotification(statusBarNotification.getKey());
                     }
                 }
                 if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
@@ -603,7 +603,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     long id = smsDao.insert(notificationSms);
                     notificationSms.setId(id);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                    cancelNotification(statusBarNotification.getKey());
+                    //cancelNotification(statusBarNotification.getKey());
                 } else {
                     notificationSms.setPackageName(strPackageName);
                     notificationSms.set_date(date);
@@ -612,7 +612,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_contact_title(strTitle);
                     smsDao.update(notificationSms);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                    cancelNotification(statusBarNotification.getKey());
+                   // cancelNotification(statusBarNotification.getKey());
                 }
                 if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
@@ -711,13 +711,13 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
 //        if (!PackageUtil.isSiempoLauncher(this)
 //                && !SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
-        if (PackageUtil.isMsgPackage(notification.getPackageName())) {
-            new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
-        } else if (PackageUtil.isCallPackage(notification.getPackageName())) {
-            new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
-        } else {
-            new DBClient().deleteMsgByPackageName(notification.getPackageName());
-        }
+            if (PackageUtil.isMsgPackage(notification.getPackageName())) {
+                new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
+            } else if (PackageUtil.isCallPackage(notification.getPackageName())) {
+                new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
+            } else {
+                new DBClient().deleteMsgByPackageName(notification.getPackageName());
+            }
 //        }
     }
 
