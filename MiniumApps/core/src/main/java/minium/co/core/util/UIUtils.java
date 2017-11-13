@@ -187,7 +187,7 @@ public class UIUtils {
         return "\n\n\nMy Device Information is as follows:"
                 + "\nMANUFACTURER : " + Build.MANUFACTURER
                 + "\nMODEL : " + Build.MODEL
-                + "\nVERSION : " + Build.VERSION.RELEASE
+                + "\nANDROID VERSION : " + Build.VERSION.RELEASE
                 + "\nDISPLAY : " + getScreenDisplaySize(context);
     }
 

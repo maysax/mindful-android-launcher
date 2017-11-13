@@ -155,12 +155,16 @@ public class ActivityHelper {
         try {
             Intent emailIntent = new Intent(Intent.ACTION_VIEW);
             if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                String strDeviceInfo =  UIUtils.getDeviceInfo(context)
+                        + "\nAPP VERSION : " +"ALPHA-" + BuildConfig.VERSION_NAME;
                 Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]",
-                        "ALPHA-" + BuildConfig.VERSION_NAME) + "&body=" + UIUtils.getDeviceInfo(context));
+                        "ALPHA-" + BuildConfig.VERSION_NAME) + "&body=" + strDeviceInfo);
                 emailIntent.setData(data);
             } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                String strDeviceInfo =  UIUtils.getDeviceInfo(context)
+                        + "\nAPP VERSION : " +"BETA-" + BuildConfig.VERSION_NAME;
                 Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]",
-                        "BETA-" + BuildConfig.VERSION_NAME) + "&body=" + UIUtils.getDeviceInfo(context));
+                        "BETA-" + BuildConfig.VERSION_NAME) + "&body=" + strDeviceInfo);
                 emailIntent.setData(data);
             }
             emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
