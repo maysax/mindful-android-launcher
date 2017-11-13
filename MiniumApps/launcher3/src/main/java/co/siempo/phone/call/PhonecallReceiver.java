@@ -1,23 +1,16 @@
 package co.siempo.phone.call;
 
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.AudioManager;
-import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.androidnetworking.core.Core;
-
 import java.util.Date;
 
 import co.siempo.phone.event.NotificationTrayEvent;
-import co.siempo.phone.service.SiempoAccessibilityService;
-import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 
@@ -35,7 +28,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
     private static final String TAG = "PhonecallReceiver";
     int currentProfile = -1;
-    static boolean isCallisRunning = false;
+    static boolean isCallRunning = false;
     SharedPreferences sharedPref;
     boolean isAppDefaultOrFront = false;
 
@@ -51,7 +44,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
-                    isCallisRunning = true;
+                    isCallRunning = true;
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
                 }
             } else {
@@ -90,16 +83,20 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     }
 
     private void changeDeviceMode() {
-//        if (isAppDefaultOrFront) {
-//            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
-//            if (currentModeDeviceMode == 0 && currentModeDeviceMode == 2) {
-//                CoreApplication.getInstance().changeProfileToSilentMode();
-//            } else if (currentModeDeviceMode == 1) {
-//                CoreApplication.getInstance().changeProfileToVibrateMode();
-//            }
-//        } else {
-//            CoreApplication.getInstance().changeProfileToNormalMode();
-//        }
+        if (isAppDefaultOrFront) {
+            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
+            if (currentModeDeviceMode == 0) {
+                CoreApplication.getInstance().changeProfileToSilentMode();
+            } else if (currentModeDeviceMode == 1) {
+                CoreApplication.getInstance().changeProfileToVibrateMode();
+            } else if (currentModeDeviceMode == 2) {
+                CoreApplication.getInstance().changeProfileToSilentMode();
+            }
+            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront" + currentModeDeviceMode + " :: isAppDefaultOrFront " + isAppDefaultOrFront);
+        } else {
+            CoreApplication.getInstance().changeProfileToNormalMode();
+            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront -1 :: isAppDefaultOrFront " + isAppDefaultOrFront);
+        }
 
     }
 
@@ -126,13 +123,13 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     //Incoming call-  goes from IDLE to RINGING when it rings, to OFFHOOK when it's answered, to IDLE when its hung up
     //Outgoing call-  goes from IDLE to OFFHOOK when it dials out, to IDLE when hung up
     public void onCallStateChanged(Context context, int state, String number) {
-        if(TextUtils.isEmpty(number)){
+        if (TextUtils.isEmpty(number)) {
             return;
         }
         if (lastState == state) {
             //No change, debounce extras
 
-                return;
+            return;
         }
 
         switch (state) {
@@ -141,9 +138,9 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 callStartTime = new Date();
                 savedNumber = number;
 
-                if (currentProfile == 0 && !isCallisRunning) {
+                if (currentProfile == 0 && !isCallRunning) {
                     CoreApplication.getInstance().playAudio();
-                    isCallisRunning = true;
+                    isCallRunning = true;
                 }
                 onIncomingCallStarted(context, number, callStartTime);
                 break;
@@ -173,21 +170,20 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     //Ring but no pickup-  a miss
                     onMissedCall(context, savedNumber, callStartTime);
                 } else if (isIncoming) {
-
                     onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
                 } else {
-
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
-                    changeDeviceMode();
+//                    changeDeviceMode();
                 }
                 if (CoreApplication.getInstance().getMediaPlayer() != null) {
                     CoreApplication.getInstance().getMediaPlayer().stop();
                     CoreApplication.getInstance().setmMediaPlayer(null);
                     CoreApplication.getInstance().getVibrator().cancel();
                 }
-                isCallisRunning = false;
+                isCallRunning = false;
                 break;
         }
         lastState = state;
+        changeDeviceMode();
     }
 }

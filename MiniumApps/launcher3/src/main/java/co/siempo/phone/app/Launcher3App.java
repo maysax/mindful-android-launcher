@@ -216,11 +216,17 @@ public class Launcher3App extends CoreApplication {
 
 
     public void checkProfile() {
-        if (launcherPrefs.getCurrentProfile().get() == 0 || launcherPrefs.getCurrentProfile().get() == 2) {
-            Log.d("Profile Check:::", "checkProfile :" + launcherPrefs.getCurrentProfile().get());
+        // 0 - Show as Normal mode(In System it will be silent mode).
+        // 1 - Vibrate mode(In System it will be silent mode).
+        // 2 - Show as Silent mode(In System it will be silent mode).
+        if (launcherPrefs.getCurrentProfile().get() == 0) {
+            Log.d("Profile Check:::", "checkProfile : Normal" + launcherPrefs.getCurrentProfile().get());
+            changeProfileToSilentMode();
+        } else if (launcherPrefs.getCurrentProfile().get() == 2) {
+            Log.d("Profile Check:::", "checkProfile : Silent" + launcherPrefs.getCurrentProfile().get());
             changeProfileToSilentMode();
         } else {
-            Log.d("Profile Check:::", "checkProfile : Vibrate" +launcherPrefs.getCurrentProfile().get());
+            Log.d("Profile Check:::", "checkProfile : Vibrate" + launcherPrefs.getCurrentProfile().get());
             changeProfileToVibrateMode();
         }
     }

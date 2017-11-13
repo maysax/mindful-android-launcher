@@ -598,11 +598,12 @@ public abstract class CoreApplication extends MultiDexApplication {
         try {
             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
                 Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+
                 if (mMediaPlayer == null) {
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setDataSource(this, alert);
                     final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (audioManager.getStreamVolume(AudioManager.STREAM_RING) != 0) {
+                    if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
                         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_RING);
                         mMediaPlayer.prepare();
                         mMediaPlayer.start();
