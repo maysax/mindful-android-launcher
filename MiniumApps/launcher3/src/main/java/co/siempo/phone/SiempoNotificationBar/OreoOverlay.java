@@ -235,13 +235,14 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                         if(UIUtils.alertDialog!=null && UIUtils.alertDialog.isShowing()){
                             UIUtils.alertDialog.dismiss();
                         }
-
-                        Intent i = new Intent();
-                        String pkg = context.getApplicationContext().getPackageName();;
-                        String cls = "co.siempo.phone.MainActivity_";
-                        i.setComponent(new ComponentName(pkg, cls));
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        context.startActivity(i);
+                        if(CoreApplication.getInstance().isIfScreen == false) {
+                            Intent i = new Intent();
+                            String pkg = context.getApplicationContext().getPackageName();
+                            String cls = "co.siempo.phone.MainActivity_";
+                            i.setComponent(new ComponentName(pkg, cls));
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            context.startActivity(i);
+                        }
                     }
                     catch (Exception e){
                         Tracer.d("Activity Not Found.");

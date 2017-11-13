@@ -88,6 +88,8 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     private boolean isCallisRunning =false;
 
+    public boolean isIfScreen = false;
+
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
     Handler handler;

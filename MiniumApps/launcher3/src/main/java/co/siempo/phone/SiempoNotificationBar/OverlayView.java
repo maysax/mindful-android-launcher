@@ -223,6 +223,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
+
                 hide();
                 if(PackageUtil.isSiempoLauncher(context)){
 
@@ -237,13 +238,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                             UIUtils.alertDialog.dismiss();
                         }
 
-                        Intent i = new Intent();
-                        String pkg = context.getApplicationContext().getPackageName();;
-                        String cls = "co.siempo.phone.MainActivity_";
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        i.setComponent(new ComponentName(pkg, cls));
+                        if(CoreApplication.getInstance().isIfScreen == false) {
+                            Intent i = new Intent();
+                            String pkg = context.getApplicationContext().getPackageName();
+                            String cls = "co.siempo.phone.MainActivity_";
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            i.setComponent(new ComponentName(pkg, cls));
 
-                        context.startActivity(i);
+                            context.startActivity(i);
+                        }
                     }
                     catch (Exception e){
 
