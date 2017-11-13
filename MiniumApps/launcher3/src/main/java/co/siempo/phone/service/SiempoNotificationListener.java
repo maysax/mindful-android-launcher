@@ -711,8 +711,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
         if (PackageUtil.isSiempoBlocker(notification.getId())) {
             prefs.isNotificationBlockerRunning().put(false);
         }
-//        if (!PackageUtil.isSiempoLauncher(this)
-//                && !SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
+        if (!PackageUtil.isSiempoLauncher(this)
+                && !SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
             if (PackageUtil.isMsgPackage(notification.getPackageName())) {
                 new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
             } else if (PackageUtil.isCallPackage(notification.getPackageName())) {
@@ -720,7 +720,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             } else {
                 new DBClient().deleteMsgByPackageName(notification.getPackageName());
             }
-//        }
+        }
     }
 
     private String getNotificationToString(StatusBarNotification notification) {
