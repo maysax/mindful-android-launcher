@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -98,6 +99,20 @@ public class MainFragment extends CoreFragment {
 
     public MainFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("hardikkamothi","on Start..");
+        CoreApplication.getInstance().isIfScreen = true;
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("hardikkamothi","on Stop...");
+        CoreApplication.getInstance().isIfScreen = false;
+        super.onStop();
     }
 
     @AfterViews

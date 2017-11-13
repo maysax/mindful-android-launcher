@@ -223,6 +223,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
+
                 hide();
                 if(PackageUtil.isSiempoLauncher(context)){
 
@@ -237,13 +238,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                             UIUtils.alertDialog.dismiss();
                         }
 
-                        Intent i = new Intent();
-                        String pkg = context.getApplicationContext().getPackageName();;
-                        String cls = "co.siempo.phone.MainActivity_";
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        i.setComponent(new ComponentName(pkg, cls));
+                        if(CoreApplication.getInstance().isIfScreen == false) {
+                            Intent i = new Intent();
+                            String pkg = context.getApplicationContext().getPackageName();
+                            String cls = "co.siempo.phone.MainActivity_";
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            i.setComponent(new ComponentName(pkg, cls));
 
-                        context.startActivity(i);
+                            context.startActivity(i);
+                        }
                     }
                     catch (Exception e){
 
@@ -305,6 +308,16 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 hide();
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 hide();
+                if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                    CoreApplication.getInstance().getMediaPlayer().stop();
+                    CoreApplication.getInstance().getMediaPlayer().reset();
+                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().getVibrator().cancel();
+                    CoreApplication.getInstance().declinePhone();
+                }
+                if(CoreApplication.getInstance().isCallisRunning()){
+                    CoreApplication.getInstance().declinePhone();
+                }
             }
         }
 

@@ -235,13 +235,14 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                         if(UIUtils.alertDialog!=null && UIUtils.alertDialog.isShowing()){
                             UIUtils.alertDialog.dismiss();
                         }
-
-                        Intent i = new Intent();
-                        String pkg = context.getApplicationContext().getPackageName();;
-                        String cls = "co.siempo.phone.MainActivity_";
-                        i.setComponent(new ComponentName(pkg, cls));
-                        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        context.startActivity(i);
+                        if(CoreApplication.getInstance().isIfScreen == false) {
+                            Intent i = new Intent();
+                            String pkg = context.getApplicationContext().getPackageName();
+                            String cls = "co.siempo.phone.MainActivity_";
+                            i.setComponent(new ComponentName(pkg, cls));
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            context.startActivity(i);
+                        }
                     }
                     catch (Exception e){
                         Tracer.d("Activity Not Found.");
@@ -276,6 +277,16 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         public void onReceive(Context arg0, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 hide();
+                if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                    CoreApplication.getInstance().getMediaPlayer().stop();
+                    CoreApplication.getInstance().getMediaPlayer().reset();
+                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().getVibrator().cancel();
+                    CoreApplication.getInstance().declinePhone();
+                }
+                if(CoreApplication.getInstance().isCallisRunning()){
+                    CoreApplication.getInstance().declinePhone();
+                }
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
                 boolean isHideNotificationOnLockScreen=launcherPrefs.getBoolean("isHidenotificationOnLockScreen",true);

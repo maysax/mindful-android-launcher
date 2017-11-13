@@ -20,7 +20,9 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.UserManager;
 import android.os.Vibrator;
 import android.provider.AlarmClock;
@@ -40,6 +42,7 @@ import com.squareup.leakcanary.RefWatcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -83,6 +86,9 @@ public abstract class CoreApplication extends MultiDexApplication {
     UserManager userManager;
     LauncherApps launcherApps;
 
+    private boolean isCallisRunning =false;
+
+    public boolean isIfScreen = false;
 
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
@@ -125,6 +131,14 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
+    }
+
+    public boolean isCallisRunning() {
+        return isCallisRunning;
+    }
+
+    public void setCallisRunning(boolean callisRunning) {
+        isCallisRunning = callisRunning;
     }
 
     public Vibrator getVibrator() {
@@ -774,5 +788,41 @@ public abstract class CoreApplication extends MultiDexApplication {
         return "";
     }
 
+
+    public void declinePhone() {
+
+        try {
+            String serviceManagerName = "android.os.ServiceManager";
+            String serviceManagerNativeName = "android.os.ServiceManagerNative";
+            String telephonyName = "com.android.internal.telephony.ITelephony";
+            Class<?> telephonyClass;
+            Class<?> telephonyStubClass;
+            Class<?> serviceManagerClass;
+            Class<?> serviceManagerNativeClass;
+            Method telephonyEndCall;
+            Object telephonyObject;
+            Object serviceManagerObject;
+            telephonyClass = Class.forName(telephonyName);
+            telephonyStubClass = telephonyClass.getClasses()[0];
+            serviceManagerClass = Class.forName(serviceManagerName);
+            serviceManagerNativeClass = Class.forName(serviceManagerNativeName);
+            Method getService = // getDefaults[29];
+                    serviceManagerClass.getMethod("getService", String.class);
+            Method tempInterfaceMethod = serviceManagerNativeClass.getMethod("asInterface", IBinder.class);
+            Binder tmpBinder = new Binder();
+            tmpBinder.attachInterface(null, "fake");
+            serviceManagerObject = tempInterfaceMethod.invoke(null, tmpBinder);
+            IBinder retbinder = (IBinder) getService.invoke(serviceManagerObject, "phone");
+            Method serviceMethod = telephonyStubClass.getMethod("asInterface", IBinder.class);
+            telephonyObject = serviceMethod.invoke(null, retbinder);
+            telephonyEndCall = telephonyClass.getMethod("endCall");
+            telephonyEndCall.invoke(telephonyObject);
+            Log.d("Testting ", "Testting22222");
+
+        } catch (Exception e) {
+            Tracer.d("Decline call exception.."+e.toString());
+            e.printStackTrace();
+        }
+    }
 
 }
