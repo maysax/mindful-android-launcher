@@ -305,6 +305,16 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 hide();
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 hide();
+                if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                    CoreApplication.getInstance().getMediaPlayer().stop();
+                    CoreApplication.getInstance().getMediaPlayer().reset();
+                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().getVibrator().cancel();
+                    CoreApplication.getInstance().declinePhone();
+                }
+                if(CoreApplication.getInstance().isCallisRunning()){
+                    CoreApplication.getInstance().declinePhone();
+                }
             }
         }
 

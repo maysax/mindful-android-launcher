@@ -276,6 +276,16 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         public void onReceive(Context arg0, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 hide();
+                if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                    CoreApplication.getInstance().getMediaPlayer().stop();
+                    CoreApplication.getInstance().getMediaPlayer().reset();
+                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().getVibrator().cancel();
+                    CoreApplication.getInstance().declinePhone();
+                }
+                if(CoreApplication.getInstance().isCallisRunning()){
+                    CoreApplication.getInstance().declinePhone();
+                }
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
                 boolean isHideNotificationOnLockScreen=launcherPrefs.getBoolean("isHidenotificationOnLockScreen",true);
