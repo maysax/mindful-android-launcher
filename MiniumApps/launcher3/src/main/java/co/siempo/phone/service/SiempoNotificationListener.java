@@ -285,8 +285,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
             strConversationTitle = statusBarNotification.getNotification().extras.getString(Notification.EXTRA_CONVERSATION_TITLE);
         }
         try {
-            if (statusBarNotification.getNotification().extras.get(Notification.EXTRA_TEXT) != null) {
-                strText = statusBarNotification.getNotification().extras.get(Notification.EXTRA_TEXT).toString();
+            if (statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT) != null) {
+                CharSequence  charText = (CharSequence) statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT).toString();
+                strText=charText.toString();
             }
         } catch (Exception e) {
 
@@ -295,7 +296,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
         if (statusBarNotification.getNotification().extras.getString(Notification.EXTRA_BIG_TEXT) != null
                 && !statusBarNotification.getNotification().extras.getString(Notification.EXTRA_BIG_TEXT).equalsIgnoreCase("")) {
-            strBigText = statusBarNotification.getNotification().extras.getString(Notification.EXTRA_BIG_TEXT);
+            CharSequence charBigText= (CharSequence) statusBarNotification.getNotification().extras.getString(Notification.EXTRA_BIG_TEXT);
+            strBigText = charBigText.toString();
         }
 
         if (statusBarNotification.getNotification().extras.getInt(Notification.EXTRA_SMALL_ICON) != 0) {
