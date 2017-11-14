@@ -1488,17 +1488,17 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (currentModeDeviceMode == 0) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 1).apply();
-                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change Vibrate");
+                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change Vibrate 1");
                     CoreApplication.getInstance().changeProfileToVibrateMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_vibration_black_24dp));
                 } else if (currentModeDeviceMode == 1) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 2).apply();
-                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change 1");
+                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change Silent 2");
                     CoreApplication.getInstance().changeProfileToSilentMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
                 } else if (currentModeDeviceMode == 2) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 0).apply();
-                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change 2");
+                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change Normal 0");
                     CoreApplication.getInstance().changeProfileToSilentMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
                 }

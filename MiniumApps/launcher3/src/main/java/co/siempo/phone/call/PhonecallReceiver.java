@@ -9,6 +9,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import co.siempo.phone.event.NotificationTrayEvent;
 import de.greenrobot.event.EventBus;
@@ -28,7 +30,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
     private static final String TAG = "PhonecallReceiver";
     int currentProfile = -1;
-    static boolean isCallRunning = false;
+    public static boolean isCallRunning = false;
     SharedPreferences sharedPref;
     boolean isAppDefaultOrFront = false;
 
@@ -83,20 +85,20 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     }
 
     private void changeDeviceMode() {
-//        if (isAppDefaultOrFront) {
-//            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
-//            if (currentModeDeviceMode == 0) {
-//                CoreApplication.getInstance().changeProfileToSilentMode();
-//            } else if (currentModeDeviceMode == 1) {
-//                CoreApplication.getInstance().changeProfileToVibrateMode();
-//            } else if (currentModeDeviceMode == 2) {
-//                CoreApplication.getInstance().changeProfileToSilentMode();
-//            }
-//            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront" + currentModeDeviceMode + " :: isAppDefaultOrFront " + isAppDefaultOrFront);
-//        } else {
-//            CoreApplication.getInstance().changeProfileToNormalMode();
-//            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront -1 :: isAppDefaultOrFront " + isAppDefaultOrFront);
-//        }
+        if (isAppDefaultOrFront) {
+            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
+            if (currentModeDeviceMode == 0) {
+                CoreApplication.getInstance().changeProfileToSilentMode();
+            } else if (currentModeDeviceMode == 1) {
+                CoreApplication.getInstance().changeProfileToVibrateMode();
+            } else if (currentModeDeviceMode == 2) {
+                CoreApplication.getInstance().changeProfileToSilentMode();
+            }
+            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront" + currentModeDeviceMode + " :: isAppDefaultOrFront " + isAppDefaultOrFront);
+        } else {
+            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront -1 :: isAppDefaultOrFront " + isAppDefaultOrFront);
+            CoreApplication.getInstance().changeProfileToNormalMode();
+        }
 
     }
 
@@ -137,7 +139,6 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 isIncoming = true;
                 callStartTime = new Date();
                 savedNumber = number;
-
                 if (currentProfile == 0 && !isCallRunning) {
                     CoreApplication.getInstance().playAudio();
                     isCallRunning = true;

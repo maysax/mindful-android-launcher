@@ -216,9 +216,9 @@ public class Launcher3App extends CoreApplication {
 
 
     public void checkProfile() {
-        // 0 - Show as Normal mode(In System it will be silent mode).
-        // 1 - Vibrate mode(In System it will be silent mode).
-        // 2 - Show as Silent mode(In System it will be silent mode).
+//         0 - Show as Normal mode(In System it will be silent mode).
+//         1 - Vibrate mode(In System it will be silent mode).
+//         2 - Show as Silent mode(In System it will be silent mode).
         if (launcherPrefs.getCurrentProfile().get() == 0) {
             Log.d("Profile Check:::", "checkProfile : Normal" + launcherPrefs.getCurrentProfile().get());
             changeProfileToSilentMode();

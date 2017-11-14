@@ -26,7 +26,7 @@ import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CH
 
 public class SiempoAccessibilityService extends AccessibilityService {
 
-    public static String packageName = "";
+    public String packageName = "";
     public static String activityName = "";
     private final String TAG = "Accessibility";
 

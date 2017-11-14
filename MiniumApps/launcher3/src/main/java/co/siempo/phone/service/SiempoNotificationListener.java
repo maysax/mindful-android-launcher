@@ -35,6 +35,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.call.PhonecallReceiver;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
@@ -132,20 +133,19 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
 
             if (launcherPrefs.getCurrentProfile().get() == 0) {
+                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0");
                 if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
-                    Log.d("Profile Check:::", "NotificationListener : getSilentList");
                     CoreApplication.getInstance().changeProfileToSilentMode();
-                    CoreApplication.getInstance().MuteAudio();
                 } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
-                    Log.d("Profile Check:::", "NotificationListener : getVibrateList");
+                    Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0 - Vibrate");
+                    CoreApplication.getInstance().changeProfileToSilentMode();
                     vibrationUtils.vibrate(500);
-                    CoreApplication.getInstance().MuteAudio();
                 }
             } else if (launcherPrefs.getCurrentProfile().get() == 1) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile 1");
+                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Vibrate 1");
                 CoreApplication.getInstance().changeProfileToVibrateMode();
             } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile 2 ");
+                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Silent 2 ");
                 CoreApplication.getInstance().changeProfileToSilentMode();
             }
         }
@@ -643,7 +643,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             prefs.isNotificationBlockerRunning().put(false);
         }
         if (!PackageUtil.isSiempoLauncher(this)
-                && !SiempoAccessibilityService.packageName.equalsIgnoreCase(getPackageName())) {
+                && !launcherPrefs.isAppDefaultOrFront().get()) {
             if (PackageUtil.isMsgPackage(notification.getPackageName())) {
                 new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
             } else if (PackageUtil.isCallPackage(notification.getPackageName())) {
