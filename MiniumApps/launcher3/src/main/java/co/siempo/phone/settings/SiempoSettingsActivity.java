@@ -4,8 +4,10 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
@@ -67,9 +69,9 @@ import com.github.javiersantos.appupdater.enums.Display;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_KeyBoardNotification, icon_AllowNotificationFacebook, icon_Feedback, icon_version, icon_changeDefaultApp;
+    private ImageView icon_launcher, icon_KeyBoardNotification, icon_AllowNotificationFacebook,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_changeDefaultApp;
+    private LinearLayout ln_launcher, ln_version, ln_Feedback,ln_Faq, ln_changeDefaultApp;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
     AppUpdaterUtils appUpdaterUtils;
@@ -110,6 +112,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_changeDefaultApp = findViewById(R.id.icon_changeDefaultApp);
         icon_KeyBoardNotification = findViewById(R.id.icon_KeyBoardNotification);
         icon_Feedback = findViewById(R.id.icon_Feedback);
+        icon_Faq = findViewById(R.id.icon_Faq);
         icon_AllowNotificationFacebook = findViewById(R.id.icon_AllowNotificationFacebook);
         txt_version = findViewById(R.id.txt_version);
         if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
@@ -123,6 +126,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
         ln_Feedback = findViewById(R.id.ln_Feedback);
+        ln_Faq = findViewById(R.id.ln_Faq);
         icon_hideNotification = findViewById(R.id.icon_hideNotification);
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
         switch_notification = findViewById(R.id.swtch_notification);
@@ -147,6 +151,9 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
         icon_Feedback.setImageDrawable(new IconDrawable(context, "fa-question-circle")
+                .colorRes(R.color.text_primary)
+                .sizeDp(18));
+        icon_Faq.setImageDrawable(new IconDrawable(context, "fa-shield")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
 
@@ -180,6 +187,17 @@ public class SiempoSettingsActivity extends CoreActivity {
             @Override
             public void onClick(View v) {
                 new MainListItemLoader(SiempoSettingsActivity.this).listItemClicked(18);
+            }
+        });
+
+        ln_Faq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "http://www.getsiempo.com/apps/android/beta/faq.htm";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
             }
         });
 
