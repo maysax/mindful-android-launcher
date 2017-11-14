@@ -435,7 +435,11 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         bindBrightnessControl();
         bleSignal = new BleSignal();
         context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-
+        if (UIUtils.isDeviceHasSimCard(context)) {
+            imgSignal.setVisibility(View.VISIBLE);
+        } else {
+            imgSignal.setImageResource(R.drawable.ic_no_sim_black_24dp);
+        }
 
     }
 
@@ -581,11 +585,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
      */
     @Subscribe
     public void onConnectivityEvent(ConnectivityEvent event) {
-        if(UIUtils.isDeviceHasSimCard(context)){
-            imgSignal.setVisibility(View.VISIBLE);
-        }else{
-            imgSignal.setImageResource(R.drawable.ic_no_sim_black_24dp);
-        }
         if (event.getState() == ConnectivityEvent.AIRPLANE) {
             if (imgSignal != null)
                 imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
@@ -623,6 +622,9 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     relMobileData.setEnabled(true);
                     checkMobileData();
                 }
+            }
+            if(event.getValue()==-1) {
+                imgSignal.setImageResource(R.drawable.ic_no_sim_black_24dp);
             }
         }
     }
