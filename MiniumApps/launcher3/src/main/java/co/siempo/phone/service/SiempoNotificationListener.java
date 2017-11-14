@@ -122,7 +122,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
-        Tracer.d("Notification posted: " + getNotificationToString(notification));
+        printLog(notification);
         if (launcherPrefs.isAppDefaultOrFront().get()) {
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
             if (PackageUtil.isSiempoLauncher(this) && myKM.inKeyguardRestrictedInputMode() && launcherPrefs.isHidenotificationOnLockScreen().get()) {
@@ -148,6 +148,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Silent 2 ");
                 CoreApplication.getInstance().changeProfileToSilentMode();
             }
+
+            filterByCategory(notification);
         }
     }
 
@@ -177,15 +179,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
             }
         }
-
-        Log.d("NotificationPosted:",
-                "\n" + " Package: " + notification.getPackageName()
-                        + "\n" + " Id: " + notification.getId()
-                        + "\n" + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
-                        + "\n" + " Details: " + notification.getNotification().toString()
-                        + "\n" + " Category: " + notification.getNotification().category
-                        + "\n" + " Ticker: " + notification.getNotification().tickerText
-                        + "\n" + " Bundle Data:" + finalString);
         Tracer.d("NotificationPosted : " + " Package: " + notification.getPackageName()
                 + "\n" + " Id: " + notification.getId()
                 + "\n" + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))

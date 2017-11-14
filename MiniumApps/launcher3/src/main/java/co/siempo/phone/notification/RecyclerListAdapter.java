@@ -94,7 +94,10 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         Notification notification = notificationList.get(position);
         if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
             Bitmap bitmap = CoreApplication.getInstance().iconList.get(notification.getPackageName());
-            holder.imgAppIcon.setImageBitmap(bitmap);
+            if(bitmap!=null) {
+                holder.imgAppIcon.setBackground(null);
+                holder.imgAppIcon.setImageBitmap(bitmap);
+            }
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
             if (notification.getStrTitle().equalsIgnoreCase("")) {
                 holder.txtUserName.setText("");
