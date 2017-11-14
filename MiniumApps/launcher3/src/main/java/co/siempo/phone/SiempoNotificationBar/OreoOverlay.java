@@ -885,6 +885,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                if(notificationList.size() > position) {
                 if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -933,8 +934,8 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     } else {
                         new ActivityHelper(context).openAppWithPackageName(strPackageName);
                     }
+                    }
                 }
-
 
             }
 
