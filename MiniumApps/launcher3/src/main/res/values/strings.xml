@@ -21,6 +21,7 @@
     <string name="title.map">Map</string>
     <string name="title.email">Email</string>
     <string name="title.feedback">Feedback</string>
+    <string name="title.faq">FAQ</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Switch Home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
