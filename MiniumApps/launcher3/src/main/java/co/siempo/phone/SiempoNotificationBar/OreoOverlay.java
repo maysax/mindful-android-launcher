@@ -891,6 +891,9 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                     hide();
+                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                    deleteItem.executeDelete(notificationList.get(position));
+                    loadData();
                 } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
                     if (
                             ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
