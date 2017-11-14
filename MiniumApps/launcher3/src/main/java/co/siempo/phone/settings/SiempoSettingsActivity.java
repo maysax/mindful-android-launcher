@@ -69,7 +69,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
     private ImageView icon_launcher, icon_KeyBoardNotification, icon_AllowNotificationFacebook, icon_Feedback, icon_version, icon_changeDefaultApp;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_AllowNotificationFacebook, ln_changeDefaultApp;
+    private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_changeDefaultApp;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
     AppUpdaterUtils appUpdaterUtils;
@@ -123,7 +123,6 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
         ln_Feedback = findViewById(R.id.ln_Feedback);
-        ln_AllowNotificationFacebook = findViewById(R.id.ln_AllowNotificationFacebook);
         icon_hideNotification = findViewById(R.id.icon_hideNotification);
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
         switch_notification = findViewById(R.id.swtch_notification);

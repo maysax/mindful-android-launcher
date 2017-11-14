@@ -34,6 +34,7 @@ public class Constants {
     public static final int CALENDER_PACKAGE = 20;
     public static final int CONTACT_PACKAGE = 3;
     public static final int MAP_PACKAGE = 11;
+    public static final int NOTES_PACKAGE = 6;
     public static final int PHOTOS_PACKAGE = 22;
     public static final int CAMERA_PACKAGE = 23;
     public static final int BROWSER_PACKAGE = 24;

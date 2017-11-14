@@ -33,7 +33,8 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
     private Context context;
 
     private List<MainListItem> data = null;
-    public  List<ApplicationInfo> packagesList;
+    public List<ApplicationInfo> packagesList;
+
     public OldMenuAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
@@ -112,14 +113,19 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
                     packageName = siempoSettingsDefaultAppActivity.prefs.clockPackage().get();
                 } else if (menuId == Constants.EMAIL_PACKAGE) {
                     packageName = siempoSettingsDefaultAppActivity.prefs.emailPackage().get();
+                } else if (menuId == Constants.NOTES_PACKAGE) {
+                    packageName = siempoSettingsDefaultAppActivity.prefs.notesPackage().get();
                 }
-                String strAppName = getApplicationNameFromPackageName(packageName);
-                if (strAppName.equalsIgnoreCase("")) {
-                    holder.textDefaultApp.setText("Default: Not Set");
+                if (!packageName.equalsIgnoreCase("Notes")) {
+                    String strAppName = getApplicationNameFromPackageName(packageName);
+                    if (strAppName.equalsIgnoreCase("")) {
+                        holder.textDefaultApp.setText("Default: Not Set");
+                    } else {
+                        holder.textDefaultApp.setText("Default: " + strAppName);
+                    }
                 } else {
-                    holder.textDefaultApp.setText("Default: "+strAppName);
+                    holder.textDefaultApp.setText("Default: " + context.getResources().getString(R.string.siempo_note));
                 }
-
             } else {
                 holder.textDefaultApp.setVisibility(View.GONE);
             }
@@ -129,7 +135,7 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
         return convertView;
     }
 
-    private void getInstalledPackges(Context context){
+    private void getInstalledPackges(Context context) {
         packagesList = new ArrayList<>();
         final PackageManager pm = context.getPackageManager();
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
@@ -139,14 +145,17 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
     }
 
     public String getApplicationNameFromPackageName(String packagename) {
-        if (packagename != null && !packagename.equalsIgnoreCase("")) {
-            for (ApplicationInfo applicationInfo : packagesList) {
-                if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
-                    return ""+ applicationInfo.loadLabel(context.getPackageManager());
+        try {
+            if (packagename != null && !packagename.equalsIgnoreCase("")) {
+                for (ApplicationInfo applicationInfo : packagesList) {
+                    if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
+                        return "" + applicationInfo.loadLabel(context.getPackageManager());
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
         return "";
     }
 

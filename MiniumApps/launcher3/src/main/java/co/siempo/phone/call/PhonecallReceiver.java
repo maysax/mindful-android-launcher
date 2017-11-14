@@ -1,17 +1,16 @@
 package co.siempo.phone.call;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import co.siempo.phone.event.NotificationTrayEvent;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
@@ -30,6 +29,8 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
     private static final String TAG = "PhonecallReceiver";
     int currentProfile = -1;
+    AudioManager audioManager;
+    NotificationManager notificationManager;
     public static boolean isCallRunning = false;
     SharedPreferences sharedPref;
     boolean isAppDefaultOrFront = false;
@@ -37,6 +38,8 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         sharedPref =
                 context.getSharedPreferences("Launcher3Prefs", 0);
         currentProfile = sharedPref.getInt("getCurrentProfile", 0);
@@ -48,6 +51,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
                     isCallRunning = true;
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
+                    CoreApplication.getInstance().changeProfileToNormalMode();
                 }
             } else {
                 EventBus.getDefault().post(new NotificationTrayEvent(true));
@@ -137,6 +141,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
         switch (state) {
             case TelephonyManager.CALL_STATE_RINGING:
                 isIncoming = true;
+                CoreApplication.getInstance().setCallisRunning(true);
                 callStartTime = new Date();
                 savedNumber = number;
                 if (currentProfile == 0 && !isCallRunning) {
@@ -156,11 +161,13 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     isIncoming = false;
                     callStartTime = new Date();
+                    CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallStarted(context, number, callStartTime);
                 } else {
 
                     isIncoming = true;
                     callStartTime = new Date();
+                    CoreApplication.getInstance().setCallisRunning(true);
                     onIncomingCallAnswered(context, savedNumber, callStartTime);
                 }
                 break;
@@ -169,11 +176,16 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 //Went to idle-  this is the end of a call.  What type depends on previous state(s)
                 if (lastState == TelephonyManager.CALL_STATE_RINGING) {
                     //Ring but no pickup-  a miss
+                    CoreApplication.getInstance().setCallisRunning(false);
                     onMissedCall(context, savedNumber, callStartTime);
                     changeDeviceMode();
                 } else if (isIncoming) {
+
+                    CoreApplication.getInstance().setCallisRunning(false);
                     onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
                 } else {
+
+                    CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                     changeDeviceMode();
                 }

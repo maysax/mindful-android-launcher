@@ -223,10 +223,12 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         mHomeWatcher.setOnHomePressedListener(new HomeWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
+
                 hide();
                 if(PackageUtil.isSiempoLauncher(context)){
 
                     try{
+
                         Dialog dialog=((Launcher3App) CoreApplication.getInstance()).dialog;
                         if(dialog!=null && dialog.isShowing()) {
                             dialog.dismiss();
@@ -236,11 +238,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                             UIUtils.alertDialog.dismiss();
                         }
 
-                        Intent i = new Intent();
-                        String pkg = context.getApplicationContext().getPackageName();;
-                        String cls = "co.siempo.phone.MainActivity_";
-                        i.setComponent(new ComponentName(pkg, cls));
-                        context.startActivity(i);
+                        if(CoreApplication.getInstance().isIfScreen == false) {
+                            Intent i = new Intent();
+                            String pkg = context.getApplicationContext().getPackageName();
+                            String cls = "co.siempo.phone.MainActivity_";
+                            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            i.setComponent(new ComponentName(pkg, cls));
+
+                            context.startActivity(i);
+                        }
                     }
                     catch (Exception e){
 
@@ -302,6 +308,16 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 hide();
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 hide();
+                if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                    CoreApplication.getInstance().getMediaPlayer().stop();
+                    CoreApplication.getInstance().getMediaPlayer().reset();
+                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().getVibrator().cancel();
+                    CoreApplication.getInstance().declinePhone();
+                }
+                if(CoreApplication.getInstance().isCallisRunning()){
+                    CoreApplication.getInstance().declinePhone();
+                }
             }
         }
 
@@ -423,6 +439,13 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         bleSignal = new BleSignal();
         context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MainThread)
+    public void ReloadNotificationsEvent(OnGoingCallEvent event) {
+        smsDao = DBUtility.getNotificationDao();
+        callStorageDao = DBUtility.getCallStorageDao();
+        loadData();
     }
 
 

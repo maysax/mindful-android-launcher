@@ -6,6 +6,8 @@ import android.content.pm.ApplicationInfo;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+import com.androidnetworking.core.Core;
+
 import java.util.List;
 
 import co.siempo.phone.BuildConfig;
@@ -47,6 +49,7 @@ public class MainListItemLoader {
         items.add(new MainListItem(20, getString(R.string.title_calendar), "fa-calendar"));
         items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user", R.drawable.icon_create_user, MainListItemType.ACTION));
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
+        items.add(new MainListItem(6, getString(R.string.title_notes), "fa-sticky-note", R.drawable.icon_save_note, MainListItemType.ACTION));
         items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
         items.add(new MainListItem(23, getString(R.string.title_camera), "fa-camera"));
         items.add(new MainListItem(24, getString(R.string.title_browser), "fa-hand-pointer-o"));
@@ -189,7 +192,20 @@ public class MainListItemLoader {
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
                 break;
             case 6:
-                new ActivityHelper(context).openNotesApp(false);
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getNotesPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 6, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (!((MainActivity) context).prefs.notesPackage().get().equalsIgnoreCase("Notes")) {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.notesPackage().get());
+                    } else {
+                        new ActivityHelper(context).openNotesApp(false);
+                    }
+                }
+                //new ActivityHelper(context).openNotesApp(false);
                 break;
             case 7:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
