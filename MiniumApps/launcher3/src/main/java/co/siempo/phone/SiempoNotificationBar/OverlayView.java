@@ -115,6 +115,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.HomeWatcher;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.UIUtils;
@@ -195,7 +196,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     private int currentModeDeviceMode;
     private AudioManager audioManager;
     private boolean isWiFiOn = false;
-    AudioChangeReceiver audioChangeReceiver;
     private LinearLayout ln_ongoingCall, container_hangup;
     private TextView txtUserName, txtMessage;
     private Chronometer chronometer;
@@ -359,9 +359,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         batteryDataReceiver.register(context);
         networkDataReceiver = new NetworkDataReceiver(context);
         networkDataReceiver.register(context);
-        audioChangeReceiver = new AudioChangeReceiver();
-        context.registerReceiver(audioChangeReceiver, new IntentFilter(
-                AudioManager.RINGER_MODE_CHANGED_ACTION));
 
         updateStatusBarUI();
 
@@ -455,17 +452,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     }
 
 
-    private class AudioChangeReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            bindDND();
-        }
-    }
-
-    @Subscribe
-    public void object(Object object) {
-
-    }
 
     @Subscribe
     public void updateTopBar(TopBarUpdateEvent event) {
@@ -615,7 +601,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             displayBatteryIcon(event.getValue(), event.getType());
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             //Update status bar network icon
-            if (imgSignal != null) imgSignal.setImageResource(getNetworkIcon(event.getValue()));
+            imgSignal.setImageResource(getNetworkIcon(event.getValue()));
             if (!NetworkUtil.isAirplaneModeOn(context)) {
                 if (relMobileData != null) {
                     relMobileData.setEnabled(true);
@@ -1525,27 +1511,18 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (currentModeDeviceMode == 0) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 1).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change Vibrate 1");
+                    CoreApplication.getInstance().changeProfileToVibrateMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_vibration_black_24dp));
                 } else if (currentModeDeviceMode == 1) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 2).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change Silent 2");
+                    CoreApplication.getInstance().changeProfileToSilentMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
                 } else if (currentModeDeviceMode == 2) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 0).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : Overlay Profile Change Normal 0");
+                    CoreApplication.getInstance().changeProfileToSilentMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
                 }
                 currentModeDeviceMode = launcherPrefs.getInt("getCurrentProfile", 0);

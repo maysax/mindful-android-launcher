@@ -26,7 +26,7 @@ import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CH
 
 public class SiempoAccessibilityService extends AccessibilityService {
 
-    public static String packageName = "";
+    public String packageName = "";
     public static String activityName = "";
     private final String TAG = "Accessibility";
 
@@ -59,13 +59,13 @@ public class SiempoAccessibilityService extends AccessibilityService {
                 }
 
 
-                if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                    }
-                }
+//                if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+//                            && !notificationManager.isNotificationPolicyAccessGranted()) {
+//                    } else {
+//                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+//                    }
+//                }
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                     // check the condition for the Marshmallow device.

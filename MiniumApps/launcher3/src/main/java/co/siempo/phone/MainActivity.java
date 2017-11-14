@@ -43,6 +43,7 @@ import java.util.ArrayList;
 
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.app.Launcher3Prefs;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
@@ -147,7 +148,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void checkAppLoadFirstTime() {
         if (launcherPrefs.isAppInstalledFirstTime().get()) {
             launcherPrefs.isAppInstalledFirstTime().put(false);
-            launcherPrefs.getCurrentProfile().put(0);
+            ((Launcher3App)CoreApplication.getInstance()).checkProfile();
             final ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
 
@@ -218,7 +219,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                         .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                         startActivityForResult(intent, 103);
                     } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                         ViewService_.intent(this).showMask().start();
                         checkAppLoadFirstTime();
                     }
@@ -234,7 +234,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                 .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                 startActivityForResult(intent, 103);
             } else {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 ViewService_.intent(this).showMask().start();
                 checkAppLoadFirstTime();
             }

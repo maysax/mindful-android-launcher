@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.KeyguardManager;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
@@ -16,7 +15,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -28,7 +26,6 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,11 +63,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Queue;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -86,7 +81,6 @@ import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
-import co.siempo.phone.mm.model.Utilities;
 import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.notification.ItemClickSupport;
 import co.siempo.phone.notification.Notification;
@@ -95,7 +89,6 @@ import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.notification.RecyclerListAdapter;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
-import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
@@ -105,12 +98,10 @@ import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.HomeWatcher;
 import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
 import minium.co.core.util.UIUtils;
 
 import static android.graphics.PixelFormat.TRANSLUCENT;
@@ -190,7 +181,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     private int currentModeDeviceMode;
     private AudioManager audioManager;
     private boolean isWiFiOn = false;
-    AudioChangeReceiver audioChangeReceiver;
     private LinearLayout ln_ongoingCall, container_hangup;
     private TextView txtUserName, txtMessage;
     private Chronometer chronometer;
@@ -224,18 +214,18 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             @Override
             public void onHomePressed() {
                 hide();
-                if(PackageUtil.isSiempoLauncher(context)){
-                    try{
+                if (PackageUtil.isSiempoLauncher(context)) {
+                    try {
 
-                        Dialog dialog=((Launcher3App) CoreApplication.getInstance()).dialog;
-                        if(dialog!=null && dialog.isShowing()) {
+                        Dialog dialog = ((Launcher3App) CoreApplication.getInstance()).dialog;
+                        if (dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
                         }
 
-                        if(UIUtils.alertDialog!=null && UIUtils.alertDialog.isShowing()){
+                        if (UIUtils.alertDialog != null && UIUtils.alertDialog.isShowing()) {
                             UIUtils.alertDialog.dismiss();
                         }
-                        if(CoreApplication.getInstance().isIfScreen == false) {
+                        if (CoreApplication.getInstance().isIfScreen == false) {
                             Intent i = new Intent();
                             String pkg = context.getApplicationContext().getPackageName();
                             String cls = "co.siempo.phone.MainActivity_";
@@ -243,8 +233,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                             i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             context.startActivity(i);
                         }
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         Tracer.d("Activity Not Found.");
                     }
 
@@ -284,20 +273,20 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     CoreApplication.getInstance().getVibrator().cancel();
                     CoreApplication.getInstance().declinePhone();
                 }
-                if(CoreApplication.getInstance().isCallisRunning()){
+                if (CoreApplication.getInstance().isCallisRunning()) {
                     CoreApplication.getInstance().declinePhone();
                 }
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-                boolean isHideNotificationOnLockScreen=launcherPrefs.getBoolean("isHidenotificationOnLockScreen",true);
+                boolean isHideNotificationOnLockScreen = launcherPrefs.getBoolean("isHidenotificationOnLockScreen", true);
                 boolean locked = myKM.inKeyguardRestrictedInputMode();
                 if (locked && PackageUtil.isSiempoLauncher(context) && isHideNotificationOnLockScreen) {
 
 
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         NotificationUtils mNotificationUtils = new NotificationUtils(context);
                         android.app.Notification.Builder nb = mNotificationUtils.
-                                getAndroidChannelNotification("Siempo","Siempo");
+                                getAndroidChannelNotification("Siempo", "Siempo");
 
                         mNotificationUtils.getManager().notify(101, nb.build());
                     }
@@ -361,9 +350,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         batteryDataReceiver.register(context);
         networkDataReceiver = new NetworkDataReceiver(context);
         networkDataReceiver.register(context);
-        audioChangeReceiver = new AudioChangeReceiver();
-        context.registerReceiver(audioChangeReceiver, new IntentFilter(
-                AudioManager.RINGER_MODE_CHANGED_ACTION));
 
         updateStatusBarUI();
 
@@ -443,12 +429,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
     }
 
-    private class AudioChangeReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            bindDND();
-        }
-    }
 
     @Subscribe
     public void object(Object object) {
@@ -623,7 +603,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     checkMobileData();
                 }
             }
-            if(event.getValue()==-1) {
+            if (event.getValue() == -1) {
                 imgSignal.setImageResource(R.drawable.ic_no_sim_black_24dp);
             }
         }
@@ -910,10 +890,6 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                     hide();
-                    // Following code will delete all notification of same user and same types.
-                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                    deleteItem.executeDelete(notificationList.get(position));
-                    loadData();
                 } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
                     if (
                             ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
@@ -938,9 +914,9 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     adapter.notifyItemRemoved(position);
                     notificationList.remove(position);
                     hide();
-                    if(DBUtility.getTableNotificationSmsDao().count()>=1){
+                    if (DBUtility.getTableNotificationSmsDao().count() >= 1) {
                         imgNotification.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         imgNotification.setVisibility(View.GONE);
                     }
                     if (strPackageName.equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
@@ -1222,7 +1198,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
      *
      * @param tableNotificationSms
      */
-    @Subscribe(threadMode = ThreadMode.MainThread)
+    @Subscribe
     public void newNotificationEvent(NewNotificationEvent tableNotificationSms) {
         System.out.println("NotificationFragment.newNotificationEvent" + tableNotificationSms);
         if (tableNotificationSms != null) {
@@ -1519,27 +1495,18 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 img_notification_Brightness.setBackground(context.getDrawable(R.drawable.ic_brightness_off_black_24dp));
                 if (currentModeDeviceMode == 0) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 1).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : OreoOverlay Profile Change Vibrate 1");
+                    CoreApplication.getInstance().changeProfileToVibrateMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_vibration_black_24dp));
                 } else if (currentModeDeviceMode == 1) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 2).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : OreoOverlay Profile Change Silent  2");
+                    CoreApplication.getInstance().changeProfileToSilentMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_on_black_24dp));
                 } else if (currentModeDeviceMode == 2) {
                     launcherPrefs.edit().putInt("getCurrentProfile", 0).apply();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-                    } else {
-                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    }
+                    Log.d("Profile Check:::", "NotificationListener : OreoOverlay Profile Change Normal 0");
+                    CoreApplication.getInstance().changeProfileToSilentMode();
                     img_notification_Dnd.setBackground(context.getDrawable(R.drawable.ic_do_not_disturb_off_black_24dp));
                 }
                 currentModeDeviceMode = launcherPrefs.getInt("getCurrentProfile", 0);
@@ -1676,146 +1643,102 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         return true;
     }
 
-    public void displayBatteryIcon(int batteryStatus,String isCharging){
-        if(imgBattery != null){
-            if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")){
-                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+    public void displayBatteryIcon(int batteryStatus, String isCharging) {
+        if (imgBattery != null) {
+            if (!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")) {
+                if ((batteryStatus >= 0 && batteryStatus < 5) || (batteryStatus < 0)) {
                     imgBattery.setImageResource(R.drawable.battery_c_05);
-                }
-                else if(batteryStatus>=5 && batteryStatus<10){
+                } else if (batteryStatus >= 5 && batteryStatus < 10) {
                     imgBattery.setImageResource(R.drawable.battery_c_05);
-                }
-                else if(batteryStatus>=10 && batteryStatus<15){
+                } else if (batteryStatus >= 10 && batteryStatus < 15) {
                     imgBattery.setImageResource(R.drawable.battery_c_10);
-                }
-                else if(batteryStatus>=15 && batteryStatus<20){
+                } else if (batteryStatus >= 15 && batteryStatus < 20) {
                     imgBattery.setImageResource(R.drawable.battery_c_15);
-                }
-                else if(batteryStatus>=20 && batteryStatus<25){
+                } else if (batteryStatus >= 20 && batteryStatus < 25) {
                     imgBattery.setImageResource(R.drawable.battery_c_20);
-                }
-                else if(batteryStatus>=25 && batteryStatus<30){
+                } else if (batteryStatus >= 25 && batteryStatus < 30) {
                     imgBattery.setImageResource(R.drawable.battery_c_25);
-                }
-                else if(batteryStatus>=30 && batteryStatus<35){
+                } else if (batteryStatus >= 30 && batteryStatus < 35) {
                     imgBattery.setImageResource(R.drawable.battery_c_30);
-                }
-                else if(batteryStatus>=35 && batteryStatus<40){
+                } else if (batteryStatus >= 35 && batteryStatus < 40) {
                     imgBattery.setImageResource(R.drawable.battery_c_35);
-                }
-                else if(batteryStatus>=40 && batteryStatus<45){
+                } else if (batteryStatus >= 40 && batteryStatus < 45) {
                     imgBattery.setImageResource(R.drawable.battery_c_40);
-                }
-                else if(batteryStatus>=45 && batteryStatus<50){
+                } else if (batteryStatus >= 45 && batteryStatus < 50) {
                     imgBattery.setImageResource(R.drawable.battery_c_45);
-                }
-                else if(batteryStatus>=50 && batteryStatus<55){
+                } else if (batteryStatus >= 50 && batteryStatus < 55) {
                     imgBattery.setImageResource(R.drawable.battery_c_50);
-                }
-                else if(batteryStatus>=55 && batteryStatus<60){
+                } else if (batteryStatus >= 55 && batteryStatus < 60) {
                     imgBattery.setImageResource(R.drawable.battery_c_55);
-                }
-                else if(batteryStatus>=60 && batteryStatus<65){
+                } else if (batteryStatus >= 60 && batteryStatus < 65) {
                     imgBattery.setImageResource(R.drawable.battery_c_60);
-                }
-                else if(batteryStatus>=65 && batteryStatus<70){
+                } else if (batteryStatus >= 65 && batteryStatus < 70) {
                     imgBattery.setImageResource(R.drawable.battery_c_65);
-                }
-                else if(batteryStatus>=70 && batteryStatus<75){
+                } else if (batteryStatus >= 70 && batteryStatus < 75) {
                     imgBattery.setImageResource(R.drawable.battery_c_70);
-                }
-                else if(batteryStatus>=75 && batteryStatus<80){
+                } else if (batteryStatus >= 75 && batteryStatus < 80) {
                     imgBattery.setImageResource(R.drawable.battery_c_75);
-                }
-                else if(batteryStatus>=80 && batteryStatus<85){
+                } else if (batteryStatus >= 80 && batteryStatus < 85) {
                     imgBattery.setImageResource(R.drawable.battery_c_80);
-                }
-                else if(batteryStatus>=85 && batteryStatus<90){
+                } else if (batteryStatus >= 85 && batteryStatus < 90) {
                     imgBattery.setImageResource(R.drawable.battery_c_85);
-                }
-                else if(batteryStatus>=90 && batteryStatus<95){
+                } else if (batteryStatus >= 90 && batteryStatus < 95) {
                     imgBattery.setImageResource(R.drawable.battery_c_90);
-                }
-                else if(batteryStatus>=95 && batteryStatus<100){
+                } else if (batteryStatus >= 95 && batteryStatus < 100) {
                     imgBattery.setImageResource(R.drawable.battery_c_95);
-                }
-                else if(batteryStatus>=100){
+                } else if (batteryStatus >= 100) {
                     imgBattery.setImageResource(R.drawable.battery_c_100);
-                }
-                else{
+                } else {
                     imgBattery.setImageResource(R.drawable.battery_c_50);
                 }
-            }
-            else if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("OFF")){
-                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+            } else if (!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("OFF")) {
+                if ((batteryStatus >= 0 && batteryStatus < 5) || (batteryStatus < 0)) {
                     imgBattery.setImageResource(R.drawable.battery_alert);
-                }
-                else if(batteryStatus>=5 && batteryStatus<10){
+                } else if (batteryStatus >= 5 && batteryStatus < 10) {
                     imgBattery.setImageResource(R.drawable.battery_n_05);
-                }
-                else if(batteryStatus>=10 && batteryStatus<15){
+                } else if (batteryStatus >= 10 && batteryStatus < 15) {
                     imgBattery.setImageResource(R.drawable.battery_n_10);
-                }
-                else if(batteryStatus>=15 && batteryStatus<20){
+                } else if (batteryStatus >= 15 && batteryStatus < 20) {
                     imgBattery.setImageResource(R.drawable.battery_n_15);
-                }
-                else if(batteryStatus>=20 && batteryStatus<25){
+                } else if (batteryStatus >= 20 && batteryStatus < 25) {
                     imgBattery.setImageResource(R.drawable.battery_n_20);
-                }
-                else if(batteryStatus>=25 && batteryStatus<30){
+                } else if (batteryStatus >= 25 && batteryStatus < 30) {
                     imgBattery.setImageResource(R.drawable.battery_n_25);
-                }
-                else if(batteryStatus>=30 && batteryStatus<35){
+                } else if (batteryStatus >= 30 && batteryStatus < 35) {
                     imgBattery.setImageResource(R.drawable.battery_n_30);
-                }
-                else if(batteryStatus>=35 && batteryStatus<40){
+                } else if (batteryStatus >= 35 && batteryStatus < 40) {
                     imgBattery.setImageResource(R.drawable.battery_n_35);
-                }
-                else if(batteryStatus>=40 && batteryStatus<45){
+                } else if (batteryStatus >= 40 && batteryStatus < 45) {
                     imgBattery.setImageResource(R.drawable.battery_n_40);
-                }
-                else if(batteryStatus>=45 && batteryStatus<50){
+                } else if (batteryStatus >= 45 && batteryStatus < 50) {
                     imgBattery.setImageResource(R.drawable.battery_n_45);
-                }
-                else if(batteryStatus>=50 && batteryStatus<55){
+                } else if (batteryStatus >= 50 && batteryStatus < 55) {
                     imgBattery.setImageResource(R.drawable.battery_n_50);
-                }
-                else if(batteryStatus>=55 && batteryStatus<60){
+                } else if (batteryStatus >= 55 && batteryStatus < 60) {
                     imgBattery.setImageResource(R.drawable.battery_n_55);
-                }
-                else if(batteryStatus>=60 && batteryStatus<65){
+                } else if (batteryStatus >= 60 && batteryStatus < 65) {
                     imgBattery.setImageResource(R.drawable.battery_n_60);
-                }
-                else if(batteryStatus>=65 && batteryStatus<70){
+                } else if (batteryStatus >= 65 && batteryStatus < 70) {
                     imgBattery.setImageResource(R.drawable.battery_n_65);
-                }
-                else if(batteryStatus>=70 && batteryStatus<75){
+                } else if (batteryStatus >= 70 && batteryStatus < 75) {
                     imgBattery.setImageResource(R.drawable.battery_n_70);
-                }
-                else if(batteryStatus>=75 && batteryStatus<80){
+                } else if (batteryStatus >= 75 && batteryStatus < 80) {
                     imgBattery.setImageResource(R.drawable.battery_n_75);
-                }
-                else if(batteryStatus>=80 && batteryStatus<85){
+                } else if (batteryStatus >= 80 && batteryStatus < 85) {
                     imgBattery.setImageResource(R.drawable.battery_n_80);
-                }
-                else if(batteryStatus>=85 && batteryStatus<90){
+                } else if (batteryStatus >= 85 && batteryStatus < 90) {
                     imgBattery.setImageResource(R.drawable.battery_n_85);
-                }
-                else if(batteryStatus>=90 && batteryStatus<95){
+                } else if (batteryStatus >= 90 && batteryStatus < 95) {
                     imgBattery.setImageResource(R.drawable.battery_n_90);
-                }
-                else if(batteryStatus>=95 && batteryStatus<100){
+                } else if (batteryStatus >= 95 && batteryStatus < 100) {
                     imgBattery.setImageResource(R.drawable.battery_n_95);
-                }
-                else if(batteryStatus>=100){
+                } else if (batteryStatus >= 100) {
                     imgBattery.setImageResource(R.drawable.battery_n_100);
-                }
-                else{
+                } else {
                     imgBattery.setImageResource(R.drawable.battery_n_50);
                 }
-            }
-            else{
-                Log.d(TAG,"Charging Status not identify");
+            } else {
+                Log.d(TAG, "Charging Status not identify");
             }
         }
     }

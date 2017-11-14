@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import com.evernote.client.android.EvernoteSession;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.EApplication;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.greenrobot.greendao.database.Database;
@@ -74,6 +77,12 @@ public class Launcher3App extends CoreApplication {
 
     @SuppressLint("StaticFieldLeak")
     private static IconsHandler iconsPackHandler;
+
+    @SystemService
+    AudioManager audioManager;
+
+    @SystemService
+    NotificationManager notificationManager;
 
 
     @Trace(tag = TRACE_TAG)
@@ -141,6 +150,8 @@ public class Launcher3App extends CoreApplication {
             if (numStarted == 0) {
                 // app went to foreground
                 Log.d(TAG, "Siempo is on foreground");
+                checkProfile();
+                launcherPrefs.isAppDefaultOrFront().put(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(getApplicationContext())) {
@@ -185,6 +196,12 @@ public class Launcher3App extends CoreApplication {
                         ViewService_.intent(getApplicationContext()).hideMask().start();
                     }
                 }
+                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                    launcherPrefs.isAppDefaultOrFront().put(true);
+                } else {
+                    launcherPrefs.isAppDefaultOrFront().put(false);
+                    changeProfileToNormalMode();
+                }
             }
         }
 
@@ -198,6 +215,24 @@ public class Launcher3App extends CoreApplication {
 
         }
     }
+
+
+    public void checkProfile() {
+//         0 - Show as Normal mode(In System it will be silent mode).
+//         1 - Vibrate mode(In System it will be silent mode).
+//         2 - Show as Silent mode(In System it will be silent mode).
+        if (launcherPrefs.getCurrentProfile().get() == 0) {
+            Log.d("Profile Check:::", "checkProfile : Normal" + launcherPrefs.getCurrentProfile().get());
+            changeProfileToSilentMode();
+        } else if (launcherPrefs.getCurrentProfile().get() == 2) {
+            Log.d("Profile Check:::", "checkProfile : Silent" + launcherPrefs.getCurrentProfile().get());
+            changeProfileToSilentMode();
+        } else {
+            Log.d("Profile Check:::", "checkProfile : Vibrate" + launcherPrefs.getCurrentProfile().get());
+            changeProfileToVibrateMode();
+        }
+    }
+
 
     /**
      * Configure the default application when application insatlled

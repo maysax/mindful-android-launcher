@@ -67,5 +67,8 @@ public interface Launcher3Prefs {
     @DefaultInt(0)
     int getCurrentProfile();
 
+    @DefaultBoolean(false)
+    boolean isAppDefaultOrFront();
+
 
 }
