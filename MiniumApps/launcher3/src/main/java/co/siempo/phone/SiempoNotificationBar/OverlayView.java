@@ -196,10 +196,10 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     private AudioManager audioManager;
     private boolean isWiFiOn = false;
     AudioChangeReceiver audioChangeReceiver;
-    private LinearLayout ln_ongoingCall,container_hangup;
-    private TextView txtUserName,txtMessage;
+    private LinearLayout ln_ongoingCall, container_hangup;
+    private TextView txtUserName, txtMessage;
     private Chronometer chronometer;
-    private ImageView imgUserOngoingCallImage,img_dot;
+    private ImageView imgUserOngoingCallImage, img_dot;
 
     public OverlayView(final Context context) {
         super(context);
@@ -225,20 +225,20 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             public void onHomePressed() {
 
                 hide();
-                if(PackageUtil.isSiempoLauncher(context)){
+                if (PackageUtil.isSiempoLauncher(context)) {
 
-                    try{
+                    try {
 
-                        Dialog dialog=((Launcher3App) CoreApplication.getInstance()).dialog;
-                        if(dialog!=null && dialog.isShowing()) {
+                        Dialog dialog = ((Launcher3App) CoreApplication.getInstance()).dialog;
+                        if (dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
                         }
 
-                        if(UIUtils.alertDialog!=null && UIUtils.alertDialog.isShowing()){
+                        if (UIUtils.alertDialog != null && UIUtils.alertDialog.isShowing()) {
                             UIUtils.alertDialog.dismiss();
                         }
 
-                        if(CoreApplication.getInstance().isIfScreen == false) {
+                        if (CoreApplication.getInstance().isIfScreen == false) {
                             Intent i = new Intent();
                             String pkg = context.getApplicationContext().getPackageName();
                             String cls = "co.siempo.phone.MainActivity_";
@@ -247,8 +247,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
                             context.startActivity(i);
                         }
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
 
                         Tracer.d("Activity Not Found.");
                     }
@@ -287,21 +286,21 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                 KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
                 boolean locked = myKM.inKeyguardRestrictedInputMode();
-                boolean isHideNotificationOnLockScreen=launcherPrefs.getBoolean("isHidenotificationOnLockScreen",true);
+                boolean isHideNotificationOnLockScreen = launcherPrefs.getBoolean("isHidenotificationOnLockScreen", true);
                 if (locked && PackageUtil.isSiempoLauncher(context) && isHideNotificationOnLockScreen) {
-                        int icon = R.drawable.ic_launch;
-                        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    int icon = R.drawable.ic_launch;
+                    NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                        int notifyID = 96;
-                        NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(context)
-                                .setContentTitle("SiempoApp")
-                                .setSortKey("SiempoLockScreeen")
-                                .setDefaults(android.app.Notification.DEFAULT_ALL)
-                                .setAutoCancel(true)
-                                .setSmallIcon(icon);
+                    int notifyID = 96;
+                    NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(context)
+                            .setContentTitle("SiempoApp")
+                            .setSortKey("SiempoLockScreeen")
+                            .setDefaults(android.app.Notification.DEFAULT_ALL)
+                            .setAutoCancel(true)
+                            .setSmallIcon(icon);
 
-                        android.app.Notification notification = mNotifyBuilder.build();
-                        mNotificationManager.notify(notifyID, notification);
+                    android.app.Notification notification = mNotifyBuilder.build();
+                    mNotificationManager.notify(notifyID, notification);
 
                 }
 
@@ -315,7 +314,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     CoreApplication.getInstance().getVibrator().cancel();
                     CoreApplication.getInstance().declinePhone();
                 }
-                if(CoreApplication.getInstance().isCallisRunning()){
+                if (CoreApplication.getInstance().isCallisRunning()) {
                     CoreApplication.getInstance().declinePhone();
                 }
             }
@@ -441,7 +440,11 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         bindBrightnessControl();
         bleSignal = new BleSignal();
         context.registerReceiver(bleSignal, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
-
+        if (UIUtils.isDeviceHasSimCard(context)) {
+            imgSignal.setVisibility(View.VISIBLE);
+        } else {
+            imgSignal.setImageResource(R.drawable.ic_no_sim_black_24dp);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MainThread)
@@ -468,7 +471,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     public void updateTopBar(TopBarUpdateEvent event) {
         updateStatusBarUI();
     }
-
 
 
     /**
@@ -587,11 +589,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      */
     @Subscribe
     public void onConnectivityEvent(ConnectivityEvent event) {
-        if(UIUtils.isDeviceHasSimCard(context)){
-            imgSignal.setVisibility(View.VISIBLE);
-        }else{
-            imgSignal.setImageResource(R.drawable.ic_no_sim_black_24dp);
-        }
         if (event.getState() == ConnectivityEvent.AIRPLANE) {
             if (imgSignal != null)
                 imgSignal.setVisibility(NetworkUtil.isAirplaneModeOn(context) ? View.GONE : View.VISIBLE);
@@ -618,12 +615,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             displayBatteryIcon(event.getValue(), event.getType());
         } else if (event.getState() == ConnectivityEvent.NETWORK) {
             //Update status bar network icon
-            imgSignal.setImageResource(getNetworkIcon(event.getValue()));
+            if (imgSignal != null) imgSignal.setImageResource(getNetworkIcon(event.getValue()));
             if (!NetworkUtil.isAirplaneModeOn(context)) {
                 if (relMobileData != null) {
                     relMobileData.setEnabled(true);
                     checkMobileData();
                 }
+            }
+            if (event.getValue() == -1) {
+                imgSignal.setImageResource(R.drawable.ic_no_sim_black_24dp);
             }
         }
     }
@@ -764,6 +764,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
     /**
      * Below logic will use in further development
+     *
      * @return
      */
 //    @Override
@@ -771,7 +772,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 //        addSiempoNotificationBar(event);
 //        return super.onTouchEvent(event);
 //    }
-
     public int retrieveStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -798,12 +798,12 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 mWinManager.removeView(mParentView);
             }
             WindowManager.LayoutParams params =
-            new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
-                    | FLAG_LAYOUT_IN_SCREEN
-                    | FLAG_LAYOUT_NO_LIMITS
-                    | FLAG_NOT_TOUCH_MODAL
-                    | FLAG_WATCH_OUTSIDE_TOUCH
-                    , TRANSLUCENT);
+                    new WindowManager.LayoutParams(MATCH_PARENT, WRAP_CONTENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
+                            | FLAG_LAYOUT_IN_SCREEN
+                            | FLAG_LAYOUT_NO_LIMITS
+                            | FLAG_NOT_TOUCH_MODAL
+                            | FLAG_WATCH_OUTSIDE_TOUCH
+                            , TRANSLUCENT);
             params.gravity = Gravity.TOP;
             mWinManager.updateViewLayout(this, params);
         }
@@ -815,7 +815,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      */
     public synchronized void addSiempoNotificationBar(MotionEvent event) {
         if (!siempoNotificationBar) {
-            int navigationBarHeight=0;
+            int navigationBarHeight = 0;
 
             WindowManager.LayoutParams params = new WindowManager.LayoutParams(MATCH_PARENT, MATCH_PARENT, TYPE_SYSTEM_ERROR, FLAG_NOT_FOCUSABLE
                     | FLAG_LAYOUT_IN_SCREEN
@@ -948,9 +948,9 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     adapter.notifyItemRemoved(position);
                     notificationList.remove(position);
                     hide();
-                    if(DBUtility.getTableNotificationSmsDao().count()>=1){
+                    if (DBUtility.getTableNotificationSmsDao().count() >= 1) {
                         imgNotification.setVisibility(View.VISIBLE);
-                    }else{
+                    } else {
                         imgNotification.setVisibility(View.GONE);
                     }
                     if (strPackageName.equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
@@ -1231,7 +1231,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     public void newNotificationEvent(NewNotificationEvent tableNotificationSms) {
         System.out.println("NotificationFragment.newNotificationEvent" + tableNotificationSms.toString());
         if (tableNotificationSms != null) {
-            if(imgNotification!=null) imgNotification.setVisibility(View.VISIBLE);
+            if (imgNotification != null) imgNotification.setVisibility(View.VISIBLE);
             if (!checkNotificationExistsOrNot(tableNotificationSms.getTopTableNotificationSmsDao().getId())) {
                 @SuppressLint("SimpleDateFormat")
                 DateFormat sdf = new SimpleDateFormat("hh:mm a");
@@ -1682,146 +1682,102 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         return true;
     }
 
-    public void displayBatteryIcon(int batteryStatus,String isCharging){
-        if(imgBattery != null){
-            if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")){
-                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+    public void displayBatteryIcon(int batteryStatus, String isCharging) {
+        if (imgBattery != null) {
+            if (!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("ON")) {
+                if ((batteryStatus >= 0 && batteryStatus < 5) || (batteryStatus < 0)) {
                     imgBattery.setImageResource(R.drawable.battery_c_05);
-                }
-                else if(batteryStatus>=5 && batteryStatus<10){
+                } else if (batteryStatus >= 5 && batteryStatus < 10) {
                     imgBattery.setImageResource(R.drawable.battery_c_05);
-                }
-                else if(batteryStatus>=10 && batteryStatus<15){
+                } else if (batteryStatus >= 10 && batteryStatus < 15) {
                     imgBattery.setImageResource(R.drawable.battery_c_10);
-                }
-                else if(batteryStatus>=15 && batteryStatus<20){
+                } else if (batteryStatus >= 15 && batteryStatus < 20) {
                     imgBattery.setImageResource(R.drawable.battery_c_15);
-                }
-                else if(batteryStatus>=20 && batteryStatus<25){
+                } else if (batteryStatus >= 20 && batteryStatus < 25) {
                     imgBattery.setImageResource(R.drawable.battery_c_20);
-                }
-                else if(batteryStatus>=25 && batteryStatus<30){
+                } else if (batteryStatus >= 25 && batteryStatus < 30) {
                     imgBattery.setImageResource(R.drawable.battery_c_25);
-                }
-                else if(batteryStatus>=30 && batteryStatus<35){
+                } else if (batteryStatus >= 30 && batteryStatus < 35) {
                     imgBattery.setImageResource(R.drawable.battery_c_30);
-                }
-                else if(batteryStatus>=35 && batteryStatus<40){
+                } else if (batteryStatus >= 35 && batteryStatus < 40) {
                     imgBattery.setImageResource(R.drawable.battery_c_35);
-                }
-                else if(batteryStatus>=40 && batteryStatus<45){
+                } else if (batteryStatus >= 40 && batteryStatus < 45) {
                     imgBattery.setImageResource(R.drawable.battery_c_40);
-                }
-                else if(batteryStatus>=45 && batteryStatus<50){
+                } else if (batteryStatus >= 45 && batteryStatus < 50) {
                     imgBattery.setImageResource(R.drawable.battery_c_45);
-                }
-                else if(batteryStatus>=50 && batteryStatus<55){
+                } else if (batteryStatus >= 50 && batteryStatus < 55) {
                     imgBattery.setImageResource(R.drawable.battery_c_50);
-                }
-                else if(batteryStatus>=55 && batteryStatus<60){
+                } else if (batteryStatus >= 55 && batteryStatus < 60) {
                     imgBattery.setImageResource(R.drawable.battery_c_55);
-                }
-                else if(batteryStatus>=60 && batteryStatus<65){
+                } else if (batteryStatus >= 60 && batteryStatus < 65) {
                     imgBattery.setImageResource(R.drawable.battery_c_60);
-                }
-                else if(batteryStatus>=65 && batteryStatus<70){
+                } else if (batteryStatus >= 65 && batteryStatus < 70) {
                     imgBattery.setImageResource(R.drawable.battery_c_65);
-                }
-                else if(batteryStatus>=70 && batteryStatus<75){
+                } else if (batteryStatus >= 70 && batteryStatus < 75) {
                     imgBattery.setImageResource(R.drawable.battery_c_70);
-                }
-                else if(batteryStatus>=75 && batteryStatus<80){
+                } else if (batteryStatus >= 75 && batteryStatus < 80) {
                     imgBattery.setImageResource(R.drawable.battery_c_75);
-                }
-                else if(batteryStatus>=80 && batteryStatus<85){
+                } else if (batteryStatus >= 80 && batteryStatus < 85) {
                     imgBattery.setImageResource(R.drawable.battery_c_80);
-                }
-                else if(batteryStatus>=85 && batteryStatus<90){
+                } else if (batteryStatus >= 85 && batteryStatus < 90) {
                     imgBattery.setImageResource(R.drawable.battery_c_85);
-                }
-                else if(batteryStatus>=90 && batteryStatus<95){
+                } else if (batteryStatus >= 90 && batteryStatus < 95) {
                     imgBattery.setImageResource(R.drawable.battery_c_90);
-                }
-                else if(batteryStatus>=95 && batteryStatus<100){
+                } else if (batteryStatus >= 95 && batteryStatus < 100) {
                     imgBattery.setImageResource(R.drawable.battery_c_95);
-                }
-                else if(batteryStatus>=100){
+                } else if (batteryStatus >= 100) {
                     imgBattery.setImageResource(R.drawable.battery_c_100);
-                }
-                else{
+                } else {
                     imgBattery.setImageResource(R.drawable.battery_c_50);
                 }
-            }
-            else if(!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("OFF")){
-                if((batteryStatus>=0 && batteryStatus<5) || (batteryStatus<0)){
+            } else if (!TextUtils.isEmpty(isCharging) && isCharging.equalsIgnoreCase("OFF")) {
+                if ((batteryStatus >= 0 && batteryStatus < 5) || (batteryStatus < 0)) {
                     imgBattery.setImageResource(R.drawable.battery_alert);
-                }
-                else if(batteryStatus>=5 && batteryStatus<10){
+                } else if (batteryStatus >= 5 && batteryStatus < 10) {
                     imgBattery.setImageResource(R.drawable.battery_n_05);
-                }
-                else if(batteryStatus>=10 && batteryStatus<15){
+                } else if (batteryStatus >= 10 && batteryStatus < 15) {
                     imgBattery.setImageResource(R.drawable.battery_n_10);
-                }
-                else if(batteryStatus>=15 && batteryStatus<20){
+                } else if (batteryStatus >= 15 && batteryStatus < 20) {
                     imgBattery.setImageResource(R.drawable.battery_n_15);
-                }
-                else if(batteryStatus>=20 && batteryStatus<25){
+                } else if (batteryStatus >= 20 && batteryStatus < 25) {
                     imgBattery.setImageResource(R.drawable.battery_n_20);
-                }
-                else if(batteryStatus>=25 && batteryStatus<30){
+                } else if (batteryStatus >= 25 && batteryStatus < 30) {
                     imgBattery.setImageResource(R.drawable.battery_n_25);
-                }
-                else if(batteryStatus>=30 && batteryStatus<35){
+                } else if (batteryStatus >= 30 && batteryStatus < 35) {
                     imgBattery.setImageResource(R.drawable.battery_n_30);
-                }
-                else if(batteryStatus>=35 && batteryStatus<40){
+                } else if (batteryStatus >= 35 && batteryStatus < 40) {
                     imgBattery.setImageResource(R.drawable.battery_n_35);
-                }
-                else if(batteryStatus>=40 && batteryStatus<45){
+                } else if (batteryStatus >= 40 && batteryStatus < 45) {
                     imgBattery.setImageResource(R.drawable.battery_n_40);
-                }
-                else if(batteryStatus>=45 && batteryStatus<50){
+                } else if (batteryStatus >= 45 && batteryStatus < 50) {
                     imgBattery.setImageResource(R.drawable.battery_n_45);
-                }
-                else if(batteryStatus>=50 && batteryStatus<55){
+                } else if (batteryStatus >= 50 && batteryStatus < 55) {
                     imgBattery.setImageResource(R.drawable.battery_n_50);
-                }
-                else if(batteryStatus>=55 && batteryStatus<60){
+                } else if (batteryStatus >= 55 && batteryStatus < 60) {
                     imgBattery.setImageResource(R.drawable.battery_n_55);
-                }
-                else if(batteryStatus>=60 && batteryStatus<65){
+                } else if (batteryStatus >= 60 && batteryStatus < 65) {
                     imgBattery.setImageResource(R.drawable.battery_n_60);
-                }
-                else if(batteryStatus>=65 && batteryStatus<70){
+                } else if (batteryStatus >= 65 && batteryStatus < 70) {
                     imgBattery.setImageResource(R.drawable.battery_n_65);
-                }
-                else if(batteryStatus>=70 && batteryStatus<75){
+                } else if (batteryStatus >= 70 && batteryStatus < 75) {
                     imgBattery.setImageResource(R.drawable.battery_n_70);
-                }
-                else if(batteryStatus>=75 && batteryStatus<80){
+                } else if (batteryStatus >= 75 && batteryStatus < 80) {
                     imgBattery.setImageResource(R.drawable.battery_n_75);
-                }
-                else if(batteryStatus>=80 && batteryStatus<85){
+                } else if (batteryStatus >= 80 && batteryStatus < 85) {
                     imgBattery.setImageResource(R.drawable.battery_n_80);
-                }
-                else if(batteryStatus>=85 && batteryStatus<90){
+                } else if (batteryStatus >= 85 && batteryStatus < 90) {
                     imgBattery.setImageResource(R.drawable.battery_n_85);
-                }
-                else if(batteryStatus>=90 && batteryStatus<95){
+                } else if (batteryStatus >= 90 && batteryStatus < 95) {
                     imgBattery.setImageResource(R.drawable.battery_n_90);
-                }
-                else if(batteryStatus>=95 && batteryStatus<100){
+                } else if (batteryStatus >= 95 && batteryStatus < 100) {
                     imgBattery.setImageResource(R.drawable.battery_n_95);
-                }
-                else if(batteryStatus>=100){
+                } else if (batteryStatus >= 100) {
                     imgBattery.setImageResource(R.drawable.battery_n_100);
-                }
-                else{
+                } else {
                     imgBattery.setImageResource(R.drawable.battery_n_50);
                 }
-            }
-            else{
-                Log.d(TAG,"Charging Status not identify");
+            } else {
+                Log.d(TAG, "Charging Status not identify");
             }
         }
     }
