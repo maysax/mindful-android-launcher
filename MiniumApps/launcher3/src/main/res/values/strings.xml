@@ -28,7 +28,7 @@
     <string name="title.version">Version: %1$s</string>
     <string name="title.defaultapp">Assign Default App</string>
     <string name="title.lockScreenNotifications">Hide Notifications On Lock Screen </string>
-    <string name="title.allowNotification">Allow Notification for Facebook App</string>
+    <string name="title.allowNotification">Notification for Facebook &amp; Messenger</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
