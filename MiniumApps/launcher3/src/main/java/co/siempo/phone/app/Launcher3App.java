@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import com.evernote.client.android.EvernoteSession;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.androidannotations.annotations.EApplication;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.greenrobot.greendao.database.Database;
@@ -75,6 +78,12 @@ public class Launcher3App extends CoreApplication {
     @SuppressLint("StaticFieldLeak")
     private static IconsHandler iconsPackHandler;
 
+    @SystemService
+    AudioManager audioManager;
+
+    @SystemService
+    NotificationManager notificationManager;
+
 
     @Trace(tag = TRACE_TAG)
     @Override
@@ -119,7 +128,6 @@ public class Launcher3App extends CoreApplication {
         //}
 
 
-
         AppLifecycleTracker handler = new AppLifecycleTracker();
 
         registerActivityLifecycleCallbacks(handler);
@@ -127,7 +135,7 @@ public class Launcher3App extends CoreApplication {
     }
 
 
-    class AppLifecycleTracker implements Application.ActivityLifecycleCallbacks  {
+    class AppLifecycleTracker implements Application.ActivityLifecycleCallbacks {
 
         private int numStarted = 0;
 
@@ -141,19 +149,19 @@ public class Launcher3App extends CoreApplication {
         public void onActivityStarted(Activity activity) {
             if (numStarted == 0) {
                 // app went to foreground
-                Log.d(TAG,"Siempo is on foreground");
+                Log.d(TAG, "Siempo is on foreground");
+                checkProfile();
+                launcherPrefs.isAppDefaultOrFront().put(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(getApplicationContext())) {
-                            Log.d(TAG,"Display Siempo Status bar");
+                            Log.d(TAG, "Display Siempo Status bar");
                             ViewService_.intent(getApplicationContext()).showMask().start();
+                        } else {
+                            Log.d(TAG, "Overlay is off");
                         }
-                        else{
-                            Log.d(TAG,"Overlay is off");
-                        }
-                    }
-                    else{
-                        Log.d(TAG,"Display Siempo Status bar");
+                    } else {
+                        Log.d(TAG, "Display Siempo Status bar");
                         ViewService_.intent(getApplicationContext()).showMask().start();
                     }
                 }
@@ -175,23 +183,24 @@ public class Launcher3App extends CoreApplication {
         public void onActivityStopped(Activity activity) {
             numStarted--;
             if (numStarted == 0) {
-                Log.d(TAG,"Siempo is on background");
+                Log.d(TAG, "Siempo is on background");
                 // app went to background
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Settings.canDrawOverlays(getApplicationContext())) {
-                            if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                                Log.d(TAG,"Hide Siempo Status bar");
-                                ViewService_.intent(getApplicationContext()).hideMask().start();
-                            }
-                        }
-                    }
-                    else{
-                        if(!PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                            Log.d(TAG, "Hide Siempo Status Bar");
+                            Log.d(TAG, "Hide Siempo Status bar");
                             ViewService_.intent(getApplicationContext()).hideMask().start();
                         }
+                    } else {
+                        Log.d(TAG, "Hide Siempo Status Bar");
+                        ViewService_.intent(getApplicationContext()).hideMask().start();
                     }
+                }
+                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                    launcherPrefs.isAppDefaultOrFront().put(true);
+                } else {
+                    launcherPrefs.isAppDefaultOrFront().put(false);
+                    changeProfileToNormalMode();
                 }
             }
         }
@@ -206,6 +215,25 @@ public class Launcher3App extends CoreApplication {
 
         }
     }
+
+
+    public void checkProfile() {
+//         0 - Show as Normal mode(In System it will be silent mode).
+//         1 - Vibrate mode(In System it will be silent mode).
+//         2 - Show as Silent mode(In System it will be silent mode).
+        if (launcherPrefs.getCurrentProfile().get() == 0) {
+            Log.d("Profile Check:::", "checkProfile : Normal" + launcherPrefs.getCurrentProfile().get());
+            changeProfileToSilentMode();
+        } else if (launcherPrefs.getCurrentProfile().get() == 2) {
+            Log.d("Profile Check:::", "checkProfile : Silent" + launcherPrefs.getCurrentProfile().get());
+            changeProfileToSilentMode();
+        } else {
+            Log.d("Profile Check:::", "checkProfile : Vibrate" + launcherPrefs.getCurrentProfile().get());
+            changeProfileToVibrateMode();
+        }
+    }
+
+
     /**
      * Configure the default application when application insatlled
      */
@@ -249,6 +277,11 @@ public class Launcher3App extends CoreApplication {
         String emailPackage = getMailPackageName();
         if (!emailPackage.equalsIgnoreCase("") && prefs.emailPackage().get().equalsIgnoreCase(""))
             prefs.emailPackage().put(emailPackage);
+
+        String notesPackage = getNotesPackageName();
+        if (!notesPackage.equalsIgnoreCase("") && prefs.notesPackage().get().equalsIgnoreCase(""))
+            prefs.notesPackage().put(notesPackage);
+
     }
 
     ResolveInfo resolveInfo;
@@ -262,10 +295,15 @@ public class Launcher3App extends CoreApplication {
      * @param menuId
      * @param isOkayShow
      */
+    public Dialog dialog;
+
     public void showPreferenceAppListDialog(final Context context, final int menuId, final boolean isOkayShow) {
         resolveInfo = null;
         pos = -1;
-        final Dialog dialog = new Dialog(context, R.style.MaterialDialogSheet);
+        if (dialog != null && dialog.isShowing()) {
+            return;
+        }
+        dialog = new Dialog(context, R.style.MaterialDialogSheet);
         dialog.setContentView(R.layout.dialog_open_with);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -371,6 +409,18 @@ public class Launcher3App extends CoreApplication {
                     }
                 }
             }
+        } else if (menuId == Constants.NOTES_PACKAGE) {
+            appList = getNotesPackageList();
+            if (isOkayShow) {
+                for (int i = 0; i < appList.size(); i++) {
+                    if (appList.get(i) != null && appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.emailPackage().get())) {
+                        resolveInfo = appList.get(i);
+                        pos = i;
+                    }else{
+                        resolveInfo = null;
+                    }
+                }
+            }
         }
         final ListView listView = dialog.findViewById(R.id.listApps);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
@@ -386,7 +436,7 @@ public class Launcher3App extends CoreApplication {
             btnJustOnce.setVisibility(View.VISIBLE);
             btnOkay.setVisibility(View.GONE);
         }
-        final PreferenceListAdapter preferenceListAdapter = new PreferenceListAdapter(context, listView, appList, pos);
+        final PreferenceListAdapter preferenceListAdapter = new PreferenceListAdapter(context, listView, appList, menuId);
         listView.setAdapter(preferenceListAdapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setItemChecked(pos, true);
@@ -444,6 +494,8 @@ public class Launcher3App extends CoreApplication {
                         prefs.browserPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.CLOCK_PACKAGE) {
                         prefs.clockPackage().put(resolveInfo.activityInfo.packageName);
+                    } else if (menuId == Constants.NOTES_PACKAGE) {
+                        prefs.notesPackage().put(resolveInfo.activityInfo.packageName);
                     } else if (menuId == Constants.EMAIL_PACKAGE) {
                         prefs.emailPackage().put(resolveInfo.activityInfo.packageName);
                         prefs.isEmailClicked().put(true);
@@ -452,7 +504,19 @@ public class Launcher3App extends CoreApplication {
                     dialog.dismiss();
                     EventBus.getDefault().post(new DefaultAppUpdate(true));
                 } else {
-                    Toast.makeText(context, "Please select application.", Toast.LENGTH_SHORT).show();
+                    if(menuId==6){
+                        if(resolveInfo==null){
+                            prefs.notesPackage().put(context.getResources().getString(R.string.notes));
+                        }else{
+                            prefs.notesPackage().put(resolveInfo.activityInfo.packageName);
+                        }
+
+                        dialog.dismiss();
+                        EventBus.getDefault().post(new DefaultAppUpdate(true));
+                    }else{
+                        Toast.makeText(context, "Please select application.", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
             }
         });
@@ -472,6 +536,27 @@ public class Launcher3App extends CoreApplication {
                         prefs.emailPackage().put(resolveInfo.activityInfo.packageName);
                         prefs.isEmailClicked().put(true);
                         prefs.isEmailClickedFirstTime().put(true);
+                    } else if (menuId == Constants.CALENDER_PACKAGE) {
+                        prefs.calenderPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isCalenderClicked().put(true);
+                    } else if (menuId == Constants.CONTACT_PACKAGE) {
+                        prefs.contactPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isContactClicked().put(true);
+                    } else if (menuId == Constants.MAP_PACKAGE) {
+                        prefs.mapPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isMapClicked().put(true);
+                    } else if (menuId == Constants.PHOTOS_PACKAGE) {
+                        prefs.photosPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isPhotosClicked().put(true);
+                    } else if (menuId == Constants.CAMERA_PACKAGE) {
+                        prefs.cameraPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isCameraClicked().put(true);
+                    } else if (menuId == Constants.BROWSER_PACKAGE) {
+                        prefs.browserPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isBrowserClicked().put(true);
+                    } else if (menuId == Constants.CLOCK_PACKAGE) {
+                        prefs.clockPackage().put(resolveInfo.activityInfo.packageName);
+                        prefs.isClockClicked().put(true);
                     }
                     dialog.dismiss();
                     EventBus.getDefault().post(new DefaultAppUpdate(true));
@@ -483,16 +568,6 @@ public class Launcher3App extends CoreApplication {
             }
         });
         dialog.show();
-//        listView.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (pos != -1 && isOkayShow) {
-//                    listView.performItemClick(listView, pos, listView.getItemIdAtPosition(pos));
-//                    listView.setItemChecked(pos,true);
-//                }
-//            }
-//        },2000);
-
     }
 
 

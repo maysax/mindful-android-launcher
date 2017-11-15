@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.nfc.NdefRecord;
 import android.nfc.Tag;
@@ -92,7 +93,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.setVolumeControlStream(AudioManager.STREAM_ALARM);
         //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 

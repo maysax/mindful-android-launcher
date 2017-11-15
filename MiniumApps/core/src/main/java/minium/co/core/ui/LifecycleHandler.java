@@ -35,7 +35,7 @@ public class LifecycleHandler implements Application.ActivityLifecycleCallbacks 
     @Override
     public void onActivityPaused(Activity activity) {
         sPaused++;
-        Tracer.v("application is in foreground: " + (sResumed > sPaused));
+        Tracer.v("Application in background: " + (sResumed > sPaused));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class LifecycleHandler implements Application.ActivityLifecycleCallbacks 
     @Override
     public void onActivityStopped(Activity activity) {
         sStopped++;
-        Tracer.v("application is visible: " + (sStarted > sStopped));
+        Tracer.v("Application in background: " + (sStarted > sStopped));
     }
 
     public static boolean isApplicationVisible() {

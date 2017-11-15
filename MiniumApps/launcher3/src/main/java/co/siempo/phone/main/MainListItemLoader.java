@@ -6,6 +6,8 @@ import android.content.pm.ApplicationInfo;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
+import com.androidnetworking.core.Core;
+
 import java.util.List;
 
 import co.siempo.phone.BuildConfig;
@@ -47,6 +49,7 @@ public class MainListItemLoader {
         items.add(new MainListItem(20, getString(R.string.title_calendar), "fa-calendar"));
         items.add(new MainListItem(3, getString(R.string.title_contacts), "fa-user", R.drawable.icon_create_user, MainListItemType.ACTION));
         items.add(new MainListItem(11, getString(R.string.title_map), "fa-street-view"));
+        items.add(new MainListItem(6, getString(R.string.title_notes), "fa-sticky-note", R.drawable.icon_save_note, MainListItemType.ACTION));
         items.add(new MainListItem(22, getString(R.string.title_photos), "fa-picture-o"));
         items.add(new MainListItem(23, getString(R.string.title_camera), "fa-camera"));
         items.add(new MainListItem(24, getString(R.string.title_browser), "fa-hand-pointer-o"));
@@ -85,7 +88,7 @@ public class MainListItemLoader {
 //        if (!Build.MODEL.toLowerCase().contains("siempo")) {
 //            items.add(new MainListItem(12, getString(title_defaultLauncher), "fa-certificate"));
 //        }
-        items.add(new MainListItem(18, getString(R.string.title_feedback), "fa-question-circle"));
+//        items.add(new MainListItem(18, getString(R.string.title_feedback), "fa-question-circle"));
         // items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
         //items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
 //        items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
@@ -170,7 +173,16 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.contactPackage().get());
+//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.contactPackage().get());
+                    if (!((MainActivity) context).prefs.isContactClicked().get()) {
+                        if (CoreApplication.getInstance().getContactPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 3, false);
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.contactPackage().get());
+                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.contactPackage().get());
+                    }
                 }
                 break;
             case 4:
@@ -180,7 +192,20 @@ public class MainListItemLoader {
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
                 break;
             case 6:
-                new ActivityHelper(context).openNotesApp(false);
+                if (context instanceof SiempoSettingsDefaultAppActivity) {
+                    if (CoreApplication.getInstance().getNotesPackageList().size() > 1) {
+                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 6, true);
+                    } else {
+                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (!((MainActivity) context).prefs.notesPackage().get().equalsIgnoreCase("Notes")) {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.notesPackage().get());
+                    } else {
+                        new ActivityHelper(context).openNotesApp(false);
+                    }
+                }
+                //new ActivityHelper(context).openNotesApp(false);
                 break;
             case 7:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
@@ -202,7 +227,16 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.mapPackage().get());
+//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.mapPackage().get());
+                    if (!((MainActivity) context).prefs.isMapClicked().get()) {
+                        if (CoreApplication.getInstance().getMapPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 11, false);
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.mapPackage().get());
+                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.mapPackage().get());
+                    }
                 }
                 break;
             case 12:
@@ -258,7 +292,16 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.calenderPackage().get());
+//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.calenderPackage().get());
+                    if (!((MainActivity) context).prefs.isCalenderClicked().get()) {
+                        if (CoreApplication.getInstance().getCalenderPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 20, false);
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.calenderPackage().get());
+                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.calenderPackage().get());
+                    }
                 }
                 break;
             case 21://Clock
@@ -269,7 +312,16 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.clockPackage().get());
+//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.clockPackage().get());
+                    if (!((MainActivity) context).prefs.isClockClicked().get()) {
+                        if (CoreApplication.getInstance().getClockPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 21, false);
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.clockPackage().get());
+                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.clockPackage().get());
+                    }
                 }
                 break;
             case 22://Photos
@@ -280,7 +332,17 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.photosPackage().get());
+//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.photosPackage().get());
+                    if (!((MainActivity) context).prefs.isPhotosClicked().get()) {
+                        if (CoreApplication.getInstance().getPhotosPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 22, false);
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.photosPackage().get());
+                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.photosPackage().get());
+                    }
+
                 }
                 break;
             case 23:// Camera
@@ -291,7 +353,16 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.cameraPackage().get());
+//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.cameraPackage().get());
+                    if (!((MainActivity) context).prefs.isCameraClicked().get()) {
+                        if (CoreApplication.getInstance().getCameraPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 23, false);
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.cameraPackage().get());
+                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.cameraPackage().get());
+                    }
                 }
                 break;
             case 24:// Browser
@@ -302,7 +373,16 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.browserPackage().get());
+//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.browserPackage().get());
+                    if (!((MainActivity) context).prefs.isBrowserClicked().get()) {
+                        if (CoreApplication.getInstance().getBrowserPackageList().size() > 1) {
+                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 24, false);
+                        } else {
+                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.browserPackage().get());
+                        }
+                    } else {
+                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.browserPackage().get());
+                    }
                 }
                 break;
             default:

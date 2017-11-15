@@ -157,10 +157,22 @@ public interface DroidPrefs {
     @DefaultString("")
     String emailPackage();
 
+    @DefaultString("")
+    String notesPackage();
+
     @DefaultBoolean(false)
     boolean isEmailClicked();
 
     @DefaultBoolean(false)
     boolean isEmailClickedFirstTime();
+
+    @DefaultBoolean(true)
+    boolean isFacebookAllowed();
+
+    @DefaultBoolean(true)
+    boolean isFacebooKMessangerAllowed();
+
+    @DefaultBoolean(true)
+    boolean isFacebooKMessangerLiteAllowed();
 
 }

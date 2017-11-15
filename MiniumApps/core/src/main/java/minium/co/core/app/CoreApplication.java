@@ -1,6 +1,7 @@
 package minium.co.core.app;
 
 import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +21,10 @@ import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Binder;
+import android.os.Build;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.UserManager;
 import android.os.Vibrator;
 import android.provider.AlarmClock;
@@ -38,6 +42,9 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import io.fabric.sdk.android.BuildConfig;
 import io.fabric.sdk.android.Fabric;
 import minium.co.core.R;
 import minium.co.core.config.Config;
@@ -80,6 +88,9 @@ public abstract class CoreApplication extends MultiDexApplication {
     UserManager userManager;
     LauncherApps launcherApps;
 
+    private boolean isCallisRunning = false;
+
+    public boolean isIfScreen = false;
 
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
@@ -102,7 +113,11 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<ResolveInfo> browserPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> clockPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> emailPackageList = new ArrayList<>();
+    private ArrayList<ResolveInfo> notesPackageList = new ArrayList<>();
     private boolean isEditNotOpen = false;
+    AudioManager audioManager;
+    NotificationManager notificationManager;
+
 
     public boolean isEditNotOpen() {
         return isEditNotOpen;
@@ -121,6 +136,14 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
+    }
+
+    public boolean isCallisRunning() {
+        return isCallisRunning;
+    }
+
+    public void setCallisRunning(boolean callisRunning) {
+        isCallisRunning = callisRunning;
     }
 
     public Vibrator getVibrator() {
@@ -212,11 +235,21 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.emailPackageList = emailPackageList;
     }
 
+    public ArrayList<ResolveInfo> getNotesPackageList() {
+        return notesPackageList;
+    }
+
+    public void setNotesPackageList(ArrayList<ResolveInfo> notesPackageList) {
+        this.notesPackageList = notesPackageList;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         sharedPref = getSharedPreferences("DroidPrefs", 0);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
@@ -334,6 +367,16 @@ public abstract class CoreApplication extends MultiDexApplication {
         if (sharedPref.getString("emailPackage", "").equalsIgnoreCase("")) {
             sharedPref.edit().putString("emailPackage", emailPackage).apply();
         }
+
+        String notesPackage = CoreApplication.getInstance().getNotesPackageName();
+        if (!sharedPref.getString("notesPackage", "").equalsIgnoreCase("")
+                && !sharedPref.getString("notesPackage", "").equalsIgnoreCase("Notes")
+                && !UIUtils.isAppInstalled(this, sharedPref.getString("notesPackage", ""))) {
+            sharedPref.edit().putString("notesPackage", notesPackage).apply();
+        }
+        if (sharedPref.getString("notesPackage", "").equalsIgnoreCase("")) {
+            sharedPref.edit().putString("notesPackage", notesPackage).apply();
+        }
     }
 
 
@@ -368,11 +411,13 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     private void configFabric() {
-        final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics())
-                .debuggable(Config.DEBUG)
-                .build();
-        Fabric.with(fabric);
+        if (!BuildConfig.DEBUG) {
+            final Fabric fabric = new Fabric.Builder(this)
+                    .kits(new Crashlytics())
+                    .debuggable(Config.DEBUG)
+                    .build();
+            Fabric.with(fabric);
+        }
     }
 
 
@@ -440,6 +485,41 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.normalModeList = normalModeList;
     }
 
+    public void changeProfileToNormalMode() {
+        int currentMode = audioManager.getRingerMode();
+        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+            } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            }
+        }
+
+    }
+
+    public void changeProfileToVibrateMode() {
+        int currentMode = audioManager.getRingerMode();
+        if (currentMode != AudioManager.RINGER_MODE_VIBRATE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+            } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            }
+        }
+    }
+
+    public void changeProfileToSilentMode() {
+        int currentMode = audioManager.getRingerMode();
+        if (currentMode != AudioManager.RINGER_MODE_SILENT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+            } else {
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            }
+        }
+
+    }
+
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
 
         @Override
@@ -452,8 +532,14 @@ public abstract class CoreApplication extends MultiDexApplication {
                     appInfo.name = activityInfo.getLabel().toString();
                     String defSMSApp = Settings.Secure.getString(getContentResolver(), "sms_default_application");
                     String defDialerApp = Settings.Secure.getString(getContentResolver(), "dialer_default_application");
-
-                    if (appInfo.packageName.equalsIgnoreCase(defSMSApp) || appInfo.packageName.contains("com.google.android.calendar")) {
+// || appInfo.packageName.contains("com.google.android.talk")
+                    //                   || appInfo.packageName.contains("com.whatsapp")
+                    if (appInfo.packageName.equalsIgnoreCase(defSMSApp)
+                            || appInfo.packageName.contains("com.google.android.calendar")
+                            || appInfo.packageName.contains("com.facebook.katana")
+                            || appInfo.packageName.contains("com.facebook.orca")
+                            || appInfo.packageName.contains("com.facebook.mlite")
+                            ) {
                         getVibrateList().add(appInfo.packageName);
                     } else if (appInfo.packageName.contains("telecom") || appInfo.packageName.contains("dialer")) {
                         getNormalModeList().add(appInfo.packageName);
@@ -546,17 +632,28 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public void playAudio() {
         try {
-            Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            if (mMediaPlayer == null) {
-                mMediaPlayer = new MediaPlayer();
-                mMediaPlayer.setDataSource(this, alert);
-                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-//                    mMediaPlayer.setLooping(true);
-                    mMediaPlayer.prepare();
-                    mMediaPlayer.start();
-                    vibrator.vibrate(pattern, 0);
+            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                if (mMediaPlayer == null) {
+                    mMediaPlayer = new MediaPlayer();
+                    mMediaPlayer.setDataSource(this, alert);
+                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
+                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                        mMediaPlayer.setVolume(100, 100);
+                        mMediaPlayer.setScreenOnWhilePlaying(true);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.start();
+                        vibrator.vibrate(pattern, 0);
+                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer player) {
+                                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 100, 0);
+                                player.release();
+                                player.stop();
+                            }
+                        });
+                    }
                 }
             }
         } catch (Exception e) {
@@ -718,5 +815,67 @@ public abstract class CoreApplication extends MultiDexApplication {
         return "";
     }
 
+    /**
+     * get all Notes application package name
+     */
+    public String getNotesPackageName() {
+        String filepath = "mnt/sdcard/doc.txt";
+        File file = new File(filepath);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Intent intent = new Intent(Intent.ACTION_EDIT);
+        intent.setDataAndType(Uri.fromFile(file), "text/plain");
+        getNotesPackageList().clear();
+        getNotesPackageList().add(null);
+        getNotesPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getNotesPackageList()) {
+//            Log.d("Default App Name", "Notes : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res != null ? res.activityInfo.packageName : "Notes";
+        }
+        return "";
+    }
+
+
+    public void declinePhone() {
+
+        try {
+            String serviceManagerName = "android.os.ServiceManager";
+            String serviceManagerNativeName = "android.os.ServiceManagerNative";
+            String telephonyName = "com.android.internal.telephony.ITelephony";
+            Class<?> telephonyClass;
+            Class<?> telephonyStubClass;
+            Class<?> serviceManagerClass;
+            Class<?> serviceManagerNativeClass;
+            Method telephonyEndCall;
+            Object telephonyObject;
+            Object serviceManagerObject;
+            telephonyClass = Class.forName(telephonyName);
+            telephonyStubClass = telephonyClass.getClasses()[0];
+            serviceManagerClass = Class.forName(serviceManagerName);
+            serviceManagerNativeClass = Class.forName(serviceManagerNativeName);
+            Method getService = // getDefaults[29];
+                    serviceManagerClass.getMethod("getService", String.class);
+            Method tempInterfaceMethod = serviceManagerNativeClass.getMethod("asInterface", IBinder.class);
+            Binder tmpBinder = new Binder();
+            tmpBinder.attachInterface(null, "fake");
+            serviceManagerObject = tempInterfaceMethod.invoke(null, tmpBinder);
+            IBinder retbinder = (IBinder) getService.invoke(serviceManagerObject, "phone");
+            Method serviceMethod = telephonyStubClass.getMethod("asInterface", IBinder.class);
+            telephonyObject = serviceMethod.invoke(null, retbinder);
+            telephonyEndCall = telephonyClass.getMethod("endCall");
+            telephonyEndCall.invoke(telephonyObject);
+            Log.d("Testting ", "Testting22222");
+
+        } catch (Exception e) {
+            Tracer.d("Decline call exception.." + e.toString());
+            e.printStackTrace();
+        }
+    }
 
 }
