@@ -88,7 +88,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     UserManager userManager;
     LauncherApps launcherApps;
 
-    private boolean isCallisRunning =false;
+    private boolean isCallisRunning = false;
 
     public boolean isIfScreen = false;
 
@@ -640,17 +640,18 @@ public abstract class CoreApplication extends MultiDexApplication {
                     final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
                         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        mMediaPlayer.setVolume(100,100);
+                        mMediaPlayer.setVolume(100, 100);
                         mMediaPlayer.setScreenOnWhilePlaying(true);
                         mMediaPlayer.prepare();
                         mMediaPlayer.start();
                         vibrator.vibrate(pattern, 0);
-                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
+                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                             @Override
-                            public void onCompletion(MediaPlayer player){
+                            public void onCompletion(MediaPlayer player) {
                                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 100, 0);
                                 player.release();
-                                player.stop();  }
+                                player.stop();
+                            }
                         });
                     }
                 }
@@ -829,7 +830,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
 
         Intent intent = new Intent(Intent.ACTION_EDIT);
-        intent.setDataAndType(Uri.fromFile(file),"text/plain");
+        intent.setDataAndType(Uri.fromFile(file), "text/plain");
         getNotesPackageList().clear();
         getNotesPackageList().add(null);
         getNotesPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
@@ -872,7 +873,7 @@ public abstract class CoreApplication extends MultiDexApplication {
             Log.d("Testting ", "Testting22222");
 
         } catch (Exception e) {
-            Tracer.d("Decline call exception.."+e.toString());
+            Tracer.d("Decline call exception.." + e.toString());
             e.printStackTrace();
         }
     }
