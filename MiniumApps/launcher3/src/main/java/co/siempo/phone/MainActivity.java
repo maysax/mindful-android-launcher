@@ -148,7 +148,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void checkAppLoadFirstTime() {
         if (launcherPrefs.isAppInstalledFirstTime().get()) {
             launcherPrefs.isAppInstalledFirstTime().put(false);
-            ((Launcher3App)CoreApplication.getInstance()).checkProfile();
+            ((Launcher3App) CoreApplication.getInstance()).checkProfile();
             final ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
 
@@ -160,6 +160,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         loadDialog();
                     }
                 }, 1000);
+            }
+        } else {
+            if (launcherPrefs.getCurrentVersion().get() != 0
+                    && BuildConfig.VERSION_CODE > launcherPrefs.getCurrentVersion().get()) {
+                new ActivityHelper(this).handleDefaultLauncher(this);
+                loadDialog();
+                launcherPrefs.getCurrentVersion().put(BuildConfig.VERSION_CODE);
+            } else {
+                launcherPrefs.getCurrentVersion().put(BuildConfig.VERSION_CODE);
             }
         }
     }
@@ -267,7 +276,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             public void onPageScrollStateChanged(int state) {
             }
         });
-
     }
 
     /**
