@@ -281,7 +281,8 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         super.setMenuVisibility(menuVisible);
         if (menuVisible) {
             try {
-                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
+                if (getActivity() != null)
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
             } catch (Exception e) {
                 Tracer.e(e, e.getMessage());
             }
@@ -293,7 +294,8 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             try {
-                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
+                if (getActivity() != null)
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
             } catch (Exception e) {
                 Tracer.e(e, e.getMessage());
             }

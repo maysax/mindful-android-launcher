@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -16,8 +17,10 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -43,7 +46,6 @@ import java.util.ArrayList;
 
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
@@ -81,6 +83,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     MainSlidePagerAdapter sliderAdapter;
 
+    @SystemService
+    TelephonyManager telephonyManager;
 
     @SystemService
     ConnectivityManager connectivityManager;
@@ -131,10 +135,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Manifest.permission.ACCESS_NETWORK_STATE)
                 .check();
 
-
-        FirebaseHelper firebaseHelper = new FirebaseHelper(this);
-        firebaseHelper.testEvent1();
-        firebaseHelper.testEvent2();
+        logFirebase();
         launcherPrefs.updatePrompt().put(true);
     }
 
@@ -299,6 +300,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         public void onPermissionGranted() {
             Log.d(TAG, "Permission granted");
             loadViews();
+            logFirebase();
             checknavigatePermissions();
 
         }
@@ -326,6 +328,23 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     .check();
         }
     };
+
+    private void logFirebase() {
+        FirebaseHelper firebaseHelper = new FirebaseHelper(MainActivity.this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
+                firebaseHelper.getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
+                firebaseHelper.testEvent1();
+                firebaseHelper.testEvent2();
+            }
+        } else {
+            Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
+            firebaseHelper.getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
+            firebaseHelper.testEvent1();
+            firebaseHelper.testEvent2();
+        }
+    }
 
 
     @Override
@@ -648,7 +667,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setPermissionListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted() {
-
+                        logFirebase();
                         checknavigatePermissions();
 
                     }

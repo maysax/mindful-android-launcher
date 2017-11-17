@@ -63,9 +63,9 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:launchMode="singleInstance"
         android:supportsRtl="true"
-        android:largeHeap="true"
         android:theme="@style/SiempoAppTheme"
         tools:replace="android:theme,name,label">
 
@@ -169,10 +169,9 @@
         <receiver
             android:name=".call.CallReceiver_"
             android:enabled="true">
-            <intent-filter android:priority="999">
-                <action android:name="android.intent.action.PHONE_STATE" />
-            </intent-filter>
             <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
             </intent-filter>
         </receiver>
@@ -223,6 +222,7 @@
         <activity android:name=".settings.SiempoSettingsDefaultAppActivity_" />
         <activity android:name=".settings.SiempoMainSettingsActivity_" />
         <activity android:name=".settings.SiempoAlphaSettingsActivity_" />
+
         <service android:name=".SiempoNotificationBar.ViewService_" />
         <service
             android:name=".service.StatusBarService"

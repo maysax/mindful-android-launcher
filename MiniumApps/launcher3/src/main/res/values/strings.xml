@@ -23,12 +23,12 @@
     <string name="title.feedback">Feedback</string>
     <string name="title.faq">FAQ</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
-    <string name="title.defaultLauncher">Switch Home app</string>
+    <string name="title.defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
     <string name="title.version">Version: %1$s</string>
-    <string name="title.defaultapp">Assign Default App</string>
+    <string name="title.defaultapp">Assign app defaults</string>
     <string name="title.lockScreenNotifications">Hide Notifications On Lock Screen </string>
-    <string name="title.allowNotification">Notification for Facebook &amp; Messenger</string>
+    <string name="title.allowNotification">Notification for Messenger</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
