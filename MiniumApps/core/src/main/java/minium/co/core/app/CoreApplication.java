@@ -534,9 +534,9 @@ public abstract class CoreApplication extends MultiDexApplication {
                     String defDialerApp = Settings.Secure.getString(getContentResolver(), "dialer_default_application");
 // || appInfo.packageName.contains("com.google.android.talk")
                     //                   || appInfo.packageName.contains("com.whatsapp")
+//                     || appInfo.packageName.contains("com.facebook.katana")
                     if (appInfo.packageName.equalsIgnoreCase(defSMSApp)
                             || appInfo.packageName.contains("com.google.android.calendar")
-                            || appInfo.packageName.contains("com.facebook.katana")
                             || appInfo.packageName.contains("com.facebook.orca")
                             || appInfo.packageName.contains("com.facebook.mlite")
                             ) {
@@ -645,14 +645,6 @@ public abstract class CoreApplication extends MultiDexApplication {
                         mMediaPlayer.prepare();
                         mMediaPlayer.start();
                         vibrator.vibrate(pattern, 0);
-                        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                            @Override
-                            public void onCompletion(MediaPlayer player) {
-                                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 100, 0);
-                                player.release();
-                                player.stop();
-                            }
-                        });
                     }
                 }
             }
@@ -871,7 +863,6 @@ public abstract class CoreApplication extends MultiDexApplication {
             telephonyEndCall = telephonyClass.getMethod("endCall");
             telephonyEndCall.invoke(telephonyObject);
             Log.d("Testting ", "Testting22222");
-
         } catch (Exception e) {
             Tracer.d("Decline call exception.." + e.toString());
             e.printStackTrace();
