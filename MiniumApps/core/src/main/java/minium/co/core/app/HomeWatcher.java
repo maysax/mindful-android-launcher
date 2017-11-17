@@ -17,6 +17,7 @@ public class HomeWatcher {
     private IntentFilter mFilter;
     private OnHomePressedListener mListener;
     private InnerRecevier mRecevier;
+    private String state="";
 
     public HomeWatcher(Context context) {
         mContext = context;
@@ -54,11 +55,12 @@ public class HomeWatcher {
                 if (reason != null) {
                     Log.e(TAG, "action:" + action + ",reason:" + reason);
                     if (mListener != null) {
-                        if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                        if (!state.equalsIgnoreCase(SYSTEM_DIALOG_REASON_RECENT_APPS) && reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                             mListener.onHomePressed();
                         } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
                             mListener.onHomeLongPressed();
                         }
+                        state = reason;
                     }
                 }
             }
