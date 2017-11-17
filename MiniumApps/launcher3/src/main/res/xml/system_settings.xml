@@ -19,9 +19,9 @@
         <intent android:action="android.settings.ACTION_PRINT_SETTINGS" />
     </Preference>
 
-    <Preference android:title="@string/pref_developer_option">
-        <intent android:action="android.settings.APPLICATION_DEVELOPMENT_SETTINGS" />
-    </Preference>
+    <!--<Preference android:title="@string/pref_developer_option">-->
+        <!--<intent android:action="android.settings.APPLICATION_DEVELOPMENT_SETTINGS" />-->
+    <!--</Preference>-->
 
     <Preference android:title="@string/pref_about_phone">
         <intent android:action="android.settings.DEVICE_INFO_SETTINGS" />
