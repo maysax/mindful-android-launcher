@@ -69,9 +69,9 @@ import com.github.javiersantos.appupdater.enums.Display;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_KeyBoardNotification, icon_AllowNotificationFacebook,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp;
+    private ImageView icon_launcher, icon_KeyBoardNotification, icon_AllowNotificationFacebook,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp,icon_AppNotifications;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version, ln_Feedback,ln_Faq, ln_changeDefaultApp;
+    private LinearLayout ln_launcher, ln_version, ln_Feedback,ln_Faq, ln_changeDefaultApp,ln_AppListNotifications;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
     AppUpdaterUtils appUpdaterUtils;
@@ -113,6 +113,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_KeyBoardNotification = findViewById(R.id.icon_KeyBoardNotification);
         icon_Feedback = findViewById(R.id.icon_Feedback);
         icon_Faq = findViewById(R.id.icon_Faq);
+        icon_AppNotifications = findViewById(R.id.icon_AppNotifications);
         icon_AllowNotificationFacebook = findViewById(R.id.icon_AllowNotificationFacebook);
         txt_version = findViewById(R.id.txt_version);
         if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
@@ -126,6 +127,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
         ln_Feedback = findViewById(R.id.ln_Feedback);
+        ln_AppListNotifications = findViewById(R.id.ln_notifications);
         ln_Faq = findViewById(R.id.ln_Faq);
         icon_hideNotification = findViewById(R.id.icon_hideNotification);
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
@@ -138,12 +140,13 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_hideNotification.setImageDrawable(new IconDrawable(context, "fa-flag")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
-                .colorRes(R.color.text_primary)
-                .sizeDp(18));
         icon_changeDefaultApp.setImageDrawable(new IconDrawable(context, "fa-link")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
+        icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
+                .colorRes(R.color.text_primary)
+                .sizeDp(18));
+        icon_AppNotifications.setImageDrawable(new IconDrawable(context,"fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         icon_KeyBoardNotification.setImageDrawable(new IconDrawable(context, "fa-keyboard-o")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -200,7 +203,14 @@ public class SiempoSettingsActivity extends CoreActivity {
                 startActivity(i);
             }
         });
-
+        ln_AppListNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SiempoSettingsActivity.this,AppListNotification.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+            }
+        });
 
         ln_version.setOnClickListener(new View.OnClickListener() {
             @Override

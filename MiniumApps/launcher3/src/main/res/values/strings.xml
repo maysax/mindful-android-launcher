@@ -22,13 +22,15 @@
     <string name="title.email">Email</string>
     <string name="title.feedback">Feedback</string>
     <string name="title.faq">FAQ</string>
+    <string name="title.appNotifications">Notification manager</string>
+    <string name="title.managenotifications">Manage Notifications</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
     <string name="title.version">Version: %1$s</string>
     <string name="title.defaultapp">Assign app defaults</string>
-    <string name="title.lockScreenNotifications">Hide Notifications On Lock Screen </string>
-    <string name="title.allowNotification">Notification for Messenger</string>
+    <string name="title.lockScreenNotifications">Hide notifications on lock screen </string>
+    <string name="title.allowNotification">Notification for messenger</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
@@ -213,4 +215,5 @@
     <string name="default_apps">Default Apps</string>
     <string name="clear_all">Clear All</string>
     <string name="siempo_note">Siempo Note</string>
+    <string name="title_activity_app_list_notification">AppListNotification</string>
 </resources>

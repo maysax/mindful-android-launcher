@@ -60,4 +60,8 @@
         <item name="android:topDark">@color/transparent</item>
     </style>
 
+    <style name="SiempoAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="SiempoAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>

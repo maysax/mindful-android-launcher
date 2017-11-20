@@ -115,7 +115,7 @@ public class AppDrawerActivity extends CoreActivity {
         btnListOrGrid.setVisibility(View.VISIBLE);
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
         activity_grid_view.setLayoutManager(mLayoutManager);
-        mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this, arrayList, false);
+        mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this, arrayList, false,false);
         activity_grid_view.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         prefs.isGrid().put(false);
@@ -133,7 +133,7 @@ public class AppDrawerActivity extends CoreActivity {
         btnListOrGrid.setVisibility(View.VISIBLE);
         mLayoutManager = new GridLayoutManager(getApplicationContext(), 3);
         activity_grid_view.setLayoutManager(mLayoutManager);
-        mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this, arrayList, true);
+        mAdapter = new InstalledAppListAdapter(AppDrawerActivity.this, arrayList, true, false);
         activity_grid_view.setAdapter(mAdapter);
         prefs.isGrid().put(true);
     }
