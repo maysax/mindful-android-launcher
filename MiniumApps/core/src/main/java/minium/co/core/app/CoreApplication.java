@@ -537,6 +537,7 @@ public abstract class CoreApplication extends MultiDexApplication {
 //                     || appInfo.packageName.contains("com.facebook.katana")
                     if (appInfo.packageName.equalsIgnoreCase(defSMSApp)
                             || appInfo.packageName.contains("com.google.android.calendar")
+                            || appInfo.packageName.contains("com.whatsapp")
                             || appInfo.packageName.contains("com.facebook.orca")
                             || appInfo.packageName.contains("com.facebook.mlite")
                             ) {
