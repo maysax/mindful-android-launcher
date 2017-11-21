@@ -557,7 +557,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setPackageName(strPackageName);
                     notificationSms.set_date(date);
                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                    if (data != null && !data.equalsIgnoreCase("")) {
+                        notificationSms.set_message(data);
+                    } else {
+                        notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                    }
                     notificationSms.set_contact_title(strTitle);
                     smsDao.update(notificationSms);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
@@ -599,7 +603,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     long id = smsDao.insert(notificationSms);
                     notificationSms.setId(id);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-//                    cancelNotification(statusBarNotification.getKey());
+                    cancelNotification(statusBarNotification.getKey());
                 } else {
                     notificationSms.setPackageName(strPackageName);
                     notificationSms.set_date(date);
@@ -608,7 +612,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_contact_title(strConversationTitle);
                     smsDao.update(notificationSms);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-//                    cancelNotification(statusBarNotification.getKey());
+                    cancelNotification(statusBarNotification.getKey());
                 }
             } else {
                 if (statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")) {
@@ -632,7 +636,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         long id = smsDao.insert(notificationSms);
                         notificationSms.setId(id);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-//                        cancelNotification(statusBarNotification.getKey());
+                        cancelNotification(statusBarNotification.getKey());
                     } else {
                         notificationSms.setPackageName(strPackageName);
                         notificationSms.set_date(date);
@@ -641,7 +645,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.set_contact_title(strTitle);
                         smsDao.update(notificationSms);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-//                        cancelNotification(statusBarNotification.getKey());
+                        cancelNotification(statusBarNotification.getKey());
                     }
                 }
             }
