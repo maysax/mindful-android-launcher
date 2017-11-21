@@ -37,127 +37,15 @@
                 android:visibility="visible"
                 tools:ignore="DuplicateIncludedIds,UnusedIds" />
 
-            <ListView
-                android:id="@+id/listView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/btnListOrGrid"
-                android:divider="@color/transparent"
-                android:scrollbars="none"
-                android:visibility="gone"
-                tools:context="co.siempo.phone.old.OldMenuFragment" />
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/activity_grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/view"
                 android:layout_marginBottom="2dp"
                 android:layout_below="@+id/btnListOrGrid"
                 android:scrollbars="vertical" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_above="@+id/lin"
-                android:layout_marginLeft="@dimen/activity_vertical_margin"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
-                android:background="@color/circle_color_default_gray"
-                tools:ignore="PxUsage" />
 
-            <LinearLayout
-                android:layout_marginTop="2dp"
-                android:id="@+id/lin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:visibility="visible"
-                    android:id="@+id/relMenuList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:tools="http://schemas.android.com/tools"
-                        android:id="@+id/linearList"
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:orientation="horizontal"
-                        tools:ignore="UseCompoundDrawables,UselessParent">
-
-                        <ImageView
-                            android:id="@+id/icon"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="18dp"
-                            android:contentDescription="@null"
-                            android:padding="6dp" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginStart="18dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/text"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
-                                android:textSize="14sp"
-                                android:text="@string/title.settings" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:visibility="gone"
-                    android:id="@+id/relMenuGrid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-
-                        android:orientation="vertical"
-                        android:padding="@dimen/dp_10"
-                        tools:ignore="UseCompoundDrawables,UselessParent">
-
-                        <ImageView
-                            android:id="@+id/iconGrid"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_gravity="center_horizontal"
-                            android:contentDescription="@null"
-                            android:padding="6dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif-medium"
-                                android:gravity="center"
-                                android:textSize="14sp"
-                                android:text="@string/title.settings" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </RelativeLayout>
-
-            </LinearLayout>
         </RelativeLayout>
 
 

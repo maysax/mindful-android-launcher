@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +47,7 @@ import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.kiss.IconsHandler;
 import co.siempo.phone.old.PreferenceListAdapter;
+import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.BuildConfig;
@@ -150,7 +152,11 @@ public class Launcher3App extends CoreApplication {
             if (numStarted == 0) {
                 // app went to foreground
                 Log.d(TAG, "Siempo is on foreground");
-                checkProfile();
+                KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+                if (!myKM.inKeyguardRestrictedInputMode()) {
+                    checkProfile();
+                }
+
                 launcherPrefs.isAppDefaultOrFront().put(true);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

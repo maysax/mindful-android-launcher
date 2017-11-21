@@ -63,8 +63,6 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     @Pref
     public Launcher3Prefs_ launcher3Prefs_;
 
-    @ViewById
-    ListView listView;
 
     @ViewById
     RecyclerView activity_grid_view;
@@ -78,12 +76,6 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
 
     @ViewById
     CardView cardView;
-
-    @ViewById
-    ImageView iconGrid;
-
-    @ViewById
-    RelativeLayout relMenuList, relMenuGrid;
 
     private MenuAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -128,28 +120,15 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
                 }
             }
         });
-        relMenuList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new ActivityHelper(context).openSettingsApp();
-            }
-        });
-        relMenuGrid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new ActivityHelper(context).openSettingsApp();
-            }
-        });
+
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        if(ViewConfiguration.get(getActivity()).hasPermanentMenuKey()){
-            Log.d("Test1","Test1111111");
-            layoutParams.setMargins(UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8));
+        if (ViewConfiguration.get(getActivity()).hasPermanentMenuKey()) {
+            layoutParams.setMargins(UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8));
             cardView.setLayoutParams(layoutParams);
-        }else{
-            Log.d("Test1","Test2222222");
-            layoutParams.setMargins(UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),8), UIUtils.dpToPx(getActivity(),54));
+        } else {
+            layoutParams.setMargins(UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 54));
             cardView.setLayoutParams(layoutParams);
         }
         if (mListState != null) {
@@ -270,11 +249,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         activity_grid_view.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         prefs.isMenuGrid().put(false);
-        relMenuGrid.setVisibility(View.GONE);
-        relMenuList.setVisibility(View.VISIBLE);
-        icon.setImageDrawable(new IconDrawable(context, "fa-cogs")
-                .colorRes(R.color.text_primary)
-                .sizeDp(18));
+
     }
 
     /**
@@ -298,11 +273,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         mItemTouchHelper.attachToRecyclerView(activity_grid_view);
         activity_grid_view.setAdapter(mAdapter);
         prefs.isMenuGrid().put(true);
-        relMenuGrid.setVisibility(View.VISIBLE);
-        relMenuList.setVisibility(View.GONE);
-        iconGrid.setImageDrawable(new IconDrawable(context, "fa-cogs")
-                .colorRes(R.color.text_primary)
-                .sizeDp(25));
+
     }
 
     @Override
@@ -310,7 +281,8 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         super.setMenuVisibility(menuVisible);
         if (menuVisible) {
             try {
-                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
+                if (getActivity() != null)
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
             } catch (Exception e) {
                 Tracer.e(e, e.getMessage());
             }
@@ -322,7 +294,8 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             try {
-                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
+                if (getActivity() != null)
+                    UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
             } catch (Exception e) {
                 Tracer.e(e, e.getMessage());
             }

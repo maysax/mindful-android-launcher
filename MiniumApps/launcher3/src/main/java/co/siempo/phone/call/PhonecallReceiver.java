@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.Date;
+
 import co.siempo.phone.event.NotificationTrayEvent;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
@@ -27,7 +28,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     private static Date callStartTime;
     private static boolean isIncoming;
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
-    private static final String TAG = "PhonecallReceiver";
+    private static final String TAG = "PhoneCallReceiver";
     int currentProfile = -1;
     AudioManager audioManager;
     NotificationManager notificationManager;
@@ -43,7 +44,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
         sharedPref =
                 context.getSharedPreferences("Launcher3Prefs", 0);
         currentProfile = sharedPref.getInt("getCurrentProfile", 0);
-        isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
+
         if (intent != null) {
             Log.d(TAG, "Phone Call Receiver :: " + intent.getAction() + currentProfile);
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
@@ -72,7 +73,6 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                         state = TelephonyManager.CALL_STATE_RINGING;
                     }
                 }
-                Log.d("Testing State", "" + state);
                 onCallStateChanged(context, state, number);
             }
         }
@@ -89,6 +89,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
     }
 
     private void changeDeviceMode() {
+        isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
         if (isAppDefaultOrFront) {
             int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
             if (currentModeDeviceMode == 0) {
@@ -98,11 +99,11 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
             } else if (currentModeDeviceMode == 2) {
                 CoreApplication.getInstance().changeProfileToSilentMode();
             }
-            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront" + currentModeDeviceMode + " :: isAppDefaultOrFront " + isAppDefaultOrFront);
-        } else {
-            Log.d("Profile Check:::", "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront -1 :: isAppDefaultOrFront " + isAppDefaultOrFront);
+            Log.d(TAG, "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront" + currentModeDeviceMode + " :: isAppDefaultOrFront " + isAppDefaultOrFront);
+        } /*else {
+            Log.d(TAG, "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront -1 :: isAppDefaultOrFront " + isAppDefaultOrFront);
             CoreApplication.getInstance().changeProfileToNormalMode();
-        }
+        }*/
 
     }
 
@@ -144,9 +145,12 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 CoreApplication.getInstance().setCallisRunning(true);
                 callStartTime = new Date();
                 savedNumber = number;
-                if (currentProfile == 0 && !isCallRunning) {
-                    CoreApplication.getInstance().playAudio();
-                    isCallRunning = true;
+                isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
+                if (isAppDefaultOrFront) {
+                    if (currentProfile == 0 && !isCallRunning) {
+                        CoreApplication.getInstance().playAudio();
+                        isCallRunning = true;
+                    }
                 }
                 onIncomingCallStarted(context, number, callStartTime);
                 break;
@@ -164,7 +168,6 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallStarted(context, number, callStartTime);
                 } else {
-
                     isIncoming = true;
                     callStartTime = new Date();
                     CoreApplication.getInstance().setCallisRunning(true);
@@ -180,11 +183,9 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     onMissedCall(context, savedNumber, callStartTime);
                     changeDeviceMode();
                 } else if (isIncoming) {
-
                     CoreApplication.getInstance().setCallisRunning(false);
                     onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
                 } else {
-
                     CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                     changeDeviceMode();
