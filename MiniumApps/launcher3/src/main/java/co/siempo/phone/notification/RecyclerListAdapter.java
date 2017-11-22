@@ -144,6 +144,8 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                             .load(Uri.parse(notification.getNotificationContactModel().getImage()))
                             .placeholder(R.drawable.ic_person_black_24dp)
                             .into(holder.imgUserImage);
+                }else{
+                    holder.imgUserImage.setBackground(null);
                 }
 
             } catch (Exception e) {
