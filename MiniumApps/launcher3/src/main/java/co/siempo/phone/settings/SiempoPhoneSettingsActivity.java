@@ -217,10 +217,11 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
-            if(view != null) {
+            if (view != null) {
                 ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
@@ -256,10 +257,11 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
-            if(view != null) {
+            if (view != null) {
                 ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
@@ -295,10 +297,11 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
-            if(view != null) {
+            if (view != null) {
                 ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
@@ -347,10 +350,11 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
-            if(view != null) {
+            if (view != null) {
                 ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
@@ -413,12 +417,22 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                 }
             }
 
+            Preference key_user_setting_preference = findPreference("key_user_setting");
+            Intent intent_user_setting = new Intent(Settings.ACTION_NFC_PAYMENT_SETTINGS);
+            key_user_setting_preference.setIntent(intent_user_setting);
+            if (intent_user_setting.resolveActivity(packageManager) == null) {
+                PreferenceScreen preferenceScreen = getPreferenceScreen();
+                if (preferenceScreen != null) {
+                    preferenceScreen.removePreference(key_user_setting_preference);
+                }
+            }
+
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
-            if(view != null) {
+            if (view != null) {
                 ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
@@ -473,10 +487,11 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
-            if(view != null) {
+            if (view != null) {
                 ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
@@ -519,10 +534,11 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
-            if(view != null) {
+            if (view != null) {
                 ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }

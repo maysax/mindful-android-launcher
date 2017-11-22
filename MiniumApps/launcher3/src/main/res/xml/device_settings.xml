@@ -35,7 +35,8 @@
         android:key="@string/key_memory"
         android:title="@string/pref_memory"></Preference>
 
-    <Preference android:title="@string/pref_users">
+    <Preference android:title="@string/pref_users"
+        android:key="@string/key_user_setting">
         <intent android:action="android.settings.USER_SETTINGS" />
     </Preference>
 
