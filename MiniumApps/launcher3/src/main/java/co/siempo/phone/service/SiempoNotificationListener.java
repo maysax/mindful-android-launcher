@@ -92,19 +92,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onListenerDisconnected() {
         super.onListenerDisconnected();
         Tracer.d("Notification Disconnected");
-        toggleNotificationListenerService();
-
     }
 
-    private void toggleNotificationListenerService() {
-        PackageManager pm = getPackageManager();
-        pm.setComponentEnabledSetting(new ComponentName(this, SiempoNotificationListener.class),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
-        pm.setComponentEnabledSetting(new ComponentName(this, SiempoNotificationListener.class),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-
-    }
 
     @Override
     public void onNotificationChannelModified(String pkg, UserHandle user, NotificationChannel channel, int modificationType) {
