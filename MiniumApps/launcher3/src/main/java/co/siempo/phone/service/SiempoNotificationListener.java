@@ -171,13 +171,20 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
             }
         }
-        Tracer.d("NotificationPosted : " + " Package: " + notification.getPackageName()
+        Log.d("NotificationPosted", " Package: " + notification.getPackageName()
                 + "\n" + " Id: " + notification.getId()
                 + "\n" + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
 //                + "\n" + " Details: " + notification.getNotification().toString()
                 + "\n" + " Category: " + notification.getNotification().category
                 + "\n" + " Ticker: " + notification.getNotification().tickerText
                 + "\n" + " Bundle Data:" + finalString);
+//        Tracer.d("NotificationPosted : " + " Package: " + notification.getPackageName()
+//                + "\n" + " Id: " + notification.getId()
+//                + "\n" + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
+////                + "\n" + " Details: " + notification.getNotification().toString()
+//                + "\n" + " Category: " + notification.getNotification().category
+//                + "\n" + " Ticker: " + notification.getNotification().tickerText
+//                + "\n" + " Bundle Data:" + finalString);
     }
 
 
@@ -240,9 +247,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
 
 
-        if (statusBarNotification.getNotification().extras.getString(Notification.EXTRA_BIG_TEXT) != null
-                && !statusBarNotification.getNotification().extras.getString(Notification.EXTRA_BIG_TEXT).equalsIgnoreCase("")) {
-            CharSequence charBigText = (CharSequence) statusBarNotification.getNotification().extras.getString(Notification.EXTRA_BIG_TEXT);
+        if (statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT) != null
+                && !statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT).toString().equalsIgnoreCase("")) {
+            CharSequence charBigText = (CharSequence) statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT);
             strBigText = charBigText.toString();
         }
 
@@ -311,19 +318,15 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     } else {
                                         return;
                                     }
-
-                                    // return;
                                 }
                                 if (extras.getParcelable(NotificationCompat.EXTRA_LARGE_ICON) != null) {
                                     bitmap = extras.getParcelable(NotificationCompat.EXTRA_LARGE_ICON);
                                     largeIcon = UIUtils.convertBitmapToByte(bitmap);
                                 }
-                                //BitmapUtils.saveBitmapToInternalStorage(title, (Bitmap) extras.getParcelable(NotificationCompat.EXTRA_LARGE_ICON), this);
                             } else {
                                 return;
                             }
                         }
-
 
                         if (statusBarNotification.getNotification().category == null
                                 || !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
@@ -348,14 +351,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                                 }
                             } else {
-//                                if (!text.equalsIgnoreCase("Incoming voice call") && !text.equalsIgnoreCase("Incoming video call")) {
                                 if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
+                                    // if (!Constants.WHATSAPP.equals(title.trim())) {
                                     notificationSms.set_date(date);
                                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                     notificationSms.set_message(text + "\n" + notificationSms.get_message());
                                     notificationSms.setUser_icon(largeIcon);
                                     smsDao.updateInTx(notificationSms);
                                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                                    // }
+
                                 }
                             }
                         }
@@ -394,7 +399,12 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                         notificationSms.setUser_icon(null);
                                         notificationSms.set_contact_title("Missed call");
                                         notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                        notificationSms.set_message(text);
+//                                        notificationSms.set_message(text);
+                                        if (!data.equalsIgnoreCase("")) {
+                                            notificationSms.set_message(data);
+                                        } else {
+                                            notificationSms.set_message(text + "\n" + notificationSms.get_message());
+                                        }
                                         smsDao.updateInTx(notificationSms);
                                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                                     }
