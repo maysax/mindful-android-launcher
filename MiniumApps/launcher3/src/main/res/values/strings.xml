@@ -165,6 +165,7 @@
     <string name="pref_tap_pay">Tap and Pay</string>
     <string name="key_battery">key_battery</string>
     <string name="key_tap_pay">key_tap_pay</string>
+    <string name="key_user_setting">key_user_setting</string>
     <string name="key_memory">key_process_usage</string>
     <string name="personal_settings_key">key_personal</string>
     <string name="personal_settings_summary">Personal Settings</string>
