@@ -355,7 +355,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     // if (!Constants.WHATSAPP.equals(title.trim())) {
                                     notificationSms.set_date(date);
                                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                    notificationSms.set_message(text + "\n" + notificationSms.get_message());
+                                    notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
                                     notificationSms.setUser_icon(largeIcon);
                                     smsDao.updateInTx(notificationSms);
                                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
@@ -589,43 +589,15 @@ public class SiempoNotificationListener extends NotificationListenerService {
         if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES)) {
             DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
             TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-
-
-            if (statusBarNotification.getNotification().category != null
-                    && !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
-                TableNotificationSms notificationSms
-                        = DBUtility.getNotificationDao().queryBuilder()
-                        .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
-                                TableNotificationSmsDao.Properties._contact_title.eq(strConversationTitle),
-                                TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
-                        .unique();
-                if (notificationSms == null) {
-                    notificationSms = new TableNotificationSms();
-                    notificationSms.set_contact_title(strConversationTitle);
-                    notificationSms.set_message(strText);
-                    notificationSms.set_date(date);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.setApp_icon(icon);
-                    notificationSms.setUser_icon(largeIcon);
-                    notificationSms.setNotification_id(statusBarNotification.getId());
-                    long id = smsDao.insert(notificationSms);
-                    notificationSms.setId(id);
-                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                    cancelNotification(statusBarNotification.getKey());
-                } else {
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.set_date(date);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.set_message(strText + "\n" + notificationSms.get_message());
-                    notificationSms.set_contact_title(strConversationTitle);
-                    smsDao.update(notificationSms);
-                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                    cancelNotification(statusBarNotification.getKey());
+            if (!strTitle.trim().endsWith("new messages")) {
+                String groupname = "";
+                if (strTitle.contains(":")) {
+                    String[] separated = strTitle.split(":");
+                    strTitle = separated[0];
+                    strText = separated[1] + ": " + strText;
                 }
-            } else {
-                if (statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")) {
+                if (statusBarNotification.getNotification().category != null
+                        && !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
                     TableNotificationSms notificationSms
                             = DBUtility.getNotificationDao().queryBuilder()
                             .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
@@ -646,16 +618,50 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         long id = smsDao.insert(notificationSms);
                         notificationSms.setId(id);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                        cancelNotification(statusBarNotification.getKey());
+                        //cancelNotification(statusBarNotification.getKey());
                     } else {
                         notificationSms.setPackageName(strPackageName);
                         notificationSms.set_date(date);
                         notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                        notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                        notificationSms.set_message(strText);
                         notificationSms.set_contact_title(strTitle);
                         smsDao.update(notificationSms);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                        cancelNotification(statusBarNotification.getKey());
+                        //  cancelNotification(statusBarNotification.getKey());
+                    }
+                } else {
+                    if (statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")) {
+                        TableNotificationSms notificationSms
+                                = DBUtility.getNotificationDao().queryBuilder()
+                                .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
+                                        TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
+                                        TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                                .unique();
+                        if (notificationSms == null) {
+                            notificationSms = new TableNotificationSms();
+                            notificationSms.set_contact_title(strTitle);
+                            notificationSms.set_message(strText);
+                            notificationSms.set_date(date);
+                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                            notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                            notificationSms.setPackageName(strPackageName);
+                            notificationSms.setApp_icon(icon);
+                            notificationSms.setUser_icon(largeIcon);
+                            notificationSms.setNotification_id(statusBarNotification.getId());
+                            long id = smsDao.insert(notificationSms);
+                            notificationSms.setId(id);
+                            EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                            //cancelNotification(statusBarNotification.getKey());
+                        } else {
+                            notificationSms.setPackageName(strPackageName);
+                            notificationSms.set_date(date);
+                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                            notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                            notificationSms.set_contact_title(strTitle);
+                            smsDao.update(notificationSms);
+                            EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                            //cancelNotification(statusBarNotification.getKey());
+                        }
                     }
                 }
             }
