@@ -103,14 +103,12 @@ public class MainFragment extends CoreFragment {
 
     @Override
     public void onStart() {
-        Log.d("hardikkamothi","on Start..");
         CoreApplication.getInstance().isIfScreen = true;
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        Log.d("hardikkamothi","on Stop...");
         CoreApplication.getInstance().isIfScreen = false;
         super.onStop();
     }

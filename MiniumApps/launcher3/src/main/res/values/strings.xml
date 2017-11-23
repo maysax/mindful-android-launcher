@@ -216,4 +216,14 @@
     <string name="clear_all">Clear All</string>
     <string name="siempo_note">Siempo Note</string>
     <string name="title_activity_app_list_notification">AppListNotification</string>
+
+    <string-array name="socialAppList">
+
+        <item>com.facebook.katana</item>
+        <item>com.facebook.lite</item>
+        <item>com.facebook.orca</item>
+        <item>com.facebook.mlite</item>
+        <item>com.whatsapp</item>
+        <item>com.instagram.android</item>
+    </string-array>
 </resources>

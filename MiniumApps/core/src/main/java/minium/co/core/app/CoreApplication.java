@@ -92,6 +92,9 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public boolean isIfScreen = false;
 
+    public String DISABLE_APPLIST="DISABLE_APPLIST";
+    public String HEADER_APPLIST="HEADER_APPLIST";
+
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
     Handler handler;
