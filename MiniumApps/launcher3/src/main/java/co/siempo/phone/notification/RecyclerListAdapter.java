@@ -94,12 +94,12 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         Notification notification = notificationList.get(position);
         if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
             Bitmap bitmap = CoreApplication.getInstance().iconList.get(notification.getPackageName());
-            if(bitmap!=null) {
+            if (bitmap != null) {
                 holder.imgAppIcon.setBackground(null);
                 holder.imgAppIcon.setImageBitmap(bitmap);
             }
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
-            if (notification.getStrTitle().equalsIgnoreCase("")) {
+            if (notification.getStrTitle() == null || notification.getStrTitle().equalsIgnoreCase("")) {
                 holder.txtUserName.setText("");
                 holder.txtUserName.setVisibility(View.GONE);
                 holder.txtMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -120,7 +120,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                 holder.imgUserImage.setVisibility(View.VISIBLE);
                 if (notification.getUser_icon() != null) {
                     holder.imgUserImage.setImageBitmap(UIUtils.convertBytetoBitmap(notification.getUser_icon()));
-                }else{
+                } else {
                     holder.imgUserImage.setBackground(null);
                 }
             }
