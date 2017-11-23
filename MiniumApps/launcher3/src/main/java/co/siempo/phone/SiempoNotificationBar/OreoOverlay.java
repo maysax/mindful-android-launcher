@@ -885,58 +885,46 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                if(notificationList.size() > position) {
-                if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
-                    hide();
-                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                    deleteItem.executeDelete(notificationList.get(position));
-                    loadData();
-                } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
-                    if (
-                            ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
-                                    && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                if (notificationList.size() > position) {
+                    if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
                         hide();
-                    }
-                    // Following code will delete all notification of same user and same types.
-                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                    deleteItem.executeDelete(notificationList.get(position));
-                    loadData();
-                } else {
-                    String strPackageName = notificationList.get(position).getPackageName();
-                    String strTitle = notificationList.get(position).getStrTitle();
-                    List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
-                            .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
-                    DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
-                    adapter.notifyItemRemoved(position);
-                    notificationList.remove(position);
-                    hide();
-                    if (DBUtility.getTableNotificationSmsDao().count() >= 1) {
-                        imgNotification.setVisibility(View.VISIBLE);
-                    } else {
-                        imgNotification.setVisibility(View.GONE);
-                    }
-                    if (strPackageName.equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
-                        if (getPhoneNumber(strTitle, context).equalsIgnoreCase("")) {
-                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        deleteItem.executeDelete(notificationList.get(position));
+                        loadData();
+                    } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
+                        if (
+                                ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                                        && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+
                         } else {
-                            Uri uri = Uri.parse("smsto:" + strTitle);
-                            Intent i = new Intent(Intent.ACTION_SENDTO, uri);
-                            i.putExtra("sms_body", "");
-                            i.setPackage("com.whatsapp");
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                            hide();
                         }
+                        // Following code will delete all notification of same user and same types.
+                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        deleteItem.executeDelete(notificationList.get(position));
+                        loadData();
                     } else {
+                        String strPackageName = notificationList.get(position).getPackageName();
+                        String strTitle = notificationList.get(position).getStrTitle();
+                        List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
+                                .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
+                        DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
+                        adapter.notifyItemRemoved(position);
+                        notificationList.remove(position);
+                        hide();
+                        if (DBUtility.getTableNotificationSmsDao().count() >= 1) {
+                            imgNotification.setVisibility(View.VISIBLE);
+                        } else {
+                            imgNotification.setVisibility(View.GONE);
+                        }
                         new ActivityHelper(context).openAppWithPackageName(strPackageName);
-                    }
+
                     }
                 }
 
