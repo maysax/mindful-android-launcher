@@ -262,7 +262,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
 
         //whatsapp used in Future Sprint.
-        if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
+        if (droidPrefs.isWhatsAppAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
             DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
             TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
             try {
@@ -453,33 +453,33 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
 
         // Facebook
-//        try {
-//            if (droidPrefs.isFacebookAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE)) {
-//                DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-//                TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-//                TableNotificationSms notificationSms = new TableNotificationSms();
-//                notificationSms.set_contact_title(strTitle);
-//                notificationSms.set_message(strText);
-//                notificationSms.set_date(date);
-//                notificationSms.setNotification_date(statusBarNotification.getPostTime());
-//                notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-//                notificationSms.setPackageName(strPackageName);
-//                notificationSms.setApp_icon(icon);
-//                notificationSms.setUser_icon(largeIcon);
-//                notificationSms.setNotification_id(statusBarNotification.getId());
-//                long id = smsDao.insert(notificationSms);
-//                notificationSms.setId(id);
-//                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-//                //cancelNotification(statusBarNotification.getKey());
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            if (droidPrefs.isFacebookAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE)) {
+                DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+                TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+                TableNotificationSms notificationSms = new TableNotificationSms();
+                notificationSms.set_contact_title(strTitle);
+                notificationSms.set_message(strText);
+                notificationSms.set_date(date);
+                notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                notificationSms.setPackageName(strPackageName);
+                notificationSms.setApp_icon(icon);
+                notificationSms.setUser_icon(largeIcon);
+                notificationSms.setNotification_id(statusBarNotification.getId());
+                long id = smsDao.insert(notificationSms);
+                notificationSms.setId(id);
+                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                //cancelNotification(statusBarNotification.getKey());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         // Facebook Messenger
         try {
-            if (droidPrefs.isFacebookAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_MESSENGER_PACKAGE)) {
+            if (droidPrefs.isFacebooKMessangerAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_MESSENGER_PACKAGE)) {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
                 TableNotificationSms notificationSms
@@ -526,7 +526,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
         // Facebook Lite Messenger
         try {
-            if (droidPrefs.isFacebookAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_LITE_PACKAGE)) {
+            if (droidPrefs.isFacebooKMessangerLiteAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_LITE_PACKAGE)) {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
                 TableNotificationSms notificationSms
@@ -575,7 +575,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         }
 
         // HangOut Messenger used in Future Sprint.
-        if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES)) {
+        if (droidPrefs.isHangOutAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES)) {
             DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
             TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
             if (!strTitle.trim().endsWith("new messages")) {

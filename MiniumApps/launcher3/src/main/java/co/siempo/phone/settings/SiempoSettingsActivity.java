@@ -1,6 +1,5 @@
 package co.siempo.phone.settings;
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +10,6 @@ import android.net.Uri;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,28 +19,23 @@ import android.widget.Toast;
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
+import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.main.MainListItemLoader;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.service.ApiClient_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
@@ -52,8 +45,6 @@ import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
-
-import com.github.javiersantos.appupdater.enums.Display;
 
 
 /**
@@ -69,9 +60,9 @@ import com.github.javiersantos.appupdater.enums.Display;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_KeyBoardNotification, icon_AllowNotificationFacebook,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp;
+    private ImageView icon_launcher, icon_KeyBoardNotification, icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp, icon_AppNotifications;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version, ln_Feedback,ln_Faq, ln_changeDefaultApp;
+    private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_Faq, ln_changeDefaultApp, ln_AppListNotifications;
     private String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
     AppUpdaterUtils appUpdaterUtils;
@@ -113,7 +104,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_KeyBoardNotification = findViewById(R.id.icon_KeyBoardNotification);
         icon_Feedback = findViewById(R.id.icon_Feedback);
         icon_Faq = findViewById(R.id.icon_Faq);
-        icon_AllowNotificationFacebook = findViewById(R.id.icon_AllowNotificationFacebook);
+        icon_AppNotifications = findViewById(R.id.icon_AppNotifications);
         txt_version = findViewById(R.id.txt_version);
         if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
             txt_version.setText("Version : " + "ALPHA-" + BuildConfig.VERSION_NAME);
@@ -126,6 +117,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
         ln_Feedback = findViewById(R.id.ln_Feedback);
+        ln_AppListNotifications = findViewById(R.id.ln_notifications);
         ln_Faq = findViewById(R.id.ln_Faq);
         icon_hideNotification = findViewById(R.id.icon_hideNotification);
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
@@ -138,18 +130,17 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_hideNotification.setImageDrawable(new IconDrawable(context, "fa-flag")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
-                .colorRes(R.color.text_primary)
-                .sizeDp(18));
         icon_changeDefaultApp.setImageDrawable(new IconDrawable(context, "fa-link")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
+        icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
+                .colorRes(R.color.text_primary)
+                .sizeDp(18));
+        icon_AppNotifications.setImageDrawable(new IconDrawable(context, "fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         icon_KeyBoardNotification.setImageDrawable(new IconDrawable(context, "fa-keyboard-o")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        icon_AllowNotificationFacebook.setImageDrawable(new IconDrawable(context, "fa-facebook-official")
-                .colorRes(R.color.text_primary)
-                .sizeDp(18));
+
         icon_Feedback.setImageDrawable(new IconDrawable(context, "fa-question-circle")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -163,7 +154,6 @@ public class SiempoSettingsActivity extends CoreActivity {
             switch_notification.setChecked(false);
         }
         switch_KeyBoardnotification.setChecked(isKeyboardDisplay);
-        switch_AllowNotificationFacebook.setChecked(prefs.isFacebookAllowed().get());
 
     }
 
@@ -200,7 +190,16 @@ public class SiempoSettingsActivity extends CoreActivity {
                 startActivity(i);
             }
         });
-
+        ln_AppListNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    AppListNotification_.intent(context).start();
+                } catch (Exception e) {
+                    Tracer.e(e, e.getMessage());
+                }
+            }
+        });
 
         ln_version.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,13 +257,6 @@ public class SiempoSettingsActivity extends CoreActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 launcherPrefs.isHidenotificationOnLockScreen().put(isChecked);
-            }
-        });
-
-        switch_AllowNotificationFacebook.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                prefs.isFacebookAllowed().put(isChecked);
             }
         });
 
