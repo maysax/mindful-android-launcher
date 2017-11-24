@@ -1,24 +1,22 @@
 package co.siempo.phone.service;
 
-import android.app.ActivityManager;
 import android.app.KeyguardManager;
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.UserHandle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.androidannotations.annotations.Bean;
@@ -35,7 +33,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.call.PhonecallReceiver;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
@@ -81,6 +78,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
+    Context context;
 
     @Override
     public void onListenerConnected() {
@@ -103,6 +101,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
+        context = this;
         printLog(notification);
         if (launcherPrefs.isAppDefaultOrFront().get()) {
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
@@ -241,25 +240,23 @@ public class SiempoNotificationListener extends NotificationListenerService {
             CharSequence charBigText = (CharSequence) statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT);
             strBigText = charBigText.toString();
         }
-
-        if (statusBarNotification.getNotification().extras.getInt(Notification.EXTRA_SMALL_ICON) != 0) {
-            icon = statusBarNotification.getNotification().extras.getInt(Notification.EXTRA_SMALL_ICON);
+        try {
+            if (statusBarNotification.getNotification().extras.getInt(Notification.EXTRA_SMALL_ICON) != 0) {
+                icon = statusBarNotification.getNotification().extras.getInt(Notification.EXTRA_SMALL_ICON);
+            }
+        } catch (Exception e) {
+            Tracer.d(e.getMessage());
         }
 
-        if (statusBarNotification.getNotification().extras.getParcelable(Notification.EXTRA_LARGE_ICON) != null) {
-            Bitmap iconUser = statusBarNotification.getNotification().extras.getParcelable(Notification.EXTRA_LARGE_ICON);
-            largeIcon = UIUtils.convertBitmapToByte(iconUser);
+        try {
+            if (statusBarNotification.getNotification().extras.getParcelable(Notification.EXTRA_LARGE_ICON) != null) {
+                Bitmap iconUser = statusBarNotification.getNotification().extras.getParcelable(Notification.EXTRA_LARGE_ICON);
+                largeIcon = UIUtils.convertBitmapToByte(iconUser);
+            }
+        } catch (Exception e) {
+            Tracer.d(e.getMessage());
         }
 
-        if (statusBarNotification.getNotification().extras.getParcelable(Notification.EXTRA_LARGE_ICON) != null) {
-            Bitmap iconUser = statusBarNotification.getNotification().extras.getParcelable(Notification.EXTRA_LARGE_ICON);
-            largeIcon = UIUtils.convertBitmapToByte(iconUser);
-        }
-
-        if (statusBarNotification.getNotification().extras.getParcelable(Notification.EXTRA_LARGE_ICON) != null) {
-            Bitmap iconUser = statusBarNotification.getNotification().extras.getParcelable(Notification.EXTRA_LARGE_ICON);
-            largeIcon = UIUtils.convertBitmapToByte(iconUser);
-        }
 
         //whatsapp used in Future Sprint.
         if (droidPrefs.isWhatsAppAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
@@ -308,10 +305,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                         return;
                                     }
                                 }
-                                if (extras.getParcelable(NotificationCompat.EXTRA_LARGE_ICON) != null) {
-                                    bitmap = extras.getParcelable(NotificationCompat.EXTRA_LARGE_ICON);
-                                    largeIcon = UIUtils.convertBitmapToByte(bitmap);
-                                }
                             } else {
                                 return;
                             }
@@ -345,7 +338,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     notificationSms.set_date(date);
                                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                     notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
-                                    notificationSms.setUser_icon(largeIcon);
+                                    //notificationSms.setUser_icon(largeIcon);
                                     smsDao.updateInTx(notificationSms);
                                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                                     // }
@@ -402,7 +395,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         }
                     }
                 }
-                cancelNotification(statusBarNotification.getKey());
+                //cancelNotification(statusBarNotification.getKey());
             } catch (Exception e) {
             }
 
@@ -612,20 +605,33 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.setPackageName(strPackageName);
                         notificationSms.set_date(date);
                         notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                        notificationSms.set_message(strText);
-                        notificationSms.set_contact_title(strTitle);
-                        smsDao.update(notificationSms);
-                        EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                        if (!notificationSms.get_message().split("\n")[0].equalsIgnoreCase(strText)) {
+                            notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                            notificationSms.set_contact_title(strTitle);
+                            smsDao.update(notificationSms);
+                            EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                        }
                         //  cancelNotification(statusBarNotification.getKey());
                     }
                 } else {
-                    if (statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")) {
+                    if (!strText.toString().equalsIgnoreCase("Incoming voice call")) {
+
+                        if (statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")
+                                && strText.toString().equalsIgnoreCase("Missed call")) {
+                            strText = strTitle;
+                            strTitle = "Missed Call";
+                        } else {
+                            if (strTitle.contains("missed calls")) {
+                                strTitle = "Missed Call";
+                            }
+                        }
                         TableNotificationSms notificationSms
                                 = DBUtility.getNotificationDao().queryBuilder()
                                 .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
                                         TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
                                         TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
                                 .unique();
+
                         if (notificationSms == null) {
                             notificationSms = new TableNotificationSms();
                             notificationSms.set_contact_title(strTitle);
@@ -642,13 +648,18 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                             //cancelNotification(statusBarNotification.getKey());
                         } else {
-                            notificationSms.setPackageName(strPackageName);
+                            //notificationSms.setPackageName(strPackageName);
                             notificationSms.set_date(date);
                             notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                            notificationSms.set_message(strText + "\n" + notificationSms.get_message());
-                            notificationSms.set_contact_title(strTitle);
-                            smsDao.update(notificationSms);
-                            EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                            if (!notificationSms.get_message().split("\n")[0].equalsIgnoreCase(strText)) {
+                                notificationSms.set_message(strText);
+                                notificationSms.set_contact_title(strTitle);
+                            }
+                            if (!statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")
+                                    && !strText.toString().equalsIgnoreCase("Missed call")) {
+                                smsDao.update(notificationSms);
+                                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                            }
                             //cancelNotification(statusBarNotification.getKey());
                         }
                     }
