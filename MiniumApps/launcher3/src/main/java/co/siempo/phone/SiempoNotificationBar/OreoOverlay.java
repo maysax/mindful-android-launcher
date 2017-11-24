@@ -49,6 +49,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.james.status.data.IconStyleData;
@@ -1300,6 +1301,12 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
     private void setUpNotifications(List<TableNotificationSms> items) {
         notificationList.clear();
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "Enable permission from Settings to access Contact details.", Toast.LENGTH_SHORT).show();
+        }
+
         for (int i = 0; i < items.size(); i++) {
             @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(items.get(i).get_date());
@@ -1341,35 +1348,38 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     }
 
     private NotificationContactModel gettingNameAndImageFromPhoneNumber(String number) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+            Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
 
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-        Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
+            String contactName, imageUrl = "";
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+                    imageUrl = cursor
+                            .getString(cursor
+                                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+                    cursor.close();
 
-        String contactName, imageUrl = "";
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                imageUrl = cursor
-                        .getString(cursor
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
-                cursor.close();
-
-            } else {
-                contactName = number;
+                } else {
+                    contactName = number;
+                }
+            } catch (Exception e) {
+                contactName = "";
+                imageUrl = "";
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            contactName = "";
-            imageUrl = "";
-            e.printStackTrace();
+
+
+            NotificationContactModel notificationContactModel = new NotificationContactModel();
+            notificationContactModel.setName(contactName);
+            notificationContactModel.setImage(imageUrl);
+
+            return notificationContactModel;
         }
-
-
-        NotificationContactModel notificationContactModel = new NotificationContactModel();
-        notificationContactModel.setName(contactName);
-        notificationContactModel.setImage(imageUrl);
-
-        return notificationContactModel;
+        return null;
     }
 
     final GestureDetector gesture = new GestureDetector(context,
