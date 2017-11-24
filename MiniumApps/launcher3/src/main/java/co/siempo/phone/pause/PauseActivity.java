@@ -41,7 +41,7 @@ public class PauseActivity extends CoreActivity {
 
     private PauseFragment pauseFragment;
     private PauseActivatedFragment pauseActivatedFragment;
-    private String TAG="PauseActivity";
+    private String TAG = "PauseActivity";
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -109,7 +109,7 @@ public class PauseActivity extends CoreActivity {
         super.onStart();
         Tracer.d("onStart PauseActivity");
         if (tag != null) {
-            if (nfcCheckHandler == null ) nfcCheckHandler = new Handler();
+            if (nfcCheckHandler == null) nfcCheckHandler = new Handler();
             nfcCheckHandler.postDelayed(buildNfcRunnable(tag), 5000);
         }
     }
@@ -121,7 +121,7 @@ public class PauseActivity extends CoreActivity {
 
         if (nfcCheckHandler != null) {
             nfcCheckHandler.removeCallbacks(nfcRunnable);
-            Ndef  ndef = Ndef.get(tag);
+            Ndef ndef = Ndef.get(tag);
             if (ndef != null) {
                 try {
                     ndef.close();
@@ -167,7 +167,7 @@ public class PauseActivity extends CoreActivity {
         return nfcRunnable = new Runnable() {
             @Override
             public void run() {
-                Ndef  ndef = Ndef.get(tag);
+                Ndef ndef = Ndef.get(tag);
                 Tracer.d("Ndef: " + ndef);
                 try {
                     ndef.connect();
@@ -181,7 +181,9 @@ public class PauseActivity extends CoreActivity {
                     nfcCheckHandler.removeCallbacks(this);
                 } finally {
                     try {
-                        ndef.close();
+                        if (ndef != null) {
+                            ndef.close();
+                        }
                     } catch (IOException e) {
                         Tracer.e(e, e.getMessage());
                     }
@@ -234,7 +236,7 @@ public class PauseActivity extends CoreActivity {
     @SuppressWarnings("ConstantConditions")
     @Subscribe
     public void homePressEvent(HomePressEvent event) {
-        Log.d(TAG,"ACTION HOME PRESS");
+        Log.d(TAG, "ACTION HOME PRESS");
         if (event.isVisible()) {
         }
     }
