@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -85,6 +86,8 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     protected void onCreate(Bundle savedInstanceState) {
 //        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         CoreApplication.getInstance().setEditNotOpen(true);
         // Android version >= 18 -> set orientation fullUser
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
