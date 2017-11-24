@@ -614,7 +614,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         //  cancelNotification(statusBarNotification.getKey());
                     }
                 } else {
-                    if (!strText.toString().equalsIgnoreCase("Incoming voice call")) {
+                    if (!strText.toString().equalsIgnoreCase("Incoming voice call")
+                            && !strText.toString().equalsIgnoreCase("Incoming video call")) {
 
                         if (statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")
                                 && strText.toString().equalsIgnoreCase("Missed call")) {
