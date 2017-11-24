@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -332,13 +333,27 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             wifi_preference.setIntent(intent);
             bindPreferenceSummaryToValue(wifi_preference);
 
-            @SuppressWarnings("RedundantCast")
-            Preference data_usage_preference = (Preference) findPreference("data_usage");
-            Intent intent_data_usage = new Intent();
-            intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
-            //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            data_usage_preference.setIntent(intent_data_usage);
-            bindPreferenceSummaryToValue(data_usage_preference);
+
+            try {
+                Preference data_usage_preference = findPreference("data_usage");
+                Intent intent_data_usage = new Intent();
+                intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
+                //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (!isAvailable(getActivity(), intent)) {
+                    PreferenceScreen preferenceScreen = getPreferenceScreen();
+                    if (preferenceScreen != null) {
+                        preferenceScreen.removePreference(data_usage_preference);
+                    }
+                } else {
+                    data_usage_preference.setIntent(intent_data_usage);
+                    bindPreferenceSummaryToValue(data_usage_preference);
+                }
+            } catch (
+                    Exception e)
+
+            {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -360,6 +375,14 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return view;
         }
+    }
+
+    public static boolean isAvailable(Context ctx, Intent intent) {
+        final PackageManager mgr = ctx.getPackageManager();
+        List<ResolveInfo> list =
+                mgr.queryIntentActivities(intent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
     }
 
     /**
