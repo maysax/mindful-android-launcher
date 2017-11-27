@@ -15,6 +15,7 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
@@ -95,6 +96,7 @@ class InstalledAppListAdapter extends RecyclerView.Adapter<InstalledAppListAdapt
                     Tracer.i("Opening package: " + applicationInfo.packageName);
                     new ActivityHelper(context).openAppWithPackageName(applicationInfo.packageName);
                     EventBus.getDefault().post(new AppOpenEvent(applicationInfo.packageName));
+                    FirebaseHelper.getIntance().logAppUsage(applicationInfo.name,0);
                 } catch (Exception e) {
                     Tracer.e(e, e.getMessage());
                 }

@@ -45,6 +45,7 @@ import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.GreenDaoOpenHelper;
 import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.kiss.IconsHandler;
 import co.siempo.phone.old.PreferenceListAdapter;
 import co.siempo.phone.service.SiempoNotificationListener;
@@ -141,7 +142,6 @@ public class Launcher3App extends CoreApplication {
 
         private int numStarted = 0;
 
-
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
@@ -188,6 +188,7 @@ public class Launcher3App extends CoreApplication {
         @Override
         public void onActivityStopped(Activity activity) {
             numStarted--;
+
             if (numStarted == 0) {
                 Log.d(TAG, "Siempo is on background");
                 // app went to background
