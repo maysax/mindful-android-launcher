@@ -23,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -48,6 +49,9 @@ public class CountHeaderViewHolder extends RecyclerView.ViewHolder {
     @Bind({R.id.switch_headerNotification})
     Switch switch_headerNotification;
 
+    @Bind({R.id.headerList})
+    LinearLayout headerList;
+
     public CountHeaderViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -69,6 +73,14 @@ public class CountHeaderViewHolder extends RecyclerView.ViewHolder {
         switch_headerNotification.setChecked(ischecked);
     }
 
+    public void showHeaderView(){
+        headerList.setVisibility(View.VISIBLE);
+    }
+
+
+    public void hideHeaderView(){
+        headerList.setVisibility(View.GONE);
+    }
     public void changeNotification(HeaderAppList headerAppList, boolean ischecked, ArrayList<String> disableHeaderApps, Context context){
         SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         if(ischecked && disableHeaderApps.contains(headerAppList.name)){
@@ -81,6 +93,8 @@ public class CountHeaderViewHolder extends RecyclerView.ViewHolder {
         String disableList = new Gson().toJson(disableHeaderApps);
         launcherPrefs.edit().putString(CoreApplication.getInstance().HEADER_APPLIST,disableList).commit();
         switch_headerNotification.setChecked(ischecked);
+
+
     }
 
 

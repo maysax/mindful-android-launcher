@@ -1,7 +1,6 @@
 package co.siempo.phone.settings;
 
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,10 +11,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,14 +29,21 @@ import minium.co.core.app.CoreApplication;
 public class AppListNotification  extends AppCompatActivity {
 
     private RecyclerView lst_appList;
-    private RecyclerView.Adapter mAdapter;
-    private LinearLayoutManager mLayoutManager;
     private ImageView crossActionBar, settingsActionBar, btnListOrGrid;
     private TextView titleActionBar;
+
+    // App list contain all the apps except social apps for display in list
     private List<DisableAppList> appList = new ArrayList<>();
+
+    // App list contain all the social apps for display in list
     private List<DisableAppList> socialList = new ArrayList<>();
+
+    // App list contain all the section names for display in header list
     private List<HeaderAppList> headerList=new ArrayList<>();
+
+    // App list contain all the social apps which are fetch from string array
     private List<String> socialAppList = new ArrayList<>();
+
     private PackageManager packageManager;
     private SharedPreferences launcherPrefs;
     private ArrayList<String> disableNotificationApps= new ArrayList<>();
@@ -55,10 +59,10 @@ public class AppListNotification  extends AppCompatActivity {
 
     public void initView(){
 
-
         socialList.clear();
         appList.clear();
         socialAppList.clear();
+
         // Initialize components
         lst_appList = findViewById(R.id.lst_appList);
         crossActionBar = findViewById(R.id.crossActionBar);
@@ -73,26 +77,24 @@ public class AppListNotification  extends AppCompatActivity {
         // Add social Media List
         socialAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.socialAppList)));
 
-        // Hide componenets of header layout
+        // Hide components of header layout
         crossActionBar.setVisibility(View.GONE);
         btnListOrGrid.setVisibility(View.GONE);
         settingsActionBar.setVisibility(View.GONE);
 
-
+        // disableNotificationApps contains of disable app list
         String disable_AppList=launcherPrefs.getString(CoreApplication.getInstance().DISABLE_APPLIST,"");
         if(!TextUtils.isEmpty(disable_AppList)){
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             disableNotificationApps = new Gson().fromJson(disable_AppList, type);
         }
 
+        // disableSectionList contains of disable section list
         String disable_Header_AppList=launcherPrefs.getString(CoreApplication.getInstance().HEADER_APPLIST,"");
         if(!TextUtils.isEmpty(disable_Header_AppList)){
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             disableSectionList = new Gson().fromJson(disable_Header_AppList, type);
         }
-
-
-
 
 
         // Load social Media Apps & Filter from app list
@@ -120,31 +122,32 @@ public class AppListNotification  extends AppCompatActivity {
         }
 
 
+        // headerList contains all the section details information with name and enable/disable result
+            if(socialList.size()>0) {
+                HeaderAppList d = new HeaderAppList();
+                d.name = "Social List";
+                if (disableSectionList.contains("Social List")) {
 
-        HeaderAppList d = new HeaderAppList();
-        d.name ="Social List";
-        if(disableSectionList.contains("Social List")){
-
-            d.ischecked=false;
-        }
-        else{
-            d.ischecked = true;
-        }
-        headerList.add(d);
+                    d.ischecked = false;
+                } else {
+                    d.ischecked = true;
+                }
+                headerList.add(d);
+            }
 
 
-        HeaderAppList d1 = new HeaderAppList();
-        d1.name ="App List";
+            if(appList.size() > 0) {
+                HeaderAppList d1 = new HeaderAppList();
+                d1.name = "App List";
 
-        if(disableSectionList.contains("App List")){
+                if (disableSectionList.contains("App List")) {
 
-            d1.ischecked=false;
-        }
-        else{
-            d1.ischecked = true;
-        }
-        headerList.add(d1);
-
+                    d1.ischecked = false;
+                } else {
+                    d1.ischecked = true;
+                }
+                headerList.add(d1);
+            }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst_appList.setLayoutManager(linearLayoutManager);
