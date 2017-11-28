@@ -87,6 +87,9 @@ public class Launcher3App extends CoreApplication {
     @SystemService
     NotificationManager notificationManager;
 
+    boolean isSiempoLauncher = false;
+    private long startTime;
+
 
     @Trace(tag = TRACE_TAG)
     @Override
@@ -177,12 +180,27 @@ public class Launcher3App extends CoreApplication {
 
         @Override
         public void onActivityResumed(Activity activity) {
-
+            if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                isSiempoLauncher = true;
+                if (startTime == 0) {
+                    startTime = System.currentTimeMillis();
+                }
+            } else {
+                isSiempoLauncher = false;
+            }
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
-
+            if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                isSiempoLauncher = true;
+            } else {
+                if (isSiempoLauncher && startTime != 0) {
+                    FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_DEFAULT, startTime);
+                    startTime=0;
+                }
+                isSiempoLauncher = false;
+            }
         }
 
         @Override
@@ -204,6 +222,7 @@ public class Launcher3App extends CoreApplication {
                     }
                 }
                 if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                    isSiempoLauncher = true;
                     launcherPrefs.isAppDefaultOrFront().put(true);
                 } else {
                     launcherPrefs.isAppDefaultOrFront().put(false);
@@ -423,7 +442,7 @@ public class Launcher3App extends CoreApplication {
                     if (appList.get(i) != null && appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.emailPackage().get())) {
                         resolveInfo = appList.get(i);
                         pos = i;
-                    }else{
+                    } else {
                         resolveInfo = null;
                     }
                 }
@@ -511,16 +530,16 @@ public class Launcher3App extends CoreApplication {
                     dialog.dismiss();
                     EventBus.getDefault().post(new DefaultAppUpdate(true));
                 } else {
-                    if(menuId==6){
-                        if(resolveInfo==null){
+                    if (menuId == 6) {
+                        if (resolveInfo == null) {
                             prefs.notesPackage().put(context.getResources().getString(R.string.notes));
-                        }else{
+                        } else {
                             prefs.notesPackage().put(resolveInfo.activityInfo.packageName);
                         }
 
                         dialog.dismiss();
                         EventBus.getDefault().post(new DefaultAppUpdate(true));
-                    }else{
+                    } else {
                         Toast.makeText(context, "Please select application.", Toast.LENGTH_SHORT).show();
                     }
 

@@ -14,6 +14,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.event.DefaultAppUpdate;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.old.OldMenuAdapter;
@@ -30,6 +31,7 @@ import minium.co.core.ui.CoreActivity;
 public class SiempoSettingsDefaultAppActivity extends CoreActivity {
     private OldMenuAdapter adapter;
     private List<MainListItem> items;
+    private long startTime;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -54,6 +56,13 @@ public class SiempoSettingsDefaultAppActivity extends CoreActivity {
     protected void onResume() {
         super.onResume();
         loadData();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoSettingsDefaultAppActivity.this.getClass().getSimpleName(),startTime);
     }
 
     private void loadData() {

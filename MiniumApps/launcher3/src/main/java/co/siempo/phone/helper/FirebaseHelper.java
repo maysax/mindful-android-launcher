@@ -23,6 +23,7 @@ public class FirebaseHelper {
     private static FirebaseHelper firebaseHelper;
     public static String INTENTION_FIELD = "Intention Field";
     public static String SIEMPO_MENU = "Siempo Menu";
+    public static String SIEMPO_DEFAULT = "Siempo As Default";
 
     //Action
     public static String ACTION_CALL = "Call";

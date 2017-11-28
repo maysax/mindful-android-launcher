@@ -671,4 +671,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .check();
     }
 
+    public static void logNotesEvent(String sreenName,long startTime){
+        FirebaseHelper.getIntance().logScreenUsageTime(sreenName,startTime);
+    }
+
 }

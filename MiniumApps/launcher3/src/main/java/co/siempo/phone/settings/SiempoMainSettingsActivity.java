@@ -17,6 +17,7 @@ import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.model.SettingsData;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
@@ -37,6 +38,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     private SettingsAdapter adapter;
     private Context context;
     private final String TAG = "SiempoMainSetting";
+    private long startTime=0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -109,10 +111,16 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoMainSettingsActivity.this.getClass().getSimpleName(),startTime);
+    }
 
     @Override
     protected void onDestroy() {
