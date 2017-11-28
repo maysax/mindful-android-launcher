@@ -38,8 +38,12 @@ public class PackageUtil {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-        return defaultLauncherStr.equals(context.getPackageName());
+        if (defaultLauncher != null && defaultLauncher.activityInfo != null && defaultLauncher.activityInfo.packageName != null) {
+            String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
+            return defaultLauncherStr.equals(context.getPackageName());
+        }
+        return false;
+
     }
 
     public static boolean isSiempo(String pkg) {
