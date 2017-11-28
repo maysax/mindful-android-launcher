@@ -21,7 +21,6 @@ import android.preference.RingtonePreference;
 import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,13 +28,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ListView;
 
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
-
 import java.util.List;
 
 import co.siempo.phone.R;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by shahab on 12/6/16.
@@ -322,24 +317,19 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.connections);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            @SuppressWarnings("RedundantCast")
-            Preference wifi_preference = (Preference) findPreference("key_wifi");
-            Intent intent = new Intent(Settings.ACTION_WIFI_SETTINGS);
-            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            wifi_preference.setIntent(intent);
-            bindPreferenceSummaryToValue(wifi_preference);
+            // Check wifi preference in local system
+            checkPreferenceAvailable(getString(R.string.wifi_key), Settings.ACTION_WIFI_SETTINGS);
 
+            // Check bluetooth preference in local system
+            checkPreferenceAvailable(getString(R.string.bluetooth_key), Settings.ACTION_BLUETOOTH_SETTINGS);
 
+            // Check Data Usage preference in local system
             try {
-                Preference data_usage_preference = findPreference("data_usage");
+                Preference data_usage_preference = findPreference(getString(R.string.data_usage_key));
                 Intent intent_data_usage = new Intent();
                 intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                 //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                if (!isAvailable(getActivity(), intent)) {
+                if (!isAvailable(getActivity(), intent_data_usage)) {
                     PreferenceScreen preferenceScreen = getPreferenceScreen();
                     if (preferenceScreen != null) {
                         preferenceScreen.removePreference(data_usage_preference);
@@ -348,10 +338,29 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     data_usage_preference.setIntent(intent_data_usage);
                     bindPreferenceSummaryToValue(data_usage_preference);
                 }
-            } catch (
-                    Exception e)
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            {
+            // Check WireLess preference in local system
+            checkPreferenceAvailable(getString(R.string.wireless_key), Settings.ACTION_WIRELESS_SETTINGS);
+
+        }
+
+        private void checkPreferenceAvailable(String string, String actionWirelessSettings) {
+            try {
+                Preference wireless_preference = findPreference(string);
+                Intent intent_wireless_preference = new Intent(actionWirelessSettings);
+                if (!isAvailable(getActivity(), intent_wireless_preference)) {
+                    PreferenceScreen preferenceScreen = getPreferenceScreen();
+                    if (preferenceScreen != null) {
+                        preferenceScreen.removePreference(wireless_preference);
+                    }
+                } else {
+                    wireless_preference.setIntent(intent_wireless_preference);
+                    bindPreferenceSummaryToValue(wireless_preference);
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -397,59 +406,65 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.device_settings);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
-            @SuppressWarnings("RedundantCast")
-            Preference battery_preference = (Preference) findPreference("key_battery");
-            Intent intentBatteryUsage = new Intent(Intent.ACTION_POWER_USAGE_SUMMARY);
-            battery_preference.setIntent(intentBatteryUsage);
+            // Check home preference in local system
+            checkPreferenceAvailable(getString(R.string.home_key), Settings.ACTION_HOME_SETTINGS);
 
-            // process_usage_summary
+            // Check display preference in local system
+            checkPreferenceAvailable(getString(R.string.display_key), Settings.ACTION_DISPLAY_SETTINGS);
 
-            @SuppressWarnings("RedundantCast")
-            Preference process_usage_preference = (Preference) findPreference("key_process_usage");
-            Intent intent_data_usage = new Intent();
-            intent_data_usage.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$MemorySettingsActivity"));
-            //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            process_usage_preference.setIntent(intent_data_usage);
+            // Check sound preference in local system
+            checkPreferenceAvailable(getString(R.string.sound_key), Settings.ACTION_SOUND_SETTINGS);
 
-            /**
-             * Below validation is use to check if memory screen is available in device or not
-             * if it is not available, Memory label is hide for that particular device.
-             */
-            boolean activityExists = intent_data_usage.resolveActivityInfo(getActivity().getPackageManager(), 0) != null;
-            if (!activityExists) {
-                PreferenceScreen preferenceScreen = getPreferenceScreen();
-                if (preferenceScreen != null) {
-                    preferenceScreen.removePreference(process_usage_preference);
+            // Check Apps preference in local system
+            checkPreferenceAvailable(getString(R.string.apps_key), Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+
+            // Check Memory card preference in local system
+            checkPreferenceAvailable(getString(R.string.memory_card_setting_key), Settings.ACTION_MEMORY_CARD_SETTINGS);
+
+            // Check Battery card preference in local system
+            checkPreferenceAvailable(getString(R.string.key_battery), Intent.ACTION_POWER_USAGE_SUMMARY);
+
+            // Check Users preference in local system
+            try {
+                Preference preference = findPreference(getString(R.string.key_memory));
+                Intent intent = new Intent();
+                intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$MemorySettingsActivity"));
+                if (!isAvailable(getActivity(), intent)) {
+                    PreferenceScreen preferenceScreen = getPreferenceScreen();
+                    if (preferenceScreen != null) {
+                        preferenceScreen.removePreference(preference);
+                    }
+                } else {
+                    preference.setIntent(intent);
+                    bindPreferenceSummaryToValue(preference);
                 }
-            } else {
-                Log.d(TAG, "Memory Screen is available");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            // Check User Setting preference in local system
+            checkPreferenceAvailable(getString(R.string.key_user_setting), "android.settings.USER_SETTINGS");
 
-            Preference tap_preference = (Preference) findPreference("key_tap_pay");
-            Intent intenttap = new Intent(Settings.ACTION_NFC_PAYMENT_SETTINGS);
-            tap_preference.setIntent(intenttap);
-            PackageManager packageManager = getActivity().getPackageManager();
-            if (intenttap.resolveActivity(packageManager) == null) {
-                PreferenceScreen preferenceScreen = getPreferenceScreen();
-                if (preferenceScreen != null) {
-                    preferenceScreen.removePreference(tap_preference);
+            // Check Tap and Pay preference in local system
+            checkPreferenceAvailable(getString(R.string.key_tap_pay), Settings.ACTION_NFC_PAYMENT_SETTINGS);
+
+        }
+
+        private void checkPreferenceAvailable(String string, String actionNfcPaymentSettings) {
+            try {
+                Preference preference = findPreference(string);
+                Intent intent = new Intent(actionNfcPaymentSettings);
+                if (!isAvailable(getActivity(), intent)) {
+                    PreferenceScreen preferenceScreen = getPreferenceScreen();
+                    if (preferenceScreen != null) {
+                        preferenceScreen.removePreference(preference);
+                    }
+                } else {
+                    preference.setIntent(intent);
+                    bindPreferenceSummaryToValue(preference);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            Preference key_user_setting_preference = findPreference("key_user_setting");
-            Intent intent_user_setting = new Intent(Settings.ACTION_NFC_PAYMENT_SETTINGS);
-            key_user_setting_preference.setIntent(intent_user_setting);
-            if (intent_user_setting.resolveActivity(packageManager) == null) {
-                PreferenceScreen preferenceScreen = getPreferenceScreen();
-                if (preferenceScreen != null) {
-                    preferenceScreen.removePreference(key_user_setting_preference);
-                }
-            }
-
         }
 
         @Override
@@ -487,18 +502,42 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.personal_settings);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
+            // Check Location Source preference in local system
+            checkPreferenceAvailable(getString(R.string.location_key), Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 
-            @SuppressWarnings("RedundantCast")
-            Preference pref_language_input = (Preference) findPreference("key_pref_language_input");
-            Intent intent_input_method_language_settings = new Intent();
-            intent_input_method_language_settings.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$InputMethodAndLanguageSettingsActivity"));
-            //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            pref_language_input.setIntent(intent_input_method_language_settings);
+            // Check Security preference in local system
+            checkPreferenceAvailable(getString(R.string.security_key), Settings.ACTION_SECURITY_SETTINGS);
 
+            // Check Account preference in local system
+            checkPreferenceAvailable(getString(R.string.account_key), Settings.ACTION_SYNC_SETTINGS);
+
+            // Check Account preference in local system
+            checkPreferenceAvailable(getString(R.string.account_key), Settings.ACTION_SYNC_SETTINGS);
+
+            // Check Language preference in local system
+            checkPreferenceAvailable(getString(R.string.pref_language_key), Settings.ACTION_INPUT_METHOD_SETTINGS);
+
+            // Check backup preference in local system
+            checkPreferenceAvailable(getString(R.string.backup_key), "android.settings.BACKUP_AND_RESET_SETTINGS");
+
+        }
+
+        private void checkPreferenceAvailable(String string, String action) {
+            try {
+                Preference preference = findPreference(string);
+                Intent intent = new Intent(action);
+                if (!isAvailable(getActivity(), intent)) {
+                    PreferenceScreen preferenceScreen = getPreferenceScreen();
+                    if (preferenceScreen != null) {
+                        preferenceScreen.removePreference(preference);
+                    }
+                } else {
+                    preference.setIntent(intent);
+                    bindPreferenceSummaryToValue(preference);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -535,17 +574,37 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             addPreferencesFromResource(R.xml.system_settings);
             setHasOptionsMenu(true);
 
-            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-            // to their values. When their values change, their summaries are
-            // updated to reflect the new value, per the Android Design
-            // guidelines.
+            // Check Date Time preference in local system
+            checkPreferenceAvailable(getString(R.string.date_time_key), Settings.ACTION_DATE_SETTINGS);
 
-/*            Preference pref_language_input = (Preference) findPreference("key_pref_language_input");
-            Intent intent_input_method_language_settings = new Intent();
-            intent_input_method_language_settings.setComponent(new ComponentName("com.android.settings","com.android.settings.Settings$InputMethodAndLanguageSettingsActivity"));
-            //     intent_data_usage.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            pref_language_input.setIntent(intent_input_method_language_settings);*/
+            // Check ACCESSIBILITY preference in local system
+            checkPreferenceAvailable(getString(R.string.accessibility_key), Settings.ACTION_ACCESSIBILITY_SETTINGS);
 
+            // Check Print preference in local system
+            checkPreferenceAvailable(getString(R.string.print_key), Settings.ACTION_PRINT_SETTINGS);
+
+            // Check About Phone preference in local system
+            checkPreferenceAvailable(getString(R.string.about_key), Settings.ACTION_DEVICE_INFO_SETTINGS);
+
+
+        }
+
+        private void checkPreferenceAvailable(String string, String actionDeviceInfoSettings) {
+            try {
+                Preference preference = findPreference(string);
+                Intent intent = new Intent(actionDeviceInfoSettings);
+                if (!isAvailable(getActivity(), intent)) {
+                    PreferenceScreen preferenceScreen = getPreferenceScreen();
+                    if (preferenceScreen != null) {
+                        preferenceScreen.removePreference(preference);
+                    }
+                } else {
+                    preference.setIntent(intent);
+                    bindPreferenceSummaryToValue(preference);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
