@@ -36,6 +36,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+import minium.co.core.event.FirebaseEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.notes.R;
@@ -92,6 +94,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     private AlertDialog backupCheckDialog, backupOKDialog, restoreCheckDialog, restoreFailedDialog;
 
     public static final String EXTRA_OPEN_LATEST = "open_latest";
+    private long startTime;
 
 
     @SuppressLint("ObsoleteSdkInt")
@@ -223,6 +226,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         Tracer.d("Notes onResume called");
         // Retrieve from local path
         JSONArray tempNotes = retrieveData(localPath);
@@ -1091,4 +1095,12 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
             //new EvernoteManager().listNoteBooks(this);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().post(new FirebaseEvent("Notes:" + MainActivity.this.getClass().getSimpleName(), startTime));
+    }
+
+
 }

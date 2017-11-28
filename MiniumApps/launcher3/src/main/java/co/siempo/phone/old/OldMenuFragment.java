@@ -36,6 +36,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
@@ -83,6 +84,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     private ItemTouchHelper mItemTouchHelper;
     private Parcelable mListState;
 
+
     public OldMenuFragment() {
         // Required empty public constructor
     }
@@ -96,7 +98,6 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     @Override
     public void onResume() {
         super.onResume();
-
         items = new ArrayList<>();
         new MainListItemLoader(getActivity()).loadItems(items, this);
         if (prefs.isMenuGrid().get()) {

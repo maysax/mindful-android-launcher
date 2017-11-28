@@ -94,9 +94,12 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         Notification notification = notificationList.get(position);
         if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
             Bitmap bitmap = CoreApplication.getInstance().iconList.get(notification.getPackageName());
+            holder.imgAppIcon.setBackground(null);
+            holder.imgAppIcon.setImageBitmap(null);
             if (bitmap != null) {
-                holder.imgAppIcon.setBackground(null);
                 holder.imgAppIcon.setImageBitmap(bitmap);
+            }else{
+                holder.imgAppIcon.setBackground(mContext.getDrawable(R.mipmap.ic_launcher));
             }
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
             if (notification.getStrTitle() == null || notification.getStrTitle().equalsIgnoreCase("")) {
@@ -122,6 +125,8 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                     holder.imgUserImage.setImageBitmap(UIUtils.convertBytetoBitmap(notification.getUser_icon()));
                 } else {
                     holder.imgUserImage.setBackground(null);
+                    holder.imgUserImage.setImageBitmap(null);
+                    holder.imgUserImage.setImageResource(R.drawable.ic_person_black_24dp);
                 }
             }
 
@@ -146,6 +151,8 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                             .into(holder.imgUserImage);
                 }else{
                     holder.imgUserImage.setBackground(null);
+                    holder.imgUserImage.setImageBitmap(null);
+                    holder.imgUserImage.setImageResource(R.drawable.ic_person_black_24dp);
                 }
 
             } catch (Exception e) {

@@ -23,10 +23,12 @@ import android.util.Log;
 
 import co.siempo.phone.Manifest;
 import co.siempo.phone.event.TorchOnOff;
+import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
+import minium.co.core.event.FirebaseEvent;
 
 /**
  * This background service used for detect torch status and feature used for any other background status.
@@ -99,6 +101,11 @@ public class StatusBarService extends Service {
         } else {
             turnOffFlash();
         }
+    }
+
+    @Subscribe
+    public void firebaseEvent(FirebaseEvent firebaseEvent) {
+        FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(),firebaseEvent.getStrStartTime());
     }
 
 

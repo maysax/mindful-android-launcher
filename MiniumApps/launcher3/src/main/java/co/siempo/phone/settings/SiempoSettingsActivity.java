@@ -34,6 +34,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.util.PackageUtil;
@@ -75,6 +76,7 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
+    private long startTime=0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -267,12 +269,12 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
     }
 
     @Override
     protected void onStop() {
-
         super.onStop();
         currentIndex = 0;
     }
@@ -280,6 +282,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoSettingsActivity.this.getClass().getSimpleName(),startTime);
     }
 
     @Override

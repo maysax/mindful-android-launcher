@@ -19,6 +19,8 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.applist.AppDrawerActivity;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.mm.model.Utilities;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
@@ -203,11 +205,18 @@ public class AppListNotification extends CoreActivity {
 
     }
 
-
+    long startTime=0;
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(AppListNotification.this.getClass().getSimpleName(),startTime);
     }
 
     @Override
