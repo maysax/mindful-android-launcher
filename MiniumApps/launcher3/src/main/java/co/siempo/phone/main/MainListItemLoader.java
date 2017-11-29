@@ -6,8 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 
-import com.androidnetworking.core.Core;
-
 import java.util.List;
 
 import co.siempo.phone.BuildConfig;
@@ -16,7 +14,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.applist.AppDrawerActivity_;
-import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.mm.MMTimePickerActivity_;
@@ -27,7 +24,6 @@ import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.tempo.TempoActivity_;
-import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.ui.CoreActivity;
@@ -74,8 +70,8 @@ public class MainListItemLoader {
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
         //if (fragment instanceof MainFragment) {
-            items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
-      //  }
+        items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
+        //  }
         // items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
         //items.add(new MainListItem(10, getString(R.string.title_tempo), "fa-bell", R.drawable.icon_tempo, MainListItemType.ACTION));
         items.add(new MainListItem(16, getString(R.string.title_email), "fa-envelope"));
@@ -405,37 +401,14 @@ public class MainListItemLoader {
             case 3:// Contact
                 FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_contacts), 1);
                 break;
-            case 4:
-                break;
-            case 5:
-                break;
             case 6://Notes
                 FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_note), 1);
-                break;
-            case 7:
-                break;
-            case 8:
-                break;
-            case 9:
-                break;
-            case 10:
                 break;
             case 11://Map
                 FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_map), 1);
                 break;
-            case 12:
-                break;
-            case 13:
-                break;
-            case 14:
-                break;
-            case 15:
-
-                break;
             case 16:// Email
                 FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_email), 1);
-                break;
-            case 17: //new ActivityHelper(context).openGoogleInbox();
                 break;
             case 18://FeedBack
                 FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_feedback), 1);

@@ -3,39 +3,26 @@ package co.siempo.phone.main;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.applist.AppDrawerActivity_;
 import co.siempo.phone.contact.ContactsLoader;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.mm.MMTimePickerActivity_;
-import co.siempo.phone.mm.MindfulMorningActivity_;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
-import co.siempo.phone.pause.PauseActivity_;
-import co.siempo.phone.service.ApiClient_;
-import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
-import co.siempo.phone.tempo.TempoActivity_;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
 /**
