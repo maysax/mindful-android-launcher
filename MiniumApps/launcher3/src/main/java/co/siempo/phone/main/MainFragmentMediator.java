@@ -3,7 +3,6 @@ package co.siempo.phone.main;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,6 +135,7 @@ class MainFragmentMediator {
                 case ACTION:
                     if (getAdapter().getItem(position).getApplicationInfo() == null) {
                         position = getAdapter().getItem(position).getId();
+                        new MainListItemLoader(fragment.getActivity()).firebaseEvent(position);
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
                         UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
@@ -231,6 +231,8 @@ class MainFragmentMediator {
         getAdapter().loadData(items);
         getAdapter().notifyDataSetChanged();
     }
+
+
 
 
 }
