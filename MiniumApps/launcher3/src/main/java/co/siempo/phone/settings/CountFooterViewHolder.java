@@ -16,7 +16,9 @@
 package co.siempo.phone.settings;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -32,6 +34,7 @@ public class CountFooterViewHolder extends RecyclerView.ViewHolder {
     @Bind({R.id.title})
     TextView textView;
 
+
     public CountFooterViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -40,4 +43,5 @@ public class CountFooterViewHolder extends RecyclerView.ViewHolder {
     public void render(String text){
         textView.setText(text);
     }
+
 }

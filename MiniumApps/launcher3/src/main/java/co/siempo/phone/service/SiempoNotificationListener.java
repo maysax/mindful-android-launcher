@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -19,13 +20,18 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -123,7 +129,22 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
         printLog(notification);
+
+
+
         if (launcherPrefs.isAppDefaultOrFront().get()) {
+
+            SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
+            String disable_AppList=prefs.getString(CoreApplication.getInstance().DISABLE_APPLIST,"");
+            if(!TextUtils.isEmpty(disable_AppList)){
+                Type type = new TypeToken<ArrayList<String>>(){}.getType();
+                ArrayList<String> disableNotificationApps = new Gson().fromJson(disable_AppList, type);
+                if(!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())){
+                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                }
+            }
+
+
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
             if (PackageUtil.isSiempoLauncher(this) && myKM.inKeyguardRestrictedInputMode() && launcherPrefs.isHidenotificationOnLockScreen().get()) {
                 SiempoNotificationListener.this.cancelAllNotifications();

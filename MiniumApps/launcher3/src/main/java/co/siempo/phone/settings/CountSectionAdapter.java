@@ -44,16 +44,17 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
     SharedPreferences  launcherPrefs ;
     ArrayList<String> disableNotificationApps=new ArrayList<>();
     ArrayList<String> disableSections=new ArrayList<>();
-    private List<DisableAppList> appList,socialList;
+    private List<DisableAppList> appList,socialList,messengerList;
     private List<HeaderAppList> headerList;
 
 
 
-    public CountSectionAdapter(Context context, List<DisableAppList> appList, List<DisableAppList> socialList, List<HeaderAppList> headerList) {
+    public CountSectionAdapter(Context context, List<DisableAppList> appList, List<DisableAppList> socialList,List<DisableAppList> messengerList, List<HeaderAppList> headerList) {
         this.context = context;
         this.appList = appList;
         this.socialList= socialList;
         this.headerList = headerList;
+        this.messengerList = messengerList;
         this.packageManager=context.getPackageManager();
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
 
@@ -73,21 +74,14 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
     @Override
     protected int getItemCountForSection(int section) {
         int size=0;
-        if(headerList.size() == 1){
-            if(socialList.size() > 0){
-                size = socialList.size();
-            }
-            if(appList.size() > 0){
-                size = appList.size();
-            }
+        if(headerList.get(section).name.equals("Social Media")){
+            size = socialList.size();
         }
-        if(headerList.size() == 2){
-            if(section == 0 ){
-                size = socialList.size();
-            }
-            if(section == 1){
-                size = appList.size();
-            }
+        if(headerList.get(section).name.equals("Messengers")){
+            size = messengerList.size();
+        }
+        if(headerList.get(section).name.equals("Other Apps")){
+            size = appList.size();
         }
         return  size;
     }
@@ -127,14 +121,6 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
     @Override
     protected void onBindSectionHeaderViewHolder(final CountHeaderViewHolder holder, final int section) {
 
-//        if((section==0 && socialList.size() == 0) || (section==1 && appList.size() == 0)){
-//            holder.hideHeaderView();
-//        }
-//        else{
-//            holder.showHeaderView();
-//        }
-
-
         holder.render(headerList.get(section).name);
 
         holder.setData(headerList.get(section).ischecked);
@@ -155,77 +141,56 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
                     headerList.set(section,d);
                     holder.setData(isChecked);
 
-                    if(headerList.size()== 1){
-                        if(socialList.size() > 0){
-                            if(isChecked){
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0).commit();
-                            }
-                            else{
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,socialList.size()).commit();
-                            }
-                            for(int i=0;i<socialList.size();i++){
-                                changeAppNotification(socialList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
-                                DisableAppList d1=socialList.get(i);
-                                d1.ischecked=isChecked;
-                                socialList.set(i,d1);
-                                notifyDataSetChanged();
-                            }
-                        }
 
-                        if(appList.size() > 0){
-                            if(isChecked){
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0).commit();
-                            }
-                            else{
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,appList.size()).commit();
-                            }
-                            for(int i=0;i<appList.size();i++){
-                                changeAppNotification(appList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
-                                DisableAppList d1=appList.get(i);
-                                d1.ischecked=isChecked;
-                                appList.set(i,d1);
-                                notifyDataSetChanged();
-                            }
+                    if(headerList.get(section).name.equals("Social Media")){
+                        if(isChecked){
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0).commit();
+                        }
+                        else{
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,socialList.size()).commit();
+                        }
+                        for(int i=0;i<socialList.size();i++){
+                            changeAppNotification(socialList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
+                            DisableAppList d1=socialList.get(i);
+                            d1.ischecked=isChecked;
+                            socialList.set(i,d1);
+                            notifyDataSetChanged();
                         }
                     }
-                    if(headerList.size() == 2){
-                        // Section 0 = "Social List"
-                        // Below logic is use to maintain section and cor-related items
-                        if(section == 0){
-                            if(isChecked){
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0).commit();
-                            }
-                            else{
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,socialList.size()).commit();
-                            }
-                            for(int i=0;i<socialList.size();i++){
-                                changeAppNotification(socialList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
-                                DisableAppList d1=socialList.get(i);
-                                d1.ischecked=isChecked;
-                                socialList.set(i,d1);
-                                notifyDataSetChanged();
-                            }
+
+
+                    if(headerList.get(section).name.equals("Messengers")){
+                        if(isChecked){
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,0).commit();
                         }
-
-
-                        // Section 0 = "App List"
-                        // Below logic is use to maintain section and cor-related items
-                        if(section == 1){
-                            if(isChecked){
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0).commit();
-                            }
-                            else{
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,appList.size()).commit();
-                            }
-                            for(int i=0;i<appList.size();i++){
-                                changeAppNotification(appList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
-                                DisableAppList d1=appList.get(i);
-                                d1.ischecked=isChecked;
-                                appList.set(i,d1);
-                                notifyDataSetChanged();
-                            }
+                        else{
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,appList.size()).commit();
+                        }
+                        for(int i=0;i<messengerList.size();i++){
+                            changeAppNotification(messengerList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
+                            DisableAppList d1=messengerList.get(i);
+                            d1.ischecked=isChecked;
+                            messengerList.set(i,d1);
+                            notifyDataSetChanged();
                         }
                     }
+
+                    if(headerList.get(section).name.equals("Other Apps")){
+                        if(isChecked){
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0).commit();
+                        }
+                        else{
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,appList.size()).commit();
+                        }
+                        for(int i=0;i<appList.size();i++){
+                            changeAppNotification(appList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
+                            DisableAppList d1=appList.get(i);
+                            d1.ischecked=isChecked;
+                            appList.set(i,d1);
+                            notifyDataSetChanged();
+                        }
+                    }
+
 
 
                 }
@@ -244,172 +209,124 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
 
         holder.displayToggle();
 
+        if(headerList.get(section).name.equals("Social Media")){
+            holder.render(socialList.get(position).applicationInfo.name);
+            holder.displayImage(socialList.get(position).applicationInfo,packageManager);
+            holder.setData(socialList.get(position).ischecked);
+            holder.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(holder.getToggle().isPressed()){
 
-        if(headerList.size() == 1){
-            if(socialList.size() > 0){
-                holder.render(socialList.get(position).applicationInfo.name);
-                holder.displayImage(socialList.get(position).applicationInfo,packageManager);
-                holder.setData(socialList.get(position).ischecked);
-                holder.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(holder.getToggle().isPressed()){
+                        // Below logic is use to add disable social app names to disable toggle.
+                        holder.changeNotification(socialList.get(position).applicationInfo,isChecked,disableNotificationApps,context);
 
-                            // Below logic is use to add disable social app names to disable toggle.
-                            holder.changeNotification(socialList.get(position).applicationInfo,isChecked,disableNotificationApps,context);
-
-                            // Below logic is use to disable social app names for update existing (Current display) list
-                            DisableAppList d=socialList.get(position);
-                            d.ischecked=isChecked;
-                            socialList.set(position,d);
-                            holder.setData(isChecked);
+                        // Below logic is use to disable social app names for update existing (Current display) list
+                        DisableAppList d=socialList.get(position);
+                        d.ischecked=isChecked;
+                        socialList.set(position,d);
+                        holder.setData(isChecked);
 
 
-                            // Below logic is use to maintain social section and cor-related items
-                            if(!isChecked) {
-                                int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0);
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,disableCount+1).commit();
-                            }
-                            else{
-                                int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0);
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,disableCount-1).commit();
-                            }
+                        // Below logic is use to maintain social section and cor-related items
+                        if(!isChecked) {
+                            int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0);
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,disableCount+1).commit();
+                        }
+                        else{
+                            int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0);
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,disableCount-1).commit();
+                        }
 
-                            if(socialList.size() == launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0)){
-                                changeHeaderNotification(section,false,disableSections,context);
-                            }
-                            else{
-                                changeHeaderNotification(section,true,disableSections,context);
-                            }
+                        if(socialList.size() == launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0)){
+                            changeHeaderNotification(section,false,disableSections,context);
+                        }
+                        else{
+                            changeHeaderNotification(section,true,disableSections,context);
+                        }
 
 
+                    }
+                }
+            });
+        }
+        if(headerList.get(section).name.equals("Messengers")){
+            holder.render(messengerList.get(position).applicationInfo.name);
+
+            holder.displayImage(messengerList.get(position).applicationInfo,packageManager);
+            holder.setData(messengerList.get(position).ischecked);
+            holder.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(holder.getToggle().isPressed()){
+                        // Below logic is use to add disable app names to disable toggle.
+                        holder.changeNotification(messengerList.get(position).applicationInfo,isChecked,disableNotificationApps,context);
+
+                        // Below logic is use to disable app names for update existing (Current display) list
+                        DisableAppList d=messengerList.get(position);
+                        d.ischecked=isChecked;
+                        messengerList.set(position,d);
+                        holder.setData(isChecked);
+
+                        // Below logic is use to maintain app section and cor-related items
+                        if(!isChecked) {
+                            int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,0);
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,disableCount+1).commit();
+                        }
+                        else{
+                            int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,0);
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,disableCount-1).commit();
+                        }
+
+                        if(messengerList.size() == launcherPrefs.getInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,0)){
+                            changeHeaderNotification(section,false,disableSections,context);
+                        }
+                        else{
+                            changeHeaderNotification(section,true,disableSections,context);
                         }
                     }
-                });
-            }
+                }
+            });
+        }
+        if(headerList.get(section).name.equals("Other Apps")){
+            holder.render(appList.get(position).applicationInfo.name);
 
-            if(appList.size()>0){
-                holder.render(appList.get(position).applicationInfo.name);
+            holder.displayImage(appList.get(position).applicationInfo,packageManager);
+            holder.setData(appList.get(position).ischecked);
+            holder.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(holder.getToggle().isPressed()){
+                        // Below logic is use to add disable app names to disable toggle.
+                        holder.changeNotification(appList.get(position).applicationInfo,isChecked,disableNotificationApps,context);
 
-                holder.displayImage(appList.get(position).applicationInfo,packageManager);
-                holder.setData(appList.get(position).ischecked);
-                holder.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(holder.getToggle().isPressed()){
-                            // Below logic is use to add disable app names to disable toggle.
-                            holder.changeNotification(appList.get(position).applicationInfo,isChecked,disableNotificationApps,context);
+                        // Below logic is use to disable app names for update existing (Current display) list
+                        DisableAppList d=appList.get(position);
+                        d.ischecked=isChecked;
+                        appList.set(position,d);
+                        holder.setData(isChecked);
 
-                            // Below logic is use to disable app names for update existing (Current display) list
-                            DisableAppList d=appList.get(position);
-                            d.ischecked=isChecked;
-                            appList.set(position,d);
-                            holder.setData(isChecked);
+                        // Below logic is use to maintain app section and cor-related items
+                        if(!isChecked) {
+                            int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0);
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,disableCount+1).commit();
+                        }
+                        else{
+                            int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0);
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,disableCount-1).commit();
+                        }
 
-                            // Below logic is use to maintain app section and cor-related items
-                            if(!isChecked) {
-                                int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0);
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,disableCount+1).commit();
-                            }
-                            else{
-                                int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0);
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,disableCount-1).commit();
-                            }
-
-                            if(appList.size() == launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0)){
-                                changeHeaderNotification(section,false,disableSections,context);
-                            }
-                            else{
-                                changeHeaderNotification(section,true,disableSections,context);
-                            }
+                        if(appList.size() == launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0)){
+                            changeHeaderNotification(section,false,disableSections,context);
+                        }
+                        else{
+                            changeHeaderNotification(section,true,disableSections,context);
                         }
                     }
-                });
-            }
+                }
+            });
         }
 
-        if(headerList.size() == 2){
-            if(section == 0){
-                holder.render(socialList.get(position).applicationInfo.name);
-                holder.displayImage(socialList.get(position).applicationInfo,packageManager);
-                holder.setData(socialList.get(position).ischecked);
-                holder.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(holder.getToggle().isPressed()){
-
-                            // Below logic is use to add disable social app names to disable toggle.
-                            holder.changeNotification(socialList.get(position).applicationInfo,isChecked,disableNotificationApps,context);
-
-                            // Below logic is use to disable social app names for update existing (Current display) list
-                            DisableAppList d=socialList.get(position);
-                            d.ischecked=isChecked;
-                            socialList.set(position,d);
-                            holder.setData(isChecked);
-
-
-                            // Below logic is use to maintain social section and cor-related items
-                            if(!isChecked) {
-                                int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0);
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,disableCount+1).commit();
-                            }
-                            else{
-                                int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0);
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,disableCount-1).commit();
-                            }
-
-                            if(socialList.size() == launcherPrefs.getInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,0)){
-                                changeHeaderNotification(section,false,disableSections,context);
-                            }
-                            else{
-                                changeHeaderNotification(section,true,disableSections,context);
-                            }
-
-
-                        }
-                    }
-                });
-            }
-
-            if(section == 1){
-                holder.render(appList.get(position).applicationInfo.name);
-
-                holder.displayImage(appList.get(position).applicationInfo,packageManager);
-                holder.setData(appList.get(position).ischecked);
-                holder.getToggle().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(holder.getToggle().isPressed()){
-                            // Below logic is use to add disable app names to disable toggle.
-                            holder.changeNotification(appList.get(position).applicationInfo,isChecked,disableNotificationApps,context);
-
-                            // Below logic is use to disable app names for update existing (Current display) list
-                            DisableAppList d=appList.get(position);
-                            d.ischecked=isChecked;
-                            appList.set(position,d);
-                            holder.setData(isChecked);
-
-                            // Below logic is use to maintain app section and cor-related items
-                            if(!isChecked) {
-                                int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0);
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,disableCount+1).commit();
-                            }
-                            else{
-                                int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0);
-                                launcherPrefs.edit().putInt(CoreApplication.getInstance().APP_DISABLE_COUNT,disableCount-1).commit();
-                            }
-
-                            if(appList.size() == launcherPrefs.getInt(CoreApplication.getInstance().APP_DISABLE_COUNT,0)){
-                                changeHeaderNotification(section,false,disableSections,context);
-                            }
-                            else{
-                                changeHeaderNotification(section,true,disableSections,context);
-                            }
-                        }
-                    }
-                });
-            }
-        }
 
     }
 

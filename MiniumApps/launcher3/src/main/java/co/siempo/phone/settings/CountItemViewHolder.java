@@ -20,8 +20,10 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -92,5 +94,7 @@ public class CountItemViewHolder extends RecyclerView.ViewHolder {
           launcherPrefs.edit().putString(CoreApplication.getInstance().DISABLE_APPLIST,disableList).commit();
         switch_appNotification.setChecked(ischecked);
     }
+
+
 
 }

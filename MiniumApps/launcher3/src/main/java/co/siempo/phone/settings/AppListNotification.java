@@ -38,11 +38,17 @@ public class AppListNotification  extends AppCompatActivity {
     // App list contain all the social apps for display in list
     private List<DisableAppList> socialList = new ArrayList<>();
 
+    // App list contain all the messenger apps for display in list
+    private List<DisableAppList> messengerList = new ArrayList<>();
+
     // App list contain all the section names for display in header list
     private List<HeaderAppList> headerList=new ArrayList<>();
 
     // App list contain all the social apps which are fetch from string array
     private List<String> socialAppList = new ArrayList<>();
+
+    // App list contain all the messenger apps which are fetch from string array
+    private List<String> messengerAppList = new ArrayList<>();
 
     private PackageManager packageManager;
     private SharedPreferences launcherPrefs;
@@ -77,6 +83,9 @@ public class AppListNotification  extends AppCompatActivity {
         // Add social Media List
         socialAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.socialAppList)));
 
+        // Add social Media List
+        messengerAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.messengerAppList)));
+
         // Hide components of header layout
         crossActionBar.setVisibility(View.GONE);
         btnListOrGrid.setVisibility(View.GONE);
@@ -109,6 +118,16 @@ public class AppListNotification  extends AppCompatActivity {
                 }
                 socialList.add(d);
             }
+            else if(messengerAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
+                DisableAppList d = new DisableAppList();
+                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
+                if(disableNotificationApps.contains(d.applicationInfo.packageName)){
+                    d.ischecked=false;
+                }else{
+                    d.ischecked=true;
+                }
+                messengerList.add(d);
+            }
             else{
                 DisableAppList d = new DisableAppList();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
@@ -122,11 +141,12 @@ public class AppListNotification  extends AppCompatActivity {
         }
 
 
+
         // headerList contains all the section details information with name and enable/disable result
             if(socialList.size()>0) {
                 HeaderAppList d = new HeaderAppList();
-                d.name = "Social List";
-                if (disableSectionList.contains("Social List")) {
+                d.name = "Social Media";
+                if (disableSectionList.contains("Social Media")) {
 
                     d.ischecked = false;
                 } else {
@@ -136,24 +156,37 @@ public class AppListNotification  extends AppCompatActivity {
             }
 
 
-            if(appList.size() > 0) {
-                HeaderAppList d1 = new HeaderAppList();
-                d1.name = "App List";
+        if(messengerList.size()>0) {
+            HeaderAppList d1 = new HeaderAppList();
+            d1.name = "Messengers";
+            if (disableSectionList.contains("Messengers")) {
 
-                if (disableSectionList.contains("App List")) {
+                d1.ischecked = false;
+            } else {
+                d1.ischecked = true;
+            }
+            headerList.add(d1);
+        }
 
-                    d1.ischecked = false;
+
+        if(appList.size() > 0) {
+                HeaderAppList d2 = new HeaderAppList();
+                d2.name = "Other Apps";
+
+                if (disableSectionList.contains("Other Apps")) {
+
+                    d2.ischecked = false;
                 } else {
-                    d1.ischecked = true;
+                    d2.ischecked = true;
                 }
-                headerList.add(d1);
+                headerList.add(d2);
             }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
 
-        CountSectionAdapter adapter = new CountSectionAdapter(this,appList,socialList,headerList);
+        CountSectionAdapter adapter = new CountSectionAdapter(this,appList,socialList,messengerList,headerList);
         lst_appList.setAdapter(adapter);
 
     }
