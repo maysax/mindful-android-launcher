@@ -1,9 +1,6 @@
 package co.siempo.phone.helper;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.SystemClock;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -31,7 +28,7 @@ public class FirebaseHelper {
     public static String ACTION_SAVE_NOTE = "Save Note";
     public static String ACTION_CREATE_CONTACT = "Create Contact";
     public static String ACTION_CONTACT_PICK = "Contact Picked";
-    public static String ACTION_APPLICATION_PICK = "Contact Picked";
+    public static String ACTION_APPLICATION_PICK = "Application Picked";
 
     private FirebaseHelper() {
 
@@ -55,7 +52,7 @@ public class FirebaseHelper {
     }
 
     /**
-     * Screen name with time spent per screen wise.
+     * Used for how long user spent time on specific screen by screen name.
      *
      * @param screenName
      * @param startTime
@@ -73,22 +70,21 @@ public class FirebaseHelper {
     }
 
     /**
-     * Print third party application name log.
-     *
+     * Used for Third party application open by User from application list.
      * @param applicationName
-     * @param from            0=tray and 1=IF
      */
-    public void logAppUsage(String applicationName, int from) {
+    public void logAppUsage(String applicationName) {
         Bundle bundle = new Bundle();
         bundle.putString("Application Name", applicationName);
         getFirebaseAnalytics().logEvent("Third Party Application", bundle);
     }
 
     /**
-     * Siempo menu Usage from menu list.
-     *
+     * Used fot menu used by user from either IF or menu list based in from.
+     * from = 0 for Menu List
+     * from = 1 for IF Screen
      * @param applicationName
-     * @param from            0=Menu List, 1=IF Screen
+     * @param from
      */
     public void logSiempoMenuUsage(String applicationName, int from) {
         Bundle bundle = new Bundle();
@@ -102,15 +98,15 @@ public class FirebaseHelper {
     }
 
     /**
+     * Used for log the IF action of user.
      * @param action
+     * @param applicationName
      */
-    public void logIFAction(String action, String from) {
+    public void logIFAction(String action, String applicationName) {
         Bundle bundle = new Bundle();
         bundle.putString("Action", action);
-        if (from.equalsIgnoreCase("")) {
-//            bundle.putString("Action", action);
-        } else {
-            bundle.putString("Application Name", from);
+        if (!applicationName.equalsIgnoreCase("")) {
+            bundle.putString("Application Name", applicationName);
         }
         getFirebaseAnalytics().logEvent("IF Action", bundle);
     }

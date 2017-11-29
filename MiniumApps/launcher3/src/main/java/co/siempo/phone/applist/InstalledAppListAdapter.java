@@ -96,7 +96,7 @@ class InstalledAppListAdapter extends RecyclerView.Adapter<InstalledAppListAdapt
                     Tracer.i("Opening package: " + applicationInfo.packageName);
                     new ActivityHelper(context).openAppWithPackageName(applicationInfo.packageName);
                     EventBus.getDefault().post(new AppOpenEvent(applicationInfo.packageName));
-                    FirebaseHelper.getIntance().logAppUsage(applicationInfo.name,0);
+                    FirebaseHelper.getIntance().logAppUsage(applicationInfo.name);
                 } catch (Exception e) {
                     Tracer.e(e, e.getMessage());
                 }
