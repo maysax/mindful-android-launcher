@@ -62,7 +62,6 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.NFCEvent;
 import minium.co.core.log.Tracer;
@@ -380,10 +379,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-    @Subscribe
-    public void onCheckActivityEvent(CheckActivityEvent event) {
 
-    }
 
 
     @Override
