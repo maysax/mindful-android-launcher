@@ -15,6 +15,7 @@ import co.siempo.phone.contact.ContactsLoader;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
@@ -130,6 +131,7 @@ class MainFragmentMediator {
             switch (type) {
                 case CONTACT:
                     router.contactPicked((ContactListItem) getAdapter().getItem(position));
+                    FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "");
                     break;
                 case ACTION:
                     if (getAdapter().getItem(position).getApplicationInfo() == null) {
@@ -139,6 +141,7 @@ class MainFragmentMediator {
                         UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                         new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
                         MainActivity.isTextLenghGreater = "";
+                        FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getApplicationInfo().packageName);
                     }
                     break;
                 case DEFAULT:
@@ -147,17 +150,21 @@ class MainFragmentMediator {
                     switch (position) {
                         case 1:
                             router.sendText(fragment.getActivity());
+                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_SMS, "");
                             break;
                         case 2:
                             router.createNote(fragment.getActivity());
+                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_SAVE_NOTE, "");
                             EventBus.getDefault().post(new CreateNoteEvent());
                             break;
                         case 3:
                             router.createContact(fragment.getActivity());
+                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CREATE_CONTACT, "");
                             break;
                         case 4:
                             router.call(fragment.getActivity());
                             MainActivity.isTextLenghGreater = "";
+                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CALL, "");
                             EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
                             break;
                         default:
@@ -170,12 +177,14 @@ class MainFragmentMediator {
                         try {
                             fragment.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().getCurrent().getExtra2())));
                             MainActivity.isTextLenghGreater = "";
+                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CALL, "");
                             EventBus.getDefault().post(new SendSmsEvent(true, "", ""));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
                         router.contactNumberPicked(getAdapter().getItem(position));
+                        FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "");
                     }
                     break;
                 default:

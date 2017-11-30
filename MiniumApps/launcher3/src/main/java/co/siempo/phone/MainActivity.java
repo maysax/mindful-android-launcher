@@ -45,6 +45,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.ArrayList;
 
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
@@ -110,6 +111,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public static String isTextLenghGreater = "";
 
+    long startTime;
+
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
@@ -119,20 +122,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         new TedPermission(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                .setPermissions(Manifest.permission.READ_CONTACTS,
-                        Manifest.permission.WRITE_CONTACTS,
-                        Manifest.permission.READ_CALL_LOG,
-                        Manifest.permission.WRITE_CALL_LOG,
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.READ_SMS,
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.RECEIVE_SMS,
-                        Manifest.permission.RECEIVE_MMS,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_NETWORK_STATE)
+                .setPermissions(Constants.PERMISSIONS)
                 .check();
 
         logFirebase();
@@ -256,6 +246,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @UiThread(delay = 500)
     void loadViews() {
+        startTime = System.currentTimeMillis();
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
 
@@ -266,8 +257,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
             @Override
             public void onPageSelected(int position) {
+                if (currentItem != position) {
+                    if (currentItem == 0) {
+                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+                    } else if (currentItem == 1) {
+                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.INTENTION_FIELD, startTime);
+                    }
+                }
                 currentItem = position;
-                //  currentIndex = currentItem;
                 try {
                     if (position == 1)
                         //noinspection ConstantConditions
@@ -311,38 +308,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             new TedPermission(MainActivity.this)
                     .setPermissionListener(permissionlistener)
                     .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                    .setPermissions(Manifest.permission.READ_CONTACTS,
-                            Manifest.permission.WRITE_CONTACTS,
-                            Manifest.permission.READ_CALL_LOG,
-                            Manifest.permission.WRITE_CALL_LOG,
-                            Manifest.permission.CALL_PHONE,
-                            Manifest.permission.SEND_SMS,
-                            Manifest.permission.READ_SMS,
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.RECEIVE_SMS,
-                            Manifest.permission.RECEIVE_MMS,
-                            Manifest.permission.READ_PHONE_STATE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.ACCESS_NETWORK_STATE)
+                    .setPermissions(Constants.PERMISSIONS)
                     .check();
         }
     };
 
     private void logFirebase() {
-        FirebaseHelper firebaseHelper = new FirebaseHelper(MainActivity.this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                 Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
-                firebaseHelper.getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
-                firebaseHelper.testEvent1();
-                firebaseHelper.testEvent2();
+                ((Launcher3App) CoreApplication.getInstance()).getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
             }
         } else {
             Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
-            firebaseHelper.getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
-            firebaseHelper.testEvent1();
-            firebaseHelper.testEvent2();
+            ((Launcher3App) CoreApplication.getInstance()).getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
         }
     }
 
@@ -444,10 +423,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onResume() {
         super.onResume();
-
         Log.d(TAG, "onResume.. ");
-
-
+        startEventTime = System.currentTimeMillis();
         try {
             enableNfc(true);
         } catch (Exception e) {
@@ -459,11 +436,22 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     }
 
+
+
+    long startEventTime=0;
+
     @Override
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "ACTION ONPAUSE");
         enableNfc(false);
+
+        if (currentItem == 0) {
+            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.INTENTION_FIELD, startTime);
+        } else if (currentItem == 1) {
+            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+        }
+
     }
 
     @Override
@@ -679,19 +667,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     }
                 })
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                .setPermissions(Manifest.permission.READ_CONTACTS,
-                        Manifest.permission.WRITE_CONTACTS,
-                        Manifest.permission.READ_CALL_LOG,
-                        Manifest.permission.WRITE_CALL_LOG,
-                        Manifest.permission.CALL_PHONE,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.RECEIVE_SMS,
-                        Manifest.permission.RECEIVE_MMS,
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_NETWORK_STATE)
+                .setPermissions(Constants.PERMISSIONS)
                 .check();
+    }
+
+    public static void logNotesEvent(String sreenName,long startTime){
+        FirebaseHelper.getIntance().logScreenUsageTime(sreenName,startTime);
     }
 
 }

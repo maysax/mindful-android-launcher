@@ -144,6 +144,9 @@
 
     <string name="pref_wifi_title">Wi-Fi</string>
     <string name="wifi_key">key_wifi</string>
+    <string name="bluetooth_key">key_bluetooth</string>
+    <string name="wireless_key">key_wireless</string>
+
 
     <string name="pref_bluetooth">Bluetooth</string>
 
@@ -156,6 +159,10 @@
     <string name="device_settings_title">Device</string>
     <string name="pref_home">Home</string>
     <string name="home_key">key_home</string>
+    <string name="display_key">key_display</string>
+    <string name="sound_key">key_sound</string>
+    <string name="apps_key">key_apps</string>
+    <string name="memory_card_setting_key">key_memory_card_setting</string>
     <string name="pref_display">Display</string>
     <string name="pref_device">Device</string>
     <string name="pref_notification">Sound and Notification</string>
@@ -167,12 +174,15 @@
     <string name="pref_tap_pay">Tap and Pay</string>
     <string name="key_battery">key_battery</string>
     <string name="key_tap_pay">key_tap_pay</string>
+    <string name="key_user_setting">key_user_setting</string>
     <string name="key_memory">key_process_usage</string>
     <string name="personal_settings_key">key_personal</string>
     <string name="personal_settings_summary">Personal Settings</string>
     <string name="personal_settings_title">Personal</string>
     <string name="pref_location">Location</string>
     <string name="location_key">key_location</string>
+    <string name="security_key">key_security</string>
+    <string name="account_key">key_account</string>
     <string name="location_settings_summary">Location Settings</string>
     <string name="pref_security">Security</string>
     <string name="pref_accounts">Accounts</string>
@@ -180,11 +190,15 @@
     <string name="pref_backup_reset"><![CDATA[Backup & reset]]></string>
     <string name="pref_personal">Personal</string>
     <string name="pref_language_key">key_pref_language_input</string>
+    <string name="backup_key">key_backup</string>
     <string name="system_settings_key">key_system_settings</string>
     <string name="system_settings_summary">Systen Settings</string>
     <string name="system_settings_title">System</string>
     <string name="pref_date_time"><![CDATA[Date & time]]></string>
     <string name="date_time_key">key_date_time</string>
+    <string name="accessibility_key">key_accessibility</string>
+    <string name="print_key">key_print</string>
+    <string name="about_key">key_aboutphone</string>
     <string name="date_time_settings_summary">Date and time</string>
     <string name="pref_accessibility">Accessibility</string>
     <string name="pref_printing">Printing</string>
@@ -230,5 +244,11 @@
         <item>com.facebook.orca</item>
         <item>com.facebook.mlite</item>
         <item>com.whatsapp</item>
+    </string-array>
+
+    <string-array name="systemAppList">
+
+        <item>com.android.providers.contacts</item>
+        <item>com.android.phone</item>
     </string-array>
 </resources>

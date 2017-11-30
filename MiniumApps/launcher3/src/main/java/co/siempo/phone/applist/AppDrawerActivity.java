@@ -31,6 +31,7 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.notification.NotificationFragment;
 import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.ui.TopFragment_;
@@ -72,6 +73,8 @@ public class AppDrawerActivity extends CoreActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private String TAG="AppDrawerActivity";
     ProgressDialog progressDialog;
+
+    long startTime;
 
     @Override
     protected void onStart() {
@@ -148,6 +151,7 @@ public class AppDrawerActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
         if (prefs.isAppUpdated().get()) {
             progressDialog = ProgressDialog.show(this, "", "Loading....");
@@ -156,6 +160,11 @@ public class AppDrawerActivity extends CoreActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(AppDrawerActivity.this.getClass().getSimpleName(),startTime);
+    }
 
     @Override
     protected void onStop() {

@@ -61,6 +61,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
@@ -70,6 +71,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -450,7 +452,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         callStorageDao = DBUtility.getCallStorageDao();
         loadData();
     }
-
 
 
     @Subscribe
@@ -901,60 +902,48 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                if(notificationList.size() >  position) {
-                if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
-                    hide();
-                    // Following code will delete all notification of same user and same types.
-                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                    deleteItem.executeDelete(notificationList.get(position));
-                    loadData();
-                } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
-                    if (
-                            ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
-                                    && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                if (notificationList.size() > position) {
+                    if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
                         hide();
-                    }
-                    // Following code will delete all notification of same user and same types.
-                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                    deleteItem.executeDelete(notificationList.get(position));
-                    loadData();
-                } else {
-                    String strPackageName = notificationList.get(position).getPackageName();
-                    String strTitle = notificationList.get(position).getStrTitle();
-                    List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
-                            .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
-                    DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
-                    adapter.notifyItemRemoved(position);
-                    notificationList.remove(position);
-                    hide();
-                    if (DBUtility.getTableNotificationSmsDao().count() >= 1) {
-                        imgNotification.setVisibility(View.VISIBLE);
-                    } else {
-                        imgNotification.setVisibility(View.GONE);
-                    }
-                    if (strPackageName.equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
-                        if (getPhoneNumber(strTitle, context).equalsIgnoreCase("")) {
-                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                        // Following code will delete all notification of same user and same types.
+                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        deleteItem.executeDelete(notificationList.get(position));
+                        loadData();
+                    } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
+                        if (
+                                ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                                        && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+
                         } else {
-                            Uri uri = Uri.parse("smsto:" + strTitle);
-                            Intent i = new Intent(Intent.ACTION_SENDTO, uri);
-                            i.putExtra("sms_body", "");
-                            i.setPackage("com.whatsapp");
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                            hide();
                         }
+                        // Following code will delete all notification of same user and same types.
+                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        deleteItem.executeDelete(notificationList.get(position));
+                        loadData();
                     } else {
+                        String strPackageName = notificationList.get(position).getPackageName();
+                        String strTitle = notificationList.get(position).getStrTitle();
+                        List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
+                                .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
+                        DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
+                        adapter.notifyItemRemoved(position);
+                        notificationList.remove(position);
+                        hide();
+                        if (DBUtility.getTableNotificationSmsDao().count() >= 1) {
+                            imgNotification.setVisibility(View.VISIBLE);
+                        } else {
+                            imgNotification.setVisibility(View.GONE);
+                        }
+
                         new ActivityHelper(context).openAppWithPackageName(strPackageName);
                     }
-                }
                 }
             }
 
@@ -1204,7 +1193,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
 
     private void loadData() {
-        List<TableNotificationSms> SMSItems = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties._date).build().list();
+        List<TableNotificationSms> SMSItems = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
         setUpNotifications(SMSItems);
         EventBus.getDefault().post(new TopBarUpdateEvent());
     }
@@ -1221,8 +1210,9 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         if (tableNotificationSms != null) {
             if (imgNotification != null) imgNotification.setVisibility(View.VISIBLE);
             if (!checkNotificationExistsOrNot(tableNotificationSms.getTopTableNotificationSmsDao().getId())) {
+                Log.d("hardikkamothi","Early Pattern is :: "+getTimeFormat(context));
                 @SuppressLint("SimpleDateFormat")
-                DateFormat sdf = new SimpleDateFormat("hh:mm a");
+                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context));
                 String time = sdf.format(tableNotificationSms.getTopTableNotificationSmsDao().get_date());
                 if (tableNotificationSms.getTopTableNotificationSmsDao().getNotification_type() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
                     Notification notification = new Notification();
@@ -1278,7 +1268,8 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
             }
             if (pos != -1) {
-                DateFormat sdf = new SimpleDateFormat("hh:mm a");
+                Log.d("hardikkamothi","time Format is::"+getTimeFormat(context));
+                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context));
                 String time = sdf.format(notificationEvent.getTopTableNotificationSmsDao().get_date());
                 Notification notification = notificationList.get(pos);
                 notification.setNotitification_date(notificationEvent.getTopTableNotificationSmsDao().getNotification_date());
@@ -1327,8 +1318,15 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
     private void setUpNotifications(List<TableNotificationSms> items) {
         notificationList.clear();
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "Enable permission from Settings to access Contact details.", Toast.LENGTH_SHORT).show();
+        }
+
         for (int i = 0; i < items.size(); i++) {
-            @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat("hh:mm a");
+
+            Log.d("hardikkamothi","Pattern is :: "+getTimeFormat(context));
+            @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat(getTimeFormat(context));
             String time = sdf.format(items.get(i).get_date());
             if (items.get(i).getNotification_type() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
                 Notification notification = new Notification();
@@ -1369,35 +1367,37 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
     }
 
     private NotificationContactModel gettingNameAndImageFromPhoneNumber(String number) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+            Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
 
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-        Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
+            String contactName, imageUrl = "";
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+                    imageUrl = cursor
+                            .getString(cursor
+                                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+                    cursor.close();
 
-        String contactName, imageUrl = "";
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                imageUrl = cursor
-                        .getString(cursor
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
-                cursor.close();
-
-            } else {
-                contactName = number;
+                } else {
+                    contactName = number;
+                }
+            } catch (Exception e) {
+                contactName = "";
+                imageUrl = "";
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            contactName = "";
-            imageUrl = "";
-            e.printStackTrace();
+
+
+            NotificationContactModel notificationContactModel = new NotificationContactModel();
+            notificationContactModel.setName(contactName);
+            notificationContactModel.setImage(imageUrl);
+            return notificationContactModel;
         }
-
-
-        NotificationContactModel notificationContactModel = new NotificationContactModel();
-        notificationContactModel.setName(contactName);
-        notificationContactModel.setImage(imageUrl);
-
-        return notificationContactModel;
+        return null;
     }
 
     final GestureDetector gesture = new GestureDetector(context,
@@ -1794,5 +1794,19 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             e.printStackTrace();
 
         }
+    }
+
+    public String getTimeFormat(Context context){
+        String format="";
+        boolean is24hourformat=android.text.format.DateFormat.is24HourFormat(context);
+
+        if(is24hourformat){
+            format="HH:mm";
+        }
+        else{
+            format="hh:mm a";
+        }
+        Log.d("hardikkamothi","Format is ::"+format);
+        return format;
     }
 }

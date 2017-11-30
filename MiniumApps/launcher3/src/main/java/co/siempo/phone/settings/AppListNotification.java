@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,6 +56,7 @@ public class AppListNotification  extends AppCompatActivity {
     private SharedPreferences launcherPrefs;
     private ArrayList<String> disableNotificationApps= new ArrayList<>();
     private ArrayList<String> disableSectionList= new ArrayList<>();
+    private List<String> systemAppList = new ArrayList<>();
 
 
     @Override
@@ -79,6 +82,7 @@ public class AppListNotification  extends AppCompatActivity {
         packageManager= getPackageManager();
         launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
 
+        systemAppList=Arrays.asList(getResources().getStringArray(R.array.systemAppList));
 
         // Add social Media List
         socialAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.socialAppList)));
@@ -129,14 +133,17 @@ public class AppListNotification  extends AppCompatActivity {
                 messengerList.add(d);
             }
             else{
+
                 DisableAppList d = new DisableAppList();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                if(disableNotificationApps.contains(d.applicationInfo.packageName)){
-                    d.ischecked=false;
-                }else{
-                    d.ischecked=true;
+                if(!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
+                    if (disableNotificationApps.contains(d.applicationInfo.packageName)) {
+                        d.ischecked = false;
+                    } else {
+                        d.ischecked = true;
+                    }
+                    appList.add(d);
                 }
-                appList.add(d);
             }
         }
 

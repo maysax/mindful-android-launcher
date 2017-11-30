@@ -100,6 +100,7 @@ public class SmsReceiver extends BroadcastReceiver {
         TableNotificationSms sms = new TableNotificationSms();
         sms.set_contact_title(address);
         sms.set_message(body);
+        sms.setNotification_date(System.currentTimeMillis());
         sms.set_date(date);
         sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);
         long id = smsDao.insert(sms);

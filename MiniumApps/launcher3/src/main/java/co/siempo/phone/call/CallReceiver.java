@@ -118,6 +118,7 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
             TableNotificationSms sms = new TableNotificationSms();
             sms.set_contact_title(address);
             sms.set_date(date);
+            sms.setNotification_date(System.currentTimeMillis());
             sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
             sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
             long id = notificationSmsDao.insert(sms);

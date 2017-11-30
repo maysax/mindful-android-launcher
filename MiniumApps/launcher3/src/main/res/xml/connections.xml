@@ -5,20 +5,20 @@
     android:title="@string/connections_title">
 
     <Preference
-        android:title="@string/pref_wifi_title"
-        android:key="@string/wifi_key"></Preference>
-
-    <Preference android:title="@string/pref_bluetooth">
-        <intent android:action="android.settings.BLUETOOTH_SETTINGS" />
-    </Preference>
+        android:key="@string/wifi_key"
+        android:title="@string/pref_wifi_title"></Preference>
 
     <Preference
-        android:title="@string/pref_data_usage"
-        android:key="@string/data_usage_key"></Preference>
+        android:key="@string/bluetooth_key"
+        android:title="@string/pref_bluetooth"></Preference>
 
-    <Preference android:title="@string/wireless_and_network">
-        <intent android:action="android.settings.WIRELESS_SETTINGS" />
-    </Preference>
+    <Preference
+        android:key="@string/data_usage_key"
+        android:title="@string/pref_data_usage"></Preference>
+
+    <Preference
+        android:key="@string/wireless_key"
+        android:title="@string/wireless_and_network"></Preference>
 
 
 </PreferenceScreen>

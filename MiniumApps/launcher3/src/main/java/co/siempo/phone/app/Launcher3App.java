@@ -45,6 +45,7 @@ import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.GreenDaoOpenHelper;
 import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.kiss.IconsHandler;
 import co.siempo.phone.old.PreferenceListAdapter;
 import co.siempo.phone.service.SiempoNotificationListener;
@@ -85,6 +86,9 @@ public class Launcher3App extends CoreApplication {
 
     @SystemService
     NotificationManager notificationManager;
+
+    boolean isSiempoLauncher = false;
+    private long startTime;
 
 
     @Trace(tag = TRACE_TAG)
@@ -141,7 +145,6 @@ public class Launcher3App extends CoreApplication {
 
         private int numStarted = 0;
 
-
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 
@@ -177,17 +180,33 @@ public class Launcher3App extends CoreApplication {
 
         @Override
         public void onActivityResumed(Activity activity) {
-
+            if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                isSiempoLauncher = true;
+                if (startTime == 0) {
+                    startTime = System.currentTimeMillis();
+                }
+            } else {
+                isSiempoLauncher = false;
+            }
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
-
+            if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                isSiempoLauncher = true;
+            } else {
+                if (isSiempoLauncher && startTime != 0) {
+                    FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_DEFAULT, startTime);
+                    startTime=0;
+                }
+                isSiempoLauncher = false;
+            }
         }
 
         @Override
         public void onActivityStopped(Activity activity) {
             numStarted--;
+
             if (numStarted == 0) {
                 Log.d(TAG, "Siempo is on background");
                 // app went to background
@@ -203,6 +222,7 @@ public class Launcher3App extends CoreApplication {
                     }
                 }
                 if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                    isSiempoLauncher = true;
                     launcherPrefs.isAppDefaultOrFront().put(true);
                 } else {
                     launcherPrefs.isAppDefaultOrFront().put(false);
@@ -422,7 +442,7 @@ public class Launcher3App extends CoreApplication {
                     if (appList.get(i) != null && appList.get(i).activityInfo.packageName.equalsIgnoreCase(prefs.emailPackage().get())) {
                         resolveInfo = appList.get(i);
                         pos = i;
-                    }else{
+                    } else {
                         resolveInfo = null;
                     }
                 }
@@ -510,16 +530,16 @@ public class Launcher3App extends CoreApplication {
                     dialog.dismiss();
                     EventBus.getDefault().post(new DefaultAppUpdate(true));
                 } else {
-                    if(menuId==6){
-                        if(resolveInfo==null){
+                    if (menuId == 6) {
+                        if (resolveInfo == null) {
                             prefs.notesPackage().put(context.getResources().getString(R.string.notes));
-                        }else{
+                        } else {
                             prefs.notesPackage().put(resolveInfo.activityInfo.packageName);
                         }
 
                         dialog.dismiss();
                         EventBus.getDefault().post(new DefaultAppUpdate(true));
-                    }else{
+                    } else {
                         Toast.makeText(context, "Please select application.", Toast.LENGTH_SHORT).show();
                     }
 
