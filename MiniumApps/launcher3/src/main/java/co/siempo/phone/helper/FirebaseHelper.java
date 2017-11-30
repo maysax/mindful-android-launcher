@@ -84,12 +84,12 @@ public class FirebaseHelper {
      * from = 0 for Menu List
      * from = 1 for IF Screen
      * @param applicationName
-     * @param from
+     * @param actionFor
      */
-    public void logSiempoMenuUsage(String applicationName, int from) {
+    public void logSiempoMenuUsage(String applicationName, int actionFor) {
         Bundle bundle = new Bundle();
         bundle.putString("Menu Name", applicationName);
-        if (from == 0) {
+        if (actionFor == 0) {
             bundle.putString("From", "Menu List");
         } else {
             bundle.putString("From", "IF Screen");
@@ -102,11 +102,14 @@ public class FirebaseHelper {
      * @param action
      * @param applicationName
      */
-    public void logIFAction(String action, String applicationName) {
+    public void logIFAction(String action, String applicationName,String data) {
+
         Bundle bundle = new Bundle();
         bundle.putString("Action", action);
         if (!applicationName.equalsIgnoreCase("")) {
             bundle.putString("Application Name", applicationName);
+        }else{
+            bundle.putString("Data", data);
         }
         getFirebaseAnalytics().logEvent("IF Action", bundle);
     }

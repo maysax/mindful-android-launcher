@@ -127,6 +127,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         logFirebase();
         launcherPrefs.updatePrompt().put(true);
+
     }
 
     @Subscribe
@@ -317,11 +318,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                 Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
-                ((Launcher3App) CoreApplication.getInstance()).getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
+                FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
             }
         } else {
             Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
-            ((Launcher3App) CoreApplication.getInstance()).getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
+            FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
         }
     }
 
