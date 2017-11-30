@@ -102,14 +102,12 @@ public class MainFragment extends CoreFragment {
 
     @Override
     public void onStart() {
-        Log.d("hardikkamothi","on Start..");
         CoreApplication.getInstance().isIfScreen = true;
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        Log.d("hardikkamothi","on Stop...");
         CoreApplication.getInstance().isIfScreen = false;
         super.onStop();
     }
@@ -136,10 +134,10 @@ public class MainFragment extends CoreFragment {
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             boolean isVisible = false;
-            if(intent.hasExtra("IsNotificationVisible")){
+            if (intent.hasExtra("IsNotificationVisible")) {
                 isVisible = intent.getBooleanExtra("IsNotificationVisible", false);
             }
-            if(searchLayout!=null && searchLayout.getTxtSearchBox()!=null){
+            if (searchLayout != null && searchLayout.getTxtSearchBox() != null) {
                 searchLayout.getTxtSearchBox().setNotificationVisible(isVisible);
             }
             if (isVisible) {
@@ -154,12 +152,12 @@ public class MainFragment extends CoreFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
                 new IntentFilter("IsNotificationVisible"));
         if (adapter != null) adapter.getFilter().filter("");
-        if(searchLayout!=null) {
+        if (searchLayout != null) {
             searchLayout.askFocus();
         }
         // If new app installed or if any contact is update/create this booleans
         // becomes true from StatusService class.
-        if(prefs.isContactUpdate().get() || prefs.isAppUpdated().get()){
+        if (prefs.isContactUpdate().get() || prefs.isAppUpdated().get()) {
             loadData();
         }
     }
@@ -171,22 +169,29 @@ public class MainFragment extends CoreFragment {
         super.onDestroy();
     }
 
-    void updateListViewLayout() {
-        try {
-            int val;
-            if (isKeyboardOpen) {
-                val = Math.min(adapter.getCount() * 54, 240);
-            } else {
-                val = Math.min(adapter.getCount() * 54, 54 * 9);
-            }
+    synchronized void updateListViewLayout() {
+        if(getActivity()!=null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        int val;
+                        if (isKeyboardOpen) {
+                            val = Math.min(adapter.getCount() * 54, 240);
+                        } else {
+                            val = Math.min(adapter.getCount() * 54, 54 * 9);
+                        }
 
-            // extra padding when there is something in listView
-            if (val != 0) val += 8;
+                        // extra padding when there is something in listView
+                        if (val != 0) val += 8;
 
-            listViewLayout.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
-            listViewLayout.requestLayout();
-        } catch (Exception e) {
-            e.printStackTrace();
+                        listViewLayout.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
+                        listViewLayout.requestLayout();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 
@@ -237,7 +242,8 @@ public class MainFragment extends CoreFragment {
             }
             emptyChecker(event.getString());
             parser.parse(event.getString());
-           if(adapter!=null) adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+            if (adapter != null)
+                adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
