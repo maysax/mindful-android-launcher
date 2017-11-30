@@ -222,7 +222,7 @@ public class MainFragment extends CoreFragment {
         if (listView.getAdapter() instanceof PhoneNumbersAdapter) {
             mediator.listItemClicked2(router, position);
         } else {
-            mediator.listItemClicked(router, position);
+            mediator.listItemClicked(router, position,searchLayout.getTxtSearchBox().getStrText().toString());
         }
 
     }

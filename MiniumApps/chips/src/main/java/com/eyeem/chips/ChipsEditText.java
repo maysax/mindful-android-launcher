@@ -27,6 +27,11 @@ public class ChipsEditText extends MultilineEditText {
     boolean autoShow;
     int maxBubbleCount = -1;
     public CharSequence savedHint;
+    public String strText;
+
+    public String getStrText() {
+        return strText;
+    }
 
     private BubbleStyle currentBubbleStyle;
 
@@ -386,6 +391,7 @@ public class ChipsEditText extends MultilineEditText {
             if (muteHashWatcher)
                 return;
             after = s.toString();
+            strText = s.toString();
         }
 
         @Override
