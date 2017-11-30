@@ -161,19 +161,24 @@ public class Launcher3App extends CoreApplication {
                 }
 
                 launcherPrefs.isAppDefaultOrFront().put(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (Settings.canDrawOverlays(getApplicationContext())) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (Settings.canDrawOverlays(getApplicationContext())) {
+                                Log.d(TAG, "Display Siempo Status bar");
+                                ViewService_.intent(getApplicationContext()).showMask().start();
+                            } else {
+                                Log.d(TAG, "Overlay is off");
+                            }
+                        } else {
                             Log.d(TAG, "Display Siempo Status bar");
                             ViewService_.intent(getApplicationContext()).showMask().start();
-                        } else {
-                            Log.d(TAG, "Overlay is off");
                         }
-                    } else {
-                        Log.d(TAG, "Display Siempo Status bar");
-                        ViewService_.intent(getApplicationContext()).showMask().start();
                     }
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
+
             }
             numStarted++;
         }
