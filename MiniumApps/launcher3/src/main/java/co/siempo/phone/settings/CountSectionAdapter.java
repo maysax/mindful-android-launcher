@@ -149,6 +149,7 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
                         else{
                             launcherPrefs.edit().putInt(CoreApplication.getInstance().SOCIAL_DISABLE_COUNT,socialList.size()).commit();
                         }
+                        android.os.Handler handler = new android.os.Handler();
                         for(int i=0;i<socialList.size();i++){
                             changeAppNotification(socialList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
                             DisableAppList d1=socialList.get(i);
@@ -164,7 +165,7 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
                             launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,0).commit();
                         }
                         else{
-                            launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,appList.size()).commit();
+                            launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,messengerList.size()).commit();
                         }
                         for(int i=0;i<messengerList.size();i++){
                             changeAppNotification(messengerList.get(i).applicationInfo,isChecked,disableNotificationApps,context);
@@ -276,6 +277,7 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
                         else{
                             int disableCount=launcherPrefs.getInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,0);
                             launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,disableCount-1).commit();
+
                         }
 
                         if(messengerList.size() == launcherPrefs.getInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,0)){

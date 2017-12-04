@@ -63,5 +63,8 @@
     <style name="SiempoAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="SiempoAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
+    <style name="Autocomplete">
+        <item name="colorControlNormal">@color/automcoplete</item>
+        <item name="colorControlActivated">@color/automcoplete</item>
+    </style>
 </resources>

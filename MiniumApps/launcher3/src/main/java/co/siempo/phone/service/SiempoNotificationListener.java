@@ -124,20 +124,19 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
-
         context = this;
         printLog(notification);
-
         if (launcherPrefs.isAppDefaultOrFront().get()) {
-
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
             String disable_AppList=prefs.getString(CoreApplication.getInstance().DISABLE_APPLIST,"");
             if(!TextUtils.isEmpty(disable_AppList)){
                 Type type = new TypeToken<ArrayList<String>>(){}.getType();
+                disableNotificationApps = new ArrayList<>();
                 disableNotificationApps = new Gson().fromJson(disable_AppList, type);
                 if(!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())){
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
 
+                    filterByCategory(notification);
                 }
             }
 
@@ -168,7 +167,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 CoreApplication.getInstance().changeProfileToSilentMode();
             }
         }
-        filterByCategory(notification);
     }
 
     private void printLog(StatusBarNotification notification) {
@@ -342,6 +340,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
                         if (statusBarNotification.getNotification().category == null
                                 || !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
+
                             TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
                                     .where(TableNotificationSmsDao.Properties.PackageName.eq(statusBarNotification.getPackageName()),
                                             TableNotificationSmsDao.Properties._contact_title.eq(title),
@@ -358,6 +357,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     notificationSms.setPackageName(strPackageName);
                                     notificationSms.setApp_icon(icon);
                                     notificationSms.setUser_icon(largeIcon);
+
                                     long id = smsDao.insertOrReplace(notificationSms);
                                     notificationSms.setId(id);
                                 }
@@ -366,6 +366,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     notificationSms.set_date(date);
                                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                     notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
+
                                     smsDao.updateInTx(notificationSms);
                                 }
                             }
@@ -395,6 +396,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                         notificationSms.setPackageName(strPackageName);
                                         notificationSms.setApp_icon(icon);
                                         notificationSms.setUser_icon(largeIcon);
+
                                         long id = smsDao.insertOrReplace(notificationSms);
                                         notificationSms.setId(id);
                                     }
@@ -409,6 +411,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                         } else {
                                             notificationSms.set_message(text + "\n" + notificationSms.get_message());
                                         }
+
                                         smsDao.updateInTx(notificationSms);
                                     }
                                 }

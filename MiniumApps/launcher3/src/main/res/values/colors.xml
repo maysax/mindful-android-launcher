@@ -12,4 +12,5 @@
     <color name="transparent">#00000000</color>
     <color name="text.ongoingcall">#646464</color>
     <color name="border.color">#42000000</color>"
+    <color name="automcoplete">#bcbcbc</color>
 </resources>

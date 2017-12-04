@@ -1210,7 +1210,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         if (tableNotificationSms != null) {
             if (imgNotification != null) imgNotification.setVisibility(View.VISIBLE);
             if (!checkNotificationExistsOrNot(tableNotificationSms.getTopTableNotificationSmsDao().getId())) {
-                Log.d("hardikkamothi","Early Pattern is :: "+getTimeFormat(context));
                 @SuppressLint("SimpleDateFormat")
                 DateFormat sdf = new SimpleDateFormat(getTimeFormat(context));
                 String time = sdf.format(tableNotificationSms.getTopTableNotificationSmsDao().get_date());
@@ -1268,7 +1267,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
             }
             if (pos != -1) {
-                Log.d("hardikkamothi","time Format is::"+getTimeFormat(context));
                 DateFormat sdf = new SimpleDateFormat(getTimeFormat(context));
                 String time = sdf.format(notificationEvent.getTopTableNotificationSmsDao().get_date());
                 Notification notification = notificationList.get(pos);
@@ -1325,7 +1323,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
         for (int i = 0; i < items.size(); i++) {
 
-            Log.d("hardikkamothi","Pattern is :: "+getTimeFormat(context));
             @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat(getTimeFormat(context));
             String time = sdf.format(items.get(i).get_date());
             if (items.get(i).getNotification_type() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
@@ -1806,7 +1803,6 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         else{
             format="hh:mm a";
         }
-        Log.d("hardikkamothi","Format is ::"+format);
         return format;
     }
 }

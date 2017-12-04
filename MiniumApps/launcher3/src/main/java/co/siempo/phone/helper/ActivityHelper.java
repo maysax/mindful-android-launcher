@@ -26,6 +26,7 @@ import co.siempo.phone.settings.SiempoMainSettingsActivity_;
 import co.siempo.phone.settings.SiempoPhoneSettingsActivity;
 import co.siempo.phone.settings.SiempoSettingsActivity_;
 import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity_;
+import co.siempo.phone.settings.SiempoSupressNotificationActivity;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -461,6 +462,18 @@ public class ActivityHelper {
     public boolean openSiempoDefaultAppSettings() {
         try {
             SiempoSettingsDefaultAppActivity_.intent(getContext()).start();
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+        return false;
+    }
+
+
+    public boolean openSiempoSuppressNotificationsSettings() {
+        try {
+            Intent i = new Intent(context,SiempoSupressNotificationActivity.class);
+            context.startActivity(i);
             return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());

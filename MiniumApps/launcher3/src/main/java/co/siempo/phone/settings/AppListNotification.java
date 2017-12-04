@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.gson.Gson;
@@ -20,15 +21,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
+import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.event.AppInstalledEvent;
+import minium.co.core.ui.CoreActivity;
 
 /**
  * Created by hardik on 22/11/17.
  */
 
-public class AppListNotification  extends AppCompatActivity {
+public class AppListNotification  extends CoreActivity {
 
     private RecyclerView lst_appList;
     private ImageView crossActionBar, settingsActionBar, btnListOrGrid;
@@ -62,15 +67,20 @@ public class AppListNotification  extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_app_list_notification);
         initView();
     }
 
     public void initView(){
 
+        messengerList.clear();
+        messengerAppList.clear();
         socialList.clear();
         appList.clear();
         socialAppList.clear();
+        headerList.clear();
 
         // Initialize components
         lst_appList = findViewById(R.id.lst_appList);
@@ -110,6 +120,18 @@ public class AppListNotification  extends AppCompatActivity {
         }
 
 
+      loadAndDisplayAppList();
+
+    }
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            initView();
+        }
+    }
+
+    public void loadAndDisplayAppList(){
         // Load social Media Apps & Filter from app list
         for(int i = 0; i< CoreApplication.getInstance().getPackagesList().size(); i++){
             if(socialAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
@@ -150,17 +172,17 @@ public class AppListNotification  extends AppCompatActivity {
 
 
         // headerList contains all the section details information with name and enable/disable result
-            if(socialList.size()>0) {
-                HeaderAppList d = new HeaderAppList();
-                d.name = "Social Media";
-                if (disableSectionList.contains("Social Media")) {
+        if(socialList.size()>0) {
+            HeaderAppList d = new HeaderAppList();
+            d.name = "Social Media";
+            if (disableSectionList.contains("Social Media")) {
 
-                    d.ischecked = false;
-                } else {
-                    d.ischecked = true;
-                }
-                headerList.add(d);
+                d.ischecked = false;
+            } else {
+                d.ischecked = true;
             }
+            headerList.add(d);
+        }
 
 
         if(messengerList.size()>0) {
@@ -177,17 +199,17 @@ public class AppListNotification  extends AppCompatActivity {
 
 
         if(appList.size() > 0) {
-                HeaderAppList d2 = new HeaderAppList();
-                d2.name = "Other Apps";
+            HeaderAppList d2 = new HeaderAppList();
+            d2.name = "Other Apps";
 
-                if (disableSectionList.contains("Other Apps")) {
+            if (disableSectionList.contains("Other Apps")) {
 
-                    d2.ischecked = false;
-                } else {
-                    d2.ischecked = true;
-                }
-                headerList.add(d2);
+                d2.ischecked = false;
+            } else {
+                d2.ischecked = true;
             }
+            headerList.add(d2);
+        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst_appList.setLayoutManager(linearLayoutManager);
@@ -195,6 +217,5 @@ public class AppListNotification  extends AppCompatActivity {
 
         CountSectionAdapter adapter = new CountSectionAdapter(this,appList,socialList,messengerList,headerList);
         lst_appList.setAdapter(adapter);
-
     }
 }
