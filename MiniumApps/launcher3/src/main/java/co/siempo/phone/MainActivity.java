@@ -262,7 +262,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                     if (currentItem == 0) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
                     } else if (currentItem == 1) {
-                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.INTENTION_FIELD, startTime);
+                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
                     }
                 }
                 currentItem = position;
@@ -447,11 +447,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         Log.d(TAG, "ACTION ONPAUSE");
         enableNfc(false);
 
-        if (currentItem == 0) {
-            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.INTENTION_FIELD, startTime);
-        } else if (currentItem == 1) {
-            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
-        }
+//        if (currentItem == 0) {
+//            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+//        } else if (currentItem == 1) {
+//            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+//        }
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+
 
     }
 
@@ -670,10 +673,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Constants.PERMISSIONS)
                 .check();
-    }
-
-    public static void logNotesEvent(String sreenName,long startTime){
-        FirebaseHelper.getIntance().logScreenUsageTime(sreenName,startTime);
     }
 
 }

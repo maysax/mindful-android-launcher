@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import co.siempo.phone.app.Launcher3App;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.log.Tracer;
 
 /**
  * Created by Shahab on 5/8/2017.
@@ -18,19 +19,36 @@ public class FirebaseHelper {
 
 
     private static FirebaseHelper firebaseHelper;
-    public static String INTENTION_FIELD = "Intention Field";
-    public static String SIEMPO_MENU = "Siempo Menu";
-    public static String SIEMPO_DEFAULT = "Siempo As Default";
 
     //Action
-    public static String ACTION_CALL = "Call";
-    public static String ACTION_SMS = "Send as SMS";
-    public static String ACTION_SAVE_NOTE = "Save Note";
-    public static String ACTION_CREATE_CONTACT = "Create Contact";
-    public static String ACTION_CONTACT_PICK = "Contact Picked";
-    public static String ACTION_APPLICATION_PICK = "Application Picked";
+    public static String ACTION_CALL = "call";
+    public static String ACTION_SMS = "send_as_sms";
+    public static String ACTION_SAVE_NOTE = "save_note";
+    public static String ACTION_CREATE_CONTACT = "create_contact";
+    public static String ACTION_CONTACT_PICK = "contact_picked";
+    public static String ACTION_APPLICATION_PICK = "application_picked";
 
-    private FirebaseHelper() {
+    // Screen Name
+    public static String MENU_SCREEN = "menu_screen";
+    public static String IF_SCREEN = "if_screen";
+    public static String SIEMPO_DEFAULT = "siempo_default";
+
+    //Event
+    public static String IF_ACTION = "if_action";
+    public static String SIEMPO_MENU = "siempo_menu";
+    public static String THIRD_PARTY_APPLICATION = "third_party";
+    public static String SCREEN_USAGE = "screen_usage";
+
+    //Attribute
+    private String SCREEN_NAME = "screen_name";
+    private String TIME_SPENT = "time_spent";
+    private String APPLICATION_NAME = "application_name";
+    private String MENU_NAME = "menu_name";
+    private String INTENT_FROM = "intent_from";
+    private String ACTION = "action";
+    private String IF_DATA = "if_data";
+
+    public FirebaseHelper() {
 
     }
 
@@ -46,11 +64,6 @@ public class FirebaseHelper {
         return ((Launcher3App) CoreApplication.getInstance()).getFirebaseAnalytics();
     }
 
-    public void appOpenEvent() {
-        Bundle bundle = new Bundle();
-        getFirebaseAnalytics().logEvent(FirebaseAnalytics.Event.APP_OPEN, bundle);
-    }
-
     /**
      * Used for how long user spent time on specific screen by screen name.
      *
@@ -59,59 +72,69 @@ public class FirebaseHelper {
      */
     public void logScreenUsageTime(String screenName, long startTime) {
         long duration = System.currentTimeMillis() - startTime;
-        String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(duration),
-                TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
-                TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)));
+        long diffSeconds = duration / 1000 % 60;
+        long diffMinutes = duration / (60 * 1000) % 60;
+        long diffHours = duration / (60 * 60 * 1000) % 24;
+        long diffDays = duration / (24 * 60 * 60 * 1000);
+
         Bundle bundle = new Bundle();
-        bundle.putString("Screen Name", screenName);
-        bundle.putString("Time Spent", "" + hms);
-        getFirebaseAnalytics().logEvent("Screen Usage", bundle);
+        bundle.putString(SCREEN_NAME, screenName);
+        bundle.putString(TIME_SPENT, "" + diffDays + "," + diffHours + ":" + diffMinutes + ":" + diffSeconds);
+        Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
 
     }
 
     /**
      * Used for Third party application open by User from application list.
+     *
      * @param applicationName
      */
     public void logAppUsage(String applicationName) {
         Bundle bundle = new Bundle();
-        bundle.putString("Application Name", applicationName);
-        getFirebaseAnalytics().logEvent("Third Party Application", bundle);
+        bundle.putString(APPLICATION_NAME, applicationName);
+        Tracer.d("Firebase:" + THIRD_PARTY_APPLICATION + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(THIRD_PARTY_APPLICATION, bundle);
     }
 
     /**
      * Used fot menu used by user from either IF or menu list based in from.
      * from = 0 for Menu List
      * from = 1 for IF Screen
+     *
      * @param applicationName
      * @param actionFor
      */
     public void logSiempoMenuUsage(String applicationName, int actionFor) {
         Bundle bundle = new Bundle();
-        bundle.putString("Menu Name", applicationName);
+        bundle.putString(MENU_NAME, applicationName);
         if (actionFor == 0) {
-            bundle.putString("From", "Menu List");
+            bundle.putString(INTENT_FROM, MENU_SCREEN);
         } else {
-            bundle.putString("From", "IF Screen");
+            bundle.putString(INTENT_FROM, IF_SCREEN);
         }
-        getFirebaseAnalytics().logEvent("Siempo Menu", bundle);
+        Tracer.d("Firebase:" + SIEMPO_MENU + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(SIEMPO_MENU, bundle);
     }
 
     /**
      * Used for log the IF action of user.
+     *
      * @param action
      * @param applicationName
      */
-    public void logIFAction(String action, String applicationName,String data) {
+    public void logIFAction(String action, String applicationName, String data) {
 
         Bundle bundle = new Bundle();
-        bundle.putString("Action", action);
+        bundle.putString(ACTION, action);
         if (!applicationName.equalsIgnoreCase("")) {
-            bundle.putString("Application Name", applicationName);
-        }else{
-            bundle.putString("Data", data);
+            bundle.putString(APPLICATION_NAME, applicationName);
+        } else {
+            bundle.putString(IF_DATA, data);
         }
-        getFirebaseAnalytics().logEvent("IF Action", bundle);
+        Tracer.d(IF_ACTION + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(IF_ACTION, bundle);
+
     }
 
 }
