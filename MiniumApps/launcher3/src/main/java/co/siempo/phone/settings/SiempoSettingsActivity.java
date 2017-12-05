@@ -313,12 +313,12 @@ public class SiempoSettingsActivity extends CoreActivity {
         Log.d(TAG, "Check Version event...");
 
         if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > BuildConfig.VERSION_CODE) {
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
                 if (pd != null) {
                     pd.dismiss();
                     pd = null;
                 }
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.ALPHA);
             } else {
@@ -329,8 +329,8 @@ public class SiempoSettingsActivity extends CoreActivity {
                 pd.dismiss();
                 pd = null;
             }
-            if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.BETA);
             } else {

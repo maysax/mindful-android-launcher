@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 
+import minium.co.core.BuildConfig;
 import minium.co.core.R;
 import minium.co.core.ui.CoreActivity;
 
@@ -32,6 +34,7 @@ import minium.co.core.ui.CoreActivity;
 public class UIUtils {
     public static final String PACKAGE_NAME = "co.siempo.phone";
     public static AlertDialog alertDialog;
+
     public static int dpToPx(Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 dp, context.getResources().getDisplayMetrics());
@@ -54,7 +57,7 @@ public class UIUtils {
     }
 
     public static void alert(Context context, String title, String msg) {
-       AlertDialog.Builder alertDialogBuilder=new AlertDialog.Builder(context)
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
                 .setPositiveButton(android.R.string.ok, null);
@@ -100,13 +103,22 @@ public class UIUtils {
     }
 
     public static void confirmWithCancel(Context context, String title, String msg, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
-        new AlertDialog.Builder(context)
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(msg)
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok, listener)
-                .setNegativeButton(android.R.string.cancel, listenerNo)
-                .show();
+                .setNegativeButton(android.R.string.cancel, listenerNo);
+        if (alertDialog != null) {
+            if (!alertDialog.isShowing()) {
+                alertDialog.show();
+            }
+        } else {
+            alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+
     }
 
     public static void ask(Context context, String msg, DialogInterface.OnClickListener listener) {
@@ -235,7 +247,7 @@ public class UIUtils {
     }
 
     public static Bitmap convertBytetoBitmap(byte[] byteArray) {
-        return BitmapFactory.decodeByteArray(byteArray , 0, byteArray.length);
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
 
     public static boolean isDeviceHasSimCard(Context context) {
@@ -247,5 +259,15 @@ public class UIUtils {
             return false;
             //no sim card available
         }
+    }
+
+    public static int getCurrentVersionCode(Context context) {
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return BuildConfig.VERSION_CODE;
     }
 }
