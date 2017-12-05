@@ -1118,47 +1118,52 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
      * This method used for load the current status of Wifi/BF/DND/Airplane/FlashLight.
      */
     private void statusOfQuickSettings() {
-        if (NetworkUtil.isAirplaneModeOn(context)) {
-            relMobileData.setEnabled(false);
-            img_notification_Airplane.setBackground(context.getDrawable(R.drawable.ic_airplane));
-            imgAirplane.setVisibility(View.VISIBLE);
-            wifiManager.setWifiEnabled(false);
-            img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
-            if (BluetoothAdapter.getDefaultAdapter() != null) {
-                BluetoothAdapter.getDefaultAdapter().disable();
-            }
-            img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
-            img_notification_Data.setBackground(context.getDrawable(R.drawable.ic_data_on_black_24dp));
-        } else {
-            relMobileData.setEnabled(true);
-            checkMobileData();
-            img_notification_Airplane.setBackground(context.getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
-            imgAirplane.setVisibility(View.GONE);
-            if (isWiFiOn) {
-                wifiManager.setWifiEnabled(true);
-            } else {
-                isWiFiOn = false;
-            }
-            if (!wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(context)) {
+        try {
+
+
+            if (NetworkUtil.isAirplaneModeOn(context)) {
+                relMobileData.setEnabled(false);
+                img_notification_Airplane.setBackground(context.getDrawable(R.drawable.ic_airplane));
+                imgAirplane.setVisibility(View.VISIBLE);
+                wifiManager.setWifiEnabled(false);
                 img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
-            } else {
-                img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
-                bindWiFiImage(wifilevel);
-            }
-            if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_on));
-            } else {
+                if (BluetoothAdapter.getDefaultAdapter() != null) {
+                    BluetoothAdapter.getDefaultAdapter().disable();
+                }
                 img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
+                img_notification_Data.setBackground(context.getDrawable(R.drawable.ic_data_on_black_24dp));
+            } else {
+                relMobileData.setEnabled(true);
+                checkMobileData();
+                img_notification_Airplane.setBackground(context.getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
+                imgAirplane.setVisibility(View.GONE);
+                if (isWiFiOn) {
+                    wifiManager.setWifiEnabled(true);
+                } else {
+                    isWiFiOn = false;
+                }
+                if (!wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(context)) {
+                    img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
+                } else {
+                    img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
+                    bindWiFiImage(wifilevel);
+                }
+                if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_on));
+                } else {
+                    img_notification_Ble.setBackground(context.getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
+                }
             }
-        }
 
-        bindDND();
-        bindFlash();
-        if (telephonyManager.getNetworkOperator().equalsIgnoreCase("")) {
-            img_notification_Data.setBackground(context.getDrawable(R.drawable.ic_data_on_black_24dp));
-            relMobileData.setEnabled(false);
+            bindDND();
+            bindFlash();
+            if (telephonyManager.getNetworkOperator().equalsIgnoreCase("")) {
+                img_notification_Data.setBackground(context.getDrawable(R.drawable.ic_data_on_black_24dp));
+                relMobileData.setEnabled(false);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
     }
 
     private void bindDND() {
