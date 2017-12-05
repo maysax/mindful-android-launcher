@@ -112,10 +112,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public static String isTextLenghGreater = "";
 
     long startTime;
+    boolean isApplicationLaunch = false;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
+        isApplicationLaunch = true;
         state = ActivityState.AFTERVIEW;
         Log.d(TAG, "afterViews event called");
 
@@ -159,12 +161,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         && BuildConfig.VERSION_CODE > launcherPrefs.getCurrentVersion().get()) {
                     new ActivityHelper(this).handleDefaultLauncher(this);
                     loadDialog();
-                    launcherPrefs.getCurrentVersion().put(BuildConfig.VERSION_CODE);
+                    launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
                 } else {
-                    launcherPrefs.getCurrentVersion().put(BuildConfig.VERSION_CODE);
+                    launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
                 }
             } else {
-                launcherPrefs.getCurrentVersion().put(BuildConfig.VERSION_CODE);
+                launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
             }
         }
     }
@@ -345,16 +347,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
         if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);
                 appUpdaterUtils = null;
             } else {
                 ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
             }
         } else {
-            if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
                 appUpdaterUtils = null;
             } else {
@@ -366,13 +368,18 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void showUpdateDialog(String str) {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
-            UIUtils.confirm(this, str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+            UIUtils.confirmWithCancel(this, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
                         launcherPrefs.updatePrompt().put(false);
                         new ActivityHelper(MainActivity.this).openBecomeATester();
                     }
+                }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    isApplicationLaunch = false;
                 }
             });
         } else {
@@ -438,8 +445,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-
-    long startEventTime=0;
+    long startEventTime = 0;
 
     @Override
     protected void onPause() {
@@ -544,7 +550,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null && appUpdaterUtils == null) {
+        if (activeNetwork != null) {
             Log.d(TAG, "Active network..");
             appUpdaterUtils = new AppUpdaterUtils(this)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -629,7 +635,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void checknavigatePermissions() {
         if (!launcherPrefs.isAppInstalledFirstTime().get()) {
             Log.d(TAG, "Display upgrade dialog.");
-//            checkUpgradeVersion();
+            if (isApplicationLaunch) {
+                checkUpgradeVersion();
+            }
         }
 
 
