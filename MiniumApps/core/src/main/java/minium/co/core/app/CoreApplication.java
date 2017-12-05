@@ -563,7 +563,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                             }
                             resourcesForApplication.updateConfiguration(originalConfig, originalDisplayMetrics);
                         } catch (Exception e) {
-                            Log.e("check", "error getting Hi Res Icon :", e);
+                            Log.e("Error", "Image Loading: ", e);
                             drawable = appInfo.loadIcon(getPackageManager());
                         }
                         Bitmap bitmap = drawableToBitmap(drawable);

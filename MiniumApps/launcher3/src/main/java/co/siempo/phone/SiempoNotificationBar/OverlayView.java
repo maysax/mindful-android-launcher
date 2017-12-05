@@ -1138,11 +1138,11 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 img_notification_Airplane.setBackground(context.getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
                 imgAirplane.setVisibility(View.GONE);
                 if (isWiFiOn) {
-                    wifiManager.setWifiEnabled(true);
+                    if (wifiManager != null) wifiManager.setWifiEnabled(true);
                 } else {
                     isWiFiOn = false;
                 }
-                if (!wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(context)) {
+                if (wifiManager != null && !wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(context)) {
                     img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
                 } else {
                     img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
@@ -1161,7 +1161,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 img_notification_Data.setBackground(context.getDrawable(R.drawable.ic_data_on_black_24dp));
                 relMobileData.setEnabled(false);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
