@@ -77,7 +77,7 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
         if(headerList.get(section).name.equals("Social Media")){
             size = socialList.size();
         }
-        if(headerList.get(section).name.equals("Messengers")){
+        if(headerList.get(section).name.equals("Messaging Apps")){
             size = messengerList.size();
         }
         if(headerList.get(section).name.equals("Other Apps")){
@@ -160,7 +160,7 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
                     }
 
 
-                    if(headerList.get(section).name.equals("Messengers")){
+                    if(headerList.get(section).name.equals("Messaging Apps")){
                         if(isChecked){
                             launcherPrefs.edit().putInt(CoreApplication.getInstance().MESSENGER_DISABLE_COUNT,0).commit();
                         }
@@ -251,7 +251,7 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
                 }
             });
         }
-        if(headerList.get(section).name.equals("Messengers")){
+        if(headerList.get(section).name.equals("Messaging Apps")){
             holder.render(messengerList.get(position).applicationInfo.name);
 
             holder.displayImage(messengerList.get(position).applicationInfo,packageManager);

@@ -5,13 +5,21 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
 
 import co.siempo.phone.app.Launcher3App;
@@ -22,6 +30,7 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.notification.NotificationUtility;
+import co.siempo.phone.service.SiempoNotificationListener;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -44,6 +53,9 @@ public class SmsReceiver extends BroadcastReceiver {
     Launcher3Prefs_ launcherPrefs;
 
     TableNotificationSmsDao smsDao;
+
+
+    ArrayList<String> disableNotificationApps= new ArrayList<>();
 
     public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
 
@@ -76,7 +88,21 @@ public class SmsReceiver extends BroadcastReceiver {
                 mAddress = sms.getDisplayOriginatingAddress(); // sms..getOriginatingAddress();
                 mDate = new Date(sms.getTimestampMillis());
 
-                saveMessage(mAddress, mBody, mDate);
+                if (launcherPrefs.isAppDefaultOrFront().get()) {
+                    SharedPreferences prefs = context.getSharedPreferences("Launcher3Prefs", 0);
+                    String disable_AppList = prefs.getString(CoreApplication.getInstance().DISABLE_APPLIST, "");
+                    if (!TextUtils.isEmpty(disable_AppList)) {
+                        Type type = new TypeToken<ArrayList<String>>() {
+                        }.getType();
+                         disableNotificationApps = new ArrayList<>();
+                        disableNotificationApps = new Gson().fromJson(disable_AppList, type);
+                        if (disableNotificationApps.contains("com.google.android.apps.messaging")) {
+                            saveMessage(mAddress, mBody, mDate);
+                        }
+                    }
+                }
+
+
                 //new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
                 EventBus.getDefault().post(new TopBarUpdateEvent());
 
@@ -100,6 +126,7 @@ public class SmsReceiver extends BroadcastReceiver {
         TableNotificationSms sms = new TableNotificationSms();
         sms.set_contact_title(address);
         sms.set_message(body);
+        sms.setPackageName("com.google.android.apps.messaging");
         sms.setNotification_date(System.currentTimeMillis());
         sms.set_date(date);
         sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);

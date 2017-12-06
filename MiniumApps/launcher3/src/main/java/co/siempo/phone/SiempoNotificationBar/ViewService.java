@@ -21,6 +21,7 @@ import org.androidannotations.annotations.SystemService;
  * A service is use to creating the view and hide/show it.
  *
  */
+
 @EIntentService
 public class ViewService extends IntentService {
 
@@ -71,7 +72,6 @@ public class ViewService extends IntentService {
 
     @ServiceAction
     protected void hideMask() {
-
         holder.hideView();
     }
 
@@ -79,6 +79,5 @@ public class ViewService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         // Do nothing here
     }
-
 
 }

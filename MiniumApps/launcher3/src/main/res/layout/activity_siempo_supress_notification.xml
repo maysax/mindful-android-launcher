@@ -45,11 +45,18 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
+
+
             <EditText
+                android:id="@+id/edt_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="false"
-                android:hint="Search App"/>
+                android:completionThreshold="1"
+                android:minLines="1"
+                android:maxLines="1"
+                android:hint="Search App"
+
+                />
 
 
         </LinearLayout>

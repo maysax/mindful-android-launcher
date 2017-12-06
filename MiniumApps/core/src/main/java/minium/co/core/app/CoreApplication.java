@@ -457,6 +457,7 @@ public abstract class CoreApplication extends MultiDexApplication {
      * @return application name
      */
     public String getApplicationNameFromPackageName(String packagename) {
+
         if (packagename != null && !packagename.equalsIgnoreCase("")) {
             for (ApplicationInfo applicationInfo : getPackagesList()) {
                 if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {

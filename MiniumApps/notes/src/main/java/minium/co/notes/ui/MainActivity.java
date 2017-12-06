@@ -195,7 +195,6 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.putExtra(NOTE_REQUEST_CODE, NEW_NOTE_REQUEST);
-
                 startActivityForResult(intent, NEW_NOTE_REQUEST);
             }
         });
@@ -230,7 +229,6 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         Tracer.d("Notes onResume called");
         // Retrieve from local path
         JSONArray tempNotes = retrieveData(localPath);
-
         Tracer.d("All notes: " + tempNotes);
 
         // If not null -> equal main notes to retrieved notes

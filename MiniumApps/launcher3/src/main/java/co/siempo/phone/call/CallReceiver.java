@@ -4,17 +4,13 @@ import android.content.Context;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
-
 import com.android.internal.telephony.ITelephony;
-
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-
 import java.lang.reflect.Method;
 import java.util.Date;
-
 import co.siempo.phone.SiempoNotificationBar.OnGoingCallData;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
@@ -77,7 +73,6 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
         Tracer.d("onIncomingCallEnded()");
         removeOngoingCall(number, start,2, "Ongoing call");
         vibration.cancel();
-
     }
 
     @Override
@@ -96,41 +91,37 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
 
     private void rejectCalls(Context ctx, String number, Date start) {
         try {
-
             Class c = Class.forName(telephonyManager.getClass().getName());
             Method m = c.getDeclaredMethod("getITelephony");
             m.setAccessible(true);
             ITelephony telephonyService = (ITelephony) m.invoke(telephonyManager);
-
             telephonyService.silenceRinger();
             telephonyService.endCall();
-
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
         }
     }
 
+    // Below code will use for further devlopment
     private void saveCall(String address, Date date) {
-
-        try {
-            TableNotificationSmsDao notificationSmsDao = DBUtility.getNotificationDao();
-
-            TableNotificationSms sms = new TableNotificationSms();
-            sms.set_contact_title(address);
-            sms.set_date(date);
-            sms.setNotification_date(System.currentTimeMillis());
-            sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
-            sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
-            long id = notificationSmsDao.insert(sms);
-            sms.setId(id);
-            EventBus.getDefault().post(new NewNotificationEvent(sms));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            TableNotificationSmsDao notificationSmsDao = DBUtility.getNotificationDao();
+//
+//            TableNotificationSms sms = new TableNotificationSms();
+//            sms.set_contact_title(address);
+//            sms.set_date(date);
+//            sms.setNotification_date(System.currentTimeMillis());
+//            sms.set_message(NotificationUtility.MISSED_CALL_TEXT);
+//            sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_CALL);
+//            long id = notificationSmsDao.insert(sms);
+//            sms.setId(id);
+//            EventBus.getDefault().post(new NewNotificationEvent(sms));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     // Keep this method as it is
-    @SuppressWarnings({"rawtypes", "unchecked"})
     private void disconnectPhoneITelephony(Context context) {
         try {
 
@@ -165,34 +156,36 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
         }
     }
 
+    // Below code will use for further development
     private void saveOnGoingCall(String address, Date date, int id,String message) {
-        try {
-            OnGoingCallData onGoingCall = new OnGoingCallData();
-            onGoingCall.setId(id);
-            onGoingCall.set_contact_title(address);
-            onGoingCall.set_date(date);
-            onGoingCall.set_isCallRunning(true);
-            onGoingCall.set_message(message);
-            onGoingCall.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_ONGOING_CALL);
-            EventBus.getDefault().post(new OnGoingCallEvent(onGoingCall));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            OnGoingCallData onGoingCall = new OnGoingCallData();
+//            onGoingCall.setId(id);
+//            onGoingCall.set_contact_title(address);
+//            onGoingCall.set_date(date);
+//            onGoingCall.set_isCallRunning(true);
+//            onGoingCall.set_message(message);
+//            onGoingCall.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_ONGOING_CALL);
+//            EventBus.getDefault().post(new OnGoingCallEvent(onGoingCall));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
+    // Below code will use for further development
     private void removeOngoingCall(String address, Date date, int id, String message){
-        try {
-            OnGoingCallData onGoingCall = new OnGoingCallData();
-            onGoingCall.setId(id);
-            onGoingCall.set_contact_title(address);
-            onGoingCall.set_date(date);
-            onGoingCall.set_isCallRunning(false);
-            onGoingCall.set_message(message);
-            onGoingCall.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_ONGOING_CALL);
-            EventBus.getDefault().post(new OnGoingCallEvent(onGoingCall));
-            }
-        catch (Exception e){
-            e.printStackTrace();
-            }
+//        try {
+//            OnGoingCallData onGoingCall = new OnGoingCallData();
+//            onGoingCall.setId(id);
+//            onGoingCall.set_contact_title(address);
+//            onGoingCall.set_date(date);
+//            onGoingCall.set_isCallRunning(false);
+//            onGoingCall.set_message(message);
+//            onGoingCall.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_ONGOING_CALL);
+//            EventBus.getDefault().post(new OnGoingCallEvent(onGoingCall));
+//            }
+//        catch (Exception e){
+//            e.printStackTrace();
+//            }
          }
 }

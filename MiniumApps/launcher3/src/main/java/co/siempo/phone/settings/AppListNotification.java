@@ -187,8 +187,8 @@ public class AppListNotification  extends CoreActivity {
 
         if(messengerList.size()>0) {
             HeaderAppList d1 = new HeaderAppList();
-            d1.name = "Messengers";
-            if (disableSectionList.contains("Messengers")) {
+            d1.name = "Messaging Apps";
+            if (disableSectionList.contains("Messaging Apps")) {
 
                 d1.ischecked = false;
             } else {
