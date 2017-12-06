@@ -56,7 +56,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
     private RecyclerListAdapter adapter;
     SharedPreferences launcherPrefs;
     private EditText edt_search;
-
+    public static final String TAG = SiempoSupressNotificationActivity.class.getName();
     ArrayList<String> disableNotificationApps= new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,7 +190,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
         List<TableNotificationSms> SMSItems = smsDao.queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
 
-
+        Log.d(TAG,"Store Notifications size :: "+SMSItems.size());
         setUpNotifications(SMSItems);
     }
 
@@ -223,16 +223,6 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                     notificationList.add(n);
                 }
             }
-            if(notificationList.size() == 0){
-                edt_search.setVisibility(View.GONE);
-                txtClearAll.setVisibility(View.GONE);
-                emptyView.setVisibility(View.VISIBLE);
-            }
-            else{
-                edt_search.setVisibility(View.VISIBLE);
-                emptyView.setVisibility(View.GONE);
-                txtClearAll.setVisibility(View.VISIBLE);
-            }
 
             adapter = new RecyclerListAdapter(context, notificationList);
             recyclerView.setAdapter(adapter);
@@ -240,6 +230,16 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
         }
 
+        if(notificationList.size() == 0){
+            edt_search.setVisibility(View.GONE);
+            txtClearAll.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else{
+            edt_search.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+            txtClearAll.setVisibility(View.VISIBLE);
+        }
 
 
     }

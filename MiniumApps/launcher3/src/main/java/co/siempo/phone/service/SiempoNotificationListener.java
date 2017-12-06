@@ -126,7 +126,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
         super.onNotificationPosted(notification);
         context = this;
         printLog(notification);
-        if (launcherPrefs.isAppDefaultOrFront().get()) {
+        if(PackageUtil.isSiempoLauncher(context)){
+            Log.d(TAG,"Suppress Notification Section"+notification.getPackageName());
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
             String disable_AppList=prefs.getString(CoreApplication.getInstance().DISABLE_APPLIST,"");
             if(!TextUtils.isEmpty(disable_AppList)){
@@ -135,10 +136,12 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 disableNotificationApps = new Gson().fromJson(disable_AppList, type);
                 if(!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())){
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
-
                     filterByCategory(notification);
                 }
             }
+        }
+        if (launcherPrefs.isAppDefaultOrFront().get()) {
+
 
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
             if (PackageUtil.isSiempoLauncher(this) && myKM.inKeyguardRestrictedInputMode() && launcherPrefs.isHidenotificationOnLockScreen().get()) {
