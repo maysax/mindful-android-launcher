@@ -7,23 +7,17 @@
     tools:ignore="UnusedResources">
 
 
-    <FrameLayout
-        android:id="@+id/statusView"
-        android:layout_width="match_parent"
-        android:layout_height="27dp" />
 
     <FrameLayout
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/statusView"
         android:elevation="6dp"
         tools:ignore="UnusedIds">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/statusView"
             android:layout_marginBottom="54dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
@@ -49,7 +43,6 @@
         android:id="@+id/mainView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/statusView"
         android:elevation="6dp"></FrameLayout>
 
 

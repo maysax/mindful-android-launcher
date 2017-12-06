@@ -25,7 +25,6 @@ public class CallLogActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
-        loadFragment(TopFragment_.builder().build(), R.id.statusView, "status");
         loadFragment(CallLogFragment_.builder().build(), R.id.mainView, "main");
     }
 

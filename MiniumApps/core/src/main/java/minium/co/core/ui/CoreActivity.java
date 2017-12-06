@@ -59,7 +59,6 @@ import minium.co.core.util.UIUtils;
  */
 
 @EActivity
-@Fullscreen
 public abstract class CoreActivity extends AppCompatActivity implements NFCInterface {
 
 

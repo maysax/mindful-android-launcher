@@ -145,7 +145,6 @@ public class MMSDialogFragment extends DialogFragment {
 
         Window window = dialog.getWindow();
         window.requestFeature(Window.FEATURE_NO_TITLE);
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         LayoutInflater inflater = getActivity().getLayoutInflater();

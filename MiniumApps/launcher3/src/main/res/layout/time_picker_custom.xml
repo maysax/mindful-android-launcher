@@ -9,11 +9,6 @@
     tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
-    <FrameLayout
-        android:id="@+id/statusView"
-        android:layout_width="match_parent"
-        android:layout_height="27dp"
-        tools:background="@color/material.core.red" />
 
     <FrameLayout
         android:id="@+id/mainView"

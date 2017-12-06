@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import co.siempo.phone.R;
-import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.service.SiempoAccessibilityService;
 import co.siempo.phone.service.SiempoDndService;
@@ -75,8 +74,6 @@ public class PackageUtil {
                 Toast.makeText(context, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName()));
                 context.startActivity(intent);
-            } else {
-                ViewService_.intent(context).showMask().start();
             }
         }
 

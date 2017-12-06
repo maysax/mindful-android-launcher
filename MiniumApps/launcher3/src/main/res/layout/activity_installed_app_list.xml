@@ -3,13 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:id="@+id/statusView"
-        android:layout_width="match_parent"
-        android:layout_height="27dp"
-        android:background="@android:color/white" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/activity_grid_view"
@@ -25,7 +21,6 @@
         layout="@layout/custom_toolbar_with_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/statusView"
         tools:ignore="DuplicateIncludedIds" />
 
     <android.support.v7.widget.Toolbar
@@ -88,7 +83,7 @@
         android:id="@+id/mainView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/statusView"></FrameLayout>
+        android:elevation="6dp"></FrameLayout>
 
 
 </RelativeLayout>

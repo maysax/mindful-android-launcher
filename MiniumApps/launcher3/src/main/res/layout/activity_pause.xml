@@ -10,15 +10,9 @@
     tools:ignore="UnusedIds">
 
 
-    <FrameLayout
-        android:id="@+id/statusView"
-        android:layout_width="match_parent"
-        android:layout_height="27dp"
-        tools:background="@color/material.core.red" />
 
     <RelativeLayout
         android:id="@+id/pauseView"
-        android:layout_below="@id/statusView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -26,8 +20,8 @@
 
     <FrameLayout
         android:id="@+id/mainView"
+        android:elevation="6dp"
         android:layout_width="match_parent"
-        android:layout_below="@id/statusView"
         android:layout_height="match_parent"></FrameLayout>
 
 </RelativeLayout>

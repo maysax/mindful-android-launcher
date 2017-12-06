@@ -1,6 +1,5 @@
 package co.siempo.phone.settings;
 
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,7 +10,6 @@ import android.net.Uri;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -69,7 +67,7 @@ import com.github.javiersantos.appupdater.enums.Display;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_KeyBoardNotification, icon_AllowNotificationFacebook,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp,icon_AppNotifications,icon_SuppressedNotifications;
+    private ImageView icon_launcher, icon_KeyBoardNotification,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp,icon_AppNotifications,icon_SuppressedNotifications;
     private TextView txt_version;
     private LinearLayout ln_launcher, ln_version, ln_Feedback,ln_Faq, ln_changeDefaultApp,ln_AppListNotifications,ln_suppressedNotifications;
     private String TAG = "SiempoSettingsActivity";
@@ -78,7 +76,6 @@ public class SiempoSettingsActivity extends CoreActivity {
     private ImageView icon_hideNotification;
     private SwitchCompat switch_notification;
     private SwitchCompat switch_KeyBoardnotification;
-    private SwitchCompat switch_AllowNotificationFacebook;
     @SystemService
     ConnectivityManager connectivityManager;
 
@@ -115,7 +112,6 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_Feedback = findViewById(R.id.icon_Feedback);
         icon_Faq = findViewById(R.id.icon_Faq);
         icon_AppNotifications = findViewById(R.id.icon_AppNotifications);
-        icon_AllowNotificationFacebook = findViewById(R.id.icon_AllowNotificationFacebook);
         txt_version = findViewById(R.id.txt_version);
         if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
             txt_version.setText("Version : " + "ALPHA-" + BuildConfig.VERSION_NAME);
@@ -135,7 +131,6 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
         switch_notification = findViewById(R.id.swtch_notification);
         switch_KeyBoardnotification = findViewById(R.id.switch_KeyBoardnotification);
-        switch_AllowNotificationFacebook = findViewById(R.id.switch_AllowNotificationFacebook);
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -156,9 +151,6 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_KeyBoardNotification.setImageDrawable(new IconDrawable(context, "fa-keyboard-o")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        icon_AllowNotificationFacebook.setImageDrawable(new IconDrawable(context, "fa-facebook-official")
-                .colorRes(R.color.text_primary)
-                .sizeDp(18));
         icon_Feedback.setImageDrawable(new IconDrawable(context, "fa-question-circle")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -172,7 +164,6 @@ public class SiempoSettingsActivity extends CoreActivity {
             switch_notification.setChecked(false);
         }
         switch_KeyBoardnotification.setChecked(isKeyboardDisplay);
-        switch_AllowNotificationFacebook.setChecked(prefs.isFacebookAllowed().get());
 
     }
 
@@ -282,13 +273,6 @@ public class SiempoSettingsActivity extends CoreActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 launcherPrefs.isHidenotificationOnLockScreen().put(isChecked);
-            }
-        });
-
-        switch_AllowNotificationFacebook.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                prefs.isFacebookAllowed().put(isChecked);
             }
         });
 

@@ -39,7 +39,6 @@ import java.util.Calendar;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
-import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.GreenDaoOpenHelper;
@@ -159,21 +158,8 @@ public class Launcher3App extends CoreApplication {
                 if (!myKM.inKeyguardRestrictedInputMode()) {
                     checkProfile();
                 }
-
                 launcherPrefs.isAppDefaultOrFront().put(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (Settings.canDrawOverlays(getApplicationContext())) {
-                            Log.d(TAG, "Display Siempo Status bar");
-                            ViewService_.intent(getApplicationContext()).showMask().start();
-                        } else {
-                            Log.d(TAG, "Overlay is off");
-                        }
-                    } else {
-                        Log.d(TAG, "Display Siempo Status bar");
-                        ViewService_.intent(getApplicationContext()).showMask().start();
-                    }
-                }
+
             }
             numStarted++;
         }
@@ -209,18 +195,7 @@ public class Launcher3App extends CoreApplication {
 
             if (numStarted == 0) {
                 Log.d(TAG, "Siempo is on background");
-                // app went to background
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (Settings.canDrawOverlays(getApplicationContext())) {
-                            Log.d(TAG, "Hide Siempo Status bar");
-                            ViewService_.intent(getApplicationContext()).hideMask().start();
-                        }
-                    } else {
-                        Log.d(TAG, "Hide Siempo Status Bar");
-                        ViewService_.intent(getApplicationContext()).hideMask().start();
-                    }
-                }
+
                 if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
                     isSiempoLauncher = true;
                     launcherPrefs.isAppDefaultOrFront().put(true);

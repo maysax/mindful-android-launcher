@@ -44,7 +44,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
-import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -200,7 +199,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                         startActivityForResult(intent, 102);
                     } else {
-                        ViewService_.intent(this).showMask().start();
                         checkAppLoadFirstTime();
                     }
                 }
@@ -208,7 +206,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
         if (requestCode == 102) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ViewService_.intent(this).showMask().start();
                 checkAppLoadFirstTime();
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(MainActivity.this)) {
@@ -223,7 +220,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                         .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                         startActivityForResult(intent, 103);
                     } else {
-                        ViewService_.intent(this).showMask().start();
                         checkAppLoadFirstTime();
                     }
                 }
@@ -238,7 +234,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                 .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                 startActivityForResult(intent, 103);
             } else {
-                ViewService_.intent(this).showMask().start();
                 checkAppLoadFirstTime();
             }
         }
@@ -643,7 +638,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 102);
             } else {
-                ViewService_.intent(MainActivity.this).showMask().start();
                 checkAppLoadFirstTime();
             }
         }

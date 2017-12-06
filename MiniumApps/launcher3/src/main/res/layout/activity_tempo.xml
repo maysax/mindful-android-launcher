@@ -9,25 +9,17 @@
     tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
-    <FrameLayout
-        android:id="@+id/statusView"
-        android:layout_width="match_parent"
-        android:layout_height="27dp"
-        tools:background="@color/material.core.red"
-        android:background="?android:attr/detailsElementBackground" />
 
     <RelativeLayout
         android:id="@+id/tempoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/statusView"
         android:layout_marginBottom="54dp"
         android:background="?android:attr/detailsElementBackground" />
 
     <FrameLayout
         android:id="@+id/mainView"
         android:layout_width="match_parent"
-        android:layout_below="@id/statusView"
         android:layout_height="match_parent"></FrameLayout>
 
 </RelativeLayout>

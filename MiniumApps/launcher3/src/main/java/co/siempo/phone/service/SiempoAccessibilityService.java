@@ -1,7 +1,6 @@
 package co.siempo.phone.service;
 
 import android.accessibilityservice.AccessibilityService;
-import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,15 +10,6 @@ import android.media.AudioManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
-import org.androidannotations.annotations.SystemService;
-
-import android.os.Build;
-import android.provider.Settings;
-import android.text.TextUtils;
-import android.view.accessibility.AccessibilityEvent;
-
-import co.siempo.phone.SiempoNotificationBar.ViewService_;
-import co.siempo.phone.util.PackageUtil;
 
 import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
 
@@ -67,17 +57,6 @@ public class SiempoAccessibilityService extends AccessibilityService {
 //                    }
 //                }
 
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                    // check the condition for the Marshmallow device.
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (Settings.canDrawOverlays(this)) {
-                            siempoNotificationBarStatus();
-                        }
-                    } else {
-                        siempoNotificationBarStatus();
-                    }
-                }
-
             }
         }
     }
@@ -96,12 +75,4 @@ public class SiempoAccessibilityService extends AccessibilityService {
         }
     }
 
-    public synchronized void siempoNotificationBarStatus() {
-        // below code will use for further development
-        if ((PackageUtil.isSiempoLauncher(this) || packageName.equalsIgnoreCase(getPackageName()))) {
-            ViewService_.intent(getApplication()).showMask().start();
-        } else {
-            ViewService_.intent(getApplication()).hideMask().start();
-        }
-    }
 }

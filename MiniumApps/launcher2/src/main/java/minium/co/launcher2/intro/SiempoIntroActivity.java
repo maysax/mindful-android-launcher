@@ -19,7 +19,6 @@ import minium.co.launcher2.R;
  * Created by Shahab on 1/9/2017.
  */
 
-@Fullscreen
 @EActivity
 public class SiempoIntroActivity extends AppIntro2 {
 
