@@ -31,6 +31,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.helper.FirebaseHelper;
 
 /**
  * Created by shahab on 12/6/16.
@@ -141,6 +142,19 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         getListView().setPadding(0, retrieveStatusBarHeight(this), 0, 0);
     }
 
+    long startTime =0;
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoPhoneSettingsActivity.class.getSimpleName(),startTime);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
      */
@@ -223,6 +237,19 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return view;
         }
+
+        long startTime =0;
+        @Override
+        public void onPause() {
+            super.onPause();
+            FirebaseHelper.getIntance().logScreenUsageTime(GeneralPreferenceFragment.class.getSimpleName(),startTime);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            startTime = System.currentTimeMillis();
+        }
     }
 
     /**
@@ -263,6 +290,19 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return view;
         }
+
+        long startTime =0;
+        @Override
+        public void onPause() {
+            super.onPause();
+            FirebaseHelper.getIntance().logScreenUsageTime(NotificationPreferenceFragment.class.getSimpleName(),startTime);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            startTime = System.currentTimeMillis();
+        }
     }
 
     /**
@@ -302,6 +342,19 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
+        }
+
+        long startTime =0;
+        @Override
+        public void onPause() {
+            super.onPause();
+            FirebaseHelper.getIntance().logScreenUsageTime(DataSyncPreferenceFragment.class.getSimpleName(),startTime);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            startTime = System.currentTimeMillis();
         }
     }
 
@@ -383,6 +436,19 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
+        }
+
+        long startTime =0;
+        @Override
+        public void onPause() {
+            super.onPause();
+            FirebaseHelper.getIntance().logScreenUsageTime(ConnectionFragment.class.getSimpleName(),startTime);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            startTime = System.currentTimeMillis();
         }
     }
 
@@ -487,6 +553,19 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
 
+        long startTime =0;
+        @Override
+        public void onPause() {
+            super.onPause();
+            FirebaseHelper.getIntance().logScreenUsageTime(DeviceSettingsFragment.class.getSimpleName(),startTime);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            startTime = System.currentTimeMillis();
+        }
+
     }
 
 
@@ -559,6 +638,19 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             }
             return view;
         }
+
+        long startTime =0;
+        @Override
+        public void onPause() {
+            super.onPause();
+            FirebaseHelper.getIntance().logScreenUsageTime(PersonalSettingsFragment.class.getSimpleName(),startTime);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            startTime = System.currentTimeMillis();
+        }
     }
 
 
@@ -625,6 +717,20 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
+        }
+
+
+        long startTime =0;
+        @Override
+        public void onPause() {
+            super.onPause();
+            FirebaseHelper.getIntance().logScreenUsageTime(System.class.getSimpleName(),startTime);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            startTime = System.currentTimeMillis();
         }
     }
 

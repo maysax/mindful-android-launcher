@@ -42,7 +42,7 @@ android {
         alpha {
 //            versionCode 1
 //            versionName "1"
-            versionCode 10901
+            versionCode 10902
             versionName "${0}.${0}.${10}.${9}-${buildTime}"
         }
         beta {

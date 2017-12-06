@@ -71,17 +71,36 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logScreenUsageTime(String screenName, long startTime) {
-        long duration = System.currentTimeMillis() - startTime;
-        long diffSeconds = duration / 1000 % 60;
-        long diffMinutes = duration / (60 * 1000) % 60;
-        long diffHours = duration / (60 * 60 * 1000) % 24;
-        long diffDays = duration / (24 * 60 * 60 * 1000);
+        long currentTime = System.currentTimeMillis();
+        long duration = currentTime - startTime;
 
-        Bundle bundle = new Bundle();
-        bundle.putString(SCREEN_NAME, screenName);
-        bundle.putString(TIME_SPENT, "" + diffDays + "," + diffHours + ":" + diffMinutes + ":" + diffSeconds);
-        Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long day = duration / daysInMilli;
+        duration = duration % daysInMilli;
+
+        long hours = duration / hoursInMilli;
+        duration = duration % hoursInMilli;
+
+        long minute = duration / minutesInMilli;
+        duration = duration % minutesInMilli;
+
+        long second = duration / secondsInMilli;
+
+        if (day == 0 && hours == 0 && minute == 0 && second == 0) {
+            Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putString(SCREEN_NAME, screenName);
+            bundle.putString(TIME_SPENT, "" + String.format("%02d", day) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second));
+            Tracer.d("Firebase:" + currentTime + ": " + startTime);
+            Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+        }
 
     }
 

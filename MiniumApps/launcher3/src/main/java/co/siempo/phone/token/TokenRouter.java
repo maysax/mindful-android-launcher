@@ -21,7 +21,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.SendSmsEvent;
+import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
@@ -64,12 +66,18 @@ public class TokenRouter {
 
     public void createContact(Context context) {
         String inputStr = TokenManager.getInstance().getCurrent().getTitle();
-        if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
-            context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
+        if (inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
+            new ActivityHelper(context).openSiempoAlphaSettingsApp();
+            TokenManager.getInstance().clear();
         } else {
-            context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
+            if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
+                context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
+            } else {
+                context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
+            }
+            TokenManager.getInstance().clear();
         }
-        TokenManager.getInstance().clear();
+
     }
 
     public void contactPicked(ContactListItem item) {
@@ -124,7 +132,7 @@ public class TokenRouter {
                     }
                     context.startActivity(intent);
                     EventBus.getDefault().post(new SendSmsEvent(true, strNumber, strMessage));
-                }else{
+                } else {
                     UIUtils.toast(context, "Please enter message.");
                 }
             } else if (!TokenManager.getInstance().has(TokenItemType.CONTACT)) {

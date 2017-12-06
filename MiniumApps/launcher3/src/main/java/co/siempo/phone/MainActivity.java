@@ -76,7 +76,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     private static final String TAG = "MainActivity";
 
-    public static int currentItem = 0;
+    public static int currentItem =-1;
     @ViewById
     ViewPager pager;
 
@@ -248,21 +248,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @UiThread(delay = 500)
     void loadViews() {
-        startTime = System.currentTimeMillis();
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
-
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (currentItem != position) {
-                    if (currentItem == 0) {
+                if (currentItem != -1 && currentItem != position) {
+                    if (position == 0) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
-                    } else if (currentItem == 1) {
+                    } else if (position == 1) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
                     }
                 }
@@ -387,9 +386,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-
-
-
     @Override
     public void onSmsSent(int threadId) {
 //        try {
@@ -428,7 +424,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume.. ");
-        startEventTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         try {
             enableNfc(true);
         } catch (Exception e) {
@@ -441,22 +437,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-    long startEventTime = 0;
-
     @Override
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "ACTION ONPAUSE");
         enableNfc(false);
-
-//        if (currentItem == 0) {
-//            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
-//        } else if (currentItem == 1) {
-//            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
-//        }
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
-
+        if (currentItem == 0) {
+            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+        } else if (currentItem == 1) {
+            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+        }
 
     }
 

@@ -95,12 +95,6 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         arr_menuList.add(s2);
 
 
-        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
-            SettingsData s3 = new SettingsData();
-            s3.setSettingType(getString(R.string.str_siempo_alphasettings));
-            s3.setId(3);
-            arr_menuList.add(s3);
-        }
 
         adapter = new SettingsAdapter(this, arr_menuList);
         lst_settings.setAdapter(adapter);
@@ -119,7 +113,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(SiempoMainSettingsActivity.this.getClass().getSimpleName(),startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoMainSettingsActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override
