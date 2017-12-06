@@ -71,17 +71,42 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logScreenUsageTime(String screenName, long startTime) {
-        long duration = System.currentTimeMillis() - startTime;
-        long diffSeconds = duration / 1000 % 60;
-        long diffMinutes = duration / (60 * 1000) % 60;
-        long diffHours = duration / (60 * 60 * 1000) % 24;
-        long diffDays = duration / (24 * 60 * 60 * 1000);
+        long currentTime = System.currentTimeMillis();
+        long duration = currentTime - startTime;
 
-        Bundle bundle = new Bundle();
-        bundle.putString(SCREEN_NAME, screenName);
-        bundle.putString(TIME_SPENT, "" + diffDays + "," + diffHours + ":" + diffMinutes + ":" + diffSeconds);
-        Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+        try {
+            long msInSecond = 1000;
+            long msInMinute = msInSecond * 60;
+            long msInHour = msInMinute * 60;
+            long msInDay = msInHour * 24;
+
+            long days = duration / msInDay;
+            duration = duration % msInDay;
+
+            long hours = duration / msInHour;
+            duration = duration % msInHour;
+
+            long minutes = duration / msInMinute;
+            duration = duration % msInMinute;
+
+            long seconds = duration / msInSecond;
+
+            if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+                Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString(SCREEN_NAME, screenName);
+                bundle.putString(TIME_SPENT, "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+                Tracer.d("Firebase:" + currentTime + ": " + startTime);
+                Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
+                getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+            }
+        } catch (ArithmeticException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
 
     }
 

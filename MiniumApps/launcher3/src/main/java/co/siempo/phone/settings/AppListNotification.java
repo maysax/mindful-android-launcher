@@ -123,6 +123,7 @@ public class AppListNotification extends CoreActivity {
             linSocial.setVisibility(View.VISIBLE);
             icon_AllowNotificationFacebook.setImageBitmap(CoreApplication.getInstance().iconList.get(Constants.FACEBOOK_PACKAGE));
             switch_AllowNotificationFacebook.setChecked(prefs.isFacebookAllowed().get());
+            linSocial.setVisibility(View.GONE);
         } else {
             linSocial.setVisibility(View.GONE);
         }
