@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 
 import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DataUtils;
 import minium.co.core.util.UIUtils;
@@ -36,6 +38,8 @@ import minium.co.core.util.UIUtils;
 @EBean
 public class TokenRouter {
 
+    @Pref
+    DroidPrefs_ droidPrefs_;
 
     void route() {
         EventBus.getDefault().post(new TokenUpdateEvent());
@@ -67,8 +71,18 @@ public class TokenRouter {
     public void createContact(Context context) {
         String inputStr = TokenManager.getInstance().getCurrent().getTitle();
         if (inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
-            new ActivityHelper(context).openSiempoAlphaSettingsApp();
-            TokenManager.getInstance().clear();
+            if (droidPrefs_.isAlphaSettingEnable().get()) {
+                if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
+                    context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
+                } else {
+                    context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
+                }
+                TokenManager.getInstance().clear();
+            } else {
+                droidPrefs_.isAlphaSettingEnable().put(true);
+                new ActivityHelper(context).openSiempoAlphaSettingsApp();
+                TokenManager.getInstance().clear();
+            }
         } else {
             if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
                 context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));

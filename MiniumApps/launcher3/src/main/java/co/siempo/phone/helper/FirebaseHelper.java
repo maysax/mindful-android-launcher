@@ -74,32 +74,38 @@ public class FirebaseHelper {
         long currentTime = System.currentTimeMillis();
         long duration = currentTime - startTime;
 
+        try {
+            long msInSecond = 1000;
+            long msInMinute = msInSecond * 60;
+            long msInHour = msInMinute * 60;
+            long msInDay = msInHour * 24;
 
-        long secondsInMilli = 1000;
-        long minutesInMilli = secondsInMilli * 60;
-        long hoursInMilli = minutesInMilli * 60;
-        long daysInMilli = hoursInMilli * 24;
+            long days = duration / msInDay;
+            duration = duration % msInDay;
 
-        long day = duration / daysInMilli;
-        duration = duration % daysInMilli;
+            long hours = duration / msInHour;
+            duration = duration % msInHour;
 
-        long hours = duration / hoursInMilli;
-        duration = duration % hoursInMilli;
+            long minutes = duration / msInMinute;
+            duration = duration % msInMinute;
 
-        long minute = duration / minutesInMilli;
-        duration = duration % minutesInMilli;
+            long seconds = duration / msInSecond;
 
-        long second = duration / secondsInMilli;
+            if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
+                Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putString(SCREEN_NAME, screenName);
+                bundle.putString(TIME_SPENT, "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+                Tracer.d("Firebase:" + currentTime + ": " + startTime);
+                Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
+                getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+            }
+        } catch (ArithmeticException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
 
-        if (day == 0 && hours == 0 && minute == 0 && second == 0) {
-            Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-        } else {
-            Bundle bundle = new Bundle();
-            bundle.putString(SCREEN_NAME, screenName);
-            bundle.putString(TIME_SPENT, "" + String.format("%02d", day) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", second));
-            Tracer.d("Firebase:" + currentTime + ": " + startTime);
-            Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
-            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
     }
