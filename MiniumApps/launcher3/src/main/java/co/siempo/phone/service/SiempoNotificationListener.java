@@ -139,7 +139,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     filterByCategory(notification);
                 }
             }
-            return;
         }
         if (launcherPrefs.isAppDefaultOrFront().get()) {
 
