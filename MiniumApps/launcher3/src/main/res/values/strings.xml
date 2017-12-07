@@ -230,6 +230,7 @@
     <string name="default_apps">Default Apps</string>
     <string name="clear_all">Clear All</string>
     <string name="siempo_note">Siempo Note</string>
+    <string name="messaging">Messaging</string>
     <string name="title_activity_app_list_notification">AppListNotification</string>
 
     <string-array name="socialAppList">

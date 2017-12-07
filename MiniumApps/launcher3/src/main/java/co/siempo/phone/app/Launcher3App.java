@@ -7,13 +7,10 @@ import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -37,7 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
@@ -47,7 +43,6 @@ import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.kiss.IconsHandler;
 import co.siempo.phone.old.PreferenceListAdapter;
-import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.BuildConfig;
@@ -170,6 +165,7 @@ public class Launcher3App extends CoreApplication {
                 isSiempoLauncher = true;
                 if (startTime == 0) {
                     startTime = System.currentTimeMillis();
+                    FirebaseHelper.getIntance().logSiempoAsDefault("On",0);
                 }
             } else {
                 isSiempoLauncher = false;
@@ -182,7 +178,7 @@ public class Launcher3App extends CoreApplication {
                 isSiempoLauncher = true;
             } else {
                 if (isSiempoLauncher && startTime != 0) {
-                    FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_DEFAULT, startTime);
+                    FirebaseHelper.getIntance().logSiempoAsDefault("Off",startTime);
                     startTime=0;
                 }
                 isSiempoLauncher = false;

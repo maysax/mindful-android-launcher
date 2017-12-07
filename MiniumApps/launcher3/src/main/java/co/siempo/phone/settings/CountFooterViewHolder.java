@@ -16,11 +16,8 @@
 package co.siempo.phone.settings;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -61,7 +61,6 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.CheckActivityEvent;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.event.NFCEvent;
 import minium.co.core.log.Tracer;
@@ -76,7 +75,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     private static final String TAG = "MainActivity";
 
-    public static int currentItem = 0;
+    public static int currentItem =-1;
     @ViewById
     ViewPager pager;
 
@@ -111,10 +110,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public static String isTextLenghGreater = "";
 
     long startTime;
+    boolean isApplicationLaunch = false;
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
     void afterViews() {
+        isApplicationLaunch = true;
         state = ActivityState.AFTERVIEW;
         Log.d(TAG, "afterViews event called");
 
@@ -126,6 +127,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         logFirebase();
         launcherPrefs.updatePrompt().put(true);
+
     }
 
     @Subscribe
@@ -157,12 +159,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         && BuildConfig.VERSION_CODE > launcherPrefs.getCurrentVersion().get()) {
                     new ActivityHelper(this).handleDefaultLauncher(this);
                     loadDialog();
-                    launcherPrefs.getCurrentVersion().put(BuildConfig.VERSION_CODE);
+                    launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
                 } else {
-                    launcherPrefs.getCurrentVersion().put(BuildConfig.VERSION_CODE);
+                    launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
                 }
             } else {
-                launcherPrefs.getCurrentVersion().put(BuildConfig.VERSION_CODE);
+                launcherPrefs.getCurrentVersion().put(UIUtils.getCurrentVersionCode(this));
             }
         }
     }
@@ -241,22 +243,21 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @UiThread(delay = 500)
     void loadViews() {
-        startTime = System.currentTimeMillis();
         sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
         pager.setAdapter(sliderAdapter);
-
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (currentItem != position) {
-                    if (currentItem == 0) {
+                if (currentItem != -1 && currentItem != position) {
+                    if (position == 0) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
-                    } else if (currentItem == 1) {
-                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.INTENTION_FIELD, startTime);
+                    } else if (position == 1) {
+                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
                     }
                 }
                 currentItem = position;
@@ -312,11 +313,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                 Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
-                ((Launcher3App) CoreApplication.getInstance()).getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
+                FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
             }
         } else {
             Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
-            ((Launcher3App) CoreApplication.getInstance()).getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
+            FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
         }
     }
 
@@ -339,16 +340,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
         if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);
                 appUpdaterUtils = null;
             } else {
                 ApiClient_.getInstance_(this).checkAppVersion(CheckVersionEvent.BETA);
             }
         } else {
-            if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.BETA);
                 appUpdaterUtils = null;
             } else {
@@ -360,7 +361,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void showUpdateDialog(String str) {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
-            UIUtils.confirm(this, str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
+            UIUtils.confirmWithCancel(this, "", str.equalsIgnoreCase(CheckVersionEvent.ALPHA) ? "New alpha version found! Would you like to update Siempo?" : "New beta version found! Would you like to update Siempo?", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
@@ -368,16 +369,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         new ActivityHelper(MainActivity.this).openBecomeATester();
                     }
                 }
+            }, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    isApplicationLaunch = false;
+                }
             });
         } else {
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
-    }
-
-
-    @Subscribe
-    public void onCheckActivityEvent(CheckActivityEvent event) {
-
     }
 
 
@@ -419,7 +419,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume.. ");
-        startEventTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         try {
             enableNfc(true);
         } catch (Exception e) {
@@ -432,17 +432,13 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     }
 
 
-
-    long startEventTime=0;
-
     @Override
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "ACTION ONPAUSE");
         enableNfc(false);
-
         if (currentItem == 0) {
-            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.INTENTION_FIELD, startTime);
+            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
         } else if (currentItem == 1) {
             FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
         }
@@ -535,7 +531,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-        if (activeNetwork != null && appUpdaterUtils == null) {
+        if (activeNetwork != null) {
             Log.d(TAG, "Active network..");
             appUpdaterUtils = new AppUpdaterUtils(this)
                     .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -620,7 +616,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     public void checknavigatePermissions() {
         if (!launcherPrefs.isAppInstalledFirstTime().get()) {
             Log.d(TAG, "Display upgrade dialog.");
-//            checkUpgradeVersion();
+            if (isApplicationLaunch) {
+                checkUpgradeVersion();
+            }
         }
 
 
@@ -663,10 +661,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Constants.PERMISSIONS)
                 .check();
-    }
-
-    public static void logNotesEvent(String sreenName,long startTime){
-        FirebaseHelper.getIntance().logScreenUsageTime(sreenName,startTime);
     }
 
 }

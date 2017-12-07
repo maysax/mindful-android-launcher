@@ -19,28 +19,23 @@ import android.widget.Toast;
 import com.github.javiersantos.appupdater.AppUpdater;
 import com.github.javiersantos.appupdater.AppUpdaterUtils;
 import com.github.javiersantos.appupdater.enums.AppUpdaterError;
+import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.enums.UpdateFrom;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.main.MainListItemLoader;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
 import co.siempo.phone.service.ApiClient_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
@@ -50,8 +45,6 @@ import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
-
-import com.github.javiersantos.appupdater.enums.Display;
 
 
 /**
@@ -327,12 +320,12 @@ public class SiempoSettingsActivity extends CoreActivity {
         Log.d(TAG, "Check Version event...");
 
         if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > BuildConfig.VERSION_CODE) {
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
                 if (pd != null) {
                     pd.dismiss();
                     pd = null;
                 }
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.ALPHA);
             } else {
@@ -343,8 +336,8 @@ public class SiempoSettingsActivity extends CoreActivity {
                 pd.dismiss();
                 pd = null;
             }
-            if (event.getVersion() > BuildConfig.VERSION_CODE) {
-                Tracer.d("Installed version: " + BuildConfig.VERSION_CODE + " Found: " + event.getVersion());
+            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+                Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.BETA);
             } else {

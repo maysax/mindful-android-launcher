@@ -5,7 +5,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
-import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 2/23/2017.

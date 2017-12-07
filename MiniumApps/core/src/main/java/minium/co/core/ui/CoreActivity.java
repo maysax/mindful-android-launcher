@@ -19,15 +19,12 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Fullscreen;
@@ -48,7 +45,6 @@ import minium.co.core.event.DownloadApkEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.helper.Validate;
 import minium.co.core.log.Tracer;
-import minium.co.core.util.ActiveActivitiesTracker;
 import minium.co.core.util.UIUtils;
 
 /**
@@ -268,13 +264,10 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-        ActiveActivitiesTracker.activityStarted();
-        //onStartAnimation();
     }
 
     @Override
     protected void onStop() {
-        ActiveActivitiesTracker.activityStopped();
         EventBus.getDefault().unregister(this);
         try {
             if (Config.isNotificationAlive) {

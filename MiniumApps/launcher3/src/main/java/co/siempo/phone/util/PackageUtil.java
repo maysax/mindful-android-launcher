@@ -9,9 +9,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Toast;
-
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.service.SiempoAccessibilityService;
 import co.siempo.phone.service.SiempoDndService;
 

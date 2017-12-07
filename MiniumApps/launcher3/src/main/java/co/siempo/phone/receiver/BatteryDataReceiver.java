@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.util.Log;
 
 import co.siempo.phone.event.ConnectivityEvent;
 import de.greenrobot.event.EventBus;

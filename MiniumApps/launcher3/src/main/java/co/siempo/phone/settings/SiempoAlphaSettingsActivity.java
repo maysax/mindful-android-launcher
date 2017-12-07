@@ -1,31 +1,31 @@
 package co.siempo.phone.settings;
 
-import android.app.Fragment;
+import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.SystemService;
+import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
 /**
@@ -37,6 +37,14 @@ import minium.co.core.ui.CoreActivity;
 public class SiempoAlphaSettingsActivity extends CoreActivity {
 
     private Context context;
+    @ViewById
+    ImageView icon_UserId;
+
+    @ViewById
+    TextView txt_UserId;
+
+    @SystemService
+    TelephonyManager telephonyManager;
     private long startTime=0;
     private LinearLayout ln_notifications,ln_suppressedNotifications;
     private ImageView icon_AppNotifications,icon_SuppressedNotifications;
@@ -69,6 +77,18 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
             icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
         }catch (Exception e){
         }
+        icon_UserId.setImageDrawable(new IconDrawable(context, "fa-user-secret")
+                .colorRes(R.color.text_primary)
+                .sizeDp(18));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                txt_UserId.setText("UserId: " + telephonyManager.getDeviceId());
+            }
+        }
+        else{
+            txt_UserId.setText("UserId: " + telephonyManager.getDeviceId());
+        }
+
     }
 
     public void onClickEvents(){
@@ -92,7 +112,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(SiempoAlphaSettingsActivity.this.getClass().getSimpleName(),startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoAlphaSettingsActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override
@@ -101,8 +121,6 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
     }
-
-
 
 
 }

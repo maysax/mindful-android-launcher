@@ -13,19 +13,17 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-
 import org.androidannotations.annotations.EBean;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.io.File;
-
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.SendSmsEvent;
+import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DataUtils;
 import minium.co.core.util.UIUtils;
@@ -34,6 +32,8 @@ import minium.co.core.util.UIUtils;
 @EBean
 public class TokenRouter {
 
+    @Pref
+    DroidPrefs_ droidPrefs_;
 
     void route() {
         EventBus.getDefault().post(new TokenUpdateEvent());
@@ -64,12 +64,28 @@ public class TokenRouter {
 
     public void createContact(Context context) {
         String inputStr = TokenManager.getInstance().getCurrent().getTitle();
-        if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
-            context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
+        if (inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
+            if (droidPrefs_.isAlphaSettingEnable().get()) {
+                if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
+                    context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
+                } else {
+                    context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
+                }
+                TokenManager.getInstance().clear();
+            } else {
+                droidPrefs_.isAlphaSettingEnable().put(true);
+                new ActivityHelper(context).openSiempoAlphaSettingsApp();
+                TokenManager.getInstance().clear();
+            }
         } else {
-            context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
+            if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
+                context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
+            } else {
+                context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.NAME, inputStr));
+            }
+            TokenManager.getInstance().clear();
         }
-        TokenManager.getInstance().clear();
+
     }
 
     public void contactPicked(ContactListItem item) {
@@ -124,7 +140,7 @@ public class TokenRouter {
                     }
                     context.startActivity(intent);
                     EventBus.getDefault().post(new SendSmsEvent(true, strNumber, strMessage));
-                }else{
+                } else {
                     UIUtils.toast(context, "Please enter message.");
                 }
             } else if (!TokenManager.getInstance().has(TokenItemType.CONTACT)) {

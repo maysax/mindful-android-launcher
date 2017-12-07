@@ -10,7 +10,6 @@ import android.media.AudioManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
-
 import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
 
 

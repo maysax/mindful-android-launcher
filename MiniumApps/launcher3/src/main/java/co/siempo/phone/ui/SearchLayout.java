@@ -13,16 +13,8 @@ import android.widget.ImageView;
 import com.eyeem.chips.BubbleStyle;
 import com.eyeem.chips.ChipsEditText;
 
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.Trace;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
-
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
-//import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.token.TokenCompleteType;
@@ -34,7 +26,7 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.util.UIUtils;
 
-import static minium.co.core.log.LogConfig.TRACE_TAG;
+//import co.siempo.phone.app.Launcher3Prefs_;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -45,12 +37,9 @@ public class SearchLayout extends CardView {
         return txtSearchBox;
     }
 
-
-
-
     private SharedPreferences launcherPrefs;
 
-    ChipsEditText txtSearchBox;
+    public ChipsEditText txtSearchBox;
 
     ImageView btnClear;
 

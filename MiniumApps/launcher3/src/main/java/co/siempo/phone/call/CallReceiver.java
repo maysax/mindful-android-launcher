@@ -4,23 +4,19 @@ import android.content.Context;
 import android.os.Binder;
 import android.os.IBinder;
 import android.telephony.TelephonyManager;
+
 import com.android.internal.telephony.ITelephony;
+
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EReceiver;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+
 import java.lang.reflect.Method;
 import java.util.Date;
-import co.siempo.phone.SiempoNotificationBar.OnGoingCallData;
+
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.db.TableNotificationSms;
-import co.siempo.phone.db.TableNotificationSmsDao;
-import co.siempo.phone.event.NewNotificationEvent;
-import co.siempo.phone.event.OnGoingCallEvent;
-import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.VibrationUtils;
-import de.greenrobot.event.EventBus;
 import minium.co.core.log.Tracer;
 
 @EReceiver

@@ -181,4 +181,7 @@ public interface DroidPrefs {
     @DefaultBoolean(true)
     boolean isHangOutAllowed();
 
+    @DefaultBoolean(false)
+    boolean isAlphaSettingEnable();
+
 }

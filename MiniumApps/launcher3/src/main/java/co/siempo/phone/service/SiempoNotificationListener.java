@@ -1,20 +1,13 @@
 package co.siempo.phone.service;
 
-import android.app.ActivityManager;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +16,6 @@ import android.os.UserHandle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -44,7 +36,6 @@ import java.util.Date;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
@@ -60,7 +51,6 @@ import co.siempo.phone.util.PackageUtil;
 import co.siempo.phone.util.VibrationUtils;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.UIUtils;
@@ -316,7 +306,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 String[] text_comp = text.split(" ");
                                 if (text_comp != null && text_comp.length > 0) {
                                     String text_p1 = text_comp[0] != null ? text_comp[0] : "";
-                                    if (isInteger(text_p1, 10) || Constants.RISALATAN.equals(text_p1)) {
+                                    if (isInteger(text_p1, 10) ) {
                                         return;
                                     }
                                 }

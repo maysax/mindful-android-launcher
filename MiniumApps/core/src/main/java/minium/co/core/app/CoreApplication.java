@@ -569,8 +569,8 @@ public abstract class CoreApplication extends MultiDexApplication {
                                 drawable = appInfo.loadIcon(getPackageManager());
                             }
                             resourcesForApplication.updateConfiguration(originalConfig, originalDisplayMetrics);
-                        } catch (PackageManager.NameNotFoundException e) {
-                            Log.e("check", "error getting Hi Res Icon :", e);
+                        } catch (Exception e) {
+                            Log.e("Error", "Image Loading: ", e);
                             drawable = appInfo.loadIcon(getPackageManager());
                         }
                         Bitmap bitmap = drawableToBitmap(drawable);

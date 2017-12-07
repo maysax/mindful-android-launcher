@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import co.siempo.phone.Manifest;
 import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.EventBus;

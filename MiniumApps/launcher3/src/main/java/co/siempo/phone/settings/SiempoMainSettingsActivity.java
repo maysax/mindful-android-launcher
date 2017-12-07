@@ -1,32 +1,26 @@
 package co.siempo.phone.settings;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.model.SettingsData;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
 
@@ -38,7 +32,10 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     private SettingsAdapter adapter;
     private Context context;
     private final String TAG = "SiempoMainSetting";
-    private long startTime=0;
+    private long startTime = 0;
+
+    @Pref
+    DroidPrefs_ droidPrefs_;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -95,7 +92,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         arr_menuList.add(s2);
 
 
-        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+        if (droidPrefs_.isAlphaSettingEnable().get()) {
             SettingsData s3 = new SettingsData();
             s3.setSettingType(getString(R.string.str_siempo_alphasettings));
             s3.setId(3);
@@ -119,7 +116,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(SiempoMainSettingsActivity.this.getClass().getSimpleName(),startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoMainSettingsActivity.this.getClass().getSimpleName(), startTime);
     }
 
     @Override
