@@ -233,7 +233,7 @@
     <string name="title_activity_app_list_notification">AppListNotification</string>
 
     <string-array name="socialAppList">
-
+        <item>com.facebook.lite</item>
         <item>com.facebook.katana</item>
         <item>com.instagram.android</item>
     </string-array>
@@ -241,14 +241,15 @@
 
     <string-array name="messengerAppList">
 
-        <item>com.facebook.lite</item>
         <item>com.facebook.orca</item>
         <item>com.facebook.mlite</item>
         <item>com.whatsapp</item>
+        <item>com.Slack</item>
+        <item>com.google.android.talk</item>
+        <item>com.google.android.apps.messaging</item>
     </string-array>
 
     <string-array name="systemAppList">
-
         <item>com.android.providers.contacts</item>
         <item>com.android.phone</item>
     </string-array>

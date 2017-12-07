@@ -230,6 +230,8 @@
             android:enabled="true"
             android:exported="false" />
 
+        <activity android:name=".settings.AppListNotificationSetting"
+            android:label="@string/title_activity_app_list_notification"></activity>
         <activity
             android:name=".settings.AppListNotification"
             android:label="@string/title_activity_app_list_notification" />

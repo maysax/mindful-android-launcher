@@ -3,26 +3,22 @@ package co.siempo.phone.settings;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.Telephony;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import co.siempo.phone.R;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
 import de.greenrobot.event.Subscribe;
@@ -34,7 +30,7 @@ import minium.co.core.ui.CoreActivity;
  * Created by hardik on 22/11/17.
  */
 
-public class AppListNotification  extends CoreActivity {
+public class AppListNotificationSetting extends CoreActivity {
 
     private RecyclerView lst_appList;
     private ImageView crossActionBar, settingsActionBar, btnListOrGrid;
@@ -91,19 +87,13 @@ public class AppListNotification  extends CoreActivity {
         packageManager= getPackageManager();
         launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
 
-        systemAppList=Arrays.asList(getResources().getStringArray(R.array.systemAppList));
-
-        // Add social Media List
-        socialAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.socialAppList)));
+//        systemAppList=Arrays.asList(getResources().getStringArray(R.array.systemAppList));
+//
+//        // Add social Media List
+//        socialAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.socialAppList)));
 
         // Add social Media List
         messengerAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.messengerAppList)));
-
-        // Below logic will use for further development
-//        String packageName=Telephony.Sms.getDefaultSmsPackage(getApplicationContext());
-//        if(!TextUtils.isEmpty(packageName)){
-//            messengerAppList.add(packageName);
-//        }
 
         // Hide components of header layout
         crossActionBar.setVisibility(View.GONE);
@@ -139,17 +129,18 @@ public class AppListNotification  extends CoreActivity {
     public void loadAndDisplayAppList(){
         // Load social Media Apps & Filter from app list
         for(int i = 0; i< CoreApplication.getInstance().getPackagesList().size(); i++){
-            if(socialAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
-                DisableAppList d = new DisableAppList();
-                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                if(disableNotificationApps.contains(d.applicationInfo.packageName)){
-                    d.ischecked=false;
-                }else{
-                    d.ischecked=true;
-                }
-                socialList.add(d);
-            }
-            else if(messengerAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
+//            if(socialAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
+//                DisableAppList d = new DisableAppList();
+//                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
+//                if(disableNotificationApps.contains(d.applicationInfo.packageName)){
+//                    d.ischecked=false;
+//                }else{
+//                    d.ischecked=true;
+//                }
+//                socialList.add(d);
+//            }
+//            else
+                if(messengerAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
                 DisableAppList d = new DisableAppList();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
                 if(disableNotificationApps.contains(d.applicationInfo.packageName)){
@@ -159,19 +150,19 @@ public class AppListNotification  extends CoreActivity {
                 }
                 messengerList.add(d);
             }
-            else{
-
-                DisableAppList d = new DisableAppList();
-                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                if(!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
-                    if (disableNotificationApps.contains(d.applicationInfo.packageName)) {
-                        d.ischecked = false;
-                    } else {
-                        d.ischecked = true;
-                    }
-                    appList.add(d);
-                }
-            }
+//            else{
+//
+//                DisableAppList d = new DisableAppList();
+//                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
+//                if(!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
+//                    if (disableNotificationApps.contains(d.applicationInfo.packageName)) {
+//                        d.ischecked = false;
+//                    } else {
+//                        d.ischecked = true;
+//                    }
+//                    appList.add(d);
+//                }
+//            }
         }
 
 

@@ -113,34 +113,34 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:id="@+id/ln_suppressedNotifications"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                tools:ignore="UseCompoundDrawables">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/ln_suppressedNotifications"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="15dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--tools:ignore="UseCompoundDrawables">-->
 
-                <ImageView
-                    android:id="@+id/icon_SuppressedNotifications"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="15dp"
-                    android:contentDescription="@null"
-                    android:padding="6dp" />
+                <!--<ImageView-->
+                    <!--android:id="@+id/icon_SuppressedNotifications"-->
+                    <!--android:layout_width="36dp"-->
+                    <!--android:layout_height="36dp"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:layout_marginStart="15dp"-->
+                    <!--android:contentDescription="@null"-->
+                    <!--android:padding="6dp" />-->
 
-                <TextView
-                    android:id="@+id/txt_SuppressedNotifications"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="15dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@string/title.suppressedNotifications"
-                    android:textSize="14sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/txt_SuppressedNotifications"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:layout_marginStart="15dp"-->
+                    <!--android:fontFamily="sans-serif-medium"-->
+                    <!--android:text="@string/title.suppressedNotifications"-->
+                    <!--android:textSize="14sp" />-->
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
 
 
             <RelativeLayout

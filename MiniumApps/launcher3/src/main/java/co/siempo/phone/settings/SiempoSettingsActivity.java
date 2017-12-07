@@ -106,7 +106,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         context = SiempoSettingsActivity.this;
         icon_launcher = findViewById(R.id.icon_launcher);
         icon_version = findViewById(R.id.icon_version);
-        icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
+//        icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
         icon_changeDefaultApp = findViewById(R.id.icon_changeDefaultApp);
         icon_KeyBoardNotification = findViewById(R.id.icon_KeyBoardNotification);
         icon_Feedback = findViewById(R.id.icon_Feedback);
@@ -123,7 +123,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_launcher = findViewById(R.id.ln_launcher);
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
-        ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
+//        ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
         ln_Feedback = findViewById(R.id.ln_Feedback);
         ln_AppListNotifications = findViewById(R.id.ln_notifications);
         ln_Faq = findViewById(R.id.ln_Faq);
@@ -134,10 +134,11 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        try {
-            icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
-        }catch (Exception e){
-        }
+        // Below logic will use for further development
+//        try {
+//            icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
+//        }catch (Exception e){
+//        }
         icon_hideNotification.setImageDrawable(new IconDrawable(context, "fa-flag")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -182,14 +183,14 @@ public class SiempoSettingsActivity extends CoreActivity {
                 new ActivityHelper(context).openSiempoDefaultAppSettings();
             }
         });
-
-        ln_suppressedNotifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                new ActivityHelper(context).openSiempoSuppressNotificationsSettings();
-            }
-        });
+// Below logic will use for further development
+//        ln_suppressedNotifications.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                new ActivityHelper(context).openSiempoSuppressNotificationsSettings();
+//            }
+//        });
 
         ln_Feedback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +212,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_AppListNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SiempoSettingsActivity.this,AppListNotification.class);
+                Intent i = new Intent(SiempoSettingsActivity.this,AppListNotificationSetting.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
