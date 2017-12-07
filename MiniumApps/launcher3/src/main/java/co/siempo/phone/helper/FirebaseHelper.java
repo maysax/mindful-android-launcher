@@ -31,13 +31,14 @@ public class FirebaseHelper {
     // Screen Name
     public static String MENU_SCREEN = "menu_screen";
     public static String IF_SCREEN = "if_screen";
-    public static String SIEMPO_DEFAULT = "siempo_default";
+
 
     //Event
     public static String IF_ACTION = "if_action";
     public static String SIEMPO_MENU = "siempo_menu";
     public static String THIRD_PARTY_APPLICATION = "third_party";
     public static String SCREEN_USAGE = "screen_usage";
+    public static String SIEMPO_DEFAULT = "siempo_default";
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -71,41 +72,15 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logScreenUsageTime(String screenName, long startTime) {
-        long currentTime = System.currentTimeMillis();
-        long duration = currentTime - startTime;
-
-        try {
-            long msInSecond = 1000;
-            long msInMinute = msInSecond * 60;
-            long msInHour = msInMinute * 60;
-            long msInDay = msInHour * 24;
-
-            long days = duration / msInDay;
-            duration = duration % msInDay;
-
-            long hours = duration / msInHour;
-            duration = duration % msInHour;
-
-            long minutes = duration / msInMinute;
-            duration = duration % msInMinute;
-
-            long seconds = duration / msInSecond;
-
-            if (days == 0 && hours == 0 && minutes == 0 && seconds == 0) {
-                Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-            } else {
-                Bundle bundle = new Bundle();
-                bundle.putString(SCREEN_NAME, screenName);
-                bundle.putString(TIME_SPENT, "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
-                Tracer.d("Firebase:" + currentTime + ": " + startTime);
-                Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
-                getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
-            }
-        } catch (ArithmeticException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-
+        String strTime = getTime(startTime, System.currentTimeMillis());
+        if (strTime.equalsIgnoreCase("0")) {
+//            Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putString(SCREEN_NAME, screenName);
+            bundle.putString(TIME_SPENT, strTime);
+            Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
     }
@@ -149,7 +124,6 @@ public class FirebaseHelper {
      * @param applicationName
      */
     public void logIFAction(String action, String applicationName, String data) {
-
         Bundle bundle = new Bundle();
         bundle.putString(ACTION, action);
         if (!applicationName.equalsIgnoreCase("")) {
@@ -159,7 +133,75 @@ public class FirebaseHelper {
         }
         Tracer.d(IF_ACTION + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(IF_ACTION, bundle);
+    }
 
+    /**
+     * Siempo as default.
+     *
+     * @param action
+     * @param startTime
+     */
+    public void logSiempoAsDefault(String action, long startTime) {
+        Bundle bundle = new Bundle();
+        bundle.putString(ACTION, action);
+        if (startTime != 0) {
+            String strTime = getTime(startTime, System.currentTimeMillis());
+            if (strTime.equalsIgnoreCase("0")) {
+//                Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
+            } else {
+                bundle.putString(TIME_SPENT, strTime);
+                Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
+                getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
+            }
+        } else {
+            Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
+        }
+    }
+
+    /**
+     * 2 date difference in day,hh:mm:ss:ms
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    private String getTime(long startTime, long endTime) {
+        String strTime = "0";
+        long duration = endTime - startTime;
+        try {
+            long msInSecond = 1000;
+            long msInMinute = msInSecond * 60;
+            long msInHour = msInMinute * 60;
+            long msInDay = msInHour * 24;
+
+            long days = duration / msInDay;
+            duration = duration % msInDay;
+
+            long hours = duration / msInHour;
+            duration = duration % msInHour;
+
+            long minutes = duration / msInMinute;
+            duration = duration % msInMinute;
+
+            double seconds = (double) duration / msInSecond;
+            String strMilli = "" + seconds;
+            long strSecond;
+            String strMilliSecond;
+            String str[] = strMilli.split("\\.");
+            strSecond = Long.parseLong(str[0]);
+            strMilliSecond = str[1];
+            if (days == 0 && hours == 0 && minutes == 0 && strSecond == 0) {
+               // Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
+            } else {
+                strTime = "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", strSecond)  + ":" + strMilliSecond;
+            }
+        } catch (ArithmeticException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return strTime;
     }
 
 }
