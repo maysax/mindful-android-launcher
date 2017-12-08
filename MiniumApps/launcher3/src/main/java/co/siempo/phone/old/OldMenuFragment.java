@@ -122,7 +122,8 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
             layoutParams.setMargins(UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8));
             cardView.setLayoutParams(layoutParams);
         } else {
-            layoutParams.setMargins(UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 54));
+            layoutParams.setMargins(UIUtils.dpToPx(getActivity(), 8),
+                    UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8));
             cardView.setLayoutParams(layoutParams);
         }
         if (mListState != null) {

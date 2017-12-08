@@ -206,7 +206,6 @@ public class SiempoSettingsActivity extends CoreActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SiempoSettingsActivity.this,AppListNotificationSetting.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
         });
