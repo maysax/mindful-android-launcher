@@ -1,10 +1,30 @@
 package co.siempo.phone.app;
 
+import android.Manifest;
+
 /**
  * Created by tkb on 2017-04-26.
  */
 
 public class Constants {
+
+
+    public static String[] PERMISSIONS = {
+            Manifest.permission.READ_CONTACTS,
+            Manifest.permission.WRITE_CONTACTS,
+            Manifest.permission.READ_CALL_LOG,
+            Manifest.permission.WRITE_CALL_LOG,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.READ_SMS,
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECEIVE_SMS,
+            Manifest.permission.RECEIVE_MMS,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_NETWORK_STATE};
+
     public static final String WHATSAPP_PACKAGE = "com.whatsapp";
     public static final String GOOGLE_CALENDAR_PACKAGES = "com.google.android.calendar";
     public static final String FACEBOOK_PACKAGE = "com.facebook.katana";
@@ -41,5 +61,5 @@ public class Constants {
     public static final int CLOCK_PACKAGE = 21;
     public static final int EMAIL_PACKAGE = 16;
     public static final String WHATSAPP = "WhatsApp";
-    public static final String RISALATAN = "رسالتان";
+    public static final String ALPHA_SETTING = "0x0p9o8i7u6y";
 }

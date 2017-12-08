@@ -21,6 +21,7 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.ItemTouchHelperAdapter;
 import co.siempo.phone.main.ItemTouchHelperViewHolder;
 import co.siempo.phone.main.MainListItemLoader;
@@ -56,7 +57,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
                 mListChangedListener.onNoteListChanged(arrayList);
                 notifyItemMoved(fromPosition, toPosition);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -112,10 +113,10 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 int id;
                 if (item != null) {
                     id = item.getId();
+                    FirebaseHelper.getIntance().logSiempoMenuUsage(item.getTitle(), 0);
                     new MainListItemLoader(context).listItemClicked(id);
                 }
 
@@ -204,15 +205,15 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         @Override
         public void onItemClear() {
             if (relMenu.getTag().equals("list")) {
-                if(imgView.getTag()!=null && imgView.getTag().equals("1")){
+                if (imgView.getTag() != null && imgView.getTag().equals("1")) {
                     imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.rectagle_menu));
-                }else{
+                } else {
                     imgView.setBackground(null);
                 }
             } else {
-                if(imgView.getTag()!=null && imgView.getTag().equals("1")){
+                if (imgView.getTag() != null && imgView.getTag().equals("1")) {
                     imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu));
-                }else{
+                } else {
                     imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu_unselected));
                 }
             }

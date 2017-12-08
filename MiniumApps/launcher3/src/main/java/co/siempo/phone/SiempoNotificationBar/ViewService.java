@@ -2,6 +2,8 @@ package co.siempo.phone.SiempoNotificationBar;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -17,9 +19,11 @@ import org.androidannotations.annotations.EIntentService;
 import org.androidannotations.annotations.ServiceAction;
 import org.androidannotations.annotations.SystemService;
 
+import co.siempo.phone.MainActivity;
+import co.siempo.phone.R;
+
 /**
  * A service is use to creating the view and hide/show it.
- *
  */
 @EIntentService
 public class ViewService extends IntentService {
@@ -34,19 +38,19 @@ public class ViewService extends IntentService {
 
 
     SharedPreferences preferences;
+
     public ViewService() {
         super(ViewService.class.getSimpleName());
     }
 
     @AfterInject
     public void init() {
-        if (holder.getCurrentOverlay() == null ) {
+        if (holder.getCurrentOverlay() == null) {
             View overlayView;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 overlayView = new OreoOverlay(getApplicationContext());
                 windowManager.addView(overlayView, OreoOverlay.createLayoutParams(retrieveStatusBarHeight() + SAFETY_MARGIN));
-            }
-            else{
+            } else {
                 overlayView = new OverlayView(getApplicationContext());
                 windowManager.addView(overlayView, OverlayView.createLayoutParams(retrieveStatusBarHeight() + SAFETY_MARGIN));
             }
@@ -71,13 +75,32 @@ public class ViewService extends IntentService {
 
     @ServiceAction
     protected void hideMask() {
-
         holder.hideView();
+        try {
+            stopForeground(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        // Do nothing here
+        try {
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent =
+                    PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+            Notification notification = new Notification.Builder(getApplicationContext())
+                    .setContentTitle(getString(R.string.app_name))
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setWhen(System.currentTimeMillis())
+                    .setContentIntent(pendingIntent)
+                    .build();
+            startForeground(1, notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

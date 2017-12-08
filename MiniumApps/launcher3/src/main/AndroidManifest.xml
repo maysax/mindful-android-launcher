@@ -9,6 +9,7 @@
         android:normalScreens="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
+
     <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -50,7 +51,8 @@
 
     <!-- TODO: using it for flow, we might not need this -->
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
@@ -222,6 +224,7 @@
         <activity android:name=".settings.SiempoSettingsDefaultAppActivity_" />
         <activity android:name=".settings.SiempoMainSettingsActivity_" />
         <activity android:name=".settings.SiempoAlphaSettingsActivity_" />
+        <activity android:name=".settings.AppListNotification_" />
 
         <service android:name=".SiempoNotificationBar.ViewService_" />
         <service

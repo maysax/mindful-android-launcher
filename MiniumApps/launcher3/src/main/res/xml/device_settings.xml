@@ -5,27 +5,25 @@
     android:title="@string/device_settings_title">
 
     <Preference
-        android:title="@string/pref_home"
         android:key="@string/home_key"
-        android:summary="@string/device_settings_summary">
-        <intent android:action="android.settings.HOME_SETTINGS" />
-    </Preference>
+        android:summary="@string/device_settings_summary"
+        android:title="@string/pref_home"></Preference>
 
-    <Preference android:title="@string/pref_display">
-        <intent android:action="android.settings.DISPLAY_SETTINGS" />
-    </Preference>
+    <Preference
+        android:key="@string/display_key"
+        android:title="@string/pref_display"></Preference>
 
-    <Preference android:title="@string/pref_notification">
-        <intent android:action="android.settings.SOUND_SETTINGS" />
-    </Preference>
+    <Preference
+        android:key="@string/sound_key"
+        android:title="@string/pref_notification"></Preference>
 
-    <Preference android:title="@string/pref_apps">
-        <intent android:action="android.settings.MANAGE_APPLICATIONS_SETTINGS" />
-    </Preference>
+    <Preference
+        android:key="@string/apps_key"
+        android:title="@string/pref_apps"></Preference>
 
-    <Preference android:title="@string/pref_storage_usb">
-        <intent android:action="android.settings.MEMORY_CARD_SETTINGS" />
-    </Preference>
+    <Preference
+        android:key="@string/memory_card_setting_key"
+        android:title="@string/pref_storage_usb"></Preference>
 
     <Preference
         android:key="@string/key_battery"
@@ -35,14 +33,13 @@
         android:key="@string/key_memory"
         android:title="@string/pref_memory"></Preference>
 
-    <Preference android:title="@string/pref_users">
-        <intent android:action="android.settings.USER_SETTINGS" />
-    </Preference>
+    <Preference
+        android:key="@string/key_user_setting"
+        android:title="@string/pref_users"></Preference>
 
-    <Preference android:title="@string/pref_tap_pay"
-        android:key="@string/key_tap_pay">
-        <intent android:action="android.settings.NFC_PAYMENT_SETTINGS" />
-    </Preference>
+    <Preference
+        android:key="@string/key_tap_pay"
+        android:title="@string/pref_tap_pay"></Preference>
 
 
 </PreferenceScreen>

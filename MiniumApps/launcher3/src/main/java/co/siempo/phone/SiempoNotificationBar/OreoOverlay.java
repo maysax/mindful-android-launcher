@@ -49,6 +49,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextClock;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.james.status.data.IconStyleData;
@@ -885,58 +886,46 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                if(notificationList.size() > position) {
-                if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
-                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
-                    hide();
-                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                    deleteItem.executeDelete(notificationList.get(position));
-                    loadData();
-                } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
-                    if (
-                            ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
-                                    && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
-
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                if (notificationList.size() > position) {
+                    if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
                         hide();
-                    }
-                    // Following code will delete all notification of same user and same types.
-                    DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                    deleteItem.executeDelete(notificationList.get(position));
-                    loadData();
-                } else {
-                    String strPackageName = notificationList.get(position).getPackageName();
-                    String strTitle = notificationList.get(position).getStrTitle();
-                    List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
-                            .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
-                    DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
-                    adapter.notifyItemRemoved(position);
-                    notificationList.remove(position);
-                    hide();
-                    if (DBUtility.getTableNotificationSmsDao().count() >= 1) {
-                        imgNotification.setVisibility(View.VISIBLE);
-                    } else {
-                        imgNotification.setVisibility(View.GONE);
-                    }
-                    if (strPackageName.equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
-                        if (getPhoneNumber(strTitle, context).equalsIgnoreCase("")) {
-                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        deleteItem.executeDelete(notificationList.get(position));
+                        loadData();
+                    } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
+                        if (
+                                ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
+                                        && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+
                         } else {
-                            Uri uri = Uri.parse("smsto:" + strTitle);
-                            Intent i = new Intent(Intent.ACTION_SENDTO, uri);
-                            i.putExtra("sms_body", "");
-                            i.setPackage("com.whatsapp");
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                            hide();
                         }
+                        // Following code will delete all notification of same user and same types.
+                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        deleteItem.executeDelete(notificationList.get(position));
+                        loadData();
                     } else {
+                        String strPackageName = notificationList.get(position).getPackageName();
+                        String strTitle = notificationList.get(position).getStrTitle();
+                        List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
+                                .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
+                        DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
+                        adapter.notifyItemRemoved(position);
+                        notificationList.remove(position);
+                        hide();
+                        if (DBUtility.getTableNotificationSmsDao().count() >= 1) {
+                            imgNotification.setVisibility(View.VISIBLE);
+                        } else {
+                            imgNotification.setVisibility(View.GONE);
+                        }
                         new ActivityHelper(context).openAppWithPackageName(strPackageName);
-                    }
+
                     }
                 }
 
@@ -1132,11 +1121,11 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             img_notification_Airplane.setBackground(context.getDrawable(R.drawable.ic_airplanemode_inactive_black_24dp));
             imgAirplane.setVisibility(View.GONE);
             if (isWiFiOn) {
-                wifiManager.setWifiEnabled(true);
+                if (wifiManager != null) wifiManager.setWifiEnabled(true);
             } else {
                 isWiFiOn = false;
             }
-            if (!wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(context)) {
+            if (wifiManager != null && !wifiManager.isWifiEnabled() || NetworkUtil.isAirplaneModeOn(context)) {
                 img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_signal_wifi_off_black_24dp));
             } else {
                 img_notification_Wifi.setBackground(context.getDrawable(R.drawable.ic_wifi_0));
@@ -1312,6 +1301,12 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
 
     private void setUpNotifications(List<TableNotificationSms> items) {
         notificationList.clear();
+
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(context, "Enable permission from Settings to access Contact details.", Toast.LENGTH_SHORT).show();
+        }
+
         for (int i = 0; i < items.size(); i++) {
             @SuppressLint("SimpleDateFormat") DateFormat sdf = new SimpleDateFormat("hh:mm a");
             String time = sdf.format(items.get(i).get_date());
@@ -1353,35 +1348,40 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
     }
 
     private NotificationContactModel gettingNameAndImageFromPhoneNumber(String number) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            if (number != null && !number.equalsIgnoreCase("")) {
+                Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+                Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
+                        ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
 
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-        Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
+                String contactName, imageUrl = "";
+                try {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+                        imageUrl = cursor
+                                .getString(cursor
+                                        .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+                        cursor.close();
 
-        String contactName, imageUrl = "";
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                imageUrl = cursor
-                        .getString(cursor
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
-                cursor.close();
+                    } else {
+                        contactName = number;
+                    }
+                } catch (Exception e) {
+                    contactName = "";
+                    imageUrl = "";
+                    e.printStackTrace();
+                }
 
-            } else {
-                contactName = number;
+
+                NotificationContactModel notificationContactModel = new NotificationContactModel();
+                notificationContactModel.setName(contactName);
+                notificationContactModel.setImage(imageUrl);
+
+                return notificationContactModel;
             }
-        } catch (Exception e) {
-            contactName = "";
-            imageUrl = "";
-            e.printStackTrace();
         }
-
-
-        NotificationContactModel notificationContactModel = new NotificationContactModel();
-        notificationContactModel.setName(contactName);
-        notificationContactModel.setImage(imageUrl);
-
-        return notificationContactModel;
+        return null;
     }
 
     final GestureDetector gesture = new GestureDetector(context,

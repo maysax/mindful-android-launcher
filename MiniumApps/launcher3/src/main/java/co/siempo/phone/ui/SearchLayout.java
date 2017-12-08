@@ -45,12 +45,9 @@ public class SearchLayout extends CardView {
         return txtSearchBox;
     }
 
-
-
-
     private SharedPreferences launcherPrefs;
 
-    ChipsEditText txtSearchBox;
+    public ChipsEditText txtSearchBox;
 
     ImageView btnClear;
 

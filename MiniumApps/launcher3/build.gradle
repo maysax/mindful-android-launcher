@@ -8,7 +8,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     lintOptions {
-        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware','TypographyFractions','TypographyQuotes','InvalidPackage'
+        disable 'GoogleAppIndexingApiWarning', 'IconDensities', 'Registered', 'MissingTranslation', 'SetTextI18n', 'RtlHardcoded', 'SelectableText', 'PermissionImpliesUnsupportedHardware', 'TypographyFractions', 'TypographyQuotes', 'InvalidPackage'
         ignoreWarnings true
     }
     defaultConfig {
@@ -42,12 +42,12 @@ android {
         alpha {
 //            versionCode 1
 //            versionName "1"
-            versionCode 10803
-            versionName "${0}.${0}.${10}.${8}-${buildTime}"
+            versionCode 10902
+            versionName "${0}.${0}.${10}.${9}-${buildTime}"
         }
         beta {
-            versionCode 10811
-            versionName "${0}.${0}.${10}.${8}-${buildTime}"
+            versionCode 10911
+            versionName "${0}.${0}.${10}.${9}-${buildTime}"
         }
     }
 
@@ -107,7 +107,7 @@ dependencies {
     compile "com.github.yuweiguocn:GreenDaoUpgradeHelper:$greenDaoUpgradeHelperVersion"
     compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
-    compile 'com.google.firebase:firebase-core:10.2.4'
+    compile 'com.google.firebase:firebase-core:11.0.4'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.javiersantos:AppUpdater:2.6.3'
 }

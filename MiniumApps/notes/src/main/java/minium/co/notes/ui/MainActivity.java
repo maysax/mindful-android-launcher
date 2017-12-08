@@ -18,9 +18,11 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
+import minium.co.core.event.FirebaseEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.notes.R;
@@ -90,13 +94,15 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     private AlertDialog backupCheckDialog, backupOKDialog, restoreCheckDialog, restoreFailedDialog;
 
     public static final String EXTRA_OPEN_LATEST = "open_latest";
+    private long startTime;
 
 
     @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // Initialize local file path and backup file path
         localPath = new File(getFilesDir() + "/" + NOTES_FILE_NAME);
 
@@ -130,6 +136,12 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
         // Init layout components
         toolbar = findViewById(R.id.toolbarMain);
+        int statusbarheight = retrieveStatusBarHeight();
+
+//
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, statusbarheight, 0, 0);
+        toolbar.setLayoutParams(params);
         listView = findViewById(R.id.listView);
         newNote = findViewById(R.id.fab);
         noNotes = findViewById(R.id.noNotes);
@@ -202,9 +214,19 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         }
     }
 
+    public int retrieveStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         Tracer.d("Notes onResume called");
         // Retrieve from local path
         JSONArray tempNotes = retrieveData(localPath);
@@ -1073,4 +1095,12 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
             //new EvernoteManager().listNoteBooks(this);
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().post(new FirebaseEvent("Notes:" + MainActivity.this.getClass().getSimpleName(), startTime));
+    }
+
+
 }

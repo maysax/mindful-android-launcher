@@ -175,4 +175,13 @@ public interface DroidPrefs {
     @DefaultBoolean(true)
     boolean isFacebooKMessangerLiteAllowed();
 
+    @DefaultBoolean(true)
+    boolean isWhatsAppAllowed();
+
+    @DefaultBoolean(true)
+    boolean isHangOutAllowed();
+
+    @DefaultBoolean(false)
+    boolean isAlphaSettingEnable();
+
 }

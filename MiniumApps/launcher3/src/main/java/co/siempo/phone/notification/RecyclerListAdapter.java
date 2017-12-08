@@ -94,12 +94,15 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
         Notification notification = notificationList.get(position);
         if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_EVENT) {
             Bitmap bitmap = CoreApplication.getInstance().iconList.get(notification.getPackageName());
-            if(bitmap!=null) {
-                holder.imgAppIcon.setBackground(null);
+            holder.imgAppIcon.setBackground(null);
+            holder.imgAppIcon.setImageBitmap(null);
+            if (bitmap != null) {
                 holder.imgAppIcon.setImageBitmap(bitmap);
+            }else{
+                holder.imgAppIcon.setBackground(mContext.getDrawable(R.mipmap.ic_launcher));
             }
             holder.txtAppName.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
-            if (notification.getStrTitle().equalsIgnoreCase("")) {
+            if (notification.getStrTitle() == null || notification.getStrTitle().equalsIgnoreCase("")) {
                 holder.txtUserName.setText("");
                 holder.txtUserName.setVisibility(View.GONE);
                 holder.txtMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
@@ -120,8 +123,10 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                 holder.imgUserImage.setVisibility(View.VISIBLE);
                 if (notification.getUser_icon() != null) {
                     holder.imgUserImage.setImageBitmap(UIUtils.convertBytetoBitmap(notification.getUser_icon()));
-                }else{
+                } else {
                     holder.imgUserImage.setBackground(null);
+                    holder.imgUserImage.setImageBitmap(null);
+                    holder.imgUserImage.setImageResource(R.drawable.ic_person_black_24dp);
                 }
             }
 
@@ -144,6 +149,10 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
                             .load(Uri.parse(notification.getNotificationContactModel().getImage()))
                             .placeholder(R.drawable.ic_person_black_24dp)
                             .into(holder.imgUserImage);
+                }else{
+                    holder.imgUserImage.setBackground(null);
+                    holder.imgUserImage.setImageBitmap(null);
+                    holder.imgUserImage.setImageResource(R.drawable.ic_person_black_24dp);
                 }
 
             } catch (Exception e) {

@@ -344,10 +344,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                     }
                 }
             }
-
             ret.values = buildData;
             ret.count = buildData.size();
-
             return ret;
         }
 

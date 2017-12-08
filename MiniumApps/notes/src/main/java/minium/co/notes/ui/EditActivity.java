@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -33,8 +34,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.event.FirebaseEvent;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -79,12 +82,15 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
     private AlertDialog fontDialog, saveChangesDialog;
     private ColorPickerDialog colorPickerDialog;
+    private long startTime;
 
     @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         CoreApplication.getInstance().setEditNotOpen(true);
         // Android version >= 18 -> set orientation fullUser
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
@@ -606,5 +612,15 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().post(new FirebaseEvent(EditActivity.this.getClass().getSimpleName(),startTime));
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
 }
