@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DaoSession;
@@ -88,7 +89,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 if (launcherPrefs.isAppDefaultOrFront().get()) {
                     SharedPreferences prefs = context.getSharedPreferences("Launcher3Prefs", 0);
-                    String disable_AppList = prefs.getString(CoreApplication.getInstance().DISABLE_APPLIST, "");
+                    String disable_AppList = prefs.getString(Constants.DISABLE_APPLIST, "");
                     if (!TextUtils.isEmpty(disable_AppList)) {
                         Type type = new TypeToken<ArrayList<String>>() {
                         }.getType();

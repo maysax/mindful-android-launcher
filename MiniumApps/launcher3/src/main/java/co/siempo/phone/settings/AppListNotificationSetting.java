@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
 import de.greenrobot.event.Subscribe;
@@ -48,9 +49,6 @@ public class AppListNotificationSetting extends CoreActivity {
     // App list contain all the section names for display in header list
     private List<HeaderAppList> headerList=new ArrayList<>();
 
-    // App list contain all the social apps which are fetch from string array
-    private List<String> socialAppList = new ArrayList<>();
-
     // App list contain all the messenger apps which are fetch from string array
     private List<String> messengerAppList = new ArrayList<>();
 
@@ -74,7 +72,6 @@ public class AppListNotificationSetting extends CoreActivity {
         messengerAppList.clear();
         socialList.clear();
         appList.clear();
-        socialAppList.clear();
         headerList.clear();
 
         // Initialize components
@@ -87,11 +84,6 @@ public class AppListNotificationSetting extends CoreActivity {
         packageManager= getPackageManager();
         launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
 
-//        systemAppList=Arrays.asList(getResources().getStringArray(R.array.systemAppList));
-//
-//        // Add social Media List
-//        socialAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.socialAppList)));
-
         // Add social Media List
         messengerAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.messengerAppList)));
 
@@ -101,14 +93,14 @@ public class AppListNotificationSetting extends CoreActivity {
         settingsActionBar.setVisibility(View.GONE);
 
         // disableNotificationApps contains of disable app list
-        String disable_AppList=launcherPrefs.getString(CoreApplication.getInstance().DISABLE_APPLIST,"");
+        String disable_AppList=launcherPrefs.getString(Constants.DISABLE_APPLIST,"");
         if(!TextUtils.isEmpty(disable_AppList)){
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             disableNotificationApps = new Gson().fromJson(disable_AppList, type);
         }
 
         // disableSectionList contains of disable section list
-        String disable_Header_AppList=launcherPrefs.getString(CoreApplication.getInstance().HEADER_APPLIST,"");
+        String disable_Header_AppList=launcherPrefs.getString(Constants.HEADER_APPLIST,"");
         if(!TextUtils.isEmpty(disable_Header_AppList)){
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             disableSectionList = new Gson().fromJson(disable_Header_AppList, type);
@@ -129,17 +121,6 @@ public class AppListNotificationSetting extends CoreActivity {
     public void loadAndDisplayAppList(){
         // Load social Media Apps & Filter from app list
         for(int i = 0; i< CoreApplication.getInstance().getPackagesList().size(); i++){
-//            if(socialAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
-//                DisableAppList d = new DisableAppList();
-//                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-//                if(disableNotificationApps.contains(d.applicationInfo.packageName)){
-//                    d.ischecked=false;
-//                }else{
-//                    d.ischecked=true;
-//                }
-//                socialList.add(d);
-//            }
-//            else
                 if(messengerAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
                 DisableAppList d = new DisableAppList();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
@@ -150,19 +131,6 @@ public class AppListNotificationSetting extends CoreActivity {
                 }
                 messengerList.add(d);
             }
-//            else{
-//
-//                DisableAppList d = new DisableAppList();
-//                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-//                if(!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
-//                    if (disableNotificationApps.contains(d.applicationInfo.packageName)) {
-//                        d.ischecked = false;
-//                    } else {
-//                        d.ischecked = true;
-//                    }
-//                    appList.add(d);
-//                }
-//            }
         }
 
 
@@ -211,7 +179,7 @@ public class AppListNotificationSetting extends CoreActivity {
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
 
-        CountSectionAdapter adapter = new CountSectionAdapter(this,appList,socialList,messengerList,headerList);
+        NotificationSectionAdapter adapter = new NotificationSectionAdapter(this,appList,socialList,messengerList,headerList);
         lst_appList.setAdapter(adapter);
     }
 }

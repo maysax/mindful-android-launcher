@@ -112,7 +112,8 @@
 
             </LinearLayout>
 
-
+<!--Required when Suppress Notification Section needs to be placed Settings
+Screen-->
             <!--<LinearLayout-->
                 <!--android:id="@+id/ln_suppressedNotifications"-->
                 <!--android:layout_width="match_parent"-->

@@ -8,12 +8,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
 
-public class AgendaItemViewHolder extends RecyclerView.ViewHolder {
+
+public class NoticationFooterViewHolder extends RecyclerView.ViewHolder {
 
     @Bind({R.id.title})
     TextView textView;
 
-    public AgendaItemViewHolder(View itemView) {
+
+    public NoticationFooterViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
@@ -21,4 +23,5 @@ public class AgendaItemViewHolder extends RecyclerView.ViewHolder {
     public void render(String text){
         textView.setText(text);
     }
+
 }

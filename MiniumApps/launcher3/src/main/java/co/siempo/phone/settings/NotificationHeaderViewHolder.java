@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2015 Tomás Ruiz-López.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package co.siempo.phone.settings;
 
 import android.content.Context;
@@ -30,13 +15,11 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.HeaderAppList;
 import minium.co.core.app.CoreApplication;
 
-/**
- * Created by tomas on 15/07/15.
- */
-public class CountHeaderViewHolder extends RecyclerView.ViewHolder {
+public class NotificationHeaderViewHolder extends RecyclerView.ViewHolder {
 
     @Bind({R.id.txt_headerName})
     TextView txt_headerName;
@@ -47,7 +30,7 @@ public class CountHeaderViewHolder extends RecyclerView.ViewHolder {
     @Bind({R.id.headerList})
     LinearLayout headerList;
 
-    public CountHeaderViewHolder(View itemView) {
+    public NotificationHeaderViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }
@@ -86,7 +69,7 @@ public class CountHeaderViewHolder extends RecyclerView.ViewHolder {
         }
 
         String disableList = new Gson().toJson(disableHeaderApps);
-        launcherPrefs.edit().putString(CoreApplication.getInstance().HEADER_APPLIST,disableList).commit();
+        launcherPrefs.edit().putString(Constants.HEADER_APPLIST,disableList).commit();
         switch_headerNotification.setChecked(ischecked);
 
 
