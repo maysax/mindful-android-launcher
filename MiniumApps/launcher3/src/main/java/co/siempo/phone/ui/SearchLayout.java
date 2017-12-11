@@ -26,7 +26,6 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.util.UIUtils;
 
-//import co.siempo.phone.app.Launcher3Prefs_;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -127,28 +126,38 @@ public class SearchLayout extends CardView {
             MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
             handleAfterTextChanged(MainActivity.isTextLenghGreater);
         } else {
-            if(launcherPrefs.getBoolean("isKeyBoardDisplay",false))
+            if(launcherPrefs.getBoolean("isKeyBoardDisplay",false) && txtSearchBox!=null)
                  txtSearchBox.requestFocus();
-            btnClear.setVisibility(INVISIBLE);
-            txtSearchBox.setText("");
+            if(btnClear!=null)
+                btnClear.setVisibility(INVISIBLE);
+            if(txtSearchBox!=null)
+                txtSearchBox.setText("");
         }
+
         handler.postDelayed(showKeyboardRunnable, 500);
     }
 
     private Runnable showKeyboardRunnable = new Runnable() {
         @Override
         public void run() {
-                if(launcherPrefs.getBoolean("isKeyBoardDisplay",false)) {
+            try {
+                if(launcherPrefs.getBoolean("isKeyBoardDisplay",false) && txtSearchBox!=null) {
                     UIUtils.showKeyboard(txtSearchBox);
                 }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
     };
 
     private void handleAfterTextChanged(String s) {
-        if (s.length() != 0) {
-            btnClear.setVisibility(VISIBLE);
-        } else {
-            btnClear.setVisibility(INVISIBLE);
+        if(btnClear!=null) {
+            if (s.length() != 0) {
+                btnClear.setVisibility(VISIBLE);
+            } else {
+                btnClear.setVisibility(INVISIBLE);
+            }
         }
 
         if (isWatching) {
