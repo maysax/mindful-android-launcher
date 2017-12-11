@@ -49,9 +49,6 @@ public class AppListNotificationSetting extends CoreActivity {
     // App list contain all the section names for display in header list
     private List<HeaderAppList> headerList=new ArrayList<>();
 
-    // App list contain all the social apps which are fetch from string array
-    private List<String> socialAppList = new ArrayList<>();
-
     // App list contain all the messenger apps which are fetch from string array
     private List<String> messengerAppList = new ArrayList<>();
 
@@ -75,7 +72,6 @@ public class AppListNotificationSetting extends CoreActivity {
         messengerAppList.clear();
         socialList.clear();
         appList.clear();
-        socialAppList.clear();
         headerList.clear();
 
         // Initialize components
@@ -87,11 +83,6 @@ public class AppListNotificationSetting extends CoreActivity {
         titleActionBar.setText(getResources().getString(R.string.title_managenotifications));
         packageManager= getPackageManager();
         launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
-
-//        systemAppList=Arrays.asList(getResources().getStringArray(R.array.systemAppList));
-//
-//        // Add social Media List
-//        socialAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.socialAppList)));
 
         // Add social Media List
         messengerAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.messengerAppList)));
@@ -188,7 +179,7 @@ public class AppListNotificationSetting extends CoreActivity {
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
 
-        CountSectionAdapter adapter = new CountSectionAdapter(this,appList,socialList,messengerList,headerList);
+        NotificationSectionAdapter adapter = new NotificationSectionAdapter(this,appList,socialList,messengerList,headerList);
         lst_appList.setAdapter(adapter);
     }
 }

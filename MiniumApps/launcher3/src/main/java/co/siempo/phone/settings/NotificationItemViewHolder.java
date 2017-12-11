@@ -21,7 +21,7 @@ import co.siempo.phone.app.Constants;
 import minium.co.core.app.CoreApplication;
 
 
-public class CountItemViewHolder extends RecyclerView.ViewHolder {
+public class NotificationItemViewHolder extends RecyclerView.ViewHolder {
 
     @Bind({R.id.txt_app_name})
     TextView txt_app_name;
@@ -33,7 +33,7 @@ public class CountItemViewHolder extends RecyclerView.ViewHolder {
     ImageView imv_appicon;
 
 
-    public CountItemViewHolder(View itemView) {
+    public NotificationItemViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }

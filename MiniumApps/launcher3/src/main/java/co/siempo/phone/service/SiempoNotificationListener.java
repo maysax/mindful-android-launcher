@@ -118,19 +118,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
         printLog(notification);
         if(PackageUtil.isSiempoLauncher(context)){
             Log.d(TAG,"Suppress Notification Section"+notification.getPackageName());
-            SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
-            String disable_AppList=prefs.getString(Constants.DISABLE_APPLIST,"");
-            if(!TextUtils.isEmpty(disable_AppList)){
-                Type type = new TypeToken<ArrayList<String>>(){}.getType();
-                disableNotificationApps = new ArrayList<>();
-                disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-                if(!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())){
-                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                    filterByCategory(notification);
-                }
-            }
-        }
-        if (launcherPrefs.isAppDefaultOrFront().get()) {
 
 
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
@@ -140,6 +127,23 @@ public class SiempoNotificationListener extends NotificationListenerService {
             if (PackageUtil.isSiempoLauncher(this) && notification.getNotification().getSortKey() != null && notification.getNotification().getSortKey().equalsIgnoreCase(getResources().getString(R.string.lock_screen_label)) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
                 SiempoNotificationListener.this.cancelAllNotifications();
             }
+
+            SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
+            String disable_AppList=prefs.getString(Constants.DISABLE_APPLIST,"");
+            if(!TextUtils.isEmpty(disable_AppList)){
+                Type type = new TypeToken<ArrayList<String>>(){}.getType();
+                disableNotificationApps = new ArrayList<>();
+                disableNotificationApps = new Gson().fromJson(disable_AppList, type);
+                if(!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())){
+                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                    filterByCategory(notification);
+                    return;
+                }
+            }
+        }
+        if (launcherPrefs.isAppDefaultOrFront().get()) {
+
+
 
             if (launcherPrefs.getCurrentProfile().get() == 0) {
                 Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0");

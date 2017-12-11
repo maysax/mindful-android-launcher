@@ -21,11 +21,10 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
-import minium.co.core.app.CoreApplication;
 
-public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeaderViewHolder,
-        CountItemViewHolder,
-        CountFooterViewHolder> {
+public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<NotificationHeaderViewHolder,
+        NotificationItemViewHolder,
+        NoticationFooterViewHolder> {
 
     protected Context context = null;
     SharedPreferences launcherPrefs;
@@ -36,7 +35,7 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
     private List<HeaderAppList> headerList;
 
 
-    public CountSectionAdapter(Context context, List<DisableAppList> appList, List<DisableAppList> socialList, List<DisableAppList> messengerList, List<HeaderAppList> headerList) {
+    public NotificationSectionAdapter(Context context, List<DisableAppList> appList, List<DisableAppList> socialList, List<DisableAppList> messengerList, List<HeaderAppList> headerList) {
         this.context = context;
         this.appList = appList;
         this.socialList = socialList;
@@ -90,25 +89,25 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
     }
 
     @Override
-    protected CountHeaderViewHolder onCreateSectionHeaderViewHolder(ViewGroup parent, int viewType) {
+    protected NotificationHeaderViewHolder onCreateSectionHeaderViewHolder(ViewGroup parent, int viewType) {
         View view = getLayoutInflater().inflate(R.layout.section_header_layout, parent, false);
-        return new CountHeaderViewHolder(view);
+        return new NotificationHeaderViewHolder(view);
     }
 
     @Override
-    protected CountFooterViewHolder onCreateSectionFooterViewHolder(ViewGroup parent, int viewType) {
+    protected NoticationFooterViewHolder onCreateSectionFooterViewHolder(ViewGroup parent, int viewType) {
         View view = getLayoutInflater().inflate(R.layout.view_count_footer, parent, false);
-        return new CountFooterViewHolder(view);
+        return new NoticationFooterViewHolder(view);
     }
 
     @Override
-    protected CountItemViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
+    protected NotificationItemViewHolder onCreateItemViewHolder(ViewGroup parent, int viewType) {
         View view = getLayoutInflater().inflate(R.layout.installed_app_list_row, parent, false);
-        return new CountItemViewHolder(view);
+        return new NotificationItemViewHolder(view);
     }
 
     @Override
-    protected void onBindSectionHeaderViewHolder(final CountHeaderViewHolder holder, final int section) {
+    protected void onBindSectionHeaderViewHolder(final NotificationHeaderViewHolder holder, final int section) {
 
         holder.render(headerList.get(section).name);
 
@@ -186,11 +185,11 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
     }
 
     @Override
-    protected void onBindSectionFooterViewHolder(CountFooterViewHolder holder, int section) {
+    protected void onBindSectionFooterViewHolder(NoticationFooterViewHolder holder, int section) {
     }
 
     @Override
-    protected void onBindItemViewHolder(final CountItemViewHolder holder, final int section, final int position) {
+    protected void onBindItemViewHolder(final NotificationItemViewHolder holder, final int section, final int position) {
 
         holder.displayToggle();
 
@@ -327,13 +326,19 @@ public class CountSectionAdapter extends SectionedRecyclerViewAdapter<CountHeade
         HeaderAppList headerAppList = headerList.get(position);
 
         SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
-        if (ischecked && disableHeaderApps.contains(headerAppList.name)) {
+        if (ischecked && null!=disableHeaderApps && disableHeaderApps
+                .contains(headerAppList
+                .name)) {
             disableHeaderApps.remove(headerAppList.name);
         }
-        if (!ischecked && !disableHeaderApps.contains(headerAppList.name)) {
+        if (!ischecked && null!=disableHeaderApps && !disableHeaderApps.contains(headerAppList.name)) {
             disableHeaderApps.add(headerAppList.name);
         }
-        String disableList = new Gson().toJson(disableHeaderApps);
+        String disableList="";
+        if(null!=disableHeaderApps) {
+            disableList = new Gson().toJson(disableHeaderApps);
+        }
+
         launcherPrefs.edit().putString(Constants.HEADER_APPLIST, disableList).commit();
 
         HeaderAppList d = headerList.get(position);

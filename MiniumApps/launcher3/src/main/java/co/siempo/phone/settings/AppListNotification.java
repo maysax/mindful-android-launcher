@@ -217,7 +217,7 @@ public class AppListNotification  extends CoreActivity {
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
 
-        CountSectionAdapter adapter = new CountSectionAdapter(this,appList,socialList,messengerList,headerList);
+        NotificationSectionAdapter adapter = new NotificationSectionAdapter(this,appList,socialList,messengerList,headerList);
         lst_appList.setAdapter(adapter);
     }
 }

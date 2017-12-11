@@ -9,7 +9,7 @@ import android.content.pm.ApplicationInfo;
  */
 public class DisableAppList {
     /**
-     * It will hold information about the app package
+     * It will hold information about the installed application information
      */
     public ApplicationInfo applicationInfo;
     /**

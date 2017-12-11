@@ -19,7 +19,7 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.HeaderAppList;
 import minium.co.core.app.CoreApplication;
 
-public class CountHeaderViewHolder extends RecyclerView.ViewHolder {
+public class NotificationHeaderViewHolder extends RecyclerView.ViewHolder {
 
     @Bind({R.id.txt_headerName})
     TextView txt_headerName;
@@ -30,7 +30,7 @@ public class CountHeaderViewHolder extends RecyclerView.ViewHolder {
     @Bind({R.id.headerList})
     LinearLayout headerList;
 
-    public CountHeaderViewHolder(View itemView) {
+    public NotificationHeaderViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }

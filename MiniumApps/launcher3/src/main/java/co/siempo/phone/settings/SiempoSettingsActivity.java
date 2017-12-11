@@ -127,7 +127,6 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        // Below logic will use for further development
        // In case if suppressed notification bar is to be invoked from this
       //  screen
 //        try {
@@ -178,7 +177,6 @@ public class SiempoSettingsActivity extends CoreActivity {
                 new ActivityHelper(context).openSiempoDefaultAppSettings();
             }
         });
-// Below logic will use for further development
 // In case if suppressed notification bar is to be invoked from this screen
 // the following click event will be used
 

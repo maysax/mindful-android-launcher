@@ -41,7 +41,7 @@ import co.siempo.phone.notification.ItemClickSupport;
 import co.siempo.phone.notification.Notification;
 import co.siempo.phone.notification.NotificationContactModel;
 import co.siempo.phone.notification.NotificationUtility;
-import co.siempo.phone.notification.RecyclerListAdapter;
+import co.siempo.phone.notification.SuppressNotificationAdapter;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
 import minium.co.core.app.CoreApplication;
@@ -54,7 +54,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
     private TextView txtClearAll,emptyView;
     private TableNotificationSmsDao smsDao;
     List<Notification> notificationList,suggetionList;
-    private RecyclerListAdapter adapter;
+    private SuppressNotificationAdapter adapter;
     SharedPreferences launcherPrefs;
     private EditText edt_search;
     public static final String TAG = SiempoSupressNotificationActivity.class.getName();
@@ -101,14 +101,14 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                     else{
                         txtClearAll.setVisibility(View.VISIBLE);
                     }
-                    adapter = new RecyclerListAdapter(context, suggetionList);
+                    adapter = new SuppressNotificationAdapter(context, suggetionList);
                     recyclerView.setAdapter(adapter);
                 }
 
             }
         });
 
-        adapter = new RecyclerListAdapter(context, notificationList);
+        adapter = new SuppressNotificationAdapter(context, notificationList);
         recyclerView.setAdapter(adapter);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -123,7 +123,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                 DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
                 deleteItem.deleteAll();
                 notificationList.clear();
-                adapter = new RecyclerListAdapter(context, notificationList);
+                adapter = new SuppressNotificationAdapter(context, notificationList);
                 recyclerView.setAdapter(adapter);
                 edt_search.setVisibility(View.GONE);
                 txtClearAll.setVisibility(View.GONE);
@@ -165,7 +165,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                                 .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
                         DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
                         notificationList.remove(position);
-                        adapter = new RecyclerListAdapter(context, notificationList);
+                        adapter = new SuppressNotificationAdapter(context, notificationList);
                         recyclerView.setAdapter(adapter);
                         loadData();
                         new ActivityHelper(context).openAppWithPackageName(strPackageName);
@@ -223,7 +223,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                 }
             }
 
-            adapter = new RecyclerListAdapter(context, notificationList);
+            adapter = new SuppressNotificationAdapter(context, notificationList);
             recyclerView.setAdapter(adapter);
 
 
