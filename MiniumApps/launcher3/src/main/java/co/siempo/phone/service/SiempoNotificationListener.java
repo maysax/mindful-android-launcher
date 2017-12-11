@@ -119,7 +119,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
         if(PackageUtil.isSiempoLauncher(context)){
             Log.d(TAG,"Suppress Notification Section"+notification.getPackageName());
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
-            String disable_AppList=prefs.getString(CoreApplication.getInstance().DISABLE_APPLIST,"");
+            String disable_AppList=prefs.getString(Constants.DISABLE_APPLIST,"");
             if(!TextUtils.isEmpty(disable_AppList)){
                 Type type = new TypeToken<ArrayList<String>>(){}.getType();
                 disableNotificationApps = new ArrayList<>();

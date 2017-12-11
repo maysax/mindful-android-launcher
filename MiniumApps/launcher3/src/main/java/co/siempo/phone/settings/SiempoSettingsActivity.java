@@ -128,6 +128,8 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
         // Below logic will use for further development
+       // In case if suppressed notification bar is to be invoked from this
+      //  screen
 //        try {
 //            icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
 //        }catch (Exception e){
@@ -177,6 +179,9 @@ public class SiempoSettingsActivity extends CoreActivity {
             }
         });
 // Below logic will use for further development
+// In case if suppressed notification bar is to be invoked from this screen
+// the following click event will be used
+
 //        ln_suppressedNotifications.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

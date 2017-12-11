@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
@@ -76,6 +77,8 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         try {
             icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
         }catch (Exception e){
+            //Todo log exception to fabric
+            Crashlytics.logException(e);
         }
         icon_UserId.setImageDrawable(new IconDrawable(context, "fa-user-secret")
                 .colorRes(R.color.text_primary)

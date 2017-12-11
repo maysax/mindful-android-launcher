@@ -99,6 +99,14 @@ public class CallReceiver extends co.siempo.phone.call.PhonecallReceiver {
     }
 
     // Below code will use for further devlopment
+
+    /**
+     * This method will be called in the event of a call being missed.
+     * the call data stays in notification bar whenever a call gets missed
+     * hence in case of notification tray removal the data needs to be stored
+     * @param address : Number of the caller
+     * @param date : Date and time of the call
+     */
     private void saveCall(String address, Date date) {
 //        try {
 //            TableNotificationSmsDao notificationSmsDao = DBUtility.getNotificationDao();

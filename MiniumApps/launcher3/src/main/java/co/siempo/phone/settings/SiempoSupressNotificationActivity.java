@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
@@ -179,7 +180,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
     private void loadData() {
 
-        String disable_AppList=launcherPrefs.getString(CoreApplication.getInstance().DISABLE_APPLIST,"");
+        String disable_AppList=launcherPrefs.getString(Constants.DISABLE_APPLIST,"");
         if(!TextUtils.isEmpty(disable_AppList)){
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             disableNotificationApps = new Gson().fromJson(disable_AppList, type);

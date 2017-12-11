@@ -166,6 +166,7 @@ public class SuppressNotificationAdapter extends ArrayAdapter<Notification> {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             List<Notification> c = (List<Notification>) results.values;
+            //Todo remove unnecessary null check
             if (results != null && results.count > 0) {
                 clear();
                 for (Notification cust : c) {

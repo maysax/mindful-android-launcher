@@ -92,11 +92,11 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public boolean isIfScreen = false;
 
-    public String DISABLE_APPLIST="DISABLE_APPLIST";
-    public String SOCIAL_DISABLE_COUNT="SOCIAL_DISABLE_COUNT";
-    public String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
-    public String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
-    public String HEADER_APPLIST="HEADER_APPLIST";
+//    public String DISABLE_APPLIST="DISABLE_APPLIST";
+//    public String SOCIAL_DISABLE_COUNT="SOCIAL_DISABLE_COUNT";
+//    public String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
+//    public String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
+//    public String HEADER_APPLIST="HEADER_APPLIST";
 
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
@@ -390,7 +390,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         // set initial configurations here
         configTracer();
         configCalligraphy();
-//        configFabric();
+        configFabric();
         configIconify();
         configureLifecycle();
         configureNetworking();

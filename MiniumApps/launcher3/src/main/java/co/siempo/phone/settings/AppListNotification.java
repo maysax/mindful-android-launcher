@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
 import de.greenrobot.event.Subscribe;
@@ -107,14 +108,14 @@ public class AppListNotification  extends CoreActivity {
         settingsActionBar.setVisibility(View.GONE);
 
         // disableNotificationApps contains of disable app list
-        String disable_AppList=launcherPrefs.getString(CoreApplication.getInstance().DISABLE_APPLIST,"");
+        String disable_AppList=launcherPrefs.getString(Constants.DISABLE_APPLIST,"");
         if(!TextUtils.isEmpty(disable_AppList)){
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             disableNotificationApps = new Gson().fromJson(disable_AppList, type);
         }
 
         // disableSectionList contains of disable section list
-        String disable_Header_AppList=launcherPrefs.getString(CoreApplication.getInstance().HEADER_APPLIST,"");
+        String disable_Header_AppList=launcherPrefs.getString(Constants.HEADER_APPLIST,"");
         if(!TextUtils.isEmpty(disable_Header_AppList)){
             Type type = new TypeToken<ArrayList<String>>(){}.getType();
             disableSectionList = new Gson().fromJson(disable_Header_AppList, type);

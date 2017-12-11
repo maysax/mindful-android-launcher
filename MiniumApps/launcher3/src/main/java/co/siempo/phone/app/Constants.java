@@ -62,4 +62,12 @@ public class Constants {
     public static final int EMAIL_PACKAGE = 16;
     public static final String WHATSAPP = "WhatsApp";
     public static final String ALPHA_SETTING = "0x0p9o8i7u6y";
+
+
+
+    public static String DISABLE_APPLIST="DISABLE_APPLIST";
+    public static String SOCIAL_DISABLE_COUNT="SOCIAL_DISABLE_COUNT";
+    public static String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
+    public static String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
+    public static String HEADER_APPLIST="HEADER_APPLIST";
 }
