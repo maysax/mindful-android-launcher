@@ -165,15 +165,7 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".call.CallReceiver_"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
-            </intent-filter>
-        </receiver>
+
         <receiver android:name=".mm.AlarmReciever_" />
         <receiver
             android:name=".tempo.TempoReceiver_"
@@ -205,17 +197,7 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".service.SiempoAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
 
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/windowchangedetectingservice" />
-        </service>
 
         <activity android:name=".ui.UpdateActivity_" />
         <activity android:name=".settings.SiempoPhoneSettingsActivity" />
@@ -224,7 +206,6 @@
         <activity android:name=".settings.SiempoMainSettingsActivity_" />
         <activity android:name=".settings.SiempoAlphaSettingsActivity_" />
 
-        <service android:name=".SiempoNotificationBar.ViewService_" />
         <service
             android:name=".service.StatusBarService"
             android:enabled="true"

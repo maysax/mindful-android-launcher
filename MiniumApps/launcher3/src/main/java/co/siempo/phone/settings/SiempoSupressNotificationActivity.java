@@ -55,7 +55,6 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
     private TableNotificationSmsDao smsDao;
     List<Notification> notificationList= new ArrayList<>();
     List<Notification> suggetionList = new ArrayList<>();
-    private RecyclerListAdapter adapter;
     private SuppressNotificationAdapter adapter;
     SharedPreferences launcherPrefs;
     private EditText edt_search;
@@ -104,7 +103,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                             txtClearAll.setVisibility(View.VISIBLE);
                         }
                     }
-                  adapter = new RecyclerListAdapter(context, suggetionList);
+                  adapter = new SuppressNotificationAdapter(context, suggetionList);
                   recyclerView.setAdapter(adapter);
 
                 }
@@ -185,13 +184,13 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                         if(!TextUtils.isEmpty(edt_search.getText().toString().trim())){
 
                             suggetionList.remove(position);
-                            adapter = new RecyclerListAdapter(context, suggetionList);
+                            adapter = new SuppressNotificationAdapter(context, suggetionList);
                             recyclerView.setAdapter(adapter);
                         }
                         else{
 
                             notificationList.remove(position);
-                            adapter = new RecyclerListAdapter(context, notificationList);
+                            adapter = new SuppressNotificationAdapter(context, notificationList);
                             recyclerView.setAdapter(adapter);
                         }
 
