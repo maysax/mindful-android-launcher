@@ -87,13 +87,8 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
     @SuppressLint("ObsoleteSdkInt")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN, android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         CoreApplication.getInstance().setEditNotOpen(true);
-        // Android version >= 18 -> set orientation fullUser
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_USER);
 
         // Initialize colours and font sizes arrays
         colourArr = getResources().getStringArray(R.array.colours);
@@ -109,13 +104,6 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
 
         // Init layout components
         toolbar = findViewById(R.id.toolbarEdit);
-        int statusbarheight = retrieveStatusBarHeight();
-
-//
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, statusbarheight, 0, 0);
-        toolbar.setLayoutParams(params);
-//
 
         titleEdit = findViewById(R.id.titleEdit);
         bodyEdit = findViewById(R.id.bodyEdit);
@@ -488,14 +476,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
         super.onConfigurationChanged(newConfig);
     }
 
-    public int retrieveStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
+
 
     @Subscribe
     public void homePressEvent(HomePressEvent event) {

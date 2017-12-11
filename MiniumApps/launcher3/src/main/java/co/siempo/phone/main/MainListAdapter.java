@@ -18,10 +18,7 @@ import com.bumptech.glide.Glide;
 import com.joanzapata.iconify.IconDrawable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import co.siempo.phone.R;
 import co.siempo.phone.model.ContactListItem;

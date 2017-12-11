@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.concurrent.TimeUnit;
-
 import co.siempo.phone.app.Launcher3App;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;

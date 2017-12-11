@@ -1,20 +1,12 @@
 package co.siempo.phone.applist;
 
-import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.LoaderManager;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.ApplicationInfo;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +15,6 @@ import com.joanzapata.iconify.IconDrawable;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -32,14 +23,10 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
 @EActivity(R.layout.activity_installed_app_list)

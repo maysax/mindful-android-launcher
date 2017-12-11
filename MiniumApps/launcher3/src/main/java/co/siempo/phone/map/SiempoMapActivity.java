@@ -11,7 +11,6 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;

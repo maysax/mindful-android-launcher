@@ -48,7 +48,7 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.util.UIUtils;
 
 
-public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.ItemViewHolder>
+public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNotificationAdapter.ItemViewHolder>
         implements ItemTouchHelperAdapter {
 
     private Context mContext;
@@ -58,7 +58,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     private final OnStartDragListener mDragStartListener;
     private String defSMSApp;
 
-    public RecyclerListAdapter(Context context, List<Notification> notificationList, OnStartDragListener dragStartListener) {
+    public SuppressNotificationAdapter(Context context, List<Notification> notificationList, OnStartDragListener dragStartListener) {
         mContext = context;
         mDragStartListener = dragStartListener;
         this.notificationList = notificationList;
@@ -66,7 +66,7 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     }
 
 
-    public RecyclerListAdapter(Context context, List<Notification> notificationList) {
+    public SuppressNotificationAdapter(Context context, List<Notification> notificationList) {
         mContext = context;
         mDragStartListener = null;
         this.notificationList = notificationList;

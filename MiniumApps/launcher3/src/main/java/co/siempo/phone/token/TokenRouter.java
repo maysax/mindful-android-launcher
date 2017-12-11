@@ -13,14 +13,8 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.SendSmsEvent;

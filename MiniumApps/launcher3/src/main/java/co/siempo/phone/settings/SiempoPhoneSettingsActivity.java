@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ListView;
 
 import java.util.List;
@@ -137,8 +136,6 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setupActionBar();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getListView().setPadding(0, retrieveStatusBarHeight(this), 0, 0);
     }
 

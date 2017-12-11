@@ -11,12 +11,10 @@
         android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.PREVENT_POWER_KEY" />
-
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
@@ -32,7 +30,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-
     <!-- Becoming default SMS app -->
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -207,12 +204,14 @@
                 <action android:name="android.net.wifi.RSSI_CHANGED" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".service.SiempoAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/windowchangedetectingservice" />
@@ -224,13 +223,19 @@
         <activity android:name=".settings.SiempoSettingsDefaultAppActivity_" />
         <activity android:name=".settings.SiempoMainSettingsActivity_" />
         <activity android:name=".settings.SiempoAlphaSettingsActivity_" />
-        <activity android:name=".settings.AppListNotification_" />
 
         <service android:name=".SiempoNotificationBar.ViewService_" />
         <service
             android:name=".service.StatusBarService"
             android:enabled="true"
             android:exported="false" />
+
+        <activity android:name=".settings.AppListNotificationSetting"
+            android:label="@string/title_activity_app_list_notification"></activity>
+        <activity
+            android:name=".settings.AppListNotification"
+            android:label="@string/title_activity_app_list_notification" />
+        <activity android:name=".settings.SiempoSupressNotificationActivity"></activity>
     </application>
 
 </manifest>

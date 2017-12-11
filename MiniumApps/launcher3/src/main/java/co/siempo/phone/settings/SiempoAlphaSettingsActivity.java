@@ -1,37 +1,33 @@
 package co.siempo.phone.settings;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.HomePressEvent;
-import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
 /**
@@ -43,7 +39,6 @@ import minium.co.core.ui.CoreActivity;
 public class SiempoAlphaSettingsActivity extends CoreActivity {
 
     private Context context;
-    private long startTime = 0;
     @ViewById
     ImageView icon_UserId;
 
@@ -52,6 +47,9 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
 
     @SystemService
     TelephonyManager telephonyManager;
+    private long startTime=0;
+    private LinearLayout ln_notifications,ln_suppressedNotifications;
+    private ImageView icon_AppNotifications,icon_SuppressedNotifications;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -66,11 +64,24 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
     @AfterViews
     void afterViews() {
         initView();
+        onClickEvents();
     }
 
 
     public void initView() {
         context = SiempoAlphaSettingsActivity.this;
+        ln_notifications = findViewById(R.id.ln_notifications);
+        ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
+        icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
+        icon_AppNotifications = findViewById(R.id.icon_AppNotifications);
+        icon_AppNotifications.setImageDrawable(new IconDrawable(context,"fa-bell").colorRes(R.color.text_primary).sizeDp(18));
+        try {
+            icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
+        }catch (Exception e){
+            //Todo log exception to fabric
+            e.printStackTrace();
+//            Crashlytics.logException(e);
+        }
         icon_UserId.setImageDrawable(new IconDrawable(context, "fa-user-secret")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -79,7 +90,27 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
                 txt_UserId.setText("UserId: " + telephonyManager.getDeviceId());
             }
         }
+        else{
+            txt_UserId.setText("UserId: " + telephonyManager.getDeviceId());
+        }
 
+    }
+
+    public void onClickEvents(){
+        ln_notifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ActivityHelper(context).openAppListNotifications();
+            }
+        });
+
+        ln_suppressedNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new ActivityHelper(context).openSiempoSuppressNotificationsSettings();
+            }
+        });
     }
 
 

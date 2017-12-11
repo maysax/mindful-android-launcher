@@ -13,7 +13,6 @@ import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.call.PhonecallReceiver;
 import co.siempo.phone.service.SiempoDndService_;
 import minium.co.core.log.Tracer;
 

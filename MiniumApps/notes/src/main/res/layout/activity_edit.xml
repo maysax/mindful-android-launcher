@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/relativeLayoutEdit"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     tools:context=".ui.EditActivity">
