@@ -18,11 +18,9 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,8 +100,6 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // Initialize local file path and backup file path
         localPath = new File(getFilesDir() + "/" + NOTES_FILE_NAME);
 
@@ -137,12 +133,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
         // Init layout components
         toolbar = findViewById(R.id.toolbarMain);
-        int statusbarheight = retrieveStatusBarHeight();
 
-//
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, statusbarheight, 0, 0);
-        toolbar.setLayoutParams(params);
         listView = findViewById(R.id.listView);
         newNote = findViewById(R.id.fab);
         noNotes = findViewById(R.id.noNotes);
@@ -196,7 +187,6 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.putExtra(NOTE_REQUEST_CODE, NEW_NOTE_REQUEST);
-
                 startActivityForResult(intent, NEW_NOTE_REQUEST);
             }
         });
@@ -215,14 +205,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         }
     }
 
-    public int retrieveStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
+
 
     @Override
     protected void onResume() {
@@ -231,7 +214,6 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         Tracer.d("Notes onResume called");
         // Retrieve from local path
         JSONArray tempNotes = retrieveData(localPath);
-
         Tracer.d("All notes: " + tempNotes);
 
         // If not null -> equal main notes to retrieved notes

@@ -2,7 +2,6 @@ package co.siempo.phone.ui;
 
 
 import android.app.Fragment;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -14,7 +13,6 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.Icon;

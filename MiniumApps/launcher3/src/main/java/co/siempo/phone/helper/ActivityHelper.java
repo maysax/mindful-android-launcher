@@ -12,11 +12,13 @@ import java.util.List;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.launcher.FakeLauncherActivity;
+import co.siempo.phone.settings.AppListNotification;
 import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
 import co.siempo.phone.settings.SiempoMainSettingsActivity_;
 import co.siempo.phone.settings.SiempoPhoneSettingsActivity;
 import co.siempo.phone.settings.SiempoSettingsActivity_;
 import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity_;
+import co.siempo.phone.settings.SiempoSupressNotificationActivity;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -179,6 +181,31 @@ public class ActivityHelper {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
+    }
+
+
+    public boolean openSiempoSuppressNotificationsSettings() {
+        try {
+            Intent i = new Intent(context,SiempoSupressNotificationActivity.class);
+            context.startActivity(i);
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+        return false;
+    }
+
+
+
+    public boolean openAppListNotifications() {
+        try {
+            Intent i = new Intent(context,AppListNotification.class);
+            context.startActivity(i);
+            return true;
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+        }
+        return false;
     }
 
     public void openSiempoSettingsApp() {

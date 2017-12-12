@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.concurrent.TimeUnit;
-
 import co.siempo.phone.app.Launcher3App;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
@@ -39,6 +37,7 @@ public class FirebaseHelper {
     private static String THIRD_PARTY_APPLICATION = "third_party";
     private static String SCREEN_USAGE = "screen_usage";
     private static String SIEMPO_DEFAULT = "siempo_default";
+    private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -48,6 +47,8 @@ public class FirebaseHelper {
     private String INTENT_FROM = "intent_from";
     private String ACTION = "action";
     private String IF_DATA = "if_data";
+    private String SUPPRESSED_COUNT = "suppressed_count";
+    private String PACKAGE_NAME = "package_name";
 
     public FirebaseHelper() {
 
@@ -81,6 +82,20 @@ public class FirebaseHelper {
             getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
+    }
+
+
+    /**
+     * Used for suppressed notification count by package name.
+     *
+     * @param count
+     */
+    public void logSuppressedNotification(String packageName, int count) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(SUPPRESSED_COUNT, count);
+        bundle.putString(PACKAGE_NAME, packageName);
+        Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
     }
 
     /**

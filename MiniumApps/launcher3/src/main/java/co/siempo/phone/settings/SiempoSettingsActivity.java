@@ -60,7 +60,7 @@ import minium.co.core.util.UIUtils;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_KeyBoardNotification, icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp, icon_AppNotifications;
+    private ImageView icon_launcher, icon_KeyBoardNotification,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp,icon_AppNotifications,icon_SuppressedNotifications;
     private TextView txt_version;
     private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_Faq, ln_changeDefaultApp, ln_AppListNotifications;
     private final String TAG = "SiempoSettingsActivity";
@@ -69,7 +69,6 @@ public class SiempoSettingsActivity extends CoreActivity {
     private ImageView icon_hideNotification;
     private SwitchCompat switch_notification;
     private SwitchCompat switch_KeyBoardnotification;
-    private SwitchCompat switch_AllowNotificationFacebook;
     @SystemService
     ConnectivityManager connectivityManager;
 
@@ -80,6 +79,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event.isRunning()) {
+
             ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
         }
     }
@@ -101,6 +101,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         context = SiempoSettingsActivity.this;
         icon_launcher = findViewById(R.id.icon_launcher);
         icon_version = findViewById(R.id.icon_version);
+//        icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
         icon_changeDefaultApp = findViewById(R.id.icon_changeDefaultApp);
         icon_KeyBoardNotification = findViewById(R.id.icon_KeyBoardNotification);
         icon_Feedback = findViewById(R.id.icon_Feedback);
@@ -117,6 +118,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_launcher = findViewById(R.id.ln_launcher);
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
+//        ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
         ln_Feedback = findViewById(R.id.ln_Feedback);
         ln_AppListNotifications = findViewById(R.id.ln_notifications);
         ln_Faq = findViewById(R.id.ln_Faq);
@@ -124,10 +126,15 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
         switch_notification = findViewById(R.id.swtch_notification);
         switch_KeyBoardnotification = findViewById(R.id.switch_KeyBoardnotification);
-        switch_AllowNotificationFacebook = findViewById(R.id.switch_AllowNotificationFacebook);
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
+       // In case if suppressed notification bar is to be invoked from this
+      //  screen
+//        try {
+//            icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
+//        }catch (Exception e){
+//        }
         icon_hideNotification.setImageDrawable(new IconDrawable(context, "fa-flag")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -137,11 +144,10 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        icon_AppNotifications.setImageDrawable(new IconDrawable(context, "fa-bell").colorRes(R.color.text_primary).sizeDp(18));
+        icon_AppNotifications.setImageDrawable(new IconDrawable(context,"fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         icon_KeyBoardNotification.setImageDrawable(new IconDrawable(context, "fa-keyboard-o")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-
         icon_Feedback.setImageDrawable(new IconDrawable(context, "fa-question-circle")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -173,6 +179,16 @@ public class SiempoSettingsActivity extends CoreActivity {
                 new ActivityHelper(context).openSiempoDefaultAppSettings();
             }
         });
+// In case if suppressed notification bar is to be invoked from this screen
+// the following click event will be used
+
+//        ln_suppressedNotifications.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                new ActivityHelper(context).openSiempoSuppressNotificationsSettings();
+//            }
+//        });
 
         ln_Feedback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,12 +210,8 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_AppListNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    AppListNotification_.intent(context).start();
-                } catch (Exception e) {
-                    CoreApplication.getInstance().logException(e);
-                    Tracer.e(e, e.getMessage());
-                }
+                Intent i = new Intent(SiempoSettingsActivity.this,AppListNotificationSetting.class);
+                startActivity(i);
             }
         });
 

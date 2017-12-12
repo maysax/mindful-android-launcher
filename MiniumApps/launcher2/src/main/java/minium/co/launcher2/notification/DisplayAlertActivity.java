@@ -38,7 +38,6 @@ import minium.co.launcher2.utils.AudioUtils;
 import minium.co.launcher2.utils.RecyclerViewItemClickListener;
 import minium.co.launcher2.utils.VibrationUtils;
 
-@Fullscreen
 @EActivity(R.layout.activity_display_alert)
 public class DisplayAlertActivity extends CoreActivity implements RecyclerViewItemClickListener {
 

@@ -13,7 +13,6 @@ import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.widget.Toast;
 
-
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 

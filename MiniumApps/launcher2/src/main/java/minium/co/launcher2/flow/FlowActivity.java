@@ -43,7 +43,6 @@ import minium.co.launcher2.ui.TopFragment_;
 import minium.co.launcher2.ui.widget.VerticalProgressBar;
 import minium.co.launcher2.utils.AudioUtils;
 
-@Fullscreen
 @EActivity(R.layout.activity_flow)
 public class FlowActivity extends CoreActivity {
 

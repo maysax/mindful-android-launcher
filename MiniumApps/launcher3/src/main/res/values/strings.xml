@@ -22,14 +22,16 @@
     <string name="title.email">Email</string>
     <string name="title.feedback">Feedback</string>
     <string name="title.faq">FAQ</string>
+    <string name="title.appNotifications">Notification manager</string>
+    <string name="title.suppressedNotifications">View Suppressed Notification</string>
+    <string name="title.managenotifications">Manage Notifications</string>
     <string name="title.inbox" tools:ignore="UnusedResources">Google Inbox</string>
     <string name="title.defaultLauncher">Set default home app</string>
     <string name="title_tracking" tools:ignore="UnusedResources">Tracking</string>
     <string name="title.version">Version: %1$s</string>
     <string name="title.defaultapp">Assign app defaults</string>
-    <string name="title.lockScreenNotifications">Hide Notifications On Lock Screen </string>
-    <string name="title.appNotifications">Notification manager</string>
-    <string name="title.allowNotification_facebook">Facebook</string>
+    <string name="title.lockScreenNotifications">Hide notifications on lock screen </string>
+    <string name="title.allowNotification">Notification for messenger</string>
     <string name="title.apps">Apps</string>
     <string name="title.calendar">Calendar</string>
 
@@ -51,7 +53,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="UnusedResources">Hello blank fragment</string>
-    <string name="title_activity_installed_app_list">Installed App List</string>
+    <string name="title_activity_installed_app_list">Installed App List </string>
     <string name="msg_tempo_inactive">Turn on Tempo to batch notifications at set intervals</string>
     <string name="msg_tempo_active" tools:ignore="PluralsCandidate">"Notifications now come batched every %1$d minutes, starting at the top of the hour"</string>
     <string name="msg_siempo_active_title">Siempo</string>
@@ -229,8 +231,35 @@
     <string name="clear_all">Clear All</string>
     <string name="siempo_note">Siempo Note</string>
     <string name="messaging">Messaging</string>
+    <string name="title_activity_app_list_notification">AppListNotification</string>
+
+    <string-array name="socialAppList">
+        <item>com.facebook.lite</item>
+        <item>com.facebook.katana</item>
+        <item>com.instagram.android</item>
+    </string-array>
+
+
+    <string-array name="messengerAppList">
+
+        <item>com.facebook.orca</item>
+        <item>com.facebook.mlite</item>
+        <item>com.whatsapp</item>
+        <item>com.Slack</item>
+        <item>com.google.android.talk</item>
+        <item>com.google.android.apps.messaging</item>
+    </string-array>
+
+    <string-array name="systemAppList">
+        <item>com.android.providers.contacts</item>
+        <item>com.android.phone</item>
+    </string-array>
     <string name="please_select_application">Please select application.</string>
     <string name="loading_msg">Loading....</string>
     <string name="no_emailapp_msg">No email application found in your phone</string>
     <string name="app_not_found">Application not found</string>
+    <string name="suppressed_notifications">Suppressed Notifications</string>
+    <string name="search_app">Search App</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
 </resources>

@@ -149,8 +149,15 @@ public class UIUtils {
     }
 
     public static void showKeyboard(EditText editText) {
-        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+        try {
+            if(editText!=null) {
+                InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

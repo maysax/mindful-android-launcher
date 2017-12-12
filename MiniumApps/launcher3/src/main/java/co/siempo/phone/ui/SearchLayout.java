@@ -15,7 +15,6 @@ import com.eyeem.chips.ChipsEditText;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
-//import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.token.TokenCompleteType;
@@ -25,7 +24,9 @@ import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenUpdateEvent;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.util.UIUtils;
+
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -126,28 +127,39 @@ public class SearchLayout extends CardView {
             MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
             handleAfterTextChanged(MainActivity.isTextLenghGreater);
         } else {
-            if(launcherPrefs.getBoolean("isKeyBoardDisplay",false))
+            if(launcherPrefs.getBoolean("isKeyBoardDisplay",false) && txtSearchBox!=null)
                  txtSearchBox.requestFocus();
-            btnClear.setVisibility(INVISIBLE);
-            txtSearchBox.setText("");
+            if(btnClear!=null)
+                btnClear.setVisibility(INVISIBLE);
+            if(txtSearchBox!=null)
+                txtSearchBox.setText("");
         }
+
         handler.postDelayed(showKeyboardRunnable, 500);
     }
 
     private Runnable showKeyboardRunnable = new Runnable() {
         @Override
         public void run() {
-                if(launcherPrefs.getBoolean("isKeyBoardDisplay",false)) {
+            try {
+                if(launcherPrefs.getBoolean("isKeyBoardDisplay",false) && txtSearchBox!=null) {
                     UIUtils.showKeyboard(txtSearchBox);
                 }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
+            }
         }
     };
 
     private void handleAfterTextChanged(String s) {
-        if (s.length() != 0) {
-            btnClear.setVisibility(VISIBLE);
-        } else {
-            btnClear.setVisibility(INVISIBLE);
+        if(btnClear!=null) {
+            if (s.length() != 0) {
+                btnClear.setVisibility(VISIBLE);
+            } else {
+                btnClear.setVisibility(INVISIBLE);
+            }
         }
 
         if (isWatching) {

@@ -13,4 +13,5 @@
     <dimen name="dp_18">18dp</dimen>
     <dimen name="dp_27">27dp</dimen>
     <dimen name="dp_40">40dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.IconDrawable;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -123,7 +122,8 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
             layoutParams.setMargins(UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8));
             cardView.setLayoutParams(layoutParams);
         } else {
-            layoutParams.setMargins(UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 54));
+            layoutParams.setMargins(UIUtils.dpToPx(getActivity(), 8),
+                    UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8), UIUtils.dpToPx(getActivity(), 8));
             cardView.setLayoutParams(layoutParams);
         }
         if (mListState != null) {

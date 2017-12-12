@@ -47,7 +47,7 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.util.UIUtils;
 
 
-public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapter.ItemViewHolder>
+public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNotificationAdapter.ItemViewHolder>
         implements ItemTouchHelperAdapter {
 
     private Context mContext;
@@ -57,12 +57,16 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<RecyclerListAdapte
     private String defSMSApp;
 
 
-    public RecyclerListAdapter(Context context, List<Notification> notificationList) {
+
+
+    public SuppressNotificationAdapter(Context context, List<Notification> notificationList) {
         mContext = context;
         this.notificationList = notificationList;
         Log.d("Test", "notificationList" + notificationList.size());
         defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
     }
+
+
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

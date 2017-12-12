@@ -10,7 +10,6 @@ import android.content.pm.ResolveInfo;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -33,7 +32,6 @@ import org.greenrobot.greendao.database.Database;
 import java.util.ArrayList;
 
 import co.siempo.phone.R;
-import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.GreenDaoOpenHelper;
@@ -132,26 +130,7 @@ public class Launcher3App extends CoreApplication {
                 if (myKM != null && !myKM.inKeyguardRestrictedInputMode()) {
                     checkProfile();
                 }
-
                 launcherPrefs.isAppDefaultOrFront().put(true);
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (Settings.canDrawOverlays(getApplicationContext())) {
-                                Log.d(TAG, "Display Siempo Status bar");
-                                ViewService_.intent(getApplicationContext()).showMask().start();
-                            } else {
-                                Log.d(TAG, "Overlay is off");
-                            }
-                        } else {
-                            Log.d(TAG, "Display Siempo Status bar");
-                            ViewService_.intent(getApplicationContext()).showMask().start();
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    CoreApplication.getInstance().logException(e);
-                }
 
             }
             numStarted++;
@@ -189,18 +168,7 @@ public class Launcher3App extends CoreApplication {
 
             if (numStarted == 0) {
                 Log.d(TAG, "Siempo is on background");
-                // app went to background
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (Settings.canDrawOverlays(getApplicationContext())) {
-                            Log.d(TAG, "Hide Siempo Status bar");
-                            ViewService_.intent(getApplicationContext()).hideMask().start();
-                        }
-                    } else {
-                        Log.d(TAG, "Hide Siempo Status Bar");
-                        ViewService_.intent(getApplicationContext()).hideMask().start();
-                    }
-                }
+
                 if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
                     isSiempoLauncher = true;
                     launcherPrefs.isAppDefaultOrFront().put(true);
