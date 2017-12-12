@@ -158,6 +158,12 @@ public class MainFragment extends CoreFragment {
         // becomes true from StatusService class.
         if (prefs.isContactUpdate().get() || prefs.isAppUpdated().get()) {
             loadData();
+            if (prefs.isContactUpdate().get()) {
+                prefs.isContactUpdate().put(false);
+            }
+            if (prefs.isAppUpdated().get()) {
+                prefs.isAppUpdated().put(false);
+            }
         }
     }
 
