@@ -19,8 +19,10 @@ import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 
+import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.EventBus;
@@ -205,6 +207,9 @@ public class StatusBarService extends Service {
             } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                 String uninstallPackageName = intent.getData().getSchemeSpecificPart();
                 Log.d("Testing with device.", "Removed" + uninstallPackageName);
+                if(!TextUtils.isEmpty(uninstallPackageName)) {
+                    new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                }
             }
             sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
             EventBus.getDefault().post(new AppInstalledEvent(true));
