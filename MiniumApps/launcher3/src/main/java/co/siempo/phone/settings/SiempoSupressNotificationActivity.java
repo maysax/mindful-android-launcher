@@ -53,7 +53,8 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
     Context context;
     private TextView txtClearAll,emptyView;
     private TableNotificationSmsDao smsDao;
-    List<Notification> notificationList,suggetionList;
+    List<Notification> notificationList= new ArrayList<>();
+    List<Notification> suggetionList = new ArrayList<>();
     private SuppressNotificationAdapter adapter;
     SharedPreferences launcherPrefs;
     private EditText edt_search;
@@ -92,17 +93,19 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                                       int before, int count) {
                 suggetionList.clear();
                 for(int i =0 ;i<notificationList.size();i++){
-                    if (CoreApplication.getInstance().getApplicationNameFromPackageName(notificationList.get(i).getPackageName()).toLowerCase().startsWith(s.toString().toLowerCase())) {
-                        suggetionList.add(notificationList.get(i));
+                    if(!TextUtils.isEmpty(notificationList.get(i).getPackageName())) {
+                        if (CoreApplication.getInstance().getApplicationNameFromPackageName(notificationList.get(i).getPackageName()).toLowerCase().startsWith(s.toString().toLowerCase())) {
+                            suggetionList.add(notificationList.get(i));
+                        }
+                        if (suggetionList.size() == 0) {
+                            txtClearAll.setVisibility(View.GONE);
+                        } else {
+                            txtClearAll.setVisibility(View.VISIBLE);
+                        }
                     }
-                    if(suggetionList.size() == 0){
-                        txtClearAll.setVisibility(View.GONE);
-                    }
-                    else{
-                        txtClearAll.setVisibility(View.VISIBLE);
-                    }
-                    adapter = new SuppressNotificationAdapter(context, suggetionList);
-                    recyclerView.setAdapter(adapter);
+                  adapter = new SuppressNotificationAdapter(context, suggetionList);
+                  recyclerView.setAdapter(adapter);
+
                 }
 
             }
@@ -136,39 +139,66 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                if (notificationList.size() > position) {
-                    if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
-                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notificationList.get(position).getNumber(), null));
+                 // Get notification object from
+                 //  1. SuggetionList - if user has search in suggestion box
+                 //  2. NotificationList - Get whole enable app notificationlist, if suggestion box is empty
+                Notification notification = null;
+                if(!TextUtils.isEmpty(edt_search.getText().toString().trim())){
+                    if(suggetionList.size() > position && suggetionList.get(position)!=null){
+                        notification = suggetionList.get(position);
+                    }
+                }
+                else{
+                    if(notificationList.size() > position && notificationList.get(position)!=null){
+                        notification = notificationList.get(position);
+                    }
+                }
+                if (notification !=null) {
+                    if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_SMS) {
+                        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", notification.getNumber(), null));
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
                         // Following code will delete all notification of same user and same types.
                         DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                        deleteItem.executeDelete(notificationList.get(position));
+                        deleteItem.executeDelete(notification);
                         loadData();
-                    } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
+                    } else if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
                         if (
                                 ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED
                                         && ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
 
                         } else {
-                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notificationList.get(position).getNumber()));
+                            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + notification.getNumber()));
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(intent);
                         }
                         // Following code will delete all notification of same user and same types.
                         DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
-                        deleteItem.executeDelete(notificationList.get(position));
+                        deleteItem.executeDelete(notification);
                         loadData();
                     } else {
-                        String strPackageName = notificationList.get(position).getPackageName();
+                        String strPackageName = notification.getPackageName();
                         List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()
-                                .where(TableNotificationSmsDao.Properties.PackageName.eq(notificationList.get(position).getPackageName())).list();
+                                .where(TableNotificationSmsDao.Properties.PackageName.eq(notification.getPackageName())).list();
                         DBUtility.getNotificationDao().deleteInTx(tableNotificationSms);
-                        notificationList.remove(position);
-                        adapter = new SuppressNotificationAdapter(context, notificationList);
-                        recyclerView.setAdapter(adapter);
+                        if(!TextUtils.isEmpty(edt_search.getText().toString().trim())){
+
+                            suggetionList.remove(position);
+                            adapter = new SuppressNotificationAdapter(context, suggetionList);
+                            recyclerView.setAdapter(adapter);
+                        }
+                        else{
+
+                            notificationList.remove(position);
+                            adapter = new SuppressNotificationAdapter(context, notificationList);
+                            recyclerView.setAdapter(adapter);
+                        }
+
                         loadData();
                         new ActivityHelper(context).openAppWithPackageName(strPackageName);
+                    }
+                    if(edt_search!=null){
+                        edt_search.getText().clear();
                     }
                 }
             }
@@ -218,7 +248,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                     notification.set_text(items.get(i).get_message());
                     notificationList.add(notification);
                 } else {
-                    Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type());
+                    Notification n = new Notification(gettingNameAndImageFromPhoneNumber(items.get(i).get_contact_title()), items.get(i).getId(), items.get(i).get_contact_title(), items.get(i).get_message(), time, false, items.get(i).getNotification_type(),items.get(i).getPackageName());
                     notificationList.add(n);
                 }
             }
