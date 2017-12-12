@@ -20,6 +20,7 @@ import android.view.accessibility.AccessibilityEvent;
 
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.util.PackageUtil;
+import minium.co.core.app.CoreApplication;
 
 import static android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED;
 
@@ -55,17 +56,10 @@ public class SiempoAccessibilityService extends AccessibilityService {
                     Log.d(TAG, "Package Name::" + packageName);
                     Log.d(TAG, "Activity Name::" + activityName);
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
 
-
-//                if (!PackageUtil.isSiempoLauncher(this) && !packageName.equalsIgnoreCase(getPackageName())) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-//                            && !notificationManager.isNotificationPolicyAccessGranted()) {
-//                    } else {
-//                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-//                    }
-//                }
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                     // check the condition for the Marshmallow device.
@@ -92,6 +86,7 @@ public class SiempoAccessibilityService extends AccessibilityService {
         try {
             return getPackageManager().getActivityInfo(componentName, 0);
         } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
             return null;
         }
     }

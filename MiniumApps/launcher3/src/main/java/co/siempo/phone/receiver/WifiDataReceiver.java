@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 
 import co.siempo.phone.event.ConnectivityEvent;
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
 /**
@@ -59,6 +60,7 @@ public class WifiDataReceiver extends BroadcastReceiver implements IDynamicStatu
             }
             EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.WIFI, level));
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e);
         }
 

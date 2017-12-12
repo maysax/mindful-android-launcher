@@ -16,6 +16,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import minium.co.core.app.CoreApplication;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -43,6 +45,7 @@ public class SaveNoteTest {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
         ViewInteraction chipsEditText = onView(
@@ -56,6 +59,7 @@ public class SaveNoteTest {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
         ViewInteraction chipsEditText2 = onView(
@@ -69,6 +73,7 @@ public class SaveNoteTest {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
         ViewInteraction chipsEditText3 = onView(
@@ -82,6 +87,7 @@ public class SaveNoteTest {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
         ViewInteraction linearLayout = onView(
@@ -99,6 +105,7 @@ public class SaveNoteTest {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
         ViewInteraction appCompatTextView = onView(
@@ -112,6 +119,7 @@ public class SaveNoteTest {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
         ViewInteraction editText = onView(

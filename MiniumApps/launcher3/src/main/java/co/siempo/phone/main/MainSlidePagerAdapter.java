@@ -24,6 +24,8 @@ public class MainSlidePagerAdapter extends FragmentPagerAdapter {
                 return MainFragment_.builder().build();
             case 1:
                 return OldMenuFragment_.builder().build();
+            default:
+                break;
         }
         return null;
     }

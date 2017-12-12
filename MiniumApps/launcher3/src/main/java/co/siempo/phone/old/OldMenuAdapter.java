@@ -33,7 +33,7 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
     private Context context;
 
     private List<MainListItem> data = null;
-    public List<ApplicationInfo> packagesList;
+    private List<ApplicationInfo> packagesList;
 
     public OldMenuAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
@@ -139,12 +139,10 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
         packagesList = new ArrayList<>();
         final PackageManager pm = context.getPackageManager();
         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-        for (ApplicationInfo packageInfo : packages) {
-            packagesList.add(packageInfo);
-        }
+        packagesList.addAll(packages);
     }
 
-    public String getApplicationNameFromPackageName(String packagename) {
+    private String getApplicationNameFromPackageName(String packagename) {
         try {
             if (packagename != null && !packagename.equalsIgnoreCase("")) {
                 for (ApplicationInfo applicationInfo : packagesList) {
@@ -154,6 +152,7 @@ public class OldMenuAdapter extends ArrayAdapter<MainListItem> {
                 }
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         return "";

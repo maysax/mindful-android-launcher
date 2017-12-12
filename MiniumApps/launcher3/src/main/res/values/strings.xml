@@ -229,4 +229,8 @@
     <string name="clear_all">Clear All</string>
     <string name="siempo_note">Siempo Note</string>
     <string name="messaging">Messaging</string>
+    <string name="please_select_application">Please select application.</string>
+    <string name="loading_msg">Loading....</string>
+    <string name="no_emailapp_msg">No email application found in your phone</string>
+    <string name="app_not_found">Application not found</string>
 </resources>

@@ -45,6 +45,7 @@ import co.siempo.phone.receiver.NetworkDataReceiver;
 import co.siempo.phone.receiver.WifiDataReceiver;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
@@ -213,6 +214,7 @@ public class TopFragment extends CoreFragment {
                 imgNotification.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -225,6 +227,7 @@ public class TopFragment extends CoreFragment {
             listener = new SignalStrengthListener();
             telephonyManager.listen(listener, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
@@ -244,6 +247,7 @@ public class TopFragment extends CoreFragment {
             networkDataReceiver.unregister(context);
             wifiDataReceiver.unregister(context);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Log.d(TAG, "onDetach Call");
         }
     }

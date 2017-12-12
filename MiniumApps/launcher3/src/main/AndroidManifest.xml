@@ -117,12 +117,8 @@
         <activity
             android:name=".tempo.TempoActivity_"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".map.SiempoMapActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".call.CallLogActivity_"
-            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".mm.MMTimePickerActivity_"
             android:screenOrientation="portrait" />
@@ -191,7 +187,7 @@
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
         </activity>
-        <activity android:name=".inbox.GoogleInboxActivity_" />
+
         <activity
             android:name=".applist.AppDrawerActivity_"
             android:label="@string/title_activity_installed_app_list"

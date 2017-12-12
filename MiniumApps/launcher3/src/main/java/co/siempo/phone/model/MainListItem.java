@@ -8,7 +8,6 @@ import co.siempo.phone.R;
  * Created by Shahab on 2/16/2017.
  */
 
-@SuppressWarnings("ALL")
 public class MainListItem {
 
     private int id;

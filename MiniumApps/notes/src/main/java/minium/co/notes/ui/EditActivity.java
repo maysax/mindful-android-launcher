@@ -527,6 +527,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
                 }
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
@@ -558,6 +559,7 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
                         notes.put(bundle.getInt(NOTE_REQUEST_CODE), newNoteObject);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -578,35 +580,32 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
             }
             // If current note is new -> request keyboard focus to note title and show keyboard
             else if (bundle.getInt(NOTE_REQUEST_CODE) == NEW_NOTE_REQUEST) {
-                {
-                    JSONObject newNoteObject = null;
-                    try {
-                        // Add new note to array
-                        newNoteObject = new JSONObject();
-                        newNoteObject.put(NOTE_TITLE, titleEdit.getText().toString());
-                        newNoteObject.put(NOTE_BODY, bodyEdit.getText().toString());
-                        newNoteObject.put(NOTE_COLOUR, colour);
-                        newNoteObject.put(NOTE_FAVOURED, false);
-                        newNoteObject.put(NOTE_FONT_SIZE, fontSize);
-                        newNoteObject.put(NOTE_HIDE_BODY, hideBody);
+                JSONObject newNoteObject = null;
+                try {
+                    // Add new note to array
+                    newNoteObject = new JSONObject();
+                    newNoteObject.put(NOTE_TITLE, titleEdit.getText().toString());
+                    newNoteObject.put(NOTE_BODY, bodyEdit.getText().toString());
+                    newNoteObject.put(NOTE_COLOUR, colour);
+                    newNoteObject.put(NOTE_FAVOURED, false);
+                    newNoteObject.put(NOTE_FONT_SIZE, fontSize);
+                    newNoteObject.put(NOTE_HIDE_BODY, hideBody);
 
-                        notes.put(newNoteObject);
+                    notes.put(newNoteObject);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
+                    e.printStackTrace();
+                }
 
-                    // If newNoteObject not null -> save notes array to local file and notify adapter
-                    if (newNoteObject != null) {
-                        Boolean saveSuccessful = saveData(localPath, notes);
-                        new EvernoteManager().createNote(newNoteObject);
-                        if (saveSuccessful) {
-                            Toast toast = Toast.makeText(getApplicationContext(),
-                                    getResources().getString(R.string.msg_noteCreated),
-                                    Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    }
+                // If newNoteObject not null -> save notes array to local file and notify adapter
+                Boolean saveSuccessful = saveData(localPath, notes);
+                new EvernoteManager().createNote(newNoteObject);
+                if (saveSuccessful) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            getResources().getString(R.string.msg_noteCreated),
+                            Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
         }

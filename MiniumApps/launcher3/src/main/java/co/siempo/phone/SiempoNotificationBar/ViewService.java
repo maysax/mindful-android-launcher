@@ -21,6 +21,7 @@ import org.androidannotations.annotations.SystemService;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import minium.co.core.app.CoreApplication;
 
 /**
  * A service is use to creating the view and hide/show it.
@@ -79,6 +80,7 @@ public class ViewService extends IntentService {
         try {
             stopForeground(true);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
 
@@ -99,6 +101,7 @@ public class ViewService extends IntentService {
                     .build();
             startForeground(1, notification);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }

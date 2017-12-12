@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import co.siempo.phone.R;
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.service.SiempoAccessibilityService;
 import co.siempo.phone.service.SiempoDndService;
+import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 5/17/2017.
@@ -23,15 +23,11 @@ import co.siempo.phone.service.SiempoDndService;
 public class PackageUtil {
 
     public static boolean isCallPackage(String pkg) {
-        return pkg.contains("telecom") || pkg.contains("dialer");
+        return pkg != null && !pkg.equalsIgnoreCase("") && (pkg.contains("telecom") || pkg.contains("dialer"));
     }
 
     public static boolean isMsgPackage(String pkg) {
-        return pkg.contains("messaging") || pkg.contains("com.android.mms");
-    }
-
-    public static boolean isCalenderPackage(String pkg) {
-        return pkg.contains("com.google.android.calendar") || pkg.contains("com.android.calendar");
+        return pkg != null && !pkg.equalsIgnoreCase("") && (pkg.contains("messaging") || pkg.contains("com.android.mms"));
     }
 
     public static boolean isSiempoLauncher(Context context) {
@@ -44,10 +40,6 @@ public class PackageUtil {
         }
         return false;
 
-    }
-
-    public static boolean isSiempo(String pkg) {
-        return pkg.contains("siempo");
     }
 
     public static boolean isSiempoBlocker(int notifId) {
@@ -91,6 +83,7 @@ public class PackageUtil {
                     mContext.getApplicationContext().getContentResolver(),
                     android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
         } catch (Settings.SettingNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');

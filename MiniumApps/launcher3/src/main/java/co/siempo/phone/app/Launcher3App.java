@@ -1,16 +1,13 @@
 package co.siempo.phone.app;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
 import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -33,11 +30,8 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.greenrobot.greendao.database.Database;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.db.DaoMaster;
@@ -46,9 +40,7 @@ import co.siempo.phone.db.GreenDaoOpenHelper;
 import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.kiss.IconsHandler;
 import co.siempo.phone.old.PreferenceListAdapter;
-import co.siempo.phone.service.SiempoNotificationListener;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.BuildConfig;
@@ -57,7 +49,6 @@ import minium.co.core.app.DroidPrefs_;
 import minium.co.core.config.Config;
 import minium.co.core.log.LogConfig;
 import minium.co.core.log.Tracer;
-import minium.co.core.util.DateUtils;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -78,24 +69,23 @@ public class Launcher3App extends CoreApplication {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    @SuppressLint("StaticFieldLeak")
-    private static IconsHandler iconsPackHandler;
-
     @SystemService
     AudioManager audioManager;
 
     @SystemService
     NotificationManager notificationManager;
 
-    boolean isSiempoLauncher = false;
+    private boolean isSiempoLauncher = false;
     private long startTime;
+    private ResolveInfo resolveInfo;
+    private ArrayList<ResolveInfo> appList;
+    public Dialog dialog;
 
 
     @Trace(tag = TRACE_TAG)
     @Override
     public void onCreate() {
         super.onCreate();
-
         Tracer.i("Application Id: " + co.siempo.phone.BuildConfig.APPLICATION_ID
                 + " || Version code: " + co.siempo.phone.BuildConfig.VERSION_CODE
                 + " || Version name: " + co.siempo.phone.BuildConfig.VERSION_NAME
@@ -113,31 +103,14 @@ public class Launcher3App extends CoreApplication {
 
         loadConfigurationValues();
         configureEverNote();
-
-
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-/*        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"noti-db");
-        Database db = helper.getWritableDb();
-        daoSession = new DaoMaster(db).newSession();
-        */
         GreenDaoOpenHelper helper2 = new GreenDaoOpenHelper(this, "noti-db", null);
-        //DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this,"noti-db");
-
         Database db = helper2.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
-        //testCases();
-
-        //if (launcherPrefs.isAppInstalledFirstTime().get()) {
         setAllDefaultMenusApplication();
-        //}
-
-
         AppLifecycleTracker handler = new AppLifecycleTracker();
-
         registerActivityLifecycleCallbacks(handler);
-
     }
 
 
@@ -156,7 +129,7 @@ public class Launcher3App extends CoreApplication {
                 // app went to foreground
                 Log.d(TAG, "Siempo is on foreground");
                 KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                if (!myKM.inKeyguardRestrictedInputMode()) {
+                if (myKM != null && !myKM.inKeyguardRestrictedInputMode()) {
                     checkProfile();
                 }
 
@@ -175,8 +148,9 @@ public class Launcher3App extends CoreApplication {
                             ViewService_.intent(getApplicationContext()).showMask().start();
                         }
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
+                    CoreApplication.getInstance().logException(e);
                 }
 
             }
@@ -189,7 +163,7 @@ public class Launcher3App extends CoreApplication {
                 isSiempoLauncher = true;
                 if (startTime == 0) {
                     startTime = System.currentTimeMillis();
-                    FirebaseHelper.getIntance().logSiempoAsDefault("On",0);
+                    FirebaseHelper.getIntance().logSiempoAsDefault("On", 0);
                 }
             } else {
                 isSiempoLauncher = false;
@@ -202,8 +176,8 @@ public class Launcher3App extends CoreApplication {
                 isSiempoLauncher = true;
             } else {
                 if (isSiempoLauncher && startTime != 0) {
-                    FirebaseHelper.getIntance().logSiempoAsDefault("Off",startTime);
-                    startTime=0;
+                    FirebaseHelper.getIntance().logSiempoAsDefault("Off", startTime);
+                    startTime = 0;
                 }
                 isSiempoLauncher = false;
             }
@@ -267,7 +241,7 @@ public class Launcher3App extends CoreApplication {
 
 
     /**
-     * Configure the default application when application insatlled
+     * Configure the default application when application installed
      */
     public void setAllDefaultMenusApplication() {
         String callPackage = getCallPackageName();
@@ -316,9 +290,6 @@ public class Launcher3App extends CoreApplication {
 
     }
 
-    ResolveInfo resolveInfo;
-    ArrayList<ResolveInfo> appList;
-    int pos = -1;
 
     /**
      * Dialog to show the change the default application
@@ -327,18 +298,18 @@ public class Launcher3App extends CoreApplication {
      * @param menuId
      * @param isOkayShow
      */
-    public Dialog dialog;
-
     public void showPreferenceAppListDialog(final Context context, final int menuId, final boolean isOkayShow) {
         resolveInfo = null;
-        pos = -1;
+        int pos = -1;
         if (dialog != null && dialog.isShowing()) {
             return;
         }
         dialog = new Dialog(context, R.style.MaterialDialogSheet);
         dialog.setContentView(R.layout.dialog_open_with);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+        }
         dialog.getWindow().setGravity(Gravity.BOTTOM);
 
         appList = new ArrayList<>();
@@ -496,7 +467,7 @@ public class Launcher3App extends CoreApplication {
                     new ActivityHelper(context).openAppWithPackageName(resolveInfo.activityInfo.packageName);
                     EventBus.getDefault().post(new DefaultAppUpdate(true));
                 } else {
-                    Toast.makeText(context, "Please select application.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.please_select_application, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -546,7 +517,7 @@ public class Launcher3App extends CoreApplication {
                         dialog.dismiss();
                         EventBus.getDefault().post(new DefaultAppUpdate(true));
                     } else {
-                        Toast.makeText(context, "Please select application.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.please_select_application, Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -595,7 +566,7 @@ public class Launcher3App extends CoreApplication {
                     new ActivityHelper(context).openAppWithPackageName(resolveInfo.activityInfo.packageName);
 
                 } else {
-                    Toast.makeText(context, "Please select application.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.please_select_application, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -607,26 +578,6 @@ public class Launcher3App extends CoreApplication {
         return daoSession;
     }
 
-    private void testCases() {
-        Tracer.d("Current Time: " + SimpleDateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime()));
-        DateUtils.nextIntervalMillis(1 * 60 * 1000);
-        DateUtils.nextIntervalMillis(2 * 60 * 1000);
-        DateUtils.nextIntervalMillis(5 * 60 * 1000);
-        DateUtils.nextIntervalMillis(10 * 60 * 1000);
-        DateUtils.nextIntervalMillis(15 * 60 * 1000);
-        DateUtils.nextIntervalMillis(20 * 60 * 1000);
-        DateUtils.nextIntervalMillis(25 * 60 * 1000);
-        DateUtils.nextIntervalMillis(30 * 60 * 1000);
-        DateUtils.nextIntervalMillis(35 * 60 * 1000);
-        DateUtils.nextIntervalMillis(40 * 60 * 1000);
-        DateUtils.nextIntervalMillis(45 * 60 * 1000);
-        DateUtils.nextIntervalMillis(50 * 60 * 1000);
-        DateUtils.nextIntervalMillis(55 * 60 * 1000);
-        DateUtils.nextIntervalMillis(60 * 60 * 1000);
-        DateUtils.nextIntervalMillis(65 * 60 * 1000);
-        DateUtils.nextIntervalMillis(70 * 60 * 1000);
-        DateUtils.nextIntervalMillis(80 * 60 * 1000);
-    }
 
     private void loadConfigurationValues() {
         int flowSegmentCount = 4;
@@ -653,18 +604,10 @@ public class Launcher3App extends CoreApplication {
                 .build(minium.co.notes.app.Config.CONSUMER_KEY, minium.co.notes.app.Config.CONSUMER_SECRET)
                 .asSingleton();
 
-//        registerActivityLifecycleCallbacks(new LoginChecker());
     }
 
     public FirebaseAnalytics getFirebaseAnalytics() {
         return mFirebaseAnalytics;
     }
 
-    public static IconsHandler getIconsHandler(Context ctx) {
-        if (iconsPackHandler == null) {
-            iconsPackHandler = new IconsHandler(ctx);
-        }
-
-        return iconsPackHandler;
-    }
 }

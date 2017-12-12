@@ -1,35 +1,26 @@
 package co.siempo.phone.settings;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
-import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.model.SettingsData;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
 
@@ -40,7 +31,6 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     private ArrayList<SettingsData> arr_menuList;
     private SettingsAdapter adapter;
     private Context context;
-    private final String TAG = "SiempoMainSetting";
     private long startTime = 0;
 
     @Pref
@@ -59,7 +49,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         onClickEvents();
     }
 
-    public void onClickEvents() {
+    private void onClickEvents() {
         lst_settings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -83,7 +73,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         });
     }
 
-    public void initView() {
+    private void initView() {
         context = SiempoMainSettingsActivity.this;
         lst_settings = findViewById(R.id.lst_settings);
 

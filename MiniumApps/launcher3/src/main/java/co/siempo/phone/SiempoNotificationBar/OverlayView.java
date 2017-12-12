@@ -4,9 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.KeyguardManager;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
@@ -16,13 +14,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.PixelFormat;
-import android.graphics.Point;
 import android.media.AudioManager;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -33,18 +27,14 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.Settings;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -63,7 +53,6 @@ import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.james.status.data.IconStyleData;
 import com.joanzapata.iconify.fonts.FontAwesomeIcons;
@@ -77,11 +66,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.NotificationSwipeEvent;
@@ -103,8 +90,7 @@ import co.siempo.phone.notification.NotificationContactModel;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.notification.RecyclerListAdapter;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
-import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
-import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
+import co.siempo.phone.notification.remove_notification_strategy.MultipleItemDelete;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
@@ -116,10 +102,8 @@ import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import de.greenrobot.event.ThreadMode;
 import minium.co.core.app.CoreApplication;
-import minium.co.core.app.CoreApplication;
 import minium.co.core.app.HomeWatcher;
 import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
 import minium.co.core.util.UIUtils;
 
 import static android.graphics.PixelFormat.TRANSLUCENT;
@@ -131,7 +115,6 @@ import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 import static android.view.WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
 
 /**
@@ -239,7 +222,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                             UIUtils.alertDialog.dismiss();
                         }
 
-                        if (CoreApplication.getInstance().isIfScreen == false) {
+                        if (!CoreApplication.getInstance().isIfScreen) {
                             Intent i = new Intent();
                             String pkg = context.getApplicationContext().getPackageName();
                             String cls = "co.siempo.phone.MainActivity_";
@@ -249,8 +232,9 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                             context.startActivity(i);
                         }
                     } catch (Exception e) {
-
+                        CoreApplication.getInstance().logException(e);
                         Tracer.d("Activity Not Found.");
+                        CoreApplication.getInstance().logException(e);
                     }
                 }
             }
@@ -311,7 +295,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 if (CoreApplication.getInstance().getMediaPlayer() != null) {
                     CoreApplication.getInstance().getMediaPlayer().stop();
                     CoreApplication.getInstance().getMediaPlayer().reset();
-                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().setMediaPlayerNull();
                     CoreApplication.getInstance().getVibrator().cancel();
                     CoreApplication.getInstance().declinePhone();
                 }
@@ -467,7 +451,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         long notificationCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
         OnGoingCallData callData = event.getCallData();
         if (imgOnGoingCall != null && callData.get_isCallRunning()) {
-            launcherPrefs.edit().putBoolean("onGoingCall", true).commit();
+            launcherPrefs.edit().putBoolean("onGoingCall", true).apply();
             imgOnGoingCall.setVisibility(View.VISIBLE);
             if (callData.getId() != 0) {
                 img_dot.setVisibility(View.VISIBLE);
@@ -509,6 +493,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     try {
                         declinePhone(context);
                     } catch (Exception e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
                 }
@@ -517,7 +502,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         if (imgOnGoingCall != null && !callData.get_isCallRunning()) {
             chronometer.setBase(SystemClock.elapsedRealtime());
             chronometer.stop();
-            launcherPrefs.edit().putBoolean("onGoingCall", false).commit();
+            launcherPrefs.edit().putBoolean("onGoingCall", false).apply();
             ln_ongoingCall.setVisibility(View.GONE);
             imgOnGoingCall.setVisibility(View.GONE);
             if (notificationCount == 0) {
@@ -682,6 +667,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     textView_notification_title.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -862,7 +848,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
         txtClearAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                 deleteItem.deleteAll();
                 notificationList.clear();
                 adapter.notifyDataSetChanged();
@@ -908,7 +894,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         context.startActivity(i);
                         hide();
                         // Following code will delete all notification of same user and same types.
-                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                         deleteItem.executeDelete(notificationList.get(position));
                         loadData();
                     } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
@@ -923,7 +909,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                             hide();
                         }
                         // Following code will delete all notification of same user and same types.
-                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                         deleteItem.executeDelete(notificationList.get(position));
                         loadData();
                     } else {
@@ -1055,6 +1041,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     Settings.System.SCREEN_BRIGHTNESS,
                     0);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             //Throw an error case it couldn't be retrieved
             e.printStackTrace();
         }
@@ -1075,6 +1062,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     brightness = Settings.System.getInt(
                             context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     //Throw an error case it couldn't be retrieved
                     e.printStackTrace();
                 }
@@ -1108,6 +1096,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     level);
             return true;
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Log.e("Screen Brightness", "error changing screen brightness");
             return false;
         }
@@ -1162,6 +1151,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 relMobileData.setEnabled(false);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -1387,6 +1377,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         contactName = number;
                     }
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     contactName = "";
                     imageUrl = "";
                     e.printStackTrace();
@@ -1428,6 +1419,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                         }
                     } catch (Exception e) {
                         // nothing
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
                     return super.onFling(e1, e2, velocityX, velocityY);
@@ -1507,6 +1499,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                     context.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
+                    CoreApplication.getInstance().logException(e);
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
@@ -1545,6 +1538,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
+                    CoreApplication.getInstance().logException(e);
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
@@ -1605,6 +1599,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
                 checkMobileData();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -1632,6 +1627,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             // get the setting for "mobile data"
             mobileDataEnabled = (Boolean) method.invoke(cm);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             // Some problem accessible private API and do whatever error handling you want here
         }
         return mobileDataEnabled;
@@ -1658,6 +1654,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
             //dynamically invoke the iConnectivityManager object according to your need (true/false)
             setMobileDataEnabledMethod.invoke(iConnectivityManager, ON);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         return true;
@@ -1794,7 +1791,7 @@ class OverlayView extends FrameLayout implements View.OnClickListener {
 
         } catch (Exception e) {
             e.printStackTrace();
-
+            CoreApplication.getInstance().logException(e);
         }
     }
 }

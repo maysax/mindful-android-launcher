@@ -28,6 +28,7 @@ import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.model.MainListItem;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 
 
@@ -37,9 +38,8 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
     private boolean isGrid;
     private OnStartDragListener mDragStartListener;
     private OnCustomerListChangedListener mListChangedListener;
-    private Launcher3Prefs_ prefs;
     private DroidPrefs_ droidPrefs_;
-    private static RecyclerView activity_grid_view;
+
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
@@ -58,6 +58,7 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
                 notifyItemMoved(fromPosition, toPosition);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
 
@@ -76,8 +77,6 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
         this.context = context;
         this.arrayList = arrayList;
         this.isGrid = isGrid;
-        this.prefs = prefs;
-        this.activity_grid_view = activity_grid_view;
         this.droidPrefs_ = droidPrefs_;
         mDragStartListener = dragListener;
         mListChangedListener = listChangedListener;
@@ -204,19 +203,25 @@ class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> imple
 
         @Override
         public void onItemClear() {
-            if (relMenu.getTag().equals("list")) {
-                if (imgView.getTag() != null && imgView.getTag().equals("1")) {
-                    imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.rectagle_menu));
+            try {
+                if (relMenu.getTag().equals("list")) {
+                    if (imgView.getTag() != null && imgView.getTag().equals("1")) {
+                        imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.rectagle_menu));
+                    } else {
+                        imgView.setBackground(null);
+                    }
                 } else {
-                    imgView.setBackground(null);
+                    if (imgView.getTag() != null && imgView.getTag().equals("1")) {
+                        imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu));
+                    } else {
+                        imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu_unselected));
+                    }
                 }
-            } else {
-                if (imgView.getTag() != null && imgView.getTag().equals("1")) {
-                    imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu));
-                } else {
-                    imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu_unselected));
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
             }
+
         }
     }
 

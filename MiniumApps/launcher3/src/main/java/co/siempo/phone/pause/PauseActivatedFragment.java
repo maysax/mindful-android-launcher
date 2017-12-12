@@ -25,8 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.util.AudioUtils;
 import co.siempo.phone.util.VibrationUtils_;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
@@ -67,7 +67,7 @@ public class PauseActivatedFragment extends CoreFragment {
     @Pref
     Launcher3Prefs_ launcherPrefs;
 
-    Handler handler;
+    private Handler handler;
 
     private int atMillis = 0;
 
@@ -135,6 +135,7 @@ public class PauseActivatedFragment extends CoreFragment {
 
                 handler.postDelayed(this, 1000);
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
@@ -146,10 +147,7 @@ public class PauseActivatedFragment extends CoreFragment {
         handler.removeCallbacks(pauseActiveRunnable);
         launcherPrefs.isPauseActive().put(false);
         getActivity().sendBroadcast(new Intent().setAction(DND_START_STOP_ACTION));
-        if (!isStopByUser) {
-//            VibrationUtils_.getInstance_(getActivity()).vibrate();
-//            AudioUtils.playnotification(getActivity());
-        }
+
         getActivity().finish();
     }
 }

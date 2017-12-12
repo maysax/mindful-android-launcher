@@ -45,15 +45,13 @@ public class SmsReceiver extends BroadcastReceiver {
 
     TableNotificationSmsDao smsDao;
 
-    public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Tracer.d("Messages: onReceive in Launcher3");
-        if (intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+        if (intent != null && intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
-            Tracer.d("Notification posted: " + bundle.toString());
+            Tracer.d("Notification posted: " + (bundle != null ? bundle.toString() : null));
             if (bundle != null) {
                 Object messages[] = (Object[]) bundle.get("pdus");
                 SmsMessage smsMessage[] = new SmsMessage[messages.length];
@@ -77,18 +75,12 @@ public class SmsReceiver extends BroadcastReceiver {
                 mDate = new Date(sms.getTimestampMillis());
 
                 saveMessage(mAddress, mBody, mDate);
-                //new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
+
                 EventBus.getDefault().post(new TopBarUpdateEvent());
 
                 if (launcherPrefs.isPauseActive().get() || launcherPrefs.isTempoActive().get()) {
                     abortBroadcast();
                 }
-
-                /*addMessageToInbox(context, mAddress, mBody, mDate.getTime());
-
-                if (!prefs.isFlowRunning().get() && !prefs.isNotificationSchedulerEnabled().get()) {
-                    context.sendBroadcast(new Intent(context, NotificationScheduleReceiver_.class));
-                }*/
             }
         }
     }
@@ -107,23 +99,4 @@ public class SmsReceiver extends BroadcastReceiver {
         EventBus.getDefault().post(new NewNotificationEvent(sms));
     }
 
-    /**
-     * Add incoming SMS to inbox
-     *
-     * @param context
-     * @param address Address of sender
-     * @param body    Body of incoming SMS message
-     * @param time    Time that incoming SMS message was sent at
-     */
-    public static Uri addMessageToInbox(Context context, String address, String body, long time) {
-
-        ContentResolver contentResolver = context.getContentResolver();
-        ContentValues cv = new ContentValues();
-
-        cv.put("address", address);
-        cv.put("body", body);
-        cv.put("date_sent", time);
-
-        return contentResolver.insert(RECEIVED_MESSAGE_CONTENT_PROVIDER, cv);
-    }
 }

@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.CallStorageDao;
@@ -63,12 +64,13 @@ import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.network.NetworkUtil;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
-import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
+import co.siempo.phone.notification.remove_notification_strategy.MultipleItemDelete;
 import co.siempo.phone.receiver.IDynamicStatus;
 import co.siempo.phone.receiver.WifiDataReceiver;
 import co.siempo.phone.service.StatusBarService;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.config.Config;
 import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
@@ -127,14 +129,16 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
         try {
             animateOut();
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
 
-    @SuppressLint("LogConditional")
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Log.d(TAG, "" + event.getAction());
+        if (BuildConfig.DEBUG)
+            Log.d(TAG, "" + event.getAction());
         return false;
     }
 
@@ -209,7 +213,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     startActivity(intent);
                 }
                 //++Tarun , Following code will delete all notification of same user and same types.
-                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                 deleteItem.executeDelete(notificationList.get(position));
                 loadData();
             }
@@ -258,6 +262,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     Settings.System.SCREEN_BRIGHTNESS,
                     0);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             //Throw an error case it couldn't be retrieved
             e.printStackTrace();
         }
@@ -278,6 +283,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     brightness = Settings.System.getInt(
                             getActivity().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     //Throw an error case it couldn't be retrieved
                     e.printStackTrace();
                 }
@@ -311,6 +317,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     level);
             return true;
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Log.e("Screen Brightness", "error changing screen brightness");
             return false;
         }
@@ -343,7 +350,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 imgWifi.setBackground(getActivity().getDrawable(R.drawable.ic_wifi_0));
             }
 
-            if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+            if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                 imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_on));
             } else {
                 imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_disabled_black_24dp));
@@ -514,6 +521,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 contactName = number;
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             contactName = "";
             imageUrl = "";
             e.printStackTrace();
@@ -557,6 +565,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                             }
                         }
                     } catch (Exception e) {
+                        CoreApplication.getInstance().logException(e);
                         // nothing
                         e.printStackTrace();
                     }
@@ -593,6 +602,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             Config.isNotificationAlive = false;
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", false));
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
@@ -606,6 +616,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             if (bleSingal != null) getActivity().unregisterReceiver(bleSingal);
             if (audioChangeReceiver != null) getActivity().unregisterReceiver(audioChangeReceiver);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -684,6 +695,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             if (getActivity() != null)
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
 
@@ -709,6 +721,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 textView_notification_title.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -735,6 +748,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                     startActivity(intent);
                 } catch (ActivityNotFoundException e) {
+                    CoreApplication.getInstance().logException(e);
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
@@ -746,15 +760,16 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             case R.id.relBle:
                 seekbarBrightness.setVisibility(View.GONE);
                 imgBrightness.setBackground(getActivity().getDrawable(R.drawable.ic_brightness_off_black_24dp));
-                if (BluetoothAdapter.getDefaultAdapter()!=null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+                if (BluetoothAdapter.getDefaultAdapter() != null && BluetoothAdapter.getDefaultAdapter().isEnabled()) {
                     BluetoothAdapter.getDefaultAdapter().disable();
                     EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 0));
                 } else {
-                    if(BluetoothAdapter.getDefaultAdapter()!=null){
-                    BluetoothAdapter.getDefaultAdapter().enable();
-                    relBle.setEnabled(false);
-                    imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
-                    EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));}
+                    if (BluetoothAdapter.getDefaultAdapter() != null) {
+                        BluetoothAdapter.getDefaultAdapter().enable();
+                        relBle.setEnabled(false);
+                        imgBle.setBackground(getActivity().getDrawable(R.drawable.ic_bluetooth_searching_black_24dp));
+                        EventBus.getDefault().post(new ConnectivityEvent(ConnectivityEvent.BLE, 1));
+                    }
                 }
                 break;
             case R.id.relDND:
@@ -800,6 +815,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                     startActivityForResult(intent, 90);
 
                 } catch (ActivityNotFoundException e) {
+                    CoreApplication.getInstance().logException(e);
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
@@ -864,6 +880,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
                 checkMobileData();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -891,6 +908,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             // get the setting for "mobile data"
             mobileDataEnabled = (Boolean) method.invoke(cm);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             // Some problem accessible private API and do whatever error handling you want here
         }
         return mobileDataEnabled;
@@ -917,6 +935,7 @@ public class NotificationFragment extends CoreFragment implements View.OnTouchLi
             //dynamically invoke the iConnectivityManager object according to your need (true/false)
             setMobileDataEnabledMethod.invoke(iConnectivityManager, ON);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         return true;

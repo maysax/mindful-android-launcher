@@ -42,7 +42,6 @@ import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -64,9 +63,9 @@ public class SiempoSettingsActivity extends CoreActivity {
     private ImageView icon_launcher, icon_KeyBoardNotification, icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp, icon_AppNotifications;
     private TextView txt_version;
     private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_Faq, ln_changeDefaultApp, ln_AppListNotifications;
-    private String TAG = "SiempoSettingsActivity";
+    private final String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
-    AppUpdaterUtils appUpdaterUtils;
+    private AppUpdaterUtils appUpdaterUtils;
     private ImageView icon_hideNotification;
     private SwitchCompat switch_notification;
     private SwitchCompat switch_KeyBoardnotification;
@@ -98,7 +97,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     }
 
 
-    public void initView() {
+    private void initView() {
         context = SiempoSettingsActivity.this;
         icon_launcher = findViewById(R.id.icon_launcher);
         icon_version = findViewById(R.id.icon_version);
@@ -198,6 +197,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                 try {
                     AppListNotification_.intent(context).start();
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     Tracer.e(e, e.getMessage());
                 }
             }
@@ -285,16 +285,11 @@ public class SiempoSettingsActivity extends CoreActivity {
         FirebaseHelper.getIntance().logScreenUsageTime(SiempoSettingsActivity.this.getClass().getSimpleName(),startTime);
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
     /**
      * This function is use to check current app version with play store version
      * and display alert if update is available using Appupdater library.
      */
-    public void checkVersionFromAppUpdater() {
+    private void checkVersionFromAppUpdater() {
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -357,7 +352,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         }
     }
 
-    public void initProgressDialog() {
+    private void initProgressDialog() {
         try {
             //noinspection deprecation
             if (pd == null) {
@@ -368,26 +363,11 @@ public class SiempoSettingsActivity extends CoreActivity {
                 pd.show();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             //WindowManager$BadTokenException will be caught here
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-
-    }
 
 }

@@ -4,24 +4,17 @@ import android.content.Context;
 import android.content.pm.ResolveInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.joanzapata.iconify.IconDrawable;
 
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
-import co.siempo.phone.model.MainListItem;
-import minium.co.core.app.DroidPrefs_;
 
 
 public class PreferenceListAdapter extends ArrayAdapter<ResolveInfo> {
@@ -29,15 +22,13 @@ public class PreferenceListAdapter extends ArrayAdapter<ResolveInfo> {
     private Context context;
 
     private List<ResolveInfo> data = null;
-    int pos;
-    ListView listView;
+    private int pos;
 
     public PreferenceListAdapter(Context context, ListView listView, List<ResolveInfo> items, int pos) {
         super(context, 0);
         this.context = context;
         this.data = items;
         this.pos = pos;
-        this.listView = listView;
     }
 
     @Override
@@ -80,10 +71,8 @@ public class PreferenceListAdapter extends ArrayAdapter<ResolveInfo> {
                 holder.text.setText(context.getResources().getText(R.string.siempo_note));
                 holder.icon.setImageDrawable(context.getDrawable(R.mipmap.ic_launcher));
             } else {
-                if (item != null) {
-                    holder.text.setText(item.loadLabel(context.getPackageManager()));
-                    holder.icon.setImageDrawable(item.loadIcon(context.getPackageManager()));
-                }
+                holder.text.setText(item.loadLabel(context.getPackageManager()));
+                holder.icon.setImageDrawable(item.loadIcon(context.getPackageManager()));
             }
         } else {
             if (item != null) {

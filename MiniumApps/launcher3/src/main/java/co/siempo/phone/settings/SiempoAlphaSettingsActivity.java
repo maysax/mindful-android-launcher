@@ -1,13 +1,11 @@
 package co.siempo.phone.settings;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,23 +13,16 @@ import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.HomePressEvent;
-import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
 /**
@@ -42,7 +33,6 @@ import minium.co.core.ui.CoreActivity;
 @EActivity(R.layout.activity_siempo_alpha_settings)
 public class SiempoAlphaSettingsActivity extends CoreActivity {
 
-    private Context context;
     private long startTime = 0;
     @ViewById
     ImageView icon_UserId;
@@ -60,8 +50,6 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
         }
     }
 
-    private final String TAG = "SiempoAlphaSetting";
-
 
     @AfterViews
     void afterViews() {
@@ -70,7 +58,7 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
 
 
     public void initView() {
-        context = SiempoAlphaSettingsActivity.this;
+        Context context = SiempoAlphaSettingsActivity.this;
         icon_UserId.setImageDrawable(new IconDrawable(context, "fa-user-secret")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));

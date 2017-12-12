@@ -24,6 +24,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.pause.PauseActivity;
 import co.siempo.phone.service.SiempoAccessibilityService;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.config.Config;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -44,7 +45,7 @@ public class StatusBarHandler {
     }
 
 
-    public static boolean isNotificationTrayVisible = false;
+    static boolean isNotificationTrayVisible = false;
     private Context mContext;
     private static customViewGroup blockingView;
     private int status_bar_height = 0;
@@ -87,6 +88,7 @@ public class StatusBarHandler {
                     mContext.getApplicationContext().getContentResolver(),
                     android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
         } catch (Settings.SettingNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
@@ -148,6 +150,7 @@ public class StatusBarHandler {
                 Log.d(TAG, "Blocking View already added...");
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
@@ -243,6 +246,7 @@ public class StatusBarHandler {
                 ft.commitAllowingStateLoss();
                 LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent("IsNotificationVisible").putExtra("IsNotificationVisible", true));
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
             isNotificationTrayVisible = true;

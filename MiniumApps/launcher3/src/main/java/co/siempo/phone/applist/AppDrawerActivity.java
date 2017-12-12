@@ -1,20 +1,11 @@
 package co.siempo.phone.applist;
 
-import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.LoaderManager;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.ApplicationInfo;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +14,6 @@ import com.joanzapata.iconify.IconDrawable;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
@@ -32,21 +22,17 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.ui.CoreActivity;
 
 @EActivity(R.layout.activity_installed_app_list)
 public class AppDrawerActivity extends CoreActivity {
 
 
-    List<ApplicationInfo> arrayList = new ArrayList<>();
+    private List<ApplicationInfo> arrayList = new ArrayList<>();
 
     @ViewById
     RecyclerView activity_grid_view;
@@ -68,18 +54,10 @@ public class AppDrawerActivity extends CoreActivity {
     @ViewById
     ImageView btnListOrGrid;
 
-
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String TAG="AppDrawerActivity";
-    ProgressDialog progressDialog;
-
-    long startTime;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+    private ProgressDialog progressDialog;
+    private long startTime;
 
     @AfterViews
     void afterViews() {
@@ -142,7 +120,6 @@ public class AppDrawerActivity extends CoreActivity {
     }
 
 
-
     @Subscribe
     public void appOpenEvent(AppOpenEvent event) {
         new AppOpenHandler().handle(this, event);
@@ -154,8 +131,7 @@ public class AppDrawerActivity extends CoreActivity {
         startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
         if (prefs.isAppUpdated().get()) {
-            progressDialog = ProgressDialog.show(this, "", "Loading....");
-            Log.d("Testing","Loading");
+            progressDialog = ProgressDialog.show(this, "", getString(R.string.loading_msg));
             CoreApplication.getInstance().getAllApplicationPackageName();
         }
     }
@@ -163,17 +139,13 @@ public class AppDrawerActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(AppDrawerActivity.this.getClass().getSimpleName(),startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(AppDrawerActivity.this.getClass().getSimpleName(), startTime);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
+        if (event!=null && event.isRunning()) {
             ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
             if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
             arrayList = CoreApplication.getInstance().getPackagesList();

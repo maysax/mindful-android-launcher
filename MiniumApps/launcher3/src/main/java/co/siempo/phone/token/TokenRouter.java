@@ -16,11 +16,6 @@ import android.widget.Toast;
 
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.SendSmsEvent;
@@ -29,6 +24,7 @@ import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DataUtils;
@@ -43,10 +39,6 @@ public class TokenRouter {
 
     void route() {
         EventBus.getDefault().post(new TokenUpdateEvent());
-    }
-
-    private void handleContacts(int ind) {
-
     }
 
     void setCurrent(TokenItem tokenItem) {
@@ -155,6 +147,7 @@ public class TokenRouter {
                 route();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
 //            UIUtils.toast(context, "The message will not get sent.");
         }
@@ -175,6 +168,7 @@ public class TokenRouter {
         try {
             activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2())));
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }

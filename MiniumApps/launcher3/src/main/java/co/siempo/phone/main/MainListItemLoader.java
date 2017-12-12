@@ -111,6 +111,7 @@ public class MainListItemLoader {
                     }
                 }
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }

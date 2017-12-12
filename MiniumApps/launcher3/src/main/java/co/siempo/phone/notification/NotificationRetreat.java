@@ -18,6 +18,7 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.StatusBarNotificationStorage;
 import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.util.PackageUtil;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
 /**
@@ -62,9 +63,9 @@ public class NotificationRetreat {
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName, 0);
         } catch (final PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
         }
-        final String title = (String) ((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "???");
-        return title;
+        return (String) ((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "???");
     }
 
     private void notificationBuilder(StatusBarNotificationStorage storage) {
@@ -102,6 +103,7 @@ public class NotificationRetreat {
             // mId allows you to update the notification later on.
             notificationManager.notify(PackageUtil.getIdByPackage(storage.getPackageName()), mBuilder.build());
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }

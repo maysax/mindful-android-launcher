@@ -37,6 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.event.FirebaseEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -484,6 +485,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     intent.putExtra(NOTE_HIDE_BODY, false);
 
             } catch (JSONException e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
 
@@ -507,6 +509,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     intent.putExtra(NOTE_HIDE_BODY, false);
 
             } catch (JSONException e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
 
@@ -563,7 +566,8 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                                 startActivity(new Intent(Intent.ACTION_VIEW,
                                         Uri.parse("market://details?id=" + appPackageName)));
 
-                            } catch (android.content.ActivityNotFoundException anfe) {
+                            } catch (android.content.ActivityNotFoundException e) {
+                            CoreApplication.getInstance().logException(e);
                                 startActivity(new Intent(Intent.ACTION_VIEW,
                                         Uri.parse("http://play.google.com/store/apps/details?id="
                                                 + appPackageName)));
@@ -752,6 +756,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     note = notes.getJSONObject(i);
 
                 } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
 
@@ -767,6 +772,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         }
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
                 }
@@ -847,6 +853,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         notes.put(newNoteObject);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -890,6 +897,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         notes.put(requestCode, newNoteObject);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -956,6 +964,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
             newFavourite = notes.getJSONObject(position);
 
         } catch (JSONException e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
 
@@ -966,6 +975,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     newFavourite.put(NOTE_FAVOURED, true);
 
                 } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
 
@@ -978,6 +988,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         newArray.put(0, newFavourite);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -988,6 +999,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                                 newArray.put(notes.get(i));
 
                             } catch (JSONException e) {
+                                CoreApplication.getInstance().logException(e);
                                 e.printStackTrace();
                             }
                         }
@@ -1012,6 +1024,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         notes.put(position, newFavourite);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -1026,6 +1039,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     notes.put(position, newFavourite);
 
                 } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
 

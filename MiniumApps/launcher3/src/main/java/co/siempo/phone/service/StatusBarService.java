@@ -21,6 +21,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.androidnetworking.core.Core;
+
 import co.siempo.phone.Manifest;
 import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.helper.FirebaseHelper;
@@ -105,7 +107,7 @@ public class StatusBarService extends Service {
 
     @Subscribe
     public void firebaseEvent(FirebaseEvent firebaseEvent) {
-        FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(),firebaseEvent.getStrStartTime());
+        FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
     }
 
 
@@ -125,6 +127,7 @@ public class StatusBarService extends Service {
                 mCameraId = cameraManager.getCameraIdList()[0];
                 cameraManager.setTorchMode(mCameraId, true);
             } catch (CameraAccessException e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
             CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
@@ -160,17 +163,24 @@ public class StatusBarService extends Service {
             try {
                 cameraManager.setTorchMode(mCameraId, false);
             } catch (CameraAccessException e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         } else {
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-            camera.setParameters(parameters);
-            camera.stopPreview();
-            if (camera != null) {
-                camera.release();
-                camera = null;
+            try {
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                camera.setParameters(parameters);
+                camera.stopPreview();
+                if (camera != null) {
+                    camera.release();
+                    camera = null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
             }
         }
+
         isFlashOn = false;
     }
 
@@ -199,16 +209,22 @@ public class StatusBarService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            CoreApplication.getInstance().getAllApplicationPackageName();
-            if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
-                String installPackageName = intent.getData().getEncodedSchemeSpecificPart();
-                Log.d("Testing with device.", "Added" + installPackageName);
-            } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
-                String uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                Log.d("Testing with device.", "Removed" + uninstallPackageName);
+            try {
+                CoreApplication.getInstance().getAllApplicationPackageName();
+                if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
+                    String installPackageName = intent.getData().getEncodedSchemeSpecificPart();
+                    Log.d("Testing with device.", "Added" + installPackageName);
+                } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
+                    String uninstallPackageName = intent.getData().getSchemeSpecificPart();
+                    Log.d("Testing with device.", "Removed" + uninstallPackageName);
+                }
+                sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
+                EventBus.getDefault().post(new AppInstalledEvent(true));
+            } catch (Exception e) {
+                e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
             }
-            sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
-            EventBus.getDefault().post(new AppInstalledEvent(true));
+
         }
     }
 

@@ -66,7 +66,6 @@ import java.util.Date;
 import java.util.List;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -89,7 +88,7 @@ import co.siempo.phone.notification.NotificationContactModel;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.notification.RecyclerListAdapter;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
-import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
+import co.siempo.phone.notification.remove_notification_strategy.MultipleItemDelete;
 import co.siempo.phone.receiver.AirplaneModeDataReceiver;
 import co.siempo.phone.receiver.BatteryDataReceiver;
 import co.siempo.phone.receiver.IDynamicStatus;
@@ -235,6 +234,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                             context.startActivity(i);
                         }
                     } catch (Exception e) {
+                        CoreApplication.getInstance().logException(e);
                         Tracer.d("Activity Not Found.");
                     }
 
@@ -270,7 +270,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 if (CoreApplication.getInstance().getMediaPlayer() != null) {
                     CoreApplication.getInstance().getMediaPlayer().stop();
                     CoreApplication.getInstance().getMediaPlayer().reset();
-                    CoreApplication.getInstance().setmMediaPlayer(null);
+                    CoreApplication.getInstance().setMediaPlayerNull();
                     CoreApplication.getInstance().getVibrator().cancel();
                     CoreApplication.getInstance().declinePhone();
                 }
@@ -500,6 +500,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     try {
                         declinePhone(context);
                     } catch (Exception e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
                 }
@@ -678,6 +679,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     textView_notification_title.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -844,7 +846,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
         txtClearAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                 deleteItem.deleteAll();
                 notificationList.clear();
                 adapter.notifyDataSetChanged();
@@ -892,7 +894,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
                         hide();
-                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                         deleteItem.executeDelete(notificationList.get(position));
                         loadData();
                     } else if (notificationList.get(position).getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
@@ -907,7 +909,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                             hide();
                         }
                         // Following code will delete all notification of same user and same types.
-                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                         deleteItem.executeDelete(notificationList.get(position));
                         loadData();
                     } else {
@@ -1041,6 +1043,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     Settings.System.SCREEN_BRIGHTNESS,
                     0);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             //Throw an error case it couldn't be retrieved
             e.printStackTrace();
         }
@@ -1061,6 +1064,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     brightness = Settings.System.getInt(
                             context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 0);
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     //Throw an error case it couldn't be retrieved
                     e.printStackTrace();
                 }
@@ -1094,6 +1098,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     level);
             return true;
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Log.e("Screen Brightness", "error changing screen brightness");
             return false;
         }
@@ -1368,6 +1373,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                         contactName = number;
                     }
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     contactName = "";
                     imageUrl = "";
                     e.printStackTrace();
@@ -1412,6 +1418,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                         }
                     } catch (Exception e) {
                         // nothing
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
                     return super.onFling(e1, e2, velocityX, velocityY);
@@ -1491,6 +1498,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$DataUsageSummaryActivity"));
                     context.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
+                    CoreApplication.getInstance().logException(e);
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
@@ -1529,6 +1537,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
+                    CoreApplication.getInstance().logException(e);
                     Log.e(TAG, "Setting screen not found due to: " + e.fillInStackTrace());
                 }
                 break;
@@ -1589,6 +1598,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
                 checkMobileData();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -1616,6 +1626,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             // get the setting for "mobile data"
             mobileDataEnabled = (Boolean) method.invoke(cm);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             // Some problem accessible private API and do whatever error handling you want here
         }
         return mobileDataEnabled;
@@ -1642,6 +1653,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             //dynamically invoke the iConnectivityManager object according to your need (true/false)
             setMobileDataEnabledMethod.invoke(iConnectivityManager, ON);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         return true;
@@ -1778,6 +1790,7 @@ class OreoOverlay extends FrameLayout implements View.OnClickListener {
             telephonyEndCall.invoke(telephonyObject);
 
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
 
         }
