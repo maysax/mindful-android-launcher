@@ -222,6 +222,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Date date;
         String data = "";
         String strBigText = null;//android.subText
+        String tickerText = "";
+
         int icon = 0;//android.icon
         byte[] largeIcon = new byte[0];// android.largeIcon
         strPackageName = statusBarNotification.getPackageName();
@@ -256,7 +258,19 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 strText = charText.toString();
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            Tracer.d(e.getMessage());
+        }
 
+
+        try {
+            if (statusBarNotification.getNotification().tickerText != null) {
+                CharSequence charText = (CharSequence) statusBarNotification.getNotification().tickerText;
+                tickerText = charText.toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Tracer.d(e.getMessage());
         }
 
 
@@ -613,7 +627,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         if (!strText.toString().equalsIgnoreCase("Incoming voice call")
                                 && !strText.toString().equalsIgnoreCase("Incoming video call")) {
 
-                            if (statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")
+                            if (tickerText.equalsIgnoreCase("Missed call")
                                     && strText.toString().equalsIgnoreCase("Missed call")) {
                                 strText = strTitle;
                                 strTitle = "Missed Call";
@@ -650,7 +664,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     notificationSms.set_message(strText);
                                     notificationSms.set_contact_title(strTitle);
                                 }
-                                if (!statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")
+                                if (!tickerText.equalsIgnoreCase("Missed call")
                                         && !strText.toString().equalsIgnoreCase("Missed call")) {
                                     smsDao.update(notificationSms);
                                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
@@ -735,11 +749,18 @@ public class SiempoNotificationListener extends NotificationListenerService {
     }
 
     private String getNotificationToString(StatusBarNotification notification) {
-        return "package: " + notification.getPackageName()
-                + "Id: " + notification.getId()
-                + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
-                + " Details: " + notification.getNotification().toString()
-                + " Ticker: " + notification.getNotification().tickerText;
+        if(notification!=null && notification.getPackageName()!=null
+        && notification.getNotification()!=null && notification.getNotification().tickerText!=null){
+            return "package: " + notification.getPackageName()
+                    + "Id: " + notification.getId()
+                    + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
+                    + " Details: " + notification.getNotification().toString()
+                    + " Ticker: " + notification.getNotification().tickerText;
+        }
+        else{
+            return  "";
+        }
+
     }
 
 
