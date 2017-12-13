@@ -40,9 +40,8 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.main.ItemTouchHelperAdapter;
 import co.siempo.phone.main.ItemTouchHelperViewHolder;
-import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
-import co.siempo.phone.notification.remove_notification_strategy.SingleIteamDelete;
+import co.siempo.phone.notification.remove_notification_strategy.SingleItemDelete;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.util.UIUtils;
@@ -55,30 +54,19 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
     private List<Notification> notificationList;
     //= new ArrayList<>();
 
-    private final OnStartDragListener mDragStartListener;
     private String defSMSApp;
 
-    public SuppressNotificationAdapter(Context context, List<Notification> notificationList, OnStartDragListener dragStartListener) {
-        mContext = context;
-        mDragStartListener = dragStartListener;
-        this.notificationList = notificationList;
-        defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
-    }
+
 
 
     public SuppressNotificationAdapter(Context context, List<Notification> notificationList) {
         mContext = context;
-        mDragStartListener = null;
         this.notificationList = notificationList;
         Log.d("Test", "notificationList" + notificationList.size());
         defSMSApp = Telephony.Sms.getDefaultSmsPackage(mContext);
     }
 
-    public void updateReceiptsList(List<Notification> newlist) {
-        notificationList.clear();
-        notificationList.addAll(newlist);
-        notifyDataSetChanged();
-    }
+
 
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -156,6 +144,7 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
                 }
 
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
@@ -167,7 +156,7 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
         //++Tarun following code will delete this item form database
         try {
             if (notificationList != null && notificationList.get(position) != null) {
-                DeleteItem deleteItem = new DeleteItem(new SingleIteamDelete());
+                DeleteItem deleteItem = new DeleteItem(new SingleItemDelete());
                 deleteItem.executeDelete(notificationList.get(position));
                 notificationList.remove(position);
                 notifyItemRemoved(position);
@@ -175,6 +164,7 @@ public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNo
                     EventBus.getDefault().post(new NotificationSwipeEvent(true));
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
 

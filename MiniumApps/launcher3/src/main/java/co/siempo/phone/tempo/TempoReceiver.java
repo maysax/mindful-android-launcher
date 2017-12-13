@@ -18,7 +18,6 @@ import co.siempo.phone.util.AudioUtils;
 /**
  * Created by Shahab on 3/30/2017.
  */
-@SuppressWarnings("ALL")
 @EReceiver
 public class TempoReceiver extends BroadcastReceiver {
 
@@ -39,9 +38,7 @@ public class TempoReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (launcherPrefs.isPauseActive().get()) {
-            // pass
-        } else if (launcherPrefs.isTempoActive().get()) {
+       if (launcherPrefs.isTempoActive().get()) {
             // show notifications
             smsDao = DBUtility.getNotificationDao();
             callStorageDao = DBUtility.getCallStorageDao();
@@ -52,8 +49,6 @@ public class TempoReceiver extends BroadcastReceiver {
             if (smsCount + callCount > 0) {
                 AudioUtils.playnotification(context);
             }
-        } else {
-            // pass
         }
     }
 }

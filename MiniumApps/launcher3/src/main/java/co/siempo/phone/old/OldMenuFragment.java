@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.IconDrawable;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -37,6 +36,7 @@ import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.model.MainListItem;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
@@ -73,7 +73,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
 
     private MenuAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    ItemOffsetDecoration itemDecoration;
+    private ItemOffsetDecoration itemDecoration;
     private ItemTouchHelper mItemTouchHelper;
     private Parcelable mListState;
 
@@ -129,12 +129,6 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         if (mListState != null) {
             mLayoutManager.onRestoreInstanceState(mListState);
         }
-    }
-
-    @AfterViews
-    void afterViews() {
-
-
     }
 
     @Override
@@ -204,7 +198,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
 
     private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
 
-        private int mItemOffset;
+        private final int mItemOffset;
 
         ItemOffsetDecoration(int itemOffset) {
             mItemOffset = itemOffset;
@@ -276,9 +270,10 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         super.setMenuVisibility(menuVisible);
         if (menuVisible) {
             try {
-                if (getActivity() != null)
+                if (getActivity() != null && getActivity().getCurrentFocus() != null)
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 Tracer.e(e, e.getMessage());
             }
         }
@@ -289,9 +284,10 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             try {
-                if (getActivity() != null)
+                if (getActivity() != null && getActivity().getCurrentFocus() != null)
                     UIUtils.hideSoftKeyboard(getActivity(), getActivity().getCurrentFocus().getWindowToken());
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 Tracer.e(e, e.getMessage());
             }
         }

@@ -43,7 +43,7 @@ import co.siempo.phone.notification.NotificationContactModel;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.notification.SuppressNotificationAdapter;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
-import co.siempo.phone.notification.remove_notification_strategy.MultipleIteamDelete;
+import co.siempo.phone.notification.remove_notification_strategy.MultipleItemDelete;
 import minium.co.core.app.CoreApplication;
 
 public class SiempoSupressNotificationActivity extends AppCompatActivity {
@@ -123,7 +123,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
         txtClearAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                 deleteItem.deleteAll();
                 notificationList.clear();
                 adapter = new SuppressNotificationAdapter(context, notificationList);
@@ -159,7 +159,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);
                         // Following code will delete all notification of same user and same types.
-                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                         deleteItem.executeDelete(notification);
                         loadData();
                     } else if (notification.getNotificationType() == NotificationUtility.NOTIFICATION_TYPE_CALL) {
@@ -173,7 +173,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
                             context.startActivity(intent);
                         }
                         // Following code will delete all notification of same user and same types.
-                        DeleteItem deleteItem = new DeleteItem(new MultipleIteamDelete());
+                        DeleteItem deleteItem = new DeleteItem(new MultipleItemDelete());
                         deleteItem.executeDelete(notification);
                         loadData();
                     } else {

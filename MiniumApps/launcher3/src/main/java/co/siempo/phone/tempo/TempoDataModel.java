@@ -6,7 +6,6 @@ import java.util.ArrayList;
  * Created by tkb on 2017-04-05.
  */
 
-@SuppressWarnings("ALL")
 public class TempoDataModel {
     private int id;
     private String name;

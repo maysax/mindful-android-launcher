@@ -19,11 +19,8 @@ import co.siempo.phone.model.SettingsData;
  * Created by hardik on 16/8/17.
  */
 
-@SuppressWarnings("ALL")
 public class SettingsAdapter extends ArrayAdapter<SettingsData> {
-
-
-    private Context context;
+    private final Context context;
     private List<SettingsData> lst_settings = null;
 
     public SettingsAdapter(Context context, List<SettingsData> lst_settings) {
@@ -51,14 +48,14 @@ public class SettingsAdapter extends ArrayAdapter<SettingsData> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
 
             convertView = inflater.inflate(R.layout.list_main_settings, parent, false);
-            holder.txt_settingsName = (TextView) convertView.findViewById(R.id.txt_settingsName);
+            holder.txt_settingsName = convertView.findViewById(R.id.txt_settingsName);
 
             convertView.setTag(holder);
         } else {

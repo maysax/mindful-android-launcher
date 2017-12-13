@@ -121,6 +121,7 @@ public class PauseActivity extends CoreActivity {
                 try {
                     ndef.close();
                 } catch (IOException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
             }
@@ -169,6 +170,7 @@ public class PauseActivity extends CoreActivity {
                     Tracer.d("Connection heart-beat for nfc tag " + tag);
                     nfcCheckHandler.postDelayed(this, 1000);
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     // if the tag is gone we might want to end the thread:
                     stopPause();
                     Tracer.e(e, e.getMessage());
@@ -180,6 +182,7 @@ public class PauseActivity extends CoreActivity {
                             ndef.close();
                         }
                     } catch (IOException e) {
+                        CoreApplication.getInstance().logException(e);
                         Tracer.e(e, e.getMessage());
                     }
                 }
@@ -228,11 +231,5 @@ public class PauseActivity extends CoreActivity {
         PackageUtil.checkPermission(this);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        Log.d(TAG, "ACTION HOME PRESS");
-        if (event.isVisible()) {
-        }
-    }
+
 }

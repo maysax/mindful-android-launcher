@@ -5,7 +5,6 @@ import android.content.pm.ApplicationInfo;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,7 +32,7 @@ import minium.co.core.ui.CoreActivity;
 public class AppDrawerActivity extends CoreActivity {
 
 
-    List<ApplicationInfo> arrayList = new ArrayList<>();
+    private List<ApplicationInfo> arrayList = new ArrayList<>();
 
     @ViewById
     RecyclerView activity_grid_view;
@@ -55,18 +54,10 @@ public class AppDrawerActivity extends CoreActivity {
     @ViewById
     ImageView btnListOrGrid;
 
-
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private String TAG="AppDrawerActivity";
-    ProgressDialog progressDialog;
-
-    long startTime;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
+    private ProgressDialog progressDialog;
+    private long startTime;
 
     @AfterViews
     void afterViews() {
@@ -129,7 +120,6 @@ public class AppDrawerActivity extends CoreActivity {
     }
 
 
-
     @Subscribe
     public void appOpenEvent(AppOpenEvent event) {
         new AppOpenHandler().handle(this, event);
@@ -141,8 +131,7 @@ public class AppDrawerActivity extends CoreActivity {
         startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
         if (prefs.isAppUpdated().get()) {
-            progressDialog = ProgressDialog.show(this, "", "Loading....");
-            Log.d("Testing","Loading");
+            progressDialog = ProgressDialog.show(this, "", getString(R.string.loading_msg));
             CoreApplication.getInstance().getAllApplicationPackageName();
         }
     }
@@ -150,17 +139,13 @@ public class AppDrawerActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(AppDrawerActivity.this.getClass().getSimpleName(),startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(AppDrawerActivity.this.getClass().getSimpleName(), startTime);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
+        if (event!=null && event.isRunning()) {
             ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
             if (progressDialog != null && progressDialog.isShowing()) progressDialog.dismiss();
             arrayList = CoreApplication.getInstance().getPackagesList();

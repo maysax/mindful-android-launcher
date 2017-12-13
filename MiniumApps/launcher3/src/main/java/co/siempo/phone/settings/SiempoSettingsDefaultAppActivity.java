@@ -47,11 +47,6 @@ public class SiempoSettingsDefaultAppActivity extends CoreActivity {
     public DroidPrefs_ prefs;
 
 
-    @AfterViews
-    void afterViews() {
-
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -87,6 +82,7 @@ public class SiempoSettingsDefaultAppActivity extends CoreActivity {
                 loadData();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }

@@ -9,12 +9,12 @@ import android.os.Handler;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberUtils;
 
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
 /**
  * Created by Shahab on 5/10/2016.
  */
-@SuppressWarnings("ALL")
 public class SmsObserver extends ContentObserver {
     private static final Handler handler = new Handler();
     private static final Uri uri = Uri.parse("content://sms/");
@@ -25,7 +25,7 @@ public class SmsObserver extends ContentObserver {
     private final String body;
 
     public interface OnSmsSentListener {
-        public void onSmsSent(int threadId);
+        void onSmsSent(int threadId);
     }
 
     public SmsObserver(Context context, String address, String body) {
@@ -79,6 +79,7 @@ public class SmsObserver extends ContentObserver {
                 }
             }
         } catch (IllegalStateException e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         } finally {
             if (cursor != null) {

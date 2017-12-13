@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.widget.Toast;
+
 import co.siempo.phone.R;
 import co.siempo.phone.service.SiempoDndService;
 
@@ -18,15 +19,11 @@ import co.siempo.phone.service.SiempoDndService;
 public class PackageUtil {
 
     public static boolean isCallPackage(String pkg) {
-        return pkg.contains("telecom") || pkg.contains("dialer");
+        return pkg != null && !pkg.equalsIgnoreCase("") && (pkg.contains("telecom") || pkg.contains("dialer"));
     }
 
     public static boolean isMsgPackage(String pkg) {
-        return pkg.contains("messaging") || pkg.contains("com.android.mms");
-    }
-
-    public static boolean isCalenderPackage(String pkg) {
-        return pkg.contains("com.google.android.calendar") || pkg.contains("com.android.calendar");
+        return pkg != null && !pkg.equalsIgnoreCase("") && (pkg.contains("messaging") || pkg.contains("com.android.mms"));
     }
 
     public static boolean isSiempoLauncher(Context context) {
@@ -39,10 +36,6 @@ public class PackageUtil {
         }
         return false;
 
-    }
-
-    public static boolean isSiempo(String pkg) {
-        return pkg.contains("siempo");
     }
 
     public static boolean isSiempoBlocker(int notifId) {

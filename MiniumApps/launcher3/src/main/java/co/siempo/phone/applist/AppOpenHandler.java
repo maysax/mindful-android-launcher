@@ -12,18 +12,16 @@ import de.greenrobot.event.EventBus;
  * Created by Shahab on 5/11/2017.
  */
 
-@SuppressWarnings("ALL")
 public class AppOpenHandler {
 
     public void handle(Context context, AppOpenEvent event) {
-        if (AppUtil.isDefaultSmsApp(context, event.getPackageName())) {
+        if (event != null && AppUtil.isDefaultSmsApp(context, event.getPackageName())) {
             new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_SMS);
             EventBus.getDefault().post(new TopBarUpdateEvent());
 
-        } else if (event.getPackageName().equals(Constants.CALL_APP_PACKAGE)) {
+        } else if (event != null && event.getPackageName().equals(Constants.CALL_APP_PACKAGE)) {
             new DBClient().deleteMsgByType(NotificationUtility.NOTIFICATION_TYPE_CALL);
             EventBus.getDefault().post(new TopBarUpdateEvent());
-
         }
     }
 }

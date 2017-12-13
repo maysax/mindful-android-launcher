@@ -4,7 +4,6 @@ package co.siempo.phone.model;
  * Created by hardik on 17/8/17.
  */
 
-@SuppressWarnings("ALL")
 public class SettingsData {
 
     private String settingType;
