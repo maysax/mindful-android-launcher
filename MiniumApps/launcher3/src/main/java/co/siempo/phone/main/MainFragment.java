@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -113,7 +114,13 @@ public class MainFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        ContextCompat.startForegroundService(getActivity(), new Intent(getActivity(), StatusBarService.class));
+
+        Intent myService = new Intent(getActivity(), StatusBarService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getActivity().startForegroundService(myService);
+        } else {
+            getActivity().startService(myService);
+        }
         if (listViewLayout != null) listViewLayout.setVisibility(View.GONE);
         if (afterEffectLayout != null) afterEffectLayout.setVisibility(View.GONE);
         KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {
@@ -157,6 +164,12 @@ public class MainFragment extends CoreFragment {
         // becomes true from StatusService class.
         if (prefs.isContactUpdate().get() || prefs.isAppUpdated().get()) {
             loadData();
+            if (prefs.isContactUpdate().get()) {
+                prefs.isContactUpdate().put(false);
+            }
+            if (prefs.isAppUpdated().get()) {
+                prefs.isAppUpdated().put(false);
+            }
         }
     }
 

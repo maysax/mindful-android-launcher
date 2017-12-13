@@ -46,8 +46,8 @@ android {
             versionName "${0}.${0}.${11}.${1}-${buildTime}"
         }
         beta {
-            versionCode 10911
-            versionName "${0}.${0}.${10}.${9}-${buildTime}"
+            versionCode 11111
+            versionName "${0}.${0}.${11}.${1}-${buildTime}"
         }
     }
 
@@ -103,7 +103,7 @@ dependencies {
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
     compile 'com.google.firebase:firebase-core:11.6.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.github.javiersantos:AppUpdater:2.6.3'
+    compile 'com.github.javiersantos:AppUpdater:2.6.4'
 
     compile 'com.jakewharton:butterknife:7.0.1'
 }
