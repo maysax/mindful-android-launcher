@@ -48,7 +48,6 @@ public class FirebaseHelper {
     private String ACTION = "action";
     private String IF_DATA = "if_data";
     private String SUPPRESSED_COUNT = "suppressed_count";
-    private String PACKAGE_NAME = "package_name";
 
     public FirebaseHelper() {
 
@@ -90,10 +89,10 @@ public class FirebaseHelper {
      *
      * @param count
      */
-    public void logSuppressedNotification(String packageName, int count) {
+    public void logSuppressedNotification(String applicationName, long count) {
         Bundle bundle = new Bundle();
-        bundle.putInt(SUPPRESSED_COUNT, count);
-        bundle.putString(PACKAGE_NAME, packageName);
+        bundle.putLong(SUPPRESSED_COUNT, count);
+        bundle.putString(APPLICATION_NAME, applicationName);
         Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
         getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
     }
@@ -202,14 +201,9 @@ public class FirebaseHelper {
             String str[] = strMilli.split("\\.");
             strSecond = Long.parseLong(str[0]);
             strMilliSecond = str[1];
-            if (days == 0 && hours == 0 && minutes == 0 && strSecond == 0) {
-                // Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-            } else {
+            if (days != 0 || hours != 0 || minutes != 0 || strSecond != 0) {
                 strTime = "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", strSecond) + ":" + strMilliSecond;
             }
-        } catch (ArithmeticException e) {
-            CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();

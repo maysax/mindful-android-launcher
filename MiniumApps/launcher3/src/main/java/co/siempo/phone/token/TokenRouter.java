@@ -16,6 +16,8 @@ import android.widget.Toast;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import co.siempo.phone.BuildConfig;
+import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
@@ -61,7 +63,7 @@ public class TokenRouter {
 
     public void createContact(Context context) {
         String inputStr = TokenManager.getInstance().getCurrent().getTitle();
-        if (inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta)) && inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
             if (droidPrefs_.isAlphaSettingEnable().get()) {
                 if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
                     context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
