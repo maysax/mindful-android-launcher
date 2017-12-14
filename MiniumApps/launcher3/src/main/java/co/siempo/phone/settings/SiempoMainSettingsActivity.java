@@ -11,6 +11,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
@@ -90,13 +91,20 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         s2.setId(2);
         arr_menuList.add(s2);
 
-
-        if (droidPrefs_.isAlphaSettingEnable().get()) {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
             SettingsData s3 = new SettingsData();
             s3.setSettingType(getString(R.string.str_siempo_alphasettings));
             s3.setId(3);
             arr_menuList.add(s3);
+        } else {
+            if (droidPrefs_.isAlphaSettingEnable().get()) {
+                SettingsData s3 = new SettingsData();
+                s3.setSettingType(getString(R.string.str_siempo_alphasettings));
+                s3.setId(3);
+                arr_menuList.add(s3);
+            }
         }
+
 
         adapter = new SettingsAdapter(this, arr_menuList);
         lst_settings.setAdapter(adapter);

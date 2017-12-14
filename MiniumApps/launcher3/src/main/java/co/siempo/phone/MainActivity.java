@@ -73,7 +73,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     private static final String TAG = "MainActivity";
 
-    public static int currentItem =-1;
+    public static int currentItem = -1;
     @ViewById
     ViewPager pager;
 
@@ -247,13 +247,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 if (currentItem != -1 && currentItem != position) {
                     if (position == 0) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+                        startTime = System.currentTimeMillis();
                     } else if (position == 1) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+                        startTime = System.currentTimeMillis();
                     }
                 }
                 currentItem = position;
                 try {
-                    if (position == 1)
+                    if (position == 1 && getCurrentFocus() != null)
                         //noinspection ConstantConditions
                         UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
                 } catch (Exception e) {
@@ -561,8 +563,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
-
 
 
     public void notificatoinAccessDialog() {

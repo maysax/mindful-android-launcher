@@ -37,6 +37,7 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.notification.ItemClickSupport;
 import co.siempo.phone.notification.Notification;
 import co.siempo.phone.notification.NotificationContactModel;
@@ -60,6 +61,21 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
     private EditText edt_search;
     public static final String TAG = SiempoSupressNotificationActivity.class.getName();
     ArrayList<String> disableNotificationApps= new ArrayList<>();
+
+    long startTime = 0;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoSupressNotificationActivity.class.getSimpleName(), startTime);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
