@@ -6,13 +6,11 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.joanzapata.iconify.IconDrawable;
 
 import org.androidannotations.annotations.AfterViews;
@@ -39,6 +37,7 @@ import minium.co.core.ui.CoreActivity;
 public class SiempoAlphaSettingsActivity extends CoreActivity {
 
     private Context context;
+    private long startTime = 0;
     @ViewById
     ImageView icon_UserId;
 
@@ -47,7 +46,6 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
 
     @SystemService
     TelephonyManager telephonyManager;
-    private long startTime=0;
     private LinearLayout ln_notifications,ln_suppressedNotifications;
     private ImageView icon_AppNotifications,icon_SuppressedNotifications;
 
@@ -57,8 +55,6 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
             ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
         }
     }
-
-    private final String TAG = "SiempoAlphaSetting";
 
 
     @AfterViews
@@ -87,11 +83,11 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
                 .sizeDp(18));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                txt_UserId.setText("UserId: " + telephonyManager.getDeviceId());
+                txt_UserId.setText(String.format("UserId: %s", telephonyManager.getDeviceId()));
             }
         }
         else{
-            txt_UserId.setText("UserId: " + telephonyManager.getDeviceId());
+            txt_UserId.setText(String.format("UserId: %s", telephonyManager.getDeviceId()));
         }
 
     }

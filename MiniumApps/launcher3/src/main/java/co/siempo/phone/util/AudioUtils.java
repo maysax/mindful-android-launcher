@@ -5,11 +5,12 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
+import minium.co.core.app.CoreApplication;
+
 /**
  * Created by Shahab on 4/6/2017.
  */
 
-@SuppressWarnings("ALL")
 public class AudioUtils {
 
     public static void playnotification(Context context) {
@@ -18,6 +19,7 @@ public class AudioUtils {
             Ringtone r = RingtoneManager.getRingtone(context, notification);
             r.play();
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }

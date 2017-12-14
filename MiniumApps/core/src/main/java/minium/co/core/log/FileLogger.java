@@ -34,7 +34,7 @@ public class FileLogger {
     }
 
 
-    protected static void log2file(final String path, final String str) {
+    private static void log2file(final String path, final String str) {
         if (executor == null) {
             executor = Executors.newSingleThreadExecutor();
         }
@@ -51,6 +51,7 @@ public class FileLogger {
                     out.println(str);
                     out.flush();
                 } catch (IOException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 } finally {
                     if (out != null) {
@@ -76,7 +77,7 @@ public class FileLogger {
 
         if (TextUtils.isEmpty(path)) {
             Log.e("Error", "The path of Log file is Null.");
-            return file;
+            return null;
         }
 
         file = new File(path);
@@ -86,7 +87,7 @@ public class FileLogger {
 
         if (isExist) {
             if (isWritable) {
-                //Log.i("Success", "The Log file exist,and can be written! -" + file.getAbsolutePath());
+                Log.i("Success", "The Log file exist,and can be written");
             } else {
                 Log.e("Error", "The Log file can not be written.");
             }
@@ -105,6 +106,7 @@ public class FileLogger {
                     Log.e("Error", "The Log file can not be written.");
                 }
             } catch (IOException e) {
+                CoreApplication.getInstance().logException(e);
                 Log.e("Error", "Failed to create The Log file.");
                 e.printStackTrace();
             }

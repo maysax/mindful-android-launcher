@@ -7,13 +7,13 @@ import java.util.List;
  * Created by Shahab on 2/16/2017.
  */
 
-@SuppressWarnings("ALL")
 public class ContactListItem extends MainListItem {
 
     private long contactId;
     private String contactName;
     private List<ContactNumber> numbers;
     private String imageUri;
+
     public ContactListItem(long contactId, String contactName) {
         super(0, contactName, "{fa-user-o}", MainListItemType.CONTACT);
         this.contactId = contactId;
@@ -90,10 +90,6 @@ public class ContactListItem extends MainListItem {
         public ContactNumber(String number, String label) {
             this.number = number;
             this.label = label;
-        }
-
-        public String getLabel() {
-            return label;
         }
 
         public String getNumber() {

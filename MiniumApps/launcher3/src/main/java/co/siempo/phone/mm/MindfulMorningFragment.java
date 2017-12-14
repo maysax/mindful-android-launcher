@@ -19,6 +19,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.util.VibrationUtils;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
@@ -96,6 +97,7 @@ public class MindfulMorningFragment extends CoreFragment {
                 mMediaPlayer.start();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
         }
     }
 

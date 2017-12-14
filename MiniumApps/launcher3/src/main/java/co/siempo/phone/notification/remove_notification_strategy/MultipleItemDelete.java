@@ -6,13 +6,14 @@ import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.notification.Notification;
+import minium.co.core.app.CoreApplication;
 
 /**
  * Created by tkb on 2017-04-03.
  */
 
 
-public class MultipleIteamDelete implements DeleteStrategy {
+public class MultipleItemDelete implements DeleteStrategy {
     @Override
     public void delete(Notification notification) {
         try {
@@ -23,6 +24,7 @@ public class MultipleIteamDelete implements DeleteStrategy {
 
             DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
         }catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }

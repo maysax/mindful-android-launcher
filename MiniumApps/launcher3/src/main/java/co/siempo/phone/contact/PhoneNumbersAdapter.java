@@ -13,7 +13,6 @@ import co.siempo.phone.R;
  * Created by shahab on 2/16/17.
  */
 
-@SuppressWarnings("ALL")
 public class PhoneNumbersAdapter extends SimpleCursorAdapter {
 
     public PhoneNumbersAdapter(Context context, int layout, Cursor c,
@@ -25,7 +24,7 @@ public class PhoneNumbersAdapter extends SimpleCursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         super.bindView(view, context, cursor);
 
-        TextView tx = (TextView) view.findViewById(R.id.txtTitle);
+        TextView tx = view.findViewById(R.id.txtTitle);
         int type = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
         String label = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.LABEL));
         label = ContactsContract.CommonDataKinds.Phone.getTypeLabel(context.getResources(), type, label).toString();

@@ -254,4 +254,12 @@
         <item>com.android.providers.contacts</item>
         <item>com.android.phone</item>
     </string-array>
+    <string name="please_select_application">Please select application.</string>
+    <string name="loading_msg">Loading....</string>
+    <string name="no_emailapp_msg">No email application found in your phone</string>
+    <string name="app_not_found">Application not found</string>
+    <string name="suppressed_notifications">Suppressed Notifications</string>
+    <string name="search_app">Search App</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
 </resources>

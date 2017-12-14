@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
 /**
@@ -28,7 +29,7 @@ public class ServiceUtils {
         return isSettingsServiceEnabled(context, getEnabledNotificationListeners(), getServiceComponentNames(clazz));
     }
 
-    public static String[] getServiceComponentNames(Class<?> clazz) {
+    private static String[] getServiceComponentNames(Class<?> clazz) {
         return new String[]{
                 clazz.getPackage().getName() + '/' + clazz.getName(),
                 clazz.getPackage().getName() + "/." + clazz.getSimpleName(),
@@ -40,7 +41,7 @@ public class ServiceUtils {
      *
      * @return True if id is an enabled {@link AccessibilityService}.
      */
-    public static boolean isSettingsServiceEnabled(Context context, String setting, String[] ids) {
+    private static boolean isSettingsServiceEnabled(Context context, String setting, String[] ids) {
         // Check the list of system settings to see if a service is running.
         String eServices = Settings.Secure.getString(context.getContentResolver(), setting);
         if (!TextUtils.isEmpty(eServices) && null != ids) {
@@ -65,6 +66,7 @@ public class ServiceUtils {
                     return true;
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
             Tracer.e(e, e.getMessage());
         }
@@ -72,16 +74,16 @@ public class ServiceUtils {
         return false;
     }
 
-    public static String getEnabledNotificationListeners() {
+    private static String getEnabledNotificationListeners() {
         try {
             Field field = Settings.Secure.class.getDeclaredField("ENABLED_NOTIFICATION_LISTENERS");
             if (null != field) {
                 field.setAccessible(true);
-                String mbr = (String) field.get(null);
-                ENABLED_NOTIFICATION_LISTENERS = mbr;
+                ENABLED_NOTIFICATION_LISTENERS = (String) field.get(null);
                 return ENABLED_NOTIFICATION_LISTENERS;
             }
         } catch (Throwable t) {
+            CoreApplication.getInstance().logException(t);
             Tracer.e(t, "getEnabledNotificationListeners()");
         }
         ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
@@ -110,7 +112,7 @@ public class ServiceUtils {
         return isMyServiceRunning(context, serviceClass.getName());
     }
 
-    public static boolean isMyServiceRunning(Context context, String serviceClass) {
+    private static boolean isMyServiceRunning(Context context, String serviceClass) {
         if (null == serviceClass || null == context) return false;
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> services = manager.getRunningServices(Integer.MAX_VALUE);

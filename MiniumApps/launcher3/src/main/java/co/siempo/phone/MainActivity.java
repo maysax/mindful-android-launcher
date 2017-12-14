@@ -21,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -259,6 +258,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                         UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
                 } catch (Exception e) {
                     e.printStackTrace();
+                    CoreApplication.getInstance().logException(e);
                 }
             }
 
@@ -304,11 +304,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void logFirebase() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
+                Tracer.d(String.format("Device Id ::%s", telephonyManager.getDeviceId()));
                 FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
             }
         } else {
-            Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
+            Tracer.d(String.format("Device Id ::%s", telephonyManager.getDeviceId()));
             FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
         }
     }
@@ -386,6 +386,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 //            startActivity(defineIntent);
         //manager.clear();
 //        } catch (Exception e) {
+//        CoreApplication.getInstance().logException(e);
 //            Tracer.e(e, e.getMessage());
 //        }
     }
@@ -416,6 +417,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             enableNfc(true);
         } catch (Exception e) {
             Tracer.e(e);
+            CoreApplication.getInstance().logException(e);
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
@@ -486,6 +488,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         } catch (Exception e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
     }

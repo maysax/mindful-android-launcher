@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
 import static minium.co.core.util.DataUtils.NOTE_BODY;
@@ -63,6 +64,7 @@ public class EvernoteManager {
             note.setContent(EvernoteUtil.NOTE_PREFIX + newNoteObject.getString(NOTE_BODY) + EvernoteUtil.NOTE_SUFFIX);
 
         } catch (JSONException e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
 

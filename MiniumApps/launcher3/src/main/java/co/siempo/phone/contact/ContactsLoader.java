@@ -1,10 +1,8 @@
 package co.siempo.phone.contact;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.ContactsContract;
 
 import java.util.ArrayList;
@@ -15,14 +13,10 @@ import co.siempo.phone.model.ContactListItem;
 /**
  * Created by Shahab on 6/27/2016.
  */
-@SuppressWarnings("ALL")
 public class ContactsLoader {
 
-    @SuppressLint({"InlinedApi", "ObsoleteSdkInt"})
-    private static String DISPLAY_NAME_COMPAT = Build.VERSION.SDK_INT
-            >= Build.VERSION_CODES.HONEYCOMB ?
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY :
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME;
+
+    private static final String DISPLAY_NAME_COMPAT = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY;
 
 
     private static final String[] CONTACTS_SUMMARY_PROJECTION = new String[]{
@@ -45,9 +39,10 @@ public class ContactsLoader {
                 + DISPLAY_NAME_COMPAT + " != '' ))";
 
         String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
-
-        Cursor contactCursor = context.getContentResolver().query(contactUri, CONTACTS_SUMMARY_PROJECTION, selection, null, sortOrder);
-
+        Cursor contactCursor = null;
+        if (contactUri != null) {
+            contactCursor = context.getContentResolver().query(contactUri, CONTACTS_SUMMARY_PROJECTION, selection, null, sortOrder);
+        }
         ContactListItem currItem = null;
         List<ContactListItem> items = new ArrayList<>();
 
@@ -79,7 +74,6 @@ public class ContactsLoader {
             }
             contactCursor.close();
         }
-
         return items;
     }
 }

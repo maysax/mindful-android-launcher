@@ -31,7 +31,6 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     private ArrayList<SettingsData> arr_menuList;
     private SettingsAdapter adapter;
     private Context context;
-    private final String TAG = "SiempoMainSetting";
     private long startTime = 0;
 
     @Pref
@@ -50,7 +49,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         onClickEvents();
     }
 
-    public void onClickEvents() {
+    private void onClickEvents() {
         lst_settings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -74,7 +73,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         });
     }
 
-    public void initView() {
+    private void initView() {
         context = SiempoMainSettingsActivity.this;
         lst_settings = findViewById(R.id.lst_settings);
 

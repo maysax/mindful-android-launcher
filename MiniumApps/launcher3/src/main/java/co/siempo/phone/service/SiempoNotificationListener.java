@@ -40,8 +40,6 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
-import co.siempo.phone.db.StatusBarNotificationStorage;
-import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
@@ -82,7 +80,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
     Context context;
 
-    ArrayList<String> disableNotificationApps= new ArrayList<>();
+    ArrayList<String> disableNotificationApps = new ArrayList<>();
 
     @Override
     public void onListenerConnected() {
@@ -116,12 +114,12 @@ public class SiempoNotificationListener extends NotificationListenerService {
         super.onNotificationPosted(notification);
         context = this;
         printLog(notification);
-        if(PackageUtil.isSiempoLauncher(context)){
-            Log.d(TAG,"Suppress Notification Section"+notification.getPackageName());
+        if (PackageUtil.isSiempoLauncher(context)) {
+            Log.d(TAG, "Suppress Notification Section" + notification.getPackageName());
 
 
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (PackageUtil.isSiempoLauncher(this) && myKM.inKeyguardRestrictedInputMode() && launcherPrefs.isHidenotificationOnLockScreen().get()) {
+            if (PackageUtil.isSiempoLauncher(this) && (myKM != null ? myKM.inKeyguardRestrictedInputMode() : false) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
                 SiempoNotificationListener.this.cancelAllNotifications();
             }
             if (PackageUtil.isSiempoLauncher(this) && notification.getNotification().getSortKey() != null && notification.getNotification().getSortKey().equalsIgnoreCase(getResources().getString(R.string.lock_screen_label)) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
@@ -129,12 +127,13 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
 
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
-            String disable_AppList=prefs.getString(Constants.DISABLE_APPLIST,"");
-            if(!TextUtils.isEmpty(disable_AppList)){
-                Type type = new TypeToken<ArrayList<String>>(){}.getType();
+            String disable_AppList = prefs.getString(Constants.DISABLE_APPLIST, "");
+            if (!TextUtils.isEmpty(disable_AppList)) {
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
                 disableNotificationApps = new ArrayList<>();
                 disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-                if(!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())){
+                if (!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())) {
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
                     filterByCategory(notification);
                     return;
@@ -144,7 +143,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
         if (launcherPrefs.isAppDefaultOrFront().get()) {
 
 
-
             if (launcherPrefs.getCurrentProfile().get() == 0) {
                 Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0");
                 if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
@@ -152,7 +150,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
                     Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0 - Vibrate");
                     CoreApplication.getInstance().changeProfileToSilentMode();
-                    if(!disableNotificationApps.contains(notification.getPackageName())) {
+                    if (!disableNotificationApps.contains(notification.getPackageName())) {
                         vibrationUtils.vibrate(500);
                     }
                 }
@@ -176,18 +174,18 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Bundle bundle = notification.getNotification().extras;
         String strKey;
         String strValue;
-        String finalString = "";
+        StringBuilder finalString = new StringBuilder();
         String strTitle;
         if (bundle != null) {
             for (String key : bundle.keySet()) {
                 Object value = bundle.get(key);
                 strKey = " Key :: " + key != null ? key : "";
                 if (key.equalsIgnoreCase("android.textLines")) {
-                    strValue = " Value ::" + value != null ? "" + value.toString() : "";
+                    strValue = " Value ::" + value != null ? "" + (value != null ? value.toString() : null) : "";
                 } else {
                     strValue = " Value ::" + value != null ? "" + value : "";
                 }
-                finalString = finalString + "\n" + strKey + " :" + strValue;
+                finalString.append("\n").append(strKey).append(" :").append(strValue);
 
             }
         }
@@ -201,26 +199,13 @@ public class SiempoNotificationListener extends NotificationListenerService {
     }
 
 
-    private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
-        try {
-            StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
-            StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
-            storage.setContent(tickerText.toString());
-            storage.setPackageName(packageName);
-            storage.setPostTime(postTime);
-            statusStorageDao.insert(storage);
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
     private synchronized void filterByCategory(StatusBarNotification statusBarNotification) {
         String strPackageName;//getPackageName
         String strTitle = null;//android.title
         String strConversationTitle = null;//android.title
         String strText = null;//android.text
         Date date;
-        String data = "";
+        StringBuilder data = new StringBuilder();
         String strBigText = null;//android.subText
         String tickerText = "";
 
@@ -238,7 +223,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
             Collections.reverse(list);
             for (String string : list) {
-                data = data + string + "\n";
+                data.append(string).append("\n");
             }
 
         }
@@ -248,24 +233,21 @@ public class SiempoNotificationListener extends NotificationListenerService {
             strTitle = statusBarNotification.getNotification().extras.getString(Notification.EXTRA_TITLE);
         }
 
-        if (statusBarNotification.getNotification().extras.getString(Notification.EXTRA_CONVERSATION_TITLE) != null
-                && !statusBarNotification.getNotification().extras.getString(Notification.EXTRA_CONVERSATION_TITLE).equalsIgnoreCase("")) {
-            strConversationTitle = statusBarNotification.getNotification().extras.getString(Notification.EXTRA_CONVERSATION_TITLE);
-        }
+
         try {
             if (statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT) != null) {
-                CharSequence charText = (CharSequence) statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT).toString();
+                CharSequence charText = statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT).toString();
                 strText = charText.toString();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Tracer.d(e.getMessage());
+            CoreApplication.getInstance().logException(e);
         }
 
 
         try {
             if (statusBarNotification.getNotification().tickerText != null) {
-                CharSequence charText = (CharSequence) statusBarNotification.getNotification().tickerText;
+                CharSequence charText = statusBarNotification.getNotification().tickerText;
                 tickerText = charText.toString();
             }
         } catch (Exception e) {
@@ -273,10 +255,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
             Tracer.d(e.getMessage());
         }
 
-
         if (statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT) != null
                 && !statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT).toString().equalsIgnoreCase("")) {
-            CharSequence charBigText = (CharSequence) statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT);
+            CharSequence charBigText = statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT);
             strBigText = charBigText.toString();
         }
         try {
@@ -284,6 +265,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 icon = statusBarNotification.getNotification().extras.getInt(Notification.EXTRA_SMALL_ICON);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.d(e.getMessage());
         }
 
@@ -293,6 +275,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 largeIcon = UIUtils.convertBitmapToByte(iconUser);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.d(e.getMessage());
         }
 
@@ -324,7 +307,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 String[] text_comp = text.split(" ");
                                 if (text_comp != null && text_comp.length > 0) {
                                     String text_p1 = text_comp[0] != null ? text_comp[0] : "";
-                                    if (isInteger(text_p1, 10) ) {
+                                    if (isInteger(text_p1, 10)) {
                                         return;
                                     }
                                 }
@@ -417,8 +400,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                         notificationSms.setUser_icon(null);
                                         notificationSms.set_contact_title("Missed call");
                                         notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                        if (!data.equalsIgnoreCase("")) {
-                                            notificationSms.set_message(data);
+                                        if (!data.toString().equalsIgnoreCase("")) {
+                                            notificationSms.set_message(data.toString());
                                         } else {
                                             notificationSms.set_message(text + "\n" + notificationSms.get_message());
                                         }
@@ -431,6 +414,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     }
                 }
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
             }
 
         }
@@ -469,12 +453,14 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     smsDao.update(notificationSms);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 }
-            }catch (Exception e){
+
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
         // Facebook
-       else if (droidPrefs.isFacebookAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE)) {
+        else if (droidPrefs.isFacebookAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE)) {
             try {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
@@ -490,7 +476,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
-            }catch (Exception e){
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
@@ -528,8 +515,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         smsDao.update(notificationSms);
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
             }
         }
         // Facebook Lite Messenger
@@ -561,8 +549,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setPackageName(strPackageName);
                     notificationSms.set_date(date);
                     notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    if (data != null && !data.equalsIgnoreCase("")) {
-                        notificationSms.set_message(data);
+                    if (data != null && !data.toString().equalsIgnoreCase("")) {
+                        notificationSms.set_message(data.toString());
                     } else {
                         notificationSms.set_message(strText + "\n" + notificationSms.get_message());
                     }
@@ -573,9 +561,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
             }
         }
         // HangOut Messenger used in Future Sprint.
@@ -624,11 +612,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             }
                         }
                     } else {
-                        if (!strText.toString().equalsIgnoreCase("Incoming voice call")
-                                && !strText.toString().equalsIgnoreCase("Incoming video call")) {
+                        if (!strText.equalsIgnoreCase("Incoming voice call")
+                                && !strText.equalsIgnoreCase("Incoming video call")) {
 
                             if (tickerText.equalsIgnoreCase("Missed call")
-                                    && strText.toString().equalsIgnoreCase("Missed call")) {
+                                    && strText.equalsIgnoreCase("Missed call")) {
                                 strText = strTitle;
                                 strTitle = "Missed Call";
                             } else {
@@ -665,7 +653,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     notificationSms.set_contact_title(strTitle);
                                 }
                                 if (!tickerText.equalsIgnoreCase("Missed call")
-                                        && !strText.toString().equalsIgnoreCase("Missed call")) {
+                                        && !strText.equalsIgnoreCase("Missed call")) {
                                     smsDao.update(notificationSms);
                                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                                 }
@@ -673,18 +661,17 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         }
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else {
             if (statusBarNotification.getNotification().category == null
                     || (!statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL) &&
                     !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_PROGRESS) &&
                     !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_TRANSPORT) &&
                     !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_SERVICE) &&
                     !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.talk")
-                   && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging"))) {
+                    && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging"))) {
                 try {
                     DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                     TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
@@ -718,8 +705,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         smsDao.update(notificationSms);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
+                    CoreApplication.getInstance().logException(e);
                 }
             }
 
@@ -749,16 +737,15 @@ public class SiempoNotificationListener extends NotificationListenerService {
     }
 
     private String getNotificationToString(StatusBarNotification notification) {
-        if(notification!=null && notification.getPackageName()!=null
-        && notification.getNotification()!=null && notification.getNotification().tickerText!=null){
+        if (notification != null && notification.getPackageName() != null
+                && notification.getNotification() != null && notification.getNotification().tickerText != null) {
             return "package: " + notification.getPackageName()
                     + "Id: " + notification.getId()
                     + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
                     + " Details: " + notification.getNotification().toString()
                     + " Ticker: " + notification.getNotification().tickerText;
-        }
-        else{
-            return  "";
+        } else {
+            return "";
         }
 
     }
@@ -782,6 +769,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
             return true;
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             return true;
         }
     }
@@ -819,25 +807,27 @@ public class SiempoNotificationListener extends NotificationListenerService {
     }
 
     private String removeXnewMessageFromSender(String title) {
-        String finalTitle = title;
-        if (finalTitle == null || !finalTitle.contains("(") || !finalTitle.contains(")")) {
-            return finalTitle;
+        if (title == null || !title.contains("(") || !title.contains(")")) {
+            return title;
         }
-        int lastParenthesiIndex = finalTitle.lastIndexOf("(");
-        int lastEndParenthesisIndex = finalTitle.lastIndexOf(")");
+        int lastParenthesiIndex = title.lastIndexOf("(");
+        int lastEndParenthesisIndex = title.lastIndexOf(")");
         if (true) {
             return "CODE_IGNORE_ME";
         }
-        return finalTitle;
+        return title;
     }
 
     private String removeColFromTitle(String title) {
         String finalTitle = title == null ? null : title.trim();
         try {
-            return (finalTitle.length() <= 3 || finalTitle.charAt(finalTitle.length() - 3) != ':') ? finalTitle : finalTitle.substring(0, finalTitle.length() - 3);
+            if (finalTitle != null)
+                return (finalTitle.length() <= 3 || finalTitle.charAt(finalTitle.length() - 3) != ':') ? finalTitle : finalTitle.substring(0, finalTitle.length() - 3);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             return title;
         }
+        return title;
     }
 
 }
