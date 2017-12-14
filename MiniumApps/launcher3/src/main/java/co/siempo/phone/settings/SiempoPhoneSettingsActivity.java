@@ -30,6 +30,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.helper.FirebaseHelper;
 
 /**
@@ -93,6 +94,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return true;
         }
     };
+    long startTime = 0;
 
     public static int retrieveStatusBarHeight(Context context) {
         int result = 0;
@@ -133,17 +135,25 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                         .getString(preference.getKey(), ""));
     }
 
+    public static boolean isAvailable(Context ctx, Intent intent) {
+        final PackageManager mgr = ctx.getPackageManager();
+        List<ResolveInfo> list =
+                mgr.queryIntentActivities(intent,
+                        PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getListView().setPadding(0, retrieveStatusBarHeight(this), 0, 0);
+
     }
 
-    long startTime =0;
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(SiempoPhoneSettingsActivity.class.getSimpleName(),startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoPhoneSettingsActivity.class.getSimpleName(), startTime);
     }
 
     @Override
@@ -177,7 +187,13 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
     @Override
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.pref_headers, target);
+
+        if (Build.MANUFACTURER.equalsIgnoreCase(Constants.HUAWEI)) {
+            loadHeadersFromResource(R.xml.pref_headers_huawei, target);
+        } else {
+            loadHeadersFromResource(R.xml.pref_headers, target);
+        }
+
     }
 
     /**
@@ -201,6 +217,8 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class GeneralPreferenceFragment extends PreferenceFragment {
+        long startTime = 0;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -235,11 +253,10 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return view;
         }
 
-        long startTime =0;
         @Override
         public void onPause() {
             super.onPause();
-            FirebaseHelper.getIntance().logScreenUsageTime(GeneralPreferenceFragment.class.getSimpleName(),startTime);
+            FirebaseHelper.getIntance().logScreenUsageTime(GeneralPreferenceFragment.class.getSimpleName(), startTime);
         }
 
         @Override
@@ -255,6 +272,8 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class NotificationPreferenceFragment extends PreferenceFragment {
+        long startTime = 0;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -288,11 +307,10 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return view;
         }
 
-        long startTime =0;
         @Override
         public void onPause() {
             super.onPause();
-            FirebaseHelper.getIntance().logScreenUsageTime(NotificationPreferenceFragment.class.getSimpleName(),startTime);
+            FirebaseHelper.getIntance().logScreenUsageTime(NotificationPreferenceFragment.class.getSimpleName(), startTime);
         }
 
         @Override
@@ -308,6 +326,8 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class DataSyncPreferenceFragment extends PreferenceFragment {
+        long startTime = 0;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -341,11 +361,10 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return view;
         }
 
-        long startTime =0;
         @Override
         public void onPause() {
             super.onPause();
-            FirebaseHelper.getIntance().logScreenUsageTime(DataSyncPreferenceFragment.class.getSimpleName(),startTime);
+            FirebaseHelper.getIntance().logScreenUsageTime(DataSyncPreferenceFragment.class.getSimpleName(), startTime);
         }
 
         @Override
@@ -361,6 +380,8 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class ConnectionFragment extends PreferenceFragment {
+        long startTime = 0;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -435,11 +456,10 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return view;
         }
 
-        long startTime =0;
         @Override
         public void onPause() {
             super.onPause();
-            FirebaseHelper.getIntance().logScreenUsageTime(ConnectionFragment.class.getSimpleName(),startTime);
+            FirebaseHelper.getIntance().logScreenUsageTime(ConnectionFragment.class.getSimpleName(), startTime);
         }
 
         @Override
@@ -449,20 +469,14 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    public static boolean isAvailable(Context ctx, Intent intent) {
-        final PackageManager mgr = ctx.getPackageManager();
-        List<ResolveInfo> list =
-                mgr.queryIntentActivities(intent,
-                        PackageManager.MATCH_DEFAULT_ONLY);
-        return list.size() > 0;
-    }
-
     /**
      * This fragment shows Device preferences only. It is used when the
      * activity is showing a two-pane settings UI.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class DeviceSettingsFragment extends PreferenceFragment {
+        long startTime = 0;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -550,11 +564,10 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return super.onOptionsItemSelected(item);
         }
 
-        long startTime =0;
         @Override
         public void onPause() {
             super.onPause();
-            FirebaseHelper.getIntance().logScreenUsageTime(DeviceSettingsFragment.class.getSimpleName(),startTime);
+            FirebaseHelper.getIntance().logScreenUsageTime(DeviceSettingsFragment.class.getSimpleName(), startTime);
         }
 
         @Override
@@ -572,6 +585,8 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class PersonalSettingsFragment extends PreferenceFragment {
+        long startTime = 0;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -636,11 +651,10 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return view;
         }
 
-        long startTime =0;
         @Override
         public void onPause() {
             super.onPause();
-            FirebaseHelper.getIntance().logScreenUsageTime(PersonalSettingsFragment.class.getSimpleName(),startTime);
+            FirebaseHelper.getIntance().logScreenUsageTime(PersonalSettingsFragment.class.getSimpleName(), startTime);
         }
 
         @Override
@@ -657,6 +671,8 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static class SystemSettingsFragment extends PreferenceFragment {
+        long startTime = 0;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -716,12 +732,10 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             return view;
         }
 
-
-        long startTime =0;
         @Override
         public void onPause() {
             super.onPause();
-            FirebaseHelper.getIntance().logScreenUsageTime(System.class.getSimpleName(),startTime);
+            FirebaseHelper.getIntance().logScreenUsageTime(System.class.getSimpleName(), startTime);
         }
 
         @Override
