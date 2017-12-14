@@ -49,7 +49,7 @@ public class TableNotificationSms implements Serializable {
         this.id = id;
     }
 
-    @Generated
+    @Generated(hash = 584408565)
     public TableNotificationSms(Long id, String _contact_title, String _message, java.util.Date _date, Integer _contact_id, Integer _sms_id, Long _snooze_time, Boolean _is_read,
             int app_icon, byte[] user_icon, Integer notification_type, String packageName, int content_type, int notification_id, long notification_date) {
         this.id = id;

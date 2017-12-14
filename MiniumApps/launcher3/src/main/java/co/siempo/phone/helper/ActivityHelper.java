@@ -98,13 +98,13 @@ public class ActivityHelper {
     public void openFeedback() {
         try {
             Intent emailIntent = new Intent(Intent.ACTION_VIEW);
-            if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+            if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
                 String strDeviceInfo = UIUtils.getDeviceInfo(context)
                         + "\nAPP VERSION : " + "ALPHA-" + BuildConfig.VERSION_NAME;
                 Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]",
                         "ALPHA-" + BuildConfig.VERSION_NAME) + "&body=" + strDeviceInfo);
                 emailIntent.setData(data);
-            } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+            } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
                 String strDeviceInfo = UIUtils.getDeviceInfo(context)
                         + "\nAPP VERSION : " + "BETA-" + BuildConfig.VERSION_NAME;
                 Uri data = Uri.parse("mailto:feedback@siempo.co?subject=" + String.format("Feedback on app [%s]",

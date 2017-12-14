@@ -108,9 +108,9 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_Faq = findViewById(R.id.icon_Faq);
         icon_AppNotifications = findViewById(R.id.icon_AppNotifications);
         txt_version = findViewById(R.id.txt_version);
-        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
             txt_version.setText("Version : " + "ALPHA-" + BuildConfig.VERSION_NAME);
-        } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
             txt_version.setText("Version : " + "BETA-" + BuildConfig.VERSION_NAME);
         }
 
@@ -235,9 +235,9 @@ public class SiempoSettingsActivity extends CoreActivity {
                                         appUpdaterUtils = null;
                                     } else {
                                         Log.d(TAG, "check version from AWS");
-                                        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                                        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
                                             ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
-                                        } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                                        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
                                             ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.BETA);
                                         }
 

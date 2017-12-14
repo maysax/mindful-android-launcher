@@ -91,7 +91,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         s2.setId(2);
         arr_menuList.add(s2);
 
-        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
             SettingsData s3 = new SettingsData();
             s3.setSettingType(getString(R.string.str_siempo_alphasettings));
             s3.setId(3);

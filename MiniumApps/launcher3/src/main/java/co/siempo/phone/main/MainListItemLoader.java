@@ -248,9 +248,9 @@ public class MainListItemLoader {
                 MindfulMorningActivity_.intent(context).start();
                 break;
             case 15:
-                if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
                     ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.ALPHA);
-                } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
                     ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.BETA);
                 }
                 break;

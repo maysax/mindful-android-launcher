@@ -262,4 +262,6 @@
     <string name="search_app">Search App</string>
     <string name="on">On</string>
     <string name="off">Off</string>
+    <string name="beta">beta</string>
+    <string name="alpha">alpha</string>
 </resources>

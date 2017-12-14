@@ -542,9 +542,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                 appUpdaterUtils = null;
                             } else {
                                 Log.d(TAG, "check version from AWS");
-                                if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                                if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
                                     ApiClient_.getInstance_(MainActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
-                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.beta))) {
                                     ApiClient_.getInstance_(MainActivity.this).checkAppVersion(CheckVersionEvent.BETA);
                                 }
                             }
