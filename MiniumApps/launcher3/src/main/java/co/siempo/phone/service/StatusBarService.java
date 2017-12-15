@@ -24,11 +24,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-<<<<<<< MiniumApps/launcher3/src/main/java/co/siempo/phone/service/StatusBarService.java
 import co.siempo.phone.db.DBClient;
-=======
 import co.siempo.phone.R;
->>>>>>> MiniumApps/launcher3/src/main/java/co/siempo/phone/service/StatusBarService.java
 import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.EventBus;
