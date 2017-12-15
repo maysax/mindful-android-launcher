@@ -19,16 +19,19 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.RingtonePreference;
 import android.provider.Settings;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.helper.FirebaseHelper;
 import minium.co.core.app.CoreApplication;
 
@@ -37,6 +40,11 @@ import minium.co.core.app.CoreApplication;
  */
 //@EActivity
 public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
+    /**
+     * A preference value change listener that updates the preference's summary
+     * to reflect its new value.
+     */
+    private static String TAG = "SiempoPhoneSettings";
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
         @Override
         public boolean onPreferenceChange(Preference preference, Object value) {
@@ -130,7 +138,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         getListView().setPadding(0, retrieveStatusBarHeight(this), 0, 0);
     }
 
-    private long startTime =0;
+    long startTime =0;
     @Override
     protected void onPause() {
         super.onPause();
@@ -209,7 +217,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = view.findViewById(android.R.id.list);
+                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -315,7 +323,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = view.findViewById(android.R.id.list);
+                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -508,6 +516,31 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     preference.setIntent(intent);
                     bindPreferenceSummaryToValue(preference);
                 }
+
+                //This is the listener for Preference being clicked
+                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        //In case if the device is Huawei and Users
+                        // preference is clicked then it will throw Security
+                        // Exception hence to prevent it we will handle the
+                        // click by showing a message and not navigating to
+                        // the activity
+                        if (preference.getTitle().toString().equalsIgnoreCase
+                                (getString(R.string.pref_users)) && Build
+                                .MANUFACTURER
+                                .equalsIgnoreCase(Constants.HUAWEI)) {
+                            Toast.makeText(getActivity(), "This feature is not " +
+                                    "supported in your device", Toast
+                                    .LENGTH_SHORT).show();
+                            return true;
+                        } else {
+                            return false;
+
+                        }
+
+                    }
+                });
             } catch (Exception e) {
                 CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
