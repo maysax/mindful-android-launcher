@@ -18,8 +18,8 @@ import minium.co.core.ui.CoreFragment;
 @EFragment(R.layout.fragment_pause_preference)
 public class TempoPreferenceFragment extends CoreFragment {
 
-    TempoRecyclerViewAdapter recyclerViewAdapter;
-    RecyclerView.LayoutManager recylerViewLayoutManager;
+    private TempoRecyclerViewAdapter recyclerViewAdapter;
+    private RecyclerView.LayoutManager recylerViewLayoutManager;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;

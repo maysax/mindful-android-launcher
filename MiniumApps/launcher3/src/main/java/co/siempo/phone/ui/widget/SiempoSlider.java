@@ -20,7 +20,6 @@ import co.siempo.phone.R;
  * Created by Shahab on 3/30/2017.
  */
 
-@SuppressWarnings("ALL")
 public class SiempoSlider extends View {
 
     private static final String STATE_PARENT = "parent";

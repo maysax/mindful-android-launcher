@@ -114,12 +114,8 @@
         <activity
             android:name=".tempo.TempoActivity_"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".map.SiempoMapActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".call.CallLogActivity_"
-            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".mm.MMTimePickerActivity_"
             android:screenOrientation="portrait" />
@@ -165,7 +161,24 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
+        <receiver
+            android:name=".call.CallReceiver_"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".msg.SmsReceiver_"
+            android:enabled="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="999">
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
         <receiver android:name=".mm.AlarmReciever_" />
         <receiver
             android:name=".tempo.TempoReceiver_"
@@ -180,7 +193,7 @@
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
         </activity>
-        <activity android:name=".inbox.GoogleInboxActivity_" />
+
         <activity
             android:name=".applist.AppDrawerActivity_"
             android:label="@string/title_activity_installed_app_list"
@@ -198,7 +211,6 @@
         </receiver>
 
 
-
         <activity android:name=".ui.UpdateActivity_" />
         <activity android:name=".settings.SiempoPhoneSettingsActivity" />
         <activity android:name=".settings.SiempoSettingsActivity_" />
@@ -211,7 +223,8 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".settings.AppListNotificationSetting"
+        <activity
+            android:name=".settings.AppListNotificationSetting"
             android:label="@string/title_activity_app_list_notification"></activity>
         <activity
             android:name=".settings.AppListNotification"

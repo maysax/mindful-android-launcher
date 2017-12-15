@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import minium.co.core.app.CoreApplication;
 import minium.co.notes.R;
 
 import static minium.co.notes.ui.MainActivity.checkedArray;
@@ -124,6 +125,7 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
                 favoured = noteObject.getBoolean(NOTE_FAVOURED);
 
             } catch (JSONException e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
 

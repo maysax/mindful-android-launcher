@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Build;
@@ -40,12 +42,11 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
-import co.siempo.phone.db.StatusBarNotificationStorage;
-import co.siempo.phone.db.StatusBarNotificationStorageDao;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.PackageUtil;
 import co.siempo.phone.util.VibrationUtils;
@@ -82,7 +83,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
     Context context;
 
-    ArrayList<String> disableNotificationApps= new ArrayList<>();
+    ArrayList<String> disableNotificationApps = new ArrayList<>();
 
     @Override
     public void onListenerConnected() {
@@ -96,7 +97,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Tracer.d("Notification Disconnected");
 
     }
-
 
     @Override
     public void onNotificationChannelModified(String pkg, UserHandle user, NotificationChannel channel, int modificationType) {
@@ -116,12 +116,12 @@ public class SiempoNotificationListener extends NotificationListenerService {
         super.onNotificationPosted(notification);
         context = this;
         printLog(notification);
-        if(PackageUtil.isSiempoLauncher(context)){
-            Log.d(TAG,"Suppress Notification Section"+notification.getPackageName());
+        if (PackageUtil.isSiempoLauncher(context)) {
+            Log.d(TAG, "Suppress Notification Section" + notification.getPackageName());
 
 
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (PackageUtil.isSiempoLauncher(this) && myKM.inKeyguardRestrictedInputMode() && launcherPrefs.isHidenotificationOnLockScreen().get()) {
+            if (PackageUtil.isSiempoLauncher(this) && (myKM != null ? myKM.inKeyguardRestrictedInputMode() : false) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
                 SiempoNotificationListener.this.cancelAllNotifications();
             }
             if (PackageUtil.isSiempoLauncher(this) && notification.getNotification().getSortKey() != null && notification.getNotification().getSortKey().equalsIgnoreCase(getResources().getString(R.string.lock_screen_label)) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
@@ -129,12 +129,13 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
 
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
-            String disable_AppList=prefs.getString(Constants.DISABLE_APPLIST,"");
-            if(!TextUtils.isEmpty(disable_AppList)){
-                Type type = new TypeToken<ArrayList<String>>(){}.getType();
+            String disable_AppList = prefs.getString(Constants.DISABLE_APPLIST, "");
+            if (!TextUtils.isEmpty(disable_AppList)) {
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
                 disableNotificationApps = new ArrayList<>();
                 disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-                if(!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())){
+                if (!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())) {
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
                     filterByCategory(notification);
                     return;
@@ -144,7 +145,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
         if (launcherPrefs.isAppDefaultOrFront().get()) {
 
 
-
             if (launcherPrefs.getCurrentProfile().get() == 0) {
                 Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0");
                 if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
@@ -152,7 +152,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
                     Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0 - Vibrate");
                     CoreApplication.getInstance().changeProfileToSilentMode();
-                    if(!disableNotificationApps.contains(notification.getPackageName())) {
+                    if (!disableNotificationApps.contains(notification.getPackageName())) {
                         vibrationUtils.vibrate(500);
                     }
                 }
@@ -176,18 +176,18 @@ public class SiempoNotificationListener extends NotificationListenerService {
         Bundle bundle = notification.getNotification().extras;
         String strKey;
         String strValue;
-        String finalString = "";
+        StringBuilder finalString = new StringBuilder();
         String strTitle;
         if (bundle != null) {
             for (String key : bundle.keySet()) {
                 Object value = bundle.get(key);
                 strKey = " Key :: " + key != null ? key : "";
                 if (key.equalsIgnoreCase("android.textLines")) {
-                    strValue = " Value ::" + value != null ? "" + value.toString() : "";
+                    strValue = " Value ::" + value != null ? "" + (value != null ? value.toString() : null) : "";
                 } else {
                     strValue = " Value ::" + value != null ? "" + value : "";
                 }
-                finalString = finalString + "\n" + strKey + " :" + strValue;
+                finalString.append("\n").append(strKey).append(" :").append(strValue);
 
             }
         }
@@ -200,28 +200,20 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 + "\n" + " Bundle Data:" + finalString);
     }
 
-
-    private void saveNotification(String packageName, long postTime, CharSequence tickerText) {
-        try {
-            StatusBarNotificationStorageDao statusStorageDao = DBUtility.getStatusStorageDao();
-            StatusBarNotificationStorage storage = new StatusBarNotificationStorage();
-            storage.setContent(tickerText.toString());
-            storage.setPackageName(packageName);
-            storage.setPostTime(postTime);
-            statusStorageDao.insert(storage);
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-        }
-    }
-
+    /**
+     * Used for the filter the Notification based on package name and parsing the notification.
+     *
+     * @param statusBarNotification
+     */
     private synchronized void filterByCategory(StatusBarNotification statusBarNotification) {
         String strPackageName;//getPackageName
         String strTitle = null;//android.title
-        String strConversationTitle = null;//android.title
         String strText = null;//android.text
         Date date;
-        String data = "";
+        StringBuilder data = new StringBuilder();
         String strBigText = null;//android.subText
+        String tickerText = "";
+
         int icon = 0;//android.icon
         byte[] largeIcon = new byte[0];// android.largeIcon
         strPackageName = statusBarNotification.getPackageName();
@@ -231,38 +223,49 @@ public class SiempoNotificationListener extends NotificationListenerService {
         if (statusBarNotification.getNotification().extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES) != null) {
             CharSequence[] test = statusBarNotification.getNotification().extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES);
             ArrayList<String> list = new ArrayList<>();
-            for (CharSequence charSequence : test) {
-                list.add("" + charSequence);
+            if (test != null) {
+                for (CharSequence charSequence : test) {
+                    list.add("" + charSequence);
+                }
             }
             Collections.reverse(list);
             for (String string : list) {
-                data = data + string + "\n";
+                data.append(string).append("\n");
             }
 
         }
-
-        if (statusBarNotification.getNotification().extras.getString(Notification.EXTRA_TITLE) != null
-                && !statusBarNotification.getNotification().extras.getString(Notification.EXTRA_TITLE).equalsIgnoreCase("")) {
-            strTitle = statusBarNotification.getNotification().extras.getString(Notification.EXTRA_TITLE);
+        try {
+            if (statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE) != null) {
+                strTitle = statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TITLE).toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
-        if (statusBarNotification.getNotification().extras.getString(Notification.EXTRA_CONVERSATION_TITLE) != null
-                && !statusBarNotification.getNotification().extras.getString(Notification.EXTRA_CONVERSATION_TITLE).equalsIgnoreCase("")) {
-            strConversationTitle = statusBarNotification.getNotification().extras.getString(Notification.EXTRA_CONVERSATION_TITLE);
-        }
         try {
             if (statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT) != null) {
-                CharSequence charText = (CharSequence) statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT).toString();
+                CharSequence charText = statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_TEXT).toString();
                 strText = charText.toString();
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
 
-        if (statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT) != null
-                && !statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT).toString().equalsIgnoreCase("")) {
-            CharSequence charBigText = (CharSequence) statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT);
+        try {
+            if (statusBarNotification.getNotification().tickerText != null) {
+                CharSequence charText = statusBarNotification.getNotification().tickerText;
+                tickerText = charText.toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Tracer.d(e.getMessage());
+        }
+
+        if (statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT) != null) {
+            CharSequence charBigText = statusBarNotification.getNotification().extras.getCharSequence(Notification.EXTRA_BIG_TEXT);
             strBigText = charBigText.toString();
         }
         try {
@@ -270,6 +273,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 icon = statusBarNotification.getNotification().extras.getInt(Notification.EXTRA_SMALL_ICON);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.d(e.getMessage());
         }
 
@@ -279,149 +283,58 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 largeIcon = UIUtils.convertBitmapToByte(iconUser);
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.d(e.getMessage());
         }
-
-
-        //whatsapp used in Future Sprint.
-        if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
-            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-            try {
-                if (statusBarNotification.getNotification().extras != null) {
-                    if (Constants.WHATSAPP_PACKAGE.equals(statusBarNotification.getPackageName())) {
-                        Bundle extras = statusBarNotification.getNotification().extras;
-                        String title = "";
-                        String text = "";
-                        Bitmap bitmap = null;
-                        if (extras != null) {
-                            title = extras.getString(NotificationCompat.EXTRA_TITLE) == null ? "" : extras.getString(NotificationCompat.EXTRA_TITLE);
-                            if (extras.getCharSequence(NotificationCompat.EXTRA_TEXT) == null) {
-                                text = "";
-                            } else {
-                                text = extras.getCharSequence(NotificationCompat.EXTRA_TEXT).toString();
-                            }
-                            text = Build.VERSION.SDK_INT >= 21 ? getNotificationTextLegacy(statusBarNotification.getNotification(), text) : getNotificationTextLegacy(statusBarNotification.getNotification(), text);
-                            if (title == null || title.isEmpty() || Constants.WHATSAPP.equals(title.trim())) {
-                                title = getTitleLegacy(text);
-                                text = fixTextLegacy(text);
-                            }
-                            if (!Constants.WHATSAPP.equals(title.trim())) {
-                                String[] text_comp = text.split(" ");
-                                if (text_comp != null && text_comp.length > 0) {
-                                    String text_p1 = text_comp[0] != null ? text_comp[0] : "";
-                                    if (isInteger(text_p1, 10) ) {
-                                        return;
-                                    }
-                                }
-                                if (title.contains("@")) {
-                                    String title_p1 = title.substring(0, title.indexOf("@")).trim();
-                                    title = title.substring(title.indexOf("@") + 1).trim();
-                                    text = title_p1 + ": " + text;
-                                }
-                                if (Build.VERSION.SDK_INT > 23) {
-                                    title = removeXnewMessageFromSender(title);
-                                    if (!"CODE_IGNORE_ME".equals(title)) {
-                                        title = removeColFromTitle(title);
-                                        if (title.contains(":")) {
-                                            return;
-                                        }
-                                    } else {
-                                        return;
-                                    }
-                                }
-                            } else {
-                                return;
-                            }
-                        }
-
-                        if (statusBarNotification.getNotification().category == null
-                                || !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
-
-                            TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
-                                    .where(TableNotificationSmsDao.Properties.PackageName.eq(statusBarNotification.getPackageName()),
-                                            TableNotificationSmsDao.Properties._contact_title.eq(title),
-                                            TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
-                                    .unique();
-                            if (notificationSms == null) {
-                                if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
-                                    notificationSms = new TableNotificationSms();
-                                    notificationSms.set_contact_title(title);
-                                    notificationSms.set_message(text);
-                                    notificationSms.set_date(date);
-                                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                    notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                                    notificationSms.setPackageName(strPackageName);
-                                    notificationSms.setApp_icon(icon);
-                                    notificationSms.setUser_icon(largeIcon);
-
-                                    long id = smsDao.insertOrReplace(notificationSms);
-                                    notificationSms.setId(id);
-                                }
-                            } else {
-                                if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
-                                    notificationSms.set_date(date);
-                                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                    notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
-
-                                    smsDao.updateInTx(notificationSms);
-                                }
-                            }
-                        }
-                        if (statusBarNotification.getNotification().category == null
-                                || statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
-
-                            if (title.toLowerCase().trim().contains("miss")
-                                    || title.toLowerCase().trim().contains("missed")) {
-                                if (title.matches(".*\\d.*")) {
-                                    // contains a number
-                                    title = title.replaceAll("^([0-9]+)", "");
-                                }
-                                TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
-                                        .where(TableNotificationSmsDao.Properties.PackageName.eq(statusBarNotification.getPackageName()),
-                                                TableNotificationSmsDao.Properties._contact_title.eq("Missed call"),
-                                                TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
-                                        .unique();
-                                if (notificationSms == null) {
-                                    if (!title.contains("WhatsApp")) {
-                                        notificationSms = new TableNotificationSms();
-                                        notificationSms.set_contact_title("Missed call");
-                                        notificationSms.set_message(text);
-                                        notificationSms.set_date(date);
-                                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                        notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                                        notificationSms.setPackageName(strPackageName);
-                                        notificationSms.setApp_icon(icon);
-                                        notificationSms.setUser_icon(largeIcon);
-
-                                        long id = smsDao.insertOrReplace(notificationSms);
-                                        notificationSms.setId(id);
-                                    }
-                                } else {
-                                    if (!title.contains("WhatsApp")) {
-                                        notificationSms.set_date(date);
-                                        notificationSms.setUser_icon(null);
-                                        notificationSms.set_contact_title("Missed call");
-                                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                        if (!data.equalsIgnoreCase("")) {
-                                            notificationSms.set_message(data);
-                                        } else {
-                                            notificationSms.set_message(text + "\n" + notificationSms.get_message());
-                                        }
-
-                                        smsDao.updateInTx(notificationSms);
-                                    }
-                                }
-                            }
-                        }
-                    }
+        String strCount;
+        try {
+            if (statusBarNotification.getNotification().extras.getCharSequence(NotificationCompat.EXTRA_SUMMARY_TEXT) != null) {
+                strCount = statusBarNotification.getNotification().extras.getCharSequence(NotificationCompat.EXTRA_SUMMARY_TEXT).toString();
+                if (Character.isDigit(strCount.charAt(0))) {
+                    String str[] = strCount.split(" ");
+                    int count = Integer.parseInt(str[0]);
+                    logFirebaseCount(strPackageName, count);
                 }
-            } catch (Exception e) {
+
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
-        // Google Calendar
-        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_CALENDAR_PACKAGES)) {
+
+
+        //Parse the Whats App messages.
+        if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE))
+            parseWhatsappMessage(statusBarNotification, strPackageName, date, data, icon, largeIcon);
+            //Parse the Google Calendar
+        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_CALENDAR_PACKAGES))
+            parseGoogleCalender(statusBarNotification, strPackageName, strTitle, strText, date, strBigText, icon, largeIcon);
+            // Facebook
+        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE))
+            parseFacebook(statusBarNotification, strPackageName, strTitle, strText, date, icon, largeIcon);
+            // Facebook Messenger
+        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_MESSENGER_PACKAGE))
+            parseFacebookMessenger(statusBarNotification, strPackageName, strTitle, strText, date, icon, largeIcon);
+            // Facebook Lite Messenger
+        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_LITE_PACKAGE))
+            parseFacebookLite(statusBarNotification, strPackageName, strTitle, strText, date, data, icon, largeIcon);
+            //Parse HangOut message
+        else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES))
+            parseHangOutMessage(statusBarNotification, strPackageName, strTitle, strText, date, tickerText, icon, largeIcon);
+        else
+            parseOtherMessages(statusBarNotification, strPackageName, strTitle, strText, date, strBigText, icon, largeIcon);
+
+    }
+
+    private void parseOtherMessages(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon) {
+        if (statusBarNotification.getNotification().category == null
+                || (!statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL) &&
+                !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_PROGRESS) &&
+                !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_TRANSPORT) &&
+                !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_SERVICE) &&
+                !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.talk")
+                && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging"))) {
             try {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
@@ -455,227 +368,30 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     smsDao.update(notificationSms);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
             }
         }
-        // Facebook
-       else if (droidPrefs.isFacebookAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_PACKAGE)) {
-            try {
-                DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-                TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-                TableNotificationSms notificationSms = new TableNotificationSms();
-                notificationSms.set_contact_title(strTitle);
-                notificationSms.set_message(strText);
-                notificationSms.set_date(date);
-                notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                notificationSms.setPackageName(strPackageName);
-                notificationSms.setApp_icon(icon);
-                notificationSms.setUser_icon(largeIcon);
-                notificationSms.setNotification_id(statusBarNotification.getId());
-                long id = smsDao.insert(notificationSms);
-                notificationSms.setId(id);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        // Facebook Messenger
-        else if (droidPrefs.isFacebooKMessangerAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_MESSENGER_PACKAGE)) {
-            try {
-                DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-                TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-                TableNotificationSms notificationSms
-                        = DBUtility.getNotificationDao().queryBuilder()
-                        .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
-                                TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
-                                TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
-                        .unique();
-                if (strTitle != null & !strTitle.equalsIgnoreCase("Chat heads active")) {
-                    if (notificationSms == null) {
-                        notificationSms = new TableNotificationSms();
-                        notificationSms.set_contact_title(strTitle);
-                        notificationSms.set_message(strText);
-                        notificationSms.set_date(date);
-                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                        notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                        notificationSms.setPackageName(strPackageName);
-                        notificationSms.setApp_icon(icon);
-                        notificationSms.setUser_icon(largeIcon);
-                        notificationSms.setNotification_id(statusBarNotification.getId());
-                        long id = smsDao.insert(notificationSms);
-                        notificationSms.setId(id);
-                    } else {
-                        notificationSms.setPackageName(strPackageName);
-                        notificationSms.set_date(date);
-                        notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                        notificationSms.set_message(strText + "\n" + notificationSms.get_message());
-                        notificationSms.set_contact_title(strTitle);
-                        smsDao.update(notificationSms);
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        // Facebook Lite Messenger
-        else if (droidPrefs.isFacebooKMessangerLiteAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.FACEBOOK_LITE_PACKAGE)) {
-            try {
-                DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-                TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-                TableNotificationSms notificationSms
-                        = DBUtility.getNotificationDao().queryBuilder()
-                        .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
-                                TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
-                                TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
-                        .unique();
-                if (notificationSms == null) {
-                    notificationSms = new TableNotificationSms();
-                    notificationSms.set_contact_title(strTitle);
-                    notificationSms.set_message(strText);
-                    notificationSms.set_date(date);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.setApp_icon(icon);
-                    notificationSms.setUser_icon(largeIcon);
-                    notificationSms.setNotification_id(statusBarNotification.getId());
-                    long id = smsDao.insert(notificationSms);
-                    notificationSms.setId(id);
-                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                } else {
-                    notificationSms.setPackageName(strPackageName);
-                    notificationSms.set_date(date);
-                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                    if (data != null && !data.equalsIgnoreCase("")) {
-                        notificationSms.set_message(data);
-                    } else {
-                        notificationSms.set_message(strText + "\n" + notificationSms.get_message());
-                    }
-                    notificationSms.set_contact_title(strTitle);
-                    smsDao.update(notificationSms);
-                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                }
-                if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
-                    EventBus.getDefault().post(new NotificationTrayEvent(true));
-                }
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        // HangOut Messenger used in Future Sprint.
-        else if (droidPrefs.isHangOutAllowed().get() && statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES)) {
-            try {
-                DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-                TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-                if (!strTitle.trim().endsWith("new messages")) {
-                    String groupname = "";
-                    if (strTitle.contains(":")) {
-                        String[] separated = strTitle.split(":");
-                        strTitle = separated[0];
-                        strText = separated[1] + ": " + strText;
-                    }
-                    if (statusBarNotification.getNotification().category != null
-                            && !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
-                        TableNotificationSms notificationSms
-                                = DBUtility.getNotificationDao().queryBuilder()
-                                .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
-                                        TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
-                                        TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
-                                .unique();
-                        if (notificationSms == null) {
-                            notificationSms = new TableNotificationSms();
-                            notificationSms.set_contact_title(strTitle);
-                            notificationSms.set_message(strText);
-                            notificationSms.set_date(date);
-                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                            notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                            notificationSms.setPackageName(strPackageName);
-                            notificationSms.setApp_icon(icon);
-                            notificationSms.setUser_icon(largeIcon);
-                            notificationSms.setNotification_id(statusBarNotification.getId());
-                            long id = smsDao.insert(notificationSms);
-                            notificationSms.setId(id);
-                            EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                        } else {
-                            notificationSms.setPackageName(strPackageName);
-                            notificationSms.set_date(date);
-                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                            if (!notificationSms.get_message().split("\n")[0].equalsIgnoreCase(strText)) {
-                                notificationSms.set_message(strText + "\n" + notificationSms.get_message());
-                                notificationSms.set_contact_title(strTitle);
-                                smsDao.update(notificationSms);
-                                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                            }
-                        }
-                    } else {
-                        if (!strText.toString().equalsIgnoreCase("Incoming voice call")
-                                && !strText.toString().equalsIgnoreCase("Incoming video call")) {
+    }
 
-                            if (statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")
-                                    && strText.toString().equalsIgnoreCase("Missed call")) {
-                                strText = strTitle;
-                                strTitle = "Missed Call";
-                            } else {
-                                if (strTitle.contains("missed calls")) {
-                                    strTitle = "Missed Call";
-                                }
-                            }
-                            TableNotificationSms notificationSms
-                                    = DBUtility.getNotificationDao().queryBuilder()
-                                    .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
-                                            TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
-                                            TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
-                                    .unique();
-
-                            if (notificationSms == null) {
-                                notificationSms = new TableNotificationSms();
-                                notificationSms.set_contact_title(strTitle);
-                                notificationSms.set_message(strText);
-                                notificationSms.set_date(date);
-                                notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
-                                notificationSms.setPackageName(strPackageName);
-                                notificationSms.setApp_icon(icon);
-                                notificationSms.setUser_icon(largeIcon);
-                                notificationSms.setNotification_id(statusBarNotification.getId());
-                                long id = smsDao.insert(notificationSms);
-                                notificationSms.setId(id);
-                                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                            } else {
-                                notificationSms.set_date(date);
-                                notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                                if (!notificationSms.get_message().split("\n")[0].equalsIgnoreCase(strText)) {
-                                    notificationSms.set_message(strText);
-                                    notificationSms.set_contact_title(strTitle);
-                                }
-                                if (!statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("Missed call")
-                                        && !strText.toString().equalsIgnoreCase("Missed call")) {
-                                    smsDao.update(notificationSms);
-                                    EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
-                                }
-                            }
-                        }
-                    }
+    private void parseHangOutMessage(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String tickerText, int icon, byte[] largeIcon) {
+        try {
+            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+            if (!strTitle.trim().endsWith("new messages")) {
+                String groupname = "";
+                if (strTitle.contains(":")) {
+                    String[] separated = strTitle.split(":");
+                    strTitle = separated[0];
+                    strText = separated[1] + ": " + strText;
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        else{
-            if (statusBarNotification.getNotification().category == null
-                    || (!statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL) &&
-                    !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_PROGRESS) &&
-                    !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_TRANSPORT) &&
-                    !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_SERVICE) &&
-                    !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.talk")
-                   && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging"))) {
-                try {
-                    DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-                    TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
-                    TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
-                            .where(TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
+                if (statusBarNotification.getNotification().category != null
+                        && !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
+                    TableNotificationSms notificationSms
+                            = DBUtility.getNotificationDao().queryBuilder()
+                            .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
+                                    TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
                                     TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
                             .unique();
                     if (notificationSms == null) {
@@ -693,26 +409,386 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.setId(id);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                     } else {
+                        notificationSms.setPackageName(strPackageName);
                         notificationSms.set_date(date);
                         notificationSms.setNotification_date(statusBarNotification.getPostTime());
-                        notificationSms.set_contact_title(strTitle);
-                        if (strBigText == null) {
-                            notificationSms.set_message(strText);
-                        } else {
-                            notificationSms.set_message(strBigText);
+                        if (!notificationSms.get_message().split("\n")[0].equalsIgnoreCase(strText)) {
+                            notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                            notificationSms.set_contact_title(strTitle);
+                            smsDao.update(notificationSms);
+                            EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                         }
-                        smsDao.update(notificationSms);
-                        EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
+                } else {
+                    if (!strText.equalsIgnoreCase("Incoming voice call")
+                            && !strText.equalsIgnoreCase("Incoming video call")) {
+
+                        if (tickerText.equalsIgnoreCase("Missed call")
+                                && strText.equalsIgnoreCase("Missed call")) {
+                            strText = strTitle;
+                            strTitle = "Missed Call";
+                        } else {
+                            if (strTitle.contains("missed calls")) {
+                                strTitle = "Missed Call";
+                            }
+                        }
+                        TableNotificationSms notificationSms
+                                = DBUtility.getNotificationDao().queryBuilder()
+                                .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
+                                        TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
+                                        TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                                .unique();
+
+                        if (notificationSms == null) {
+                            notificationSms = new TableNotificationSms();
+                            notificationSms.set_contact_title(strTitle);
+                            notificationSms.set_message(strText);
+                            notificationSms.set_date(date);
+                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                            notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                            notificationSms.setPackageName(strPackageName);
+                            notificationSms.setApp_icon(icon);
+                            notificationSms.setUser_icon(largeIcon);
+                            notificationSms.setNotification_id(statusBarNotification.getId());
+                            long id = smsDao.insert(notificationSms);
+                            notificationSms.setId(id);
+                            EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                        } else {
+                            notificationSms.set_date(date);
+                            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                            if (!notificationSms.get_message().split("\n")[0].equalsIgnoreCase(strText)) {
+                                notificationSms.set_message(strText);
+                                notificationSms.set_contact_title(strTitle);
+                            }
+                            if (!tickerText.equalsIgnoreCase("Missed call")
+                                    && !strText.equalsIgnoreCase("Missed call")) {
+                                smsDao.update(notificationSms);
+                                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+                            }
+                        }
+                    }
                 }
             }
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
+    private void parseFacebookLite(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, StringBuilder data, int icon, byte[] largeIcon) {
+        try {
+            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+            TableNotificationSms notificationSms
+                    = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
+                            TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
+                            TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                    .unique();
+            if (notificationSms == null) {
+                notificationSms = new TableNotificationSms();
+                notificationSms.set_contact_title(strTitle);
+                notificationSms.set_message(strText);
+                notificationSms.set_date(date);
+                notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                notificationSms.setPackageName(strPackageName);
+                notificationSms.setApp_icon(icon);
+                notificationSms.setUser_icon(largeIcon);
+                notificationSms.setNotification_id(statusBarNotification.getId());
+                long id = smsDao.insert(notificationSms);
+                notificationSms.setId(id);
+                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+            } else {
+                notificationSms.setPackageName(strPackageName);
+                notificationSms.set_date(date);
+                notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                if (data != null && !data.toString().equalsIgnoreCase("")) {
+                    notificationSms.set_message(data.toString());
+                } else {
+                    notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                }
+                notificationSms.set_contact_title(strTitle);
+                smsDao.update(notificationSms);
+                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+            }
+            if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
+                EventBus.getDefault().post(new NotificationTrayEvent(true));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
+        }
+    }
+
+    private void parseFacebookMessenger(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, int icon, byte[] largeIcon) {
+        try {
+            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+            TableNotificationSms notificationSms
+                    = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
+                            TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
+                            TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                    .unique();
+            if (strTitle != null & !strTitle.equalsIgnoreCase("Chat heads active")) {
+                if (notificationSms == null) {
+                    notificationSms = new TableNotificationSms();
+                    notificationSms.set_contact_title(strTitle);
+                    notificationSms.set_message(strText);
+                    notificationSms.set_date(date);
+                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                    notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                    notificationSms.setPackageName(strPackageName);
+                    notificationSms.setApp_icon(icon);
+                    notificationSms.setUser_icon(largeIcon);
+                    notificationSms.setNotification_id(statusBarNotification.getId());
+                    long id = smsDao.insert(notificationSms);
+                    notificationSms.setId(id);
+                } else {
+                    notificationSms.setPackageName(strPackageName);
+                    notificationSms.set_date(date);
+                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                    notificationSms.set_message(strText + "\n" + notificationSms.get_message());
+                    notificationSms.set_contact_title(strTitle);
+                    smsDao.update(notificationSms);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
+        }
+    }
+
+    private void parseFacebook(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, int icon, byte[] largeIcon) {
+        try {
+            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+            TableNotificationSms notificationSms = new TableNotificationSms();
+            notificationSms.set_contact_title(strTitle);
+            notificationSms.set_message(strText);
+            notificationSms.set_date(date);
+            notificationSms.setNotification_date(statusBarNotification.getPostTime());
+            notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+            notificationSms.setPackageName(strPackageName);
+            notificationSms.setApp_icon(icon);
+            notificationSms.setUser_icon(largeIcon);
+            notificationSms.setNotification_id(statusBarNotification.getId());
+            long id = smsDao.insert(notificationSms);
+            notificationSms.setId(id);
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
+        }
+    }
+
+    private void parseGoogleCalender(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon) {
+        try {
+            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+            TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties._contact_title.eq(strTitle),
+                            TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                    .unique();
+            if (notificationSms == null) {
+                notificationSms = new TableNotificationSms();
+                notificationSms.set_contact_title(strTitle);
+                notificationSms.set_message(strText);
+                notificationSms.set_date(date);
+                notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                notificationSms.setPackageName(strPackageName);
+                notificationSms.setApp_icon(icon);
+                notificationSms.setUser_icon(largeIcon);
+                notificationSms.setNotification_id(statusBarNotification.getId());
+                long id = smsDao.insert(notificationSms);
+                notificationSms.setId(id);
+                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+            } else {
+                notificationSms.set_date(date);
+                notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                notificationSms.set_contact_title(strTitle);
+                if (strBigText == null) {
+                    notificationSms.set_message(strText);
+                } else {
+                    notificationSms.set_message(strBigText);
+                }
+                smsDao.update(notificationSms);
+                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+            }
+
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
+        }
+    }
+
+    private void parseWhatsappMessage(StatusBarNotification statusBarNotification, String strPackageName, Date date, StringBuilder data, int icon, byte[] largeIcon) {
+        DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+        TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+        try {
+            if (statusBarNotification.getNotification().extras != null) {
+                if (Constants.WHATSAPP_PACKAGE.equals(statusBarNotification.getPackageName())) {
+                    Bundle extras = statusBarNotification.getNotification().extras;
+                    String title = "";
+                    String text = "";
+                    Bitmap bitmap = null;
+
+                    if (extras != null) {
+                        title = extras.getCharSequence(NotificationCompat.EXTRA_TITLE) == null ? "" : extras.getCharSequence(NotificationCompat.EXTRA_TITLE).toString();
+                        if (extras.getCharSequence(NotificationCompat.EXTRA_TEXT) == null) {
+                            text = "";
+                        } else {
+                            text = extras.getCharSequence(NotificationCompat.EXTRA_TEXT).toString();
+                        }
+
+                        text = Build.VERSION.SDK_INT >= 21 ? getNotificationTextLegacy(statusBarNotification.getNotification(), text) : getNotificationTextLegacy(statusBarNotification.getNotification(), text);
+                        if (title == null || title.isEmpty() || Constants.WHATSAPP.equals(title.trim())) {
+                            title = getTitleLegacy(text);
+                            text = fixTextLegacy(text);
+                        }
+                        if (!Constants.WHATSAPP.equals(title.trim())) {
+                            String[] text_comp = text.split(" ");
+                            if (text_comp != null && text_comp.length > 0) {
+                                String text_p1 = text_comp[0] != null ? text_comp[0] : "";
+                                if (isInteger(text_p1, 10)) {
+                                    return;
+                                }
+                            }
+                            if (title.contains("@")) {
+                                String title_p1 = title.substring(0, title.indexOf("@")).trim();
+                                title = title.substring(title.indexOf("@") + 1).trim();
+                                text = title_p1 + ": " + text;
+                            }
+                            if (Build.VERSION.SDK_INT > 23) {
+                                title = removeXnewMessageFromSender(title);
+                                if (!"CODE_IGNORE_ME".equals(title)) {
+                                    title = removeColFromTitle(title);
+                                    if (title.contains(":")) {
+                                        return;
+                                    }
+                                } else {
+                                    return;
+                                }
+                            }
+                        } else {
+                            return;
+                        }
+                    }
+
+                    if (statusBarNotification.getNotification().category == null
+                            || !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
+
+                        TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
+                                .where(TableNotificationSmsDao.Properties.PackageName.eq(statusBarNotification.getPackageName()),
+                                        TableNotificationSmsDao.Properties._contact_title.eq(title),
+                                        TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                                .unique();
+                        if (notificationSms == null) {
+                            if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
+                                notificationSms = new TableNotificationSms();
+                                notificationSms.set_contact_title(title);
+                                notificationSms.set_message(text);
+                                notificationSms.set_date(date);
+                                notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                                notificationSms.setPackageName(strPackageName);
+                                notificationSms.setApp_icon(icon);
+                                notificationSms.setUser_icon(largeIcon);
+                                long id = smsDao.insertOrReplace(notificationSms);
+                                notificationSms.setId(id);
+                            }
+                        } else {
+                            if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
+                                notificationSms.set_date(date);
+                                notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
+                                smsDao.updateInTx(notificationSms);
+                            }
+                        }
+                    }
+                    if (statusBarNotification.getNotification().category == null
+                            || statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
+
+                        if (title.toLowerCase().trim().contains("miss")
+                                || title.toLowerCase().trim().contains("missed")) {
+                            if (title.matches(".*\\d.*")) {
+                                // contains a number
+                                title = title.replaceAll("^([0-9]+)", "");
+                            }
+                            TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
+                                    .where(TableNotificationSmsDao.Properties.PackageName.eq(statusBarNotification.getPackageName()),
+                                            TableNotificationSmsDao.Properties._contact_title.eq("Missed call"),
+                                            TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                                    .unique();
+                            if (notificationSms == null) {
+                                if (!title.contains("WhatsApp")) {
+                                    notificationSms = new TableNotificationSms();
+                                    notificationSms.set_contact_title("Missed call");
+                                    notificationSms.set_message(text);
+                                    notificationSms.set_date(date);
+                                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                    notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_EVENT);
+                                    notificationSms.setPackageName(strPackageName);
+                                    notificationSms.setApp_icon(icon);
+                                    notificationSms.setUser_icon(largeIcon);
+                                    long id = smsDao.insertOrReplace(notificationSms);
+                                    notificationSms.setId(id);
+                                }
+                            } else {
+                                if (!title.contains("WhatsApp")) {
+                                    notificationSms.set_date(date);
+                                    notificationSms.setUser_icon(null);
+                                    notificationSms.set_contact_title("Missed call");
+                                    notificationSms.setNotification_date(statusBarNotification.getPostTime());
+                                    if (!data.toString().equalsIgnoreCase("")) {
+                                        notificationSms.set_message(data.toString());
+                                    } else {
+                                        notificationSms.set_message(text + "\n" + notificationSms.get_message());
+                                    }
+                                    smsDao.updateInTx(notificationSms);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+        }
+    }
+
+    /**
+     * For getting the application name from package name.
+     *
+     * @param packageName
+     * @return
+     */
+    private String getAppName(String packageName) {
+        ApplicationInfo ai;
+        try {
+            ai = getPackageManager().getApplicationInfo(packageName, 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
+            ai = null;
+        }
+        return (String) (ai != null ? getPackageManager().getApplicationLabel(ai) : "(unknown)");
+    }
+
+    /**
+     * Send the suppressed notification count to firebase analytics.
+     *
+     * @param strPackageName
+     * @param count
+     */
+    private void logFirebaseCount(String strPackageName, int count) {
+        try {
+            Log.d("Count Suppressed", "PackageName:" + strPackageName + " " + count);
+            FirebaseHelper.getIntance().logSuppressedNotification(getAppName(strPackageName), count);
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
+        }
+    }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification notification) {
@@ -735,13 +811,18 @@ public class SiempoNotificationListener extends NotificationListenerService {
     }
 
     private String getNotificationToString(StatusBarNotification notification) {
-        return "package: " + notification.getPackageName()
-                + "Id: " + notification.getId()
-                + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
-                + " Details: " + notification.getNotification().toString()
-                + " Ticker: " + notification.getNotification().tickerText;
-    }
+        if (notification != null && notification.getPackageName() != null
+                && notification.getNotification() != null && notification.getNotification().tickerText != null) {
+            return "package: " + notification.getPackageName()
+                    + "Id: " + notification.getId()
+                    + " Post time: " + SimpleDateFormat.getDateTimeInstance().format(new Date(notification.getPostTime()))
+                    + " Details: " + notification.getNotification().toString()
+                    + " Ticker: " + notification.getNotification().tickerText;
+        } else {
+            return "";
+        }
 
+    }
 
     private static boolean isInteger(String s, int radix) {
         try {
@@ -761,6 +842,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
             return true;
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             return true;
         }
     }
@@ -798,25 +880,27 @@ public class SiempoNotificationListener extends NotificationListenerService {
     }
 
     private String removeXnewMessageFromSender(String title) {
-        String finalTitle = title;
-        if (finalTitle == null || !finalTitle.contains("(") || !finalTitle.contains(")")) {
-            return finalTitle;
+        if (title == null || !title.contains("(") || !title.contains(")")) {
+            return title;
         }
-        int lastParenthesiIndex = finalTitle.lastIndexOf("(");
-        int lastEndParenthesisIndex = finalTitle.lastIndexOf(")");
+        int lastParenthesiIndex = title.lastIndexOf("(");
+        int lastEndParenthesisIndex = title.lastIndexOf(")");
         if (true) {
             return "CODE_IGNORE_ME";
         }
-        return finalTitle;
+        return title;
     }
 
     private String removeColFromTitle(String title) {
         String finalTitle = title == null ? null : title.trim();
         try {
-            return (finalTitle.length() <= 3 || finalTitle.charAt(finalTitle.length() - 3) != ':') ? finalTitle : finalTitle.substring(0, finalTitle.length() - 3);
+            if (finalTitle != null)
+                return (finalTitle.length() <= 3 || finalTitle.charAt(finalTitle.length() - 3) != ':') ? finalTitle : finalTitle.substring(0, finalTitle.length() - 3);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             return title;
         }
+        return null;
     }
 
 }
