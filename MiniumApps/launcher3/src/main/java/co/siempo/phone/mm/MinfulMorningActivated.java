@@ -28,6 +28,7 @@ import co.siempo.phone.db.ActivitiesStorage;
 import co.siempo.phone.db.ActivitiesStorageDao;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.pause.PausePreferenceFragment_;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
@@ -130,6 +131,7 @@ public class MinfulMorningActivated extends CoreFragment {
                 }
 
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }

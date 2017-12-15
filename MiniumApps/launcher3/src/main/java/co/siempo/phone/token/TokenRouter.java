@@ -16,6 +16,8 @@ import android.widget.Toast;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import co.siempo.phone.BuildConfig;
+import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
@@ -23,6 +25,7 @@ import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.DataUtils;
@@ -37,10 +40,6 @@ public class TokenRouter {
 
     void route() {
         EventBus.getDefault().post(new TokenUpdateEvent());
-    }
-
-    private void handleContacts(int ind) {
-
     }
 
     void setCurrent(TokenItem tokenItem) {
@@ -64,7 +63,7 @@ public class TokenRouter {
 
     public void createContact(Context context) {
         String inputStr = TokenManager.getInstance().getCurrent().getTitle();
-        if (inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta)) && inputStr.equalsIgnoreCase(Constants.ALPHA_SETTING)) {
             if (droidPrefs_.isAlphaSettingEnable().get()) {
                 if (PhoneNumberUtils.isGlobalPhoneNumber(inputStr)) {
                     context.startActivity(new Intent(Intent.ACTION_INSERT).setType(ContactsContract.Contacts.CONTENT_TYPE).putExtra(ContactsContract.Intents.Insert.PHONE, inputStr));
@@ -149,6 +148,7 @@ public class TokenRouter {
                 route();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
 //            UIUtils.toast(context, "The message will not get sent.");
         }
@@ -169,6 +169,7 @@ public class TokenRouter {
         try {
             activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + TokenManager.getInstance().get(TokenItemType.CONTACT).getExtra2())));
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }

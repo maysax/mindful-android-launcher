@@ -25,7 +25,6 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -34,7 +33,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -80,6 +78,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     private boolean isOnStopCalled = false;
     UserPresentBroadcastReceiver userPresentBroadcastReceiver;
     public static File localPath, backupPath;
+
     // Static method to return File at localPath
     public static File getLocalPath() {
         return localPath;
@@ -89,8 +88,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     public static File getBackupPath() {
         return backupPath;
     }
-
-
 
 
     @Override
@@ -119,21 +116,21 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 //                if (CoreApplication.getInstance().isEditNotOpen()) {
 //                    EventBus.getDefault().post(new HomePressEvent(true));
 //                } else {
-                    EventBus.getDefault().post(new HomePressEvent(true));
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                                if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
+                EventBus.getDefault().post(new HomePressEvent(true));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                            if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
+                                loadDialog();
+                        } else {
+                            if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
+                                if (Settings.canDrawOverlays(CoreActivity.this)) {
                                     loadDialog();
-                            } else {
-                                if (!isOnStopCalled && !UIUtils.isMyLauncherDefault(CoreActivity.this))
-                                    if (Settings.canDrawOverlays(CoreActivity.this)) {
-                                        loadDialog();
-                                    }
-                            }
+                                }
                         }
-                    }, 1000);
+                    }
+                }, 1000);
 //                }
             }
 
@@ -162,51 +159,52 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
 
         @Override
         public void onReceive(Context arg0, Intent intent) {
-            if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-                if (mTestView != null && mTestView.getVisibility() == View.INVISIBLE) {
-                    //if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
-                    Intent startMain = new Intent(Intent.ACTION_MAIN);
-                    startMain.addCategory(Intent.CATEGORY_HOME);
-                    startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(startMain);
-                    //  }
-                    mTestView.setVisibility(View.VISIBLE);
-                } else {
-                    if (mTestView != null)
+            if (intent != null && intent.getAction() != null) {
+                if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
+                    if (mTestView != null && mTestView.getVisibility() == View.INVISIBLE) {
+                        //if (Build.MANUFACTURER.equalsIgnoreCase("Samsung")) {
+                        Intent startMain = new Intent(Intent.ACTION_MAIN);
+                        startMain.addCategory(Intent.CATEGORY_HOME);
+                        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(startMain);
+                        //  }
                         mTestView.setVisibility(View.VISIBLE);
-                }
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                if (mTestView != null) mTestView.setVisibility(View.INVISIBLE);
-                if (CoreApplication.getInstance().getMediaPlayer() != null) {
-                    CoreApplication.getInstance().getMediaPlayer().stop();
-                    CoreApplication.getInstance().getMediaPlayer().reset();
-                    CoreApplication.getInstance().setmMediaPlayer(null);
-                    CoreApplication.getInstance().getVibrator().cancel();
-                    CoreApplication.getInstance().declinePhone();
-                }
-                if (CoreApplication.getInstance().isCallisRunning()) {
-                    CoreApplication.getInstance().declinePhone();
-                }
-            }
-            else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                KeyguardManager myKM = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-                boolean locked = myKM.inKeyguardRestrictedInputMode();
-                boolean isHideNotificationOnLockScreen = launcherPrefs.getBoolean("isHidenotificationOnLockScreen", true);
-                if (locked && isSiempoLauncher(getApplicationContext()) && isHideNotificationOnLockScreen) {
-                    int icon = minium.co.core.R.drawable.ic_tooltip;
-                    NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    } else {
+                        if (mTestView != null)
+                            mTestView.setVisibility(View.VISIBLE);
+                    }
+                } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                    if (mTestView != null) mTestView.setVisibility(View.INVISIBLE);
+                    if (CoreApplication.getInstance().getMediaPlayer() != null) {
+                        CoreApplication.getInstance().getMediaPlayer().stop();
+                        CoreApplication.getInstance().getMediaPlayer().reset();
+                        CoreApplication.getInstance().setMediaPlayerNull();
+                        CoreApplication.getInstance().getVibrator().cancel();
+                        CoreApplication.getInstance().declinePhone();
+                    }
+                    if (CoreApplication.getInstance().isCallisRunning()) {
+                        CoreApplication.getInstance().declinePhone();
+                    }
+                } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                    KeyguardManager myKM = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+                    boolean locked = myKM.inKeyguardRestrictedInputMode();
+                    boolean isHideNotificationOnLockScreen = launcherPrefs.getBoolean("isHidenotificationOnLockScreen", true);
+                    if (locked && isSiempoLauncher(getApplicationContext()) && isHideNotificationOnLockScreen) {
+                        int icon = minium.co.core.R.drawable.ic_tooltip;
+                        NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-                    int notifyID = 96;
-                    NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(getApplicationContext())
-                            .setContentTitle("SiempoApp")
-                            .setSortKey("SiempoLockScreeen")
-                            .setDefaults(android.app.Notification.DEFAULT_ALL)
-                            .setAutoCancel(true)
-                            .setSmallIcon(icon);
+                        int notifyID = 96;
+                        NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(getApplicationContext())
+                                .setContentTitle("SiempoApp")
+                                .setSortKey("SiempoLockScreeen")
+                                .setDefaults(android.app.Notification.DEFAULT_ALL)
+                                .setAutoCancel(true)
+                                .setSmallIcon(icon);
 
-                    android.app.Notification notification = mNotifyBuilder.build();
-                    mNotificationManager.notify(notifyID, notification);
+                        android.app.Notification notification = mNotifyBuilder.build();
+                        mNotificationManager.notify(notifyID, notification);
 
+                    }
                 }
             }
         }
@@ -319,6 +317,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 Config.isNotificationAlive = false;
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         isOnStopCalled = true;
@@ -356,6 +355,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             fragmentManager.popBackStack();
             t.commitAllowingStateLoss();
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
@@ -403,6 +403,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                 getFragmentManager().popBackStack();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -416,6 +417,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(installIntent);
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }

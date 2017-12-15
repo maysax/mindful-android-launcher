@@ -22,6 +22,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
+import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
@@ -61,6 +62,18 @@ public class AppListNotification  extends CoreActivity {
     private ArrayList<String> disableSectionList= new ArrayList<>();
     private List<String> systemAppList = new ArrayList<>();
 
+    long startTime = 0;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(AppListNotification.class.getSimpleName(),startTime);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

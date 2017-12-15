@@ -27,16 +27,17 @@ public class FirebaseHelper {
     public static String ACTION_APPLICATION_PICK = "application_picked";
 
     // Screen Name
-    public static String MENU_SCREEN = "menu_screen";
+    private static String MENU_SCREEN = "menu_screen";
     public static String IF_SCREEN = "if_screen";
 
 
     //Event
-    public static String IF_ACTION = "if_action";
+    private static String IF_ACTION = "if_action";
     public static String SIEMPO_MENU = "siempo_menu";
-    public static String THIRD_PARTY_APPLICATION = "third_party";
-    public static String SCREEN_USAGE = "screen_usage";
-    public static String SIEMPO_DEFAULT = "siempo_default";
+    private static String THIRD_PARTY_APPLICATION = "third_party";
+    private static String SCREEN_USAGE = "screen_usage";
+    private static String SIEMPO_DEFAULT = "siempo_default";
+    private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -46,6 +47,7 @@ public class FirebaseHelper {
     private String INTENT_FROM = "intent_from";
     private String ACTION = "action";
     private String IF_DATA = "if_data";
+    private String SUPPRESSED_COUNT = "suppressed_count";
 
     public FirebaseHelper() {
 
@@ -71,9 +73,7 @@ public class FirebaseHelper {
      */
     public void logScreenUsageTime(String screenName, long startTime) {
         String strTime = getTime(startTime, System.currentTimeMillis());
-        if (strTime.equalsIgnoreCase("0")) {
-//            Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-        } else {
+        if (!strTime.equalsIgnoreCase("0")) {
             Bundle bundle = new Bundle();
             bundle.putString(SCREEN_NAME, screenName);
             bundle.putString(TIME_SPENT, strTime);
@@ -81,6 +81,20 @@ public class FirebaseHelper {
             getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
+    }
+
+
+    /**
+     * Used for suppressed notification count by package name.
+     *
+     * @param count
+     */
+    public void logSuppressedNotification(String applicationName, long count) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(SUPPRESSED_COUNT, count);
+        bundle.putString(APPLICATION_NAME, applicationName);
+        Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
     }
 
     /**
@@ -144,9 +158,7 @@ public class FirebaseHelper {
         bundle.putString(ACTION, action);
         if (startTime != 0) {
             String strTime = getTime(startTime, System.currentTimeMillis());
-            if (strTime.equalsIgnoreCase("0")) {
-//                Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-            } else {
+            if (!strTime.equalsIgnoreCase("0")) {
                 bundle.putString(TIME_SPENT, strTime);
                 Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
                 getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
@@ -189,14 +201,11 @@ public class FirebaseHelper {
             String str[] = strMilli.split("\\.");
             strSecond = Long.parseLong(str[0]);
             strMilliSecond = str[1];
-            if (days == 0 && hours == 0 && minutes == 0 && strSecond == 0) {
-               // Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-            } else {
-                strTime = "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", strSecond)  + ":" + strMilliSecond;
+            if (days != 0 || hours != 0 || minutes != 0 || strSecond != 0) {
+                strTime = "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", strSecond) + ":" + strMilliSecond;
             }
-        } catch (ArithmeticException e) {
-            e.printStackTrace();
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         return strTime;

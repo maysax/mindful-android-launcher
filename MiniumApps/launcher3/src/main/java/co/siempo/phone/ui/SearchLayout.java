@@ -24,6 +24,7 @@ import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenUpdateEvent;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.util.UIUtils;
 
 
@@ -147,6 +148,7 @@ public class SearchLayout extends CardView {
             }
             catch (Exception e){
                 e.printStackTrace();
+                CoreApplication.getInstance().logException(e);
             }
         }
     };
@@ -161,7 +163,7 @@ public class SearchLayout extends CardView {
         }
 
         if (isWatching) {
-            EventBus.getDefault().post(new SearchLayoutEvent(s.toString()));
+            EventBus.getDefault().post(new SearchLayoutEvent(s));
         }
     }
 

@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 
 import minium.co.core.BuildConfig;
 import minium.co.core.R;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.ui.CoreActivity;
 
 
@@ -233,6 +234,7 @@ public class UIUtils {
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName, 0);
         } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         if (applicationInfo == null) {
@@ -273,6 +275,7 @@ public class UIUtils {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         return BuildConfig.VERSION_CODE;

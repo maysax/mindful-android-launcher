@@ -22,15 +22,13 @@ public class PreferenceListAdapter extends ArrayAdapter<ResolveInfo> {
     private Context context;
 
     private List<ResolveInfo> data = null;
-    int pos;
-    ListView listView;
+    private int pos;
 
     public PreferenceListAdapter(Context context, ListView listView, List<ResolveInfo> items, int pos) {
         super(context, 0);
         this.context = context;
         this.data = items;
         this.pos = pos;
-        this.listView = listView;
     }
 
     @Override
@@ -73,10 +71,8 @@ public class PreferenceListAdapter extends ArrayAdapter<ResolveInfo> {
                 holder.text.setText(context.getResources().getText(R.string.siempo_note));
                 holder.icon.setImageDrawable(context.getDrawable(R.mipmap.ic_launcher));
             } else {
-                if (item != null) {
-                    holder.text.setText(item.loadLabel(context.getPackageManager()));
-                    holder.icon.setImageDrawable(item.loadIcon(context.getPackageManager()));
-                }
+                holder.text.setText(item.loadLabel(context.getPackageManager()));
+                holder.icon.setImageDrawable(item.loadIcon(context.getPackageManager()));
             }
         } else {
             if (item != null) {

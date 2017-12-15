@@ -59,7 +59,7 @@ public class TempoFragment extends CoreFragment {
     @SystemService
     AlarmManager alarmMgr;
 
-    PendingIntent alarmIntent;
+    private PendingIntent alarmIntent;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;

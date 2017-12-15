@@ -34,6 +34,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.util.PackageUtil;
@@ -41,7 +42,6 @@ import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -62,10 +62,10 @@ public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
     private ImageView icon_launcher, icon_KeyBoardNotification,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp,icon_AppNotifications,icon_SuppressedNotifications;
     private TextView txt_version;
-    private LinearLayout ln_launcher, ln_version, ln_Feedback,ln_Faq, ln_changeDefaultApp,ln_AppListNotifications,ln_suppressedNotifications;
-    private String TAG = "SiempoSettingsActivity";
+    private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_Faq, ln_changeDefaultApp, ln_AppListNotifications;
+    private final String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
-    AppUpdaterUtils appUpdaterUtils;
+    private AppUpdaterUtils appUpdaterUtils;
     private ImageView icon_hideNotification;
     private SwitchCompat switch_notification;
     private SwitchCompat switch_KeyBoardnotification;
@@ -74,10 +74,12 @@ public class SiempoSettingsActivity extends CoreActivity {
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
+    private long startTime=0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event.isRunning()) {
+
             ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
         }
     }
@@ -95,7 +97,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     }
 
 
-    public void initView() {
+    private void initView() {
         context = SiempoSettingsActivity.this;
         icon_launcher = findViewById(R.id.icon_launcher);
         icon_version = findViewById(R.id.icon_version);
@@ -106,9 +108,9 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_Faq = findViewById(R.id.icon_Faq);
         icon_AppNotifications = findViewById(R.id.icon_AppNotifications);
         txt_version = findViewById(R.id.txt_version);
-        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
             txt_version.setText("Version : " + "ALPHA-" + BuildConfig.VERSION_NAME);
-        } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
             txt_version.setText("Version : " + "BETA-" + BuildConfig.VERSION_NAME);
         }
 
@@ -233,9 +235,9 @@ public class SiempoSettingsActivity extends CoreActivity {
                                         appUpdaterUtils = null;
                                     } else {
                                         Log.d(TAG, "check version from AWS");
-                                        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                                        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
                                             ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
-                                        } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                                        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
                                             ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.BETA);
                                         }
 
@@ -279,12 +281,12 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startTime = System.currentTimeMillis();
         PackageUtil.checkPermission(this);
     }
 
     @Override
     protected void onStop() {
-
         super.onStop();
         currentIndex = 0;
     }
@@ -292,18 +294,14 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoSettingsActivity.this.getClass().getSimpleName(),startTime);
     }
 
     /**
      * This function is use to check current app version with play store version
      * and display alert if update is available using Appupdater library.
      */
-    public void checkVersionFromAppUpdater() {
+    private void checkVersionFromAppUpdater() {
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -366,7 +364,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         }
     }
 
-    public void initProgressDialog() {
+    private void initProgressDialog() {
         try {
             //noinspection deprecation
             if (pd == null) {
@@ -377,26 +375,11 @@ public class SiempoSettingsActivity extends CoreActivity {
                 pd.show();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             //WindowManager$BadTokenException will be caught here
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-
-    }
 
 }

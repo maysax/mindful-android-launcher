@@ -11,6 +11,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
@@ -31,7 +32,6 @@ public class SiempoMainSettingsActivity extends CoreActivity {
     private ArrayList<SettingsData> arr_menuList;
     private SettingsAdapter adapter;
     private Context context;
-    private final String TAG = "SiempoMainSetting";
     private long startTime = 0;
 
     @Pref
@@ -50,7 +50,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         onClickEvents();
     }
 
-    public void onClickEvents() {
+    private void onClickEvents() {
         lst_settings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -74,7 +74,7 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         });
     }
 
-    public void initView() {
+    private void initView() {
         context = SiempoMainSettingsActivity.this;
         lst_settings = findViewById(R.id.lst_settings);
 
@@ -91,13 +91,20 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         s2.setId(2);
         arr_menuList.add(s2);
 
-
-        if (droidPrefs_.isAlphaSettingEnable().get()) {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
             SettingsData s3 = new SettingsData();
             s3.setSettingType(getString(R.string.str_siempo_alphasettings));
             s3.setId(3);
             arr_menuList.add(s3);
+        } else {
+            if (droidPrefs_.isAlphaSettingEnable().get()) {
+                SettingsData s3 = new SettingsData();
+                s3.setSettingType(getString(R.string.str_siempo_alphasettings));
+                s3.setId(3);
+                arr_menuList.add(s3);
+            }
         }
+
 
         adapter = new SettingsAdapter(this, arr_menuList);
         lst_settings.setAdapter(adapter);

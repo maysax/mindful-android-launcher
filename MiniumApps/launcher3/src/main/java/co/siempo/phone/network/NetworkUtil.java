@@ -11,21 +11,22 @@ import android.provider.Settings;
 
 
 public class NetworkUtil {
-    public static int TYPE_WIFI = 1;
-    public static int TYPE_MOBILE = 2;
-    public static int TYPE_NOT_CONNECTED = 0;
+    public static final int TYPE_WIFI = 1;
+    public static final int TYPE_MOBILE = 2;
+    public static final int TYPE_NOT_CONNECTED = 0;
 
     public static int getConnectivityStatus(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            if (null != activeNetwork) {
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
+                    return TYPE_WIFI;
 
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (null != activeNetwork) {
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
-                return TYPE_WIFI;
-
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
-                return TYPE_MOBILE;
+                if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
+                    return TYPE_MOBILE;
+            }
         }
         return TYPE_NOT_CONNECTED;
     }
@@ -41,10 +42,6 @@ public class NetworkUtil {
             status = "Not connected to Internet";
         }
         return status;
-    }
-
-    public static boolean isWifiOn(Context context) {
-        return getConnectivityStatus(context) == TYPE_WIFI;
     }
 
     public static boolean isAirplaneModeOn(Context context) {

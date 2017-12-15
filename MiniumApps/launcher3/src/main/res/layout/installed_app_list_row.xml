@@ -50,9 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:layout_centerHorizontal="true"
-            android:textOn="On"
-            android:textOff="Off"
+            android:textOn="@string/on"
+            android:textOff="@string/off"
             android:visibility="gone"
             android:gravity="center"/>
     </LinearLayout>

@@ -21,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -74,7 +73,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     private static final String TAG = "MainActivity";
 
-    public static int currentItem =-1;
+    public static int currentItem = -1;
     @ViewById
     ViewPager pager;
 
@@ -248,17 +247,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 if (currentItem != -1 && currentItem != position) {
                     if (position == 0) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+                        startTime = System.currentTimeMillis();
                     } else if (position == 1) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+                        startTime = System.currentTimeMillis();
                     }
                 }
                 currentItem = position;
                 try {
-                    if (position == 1)
+                    if (position == 1 && getCurrentFocus() != null)
                         //noinspection ConstantConditions
                         UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
                 } catch (Exception e) {
                     e.printStackTrace();
+                    CoreApplication.getInstance().logException(e);
                 }
             }
 
@@ -304,11 +306,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void logFirebase() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
+                Tracer.d(String.format("Device Id ::%s", telephonyManager.getDeviceId()));
                 FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
             }
         } else {
-            Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
+            Tracer.d(String.format("Device Id ::%s", telephonyManager.getDeviceId()));
             FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
         }
     }
@@ -386,6 +388,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 //            startActivity(defineIntent);
         //manager.clear();
 //        } catch (Exception e) {
+//        CoreApplication.getInstance().logException(e);
 //            Tracer.e(e, e.getMessage());
 //        }
     }
@@ -416,6 +419,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             enableNfc(true);
         } catch (Exception e) {
             Tracer.e(e);
+            CoreApplication.getInstance().logException(e);
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
@@ -486,6 +490,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         } catch (Exception e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
     }
@@ -537,9 +542,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                 appUpdaterUtils = null;
                             } else {
                                 Log.d(TAG, "check version from AWS");
-                                if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                                if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
                                     ApiClient_.getInstance_(MainActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
-                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.beta))) {
                                     ApiClient_.getInstance_(MainActivity.this).checkAppVersion(CheckVersionEvent.BETA);
                                 }
                             }
@@ -558,8 +563,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
-
 
 
     public void notificatoinAccessDialog() {

@@ -19,13 +19,12 @@ import de.greenrobot.event.EventBus;
  * Created by tkb on 2017-02-24.
  */
 
-@SuppressWarnings("ALL")
 public class TempoRecyclerViewAdapter extends RecyclerView.Adapter<TempoRecyclerViewAdapter.ViewHolder> {
 
-    ArrayList<TempoDataModel> SubjectValues;
-    Context context;
-    View view1;
-    ViewHolder viewHolder1;
+    private final ArrayList<TempoDataModel> SubjectValues;
+    private final Context context;
+    private View view1;
+    private ViewHolder viewHolder1;
 
     public TempoRecyclerViewAdapter(Context context1, ArrayList<TempoDataModel> subjectValues) {
 
@@ -35,15 +34,15 @@ public class TempoRecyclerViewAdapter extends RecyclerView.Adapter<TempoRecycler
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textView;
-        public CheckBox option_checkbox;
+        private TextView textView;
+        private  CheckBox option_checkbox;
 
         public ViewHolder(View v) {
 
             super(v);
 
-            textView = (TextView) v.findViewById(R.id.name_textview);
-            option_checkbox = (CheckBox) v.findViewById(R.id.option_checkbox);
+            textView = v.findViewById(R.id.name_textview);
+            option_checkbox = v.findViewById(R.id.option_checkbox);
         }
     }
 

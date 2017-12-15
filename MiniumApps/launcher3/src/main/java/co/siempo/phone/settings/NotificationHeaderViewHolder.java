@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.HeaderAppList;
-import minium.co.core.app.CoreApplication;
 
 public class NotificationHeaderViewHolder extends RecyclerView.ViewHolder {
 

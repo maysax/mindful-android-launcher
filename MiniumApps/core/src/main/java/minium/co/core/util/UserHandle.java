@@ -5,6 +5,8 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Process;
 
+import minium.co.core.app.CoreApplication;
+
 
 /**
  * Wrapper class for `android.os.UserHandle` that works with all Android versions
@@ -66,6 +68,7 @@ public class UserHandle {
             try {
                 serial = Long.parseLong(serialText);
             } catch (NumberFormatException e) {
+                CoreApplication.getInstance().logException(e);
             }
         }
 
