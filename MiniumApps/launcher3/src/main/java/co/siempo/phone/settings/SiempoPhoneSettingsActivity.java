@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -188,11 +189,12 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void onBuildHeaders(List<Header> target) {
 
-        if (Build.MANUFACTURER.equalsIgnoreCase(Constants.HUAWEI)) {
-            loadHeadersFromResource(R.xml.pref_headers_huawei, target);
-        } else {
-            loadHeadersFromResource(R.xml.pref_headers, target);
-        }
+        loadHeadersFromResource(R.xml.pref_headers, target);
+//        if (Build.MANUFACTURER.equalsIgnoreCase(Constants.HUAWEI)) {
+//            loadHeadersFromResource(R.xml.pref_headers_huawei, target);
+//        } else {
+//
+//        }
 
     }
 
@@ -529,6 +531,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         private void checkPreferenceAvailable(String string, String actionNfcPaymentSettings) {
             try {
                 Preference preference = findPreference(string);
+
                 Intent intent = new Intent(actionNfcPaymentSettings);
                 if (!isAvailable(getActivity(), intent)) {
                     PreferenceScreen preferenceScreen = getPreferenceScreen();
@@ -539,6 +542,31 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     preference.setIntent(intent);
                     bindPreferenceSummaryToValue(preference);
                 }
+
+                //This is the listener for Preference being clicked
+                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        //In case if the device is Huawei and Users
+                        // preference is clicked then it will throw Security
+                        // Exception hence to prevent it we will handle the
+                        // click by showing a message and not navigating to
+                        // the activity
+                        if (preference.getTitle().toString().equalsIgnoreCase
+                                (getString(R.string.pref_users)) && Build
+                                .MANUFACTURER
+                                .equalsIgnoreCase(Constants.HUAWEI)) {
+                            Toast.makeText(getActivity(), "This feature is not " +
+                                    "supported in your device", Toast
+                                    .LENGTH_SHORT).show();
+                            return true;
+                        } else {
+                            return false;
+
+                        }
+
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -550,6 +578,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
             if (view != null) {
                 ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
+
             }
             return view;
         }
