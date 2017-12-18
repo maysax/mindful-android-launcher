@@ -264,4 +264,5 @@
     <string name="off">Off</string>
     <string name="beta">beta</string>
     <string name="alpha">alpha</string>
+    <string name="huawei_limitation">This feature is not supported in Huawei device</string>
 </resources>
