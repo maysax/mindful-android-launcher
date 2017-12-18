@@ -217,7 +217,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -323,7 +323,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -530,8 +530,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                                 (getString(R.string.pref_users)) && Build
                                 .MANUFACTURER
                                 .equalsIgnoreCase(Constants.HUAWEI)) {
-                            Toast.makeText(getActivity(), "This feature is not " +
-                                    "supported in your device", Toast
+                            Toast.makeText(getActivity(), R.string.huawei_limitation, Toast
                                     .LENGTH_SHORT).show();
                             return true;
                         } else {
