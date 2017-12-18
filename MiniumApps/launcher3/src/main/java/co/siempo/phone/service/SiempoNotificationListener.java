@@ -34,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
@@ -121,7 +122,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
 
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (PackageUtil.isSiempoLauncher(this) && (myKM != null ? myKM.inKeyguardRestrictedInputMode() : false) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
+            if (PackageUtil.isSiempoLauncher(this) && (myKM != null && myKM.inKeyguardRestrictedInputMode()) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
                 SiempoNotificationListener.this.cancelAllNotifications();
             }
             if (PackageUtil.isSiempoLauncher(this) && notification.getNotification().getSortKey() != null && notification.getNotification().getSortKey().equalsIgnoreCase(getResources().getString(R.string.lock_screen_label)) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
@@ -286,11 +287,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
             CoreApplication.getInstance().logException(e);
             Tracer.d(e.getMessage());
         }
-        String strCount;
+        String strCount = null;
         try {
             if (statusBarNotification.getNotification().extras.getCharSequence(NotificationCompat.EXTRA_SUMMARY_TEXT) != null) {
                 strCount = statusBarNotification.getNotification().extras.getCharSequence(NotificationCompat.EXTRA_SUMMARY_TEXT).toString();
-                if (Character.isDigit(strCount.charAt(0))) {
+                if (strCount != null && Character.isDigit(strCount.charAt(0))) {
                     String str[] = strCount.split(" ");
                     int count = Integer.parseInt(str[0]);
                     logFirebaseCount(strPackageName, count);
@@ -322,12 +323,25 @@ public class SiempoNotificationListener extends NotificationListenerService {
             //Parse HangOut message
         else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_HANGOUTS_PACKAGES))
             parseHangOutMessage(statusBarNotification, strPackageName, strTitle, strText, date, tickerText, icon, largeIcon);
-        else
-            parseOtherMessages(statusBarNotification, strPackageName, strTitle, strText, date, strBigText, icon, largeIcon);
+        else {
+            parseOtherMessages(statusBarNotification, strPackageName, strTitle, strText, date, strBigText, icon, largeIcon, strCount);
+            try {
+                if (strCount == null || !Character.isDigit(strCount.charAt(0))) {
+                    List<TableNotificationSms> notificationSms
+                            = DBUtility.getNotificationDao().queryBuilder()
+                            .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
+                                    TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                            .list();
+                    logFirebaseCount(strPackageName, notificationSms.size());
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+            }
+        }
 
     }
 
-    private void parseOtherMessages(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon) {
+    private void parseOtherMessages(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon, String strCount) {
         if (statusBarNotification.getNotification().category == null
                 || (!statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL) &&
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_PROGRESS) &&
@@ -469,6 +483,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     }
                 }
             }
+            List<TableNotificationSms> notificationSms
+                    = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties.PackageName.eq(strPackageName),
+                            TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                    .list();
+            int count = 0;
+            for (TableNotificationSms tableNotificationSms : notificationSms) {
+                count = count + tableNotificationSms.get_message().split("\n").length;
+            }
+            logFirebaseCount(strPackageName, count);
         } catch (Exception e) {
             e.printStackTrace();
         }
