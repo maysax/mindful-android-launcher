@@ -154,6 +154,8 @@ public class ActivityHelper {
                 CoreApplication.getInstance().logException(e);
                 UIUtils.alert(context, context.getString(R.string.app_not_found));
             }
+        } else {
+            UIUtils.alert(context, context.getString(R.string.app_not_found));
         }
     }
 
@@ -184,28 +186,25 @@ public class ActivityHelper {
     }
 
 
-    public boolean openSiempoSuppressNotificationsSettings() {
+    public void openSiempoSuppressNotificationsSettings() {
         try {
-            Intent i = new Intent(context,SiempoSupressNotificationActivity.class);
+            Intent i = new Intent(context, SiempoSupressNotificationActivity.class);
             context.startActivity(i);
-            return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
+            CoreApplication.getInstance().logException(e);
         }
-        return false;
     }
 
 
-
-    public boolean openAppListNotifications() {
+    public void openAppListNotifications() {
         try {
-            Intent i = new Intent(context,AppListNotification.class);
+            Intent i = new Intent(context, AppListNotification.class);
             context.startActivity(i);
-            return true;
         } catch (Exception e) {
             Tracer.e(e, e.getMessage());
+            CoreApplication.getInstance().logException(e);
         }
-        return false;
     }
 
     public void openSiempoSettingsApp() {
