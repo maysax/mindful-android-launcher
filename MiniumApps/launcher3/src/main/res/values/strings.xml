@@ -264,5 +264,18 @@
     <string name="off">Off</string>
     <string name="beta">beta</string>
     <string name="alpha">alpha</string>
-    <string name="huawei_limitation">This feature is not supported in Huawei device</string>
+    <string name="huawei_limitation">This feature is not supported in Huawei devices</string>
+    <string name="app_permission">App permission</string>
+    <string name="contact_permission">Contacts</string>
+    <string name="call_permission">Calls</string>
+    <string name="sms_permission">SMS</string>
+    <string name="video_permission">Pictures and Videos</string>
+    <string name="storage_permission">Access File Manager</string>
+    <string name="notificationAccess">Notification access</string>
+    <string name="draw_overlay">Draw over other Apps</string>
+    <string name="usageStatistics">Usage statistics</string>
+    <string name="label.drawingOver">Drawing over other apps</string>
+    <string name="permission_title">Please enable the following services to allow the app to work correctly:</string>
+    <string name="permission_rejected_text"><![CDATA[As you have rejected this permission, app can not provide you the seamless integration.  Please consider turn on permissions at Setting > Permission]]></string>
+    <string name="grant_all_to_proceed_text">Please grant all the permissions to proceed</string>
 </resources>
