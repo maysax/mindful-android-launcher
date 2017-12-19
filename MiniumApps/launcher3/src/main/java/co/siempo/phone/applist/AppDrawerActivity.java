@@ -1,6 +1,7 @@
 package co.siempo.phone.applist;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import minium.co.core.ui.CoreActivity;
 public class AppDrawerActivity extends CoreActivity {
 
 
+    public static final int UNINSTALL_APP_REQUEST_CODE = 2;
     private List<ApplicationInfo> arrayList = new ArrayList<>();
 
     @ViewById
@@ -158,4 +160,14 @@ public class AppDrawerActivity extends CoreActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode==RESULT_OK && requestCode== UNINSTALL_APP_REQUEST_CODE)
+        {
+
+        }
+
+    }
 }

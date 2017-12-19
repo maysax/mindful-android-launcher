@@ -1,9 +1,14 @@
 package co.siempo.phone.applist;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,6 +103,76 @@ class InstalledAppListAdapter extends RecyclerView.Adapter<InstalledAppListAdapt
                 }
             }
         });
+
+
+        holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+
+                View view = context.getLayoutInflater().inflate(R.layout
+                        .installed_app_bottom_sheet, null);
+                TextView txtDetail = view.findViewById(R.id.txt_detail);
+                final TextView txtUninstall = view.findViewById(R.id.txt_uninstall);
+
+                final Dialog mBottomSheetDialog = new Dialog(context, R.style
+                        .MaterialDialogSheet);
+                mBottomSheetDialog.setContentView(view);
+                mBottomSheetDialog.setCancelable(true);
+                mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
+                mBottomSheetDialog.show();
+
+
+                txtDetail.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            //Open the specific App Info page:
+                            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            intent.setData(Uri.parse("package:" + applicationInfo.packageName));
+                            context.startActivity(intent);
+
+                        } catch ( ActivityNotFoundException e ) {
+                            //e.printStackTrace();
+
+                            //Open the generic Apps page:
+                            Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+                            context.startActivity(intent);
+
+                        }
+                        mBottomSheetDialog.dismiss();
+                    }
+                });
+
+
+                txtUninstall.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        try {
+
+
+                            Intent intent = new Intent(Intent.ACTION_UNINSTALL_PACKAGE);
+                            intent.setData(Uri.parse("package:" + applicationInfo.packageName));
+                            intent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
+                            context.startActivityForResult(intent,
+                                    AppDrawerActivity.UNINSTALL_APP_REQUEST_CODE);
+                        } catch (Exception e) {
+                            Tracer.e(e, e.getMessage());
+                        }
+
+                        mBottomSheetDialog.dismiss();
+
+                    }
+                });
+                return false;
+            }
+        });
+
+
+
     }
 
     @Override
