@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.util.UIUtils;
 import minium.co.notes.R;
@@ -30,19 +31,21 @@ public class NoteEventReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals("minium.co.notes.CREATE_NOTES")) {
-            Tracer.d("minium.co.notes.CREATE_NOTES received");
+        if (intent != null && intent.getAction() != null) {
+            if (intent.getAction().equals("minium.co.notes.CREATE_NOTES")) {
+                Tracer.d("minium.co.notes.CREATE_NOTES received");
 
-            saveNotes(context, intent);
+                saveNotes(context, intent);
 
-        } else if (intent.getAction().equals("minium.co.notes.EDIT_NOTES")) {
-            Tracer.d("minium.co.notes.EDIT_NOTES received");
+            } else if (intent.getAction().equals("minium.co.notes.EDIT_NOTES")) {
+                Tracer.d("minium.co.notes.EDIT_NOTES received");
+            }
         }
     }
 
     private void saveNotes(Context context, Intent intent) {
 
-        JSONObject newNoteObject = null;
+        JSONObject newNoteObject;
         File localPath = new File(context.getFilesDir() + "/" + NOTES_FILE_NAME);
 
         // Init notes array
@@ -74,6 +77,7 @@ public class NoteEventReceiver extends BroadcastReceiver {
             Tracer.d("New note: " + newNoteObject);
 
         } catch (JSONException e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
 

@@ -19,7 +19,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.CallStorageDao;
 import co.siempo.phone.db.DBUtility;
@@ -60,7 +59,7 @@ public class TempoFragment extends CoreFragment {
     @SystemService
     AlarmManager alarmMgr;
 
-    PendingIntent alarmIntent;
+    private PendingIntent alarmIntent;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;

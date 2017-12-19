@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -83,6 +82,8 @@ public abstract class CoreApplication extends MultiDexApplication {
         return sInstance;
     }
 
+    private Crashlytics crashlytics;
+
     private RefWatcher refWatcher;
     public boolean siempoBarLaunch = true;
     UserManager userManager;
@@ -91,6 +92,12 @@ public abstract class CoreApplication extends MultiDexApplication {
     private boolean isCallisRunning = false;
 
     public boolean isIfScreen = false;
+
+//    public String DISABLE_APPLIST="DISABLE_APPLIST";
+//    public String SOCIAL_DISABLE_COUNT="SOCIAL_DISABLE_COUNT";
+//    public String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
+//    public String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
+//    public String HEADER_APPLIST="HEADER_APPLIST";
 
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
@@ -119,6 +126,10 @@ public abstract class CoreApplication extends MultiDexApplication {
     NotificationManager notificationManager;
 
 
+    public Crashlytics getCrashlytics() {
+        return crashlytics;
+    }
+
     public boolean isEditNotOpen() {
         return isEditNotOpen;
     }
@@ -127,8 +138,8 @@ public abstract class CoreApplication extends MultiDexApplication {
         isEditNotOpen = editNotOpen;
     }
 
-    public void setmMediaPlayer(MediaPlayer mMediaPlayer) {
-        this.mMediaPlayer = mMediaPlayer;
+    public void setMediaPlayerNull() {
+        this.mMediaPlayer = null;
 
     }
 
@@ -412,12 +423,17 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     private void configFabric() {
         if (!BuildConfig.DEBUG) {
+            crashlytics = new Crashlytics();
             final Fabric fabric = new Fabric.Builder(this)
-                    .kits(new Crashlytics())
+                    .kits(crashlytics)
                     .debuggable(Config.DEBUG)
                     .build();
             Fabric.with(fabric);
         }
+    }
+
+    public void logException(Throwable e) {
+        Crashlytics.logException(e);
     }
 
 
@@ -451,6 +467,7 @@ public abstract class CoreApplication extends MultiDexApplication {
      * @return application name
      */
     public String getApplicationNameFromPackageName(String packagename) {
+
         if (packagename != null && !packagename.equalsIgnoreCase("")) {
             for (ApplicationInfo applicationInfo : getPackagesList()) {
                 if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
@@ -563,7 +580,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                             }
                             resourcesForApplication.updateConfiguration(originalConfig, originalDisplayMetrics);
                         } catch (Exception e) {
-                            Log.e("Error", "Image Loading: ", e);
+                            CoreApplication.getInstance().logException(e);
                             drawable = appInfo.loadIcon(getPackageManager());
                         }
                         Bitmap bitmap = drawableToBitmap(drawable);
@@ -594,6 +611,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                         applist.add(info);
                     }
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
             }
@@ -637,8 +655,8 @@ public abstract class CoreApplication extends MultiDexApplication {
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setDataSource(this, alert);
                     final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
                         mMediaPlayer.setVolume(100, 100);
                         mMediaPlayer.setScreenOnWhilePlaying(true);
                         mMediaPlayer.prepare();
@@ -648,6 +666,7 @@ public abstract class CoreApplication extends MultiDexApplication {
                 }
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
     }
@@ -816,6 +835,7 @@ public abstract class CoreApplication extends MultiDexApplication {
             try {
                 file.createNewFile();
             } catch (IOException e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
@@ -861,8 +881,8 @@ public abstract class CoreApplication extends MultiDexApplication {
             telephonyObject = serviceMethod.invoke(null, retbinder);
             telephonyEndCall = telephonyClass.getMethod("endCall");
             telephonyEndCall.invoke(telephonyObject);
-            Log.d("Testting ", "Testting22222");
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.d("Decline call exception.." + e.toString());
             e.printStackTrace();
         }

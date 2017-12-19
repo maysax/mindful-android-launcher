@@ -1,7 +1,6 @@
 package co.siempo.phone.main;
 
 
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
@@ -9,10 +8,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -114,10 +114,15 @@ public class MainFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        getActivity().startService(new Intent(getActivity(), StatusBarService.class));
 
-        listViewLayout.setVisibility(View.GONE);
-        afterEffectLayout.setVisibility(View.GONE);
+        Intent myService = new Intent(getActivity(), StatusBarService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getActivity().startForegroundService(myService);
+        } else {
+            getActivity().startService(myService);
+        }
+        if (listViewLayout != null) listViewLayout.setVisibility(View.GONE);
+        if (afterEffectLayout != null) afterEffectLayout.setVisibility(View.GONE);
         KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {
             @Override
             public void onVisibilityChanged(boolean isOpen) {
@@ -125,7 +130,7 @@ public class MainFragment extends CoreFragment {
                 updateListViewLayout();
             }
         });
-        moveSearchBar(false, null);
+        moveSearchBar(false);
     }
 
 
@@ -134,13 +139,13 @@ public class MainFragment extends CoreFragment {
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             boolean isVisible = false;
-            if (intent.hasExtra("IsNotificationVisible")) {
+            if (intent != null && intent.hasExtra("IsNotificationVisible")) {
                 isVisible = intent.getBooleanExtra("IsNotificationVisible", false);
             }
             if (searchLayout != null && searchLayout.getTxtSearchBox() != null) {
                 searchLayout.getTxtSearchBox().setNotificationVisible(isVisible);
             }
-            if (isVisible) {
+            if (isVisible && getActivity() != null) {
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
             }
         }
@@ -159,6 +164,12 @@ public class MainFragment extends CoreFragment {
         // becomes true from StatusService class.
         if (prefs.isContactUpdate().get() || prefs.isAppUpdated().get()) {
             loadData();
+            if (prefs.isContactUpdate().get()) {
+                prefs.isContactUpdate().put(false);
+            }
+            if (prefs.isAppUpdated().get()) {
+                prefs.isAppUpdated().put(false);
+            }
         }
     }
 
@@ -169,25 +180,27 @@ public class MainFragment extends CoreFragment {
         super.onDestroy();
     }
 
-    synchronized void updateListViewLayout() {
-        if(getActivity()!=null) {
+    private synchronized void updateListViewLayout() {
+        if (getActivity() != null) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        int val;
-                        if (isKeyboardOpen) {
-                            val = Math.min(adapter.getCount() * 54, 240);
-                        } else {
-                            val = Math.min(adapter.getCount() * 54, 54 * 9);
+                        if (listViewLayout != null) {
+                            int val;
+                            if (isKeyboardOpen) {
+                                val = Math.min(adapter.getCount() * 54, 240);
+                            } else {
+                                val = Math.min(adapter.getCount() * 54, 54 * 9);
+                            }
+
+                            // extra padding when there is something in listView
+                            if (val != 0) val += 8;
+                            listViewLayout.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
+                            listViewLayout.requestLayout();
                         }
-
-                        // extra padding when there is something in listView
-                        if (val != 0) val += 8;
-
-                        listViewLayout.getLayoutParams().height = UIUtils.dpToPx(getActivity(), val);
-                        listViewLayout.requestLayout();
                     } catch (Exception e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
                 }
@@ -219,14 +232,8 @@ public class MainFragment extends CoreFragment {
 
     @ItemClick(R.id.listView)
     public void listItemClicked(int position) {
-        if (listView.getAdapter() instanceof PhoneNumbersAdapter) {
-            mediator.listItemClicked2(router, position);
-        } else {
-            mediator.listItemClicked(router, position,searchLayout.getTxtSearchBox().getStrText().toString());
-        }
-
+        mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
     }
-
 
 
     public MainListAdapter getAdapter() {
@@ -245,6 +252,7 @@ public class MainFragment extends CoreFragment {
             if (adapter != null)
                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
@@ -254,21 +262,22 @@ public class MainFragment extends CoreFragment {
         try {
             if (event.isSendSms()) {
                 MainActivity.isTextLenghGreater = "";
-                afterEffectLayout.setVisibility(View.GONE);
-                moveSearchBar(true, null);
+                if (afterEffectLayout != null) afterEffectLayout.setVisibility(View.GONE);
+                moveSearchBar(true);
                 // manager.clear();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
 
     private void emptyChecker(String string) {
         if (!string.isEmpty()) {
-            afterEffectLayout.setVisibility(View.GONE);
-            moveSearchBar(true, null);
+            if (afterEffectLayout != null) afterEffectLayout.setVisibility(View.GONE);
+            moveSearchBar(true);
         } else {
-            moveSearchBar(false, null);
+            moveSearchBar(false);
         }
     }
 
@@ -276,78 +285,78 @@ public class MainFragment extends CoreFragment {
     public void tokenManagerEvent(TokenUpdateEvent event) {
         try {
             TokenItem current = TokenManager.getInstance().getCurrent();
-
-            if (current.getItemType() == TokenItemType.END_OP) {
-                mediator.defaultData();
-            } else if (current.getItemType() == TokenItemType.CONTACT) {
-                if (current.getCompleteType() == TokenCompleteType.HALF) {
-                    mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
-                } else {
-                    mediator.contactPicker();
-                }
-            } else if (current.getItemType() == TokenItemType.DATA) {
-                if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
-                    mediator.resetData();
-                    if (adapter != null) adapter.getFilter().filter(current.getTitle());
-                } else {
-                    mediator.resetData();
-                    if (current.getTitle().trim().isEmpty()) {
-                        if (adapter != null) adapter.getFilter().filter("^");
+            if (current != null) {
+                if (current.getItemType() == TokenItemType.END_OP) {
+                    mediator.defaultData();
+                } else if (current.getItemType() == TokenItemType.CONTACT) {
+                    if (current.getCompleteType() == TokenCompleteType.HALF) {
+                        mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
                     } else {
-                        if (adapter != null) adapter.getFilter().filter(current.getTitle());
+                        mediator.contactPicker();
                     }
+                } else if (current.getItemType() == TokenItemType.DATA) {
+                    if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
+                        mediator.resetData();
+                        if (adapter != null) adapter.getFilter().filter(current.getTitle());
+                    } else {
+                        mediator.resetData();
+                        if (current.getTitle().trim().isEmpty()) {
+                            if (adapter != null) adapter.getFilter().filter("^");
+                        } else {
+                            if (adapter != null) adapter.getFilter().filter(current.getTitle());
+                        }
 
+                    }
                 }
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
         }
     }
 
-    void moveSearchBar(boolean isUp, final AnimatorListenerAdapter adapter) {
+    private void moveSearchBar(boolean isUp) {
         ObjectAnimator animY;
-
-        if (isUp) {
-            animY = ObjectAnimator.ofFloat(searchLayout, "y", 40);
-        } else {
-            animY = ObjectAnimator.ofFloat(searchLayout, "y", UIUtils.getScreenHeight(getActivity()) / 3);
+        if (searchLayout != null) {
+            if (isUp) {
+                animY = ObjectAnimator.ofFloat(searchLayout, "y", 40);
+            } else {
+                animY = ObjectAnimator.ofFloat(searchLayout, "y", UIUtils.getScreenHeight(getActivity()) / 3);
+            }
+            AnimatorSet animSet = new AnimatorSet();
+            animSet.play(animY);
+            animSet.start();
         }
-
-        if (adapter != null) {
-            animY.addListener(adapter);
-        }
-
-        AnimatorSet animSet = new AnimatorSet();
-        animSet.play(animY);
-        animSet.start();
     }
 
     @Click
     void text() {
         String id = (String) text.getTag();
-        if (id.equals("1")) {
+        if (id.equals("1") && getActivity() != null) {
             new ActivityHelper(getActivity()).openNotesApp(true);
         }
-        afterEffectLayout.setVisibility(View.GONE);
-        moveSearchBar(false, null);
+        if (afterEffectLayout != null) afterEffectLayout.setVisibility(View.GONE);
+        moveSearchBar(false);
     }
 
     @Subscribe
     public void mainListAdapterEvent(MainListAdapterEvent event) {
-        if (event.getDataSize() == 0)
-            listViewLayout.setVisibility(View.GONE);
-        else {
-            listViewLayout.setVisibility(View.VISIBLE);
+        if (event.getDataSize() == 0) {
+            if (listViewLayout != null) listViewLayout.setVisibility(View.GONE);
+        } else {
+            if (listViewLayout != null) listViewLayout.setVisibility(View.VISIBLE);
             updateListViewLayout();
         }
     }
 
     @Subscribe
     public void createNoteEvent(CreateNoteEvent event) {
-        icon.setImageResource(R.drawable.icon_save_note);
-        text.setText(R.string.view_save_note);
-        text.setTag("1");
-        afterEffectLayout.setVisibility(View.VISIBLE);
+        if (icon != null) icon.setImageResource(R.drawable.icon_save_note);
+        if (text != null) {
+            text.setText(R.string.view_save_note);
+            text.setTag("1");
+        }
+        if (afterEffectLayout != null) afterEffectLayout.setVisibility(View.VISIBLE);
 
     }
 

@@ -1,7 +1,6 @@
 package co.siempo.phone.main;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.telephony.PhoneNumberUtils;
@@ -18,10 +17,7 @@ import com.bumptech.glide.Glide;
 import com.joanzapata.iconify.IconDrawable;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import co.siempo.phone.R;
 import co.siempo.phone.model.ContactListItem;
@@ -38,16 +34,14 @@ import minium.co.core.app.CoreApplication;
 
 public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
-    private Context context;
+    private final Context context;
     private List<MainListItem> originalData = null;
     private List<MainListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
-    PackageManager packageManager;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
-        packageManager = context.getPackageManager();
         loadData(items);
     }
 
@@ -78,44 +72,33 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
     @Override
     public int getItemViewType(int position) {
-        return getItem(position).getItemType().ordinal();
-    }
-
-    public MainListItem getItemById(MainListItemType type, int id) {
-
-        for (MainListItem item : filteredData) {
-            switch (type) {
-                case CONTACT:
-                    break;
-                case ACTION:
-                    if (item.getId() == id) return item;
-                    break;
-                case DEFAULT:
-                    if (item.getId() == id) return item;
-                    break;
-                case NUMBERS:
-                    break;
-            }
+        int pos = 0;
+        try {
+            pos = getItem(position).getItemType().ordinal();
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
         }
+        return pos;
 
-        return null;
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         MainListItemType itemViewType = MainListItemType.values()[getItemViewType(position)];
-
-        switch (itemViewType) {
-            case CONTACT:
-                convertView = getContactItemView(position, convertView, parent);
-                break;
-            case ACTION:
-            case DEFAULT:
-            case NUMBERS:
-                convertView = getActionItemView(position, convertView, parent);
+        if (itemViewType != null) {
+            switch (itemViewType) {
+                case CONTACT:
+                    convertView = getContactItemView(position, convertView, parent);
+                    break;
+                case ACTION:
+                case DEFAULT:
+                case NUMBERS:
+                    convertView = getActionItemView(position, convertView, parent);
+                default:
+                    break;
+            }
         }
-
         return convertView;
     }
 
@@ -131,47 +114,20 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         TextView txtNumber;
     }
 
-    private View getNumberPickerView(int position, View view, ViewGroup parent) {
-        ContactViewHolder holder;
-
-        if (view == null) {
-            holder = new ContactViewHolder();
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-            view = inflater.inflate(R.layout.list_item_contacts, parent, false);
-
-            holder.icon = (ImageView) view.findViewById(R.id.icon);
-            holder.txtNumber = (TextView) view.findViewById(R.id.txtNumber);
-            holder.text = (TextView) view.findViewById(R.id.text);
-            view.setTag(holder);
-
-        } else {
-            holder = (ContactViewHolder) view.getTag();
-        }
-
-        MainListItem item = getItem(position);
-
-        if (item != null) {
-            holder.text.setText(item.getTitle());
-            holder.icon.setImageResource(item.getIconRes());
-            holder.txtNumber.setText(item.getSubTitle());
-        }
-
-        return view;
-    }
-
     private View getContactItemView(int position, View view, ViewGroup parent) {
         ContactViewHolder holder;
         if (view == null) {
             holder = new ContactViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            view = inflater.inflate(R.layout.list_item_contacts, parent, false);
+            if (inflater != null) {
+                view = inflater.inflate(R.layout.list_item_contacts, parent, false);
+                holder.icon = view.findViewById(R.id.icon);
+                holder.txtNumber = view.findViewById(R.id.txtNumber);
+                holder.text = view.findViewById(R.id.text);
+                view.setTag(holder);
+            }
 
-            holder.icon = (ImageView) view.findViewById(R.id.icon);
-            holder.txtNumber = (TextView) view.findViewById(R.id.txtNumber);
-            holder.text = (TextView) view.findViewById(R.id.text);
-            view.setTag(holder);
 
         } else {
             holder = (ContactViewHolder) view.getTag();
@@ -207,12 +163,15 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             holder = new ActionViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            view = inflater.inflate(R.layout.list_item, parent, false);
+            if (inflater != null) {
+                view = inflater.inflate(R.layout.list_item, parent, false);
+                holder.icon = view.findViewById(R.id.icon);
+                holder.text = view.findViewById(R.id.text);
 
-            holder.icon = (ImageView) view.findViewById(R.id.icon);
-            holder.text = (TextView) view.findViewById(R.id.text);
+                view.setTag(holder);
+            }
 
-            view.setTag(holder);
+
         } else {
             holder = (ActionViewHolder) view.getTag();
         }
@@ -221,7 +180,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             if (item.getId() == -1) {
-                if(!TextUtils.isEmpty(item.getApplicationInfo().packageName)){
+                if (!TextUtils.isEmpty(item.getApplicationInfo().packageName)) {
                     holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
                 }
                 holder.text.setText(item.getApplicationInfo().name);
@@ -252,16 +211,15 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
 
-            String searchString = constraint.toString().toLowerCase();
+            String searchString = constraint.toString().toLowerCase().trim();
 
             FilterResults ret = new FilterResults();
 
             int count = originalData.size();
             List<MainListItem> buildData = new ArrayList<>();
 
-            if (searchString.isEmpty()) {
-                // blank
-            } else {
+            if (!searchString.isEmpty()) {
+
                 for (int i = 0; i < count; i++) {
                     String filterableString;
                     String[] splits;
@@ -277,7 +235,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             String strSearch = searchString.substring(1).toLowerCase();
                             if (originalData.get(i).getItemType() == MainListItemType.ACTION
                                     && originalData.get(i).getTitle().toLowerCase().startsWith(strSearch)) {
-                                if (!checkDuplicate(buildData, strSearch))
+                                if (checkDuplicate(buildData, strSearch))
                                     buildData.add(originalData.get(i));
                             }
                         }
@@ -287,14 +245,14 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 if (searchString.equals("@")) {
                                     buildData.add(originalData.get(i));
                                 } else {
-                                    /**
-                                     * A blank space was added with searchString2. After using trim the search problem is resolved
+                                    /*
+                                      A blank space was added with searchString2. After using trim the search problem is resolved
                                      */
                                     String searchString2 = searchString.replaceAll("@", "").trim();
                                     ContactListItem item = (ContactListItem) originalData.get(i);
                                     filterableString = item.getContactName();
                                     boolean isAdded = false;
-                                    if (filterableString.toString().toLowerCase().contains(searchString2)) {
+                                    if (filterableString.toLowerCase().contains(searchString2)) {
                                         buildData.add(originalData.get(i));
                                         isAdded = true;
                                     }
@@ -325,17 +283,17 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                     }
                                 } else {
                                     if (originalData.get(i).getTitle().toLowerCase().startsWith(searchString.toLowerCase())) {
-                                        if (!checkDuplicate(buildData, searchString.toLowerCase().toLowerCase()))
+                                        if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase()))
                                             buildData.add(originalData.get(i));
                                     }
                                 }
                                 break;
                             case DEFAULT:
-                                if (!checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase()))
+                                if (checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase()))
                                     buildData.add(originalData.get(i));
                                 break;
                             case NUMBERS:
-                                if(PhoneNumberUtils.isGlobalPhoneNumber(searchString)){
+                                if (PhoneNumberUtils.isGlobalPhoneNumber(searchString)) {
                                     TokenManager.getInstance().getCurrent().setExtra2(searchString);
                                     buildData.add(originalData.get(i));
                                 }
@@ -362,12 +320,14 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     }
 
     private boolean checkDuplicate(List<MainListItem> buildData, String str) {
-        for (MainListItem mainListItem : buildData) {
-            if (mainListItem.getTitle().toLowerCase().toString().equalsIgnoreCase(str)) {
-                return true;
+        if (buildData != null) {
+            for (MainListItem mainListItem : buildData) {
+                if (mainListItem.getTitle().toLowerCase().equalsIgnoreCase(str)) {
+                    return false;
+                }
             }
         }
-        return false;
+        return true;
     }
 
     private String phoneNumberString(String str) {

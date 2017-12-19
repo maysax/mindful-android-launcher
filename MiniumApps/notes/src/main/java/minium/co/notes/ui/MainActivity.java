@@ -18,11 +18,9 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +35,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.event.FirebaseEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
@@ -101,8 +100,6 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // Initialize local file path and backup file path
         localPath = new File(getFilesDir() + "/" + NOTES_FILE_NAME);
 
@@ -136,12 +133,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
 
         // Init layout components
         toolbar = findViewById(R.id.toolbarMain);
-        int statusbarheight = retrieveStatusBarHeight();
 
-//
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, statusbarheight, 0, 0);
-        toolbar.setLayoutParams(params);
         listView = findViewById(R.id.listView);
         newNote = findViewById(R.id.fab);
         noNotes = findViewById(R.id.noNotes);
@@ -195,7 +187,6 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.putExtra(NOTE_REQUEST_CODE, NEW_NOTE_REQUEST);
-
                 startActivityForResult(intent, NEW_NOTE_REQUEST);
             }
         });
@@ -214,14 +205,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         }
     }
 
-    public int retrieveStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
+
 
     @Override
     protected void onResume() {
@@ -230,7 +214,6 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
         Tracer.d("Notes onResume called");
         // Retrieve from local path
         JSONArray tempNotes = retrieveData(localPath);
-
         Tracer.d("All notes: " + tempNotes);
 
         // If not null -> equal main notes to retrieved notes
@@ -484,6 +467,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     intent.putExtra(NOTE_HIDE_BODY, false);
 
             } catch (JSONException e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
 
@@ -507,6 +491,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     intent.putExtra(NOTE_HIDE_BODY, false);
 
             } catch (JSONException e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
 
@@ -563,7 +548,8 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                                 startActivity(new Intent(Intent.ACTION_VIEW,
                                         Uri.parse("market://details?id=" + appPackageName)));
 
-                            } catch (android.content.ActivityNotFoundException anfe) {
+                            } catch (android.content.ActivityNotFoundException e) {
+                            CoreApplication.getInstance().logException(e);
                                 startActivity(new Intent(Intent.ACTION_VIEW,
                                         Uri.parse("http://play.google.com/store/apps/details?id="
                                                 + appPackageName)));
@@ -752,6 +738,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     note = notes.getJSONObject(i);
 
                 } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
 
@@ -767,6 +754,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         }
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
                 }
@@ -847,6 +835,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         notes.put(newNoteObject);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -890,6 +879,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         notes.put(requestCode, newNoteObject);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -956,6 +946,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
             newFavourite = notes.getJSONObject(position);
 
         } catch (JSONException e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
 
@@ -966,6 +957,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     newFavourite.put(NOTE_FAVOURED, true);
 
                 } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
 
@@ -978,6 +970,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         newArray.put(0, newFavourite);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -988,6 +981,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                                 newArray.put(notes.get(i));
 
                             } catch (JSONException e) {
+                                CoreApplication.getInstance().logException(e);
                                 e.printStackTrace();
                             }
                         }
@@ -1012,6 +1006,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                         notes.put(position, newFavourite);
 
                     } catch (JSONException e) {
+                        CoreApplication.getInstance().logException(e);
                         e.printStackTrace();
                     }
 
@@ -1026,6 +1021,7 @@ public class MainActivity extends CoreActivity implements AdapterView.OnItemClic
                     notes.put(position, newFavourite);
 
                 } catch (JSONException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
 

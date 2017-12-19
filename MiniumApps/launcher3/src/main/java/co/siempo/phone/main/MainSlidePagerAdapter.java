@@ -1,9 +1,7 @@
 package co.siempo.phone.main;
 
 import android.app.FragmentManager;
-import android.os.Parcelable;
 import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v13.app.FragmentStatePagerAdapter;
 
 import co.siempo.phone.old.OldMenuFragment_;
 
@@ -24,6 +22,8 @@ public class MainSlidePagerAdapter extends FragmentPagerAdapter {
                 return MainFragment_.builder().build();
             case 1:
                 return OldMenuFragment_.builder().build();
+            default:
+                break;
         }
         return null;
     }

@@ -4,14 +4,12 @@ import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.concurrent.TimeUnit;
-
 import co.siempo.phone.app.Launcher3App;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
 /**
- * Created by Shahab on 5/8/2017.
+ * Created by Volansys
  */
 
 
@@ -29,16 +27,17 @@ public class FirebaseHelper {
     public static String ACTION_APPLICATION_PICK = "application_picked";
 
     // Screen Name
-    public static String MENU_SCREEN = "menu_screen";
+    private static String MENU_SCREEN = "menu_screen";
     public static String IF_SCREEN = "if_screen";
 
 
     //Event
-    public static String IF_ACTION = "if_action";
+    private static String IF_ACTION = "if_action";
     public static String SIEMPO_MENU = "siempo_menu";
-    public static String THIRD_PARTY_APPLICATION = "third_party";
-    public static String SCREEN_USAGE = "screen_usage";
-    public static String SIEMPO_DEFAULT = "siempo_default";
+    private static String THIRD_PARTY_APPLICATION = "third_party";
+    private static String SCREEN_USAGE = "screen_usage";
+    private static String SIEMPO_DEFAULT = "siempo_default";
+    private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -48,6 +47,7 @@ public class FirebaseHelper {
     private String INTENT_FROM = "intent_from";
     private String ACTION = "action";
     private String IF_DATA = "if_data";
+    private String SUPPRESSED_COUNT = "suppressed_count";
 
     public FirebaseHelper() {
 
@@ -72,17 +72,29 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logScreenUsageTime(String screenName, long startTime) {
-        String strTime = getTime(startTime, System.currentTimeMillis());
-        if (strTime.equalsIgnoreCase("0")) {
-//            Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-        } else {
+        long longDifference = getTime(startTime, System.currentTimeMillis());
+        if (longDifference != 0) {
             Bundle bundle = new Bundle();
             bundle.putString(SCREEN_NAME, screenName);
-            bundle.putString(TIME_SPENT, strTime);
+            bundle.putLong(TIME_SPENT, longDifference);
             Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
             getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
         }
 
+    }
+
+
+    /**
+     * Used for suppressed notification count by package name.
+     *
+     * @param count
+     */
+    public void logSuppressedNotification(String applicationName, long count) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(SUPPRESSED_COUNT, count);
+        bundle.putString(APPLICATION_NAME, applicationName);
+        Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
     }
 
     /**
@@ -145,11 +157,9 @@ public class FirebaseHelper {
         Bundle bundle = new Bundle();
         bundle.putString(ACTION, action);
         if (startTime != 0) {
-            String strTime = getTime(startTime, System.currentTimeMillis());
-            if (strTime.equalsIgnoreCase("0")) {
-//                Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-            } else {
-                bundle.putString(TIME_SPENT, strTime);
+            long longDifference = getTime(startTime, System.currentTimeMillis());
+            if (longDifference != 0) {
+                bundle.putLong(TIME_SPENT, longDifference);
                 Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
                 getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
             }
@@ -166,42 +176,38 @@ public class FirebaseHelper {
      * @param endTime
      * @return
      */
-    private String getTime(long startTime, long endTime) {
+    private long getTime(long startTime, long endTime) {
         String strTime = "0";
-        long duration = endTime - startTime;
-        try {
-            long msInSecond = 1000;
-            long msInMinute = msInSecond * 60;
-            long msInHour = msInMinute * 60;
-            long msInDay = msInHour * 24;
-
-            long days = duration / msInDay;
-            duration = duration % msInDay;
-
-            long hours = duration / msInHour;
-            duration = duration % msInHour;
-
-            long minutes = duration / msInMinute;
-            duration = duration % msInMinute;
-
-            double seconds = (double) duration / msInSecond;
-            String strMilli = "" + seconds;
-            long strSecond;
-            String strMilliSecond;
-            String str[] = strMilli.split("\\.");
-            strSecond = Long.parseLong(str[0]);
-            strMilliSecond = str[1];
-            if (days == 0 && hours == 0 && minutes == 0 && strSecond == 0) {
-               // Tracer.d("Firebase:" + SCREEN_USAGE + ": No Difference");
-            } else {
-                strTime = "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", strSecond)  + ":" + strMilliSecond;
-            }
-        } catch (ArithmeticException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return strTime;
+        //        try {
+//            long msInSecond = 1000;
+//            long msInMinute = msInSecond * 60;
+//            long msInHour = msInMinute * 60;
+//            long msInDay = msInHour * 24;
+//
+//            long days = duration / msInDay;
+//            duration = duration % msInDay;
+//
+//            long hours = duration / msInHour;
+//            duration = duration % msInHour;
+//
+//            long minutes = duration / msInMinute;
+//            duration = duration % msInMinute;
+//
+//            double seconds = (double) duration / msInSecond;
+//            String strMilli = "" + seconds;
+//            long strSecond;
+//            String strMilliSecond;
+//            String str[] = strMilli.split("\\.");
+//            strSecond = Long.parseLong(str[0]);
+//            strMilliSecond = str[1];
+//            if (days != 0 || hours != 0 || minutes != 0 || strSecond != 0) {
+//                strTime = "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", strSecond) + ":" + strMilliSecond;
+//            }
+//        } catch (Exception e) {
+//            CoreApplication.getInstance().logException(e);
+//            e.printStackTrace();
+//        }
+        return endTime - startTime;
     }
 
 }

@@ -2,7 +2,6 @@ package co.siempo.phone.mm;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;

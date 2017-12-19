@@ -21,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -44,7 +43,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
-import co.siempo.phone.SiempoNotificationBar.ViewService_;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -56,7 +54,6 @@ import co.siempo.phone.main.MainSlidePagerAdapter;
 import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
-import co.siempo.phone.service.SiempoAccessibilityService;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -76,7 +73,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     private static final String TAG = "MainActivity";
 
-    public static int currentItem =-1;
+    public static int currentItem = -1;
     @ViewById
     ViewPager pager;
 
@@ -178,39 +175,30 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         if (requestCode == 100) {
             if (isEnabled(MainActivity.this)) {
-                if (!isAccessibilitySettingsOn(this)) {
-                    Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
-                    Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                    startActivityForResult(intent1, 101);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.canDrawOverlays(MainActivity.this)) {
+                        Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                        startActivityForResult(intent, 102);
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                                && !notificationManager.isNotificationPolicyAccessGranted()) {
+                            Intent intent = new Intent(
+                                    android.provider.Settings
+                                            .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                            startActivityForResult(intent, 103);
+                        } else {
+                            checkAppLoadFirstTime();
+                        }
+                    }
                 }
 
             } else {
                 notificatoinAccessDialog();
             }
         }
-        if (requestCode == 101) {
-            if (!isAccessibilitySettingsOn(this)) {
-                Toast.makeText(this, R.string.msg_accessibility2, Toast.LENGTH_SHORT).show();
-                Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                startActivityForResult(intent1, 101);
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    // Show alert dialog to the user saying a separate permission is needed
-                    // Launch the settings activity if the user prefers
-                    if (!Settings.canDrawOverlays(this)) {
-                        Toast.makeText(this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent, 102);
-                    } else {
-                        ViewService_.intent(this).showMask().start();
-                        checkAppLoadFirstTime();
-                    }
-                }
-            }
-        }
         if (requestCode == 102) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                ViewService_.intent(this).showMask().start();
                 checkAppLoadFirstTime();
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(MainActivity.this)) {
@@ -225,7 +213,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                         .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                         startActivityForResult(intent, 103);
                     } else {
-                        ViewService_.intent(this).showMask().start();
                         checkAppLoadFirstTime();
                     }
                 }
@@ -240,7 +227,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                 .ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                 startActivityForResult(intent, 103);
             } else {
-                ViewService_.intent(this).showMask().start();
                 checkAppLoadFirstTime();
             }
         }
@@ -261,17 +247,20 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 if (currentItem != -1 && currentItem != position) {
                     if (position == 0) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+                        startTime = System.currentTimeMillis();
                     } else if (position == 1) {
                         FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+                        startTime = System.currentTimeMillis();
                     }
                 }
                 currentItem = position;
                 try {
-                    if (position == 1)
+                    if (position == 1 && getCurrentFocus() != null)
                         //noinspection ConstantConditions
                         UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
                 } catch (Exception e) {
                     e.printStackTrace();
+                    CoreApplication.getInstance().logException(e);
                 }
             }
 
@@ -317,11 +306,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void logFirebase() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
+                Tracer.d(String.format("Device Id ::%s", telephonyManager.getDeviceId()));
                 FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
             }
         } else {
-            Tracer.d("Device Id ::" + telephonyManager.getDeviceId());
+            Tracer.d(String.format("Device Id ::%s", telephonyManager.getDeviceId()));
             FirebaseHelper.getIntance().getFirebaseAnalytics().setUserId(telephonyManager.getDeviceId());
         }
     }
@@ -399,6 +388,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 //            startActivity(defineIntent);
         //manager.clear();
 //        } catch (Exception e) {
+//        CoreApplication.getInstance().logException(e);
 //            Tracer.e(e, e.getMessage());
 //        }
     }
@@ -429,6 +419,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             enableNfc(true);
         } catch (Exception e) {
             Tracer.e(e);
+            CoreApplication.getInstance().logException(e);
         }
         // prevent keyboard up on old menu screen when coming back from other launcher
         if (pager != null) pager.setCurrentItem(currentItem, true);
@@ -499,6 +490,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
         } catch (Exception e) {
             e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
 
     }
@@ -550,9 +542,9 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                                 appUpdaterUtils = null;
                             } else {
                                 Log.d(TAG, "check version from AWS");
-                                if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                                if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
                                     ApiClient_.getInstance_(MainActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
-                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                                } else if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.beta))) {
                                     ApiClient_.getInstance_(MainActivity.this).checkAppVersion(CheckVersionEvent.BETA);
                                 }
                             }
@@ -572,36 +564,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-
-    private static boolean isAccessibilitySettingsOn(Context mContext) {
-        int accessibilityEnabled = 0;
-        final String service = mContext.getPackageName() + "/" + SiempoAccessibilityService.class.getCanonicalName();
-        try {
-            accessibilityEnabled = Settings.Secure.getInt(
-                    mContext.getApplicationContext().getContentResolver(),
-                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
-        } catch (Settings.SettingNotFoundException e) {
-            e.printStackTrace();
-        }
-        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
-
-        if (accessibilityEnabled == 1) {
-            String settingValue = Settings.Secure.getString(
-                    mContext.getApplicationContext().getContentResolver(),
-                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-            if (settingValue != null) {
-                mStringColonSplitter.setString(settingValue);
-                while (mStringColonSplitter.hasNext()) {
-                    String accessibilityService = mStringColonSplitter.next();
-                    if (accessibilityService.equalsIgnoreCase(service)) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
 
     public void notificatoinAccessDialog() {
         notificationDialog = new AlertDialog.Builder(MainActivity.this)
@@ -630,9 +592,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         if (!isEnabled(MainActivity.this)) {
 
             notificatoinAccessDialog();
-        } else if (!isAccessibilitySettingsOn(MainActivity.this)) {
-            Intent intent1 = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
-            startActivityForResult(intent1, 101);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Show alert dialog to the user saying a separate permission is needed
             // Launch the settings activity if the user prefers
@@ -641,7 +600,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, 102);
             } else {
-                ViewService_.intent(MainActivity.this).showMask().start();
                 checkAppLoadFirstTime();
             }
         }

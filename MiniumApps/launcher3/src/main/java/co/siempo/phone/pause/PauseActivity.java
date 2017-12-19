@@ -1,6 +1,5 @@
 package co.siempo.phone.pause;
 
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.Tag;
@@ -13,7 +12,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.KeyDown;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -24,9 +22,6 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.PauseStartEvent;
-import co.siempo.phone.notification.NotificationFragment;
-import co.siempo.phone.notification.NotificationRetreat_;
-import co.siempo.phone.ui.TopFragment_;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
@@ -126,6 +121,7 @@ public class PauseActivity extends CoreActivity {
                 try {
                     ndef.close();
                 } catch (IOException e) {
+                    CoreApplication.getInstance().logException(e);
                     e.printStackTrace();
                 }
             }
@@ -174,6 +170,7 @@ public class PauseActivity extends CoreActivity {
                     Tracer.d("Connection heart-beat for nfc tag " + tag);
                     nfcCheckHandler.postDelayed(this, 1000);
                 } catch (Exception e) {
+                    CoreApplication.getInstance().logException(e);
                     // if the tag is gone we might want to end the thread:
                     stopPause();
                     Tracer.e(e, e.getMessage());
@@ -185,6 +182,7 @@ public class PauseActivity extends CoreActivity {
                             ndef.close();
                         }
                     } catch (IOException e) {
+                        CoreApplication.getInstance().logException(e);
                         Tracer.e(e, e.getMessage());
                     }
                 }
@@ -233,11 +231,5 @@ public class PauseActivity extends CoreActivity {
         PackageUtil.checkPermission(this);
     }
 
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-        Log.d(TAG, "ACTION HOME PRESS");
-        if (event.isVisible()) {
-        }
-    }
+
 }

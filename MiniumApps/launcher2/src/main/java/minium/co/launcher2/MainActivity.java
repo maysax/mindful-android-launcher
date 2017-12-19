@@ -62,7 +62,6 @@ import minium.co.launcher2.ui.OptionsFragment2_;
 import minium.co.launcher2.ui.SearchFragment_;
 import minium.co.launcher2.ui.TopFragment_;
 
-@Fullscreen
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements OnContactSelectedListener, SmsObserver.OnSmsSentListener {
 

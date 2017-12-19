@@ -180,6 +180,5 @@ public class TableNotificationSms implements Serializable {
     public void setContent_type(int content_type) {
         this.content_type = content_type;
     }
-    
 
 }

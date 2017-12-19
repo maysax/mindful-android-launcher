@@ -25,17 +25,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.helper.FirebaseHelper;
-
-/**
- * Created by shahab on 12/6/16.
- */
+import minium.co.core.app.CoreApplication;
 
 /**
  * This class contain all the native settings feature.
@@ -137,8 +135,6 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setupActionBar();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getListView().setPadding(0, retrieveStatusBarHeight(this), 0, 0);
     }
 
@@ -153,17 +149,6 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     /**
@@ -232,7 +217,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -285,7 +270,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -338,7 +323,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -392,6 +377,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     bindPreferenceSummaryToValue(data_usage_preference);
                 }
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
 
@@ -414,6 +400,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     bindPreferenceSummaryToValue(wireless_preference);
                 }
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
@@ -432,7 +419,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -452,7 +439,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         }
     }
 
-    public static boolean isAvailable(Context ctx, Intent intent) {
+    private static boolean isAvailable(Context ctx, Intent intent) {
         final PackageManager mgr = ctx.getPackageManager();
         List<ResolveInfo> list =
                 mgr.queryIntentActivities(intent,
@@ -505,6 +492,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     bindPreferenceSummaryToValue(preference);
                 }
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
             // Check User Setting preference in local system
@@ -528,7 +516,32 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     preference.setIntent(intent);
                     bindPreferenceSummaryToValue(preference);
                 }
+
+                //This is the listener for Preference being clicked
+                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        //In case if the device is Huawei and Users
+                        // preference is clicked then it will throw Security
+                        // Exception hence to prevent it we will handle the
+                        // click by showing a message and not navigating to
+                        // the activity
+                        if (preference.getTitle().toString().equalsIgnoreCase
+                                (getString(R.string.pref_users)) && Build
+                                .MANUFACTURER
+                                .equalsIgnoreCase(Constants.HUAWEI)) {
+                            Toast.makeText(getActivity(), R.string.huawei_limitation, Toast
+                                    .LENGTH_SHORT).show();
+                            return true;
+                        } else {
+                            return false;
+
+                        }
+
+                    }
+                });
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
@@ -537,7 +550,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -615,6 +628,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     bindPreferenceSummaryToValue(preference);
                 }
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
@@ -633,7 +647,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;
@@ -695,6 +709,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
                     bindPreferenceSummaryToValue(preference);
                 }
             } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
@@ -713,7 +728,7 @@ public class SiempoPhoneSettingsActivity extends AppCompatPreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
             if (view != null) {
-                ListView preferencesList = (ListView) view.findViewById(android.R.id.list);
+                ListView preferencesList = view.findViewById(android.R.id.list);
                 preferencesList.setPadding(0, SiempoPhoneSettingsActivity.retrieveStatusBarHeight(getActivity()), 0, 0);
             }
             return view;

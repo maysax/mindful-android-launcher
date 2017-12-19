@@ -1,231 +1,236 @@
 package co.siempo.phone.settings;
 
-import android.content.Context;
-import android.support.v7.widget.SwitchCompat;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.joanzapata.iconify.IconDrawable;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.applist.AppDrawerActivity;
+import co.siempo.phone.applist.DisableAppList;
+import co.siempo.phone.applist.HeaderAppList;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.mm.model.Utilities;
-import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
-
 
 /**
- * Created by hardik on 17/8/17.
+ * Created by hardik on 22/11/17.
  */
 
-/**
- * This class contain all the siempo settings feature.
- * 1. Switc home app
- * 2. Keyboard hide & show in IF Screen when launch
- * 3. Version of Current App & update
- */
-@EActivity(R.layout.activity_app_list_notification)
-public class AppListNotification extends CoreActivity {
-    private String TAG = "AppListNotification";
-    private Context context;
+public class AppListNotification  extends CoreActivity {
 
-    @ViewById
-    LinearLayout linSocial;
+    private RecyclerView lst_appList;
+    private ImageView crossActionBar, settingsActionBar, btnListOrGrid;
+    private TextView titleActionBar;
 
-    @ViewById
-    ImageView icon_AllowNotificationFacebook;
+    // App list contain all the apps except social apps for display in list
+    private List<DisableAppList> appList = new ArrayList<>();
 
-    @ViewById
-    SwitchCompat switch_AllowNotificationFacebook;
+    // App list contain all the social apps for display in list
+    private List<DisableAppList> socialList = new ArrayList<>();
 
-    @ViewById
-    RelativeLayout relMessenger;
+    // App list contain all the messenger apps for display in list
+    private List<DisableAppList> messengerList = new ArrayList<>();
 
-    @ViewById
-    ImageView icon_AllowNotificationMessenger;
+    // App list contain all the section names for display in header list
+    private List<HeaderAppList> headerList=new ArrayList<>();
 
-    @ViewById
-    SwitchCompat switch_AllowNotificationMessenger;
+    // App list contain all the social apps which are fetch from string array
+    private List<String> socialAppList = new ArrayList<>();
 
+    // App list contain all the messenger apps which are fetch from string array
+    private List<String> messengerAppList = new ArrayList<>();
 
-    @ViewById
-    RelativeLayout relLite;
+    private PackageManager packageManager;
+    private SharedPreferences launcherPrefs;
+    private ArrayList<String> disableNotificationApps= new ArrayList<>();
+    private ArrayList<String> disableSectionList= new ArrayList<>();
+    private List<String> systemAppList = new ArrayList<>();
 
-    @ViewById
-    ImageView icon_AllowNotificationLite;
-
-    @ViewById
-    SwitchCompat switch_AllowNotificationLite;
-
-    @ViewById
-    RelativeLayout relWhatsApp;
-
-    @ViewById
-    ImageView icon_AllowNotificationWhatsApp;
-
-    @ViewById
-    SwitchCompat switch_AllowNotificationWhatsApp;
-
-    @ViewById
-    RelativeLayout relHangOut;
-
-    @ViewById
-    ImageView icon_AllowNotificationHangout;
-
-    @ViewById
-    SwitchCompat switch_AllowNotificationHangout;
-
-
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
-
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-        }
-    }
-
-    @AfterViews
-    void afterViews() {
-        initView();
-        onClickEvents();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        currentIndex = 0;
-    }
-
-
-    public void initView() {
-        context = AppListNotification.this;
-
-        //Facebook
-        if (UIUtils.isAppInstalled(context, Constants.FACEBOOK_PACKAGE)) {
-            linSocial.setVisibility(View.VISIBLE);
-            icon_AllowNotificationFacebook.setImageBitmap(CoreApplication.getInstance().iconList.get(Constants.FACEBOOK_PACKAGE));
-            switch_AllowNotificationFacebook.setChecked(prefs.isFacebookAllowed().get());
-            linSocial.setVisibility(View.GONE);
-        } else {
-            linSocial.setVisibility(View.GONE);
-        }
-
-        //Messenger
-        if (UIUtils.isAppInstalled(context, Constants.FACEBOOK_MESSENGER_PACKAGE)) {
-            relMessenger.setVisibility(View.VISIBLE);
-            icon_AllowNotificationMessenger.setImageBitmap(CoreApplication.getInstance().iconList.get(Constants.FACEBOOK_MESSENGER_PACKAGE));
-            switch_AllowNotificationMessenger.setChecked(prefs.isFacebooKMessangerAllowed().get());
-        } else {
-            relMessenger.setVisibility(View.GONE);
-        }
-
-        //Lite
-        if (UIUtils.isAppInstalled(context, Constants.FACEBOOK_LITE_PACKAGE)) {
-            relLite.setVisibility(View.VISIBLE);
-            icon_AllowNotificationLite.setImageBitmap(CoreApplication.getInstance().iconList.get(Constants.FACEBOOK_LITE_PACKAGE));
-            switch_AllowNotificationLite.setChecked(prefs.isFacebooKMessangerLiteAllowed().get());
-        } else {
-            relLite.setVisibility(View.GONE);
-        }
-
-        //WhatsApp
-        if (UIUtils.isAppInstalled(context, Constants.WHATSAPP_PACKAGE)) {
-            relWhatsApp.setVisibility(View.VISIBLE);
-            icon_AllowNotificationWhatsApp.setImageBitmap(CoreApplication.getInstance().iconList.get(Constants.WHATSAPP_PACKAGE));
-            switch_AllowNotificationWhatsApp.setChecked(prefs.isWhatsAppAllowed().get());
-        } else {
-            relWhatsApp.setVisibility(View.GONE);
-        }
-
-        //Hangouts
-        if (UIUtils.isAppInstalled(context, Constants.GOOGLE_HANGOUTS_PACKAGES)) {
-            relHangOut.setVisibility(View.VISIBLE);
-            icon_AllowNotificationHangout.setImageBitmap(CoreApplication.getInstance().iconList.get(Constants.GOOGLE_HANGOUTS_PACKAGES));
-            switch_AllowNotificationHangout.setChecked(prefs.isHangOutAllowed().get());
-        } else {
-            relHangOut.setVisibility(View.GONE);
-        }
-
-
-    }
-
-    private void onClickEvents() {
-
-        switch_AllowNotificationFacebook.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                prefs.isFacebookAllowed().put(isChecked);
-            }
-        });
-
-        switch_AllowNotificationMessenger.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                prefs.isFacebooKMessangerAllowed().put(isChecked);
-            }
-        });
-        switch_AllowNotificationLite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                prefs.isFacebooKMessangerLiteAllowed().put(isChecked);
-            }
-        });
-
-        switch_AllowNotificationWhatsApp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                prefs.isWhatsAppAllowed().put(isChecked);
-            }
-        });
-
-        switch_AllowNotificationHangout.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                prefs.isHangOutAllowed().put(isChecked);
-            }
-        });
-
-
-    }
-
-    long startTime=0;
+    long startTime = 0;
     @Override
     protected void onResume() {
         super.onResume();
         startTime = System.currentTimeMillis();
-        PackageUtil.checkPermission(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(AppListNotification.this.getClass().getSimpleName(),startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(AppListNotification.class.getSimpleName(),startTime);
     }
 
     @Override
-    protected void onStop() {
-
-        super.onStop();
-        currentIndex = 0;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_app_list_notification);
+        initView();
     }
 
+    public void initView(){
 
+        messengerList.clear();
+        messengerAppList.clear();
+        socialList.clear();
+        appList.clear();
+        socialAppList.clear();
+        headerList.clear();
+
+        // Initialize components
+        lst_appList = findViewById(R.id.lst_appList);
+        crossActionBar = findViewById(R.id.crossActionBar);
+        settingsActionBar = findViewById(R.id.settingsActionBar);
+        btnListOrGrid = findViewById(R.id.btnListOrGrid);
+        titleActionBar = findViewById(R.id.titleActionBar);
+        titleActionBar.setText(getResources().getString(R.string.title_managenotifications));
+        packageManager= getPackageManager();
+        launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
+
+        systemAppList=Arrays.asList(getResources().getStringArray(R.array.systemAppList));
+
+        // Add social Media List
+        socialAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.socialAppList)));
+
+        // Add social Media List
+        messengerAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.messengerAppList)));
+
+        // Below logic will use for further development
+//        String packageName=Telephony.Sms.getDefaultSmsPackage(getApplicationContext());
+//        if(!TextUtils.isEmpty(packageName)){
+//            messengerAppList.add(packageName);
+//        }
+
+        // Hide components of header layout
+        crossActionBar.setVisibility(View.GONE);
+        btnListOrGrid.setVisibility(View.GONE);
+        settingsActionBar.setVisibility(View.GONE);
+
+        // disableNotificationApps contains of disable app list
+        String disable_AppList=launcherPrefs.getString(Constants.DISABLE_APPLIST,"");
+        if(!TextUtils.isEmpty(disable_AppList)){
+            Type type = new TypeToken<ArrayList<String>>(){}.getType();
+            disableNotificationApps = new Gson().fromJson(disable_AppList, type);
+        }
+
+        // disableSectionList contains of disable section list
+        String disable_Header_AppList=launcherPrefs.getString(Constants.HEADER_APPLIST,"");
+        if(!TextUtils.isEmpty(disable_Header_AppList)){
+            Type type = new TypeToken<ArrayList<String>>(){}.getType();
+            disableSectionList = new Gson().fromJson(disable_Header_AppList, type);
+        }
+
+
+      loadAndDisplayAppList();
+
+    }
+
+    @Subscribe
+    public void appInstalledEvent(AppInstalledEvent event) {
+        if (event.isRunning()) {
+            initView();
+        }
+    }
+
+    public void loadAndDisplayAppList(){
+        // Load social Media Apps & Filter from app list
+        for(int i = 0; i< CoreApplication.getInstance().getPackagesList().size(); i++){
+            if(socialAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
+                DisableAppList d = new DisableAppList();
+                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
+                if(disableNotificationApps.contains(d.applicationInfo.packageName)){
+                    d.ischecked=false;
+                }else{
+                    d.ischecked=true;
+                }
+                socialList.add(d);
+            }
+            else if(messengerAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)){
+                DisableAppList d = new DisableAppList();
+                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
+                if(disableNotificationApps.contains(d.applicationInfo.packageName)){
+                    d.ischecked=false;
+                }else{
+                    d.ischecked=true;
+                }
+                messengerList.add(d);
+            }
+            else{
+
+                DisableAppList d = new DisableAppList();
+                d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
+                if(!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
+                    if (disableNotificationApps.contains(d.applicationInfo.packageName)) {
+                        d.ischecked = false;
+                    } else {
+                        d.ischecked = true;
+                    }
+                    appList.add(d);
+                }
+            }
+        }
+
+
+
+        // headerList contains all the section details information with name and enable/disable result
+        if(socialList.size()>0) {
+            HeaderAppList d = new HeaderAppList();
+            d.name = "Social Media";
+            if (disableSectionList.contains("Social Media")) {
+
+                d.ischecked = false;
+            } else {
+                d.ischecked = true;
+            }
+            headerList.add(d);
+        }
+
+
+        if(messengerList.size()>0) {
+            HeaderAppList d1 = new HeaderAppList();
+            d1.name = "Messaging Apps";
+            if (disableSectionList.contains("Messaging Apps")) {
+
+                d1.ischecked = false;
+            } else {
+                d1.ischecked = true;
+            }
+            headerList.add(d1);
+        }
+
+
+        if(appList.size() > 0) {
+            HeaderAppList d2 = new HeaderAppList();
+            d2.name = "Other Apps";
+
+            if (disableSectionList.contains("Other Apps")) {
+
+                d2.ischecked = false;
+            } else {
+                d2.ischecked = true;
+            }
+            headerList.add(d2);
+        }
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        lst_appList.setLayoutManager(linearLayoutManager);
+        lst_appList.setHasFixedSize(true);
+
+        NotificationSectionAdapter adapter = new NotificationSectionAdapter(this,appList,socialList,messengerList,headerList);
+        lst_appList.setAdapter(adapter);
+    }
 }

@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 
 import minium.co.core.BuildConfig;
 import minium.co.core.R;
+import minium.co.core.app.CoreApplication;
 import minium.co.core.ui.CoreActivity;
 
 
@@ -148,8 +149,15 @@ public class UIUtils {
     }
 
     public static void showKeyboard(EditText editText) {
-        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+        try {
+            if(editText!=null) {
+                InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -226,6 +234,7 @@ public class UIUtils {
         try {
             applicationInfo = packageManager.getApplicationInfo(packageName, 0);
         } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         if (applicationInfo == null) {
@@ -266,6 +275,7 @@ public class UIUtils {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
         return BuildConfig.VERSION_CODE;

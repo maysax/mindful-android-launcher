@@ -42,7 +42,6 @@ import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.event.HomePressEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
@@ -61,16 +60,15 @@ import minium.co.core.util.UIUtils;
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
     private Context context;
-    private ImageView icon_launcher, icon_KeyBoardNotification, icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp, icon_AppNotifications;
+    private ImageView icon_launcher, icon_KeyBoardNotification,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp,icon_AppNotifications,icon_SuppressedNotifications;
     private TextView txt_version;
     private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_Faq, ln_changeDefaultApp, ln_AppListNotifications;
-    private String TAG = "SiempoSettingsActivity";
+    private final String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
-    AppUpdaterUtils appUpdaterUtils;
+    private AppUpdaterUtils appUpdaterUtils;
     private ImageView icon_hideNotification;
     private SwitchCompat switch_notification;
     private SwitchCompat switch_KeyBoardnotification;
-    private SwitchCompat switch_AllowNotificationFacebook;
     @SystemService
     ConnectivityManager connectivityManager;
 
@@ -81,6 +79,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
         if (event.isRunning()) {
+
             ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
         }
     }
@@ -98,19 +97,20 @@ public class SiempoSettingsActivity extends CoreActivity {
     }
 
 
-    public void initView() {
+    private void initView() {
         context = SiempoSettingsActivity.this;
         icon_launcher = findViewById(R.id.icon_launcher);
         icon_version = findViewById(R.id.icon_version);
+//        icon_SuppressedNotifications = findViewById(R.id.icon_SuppressedNotifications);
         icon_changeDefaultApp = findViewById(R.id.icon_changeDefaultApp);
         icon_KeyBoardNotification = findViewById(R.id.icon_KeyBoardNotification);
         icon_Feedback = findViewById(R.id.icon_Feedback);
         icon_Faq = findViewById(R.id.icon_Faq);
         icon_AppNotifications = findViewById(R.id.icon_AppNotifications);
         txt_version = findViewById(R.id.txt_version);
-        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
             txt_version.setText("Version : " + "ALPHA-" + BuildConfig.VERSION_NAME);
-        } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
             txt_version.setText("Version : " + "BETA-" + BuildConfig.VERSION_NAME);
         }
 
@@ -118,6 +118,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_launcher = findViewById(R.id.ln_launcher);
         ln_version = findViewById(R.id.ln_version);
         ln_version = findViewById(R.id.ln_version);
+//        ln_suppressedNotifications = findViewById(R.id.ln_suppressedNotifications);
         ln_Feedback = findViewById(R.id.ln_Feedback);
         ln_AppListNotifications = findViewById(R.id.ln_notifications);
         ln_Faq = findViewById(R.id.ln_Faq);
@@ -125,10 +126,15 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
         switch_notification = findViewById(R.id.swtch_notification);
         switch_KeyBoardnotification = findViewById(R.id.switch_KeyBoardnotification);
-        switch_AllowNotificationFacebook = findViewById(R.id.switch_AllowNotificationFacebook);
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
+       // In case if suppressed notification bar is to be invoked from this
+      //  screen
+//        try {
+//            icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
+//        }catch (Exception e){
+//        }
         icon_hideNotification.setImageDrawable(new IconDrawable(context, "fa-flag")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -138,11 +144,10 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        icon_AppNotifications.setImageDrawable(new IconDrawable(context, "fa-bell").colorRes(R.color.text_primary).sizeDp(18));
+        icon_AppNotifications.setImageDrawable(new IconDrawable(context,"fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         icon_KeyBoardNotification.setImageDrawable(new IconDrawable(context, "fa-keyboard-o")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-
         icon_Feedback.setImageDrawable(new IconDrawable(context, "fa-question-circle")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -174,6 +179,16 @@ public class SiempoSettingsActivity extends CoreActivity {
                 new ActivityHelper(context).openSiempoDefaultAppSettings();
             }
         });
+// In case if suppressed notification bar is to be invoked from this screen
+// the following click event will be used
+
+//        ln_suppressedNotifications.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                new ActivityHelper(context).openSiempoSuppressNotificationsSettings();
+//            }
+//        });
 
         ln_Feedback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,11 +210,8 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_AppListNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    AppListNotification_.intent(context).start();
-                } catch (Exception e) {
-                    Tracer.e(e, e.getMessage());
-                }
+                Intent i = new Intent(SiempoSettingsActivity.this,AppListNotificationSetting.class);
+                startActivity(i);
             }
         });
 
@@ -223,9 +235,9 @@ public class SiempoSettingsActivity extends CoreActivity {
                                         appUpdaterUtils = null;
                                     } else {
                                         Log.d(TAG, "check version from AWS");
-                                        if (BuildConfig.FLAVOR.equalsIgnoreCase("alpha")) {
+                                        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
                                             ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.ALPHA);
-                                        } else if (BuildConfig.FLAVOR.equalsIgnoreCase("beta")) {
+                                        } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
                                             ApiClient_.getInstance_(SiempoSettingsActivity.this).checkAppVersion(CheckVersionEvent.BETA);
                                         }
 
@@ -285,16 +297,11 @@ public class SiempoSettingsActivity extends CoreActivity {
         FirebaseHelper.getIntance().logScreenUsageTime(SiempoSettingsActivity.this.getClass().getSimpleName(),startTime);
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
     /**
      * This function is use to check current app version with play store version
      * and display alert if update is available using Appupdater library.
      */
-    public void checkVersionFromAppUpdater() {
+    private void checkVersionFromAppUpdater() {
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
@@ -357,7 +364,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         }
     }
 
-    public void initProgressDialog() {
+    private void initProgressDialog() {
         try {
             //noinspection deprecation
             if (pd == null) {
@@ -368,26 +375,11 @@ public class SiempoSettingsActivity extends CoreActivity {
                 pd.show();
             }
         } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
             //WindowManager$BadTokenException will be caught here
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-
-    @SuppressWarnings("ConstantConditions")
-    @Subscribe
-    public void homePressEvent(HomePressEvent event) {
-
-    }
 
 }
