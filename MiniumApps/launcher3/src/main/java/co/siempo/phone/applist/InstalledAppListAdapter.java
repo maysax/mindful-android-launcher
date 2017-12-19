@@ -21,6 +21,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
@@ -122,6 +123,14 @@ class InstalledAppListAdapter extends RecyclerView.Adapter<InstalledAppListAdapt
                 mBottomSheetDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 mBottomSheetDialog.getWindow().setGravity(Gravity.BOTTOM);
                 mBottomSheetDialog.show();
+                if(PackageUtil.isSystemApp( applicationInfo.packageName,context))
+                {
+                    txtUninstall.setVisibility(View.GONE);
+                }
+                else
+                {
+                    txtUninstall.setVisibility(View.VISIBLE);
+                }
 
 
                 txtDetail.setOnClickListener(new View.OnClickListener() {
