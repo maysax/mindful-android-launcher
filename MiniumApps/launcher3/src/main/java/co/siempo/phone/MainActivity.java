@@ -55,6 +55,9 @@ import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.ui.SiempoPermissionActivity;
+import co.siempo.phone.ui.SiempoPermissionActivity_;
+import co.siempo.phone.util.PermissionUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
@@ -72,6 +75,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
 
     private static final String TAG = "MainActivity";
+    private PermissionUtil permissionUtil;
+    @Pref
+    Launcher3Prefs_ launcher3Prefs;
+
 
     public static int currentItem = -1;
     @ViewById
@@ -117,11 +124,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         state = ActivityState.AFTERVIEW;
         Log.d(TAG, "afterViews event called");
 
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                .setPermissions(Constants.PERMISSIONS)
-                .check();
+//        new TedPermission(this)
+//                .setPermissionListener(permissionlistener)
+//                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+//                .setPermissions(Constants.PERMISSIONS)
+//                .check();
+
+        loadViews();
+        logFirebase();
+        checknavigatePermissions();
 
         logFirebase();
         launcherPrefs.updatePrompt().put(true);
@@ -413,17 +424,32 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume.. ");
-        startTime = System.currentTimeMillis();
-        try {
-            enableNfc(true);
-        } catch (Exception e) {
-            Tracer.e(e);
-            CoreApplication.getInstance().logException(e);
+
+        permissionUtil = new PermissionUtil(this);
+        if (!launcher3Prefs.isPermissionGivenAndContinued().get() || !permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) || !permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
+                ) {
+            Intent intent = new Intent(MainActivity.this, SiempoPermissionActivity_.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+        } else {
+            Log.d(TAG, "onResume.. ");
+            startTime = System.currentTimeMillis();
+            try {
+                enableNfc(true);
+            } catch (Exception e) {
+                Tracer.e(e);
+                CoreApplication.getInstance().logException(e);
+            }
+            // prevent keyboard up on old menu screen when coming back from other launcher
+            if (pager != null) pager.setCurrentItem(currentItem, true);
+            //  currentIndex = currentItem;
         }
-        // prevent keyboard up on old menu screen when coming back from other launcher
-        if (pager != null) pager.setCurrentItem(currentItem, true);
-        //  currentIndex = currentItem;
+
+
 
     }
 
@@ -499,7 +525,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onRestart() {
         super.onRestart();
         if (state != ActivityState.AFTERVIEW && state != ActivityState.ACTIVITY_RESULT) {
-            checkAllPermissions();
+//            checkAllPermissions();
             Log.d(TAG, "Restart ... ");
         }
 

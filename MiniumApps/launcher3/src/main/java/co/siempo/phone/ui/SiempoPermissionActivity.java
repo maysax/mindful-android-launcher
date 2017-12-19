@@ -64,25 +64,23 @@ public class SiempoPermissionActivity extends CoreActivity {
     @AfterViews
     void afterViews() {
         permissionUtil = new PermissionUtil(this);
-        if(launcher3Prefs.isPermissionGivenAndContinued().get() && permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
-                && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
-                && permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
-                && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
-                )
-        {
-            Intent intent = new Intent(SiempoPermissionActivity.this, MainActivity_.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        }
-        else {
+//        if (launcher3Prefs.isPermissionGivenAndContinued().get() && permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+//                && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
+//                && permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
+//                && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
+//                ) {
+//            Intent intent = new Intent(SiempoPermissionActivity.this, MainActivity_.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
+//            finish();
+//        } else {
             setSupportActionBar(toolbar);
             switchSmsPermission.setOnCheckedChangeListener(onCheckedChangeListener);
             switchContactPermission.setOnCheckedChangeListener(onCheckedChangeListener);
             switchCameraPermission.setOnCheckedChangeListener(onCheckedChangeListener);
             switchCallPermission.setOnCheckedChangeListener(onCheckedChangeListener);
             switchFilePermission.setOnCheckedChangeListener(onCheckedChangeListener);
-        }
+//        }
     }
 
 
@@ -104,8 +102,6 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchNotificationAccess.setChecked(true);
         if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS))
             switchOverlayAccess.setChecked(true);
-
-
 
 
     }
@@ -196,7 +192,7 @@ public class SiempoPermissionActivity extends CoreActivity {
                 startActivityForResult(intent, PermissionUtil.DRAWING_OVER_OTHER_APPS);
             }
         } else {
-            startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,Uri.parse("package:" + getPackageName())), PermissionUtil.DRAWING_OVER_OTHER_APPS);
+            startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), PermissionUtil.DRAWING_OVER_OTHER_APPS);
         }
     }
 
@@ -205,15 +201,13 @@ public class SiempoPermissionActivity extends CoreActivity {
     void myButtonWasClicked() {
 
         if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
-                permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
-            Intent intent = new Intent(SiempoPermissionActivity.this, MainActivity_.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+                permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
             launcher3Prefs.isPermissionGivenAndContinued().put(true);
+            finish();
+
 
         } else {
-            UIUtils.toast(SiempoPermissionActivity.this, R.string.grant_all_to_proceed_text);
+            UIUtils.toastShort(SiempoPermissionActivity.this, R.string.grant_all_to_proceed_text);
         }
 
     }
@@ -258,7 +252,7 @@ public class SiempoPermissionActivity extends CoreActivity {
 
                 }
 
-                UIUtils.toast(SiempoPermissionActivity.this, "Permission denied: " + deniedPermissions.get(0));
+                UIUtils.toastShort(SiempoPermissionActivity.this, "Permission denied: " + deniedPermissions.get(0));
             }
         }
     };
@@ -280,6 +274,23 @@ public class SiempoPermissionActivity extends CoreActivity {
         } else {
             switchOverlayAccess.setChecked(true);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+                && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
+                && permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
+                && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
+                ) {
+            UIUtils.toastShort(SiempoPermissionActivity.this, R.string.permission_proceed_text);
+        }
+        else
+        {
+
+            UIUtils.toastShort(SiempoPermissionActivity.this, R.string.grant_all_to_proceed_text);
+        }
+
     }
 
 

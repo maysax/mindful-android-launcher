@@ -80,14 +80,14 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.HOME" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-                <!--<category android:name="RUN_AT_BOOT" />-->
-            <!--</intent-filter>-->
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="RUN_AT_BOOT" />
+            </intent-filter>
 
             <!--
                 <intent-filter>
@@ -257,14 +257,6 @@
             android:label="@string/title_activity_app_list_notification" />
         <activity android:name=".settings.SiempoSupressNotificationActivity"></activity>
         <activity android:name=".ui.SiempoPermissionActivity_" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <!--<category android:name="RUN_AT_BOOT" />-->
-            </intent-filter>
 
 
         </activity>
