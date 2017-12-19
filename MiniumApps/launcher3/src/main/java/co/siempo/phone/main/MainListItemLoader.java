@@ -203,7 +203,6 @@ public class MainListItemLoader {
                         new ActivityHelper(context).openNotesApp(false);
                     }
                 }
-                //new ActivityHelper(context).openNotesApp(false);
                 break;
             case 7:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
@@ -225,7 +224,6 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.mapPackage().get());
                     if (!((MainActivity) context).prefs.isMapClicked().get()) {
                         if (CoreApplication.getInstance().getMapPackageList().size() > 1) {
                             ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 11, false);
@@ -290,7 +288,6 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.calenderPackage().get());
                     if (!((MainActivity) context).prefs.isCalenderClicked().get()) {
                         if (CoreApplication.getInstance().getCalenderPackageList().size() > 1) {
                             ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 20, false);
@@ -310,7 +307,6 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.clockPackage().get());
                     if (!((MainActivity) context).prefs.isClockClicked().get()) {
                         if (CoreApplication.getInstance().getClockPackageList().size() > 1) {
                             ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 21, false);
@@ -330,7 +326,6 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.photosPackage().get());
                     if (!((MainActivity) context).prefs.isPhotosClicked().get()) {
                         if (CoreApplication.getInstance().getPhotosPackageList().size() > 1) {
                             ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 22, false);
@@ -351,7 +346,6 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.cameraPackage().get());
                     if (!((MainActivity) context).prefs.isCameraClicked().get()) {
                         if (CoreApplication.getInstance().getCameraPackageList().size() > 1) {
                             ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 23, false);
@@ -371,7 +365,6 @@ public class MainListItemLoader {
                         Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-//                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.browserPackage().get());
                     if (!((MainActivity) context).prefs.isBrowserClicked().get()) {
                         if (CoreApplication.getInstance().getBrowserPackageList().size() > 1) {
                             ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 24, false);

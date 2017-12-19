@@ -433,7 +433,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void logException(Throwable e) {
-        getCrashlytics().logException(e);
+        Crashlytics.logException(e);
     }
 
 
@@ -655,8 +655,8 @@ public abstract class CoreApplication extends MultiDexApplication {
                     mMediaPlayer = new MediaPlayer();
                     mMediaPlayer.setDataSource(this, alert);
                     final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
                         mMediaPlayer.setVolume(100, 100);
                         mMediaPlayer.setScreenOnWhilePlaying(true);
                         mMediaPlayer.prepare();
