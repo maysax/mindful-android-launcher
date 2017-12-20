@@ -75,6 +75,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
 
     private static final String TAG = "MainActivity";
+    public static final String IS_FROM_HOME = "isFromHome";
     private PermissionUtil permissionUtil;
     @Pref
     Launcher3Prefs_ launcher3Prefs;
@@ -433,6 +434,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 ) {
             Intent intent = new Intent(MainActivity.this, SiempoPermissionActivity_.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(IS_FROM_HOME,true);
             startActivity(intent);
 
         } else {

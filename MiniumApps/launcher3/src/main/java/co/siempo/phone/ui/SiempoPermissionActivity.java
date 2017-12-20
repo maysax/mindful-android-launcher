@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
@@ -57,9 +59,12 @@ public class SiempoPermissionActivity extends CoreActivity {
     Switch switchOverlayAccess;
     @ViewById
     Button btnContinue;
+    @ViewById
+    TextView txtPermissionLabel;
     private PermissionUtil permissionUtil;
     @Pref
     Launcher3Prefs_ launcher3Prefs;
+    private boolean isFromHome;
 
     @AfterViews
     void afterViews() {
@@ -74,12 +79,17 @@ public class SiempoPermissionActivity extends CoreActivity {
 //            startActivity(intent);
 //            finish();
 //        } else {
-            setSupportActionBar(toolbar);
-            switchSmsPermission.setOnCheckedChangeListener(onCheckedChangeListener);
-            switchContactPermission.setOnCheckedChangeListener(onCheckedChangeListener);
-            switchCameraPermission.setOnCheckedChangeListener(onCheckedChangeListener);
-            switchCallPermission.setOnCheckedChangeListener(onCheckedChangeListener);
-            switchFilePermission.setOnCheckedChangeListener(onCheckedChangeListener);
+        setSupportActionBar(toolbar);
+        switchSmsPermission.setOnCheckedChangeListener(onCheckedChangeListener);
+        switchContactPermission.setOnCheckedChangeListener(onCheckedChangeListener);
+        switchCameraPermission.setOnCheckedChangeListener(onCheckedChangeListener);
+        switchCallPermission.setOnCheckedChangeListener(onCheckedChangeListener);
+        switchFilePermission.setOnCheckedChangeListener(onCheckedChangeListener);
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            isFromHome = intent.getBooleanExtra(MainActivity.IS_FROM_HOME, false);
+        }
 //        }
     }
 
@@ -87,6 +97,7 @@ public class SiempoPermissionActivity extends CoreActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
 
         if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION))
             switchContactPermission.setChecked(true);
@@ -102,6 +113,27 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchNotificationAccess.setChecked(true);
         if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS))
             switchOverlayAccess.setChecked(true);
+        if (isFromHome) {
+            switchContactPermission.setVisibility(View.VISIBLE);
+            switchCallPermission.setVisibility(View.VISIBLE);
+            switchSmsPermission.setVisibility(View.VISIBLE);
+            switchCameraPermission.setVisibility(View.VISIBLE);
+            switchFilePermission.setVisibility(View.VISIBLE);
+            switchNotificationAccess.setVisibility(View.VISIBLE);
+            switchOverlayAccess.setVisibility(View.VISIBLE);
+            btnContinue.setVisibility(View.VISIBLE);
+            txtPermissionLabel.setText(getString(R.string.permission_title));
+        } else {
+            switchContactPermission.setVisibility(View.GONE);
+            switchCallPermission.setVisibility(View.GONE);
+            switchSmsPermission.setVisibility(View.GONE);
+            switchCameraPermission.setVisibility(View.GONE);
+            switchFilePermission.setVisibility(View.GONE);
+            switchNotificationAccess.setVisibility(View.GONE);
+            switchOverlayAccess.setVisibility(View.GONE);
+            btnContinue.setVisibility(View.GONE);
+            txtPermissionLabel.setText(getString(R.string.permission_siempo_alpha_title));
+        }
 
 
     }
@@ -278,17 +310,11 @@ public class SiempoPermissionActivity extends CoreActivity {
 
     @Override
     public void onBackPressed() {
-        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
-                && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
-                && permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
-                && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
-                ) {
+        if (isFromHome) {
             UIUtils.toastShort(SiempoPermissionActivity.this, R.string.permission_proceed_text);
-        }
-        else
-        {
-
-            UIUtils.toastShort(SiempoPermissionActivity.this, R.string.grant_all_to_proceed_text);
+        } else {
+            super.onBackPressed();
+//            UIUtils.toastShort(SiempoPermissionActivity.this, R.string.grant_all_to_proceed_text);
         }
 
     }
