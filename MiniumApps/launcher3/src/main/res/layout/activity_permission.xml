@@ -151,7 +151,7 @@
         </TableLayout>
 
         <Button
-            android:text="@string/continue"
+            android:text="@string/btn_continue"
             android:id="@+id/btnContinue"
             android:padding="16dp"
             android:layout_margin="8dp"
