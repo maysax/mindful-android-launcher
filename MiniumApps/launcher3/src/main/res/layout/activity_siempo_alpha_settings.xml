@@ -48,7 +48,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:fontFamily="sans-serif-medium"
-                    android:text="UserId:"
+                    android:text="@string/userid"
                     android:textSize="14sp"
                     tools:ignore="UnusedIds" />
 

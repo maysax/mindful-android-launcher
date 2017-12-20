@@ -281,4 +281,6 @@
     <string name="permission_rejected_text"><![CDATA[As you have rejected this permission, app can not provide you the seamless integration.  Please consider turn on permissions at Setting > Permission]]></string>
     <string name="grant_all_to_proceed_text">Please grant all the permissions to proceed</string>
     <string name="permission_proceed_text">Press Continue to proceed</string>
+    <string name="continue">Continue</string>
+    <string name="userid">UserId:</string>
 </resources>
