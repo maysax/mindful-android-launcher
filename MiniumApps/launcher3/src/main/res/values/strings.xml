@@ -265,4 +265,7 @@
     <string name="beta">beta</string>
     <string name="alpha">alpha</string>
     <string name="huawei_limitation">This feature is not supported in Huawei devices.</string>
+    <string name="tempo">Tempo</string>
+    <string name="settings">Settings</string>
+    <string name="help">Help</string>
 </resources>

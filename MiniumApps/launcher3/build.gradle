@@ -42,7 +42,7 @@ android {
         alpha {
 //            versionCode 1
 //            versionName "1"
-            versionCode 11102
+            versionCode 11103
             versionName "${0}.${0}.${11}.${1}-${buildTime}"
         }
         beta {
@@ -101,7 +101,7 @@ dependencies {
     compile "com.github.yuweiguocn:GreenDaoUpgradeHelper:$greenDaoUpgradeHelperVersion"
     compile "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     debugCompile "com.amitshekhar.android:debug-db:$debugDBVersion"
-    compile 'com.google.firebase:firebase-core:11.6.2'
+    compile 'com.google.firebase:firebase-core:11.8.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.javiersantos:AppUpdater:2.6.4'
 

@@ -191,6 +191,7 @@
     <!-- Android core colors for easy access -->
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
+    <color name="shadow">#727272</color>
     <color name="transparent">@android:color/transparent</color>
     <color name="darker_gray">@android:color/darker_gray</color>
 

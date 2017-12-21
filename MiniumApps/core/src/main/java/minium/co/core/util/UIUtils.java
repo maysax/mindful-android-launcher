@@ -10,15 +10,20 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.ViewGroup;
+import android.view.ViewGroupOverlay;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -34,7 +39,7 @@ import minium.co.core.ui.CoreActivity;
 
 public class UIUtils {
     public static final String PACKAGE_NAME = "co.siempo.phone";
-    public static AlertDialog alertDialog;
+    private static AlertDialog alertDialog;
 
     public static int dpToPx(Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
@@ -152,7 +157,9 @@ public class UIUtils {
         try {
             if(editText!=null) {
                 InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                if (imm != null) {
+                    imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                }
             }
         }
         catch (Exception e){
@@ -189,7 +196,9 @@ public class UIUtils {
      */
     public static void hideSoftKeyboard(Context mContext, IBinder windowToken) {
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
+        if (inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(windowToken, 0);
+        }
     }
 
     public static int getDensity(Context context) {
@@ -219,7 +228,10 @@ public class UIUtils {
      */
     private static String getScreenDisplaySize(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
+        Display display = null;
+        if (wm != null) {
+            display = wm.getDefaultDisplay();
+        }
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
@@ -237,16 +249,8 @@ public class UIUtils {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
         }
-        if (applicationInfo == null) {
-            return false;
-        } else {
-            // Installed
-            if (applicationInfo.enabled) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        return applicationInfo != null && applicationInfo.enabled;
+// Installed
     }
 
     public static byte[] convertBitmapToByte(Bitmap bitmap) {
@@ -261,13 +265,9 @@ public class UIUtils {
 
     public static boolean isDeviceHasSimCard(Context context) {
         TelephonyManager tm = (TelephonyManager) context.getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);  //gets the current TelephonyManager
-        if (tm.getSimState() != TelephonyManager.SIM_STATE_ABSENT) {
-            //the phone has a sim card
-            return true;
-        } else {
-            return false;
-            //no sim card available
-        }
+        //the phone has a sim card
+//no sim card available
+        return tm.getSimState() != TelephonyManager.SIM_STATE_ABSENT;
     }
 
     public static int getCurrentVersionCode(Context context) {
@@ -280,4 +280,31 @@ public class UIUtils {
         }
         return BuildConfig.VERSION_CODE;
     }
+
+    /**
+     * This method is used for dim the background when user open the pop up dialog.
+     *
+     * @param parent
+     * @param dimAmount
+     */
+    public static void applyDim(@NonNull ViewGroup parent, float dimAmount) {
+        //Drawable dim = new ColorDrawable(Color.BLACK);
+        Drawable dim = new ColorDrawable(parent.getContext().getResources().getColor(R.color.shadow));
+        dim.setBounds(0, 0, parent.getWidth(), parent.getHeight());
+        dim.setAlpha((int) (255 * dimAmount));
+
+        ViewGroupOverlay overlay = parent.getOverlay();
+        overlay.add(dim);
+    }
+
+    /**
+     * This method remove the dim background.
+     *
+     * @param parent
+     */
+    public static void clearDim(@NonNull ViewGroup parent) {
+        ViewGroupOverlay overlay = parent.getOverlay();
+        overlay.clear();
+    }
+
 }
