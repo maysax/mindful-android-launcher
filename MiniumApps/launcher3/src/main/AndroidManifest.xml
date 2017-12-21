@@ -99,8 +99,6 @@
 
         </activity>
 
-
-
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />
@@ -229,6 +227,7 @@
 
 
         </activity>
+        <activity android:name=".settings.SiempoSupressNotificationActivity" />
     </application>
 
 </manifest>

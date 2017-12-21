@@ -2,6 +2,8 @@ package co.siempo.phone.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.widget.Toast;
 
 import co.siempo.phone.R;
 import co.siempo.phone.service.SiempoDndService;
+import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 5/17/2017.
@@ -18,6 +21,7 @@ import co.siempo.phone.service.SiempoDndService;
 
 public class PackageUtil {
 
+    private static final String SYSTEM_PACKAGE_NAME = "android";
     public static boolean isCallPackage(String pkg) {
         return pkg != null && !pkg.equalsIgnoreCase("") && (pkg.contains("telecom") || pkg.contains("dialer"));
     }
@@ -63,6 +67,29 @@ public class PackageUtil {
         }
 
 
+    }
+
+    /**
+     * Match signature of application to identify that if it is signed by system
+     * or not.
+     *
+     * @param packageName package of application. Can not be blank.
+     * @return <code>true</code> if application is signed by system certificate,
+     * otherwise <code>false</code>
+     */
+    public static boolean isSystemApp(String packageName, Context context) {
+        try {
+            PackageManager mPackageManager = (PackageManager) context.getPackageManager();
+            // Get packageinfo for target application
+
+            ApplicationInfo ai = mPackageManager.getApplicationInfo(packageName, 0);
+            return ((ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+
+
+        } catch (PackageManager.NameNotFoundException e) {
+            CoreApplication.getInstance().logException(e);
+            return false;
+        }
     }
 
 }
