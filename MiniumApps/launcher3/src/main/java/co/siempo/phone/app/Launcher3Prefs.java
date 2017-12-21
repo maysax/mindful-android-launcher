@@ -72,4 +72,8 @@ public interface Launcher3Prefs {
 
     @DefaultInt(0)
     int getCurrentVersion();
+
+    @DefaultBoolean(false)
+    boolean isPermissionGivenAndContinued();
+
 }

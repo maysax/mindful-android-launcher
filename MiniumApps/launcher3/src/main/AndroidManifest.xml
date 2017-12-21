@@ -153,15 +153,6 @@
         <service android:name=".service.SiempoDndService_" />
 
         <receiver
-            android:name=".msg.SmsReceiver_"
-            android:enabled="true"
-            android:permission="android.permission.BROADCAST_SMS">
-            <intent-filter android:priority="999">
-                <action android:name="android.provider.Telephony.SMS_DELIVER" />
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
-        <receiver
             android:name=".call.CallReceiver_"
             android:enabled="true">
             <intent-filter>
@@ -216,11 +207,16 @@
 
         <activity
             android:name=".settings.AppListNotificationSetting"
-            android:label="@string/title_activity_app_list_notification"></activity>
+            android:label="@string/title_activity_app_list_notification" />
         <activity
             android:name=".settings.AppListNotification"
             android:label="@string/title_activity_app_list_notification" />
-        <activity android:name=".settings.SiempoSupressNotificationActivity"></activity>
+        <activity android:name=".settings.SiempoSupressNotificationActivity" />
+        <activity
+            android:name=".ui.SiempoPermissionActivity_"
+           />
+
+
     </application>
 
 </manifest>

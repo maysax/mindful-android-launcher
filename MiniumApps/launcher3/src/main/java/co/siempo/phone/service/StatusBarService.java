@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.hardware.Camera;
@@ -22,6 +23,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.List;
 
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.R;
@@ -87,9 +90,12 @@ public class StatusBarService extends Service {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
         intentFilter.addDataScheme("package");
         registerReceiver(appInstallUninstall, intentFilter);
     }
+
+
 
     /**
      * Observer for when new contact adding or updating any exiting contact.
@@ -237,13 +243,15 @@ public class StatusBarService extends Service {
                         String installPackageName;
                         installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                         Log.d("Testing with device.", "Added" + installPackageName);
+
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                         String uninstallPackageName;
                         uninstallPackageName = intent.getData().getSchemeSpecificPart();
                         Log.d("Testing with device.", "Removed" + uninstallPackageName);
-                        if(!TextUtils.isEmpty(uninstallPackageName)) {
-                             new DBClient().deleteMsgByPackageName(uninstallPackageName);
-                         }
+                        if (!TextUtils.isEmpty(uninstallPackageName)) {
+                            new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                        }
+
                     }
                     sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
                     EventBus.getDefault().post(new AppInstalledEvent(true));
@@ -255,6 +263,7 @@ public class StatusBarService extends Service {
 
         }
     }
+
 
 
     @Override
