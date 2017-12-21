@@ -160,14 +160,4 @@ public class AppDrawerActivity extends CoreActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(resultCode==RESULT_OK && requestCode== UNINSTALL_APP_REQUEST_CODE)
-        {
-
-        }
-
     }
-}

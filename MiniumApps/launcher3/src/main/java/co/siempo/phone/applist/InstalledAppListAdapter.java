@@ -144,8 +144,8 @@ class InstalledAppListAdapter extends RecyclerView.Adapter<InstalledAppListAdapt
                             context.startActivity(intent);
 
                         } catch ( ActivityNotFoundException e ) {
-                            //e.printStackTrace();
-
+                            Tracer.e(e, e.getMessage());
+                            CoreApplication.getInstance().logException(e);
                             //Open the generic Apps page:
                             Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
                             context.startActivity(intent);
@@ -170,6 +170,7 @@ class InstalledAppListAdapter extends RecyclerView.Adapter<InstalledAppListAdapt
                                     AppDrawerActivity.UNINSTALL_APP_REQUEST_CODE);
                         } catch (Exception e) {
                             Tracer.e(e, e.getMessage());
+                            CoreApplication.getInstance().logException(e);
                         }
 
                         mBottomSheetDialog.dismiss();

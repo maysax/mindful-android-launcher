@@ -244,26 +244,14 @@ public class StatusBarService extends Service {
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                         String uninstallPackageName;
                         uninstallPackageName = intent.getData().getSchemeSpecificPart();
-//                        ApplicationInfo uninstalledApplicationInfo=null;
-//                        List<ApplicationInfo> packagesList = CoreApplication.getInstance().getPackagesList();
-//                        for (ApplicationInfo applicationInfo : packagesList) {
-//                            if(applicationInfo.packageName.equalsIgnoreCase(uninstallPackageName))
-//                            {
-//                                uninstalledApplicationInfo=applicationInfo;
-//                            }
-//                        }
-//                        if(null!=uninstalledApplicationInfo && null!=packagesList) {
-//                            packagesList.remove(uninstalledApplicationInfo);
-//                        }
-
                         Log.d("Testing with device.", "Removed" + uninstallPackageName);
-                        if(!TextUtils.isEmpty(uninstallPackageName)) {
-                             new DBClient().deleteMsgByPackageName(uninstallPackageName);
-                         }
+                        if (!TextUtils.isEmpty(uninstallPackageName)) {
+                            new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                        }
 
                     }
                     sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
-                   EventBus.getDefault().post(new AppInstalledEvent(true));
+                    EventBus.getDefault().post(new AppInstalledEvent(true));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
