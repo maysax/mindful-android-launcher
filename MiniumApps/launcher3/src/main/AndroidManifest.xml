@@ -220,14 +220,12 @@
         <activity
             android:name=".settings.AppListNotification"
             android:label="@string/title_activity_app_list_notification" />
-        <activity
-            android:name=".settings.SiempoSupressNotificationActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".ui.SiempoPermissionActivity_" >
-
-
-        </activity>
         <activity android:name=".settings.SiempoSupressNotificationActivity" />
+        <activity
+            android:name=".ui.SiempoPermissionActivity_"
+           />
+
+
     </application>
 
 </manifest>
