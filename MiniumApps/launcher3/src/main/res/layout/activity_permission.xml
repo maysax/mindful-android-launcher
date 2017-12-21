@@ -43,7 +43,7 @@
             android:padding="@dimen/margin.3"
             android:stretchColumns="0">
 
-            <TableRow>
+            <TableRow android:id="@+id/tblContact">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -57,7 +57,9 @@
                     android:layout_height="wrap_content" />
 
             </TableRow>
-            <TableRow android:layout_marginTop="16dp">
+            <TableRow
+                android:id="@+id/tblCalls"
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -71,7 +73,9 @@
                     android:layout_height="wrap_content" />
 
             </TableRow>
-            <TableRow android:layout_marginTop="16dp">
+            <TableRow
+                android:id="@+id/tblSMS"
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -85,7 +89,9 @@
                     android:layout_height="wrap_content" />
 
             </TableRow>
-            <TableRow android:layout_marginTop="16dp">
+            <TableRow
+                android:id="@+id/tblCamera"
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -99,7 +105,9 @@
                     android:layout_height="wrap_content" />
 
             </TableRow>
-            <TableRow android:layout_marginTop="16dp">
+            <TableRow
+                android:id="@+id/tblStorage"
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -130,7 +138,9 @@
             </TableRow>
 
 
-            <TableRow android:layout_marginTop="16dp">
+            <TableRow
+                android:id="@+id/tblNotification"
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -146,7 +156,9 @@
             </TableRow>
 
 
-            <TableRow android:layout_marginTop="16dp">
+            <TableRow
+                android:id="@+id/tblDrawOverlay"
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:layout_width="match_parent"

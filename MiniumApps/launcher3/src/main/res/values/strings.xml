@@ -277,7 +277,7 @@
     <string name="draw_overlay">Draw over other Apps</string>
     <string name="usageStatistics">Usage statistics</string>
     <string name="label.drawingOver">Drawing over other apps</string>
-    <string name="permission_title">Please enable the following services to allow the app to work correctly:</string>
+    <string name="permission_title">"Please enable the following permission(s) to allow the app to work correctly:"</string>
     <string name="permission_siempo_alpha_title">"Siempo is using following permissions\n"</string>
     <string name="permission_rejected_text"><![CDATA[As you have rejected this permission, app can not provide you the seamless integration.  Please consider turn on permissions at Setting > Permission]]></string>
     <string name="grant_all_to_proceed_text">Please grant all the permissions to proceed</string>

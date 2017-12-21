@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -61,6 +62,22 @@ public class SiempoPermissionActivity extends CoreActivity {
 
     @ViewById
     TableRow tblLocation;
+    @ViewById
+    TableRow tblCalls;
+     @ViewById
+    TableRow tblContact;
+     @ViewById
+    TableRow tblSMS;
+     @ViewById
+    TableRow tblCamera;
+     @ViewById
+    TableRow tblNotification;
+     @ViewById
+    TableRow tblDrawOverlay;
+     @ViewById
+    TableRow tblStorage;
+
+
     private PermissionUtil permissionUtil;
     @Pref
     Launcher3Prefs_ launcher3Prefs;
@@ -80,6 +97,9 @@ public class SiempoPermissionActivity extends CoreActivity {
         if (intent != null) {
             isFromHome = intent.getBooleanExtra(MainActivity.IS_FROM_HOME, false);
         }
+
+
+
     }
 
 
@@ -136,6 +156,31 @@ public class SiempoPermissionActivity extends CoreActivity {
             btnContinue.setVisibility(View.VISIBLE);
             tblLocation.setVisibility(View.GONE);
             txtPermissionLabel.setText(getString(R.string.permission_title));
+
+            if (Build.VERSION.SDK_INT >= 23) {
+                tblContact.setVisibility(View.VISIBLE);
+                tblCalls.setVisibility(View.VISIBLE);
+                tblCamera.setVisibility(View.VISIBLE);
+                tblDrawOverlay.setVisibility(View.VISIBLE);
+                tblStorage.setVisibility(View.VISIBLE);
+                tblNotification.setVisibility(View.VISIBLE);
+                tblSMS.setVisibility(View.VISIBLE);
+
+            }
+            else
+            {
+
+
+
+                tblContact.setVisibility(View.GONE);
+                tblCalls.setVisibility(View.GONE);
+                tblCamera.setVisibility(View.GONE);
+                tblDrawOverlay.setVisibility(View.GONE);
+                tblStorage.setVisibility(View.GONE);
+                tblNotification.setVisibility(View.VISIBLE);
+                tblSMS.setVisibility(View.GONE);
+            }
+
         } else {
             switchContactPermission.setVisibility(View.GONE);
             switchCallPermission.setVisibility(View.GONE);
@@ -190,14 +235,16 @@ public class SiempoPermissionActivity extends CoreActivity {
     @TargetApi(23)
     @CheckedChange
     void switchOverlayAccess(CompoundButton btn, boolean isChecked) {
-        if (isChecked) {
-            if (!Settings.canDrawOverlays(SiempoPermissionActivity.this)) {
-                Toast.makeText(SiempoPermissionActivity.this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, PermissionUtil.DRAWING_OVER_OTHER_APPS);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (isChecked) {
+                if (!Settings.canDrawOverlays(SiempoPermissionActivity.this)) {
+                    Toast.makeText(SiempoPermissionActivity.this, R.string.msg_overlay_settings, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, PermissionUtil.DRAWING_OVER_OTHER_APPS);
+                }
+            } else {
+                startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), PermissionUtil.DRAWING_OVER_OTHER_APPS);
             }
-        } else {
-            startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName())), PermissionUtil.DRAWING_OVER_OTHER_APPS);
         }
     }
 
