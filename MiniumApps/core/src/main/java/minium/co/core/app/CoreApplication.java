@@ -845,6 +845,17 @@ public abstract class CoreApplication extends MultiDexApplication {
         getNotesPackageList().clear();
         getNotesPackageList().add(null);
         getNotesPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+
+        if (UIUtils.isAppInstalled(this, "com.google.android.keep")) {
+            Intent keepIntent = new Intent();
+            keepIntent.setPackage("com.google.android.keep");
+            List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
+            if (resolveInfo != null && resolveInfo.size() > 0) {
+                getNotesPackageList().add(resolveInfo.get(0));
+            }
+        }
+
+
         for (ResolveInfo res : getNotesPackageList()) {
 //            Log.d("Default App Name", "Notes : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
             return res != null ? res.activityInfo.packageName : "Notes";

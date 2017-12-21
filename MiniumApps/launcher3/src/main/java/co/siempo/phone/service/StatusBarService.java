@@ -90,9 +90,12 @@ public class StatusBarService extends Service {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
         intentFilter.addDataScheme("package");
         registerReceiver(appInstallUninstall, intentFilter);
     }
+
+
 
     /**
      * Observer for when new contact adding or updating any exiting contact.
@@ -260,6 +263,7 @@ public class StatusBarService extends Service {
 
         }
     }
+
 
 
     @Override
