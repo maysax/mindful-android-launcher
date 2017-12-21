@@ -272,6 +272,7 @@
     <string name="sms_permission">SMS</string>
     <string name="video_permission">Pictures and Videos</string>
     <string name="storage_permission">Access File Manager</string>
+    <string name="location_permission">Location</string>
     <string name="notificationAccess">Notification access</string>
     <string name="draw_overlay">Draw over other Apps</string>
     <string name="usageStatistics">Usage statistics</string>
@@ -280,6 +281,7 @@
     <string name="permission_siempo_alpha_title">"Siempo is using following permissions\n"</string>
     <string name="permission_rejected_text"><![CDATA[As you have rejected this permission, app can not provide you the seamless integration.  Please consider turn on permissions at Setting > Permission]]></string>
     <string name="grant_all_to_proceed_text">Please grant all the permissions to proceed</string>
+    <string name="runtime_permission_text">Please consider turn on permissions at Setting > Permission</string>
     <string name="permission_proceed_text">Press Continue to proceed</string>
     <string name="btn_continue">Continue</string>
     <string name="userid">UserId:</string>

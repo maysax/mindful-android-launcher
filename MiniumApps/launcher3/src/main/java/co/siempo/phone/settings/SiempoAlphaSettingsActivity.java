@@ -122,7 +122,8 @@ public class SiempoAlphaSettingsActivity extends CoreActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SiempoAlphaSettingsActivity.this, SiempoPermissionActivity_.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 intent.putExtra(IS_FROM_HOME,false);
                 startActivity(intent);
             }

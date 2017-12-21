@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,9 @@ public class SiempoPermissionActivity extends CoreActivity {
     Button btnContinue;
     @ViewById
     TextView txtPermissionLabel;
+
+    @ViewById
+    TableRow tblLocation;
     private PermissionUtil permissionUtil;
     @Pref
     Launcher3Prefs_ launcher3Prefs;
@@ -90,51 +94,37 @@ public class SiempoPermissionActivity extends CoreActivity {
 
         if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)) {
             switchContactPermission.setChecked(true);
-        }
-        else
-        {
+        } else {
             switchContactPermission.setChecked(false);
         }
         if (permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION)) {
             switchCallPermission.setChecked(true);
-        }
-        else
-        {
+        } else {
             switchCallPermission.setChecked(false);
         }
         if (permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)) {
             switchSmsPermission.setChecked(true);
-        }
-        else
-        {
+        } else {
             switchSmsPermission.setChecked(false);
         }
         if (permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION)) {
             switchCameraPermission.setChecked(true);
-        }
-        else
-        {
+        } else {
             switchCameraPermission.setChecked(false);
         }
         if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
             switchFilePermission.setChecked(true);
-        }
-        else
-        {
+        } else {
             switchFilePermission.setChecked(false);
         }
         if (permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS)) {
             switchNotificationAccess.setChecked(true);
-        }
-        else
-        {
+        } else {
             switchNotificationAccess.setChecked(false);
         }
         if (permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
             switchOverlayAccess.setChecked(true);
-        }
-        else
-        {
+        } else {
             switchOverlayAccess.setChecked(false);
         }
 
@@ -148,6 +138,7 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchNotificationAccess.setVisibility(View.VISIBLE);
             switchOverlayAccess.setVisibility(View.VISIBLE);
             btnContinue.setVisibility(View.VISIBLE);
+            tblLocation.setVisibility(View.GONE);
             txtPermissionLabel.setText(getString(R.string.permission_title));
         } else {
             switchContactPermission.setVisibility(View.GONE);
@@ -158,6 +149,13 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchNotificationAccess.setVisibility(View.GONE);
             switchOverlayAccess.setVisibility(View.GONE);
             btnContinue.setVisibility(View.GONE);
+            if(permissionUtil.hasGiven(PermissionUtil.LOCATION_PERMISSION)) {
+                tblLocation.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                tblLocation.setVisibility(View.GONE);
+            }
             txtPermissionLabel.setText(getString(R.string.permission_siempo_alpha_title));
         }
 
@@ -165,72 +163,77 @@ public class SiempoPermissionActivity extends CoreActivity {
     }
 
 
-
-    CompoundButton.OnClickListener onClickListener =new CompoundButton.OnClickListener()
+    CompoundButton.OnClickListener onClickListener = new CompoundButton.OnClickListener()
 
     {
         @Override
         public void onClick(View v) {
 
-           Switch aSwitch= (Switch) v;
-           if(aSwitch.isChecked())
-           {
-               switch (v.getId()) {
-                   case R.id.switchCallPermission:
+            Switch aSwitch = (Switch) v;
+            if (aSwitch.isChecked()) {
+                UIUtils.toastShort(SiempoPermissionActivity.this, R.string.runtime_permission_text);
 
-                       new TedPermission(SiempoPermissionActivity.this)
-                               .setPermissionListener(permissionlistener)
-                               .setDeniedMessage(R.string.permission_rejected_text)
-                               .setPermissions(Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_CALL_LOG, Manifest.permission.READ_CALL_LOG)
-                               .check();
+            }
+            startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())), PermissionUtil.APP_PERMISSION);
 
-                       break;
-
-                   case R.id.switchContactPermission:
-
-                       new TedPermission(SiempoPermissionActivity.this)
-                               .setPermissionListener(permissionlistener)
-                               .setDeniedMessage(R.string.permission_rejected_text)
-                               .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)
-                               .check();
-
-                       break;
-                   case R.id.switchCameraPermission:
-
-                       new TedPermission(SiempoPermissionActivity.this)
-                               .setPermissionListener(permissionlistener)
-                               .setDeniedMessage(R.string.permission_rejected_text)
-                               .setPermissions(Manifest.permission.CAMERA)
-
-                               .check();
-
-                       break;
-                   case R.id.switchFilePermission:
-
-                       new TedPermission(SiempoPermissionActivity.this)
-                               .setPermissionListener(permissionlistener)
-                               .setDeniedMessage(R.string.permission_rejected_text)
-                               .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
-                               .check();
-
-                       break;
-                   case R.id.switchSmsPermission:
-
-                       new TedPermission(SiempoPermissionActivity.this)
-                               .setPermissionListener(permissionlistener)
-                               .setDeniedMessage(R.string.permission_rejected_text)
-                               .setPermissions(Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.RECEIVE_MMS)
-                               .check();
-
-                       break;
-
-               }
-               
-           }
-           else
-           {
-               startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())), PermissionUtil.APP_PERMISSION);
-           }
+//            if(aSwitch.isChecked())
+//           {
+//               switch (v.getId()) {
+//                   case R.id.switchCallPermission:
+//
+//                       new TedPermission(SiempoPermissionActivity.this)
+//                               .setPermissionListener(permissionlistener)
+//                               .setDeniedMessage(R.string.permission_rejected_text)
+//                               .setPermissions(Manifest.permission.CALL_PHONE, Manifest.permission.WRITE_CALL_LOG, Manifest.permission.READ_CALL_LOG)
+//                               .check();
+//
+//                       break;
+//
+//                   case R.id.switchContactPermission:
+//
+//                       new TedPermission(SiempoPermissionActivity.this)
+//                               .setPermissionListener(permissionlistener)
+//                               .setDeniedMessage(R.string.permission_rejected_text)
+//                               .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS)
+//                               .check();
+//
+//                       break;
+//                   case R.id.switchCameraPermission:
+//
+//                       new TedPermission(SiempoPermissionActivity.this)
+//                               .setPermissionListener(permissionlistener)
+//                               .setDeniedMessage(R.string.permission_rejected_text)
+//                               .setPermissions(Manifest.permission.CAMERA)
+//
+//                               .check();
+//
+//                       break;
+//                   case R.id.switchFilePermission:
+//
+//                       new TedPermission(SiempoPermissionActivity.this)
+//                               .setPermissionListener(permissionlistener)
+//                               .setDeniedMessage(R.string.permission_rejected_text)
+//                               .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+//                               .check();
+//
+//                       break;
+//                   case R.id.switchSmsPermission:
+//
+//                       new TedPermission(SiempoPermissionActivity.this)
+//                               .setPermissionListener(permissionlistener)
+//                               .setDeniedMessage(R.string.permission_rejected_text)
+//                               .setPermissions(Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.RECEIVE_SMS, Manifest.permission.RECEIVE_MMS)
+//                               .check();
+//
+//                       break;
+//
+//               }
+//
+//           }
+//           else
+//           {
+//               startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())), PermissionUtil.APP_PERMISSION);
+//           }
 
         }
     };

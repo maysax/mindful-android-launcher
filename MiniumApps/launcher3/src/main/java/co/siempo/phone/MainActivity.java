@@ -125,6 +125,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         state = ActivityState.AFTERVIEW;
         Log.d(TAG, "afterViews event called");
 
+
 //        new TedPermission(this)
 //                .setPermissionListener(permissionlistener)
 //                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
@@ -432,9 +433,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 || !permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) || !permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
                 ) {
+
             Intent intent = new Intent(MainActivity.this, SiempoPermissionActivity_.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(IS_FROM_HOME,true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra(IS_FROM_HOME, true);
             startActivity(intent);
 
         } else {
@@ -450,7 +453,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             if (pager != null) pager.setCurrentItem(currentItem, true);
             //  currentIndex = currentItem;
         }
-
 
 
     }
