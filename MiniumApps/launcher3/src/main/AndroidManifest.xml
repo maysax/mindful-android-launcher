@@ -99,31 +99,7 @@
 
         </activity>
 
-        <!--<activity-->
-            <!--android:name=".ui.SiempoPermissionActivity"-->
-            <!--android:clearTaskOnLaunch="true"-->
-            <!--android:excludeFromRecents="true"-->
-            <!--android:launchMode="singleTask"-->
-            <!--android:screenOrientation="portrait"-->
-            <!--android:stateNotNeeded="true">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.HOME" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-                <!--<category android:name="RUN_AT_BOOT" />-->
-            <!--</intent-filter>-->
-
-            <!--&lt;!&ndash;-->
-                <!--<intent-filter>-->
-                <!--<action android:name="android.nfc.action.TECH_DISCOVERED" />-->
-            <!--</intent-filter>-->
-            <!--<meta-data android:name="android.nfc.action.TECH_DISCOVERED"-->
-                <!--android:resource="@xml/nfc_tech_filter" />-->
-            <!--&ndash;&gt;-->
-
-        <!--</activity>-->
 
         <receiver android:name=".battery.BatteryChangeReceiver_">
             <intent-filter>
@@ -178,15 +154,6 @@
 
         <service android:name=".service.SiempoDndService_" />
 
-        <receiver
-            android:name=".msg.SmsReceiver_"
-            android:enabled="true"
-            android:permission="android.permission.BROADCAST_SMS">
-            <intent-filter android:priority="999">
-                <action android:name="android.provider.Telephony.SMS_DELIVER" />
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".call.CallReceiver_"
             android:enabled="true">
@@ -251,7 +218,7 @@
 
         <activity
             android:name=".settings.AppListNotificationSetting"
-            android:label="@string/title_activity_app_list_notification"></activity>
+            android:label="@string/title_activity_app_list_notification" />
         <activity
             android:name=".settings.AppListNotification"
             android:label="@string/title_activity_app_list_notification" />
