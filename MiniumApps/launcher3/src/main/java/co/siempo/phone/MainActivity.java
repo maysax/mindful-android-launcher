@@ -55,7 +55,6 @@ import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
-import co.siempo.phone.ui.SiempoPermissionActivity;
 import co.siempo.phone.ui.SiempoPermissionActivity_;
 import co.siempo.phone.util.PermissionUtil;
 import de.greenrobot.event.EventBus;
@@ -74,14 +73,12 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
 
-    private static final String TAG = "MainActivity";
     public static final String IS_FROM_HOME = "isFromHome";
-    private PermissionUtil permissionUtil;
+    private static final String TAG = "MainActivity";
+    public static int currentItem = -1;
+    public static String isTextLenghGreater = "";
     @Pref
     Launcher3Prefs_ launcher3Prefs;
-
-
-    public static int currentItem = -1;
     @ViewById
     ViewPager pager;
 
@@ -101,22 +98,49 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
-
-    private enum ActivityState {
-        AFTERVIEW,
-        RESTART,
-        ACTIVITY_RESULT,
-        STOP
-    }
-
     ActivityState state;
-
-    private AlertDialog notificationDialog;
-
-    public static String isTextLenghGreater = "";
-
     long startTime;
     boolean isApplicationLaunch = false;
+    /**
+     * Below function is use to check if latest version is available from play store or not
+     * 1) It will check first with Appupdater library if it fails to identify then
+     * 2) It will check with AWS logic.
+     */
+    AppUpdaterUtils appUpdaterUtils;
+    private PermissionUtil permissionUtil;
+    private AlertDialog notificationDialog;
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            Log.d(TAG, "Permission granted");
+            loadViews();
+            logFirebase();
+            checknavigatePermissions();
+
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            UIUtils.toast(MainActivity.this, "Permission denied");
+            new TedPermission(MainActivity.this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+                    .setPermissions(Constants.PERMISSIONS)
+                    .check();
+        }
+    };
+
+    /**
+     * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
+     */
+    public static boolean isEnabled(Context mContext) {
+
+        ComponentName cn = new ComponentName(mContext, SiempoNotificationListener_.class);
+        String flat = Settings.Secure.getString(mContext.getContentResolver(), "enabled_notification_listeners");
+        return flat != null && flat.contains(cn.flattenToString());
+
+        //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
+    }
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -136,7 +160,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         logFirebase();
         checknavigatePermissions();
 
-        logFirebase();
         launcherPrefs.updatePrompt().put(true);
 
     }
@@ -282,39 +305,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         });
     }
-
-    /**
-     * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
-     */
-    public static boolean isEnabled(Context mContext) {
-
-        ComponentName cn = new ComponentName(mContext, SiempoNotificationListener_.class);
-        String flat = Settings.Secure.getString(mContext.getContentResolver(), "enabled_notification_listeners");
-        return flat != null && flat.contains(cn.flattenToString());
-
-        //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
-    }
-
-    PermissionListener permissionlistener = new PermissionListener() {
-        @Override
-        public void onPermissionGranted() {
-            Log.d(TAG, "Permission granted");
-            loadViews();
-            logFirebase();
-            checknavigatePermissions();
-
-        }
-
-        @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-            UIUtils.toast(MainActivity.this, "Permission denied");
-            new TedPermission(MainActivity.this)
-                    .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                    .setPermissions(Constants.PERMISSIONS)
-                    .check();
-        }
-    };
 
     private void logFirebase() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -549,13 +539,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .start();
     }
 
-    /**
-     * Below function is use to check if latest version is available from play store or not
-     * 1) It will check first with Appupdater library if it fails to identify then
-     * 2) It will check with AWS logic.
-     */
-    AppUpdaterUtils appUpdaterUtils;
-
     public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
@@ -593,7 +576,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
 
     public void notificatoinAccessDialog() {
         notificationDialog = new AlertDialog.Builder(MainActivity.this)
@@ -635,7 +617,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-
     public void checkAllPermissions() {
         new TedPermission(MainActivity.this)
                 .setPermissionListener(new PermissionListener() {
@@ -655,6 +636,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Constants.PERMISSIONS)
                 .check();
+    }
+
+
+    private enum ActivityState {
+        AFTERVIEW,
+        RESTART,
+        ACTIVITY_RESULT,
+        STOP
     }
 
 }
