@@ -13,7 +13,6 @@
         android:id="@+id/tempoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="54dp"
         android:background="?android:attr/detailsElementBackground" />
 
     <FrameLayout

@@ -288,4 +288,8 @@
     <string name="permission_proceed_text">Press Continue to proceed</string>
     <string name="btn_continue">Continue</string>
     <string name="userid">UserId:</string>
+    <string name="app_menus">App Menus</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="account">Account</string>
+    <string name="alpha_settings">Alpha Settings</string>
 </resources>

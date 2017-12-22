@@ -43,6 +43,8 @@ import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
+import co.siempo.phone.tempo.TempoSettingsActivity;
+import co.siempo.phone.tempo.TempoSettingsActivity_;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -412,6 +414,10 @@ public class MainFragment extends CoreFragment {
                 linSettings.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //Code for opening Tempo Settings
+
+                        Intent intent = new Intent(getActivity(), TempoSettingsActivity_.class);
+                        startActivity(intent);
                         UIUtils.clearDim(root);
                         mPopupWindow.dismiss();
                     }

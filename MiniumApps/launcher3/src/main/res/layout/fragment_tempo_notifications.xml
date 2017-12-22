@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        tools:context="co.siempo.phone.pause.PauseActivity">
+
+        <include
+            android:id="@+id/includeLayout"
+            layout="@layout/tempo_toolbar" />
+
+        <RelativeLayout
+            android:id="@+id/relAllowSpecificApps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/includeLayout">
+
+
+            <TextView
+                android:id="@+id/txtAllowApps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:text="Allow specific apps"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtAllowAppsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtAllowApps"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:text="Notifications from all apps ar blocked, except that you specifically choose to allow."
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/txtAllowPeaking"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relAllowSpecificApps"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="Allow peaking"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/switchAllowPeaking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txtAllowPeakingText"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/txtAllowPeakingText"
+            android:layout_below="@+id/txtAllowPeaking"
+            android:layout_marginRight="8dp" />
+
+        <TextView
+            android:id="@+id/txtAllowPeakingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtAllowPeaking"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/switchAllowPeaking"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:text="Off. The status bar will show you when you have new notifications in your tray, but your tray won't pop up automatically."
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/txtAllowOnLockScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtAllowPeakingText"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="Allow on lock screen"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/switchAllowOnLockScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txtAllowOnLockScreenText"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/txtAllowOnLockScreenText"
+            android:layout_below="@+id/txtAllowOnLockScreenText"
+            android:layout_marginRight="8dp" />
+
+        <TextView
+            android:id="@+id/txtAllowOnLockScreenText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtAllowOnLockScreen"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/switchAllowOnLockScreen"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:text="Off. All notifications will be hidden from the lock screen."
+            android:textSize="16sp" />
+
+
+        <TextView
+            android:id="@+id/txtDisableNotificationControls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtAllowOnLockScreenText"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:text="Disable notification controls"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/switchDisableNotificationControls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/txtDisableNotificationControlsTxt"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/txtDisableNotificationControlsTxt"
+            android:layout_below="@+id/txtDisableNotificationControls"
+            android:layout_marginRight="8dp" />
+
+
+        <TextView
+            android:id="@+id/txtDisableNotificationControlsTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtDisableNotificationControls"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/switchDisableNotificationControls"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:text="Disabling Siempo's notification controls means that you can no longer schedule nor control the appearance of notifications."
+            android:textSize="16sp" />
+
+
+    </RelativeLayout>
+
+</ScrollView>
+
+
