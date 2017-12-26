@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="co.siempo.phone.settings.AppListNotification">
+
+
+    <include
+        android:id="@+id/includeLayout"
+        layout="@layout/tempo_toolbar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lst_appList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/includeLayout"
+        android:background="#ffffff" />
+
+
+</RelativeLayout>

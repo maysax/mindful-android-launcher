@@ -66,6 +66,7 @@ public class TempoSettingsFragment extends CoreFragment {
     Launcher3Prefs_ launcherPrefs;
 
 
+
     @AfterViews
     void afterViews() {
         ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
@@ -84,18 +85,22 @@ public class TempoSettingsFragment extends CoreFragment {
     void txtAppMenus() {
 
     }
+
     @Click
     void txtNotification() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoNotificationFragment_.builder().build(), R.id.tempoView);
     }
+
     @Click
     void txtAccount() {
 
     }
+
     @Click
     void txtAlphaSettings() {
 
     }
+
     @Click
     void imgLeft() {
         getActivity().finish();

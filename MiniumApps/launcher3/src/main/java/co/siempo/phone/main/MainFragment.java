@@ -38,12 +38,12 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
-import co.siempo.phone.tempo.TempoSettingsActivity;
 import co.siempo.phone.tempo.TempoSettingsActivity_;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
@@ -94,6 +94,9 @@ public class MainFragment extends CoreFragment {
 
     @Pref
     DroidPrefs_ prefs;
+
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
 
 
     @Bean
@@ -161,6 +164,8 @@ public class MainFragment extends CoreFragment {
             }
         });
         moveSearchBar(false);
+
+
     }
 
     @Override
@@ -182,6 +187,15 @@ public class MainFragment extends CoreFragment {
             if (prefs.isAppUpdated().get()) {
                 prefs.isAppUpdated().put(false);
             }
+        }
+
+        if(launcherPrefs.isTempoNotificationControlsDisabled().get())
+        {
+            imgTempo.setVisibility(View.GONE);
+        }
+        else
+        {
+            imgTempo.setVisibility(View.VISIBLE);
         }
     }
 
@@ -404,6 +418,16 @@ public class MainFragment extends CoreFragment {
                 LinearLayout linHelp = customView.findViewById(R.id.linHelp);
                 LinearLayout linSettings = customView.findViewById(R.id.linSettings);
                 LinearLayout linTempo = customView.findViewById(R.id.linTempo);
+
+                if(launcherPrefs.isTempoNotificationControlsDisabled().get())
+                {
+                    linTempo.setVisibility(View.GONE);
+                }
+                else
+                {
+                    linTempo.setVisibility(View.VISIBLE);
+                }
+
                 linTempo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

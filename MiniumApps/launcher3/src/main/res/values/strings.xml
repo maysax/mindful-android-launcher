@@ -292,4 +292,5 @@
     <string name="home_screen">Home Screen</string>
     <string name="account">Account</string>
     <string name="alpha_settings">Alpha Settings</string>
+    <string name="allow_specific_apps">Allow specific apps</string>
 </resources>

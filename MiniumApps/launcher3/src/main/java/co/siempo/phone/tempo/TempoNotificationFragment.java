@@ -1,6 +1,8 @@
 package co.siempo.phone.tempo;
 
+import android.app.DatePickerDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -34,6 +36,7 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
+import minium.co.core.util.UIUtils;
 
 @EFragment(R.layout.fragment_tempo_notifications)
 public class TempoNotificationFragment extends CoreFragment {
@@ -68,9 +71,12 @@ public class TempoNotificationFragment extends CoreFragment {
     TextView txtAllowOnLockScreen;
     @ViewById
     TextView txtDisableNotificationControls;
+    @ViewById
+    TextView txtDisableNotificationControlsTxt;
 
     @ViewById
     RelativeLayout relAllowSpecificApps;
+    private boolean isDisableChecked;
 
 
     public TempoNotificationFragment() {
@@ -89,12 +95,9 @@ public class TempoNotificationFragment extends CoreFragment {
     void afterViews() {
         ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
         titleActionBar.setText(R.string.string_notification_title);
-    }
 
-
-    @CheckedChange
-    void switchDisableNotificationControls(CompoundButton btn, boolean isChecked) {
-        if (isChecked) {
+        if (launcherPrefs.isTempoNotificationControlsDisabled().get()) {
+            switchDisableNotificationControls.setChecked(true);
             txtAllowOnLockScreen.setVisibility(View.GONE);
             txtAllowPeaking.setVisibility(View.GONE);
             txtAllowApps.setVisibility(View.GONE);
@@ -103,7 +106,12 @@ public class TempoNotificationFragment extends CoreFragment {
             switchAllowPeaking.setVisibility(View.GONE);
             switchAllowOnLockScreen.setVisibility(View.GONE);
             txtAllowPeakingText.setVisibility(View.GONE);
-        } else {
+            isDisableChecked = true;
+            txtDisableNotificationControlsTxt.setText("All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.");
+        } else
+
+        {
+            switchDisableNotificationControls.setChecked(false);
             txtAllowOnLockScreen.setVisibility(View.VISIBLE);
             txtAllowPeaking.setVisibility(View.VISIBLE);
             txtAllowApps.setVisibility(View.VISIBLE);
@@ -112,14 +120,100 @@ public class TempoNotificationFragment extends CoreFragment {
             switchAllowPeaking.setVisibility(View.VISIBLE);
             switchAllowOnLockScreen.setVisibility(View.VISIBLE);
             txtAllowPeakingText.setVisibility(View.VISIBLE);
+            isDisableChecked = false;
+            txtDisableNotificationControlsTxt.setText("Disabling Siempo's notifications controls means that you can no longer schedule nor control the appearance of notifications.");
         }
 
+        switchDisableNotificationControls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!isDisableChecked) {
+
+                    UIUtils.confirmWithCancel(getActivity(), "Are you sure ?", "Most users report that phone notifications are a primary cause of unwanted distraction and encourage them to spend too much time on their phones.", "YES,DISABLE", "CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switchDisableNotificationControls.setChecked(true);
+                            txtAllowOnLockScreen.setVisibility(View.GONE);
+                            txtAllowPeaking.setVisibility(View.GONE);
+                            txtAllowApps.setVisibility(View.GONE);
+                            txtAllowAppsText.setVisibility(View.GONE);
+                            txtAllowOnLockScreenText.setVisibility(View.GONE);
+                            switchAllowPeaking.setVisibility(View.GONE);
+                            switchAllowOnLockScreen.setVisibility(View.GONE);
+                            txtAllowPeakingText.setVisibility(View.GONE);
+                            isDisableChecked = true;
+                            launcherPrefs.isTempoNotificationControlsDisabled().put(true);
+                            txtDisableNotificationControlsTxt.setText("All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.");
+
+                        }
+                    }, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switchDisableNotificationControls.setChecked(false);
+                            txtAllowOnLockScreen.setVisibility(View.VISIBLE);
+                            txtAllowPeaking.setVisibility(View.VISIBLE);
+                            txtAllowApps.setVisibility(View.VISIBLE);
+                            txtAllowAppsText.setVisibility(View.VISIBLE);
+                            txtAllowOnLockScreenText.setVisibility(View.VISIBLE);
+                            switchAllowPeaking.setVisibility(View.VISIBLE);
+                            switchAllowOnLockScreen.setVisibility(View.VISIBLE);
+                            txtAllowPeakingText.setVisibility(View.VISIBLE);
+                            isDisableChecked = false;
+                            launcherPrefs.isTempoNotificationControlsDisabled().put(false);
+
+                        }
+                    });
+
+                } else {
+                    switchDisableNotificationControls.setChecked(false);
+                    txtAllowOnLockScreen.setVisibility(View.VISIBLE);
+                    txtAllowPeaking.setVisibility(View.VISIBLE);
+                    txtAllowApps.setVisibility(View.VISIBLE);
+                    txtAllowAppsText.setVisibility(View.VISIBLE);
+                    txtAllowOnLockScreenText.setVisibility(View.VISIBLE);
+                    switchAllowPeaking.setVisibility(View.VISIBLE);
+                    switchAllowOnLockScreen.setVisibility(View.VISIBLE);
+                    txtAllowPeakingText.setVisibility(View.VISIBLE);
+                    isDisableChecked = false;
+                    launcherPrefs.isTempoNotificationControlsDisabled().put(false);
+                    txtDisableNotificationControlsTxt.setText("Disabling Siempo's notifications controls means that you can no longer schedule nor control the appearance of notifications.");
+                }
+
+
+            }
+        });
     }
+
+
+//    @CheckedChange
+//    void switchDisableNotificationControls(CompoundButton btn, boolean isChecked) {
+//        if (isChecked) {
+//            txtAllowOnLockScreen.setVisibility(View.GONE);
+//            txtAllowPeaking.setVisibility(View.GONE);
+//            txtAllowApps.setVisibility(View.GONE);
+//            txtAllowAppsText.setVisibility(View.GONE);
+//            txtAllowOnLockScreenText.setVisibility(View.GONE);
+//            switchAllowPeaking.setVisibility(View.GONE);
+//            switchAllowOnLockScreen.setVisibility(View.GONE);
+//            txtAllowPeakingText.setVisibility(View.GONE);
+//        } else {
+//            txtAllowOnLockScreen.setVisibility(View.VISIBLE);
+//            txtAllowPeaking.setVisibility(View.VISIBLE);
+//            txtAllowApps.setVisibility(View.VISIBLE);
+//            txtAllowAppsText.setVisibility(View.VISIBLE);
+//            txtAllowOnLockScreenText.setVisibility(View.VISIBLE);
+//            switchAllowPeaking.setVisibility(View.VISIBLE);
+//            switchAllowOnLockScreen.setVisibility(View.VISIBLE);
+//            txtAllowPeakingText.setVisibility(View.VISIBLE);
+//        }
+//
+//    }
 
     @CheckedChange
     void switchAllowOnLockScreen(CompoundButton btn, boolean isChecked) {
         if (isChecked) {
-            txtAllowOnLockScreenText.setText("On. All notifications will be hidden from the lock screen.");
+            txtAllowOnLockScreenText.setText("On. New notifications will be visible from the lock screen.");
         } else {
             txtAllowOnLockScreenText.setText("Off. All notifications will be hidden from the lock screen.");
         }
@@ -128,7 +222,7 @@ public class TempoNotificationFragment extends CoreFragment {
     @CheckedChange
     void switchAllowPeaking(CompoundButton btn, boolean isChecked) {
         if (isChecked) {
-            txtAllowPeakingText.setText("On. The status bar will show you when you have new notifications in your tray, but your tray won't pop up automatically.");
+            txtAllowPeakingText.setText("On. When new notifications arrive, they may pop up over the current app. The status bar will also show when you have new notifications.");
 
         } else {
             txtAllowPeakingText.setText("Off. The status bar will show you when you have new notifications in your tray, but your tray won't pop up automatically.");
