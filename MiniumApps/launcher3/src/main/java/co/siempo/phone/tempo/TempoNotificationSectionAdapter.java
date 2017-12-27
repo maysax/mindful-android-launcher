@@ -21,6 +21,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import co.siempo.phone.R;
@@ -38,6 +40,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     protected Context context = null;
     SharedPreferences launcherPrefs;
     ArrayList<String> disableNotificationApps = new ArrayList<>();
+    ArrayList<String> blockedApps = new ArrayList<>();
     ArrayList<String> disableSections = new ArrayList<>();
     private PackageManager packageManager;
     private List<DisableAppList> appList, blockedList, messengerList;
@@ -59,6 +62,15 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
             disableNotificationApps = new Gson().fromJson(disable_AppList, type);
+        }
+
+
+
+        String block_AppList = launcherPrefs.getString(Constants.BLOCKED_APPLIST, "");
+        if (!TextUtils.isEmpty(block_AppList)) {
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            blockedApps = new Gson().fromJson(block_AppList, type);
         }
 
         String disable_HeaderAppList = launcherPrefs.getString(Constants.HEADER_APPLIST, "");
@@ -163,7 +175,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                             if (!showUnblockAlert) {
 
-                                holder.changeNotification(blockedList.get(position).applicationInfo, true, disableNotificationApps, context);
+                                holder.addToBlockList(blockedList.get(position).applicationInfo, true, blockedApps, context);
                                 blockedList.remove(d);
                                 if (messengerAppList.contains(d.applicationInfo.packageName)) {
                                     messengerList.add(d);
@@ -175,14 +187,15 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                     launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
                                 }
 
+
                                 changeHeaderNotification(section, true, disableSections, context);
                             } else {
                                 showUnblockAlert = false;
-                                UIUtils.confirmWithCancel(context, "Most users report that phone notifications are a primary cause of unwanted distraction and encourage them to spend too much time on their phones.", "OK", "OPEN SYSTEM SETTINGS", new DialogInterface.OnClickListener() {
+                                UIUtils.confirmWithCancel(context, "Siempo won't block this app's notifications, but they might be blocked by your Android system settings.", "OK", "OPEN SYSTEM SETTINGS", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
-                                        holder.changeNotification(blockedList.get(position).applicationInfo, true, disableNotificationApps, context);
+                                        holder.addToBlockList(blockedList.get(position).applicationInfo, true, blockedApps, context);
                                         DisableAppList d = blockedList.get(position);
                                         blockedList.remove(d);
                                         if (messengerAppList.contains(d.applicationInfo.packageName)) {
@@ -247,7 +260,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
-                            holder.changeNotification(messengerList.get(position).applicationInfo, false, disableNotificationApps, context);
+                            holder.addToBlockList(messengerList.get(position).applicationInfo, false, blockedApps, context);
                             DisableAppList d = messengerList.get(position);
                             messengerList.remove(d);
                             blockedList.add(d);
@@ -282,7 +295,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
-                            holder.changeNotification(appList.get(position).applicationInfo, false, disableNotificationApps, context);
+                            holder.addToBlockList(appList.get(position).applicationInfo, false, blockedApps, context);
                             DisableAppList d = appList.get(position);
                             appList.remove(d);
                             blockedList.add(d);
@@ -338,6 +351,26 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         HeaderAppList d = headerList.get(position);
         d.ischecked = ischecked;
         headerList.set(position, d);
+
+        Collections.sort(blockedList, new Comparator<DisableAppList>() {
+            @Override
+            public int compare(DisableAppList o1, DisableAppList o2) {
+                return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+            }
+        });
+
+        Collections.sort(messengerList, new Comparator<DisableAppList>() {
+            @Override
+            public int compare(DisableAppList o1, DisableAppList o2) {
+                return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+            }
+        });
+        Collections.sort(appList, new Comparator<DisableAppList>() {
+            @Override
+            public int compare(DisableAppList o1, DisableAppList o2) {
+                return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+            }
+        });
 
         notifyDataSetChanged();
     }

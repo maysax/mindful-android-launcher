@@ -73,4 +73,21 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
+    public void addToBlockList(ApplicationInfo applicationInfo, boolean ischecked ,ArrayList<String> blockedApps, Context context)
+    {
+
+        SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
+        if (ischecked && blockedApps.contains(applicationInfo.packageName)) {
+            blockedApps.remove(applicationInfo.packageName);
+        }
+        if (!ischecked && !blockedApps.contains(applicationInfo.packageName)) {
+            blockedApps.add(applicationInfo.packageName);
+        }
+        String blockedList = new Gson().toJson(blockedApps);
+        launcherPrefs.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+
+
+    }
+
+
 }
