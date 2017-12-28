@@ -131,6 +131,46 @@ public class UIUtils {
 
     }
 
+
+
+    public static void confirmWithCancel(Context context, String title, String msg,String okButton,String cancelButton, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton(okButton, listener)
+                .setNegativeButton(cancelButton, listenerNo);
+        if (alertDialog != null) {
+            if (!alertDialog.isShowing()) {
+                alertDialog.show();
+            }
+        } else {
+            alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+
+    }
+
+
+    public static void confirmWithCancel(Context context, String msg,String okButton,String cancelButton, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                .setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton(okButton, listener)
+                .setNegativeButton(cancelButton, listenerNo);
+        if (alertDialog != null) {
+            if (!alertDialog.isShowing()) {
+                alertDialog.show();
+            }
+        } else {
+            alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+
+    }
+
     public static void ask(Context context, String msg, DialogInterface.OnClickListener listener) {
         new AlertDialog.Builder(context)
                 .setTitle(null)

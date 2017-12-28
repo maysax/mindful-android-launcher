@@ -66,6 +66,7 @@ public class Constants {
 
 
     public static String DISABLE_APPLIST="DISABLE_APPLIST";
+    public static String BLOCKED_APPLIST="BLOCKED_APPLIST";
     public static String SOCIAL_DISABLE_COUNT="SOCIAL_DISABLE_COUNT";
     public static String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
     public static String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
