@@ -66,6 +66,7 @@
         android:launchMode="singleInstance"
         android:supportsRtl="true"
         android:theme="@style/SiempoAppTheme"
+        tools:ignore="AllowBackup"
         tools:replace="android:theme,name,label">
 
         <!-- Fabric configuration -->
@@ -212,10 +213,7 @@
             android:name=".settings.AppListNotification"
             android:label="@string/title_activity_app_list_notification" />
         <activity android:name=".settings.SiempoSupressNotificationActivity" />
-        <activity
-            android:name=".ui.SiempoPermissionActivity_"
-           />
-
+        <activity android:name=".ui.SiempoPermissionActivity_" />
 
     </application>
 

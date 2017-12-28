@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
@@ -9,9 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/dp_10"
-
         android:elevation="7dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:id="@+id/linTempo"
@@ -19,24 +20,27 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
             android:background="@drawable/selector"
-            android:paddingBottom="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_15"
             android:paddingLeft="20dp"
             android:paddingRight="25dp"
-            android:paddingTop="@dimen/dp_10">
+            android:paddingTop="@dimen/dp_15">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_launch" />
+            <!--<ImageView-->
+            <!--android:layout_width="28dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:background="@drawable/ic_tempo_dailog" />-->
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dp_15"
+                android:drawableLeft="@drawable/ic_tempo_dailog"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="center"
                 android:text="@string/tempo"
-                android:textColor="@color/black" />
+                android:textColor="@color/dialog_text"
+                android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
         <LinearLayout
@@ -44,24 +48,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector"
-            android:paddingBottom="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_15"
             android:paddingLeft="20dp"
             android:paddingRight="25dp"
-            android:paddingTop="@dimen/dp_10">
+            android:paddingTop="@dimen/dp_15">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_settings_black_24dp" />
+            <!--<ImageView-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:background="@drawable/ic_settings_tempo" />-->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dp_15"
+                android:drawableLeft="@drawable/ic_settings_tempo"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="center"
                 android:text="@string/settings"
-                android:textColor="@color/black" />
+                android:textColor="@color/dialog_text"
+                android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,24 +77,27 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_10"
             android:background="@drawable/selector"
-            android:paddingBottom="@dimen/dp_10"
+            android:paddingBottom="@dimen/dp_15"
             android:paddingLeft="20dp"
             android:paddingRight="25dp"
-            android:paddingTop="@dimen/dp_10">
+            android:paddingTop="@dimen/dp_15">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/ic_help" />
+            <!--<ImageView-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:background="@drawable/ic_help_tempo" />-->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/dp_15"
+                android:drawableLeft="@drawable/ic_help_tempo"
+                android:drawablePadding="@dimen/dp_10"
+                android:gravity="center"
                 android:text="@string/help"
-                android:textColor="@color/black" />
+                android:textColor="@color/dialog_text"
+                android:textSize="@dimen/sp_16" />
         </LinearLayout>
 
     </LinearLayout>

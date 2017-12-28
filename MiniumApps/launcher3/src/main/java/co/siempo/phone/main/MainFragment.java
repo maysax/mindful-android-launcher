@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -43,6 +44,7 @@ import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
+import co.siempo.phone.tempo.TempoActivity_;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -405,8 +407,13 @@ public class MainFragment extends CoreFragment {
                 linTempo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        UIUtils.clearDim(root);
-                        mPopupWindow.dismiss();
+                        if (getActivity() != null) {
+                            UIUtils.clearDim(root);
+                            mPopupWindow.dismiss();
+                            Intent intent = new Intent(getActivity(), TempoActivity_.class);
+                            startActivity(intent);
+                            // getActivity().overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+                        }
                     }
                 });
                 linSettings.setOnClickListener(new View.OnClickListener() {
@@ -425,7 +432,8 @@ public class MainFragment extends CoreFragment {
                 });
                 mPopupWindow.setOutsideTouchable(true);
                 mPopupWindow.setFocusable(true);
-                mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX());
+                mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
                 UIUtils.applyDim(root, 0.6f);
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
