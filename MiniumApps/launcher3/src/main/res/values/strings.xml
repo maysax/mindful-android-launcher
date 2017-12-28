@@ -299,4 +299,9 @@
     <string name="_09_15am_amp_05_32pm_amp_05_32pm"><![CDATA[09:15am & 05:32pm & 05:32pm]]></string>
     <string name="add">ADD</string>
     <string name="individually">Individually</string>
+    <string name="app_menus">App Menus</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="account">Account</string>
+    <string name="alpha_settings">Alpha Settings</string>
+    <string name="allow_specific_apps">Allow specific apps</string>
 </resources>

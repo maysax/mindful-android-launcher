@@ -15,7 +15,8 @@
         android:id="@+id/txBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/temp_bg" />
+        android:alpha="0.3"
+        android:background="@color/black" />
 
     <RelativeLayout
         android:id="@+id/top"
@@ -255,19 +256,20 @@
             <TextView
                 android:id="@+id/txtMessage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="120dp"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginRight="@dimen/dp_10"
-                android:gravity="center_vertical"
+                android:gravity="top"
                 android:lineSpacingExtra="@dimen/dp_2"
                 android:maxLines="4"
+                android:minHeight="100dp"
                 android:paddingBottom="35dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingTop="10dp"
                 android:textColor="#7F7F7F"
                 android:textSize="15sp"
-                tools:text="Testing\nasdasdasdasdasdasda\nasadasdadssads" />
+                tools:text="Testing" />
 
         </LinearLayout>
 

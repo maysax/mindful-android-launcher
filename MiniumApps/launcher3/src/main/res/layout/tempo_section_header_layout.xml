@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/headerList"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/find_friends_tw_bg"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:showDividers="none"
+    tools:ignore="UseCompoundDrawables">
+
+
+    <TextView
+        android:id="@+id/txt_headerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/dp_5"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:lines="1"
+        android:maxLines="2"
+        android:minLines="1"
+        android:padding="2dp"
+        android:paddingLeft="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_20"
+        android:text="Sound"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+
+
+    <TextView
+        android:id="@+id/txtHeaderlabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:checked="true"
+        android:gravity="center_vertical"
+        android:text="(OK)"
+        android:textColor="#ffffff"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

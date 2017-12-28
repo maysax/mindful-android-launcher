@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
+import java.util.logging.Handler;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
@@ -283,6 +284,12 @@ public class TempoActivity extends CoreActivity {
         fabMenu.close(true);
         droidPrefs.tempoSoundProfile().put(0);
         txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        },300L);
     }
 
     @Click
@@ -290,6 +297,12 @@ public class TempoActivity extends CoreActivity {
         fabMenu.close(true);
         droidPrefs.tempoSoundProfile().put(1);
         txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        },300L);
     }
 
 

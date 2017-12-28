@@ -184,6 +184,9 @@ public interface DroidPrefs {
     @DefaultBoolean(false)
     boolean isAlphaSettingEnable();
 
+    @DefaultBoolean(false)
+    boolean isTempoNotificationControlsDisabled();
+
     //0 Individual,1 batch,2 Only at.
     @DefaultInt(0)
     int tempoType();
