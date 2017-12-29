@@ -1,7 +1,11 @@
 package co.siempo.phone.util;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -9,11 +13,22 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
+import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.service.SiempoDndService;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 5/17/2017.
@@ -22,6 +37,7 @@ import minium.co.core.app.CoreApplication;
 public class PackageUtil {
 
     private static final String SYSTEM_PACKAGE_NAME = "android";
+
     public static boolean isCallPackage(String pkg) {
         return pkg != null && !pkg.equalsIgnoreCase("") && (pkg.contains("telecom") || pkg.contains("dialer"));
     }
@@ -92,4 +108,31 @@ public class PackageUtil {
         }
     }
 
+
+    public static void recreateNotification(TableNotificationSms notification, Context context) {
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(context, "");
+        Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
+
+        int requestID = (int) System.currentTimeMillis();
+        PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(notification.getNotification_date())
+                .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                .setVibrate(new long[0])
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setContentTitle(notification.get_contact_title())
+                .setContentText(notification.get_message())
+                .setContentIntent(contentIntent)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
+                .setContentInfo("Info");
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(notification.getId().intValue(), b.build());
+
+
+    }
 }

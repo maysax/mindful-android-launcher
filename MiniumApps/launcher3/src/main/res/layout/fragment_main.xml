@@ -26,6 +26,7 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
+
             <ImageView
                 android:id="@+id/imgTempo"
                 android:layout_width="wrap_content"
