@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
@@ -29,7 +28,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import java.util.ArrayList;
 
 import co.siempo.phone.MainActivity;
-import co.siempo.phone.MainActivity_;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.util.PermissionUtil;
@@ -64,23 +62,70 @@ public class SiempoPermissionActivity extends CoreActivity {
     TableRow tblLocation;
     @ViewById
     TableRow tblCalls;
-     @ViewById
+    @ViewById
     TableRow tblContact;
-     @ViewById
+    @ViewById
     TableRow tblSMS;
-     @ViewById
+    @ViewById
     TableRow tblCamera;
-     @ViewById
+    @ViewById
     TableRow tblNotification;
-     @ViewById
+    @ViewById
     TableRow tblDrawOverlay;
-     @ViewById
+    @ViewById
     TableRow tblStorage;
-
-
-    private PermissionUtil permissionUtil;
     @Pref
     Launcher3Prefs_ launcher3Prefs;
+    CompoundButton.OnClickListener onClickListener = new CompoundButton.OnClickListener()
+
+    {
+        @Override
+        public void onClick(View v) {
+
+            Switch aSwitch = (Switch) v;
+            if (aSwitch.isChecked()) {
+                UIUtils.toastShort(SiempoPermissionActivity.this, R.string.runtime_permission_text);
+
+            }
+            startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())), PermissionUtil.APP_PERMISSION);
+
+
+        }
+    };
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+            if (!deniedPermissions.isEmpty()) {
+                if (deniedPermissions.contains(Manifest.permission.SEND_SMS)) {
+                    switchSmsPermission.setChecked(false);
+
+                }
+                if (deniedPermissions.contains(Manifest.permission.CAMERA)) {
+                    switchCameraPermission.setChecked(false);
+                }
+                if (deniedPermissions.contains(Manifest.permission.READ_CONTACTS)) {
+                    switchContactPermission.setChecked(false);
+                }
+                if (deniedPermissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    switchFilePermission.setChecked(false);
+
+                }
+                if (deniedPermissions.contains(Manifest.permission.CALL_PHONE)) {
+                    switchCallPermission.setChecked(false);
+
+                }
+
+                UIUtils.toastShort(SiempoPermissionActivity.this, "Permission denied: " + deniedPermissions.get(0));
+            }
+        }
+    };
+    private PermissionUtil permissionUtil;
     private boolean isFromHome;
 
     @AfterViews
@@ -99,9 +144,7 @@ public class SiempoPermissionActivity extends CoreActivity {
         }
 
 
-
     }
-
 
     @Override
     protected void onResume() {
@@ -165,13 +208,7 @@ public class SiempoPermissionActivity extends CoreActivity {
                 tblStorage.setVisibility(View.VISIBLE);
                 tblNotification.setVisibility(View.VISIBLE);
                 tblSMS.setVisibility(View.VISIBLE);
-
-            }
-            else
-            {
-
-
-
+            } else {
                 tblContact.setVisibility(View.GONE);
                 tblCalls.setVisibility(View.GONE);
                 tblCamera.setVisibility(View.GONE);
@@ -180,7 +217,6 @@ public class SiempoPermissionActivity extends CoreActivity {
                 tblNotification.setVisibility(View.VISIBLE);
                 tblSMS.setVisibility(View.GONE);
             }
-
         } else {
             switchContactPermission.setVisibility(View.GONE);
             switchCallPermission.setVisibility(View.GONE);
@@ -198,27 +234,11 @@ public class SiempoPermissionActivity extends CoreActivity {
             txtPermissionLabel.setText(getString(R.string.permission_siempo_alpha_title));
         }
 
-
-    }
-
-
-    CompoundButton.OnClickListener onClickListener = new CompoundButton.OnClickListener()
-
-    {
-        @Override
-        public void onClick(View v) {
-
-            Switch aSwitch = (Switch) v;
-            if (aSwitch.isChecked()) {
-                UIUtils.toastShort(SiempoPermissionActivity.this, R.string.runtime_permission_text);
-
-            }
-            startActivityForResult(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())), PermissionUtil.APP_PERMISSION);
-
-
+        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+            finish();
         }
-    };
-
+    }
 
     @TargetApi(22)
     @CheckedChange
@@ -248,57 +268,17 @@ public class SiempoPermissionActivity extends CoreActivity {
         }
     }
 
-
     @Click(R.id.btnContinue)
     void myButtonWasClicked() {
-
         if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
-            launcher3Prefs.isPermissionGivenAndContinued().put(true);
+//            launcher3Prefs.isPermissionGivenAndContinued().put(true);
             finish();
-
-
         } else {
             UIUtils.toastShort(SiempoPermissionActivity.this, R.string.grant_all_to_proceed_text);
         }
 
     }
-
-
-    PermissionListener permissionlistener = new PermissionListener() {
-        @Override
-        public void onPermissionGranted() {
-
-        }
-
-        @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-
-            if (!deniedPermissions.isEmpty()) {
-                if (deniedPermissions.contains(Manifest.permission.SEND_SMS)) {
-                    switchSmsPermission.setChecked(false);
-
-                }
-                if (deniedPermissions.contains(Manifest.permission.CAMERA)) {
-                    switchCameraPermission.setChecked(false);
-                }
-                if (deniedPermissions.contains(Manifest.permission.READ_CONTACTS)) {
-                    switchContactPermission.setChecked(false);
-                }
-                if (deniedPermissions.contains(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    switchFilePermission.setChecked(false);
-
-                }
-                if (deniedPermissions.contains(Manifest.permission.CALL_PHONE)) {
-                    switchCallPermission.setChecked(false);
-
-                }
-
-                UIUtils.toastShort(SiempoPermissionActivity.this, "Permission denied: " + deniedPermissions.get(0));
-            }
-        }
-    };
-
 
     @OnActivityResult(PermissionUtil.NOTIFICATION_ACCESS)
     void onResultNotificationAccess(int resultCode) {

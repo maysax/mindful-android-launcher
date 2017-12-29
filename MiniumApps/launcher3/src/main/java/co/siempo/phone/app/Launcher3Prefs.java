@@ -76,7 +76,4 @@ public interface Launcher3Prefs {
     @DefaultBoolean(false)
     boolean isPermissionGivenAndContinued();
 
-    @DefaultBoolean(false)
-    boolean isTempoNotificationControlsDisabled();
-
 }

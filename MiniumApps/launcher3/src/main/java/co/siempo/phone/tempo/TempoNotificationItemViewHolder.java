@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -73,8 +72,7 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void addToBlockList(ApplicationInfo applicationInfo, boolean ischecked ,ArrayList<String> blockedApps, Context context)
-    {
+    public void addToBlockList(ApplicationInfo applicationInfo, boolean ischecked, ArrayList<String> blockedApps, Context context) {
 
         SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
         if (ischecked && blockedApps.contains(applicationInfo.packageName)) {

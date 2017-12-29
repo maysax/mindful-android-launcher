@@ -132,8 +132,7 @@ public class UIUtils {
     }
 
 
-
-    public static void confirmWithCancel(Context context, String title, String msg,String okButton,String cancelButton, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
+    public static void confirmWithCancel(Context context, String title, String msg, String okButton, String cancelButton, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                 .setTitle(title)
@@ -153,7 +152,7 @@ public class UIUtils {
     }
 
 
-    public static void confirmWithCancel(Context context, String msg,String okButton,String cancelButton, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
+    public static void confirmWithCancel(Context context, String msg, String okButton, String cancelButton, DialogInterface.OnClickListener listener, DialogInterface.OnClickListener listenerNo) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                 .setMessage(msg)

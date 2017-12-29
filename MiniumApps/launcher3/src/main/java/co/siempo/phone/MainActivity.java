@@ -418,7 +418,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onResume();
 
         permissionUtil = new PermissionUtil(this);
-        if (!launcher3Prefs.isPermissionGivenAndContinued().get() || !permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+        if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
                 || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) || !permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
