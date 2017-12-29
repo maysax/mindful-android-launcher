@@ -1,8 +1,10 @@
 package co.siempo.phone.tempo;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,8 +19,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 
 import co.siempo.phone.R;
@@ -26,7 +26,6 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.settings.NotificationSectionAdapter;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
@@ -113,14 +112,12 @@ public class TempoAppNotificationActivity extends CoreActivity {
         systemAppList = Arrays.asList(getResources().getStringArray(R.array.systemAppList));
 
 
-        // Add social Media List
-        messengerAppList.addAll(Arrays.asList(getResources().getStringArray(R.array.messengerAppList)));
-
-        // Below logic will use for further development
-//        String packageName=Telephony.Sms.getDefaultSmsPackage(getApplicationContext());
-//        if(!TextUtils.isEmpty(packageName)){
-//            messengerAppList.add(packageName);
-//        }
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        List<ResolveInfo> messagingResolveList = getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo resolveInfo : messagingResolveList) {
+            messengerAppList.add(resolveInfo.activityInfo.packageName);
+        }
 
 
         // disableNotificationApps contains of disable app list
@@ -137,7 +134,6 @@ public class TempoAppNotificationActivity extends CoreActivity {
             blockedApps = new Gson().fromJson(block_AppList, type);
         }
 
-
         for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
 
             for (String blockedApp : blockedApps) {
@@ -145,10 +141,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
                     disableNotificationApps.add(applicationInfo.packageName);
                 }
             }
-
-
         }
-
 
         String disableList = new Gson().toJson(disableNotificationApps);
         launcherPrefs.edit().putString(Constants.DISABLE_APPLIST, disableList).commit();
@@ -161,10 +154,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
             }.getType();
             disableSectionList = new Gson().fromJson(disable_Header_AppList, type);
         }
-
-
         loadAndDisplayAppList();
-
     }
 
     @Subscribe

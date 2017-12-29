@@ -57,6 +57,8 @@ public class SmsReceiver extends BroadcastReceiver {
 
 
     ArrayList<String> disableNotificationApps = new ArrayList<>();
+    ArrayList<String> blockedApps = new ArrayList<>();
+
 
     public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
 
@@ -98,7 +100,26 @@ public class SmsReceiver extends BroadcastReceiver {
                         }.getType();
                         disableNotificationApps = new ArrayList<>();
                         disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-                        if (disableNotificationApps.contains("com.google.android.apps.messaging")) {
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("Launcher3Prefs", 0);
+
+                        String block_AppList = sharedPreferences.getString(Constants.BLOCKED_APPLIST, "");
+                        if (!TextUtils.isEmpty(block_AppList)) {
+                            Type blockType = new TypeToken<ArrayList<String>>() {
+                            }.getType();
+                            blockedApps = new Gson().fromJson(block_AppList, blockType);
+                        }
+                        boolean isShowNotification = true;
+                        String messagingAppPackage = "com.google.android.apps.messaging";
+                        if (null != blockedApps && blockedApps.size() > 0) {
+                            for (String blockedApp : blockedApps) {
+                                if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
+                                    isShowNotification = false;
+                                }
+                            }
+
+                        }
+
+                        if (disableNotificationApps.contains(messagingAppPackage) && isShowNotification) {
                             saveMessage(mAddress, mBody, mDate, context);
                         }
                     }

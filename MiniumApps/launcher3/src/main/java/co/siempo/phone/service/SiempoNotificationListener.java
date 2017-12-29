@@ -133,23 +133,22 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
             String disable_AppList = prefs.getString(Constants.DISABLE_APPLIST, "");
-            SharedPreferences sharedPreferences = context.getSharedPreferences("Launcher3Prefs", 0);
 
-            String block_AppList = sharedPreferences.getString(Constants.BLOCKED_APPLIST, "");
+            String block_AppList = prefs.getString(Constants.BLOCKED_APPLIST, "");
             if (!TextUtils.isEmpty(block_AppList)) {
                 Type type = new TypeToken<ArrayList<String>>() {
                 }.getType();
                 blockedApps = new Gson().fromJson(block_AppList, type);
             }
-//            boolean isShowNotification = true;
-//            if (null != blockedApps && blockedApps.size() > 0) {
-//                for (String blockedApp : blockedApps) {
-//                    if (blockedApp.equalsIgnoreCase(notification.getPackageName())) {
-//                        isShowNotification = false;
-//                    }
-//                }
-//
-//            }
+            boolean isShowNotification = true;
+            if (null != blockedApps && blockedApps.size() > 0) {
+                for (String blockedApp : blockedApps) {
+                    if (blockedApp.equalsIgnoreCase(notification.getPackageName())) {
+                        isShowNotification = false;
+                    }
+                }
+
+            }
 
 
             if (!TextUtils.isEmpty(disable_AppList)) {
@@ -159,9 +158,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 disableNotificationApps = new Gson().fromJson(disable_AppList, type);
                 if (!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())) {
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
-//                    if (isShowNotification) {
+                    if (isShowNotification) {
                         filterByCategory(notification);
-//                    }
+                    }
                     return;
                 }
             }
