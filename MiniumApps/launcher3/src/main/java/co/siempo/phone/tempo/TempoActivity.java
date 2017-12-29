@@ -28,7 +28,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
-import java.util.logging.Handler;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
@@ -88,6 +87,7 @@ public class TempoActivity extends CoreActivity {
     DroidPrefs_ droidPrefs;
     String strMessage;
     TimePickerDialog timePickerDialog;
+    boolean isCancelButton = false;
     private String TAG = "TempoActivity";
 
     @Subscribe
@@ -211,22 +211,28 @@ public class TempoActivity extends CoreActivity {
                 android.text.format.DateFormat.is24HourFormat(this)
         );
         timePickerDialog.setOkText("SAVE");
-        timePickerDialog.setCancelText("REMOVE");
-        if (listdata.size() != 0 & listdata.size() == 1) {
-            timePickerDialog.setCancelable(false);
+
+        if (listdata.size() <= 1) {
+            timePickerDialog.setCancelText("CANCEL");
+            isCancelButton = true;
+        } else {
+            timePickerDialog.setCancelText("REMOVE");
+            isCancelButton = false;
         }
 
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                if (listdata.size() != 0) {
-                    listdata.remove(i);
-                    if (listdata.size() >= 1) {
-                        droidPrefs.onlyAt().put(android.text.TextUtils.join(",", listdata));
-                    } else {
-                        droidPrefs.onlyAt().put("");
+                if (!isCancelButton) {
+                    if (listdata.size() != 0) {
+                        listdata.remove(i);
+                        if (listdata.size() >= 1) {
+                            droidPrefs.onlyAt().put(android.text.TextUtils.join(",", listdata));
+                        } else {
+                            droidPrefs.onlyAt().put("");
+                        }
+                        enableRadioOnPosition(2);
                     }
-                    enableRadioOnPosition(2);
                 }
             }
         });
@@ -289,7 +295,7 @@ public class TempoActivity extends CoreActivity {
             public void run() {
                 finish();
             }
-        },300L);
+        }, 300L);
     }
 
     @Click
@@ -302,7 +308,7 @@ public class TempoActivity extends CoreActivity {
             public void run() {
                 finish();
             }
-        },300L);
+        }, 300L);
     }
 
 

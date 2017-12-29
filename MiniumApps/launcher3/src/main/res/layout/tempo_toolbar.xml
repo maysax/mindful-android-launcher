@@ -6,59 +6,59 @@
     android:layout_height="63dp">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="63dp"
-        android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
         android:elevation="8dp"
-        app:contentInsetStart="0dp"
+        android:minHeight="?attr/actionBarSize"
         app:contentInsetEnd="0dp"
         app:contentInsetLeft="0dp"
         app:contentInsetRight="0dp"
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:contentInsetStart="0dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         tools:background="@color/material.core.cyan">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="63dp"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             tools:background="@color/material.core.brown">
 
             <ImageView
                 android:id="@+id/imgLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/icon_back"
                 android:layout_marginStart="12dp"
                 android:contentDescription="@null"
+                android:padding="4dp"
+                android:src="@drawable/icon_back"
                 tools:ignore="UnusedIds" />
 
             <TextView
                 android:id="@+id/titleActionBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="center_vertical"
-                android:padding="4dp"
-                android:textSize="20sp"
                 android:layout_marginStart="8dp"
-                android:textColor="@color/black"
+                android:layout_weight="1"
                 android:fontFamily="sans-serif-medium"
+                android:padding="4dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 tools:text="Mindful Morning" />
 
             <ImageView
                 android:id="@+id/imgRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:visibility="gone"
-                android:src="@drawable/icon_settings"
                 android:layout_marginEnd="18dp"
                 android:contentDescription="@null"
+                android:padding="4dp"
+                android:src="@drawable/icon_settings"
+                android:visibility="gone"
                 tools:ignore="UnusedIds" />
 
         </LinearLayout>

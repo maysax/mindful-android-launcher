@@ -1,21 +1,15 @@
 package co.siempo.phone.tempo;
 
 
-import android.content.DialogInterface;
-import android.content.Intent;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
 
 @EActivity(R.layout.activity_tempo_settings)
 public class TempoSettingsActivity extends CoreActivity {

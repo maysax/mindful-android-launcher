@@ -4,12 +4,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,8 +19,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.List;
 
 import co.siempo.phone.R;
@@ -26,7 +26,6 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.settings.NotificationSectionAdapter;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
@@ -38,37 +37,29 @@ import minium.co.core.ui.CoreActivity;
 
 public class TempoAppNotificationActivity extends CoreActivity {
 
+    long startTime = 0;
+    Toolbar toolbar;
     private RecyclerView lst_appList;
     private TextView titleActionBar;
     private ImageView imgBack;
-
     // App list contain all the apps except social apps for display in list
     private List<DisableAppList> appList = new ArrayList<>();
-
     // App list contain all the messenger apps for display in list
     private List<DisableAppList> messengerList = new ArrayList<>();
-
-
     // App list contain all the messenger apps for display in list
     private List<DisableAppList> blockedAppList = new ArrayList<>();
-
     // App list contain all the section names for display in header list
     private List<HeaderAppList> headerList = new ArrayList<>();
-
     // App list contain all the social apps which are fetch from string array
     private List<String> socialAppList = new ArrayList<>();
-
     // App list contain all the messenger apps which are fetch from string array
     private List<String> messengerAppList = new ArrayList<>();
-
     private PackageManager packageManager;
     private SharedPreferences launcherPrefs;
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private ArrayList<String> blockedApps = new ArrayList<>();
     private ArrayList<String> disableSectionList = new ArrayList<>();
     private List<String> systemAppList = new ArrayList<>();
-
-    long startTime = 0;
 
     @Override
     protected void onResume() {
@@ -98,18 +89,21 @@ public class TempoAppNotificationActivity extends CoreActivity {
         headerList.clear();
 
         // Initialize components
-        lst_appList = findViewById(R.id.lst_appList);
-        titleActionBar = findViewById(R.id.titleActionBar);
-        imgBack = findViewById(R.id.imgLeft);
-        titleActionBar.setText(R.string.allow_specific_apps);
-        packageManager = getPackageManager();
-        launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
-        imgBack.setOnClickListener(new View.OnClickListener() {
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
+        toolbar.setTitle(R.string.allow_specific_apps);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        lst_appList = findViewById(R.id.lst_appList);
+        packageManager = getPackageManager();
+        launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
+
         systemAppList = Arrays.asList(getResources().getStringArray(R.array.systemAppList));
 
 
@@ -180,31 +174,19 @@ public class TempoAppNotificationActivity extends CoreActivity {
             if (blockedApps.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
                 DisableAppList d = new DisableAppList();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                if (blockedApps.contains(d.applicationInfo.packageName)) {
-                    d.ischecked = false;
-                } else {
-                    d.ischecked = true;
-                }
+                d.ischecked = !blockedApps.contains(d.applicationInfo.packageName);
                 blockedAppList.add(d);
             } else if (messengerAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
                 DisableAppList d = new DisableAppList();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                if (disableNotificationApps.contains(d.applicationInfo.packageName)) {
-                    d.ischecked = false;
-                } else {
-                    d.ischecked = true;
-                }
+                d.ischecked = !disableNotificationApps.contains(d.applicationInfo.packageName);
                 messengerList.add(d);
             } else {
 
                 DisableAppList d = new DisableAppList();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
                 if (!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
-                    if (disableNotificationApps.contains(d.applicationInfo.packageName)) {
-                        d.ischecked = false;
-                    } else {
-                        d.ischecked = true;
-                    }
+                    d.ischecked = !disableNotificationApps.contains(d.applicationInfo.packageName);
                     appList.add(d);
                 }
             }
@@ -214,12 +196,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
         if (messengerList.size() >= 0) {
             HeaderAppList d1 = new HeaderAppList();
             d1.name = "Human Direct Messaging";
-            if (disableSectionList.contains("Human Direct Messaging")) {
-
-                d1.ischecked = false;
-            } else {
-                d1.ischecked = true;
-            }
+            d1.ischecked = !disableSectionList.contains("Human Direct Messaging");
             headerList.add(d1);
         }
 
@@ -228,12 +205,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
             HeaderAppList d2 = new HeaderAppList();
             d2.name = "Helpful Robots";
 
-            if (disableSectionList.contains("Helpful Robots")) {
-
-                d2.ischecked = false;
-            } else {
-                d2.ischecked = true;
-            }
+            d2.ischecked = !disableSectionList.contains("Helpful Robots");
             headerList.add(d2);
         }
 
@@ -241,12 +213,7 @@ public class TempoAppNotificationActivity extends CoreActivity {
             HeaderAppList d3 = new HeaderAppList();
             d3.name = "All Other Apps";
 
-            if (disableSectionList.contains("All Other Apps")) {
-
-                d3.ischecked = false;
-            } else {
-                d3.ischecked = true;
-            }
+            d3.ischecked = !disableSectionList.contains("All Other Apps");
             headerList.add(d3);
         }
 

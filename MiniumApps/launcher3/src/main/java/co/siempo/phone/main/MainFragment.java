@@ -151,11 +151,7 @@ public class MainFragment extends CoreFragment {
     void afterViews() {
 
         Intent myService = new Intent(getActivity(), StatusBarService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getActivity().startForegroundService(myService);
-        } else {
-            getActivity().startService(myService);
-        }
+        getActivity().startService(myService);
         if (listViewLayout != null) listViewLayout.setVisibility(View.GONE);
         if (afterEffectLayout != null) afterEffectLayout.setVisibility(View.GONE);
         KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {

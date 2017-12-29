@@ -242,6 +242,65 @@ public class StatusBarService extends Service {
         super.onDestroy();
     }
 
+    public void recreateNotification(List<TableNotificationSms> notificationList, Context context) {
+//        for (int i = 0; i < notificationList.size(); i++) {
+//            TableNotificationSms notification = notificationList.get(i);
+//            NotificationCompat.Builder b = new NotificationCompat.Builder(context, "" + notification.getId());
+//            Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
+//
+//            int requestID = (int) System.currentTimeMillis();
+//            PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//            launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            b.setAutoCancel(true)
+//                    .setDefaults(Notification.DEFAULT_ALL)
+//                    .setWhen(notification.getNotification_date())
+//                    .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+//
+//                    .setPriority(Notification.PRIORITY_HIGH)
+//                    .setContentTitle(notification.get_contact_title())
+//                    .setContentText(notification.get_message())
+//                    .setContentIntent(contentIntent)
+//                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
+//                    .setContentInfo("Info");
+//
+//            if (notificationList.size() == 1 || i == (notificationList.size() - 1)) {
+//                if (sharedPreferences.getInt("tempoSoundProfile", 0) == 0) {
+//                    b.setVibrate(new long[0]);
+//                    b.setSound(null);
+//                } else {
+//                    b.setVibrate(new long[]{1000, 1000});
+//                    Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                    b.setSound(alarmSound);
+//                }
+//            }
+//            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+//            notificationManager.notify(notification.getId().intValue(), b.build());
+//        }
+        NotificationCompat.Builder b = new NotificationCompat.Builder(context, "");
+        Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(getPackageName());
+
+        int requestID = (int) System.currentTimeMillis();
+        PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                .setVibrate(new long[0])
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setContentTitle("Total Notification" + notificationList.size())
+                .setContentText("Total Notification ::::: " + notificationList.size())
+                .setContentIntent(contentIntent)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
+                .setContentInfo("Info");
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, b.build());
+        DBUtility.getNotificationDao().deleteAll();
+    }
+
     class MyTimerTask extends TimerTask {
         public void run() {
             if (PackageUtil.isSiempoLauncher(context)) {
@@ -357,64 +416,5 @@ public class StatusBarService extends Service {
             }
 
         }
-    }
-
-    public void recreateNotification(List<TableNotificationSms> notificationList, Context context) {
-//        for (int i = 0; i < notificationList.size(); i++) {
-//            TableNotificationSms notification = notificationList.get(i);
-//            NotificationCompat.Builder b = new NotificationCompat.Builder(context, "" + notification.getId());
-//            Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-//
-//            int requestID = (int) System.currentTimeMillis();
-//            PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//            launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//            b.setAutoCancel(true)
-//                    .setDefaults(Notification.DEFAULT_ALL)
-//                    .setWhen(notification.getNotification_date())
-//                    .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-//
-//                    .setPriority(Notification.PRIORITY_HIGH)
-//                    .setContentTitle(notification.get_contact_title())
-//                    .setContentText(notification.get_message())
-//                    .setContentIntent(contentIntent)
-//                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-//                    .setContentInfo("Info");
-//
-//            if (notificationList.size() == 1 || i == (notificationList.size() - 1)) {
-//                if (sharedPreferences.getInt("tempoSoundProfile", 0) == 0) {
-//                    b.setVibrate(new long[0]);
-//                    b.setSound(null);
-//                } else {
-//                    b.setVibrate(new long[]{1000, 1000});
-//                    Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                    b.setSound(alarmSound);
-//                }
-//            }
-//            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//            notificationManager.notify(notification.getId().intValue(), b.build());
-//        }
-        NotificationCompat.Builder b = new NotificationCompat.Builder(context, "");
-        Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(getPackageName());
-
-        int requestID = (int) System.currentTimeMillis();
-        PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        b.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                .setVibrate(new long[0])
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setContentTitle("Total Notification" + notificationList.size())
-                .setContentText("Total Notification ::::: " + notificationList.size())
-                .setContentIntent(contentIntent)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-                .setContentInfo("Info");
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, b.build());
-        DBUtility.getNotificationDao().deleteAll();
     }
 }

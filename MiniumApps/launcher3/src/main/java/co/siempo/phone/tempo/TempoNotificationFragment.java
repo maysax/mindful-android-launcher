@@ -1,21 +1,14 @@
 package co.siempo.phone.tempo;
 
-import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.CheckedChange;
@@ -24,14 +17,8 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.settings.AppListNotification;
-import co.siempo.phone.ui.SiempoPermissionActivity;
-import co.siempo.phone.util.PermissionUtil;
-import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;

@@ -121,8 +121,7 @@ public class TempoNotificationAppsFragment extends CoreFragment {
     }
 
     @Click
-    void relAllowSpecificApps()
-    {
+    void relAllowSpecificApps() {
 
         ((CoreActivity) getActivity()).loadChildFragment(TempoNotificationFragment_.builder().build(), R.id.tempoView);
 

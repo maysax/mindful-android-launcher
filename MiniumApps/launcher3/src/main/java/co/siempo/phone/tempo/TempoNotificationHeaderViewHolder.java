@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -34,7 +33,7 @@ public class TempoNotificationHeaderViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void render(String text){
+    public void render(String text) {
         txt_headerName.setText(text);
     }
 
@@ -42,7 +41,7 @@ public class TempoNotificationHeaderViewHolder extends RecyclerView.ViewHolder {
 //        switch_headerNotification.setChecked(ischecked);
 //    }
 
-    public TextView getHeaderToggle(){
+    public TextView getHeaderToggle() {
         return switch_headerNotification;
     }
 
@@ -50,25 +49,26 @@ public class TempoNotificationHeaderViewHolder extends RecyclerView.ViewHolder {
 //        switch_headerNotification.setChecked(ischecked);
 //    }
 
-    public void showHeaderView(){
+    public void showHeaderView() {
         headerList.setVisibility(View.VISIBLE);
     }
 
 
-    public void hideHeaderView(){
+    public void hideHeaderView() {
         headerList.setVisibility(View.GONE);
     }
-    public void changeNotification(HeaderAppList headerAppList, boolean ischecked, ArrayList<String> disableHeaderApps, Context context){
+
+    public void changeNotification(HeaderAppList headerAppList, boolean ischecked, ArrayList<String> disableHeaderApps, Context context) {
         SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
-        if(ischecked && disableHeaderApps.contains(headerAppList.name)){
+        if (ischecked && disableHeaderApps.contains(headerAppList.name)) {
             disableHeaderApps.remove(headerAppList.name);
         }
-        if(!ischecked && !disableHeaderApps.contains(headerAppList.name)){
+        if (!ischecked && !disableHeaderApps.contains(headerAppList.name)) {
             disableHeaderApps.add(headerAppList.name);
         }
 
         String disableList = new Gson().toJson(disableHeaderApps);
-        launcherPrefs.edit().putString(Constants.HEADER_APPLIST,disableList).commit();
+        launcherPrefs.edit().putString(Constants.HEADER_APPLIST, disableList).commit();
 //        switch_headerNotification.setChecked(ischecked);
 
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/linearList"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
     android:background="?attr/selectableItemBackground"
+    android:gravity="center"
     android:orientation="vertical"
     android:showDividers="none"
     tools:ignore="UseCompoundDrawables">
@@ -14,8 +14,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="12dp">
 
         <ImageView
             android:id="@+id/imv_appicon"
@@ -28,15 +28,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:fontFamily="sans-serif"
             android:gravity="center|left"
-            android:layout_weight="1"
             android:lines="1"
-            android:minLines="1"
             android:maxLines="2"
+            android:minLines="1"
             android:padding="4dp"
-            android:layout_marginLeft="@dimen/dp_20"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
             android:text="Sound"
@@ -49,11 +49,12 @@
             android:id="@+id/img_block_unblock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_down_arrow"
-            android:gravity="center_vertical"/>
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:src="@drawable/ic_down_arrow" />
     </LinearLayout>
+
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
