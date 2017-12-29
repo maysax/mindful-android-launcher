@@ -336,7 +336,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
-        if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+        if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
             if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
                 Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);

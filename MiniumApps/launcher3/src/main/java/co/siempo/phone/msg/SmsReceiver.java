@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
-import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -43,31 +42,23 @@ import minium.co.core.log.Tracer;
 @EReceiver
 public class SmsReceiver extends BroadcastReceiver {
 
+    public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
+    @Pref
+    DroidPrefs_ prefs;
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
+    TableNotificationSmsDao smsDao;
+    ArrayList<String> disableNotificationApps = new ArrayList<>();
+    ArrayList<String> blockedApps = new ArrayList<>();
     private String mAddress;
     private String mBody;
     private Date mDate;
-
-    @Pref
-    DroidPrefs_ prefs;
-
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
-
-    TableNotificationSmsDao smsDao;
-
-
-    ArrayList<String> disableNotificationApps = new ArrayList<>();
-    ArrayList<String> blockedApps = new ArrayList<>();
-
-
-    public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         Tracer.d("Messages: onReceive in Launcher3");
-        if (intent != null && intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
+        if (intent != null && intent.getAction() != null && intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
             Tracer.d("Notification posted: " + (bundle != null ? bundle.toString() : null));
             if (bundle != null) {
@@ -172,7 +163,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 // notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
-                PackageUtil.recreateNotification(notificationSms, context);
+                PackageUtil.recreateNotification(notificationSms, context, prefs.tempoType().get(), prefs.tempoSoundProfile().get());
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
                 notificationSms.set_date(date);
@@ -180,7 +171,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 notificationSms.set_contact_title(address);
                 notificationSms.set_message(notificationSms.get_message() + "\n" + body);
                 smsDao.update(notificationSms);
-                PackageUtil.recreateNotification(notificationSms, context);
+                PackageUtil.recreateNotification(notificationSms, context, prefs.tempoType().get(), prefs.tempoSoundProfile().get());
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
         } catch (Exception e) {

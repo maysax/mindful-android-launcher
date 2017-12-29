@@ -1,34 +1,24 @@
 package co.siempo.phone.util;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
 import co.siempo.phone.R;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.service.SiempoDndService;
 import minium.co.core.app.CoreApplication;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 5/17/2017.
@@ -95,7 +85,7 @@ public class PackageUtil {
      */
     public static boolean isSystemApp(String packageName, Context context) {
         try {
-            PackageManager mPackageManager = (PackageManager) context.getPackageManager();
+            PackageManager mPackageManager = context.getPackageManager();
             // Get packageinfo for target application
 
             ApplicationInfo ai = mPackageManager.getApplicationInfo(packageName, 0);
@@ -109,30 +99,46 @@ public class PackageUtil {
     }
 
 
-    public static void recreateNotification(TableNotificationSms notification, Context context) {
+    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound) {
+        if (tempoType == 0) {
+            NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
+            Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
 
-        NotificationCompat.Builder b = new NotificationCompat.Builder(context, "");
-        Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
+            int requestID = (int) System.currentTimeMillis();
+            PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        int requestID = (int) System.currentTimeMillis();
-        PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+            if (launchIntentForPackage != null) {
+                launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            }
+            b.setAutoCancel(true)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setContentTitle(notification.get_contact_title())
+                    .setContentText(notification.get_message())
+                    .setContentIntent(contentIntent)
+                    .setDefaults(Notification.DEFAULT_ALL)
+                    .setContentInfo("Info");
+            if (tempoSound == 0) {
+                b.setDefaults(Notification.DEFAULT_LIGHTS);
+            } else {
+                CoreApplication.getInstance().playNotificationSoundVibrate();
+            }
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            String CHANNEL_ID = "Siempo";
+            if (Build.VERSION.SDK_INT >= 26) {
+                CharSequence name = "Siempo";// The user-visible name of the channel.
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+                b.setChannelId(CHANNEL_ID);
+                if (notificationManager != null) {
+                    notificationManager.createNotificationChannel(mChannel);
+                }
 
-        launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        b.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(notification.getNotification_date())
-                .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                .setVibrate(new long[0])
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setContentTitle(notification.get_contact_title())
-                .setContentText(notification.get_message())
-                .setContentIntent(contentIntent)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-                .setContentInfo("Info");
-
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notification.getId().intValue(), b.build());
-
-
+            }
+            if (notificationManager != null) {
+                notificationManager.notify(notification.getId().intValue(), b.build());
+            }
+        }
     }
 }
