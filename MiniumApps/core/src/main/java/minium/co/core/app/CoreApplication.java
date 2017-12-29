@@ -36,6 +36,8 @@ import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.squareup.leakcanary.LeakCanary;
@@ -44,6 +46,7 @@ import com.squareup.leakcanary.RefWatcher;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -93,11 +96,14 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public boolean isIfScreen = false;
 
-//    public String DISABLE_APPLIST="DISABLE_APPLIST";
+
+    //    public String DISABLE_APPLIST="DISABLE_APPLIST";
 //    public String SOCIAL_DISABLE_COUNT="SOCIAL_DISABLE_COUNT";
 //    public String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
 //    public String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
 //    public String HEADER_APPLIST="HEADER_APPLIST";
+    public String DISABLE_APPLIST = "DISABLE_APPLIST";
+    public String BLOCKED_APPLIST = "BLOCKED_APPLIST";
 
     private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
@@ -124,6 +130,8 @@ public abstract class CoreApplication extends MultiDexApplication {
     private boolean isEditNotOpen = false;
     AudioManager audioManager;
     NotificationManager notificationManager;
+    private ArrayList<String> disableNotificationApps = new ArrayList<>();
+    private ArrayList<String> blockedApps = new ArrayList<>();
 
 
     public Crashlytics getCrashlytics() {
@@ -458,6 +466,45 @@ public abstract class CoreApplication extends MultiDexApplication {
             }
         });
         this.packagesList = packagesList;
+
+        SharedPreferences sharedPreferences = getSharedPreferences("Launcher3Prefs", 0);
+
+
+        String disable_AppList = sharedPreferences.getString(DISABLE_APPLIST, "");
+        if (!TextUtils.isEmpty(disable_AppList)) {
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            disableNotificationApps = new Gson().fromJson(disable_AppList, type);
+        }
+        String block_AppList = sharedPreferences.getString(BLOCKED_APPLIST, "");
+        if (!TextUtils.isEmpty(block_AppList)) {
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            blockedApps = new Gson().fromJson(block_AppList, type);
+        }
+
+
+        for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
+
+            if (blockedApps.size() > 0) {
+                for (String blockedApp : blockedApps) {
+                    if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
+                        disableNotificationApps.add(applicationInfo.packageName);
+                    }
+                }
+
+            } else {
+
+                disableNotificationApps.add(applicationInfo.packageName);
+            }
+
+        }
+
+
+        String disableList = new Gson().toJson(disableNotificationApps);
+        sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).commit();
+
+
     }
 
     /**

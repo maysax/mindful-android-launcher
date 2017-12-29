@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.telephony.SmsMessage;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -22,12 +24,14 @@ import java.util.Date;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.notification.NotificationUtility;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -52,13 +56,16 @@ public class SmsReceiver extends BroadcastReceiver {
     TableNotificationSmsDao smsDao;
 
 
-    ArrayList<String> disableNotificationApps= new ArrayList<>();
+    ArrayList<String> disableNotificationApps = new ArrayList<>();
+    ArrayList<String> blockedApps = new ArrayList<>();
+
 
     public static final Uri RECEIVED_MESSAGE_CONTENT_PROVIDER = Uri.parse("content://sms/inbox");
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         Tracer.d("Messages: onReceive in Launcher3");
         if (intent != null && intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
@@ -91,10 +98,29 @@ public class SmsReceiver extends BroadcastReceiver {
                     if (!TextUtils.isEmpty(disable_AppList)) {
                         Type type = new TypeToken<ArrayList<String>>() {
                         }.getType();
-                         disableNotificationApps = new ArrayList<>();
+                        disableNotificationApps = new ArrayList<>();
                         disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-                        if (disableNotificationApps.contains("com.google.android.apps.messaging")) {
-                            saveMessage(mAddress, mBody, mDate);
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("Launcher3Prefs", 0);
+
+                        String block_AppList = sharedPreferences.getString(Constants.BLOCKED_APPLIST, "");
+                        if (!TextUtils.isEmpty(block_AppList)) {
+                            Type blockType = new TypeToken<ArrayList<String>>() {
+                            }.getType();
+                            blockedApps = new Gson().fromJson(block_AppList, blockType);
+                        }
+                        boolean isShowNotification = true;
+                        String messagingAppPackage = "com.google.android.apps.messaging";
+                        if (null != blockedApps && blockedApps.size() > 0) {
+                            for (String blockedApp : blockedApps) {
+                                if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
+                                    isShowNotification = false;
+                                }
+                            }
+
+                        }
+
+                        if (disableNotificationApps.contains(messagingAppPackage) && isShowNotification) {
+                            saveMessage(mAddress, mBody, mDate, context);
                         }
                     }
                 }
@@ -110,20 +136,58 @@ public class SmsReceiver extends BroadcastReceiver {
         }
     }
 
-    private void saveMessage(String address, String body, Date date) {
-        DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-        smsDao = daoSession.getTableNotificationSmsDao();
+    private void saveMessage(String address, String body, Date date, Context context) {
+//        DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+//        smsDao = daoSession.getTableNotificationSmsDao();
+//
+//        TableNotificationSms sms = new TableNotificationSms();
+//        sms.set_contact_title(address);
+//        sms.set_message(body);
+//        sms.setPackageName("com.google.android.apps.messaging");
+//        sms.setNotification_date(System.currentTimeMillis());
+//        sms.set_date(date);
+//        sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);
+//        long id = smsDao.insert(sms);
+//        sms.setId(id);
+//        EventBus.getDefault().post(new NewNotificationEvent(sms));
 
-        TableNotificationSms sms = new TableNotificationSms();
-        sms.set_contact_title(address);
-        sms.set_message(body);
-        sms.setPackageName("com.google.android.apps.messaging");
-        sms.setNotification_date(System.currentTimeMillis());
-        sms.set_date(date);
-        sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);
-        long id = smsDao.insert(sms);
-        sms.setId(id);
-        EventBus.getDefault().post(new NewNotificationEvent(sms));
+
+        try {
+            DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
+            TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
+            TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
+                    .where(TableNotificationSmsDao.Properties._contact_title.eq(address),
+                            TableNotificationSmsDao.Properties.Notification_type.eq(NotificationUtility.NOTIFICATION_TYPE_EVENT))
+                    .unique();
+            if (notificationSms == null) {
+                notificationSms = new TableNotificationSms();
+                notificationSms.set_contact_title(address);
+                notificationSms.set_message(body);
+                notificationSms.set_date(date);
+                notificationSms.setNotification_date(System.currentTimeMillis());
+                notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);
+                notificationSms.setPackageName(Telephony.Sms.getDefaultSmsPackage(context));
+//                notificationSms.setApp_icon(icon);
+//                notificationSms.setUser_icon(largeIcon);
+                // notificationSms.setNotification_id(statusBarNotification.getId());
+                long id = smsDao.insert(notificationSms);
+                notificationSms.setId(id);
+                PackageUtil.recreateNotification(notificationSms, context);
+                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+            } else {
+                notificationSms.set_date(date);
+                notificationSms.setNotification_date(System.currentTimeMillis());
+                notificationSms.set_contact_title(address);
+                notificationSms.set_message(notificationSms.get_message() + "\n" + body);
+                smsDao.update(notificationSms);
+                PackageUtil.recreateNotification(notificationSms, context);
+                EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
+        }
     }
+
 
 }
