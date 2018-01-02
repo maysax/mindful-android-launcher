@@ -97,6 +97,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     SharedPreferences sharedPref;
     AudioManager audioManager;
     NotificationManager notificationManager;
+    MediaPlayer notificationMediaPlayer;
     private Crashlytics crashlytics;
     private RefWatcher refWatcher;
     private boolean isCallisRunning = false;
@@ -485,7 +486,7 @@ public abstract class CoreApplication extends MultiDexApplication {
 
         }
         String disableList = new Gson().toJson(disableNotificationApps);
-        sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).commit();
+        sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).apply();
     }
 
     /**
@@ -813,21 +814,28 @@ public abstract class CoreApplication extends MultiDexApplication {
 
     public void playNotificationSoundVibrate() {
         try {
-            MediaPlayer mMediaPlayer = null;
             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
                 Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                mMediaPlayer = new MediaPlayer();
-                mMediaPlayer.setDataSource(this, alert);
+                notificationMediaPlayer = new MediaPlayer();
+                notificationMediaPlayer.setDataSource(this, alert);
                 final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mMediaPlayer.setVolume(100, 100);
-                    mMediaPlayer.setScreenOnWhilePlaying(true);
-                    mMediaPlayer.prepare();
-                    mMediaPlayer.start();
+                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    notificationMediaPlayer.setVolume(100, 100);
+                    notificationMediaPlayer.setScreenOnWhilePlaying(true);
+                    notificationMediaPlayer.prepare();
+                    notificationMediaPlayer.start();
                     vibrator.vibrate(200);
+                    notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            notificationMediaPlayer.release();
+                            notificationMediaPlayer = null;
+                        }
+                    });
                 }
             }
+            // }
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
