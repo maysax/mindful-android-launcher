@@ -157,14 +157,17 @@ public class UIUtils {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
                 .setMessage(msg)
                 .setCancelable(false)
+
                 .setPositiveButton(okButton, listener)
                 .setNegativeButton(cancelButton, listenerNo);
         if (alertDialog != null) {
             if (!alertDialog.isShowing()) {
+                alertDialog.setCanceledOnTouchOutside(false);
                 alertDialog.show();
             }
         } else {
             alertDialog = alertDialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
         }
 
