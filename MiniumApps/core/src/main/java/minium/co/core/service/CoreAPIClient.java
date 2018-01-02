@@ -1,6 +1,5 @@
 package minium.co.core.service;
 
-import android.app.ProgressDialog;
 import android.os.Environment;
 
 import com.androidnetworking.AndroidNetworking;
@@ -30,9 +29,6 @@ public abstract class CoreAPIClient {
 
     protected final String AWS_HOST = "http://34.193.40.200:8001";
     protected final String AWS_TOKEN = "SN2NaFFSMPkKRhMOioNEPERrCl2iCuhRcHwpm0J9";
-
-    protected abstract String getAppName();
-
     protected AnalyticsListener analyticsListener = new AnalyticsListener() {
         @Override
         public void onReceived(long timeTakenInMillis, long bytesSent, long bytesReceived, boolean isFromCache) {
@@ -42,6 +38,8 @@ public abstract class CoreAPIClient {
                     + " isFromCache: " + isFromCache);
         }
     };
+
+    protected abstract String getAppName();
 
     /**
      * This function is use to check current app version with play store version
@@ -58,12 +56,23 @@ public abstract class CoreAPIClient {
                     .getAsString(new StringRequestListener() {
                         @Override
                         public void onResponse(String response) {
-                            EventBus.getDefault().post(new CheckVersionEvent(Integer.parseInt(response.trim()),CheckVersionEvent.ALPHA));
+
+                            try {
+                                int version = Integer.parseInt(response.trim());
+                                EventBus.getDefault().post(new CheckVersionEvent(version, CheckVersionEvent.ALPHA));
+                            } catch (Exception e) {
+                                EventBus.getDefault().post(new
+                                        CheckVersionEvent(-1000,
+                                        CheckVersionEvent.ALPHA));
+                                Tracer.e(e, e.getMessage());
+
+                            }
                         }
 
                         @Override
                         public void onError(ANError anError) {
-                            EventBus.getDefault().post(new CheckVersionEvent(-1000));
+                            EventBus.getDefault().post(new CheckVersionEvent
+                                    (-1000, CheckVersionEvent.ALPHA));
                             Tracer.e(anError.getCause(), anError.getErrorDetail());
                         }
                     });
@@ -77,12 +86,23 @@ public abstract class CoreAPIClient {
                     .getAsString(new StringRequestListener() {
                         @Override
                         public void onResponse(String response) {
-                            EventBus.getDefault().post(new CheckVersionEvent(Integer.parseInt(response.trim()),CheckVersionEvent.BETA));
+
+                            try {
+                                int version = Integer.parseInt(response.trim());
+                                EventBus.getDefault().post(new CheckVersionEvent(version, CheckVersionEvent.BETA));
+                            } catch (Exception e) {
+                                EventBus.getDefault().post(new
+                                        CheckVersionEvent(-1000,
+                                        CheckVersionEvent.BETA));
+                                Tracer.e(e, e.getMessage());
+
+                            }
                         }
 
                         @Override
                         public void onError(ANError anError) {
-                            EventBus.getDefault().post(new CheckVersionEvent(-1000));
+                            EventBus.getDefault().post(new CheckVersionEvent
+                                    (-1000, CheckVersionEvent.BETA));
                             Tracer.e(anError.getCause(), anError.getErrorDetail());
                         }
                     });

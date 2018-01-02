@@ -31,6 +31,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
@@ -312,11 +313,18 @@ public class SiempoSettingsActivity extends CoreActivity {
         Log.d(TAG, "Check Version event...");
 
         if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                if (pd != null) {
-                    pd.dismiss();
-                    pd = null;
-                }
+            if (pd != null) {
+                pd.dismiss();
+                pd = null;
+            }
+            if (event.getVersion() == Constants.ERROR_VERSION_EVENT) {
+
+                Toast.makeText(getApplicationContext(), "Some error occurred. Please " +
+                        "try later.", Toast
+                        .LENGTH_LONG).show();
+            } else if (event.getVersion() > UIUtils.getCurrentVersionCode
+                    (this)) {
+
                 Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.ALPHA);
@@ -328,7 +336,13 @@ public class SiempoSettingsActivity extends CoreActivity {
                 pd.dismiss();
                 pd = null;
             }
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+
+            if (event.getVersion() == Constants.ERROR_VERSION_EVENT) {
+                Toast.makeText(getApplicationContext(), "Some error occurred. Please " +
+                        "try later.", Toast
+                        .LENGTH_LONG).show();
+            } else if (event.getVersion() > UIUtils.getCurrentVersionCode
+                    (this)) {
                 Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.BETA);
