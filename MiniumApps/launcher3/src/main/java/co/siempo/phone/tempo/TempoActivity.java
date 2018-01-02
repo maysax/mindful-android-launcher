@@ -216,8 +216,13 @@ public class TempoActivity extends CoreActivity {
             timePickerDialog.setCancelText("CANCEL");
             isCancelButton = true;
         } else {
-            timePickerDialog.setCancelText("REMOVE");
-            isCancelButton = false;
+            if (isNewAdded) {
+                timePickerDialog.setCancelText("CANCEL");
+                isCancelButton = true;
+            } else {
+                timePickerDialog.setCancelText("REMOVE");
+                isCancelButton = false;
+            }
         }
 
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
