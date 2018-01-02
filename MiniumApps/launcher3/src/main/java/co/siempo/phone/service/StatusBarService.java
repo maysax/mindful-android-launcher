@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -25,11 +26,15 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RemoteViews;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -46,6 +51,7 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.FirebaseEvent;
 import minium.co.core.log.Tracer;
+import minium.co.core.util.UIUtils;
 
 import static co.siempo.phone.SiempoNotificationBar.NotificationUtils.ANDROID_CHANNEL_ID;
 
@@ -68,6 +74,18 @@ public class StatusBarService extends Service {
     private Vibrator vibrator;
 
     public StatusBarService() {
+    }
+
+    public static String getTimeFormat(Context context) {
+        String format;
+        boolean is24hourformat = android.text.format.DateFormat.is24HourFormat(context);
+
+        if (is24hourformat) {
+            format = "HH:mm";
+        } else {
+            format = "hh:mm a";
+        }
+        return format;
     }
 
     @Override
@@ -102,7 +120,6 @@ public class StatusBarService extends Service {
         return START_STICKY;
     }
 
-
     /**
      * Observer for when installing new app or uninstalling the app.
      */
@@ -115,7 +132,6 @@ public class StatusBarService extends Service {
         intentFilter.addDataScheme("package");
         registerReceiver(appInstallUninstall, intentFilter);
     }
-
 
     /**
      * Observer for when new contact adding or updating any exiting contact.
@@ -146,7 +162,6 @@ public class StatusBarService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
@@ -170,14 +185,30 @@ public class StatusBarService extends Service {
                 if (launchIntentForPackage != null) {
                     launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 }
+                Bitmap bitmap = UIUtils.convertBytetoBitmap(notification.getUser_icon());
+                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
+                String time = sdf.format(notification.get_date());
+                RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+                contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+                if (null != bitmap) {
+                    contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
+                } else {
+                    contentView.setImageViewBitmap(R.id.imgUserImage, null);
+                }
+                contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
+                contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+                contentView.setTextViewText(R.id.txtTime, time);
+                contentView.setTextViewText(R.id.txtAppName, CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
                 b.setAutoCancel(true)
-                        .setWhen(notification.getNotification_date())
+                        .setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.drawable.ic_airplane_air_balloon)
                         .setPriority(Notification.PRIORITY_HIGH)
                         .setContentTitle(notification.get_contact_title())
                         .setContentText(notification.get_message())
                         .setContentIntent(contentIntent)
-                        .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
+                        .setCustomContentView(contentView)
+                        .setCustomBigContentView(contentView)
+                        .setDefaults(Notification.DEFAULT_ALL)
                         .setContentInfo("Info");
 
                 if (notificationList.size() == 1 || i == (notificationList.size() - 1)) {
@@ -210,7 +241,7 @@ public class StatusBarService extends Service {
 
     public void playNotificationSoundVibrate() {
         try {
-            MediaPlayer mMediaPlayer = null;
+            MediaPlayer mMediaPlayer;
             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
                 Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 mMediaPlayer = new MediaPlayer();

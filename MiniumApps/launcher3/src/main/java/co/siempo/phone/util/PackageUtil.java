@@ -9,16 +9,23 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import co.siempo.phone.R;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.service.SiempoDndService;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 5/17/2017.
@@ -110,6 +117,20 @@ public class PackageUtil {
             if (launchIntentForPackage != null) {
                 launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             }
+            Bitmap bitmap = UIUtils.convertBytetoBitmap(notification.getUser_icon());
+            DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
+            String time = sdf.format(notification.get_date());
+            RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+            contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+            if (null != bitmap) {
+                contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
+            } else {
+                contentView.setImageViewBitmap(R.id.imgUserImage, null);
+            }
+            contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
+            contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+            contentView.setTextViewText(R.id.txtTime, time);
+            contentView.setTextViewText(R.id.txtAppName, CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
             b.setAutoCancel(true)
                     .setWhen(System.currentTimeMillis())
                     .setSmallIcon(R.drawable.ic_airplane_air_balloon)
@@ -117,6 +138,8 @@ public class PackageUtil {
                     .setContentTitle(notification.get_contact_title())
                     .setContentText(notification.get_message())
                     .setContentIntent(contentIntent)
+                    .setCustomContentView(contentView)
+                    .setCustomBigContentView(contentView)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setContentInfo("Info");
             if (tempoSound == 0) {
@@ -141,4 +164,18 @@ public class PackageUtil {
             }
         }
     }
+
+
+    private static String getTimeFormat(Context context) {
+        String format;
+        boolean is24hourformat = android.text.format.DateFormat.is24HourFormat(context);
+
+        if (is24hourformat) {
+            format = "HH:mm";
+        } else {
+            format = "hh:mm a";
+        }
+        return format;
+    }
+
 }
