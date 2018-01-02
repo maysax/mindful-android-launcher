@@ -47,7 +47,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="4dp"
-                android:text="Notifications from all apps ar blocked, except that you specifically choose to allow."
+                android:text="Notifications from all apps are blocked, except that you specifically choose to allow."
                 android:textSize="16sp" />
         </RelativeLayout>
 
