@@ -115,8 +115,6 @@
         <activity
             android:name=".tempo.TempoActivity_"
             android:screenOrientation="portrait" />
-
-
         <activity
             android:name=".mm.MMTimePickerActivity_"
             android:screenOrientation="portrait" />
@@ -185,7 +183,6 @@
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".applist.AppDrawerActivity_"
             android:label="@string/title_activity_installed_app_list"
@@ -201,7 +198,6 @@
                 <action android:name="android.net.wifi.RSSI_CHANGED" />
             </intent-filter>
         </receiver>
-
 
         <activity android:name=".ui.UpdateActivity_" />
         <activity android:name=".settings.SiempoPhoneSettingsActivity" />
@@ -224,10 +220,8 @@
         <activity android:name=".settings.SiempoSupressNotificationActivity" />
         <activity android:name=".ui.SiempoPermissionActivity_" />
         <activity android:name=".tempo.TempoSettingsActivity_" />
-
         <activity android:name=".tempo.TempoAppNotificationActivity" />
-
-
+        <activity android:name=".HelpActivity"></activity>
     </application>
 
 </manifest>

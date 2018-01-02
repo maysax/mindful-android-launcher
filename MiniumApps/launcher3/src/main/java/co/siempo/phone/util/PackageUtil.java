@@ -110,11 +110,10 @@ public class PackageUtil {
         if (tempoType == 0) {
             NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
             Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-
-            int requestID = (int) System.currentTimeMillis();
-            PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-
+            PendingIntent contentIntent = null;
             if (launchIntentForPackage != null) {
+                int requestID = (int) System.currentTimeMillis();
+                contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
                 launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             }
             Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
