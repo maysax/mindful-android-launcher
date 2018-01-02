@@ -1,7 +1,7 @@
 package co.siempo.phone.service;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -12,25 +12,29 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
-import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraManager;
+import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RemoteViews;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,7 +43,6 @@ import co.siempo.phone.db.DBClient;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
-import co.siempo.phone.event.TorchOnOff;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
@@ -48,6 +51,7 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.FirebaseEvent;
 import minium.co.core.log.Tracer;
+import minium.co.core.util.UIUtils;
 
 import static co.siempo.phone.SiempoNotificationBar.NotificationUtils.ANDROID_CHANNEL_ID;
 
@@ -57,25 +61,31 @@ import static co.siempo.phone.SiempoNotificationBar.NotificationUtils.ANDROID_CH
 
 public class StatusBarService extends Service {
 
-    public static boolean isFlashOn = false;
     SharedPreferences sharedPreferences;
     Timer timer;
     MyTimerTask timerTask;
-    CountDownTimer countDownTimer;
     Context context;
     ArrayList<Integer> everyHourList = new ArrayList<>();
     ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     ArrayList<Integer> everyFourHoursList = new ArrayList<>();
-    private CameraManager cameraManager;
-    private String mCameraId;
-    @SuppressWarnings("deprecation")
-    private Camera camera;
-    @SuppressWarnings("deprecation")
-    private Camera.Parameters parameters;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
+    private AudioManager audioManager;
+    private Vibrator vibrator;
 
     public StatusBarService() {
+    }
+
+    public static String getTimeFormat(Context context) {
+        String format;
+        boolean is24hourformat = android.text.format.DateFormat.is24HourFormat(context);
+
+        if (is24hourformat) {
+            format = "HH:mm";
+        } else {
+            format = "hh:mm a";
+        }
+        return format;
     }
 
     @Override
@@ -83,6 +93,8 @@ public class StatusBarService extends Service {
         super.onCreate();
         context = this;
         sharedPreferences = getSharedPreferences("DroidPrefs", 0);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
         EventBus.getDefault().register(this);
@@ -108,7 +120,6 @@ public class StatusBarService extends Service {
         return START_STICKY;
     }
 
-
     /**
      * Observer for when installing new app or uninstalling the app.
      */
@@ -121,7 +132,6 @@ public class StatusBarService extends Service {
         intentFilter.addDataScheme("package");
         registerReceiver(appInstallUninstall, intentFilter);
     }
-
 
     /**
      * Observer for when new contact adding or updating any exiting contact.
@@ -143,15 +153,6 @@ public class StatusBarService extends Service {
     }
 
     @Subscribe
-    public void tourchOnOff(TorchOnOff torchOnOFF) {
-        if (torchOnOFF.isRunning()) {
-            turnONFlash();
-        } else {
-            turnOffFlash();
-        }
-    }
-
-    @Subscribe
     public void firebaseEvent(FirebaseEvent firebaseEvent) {
         FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
     }
@@ -159,77 +160,6 @@ public class StatusBarService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    /**
-     * Turning On flash
-     */
-    @TargetApi(23)
-    private void turnONFlash() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
-            try {
-                if (cameraManager != null) {
-                    mCameraId = cameraManager.getCameraIdList()[0];
-                    cameraManager.setTorchMode(mCameraId, true);
-                }
-
-            } catch (CameraAccessException e) {
-                CoreApplication.getInstance().logException(e);
-                e.printStackTrace();
-            }
-            CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
-
-                @Override
-                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
-                    super.onTorchModeChanged(cameraId, enabled);
-                    isFlashOn = enabled;
-                }
-
-                @Override
-                public void onTorchModeUnavailable(@NonNull String cameraId) {
-                    super.onTorchModeUnavailable(cameraId);
-                }
-            };
-            cameraManager.registerTorchCallback(mTorchCallback, new Handler());
-        } else {
-            //noinspection deprecation
-            camera = Camera.open();
-            parameters = camera.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-            camera.setParameters(parameters);
-            camera.startPreview();
-        }
-        isFlashOn = true;
-    }
-
-    /**
-     * Turning On flash
-     */
-    private void turnOffFlash() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            try {
-                cameraManager.setTorchMode(mCameraId, false);
-            } catch (CameraAccessException e) {
-                CoreApplication.getInstance().logException(e);
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                camera.setParameters(parameters);
-                camera.stopPreview();
-                if (camera != null) {
-                    camera.release();
-                    camera = null;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                CoreApplication.getInstance().logException(e);
-            }
-        }
-
-        isFlashOn = false;
     }
 
     @Override
@@ -243,62 +173,93 @@ public class StatusBarService extends Service {
     }
 
     public void recreateNotification(List<TableNotificationSms> notificationList, Context context) {
-//        for (int i = 0; i < notificationList.size(); i++) {
-//            TableNotificationSms notification = notificationList.get(i);
-//            NotificationCompat.Builder b = new NotificationCompat.Builder(context, "" + notification.getId());
-//            Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-//
-//            int requestID = (int) System.currentTimeMillis();
-//            PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//            launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//            b.setAutoCancel(true)
-//                    .setDefaults(Notification.DEFAULT_ALL)
-//                    .setWhen(notification.getNotification_date())
-//                    .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-//
-//                    .setPriority(Notification.PRIORITY_HIGH)
-//                    .setContentTitle(notification.get_contact_title())
-//                    .setContentText(notification.get_message())
-//                    .setContentIntent(contentIntent)
-//                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-//                    .setContentInfo("Info");
-//
-//            if (notificationList.size() == 1 || i == (notificationList.size() - 1)) {
-//                if (sharedPreferences.getInt("tempoSoundProfile", 0) == 0) {
-//                    b.setVibrate(new long[0]);
-//                    b.setSound(null);
-//                } else {
-//                    b.setVibrate(new long[]{1000, 1000});
-//                    Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-//                    b.setSound(alarmSound);
-//                }
-//            }
-//            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-//            notificationManager.notify(notification.getId().intValue(), b.build());
-//        }
-        NotificationCompat.Builder b = new NotificationCompat.Builder(context, "");
-        Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(getPackageName());
+        for (int i = 0; i < notificationList.size(); i++) {
+            TableNotificationSms notification = notificationList.get(i);
+            if (!notification.getPackageName().equalsIgnoreCase("android")) {
+                NotificationCompat.Builder b = new NotificationCompat.Builder(context, "" + notification.getId());
+                Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
 
-        int requestID = (int) System.currentTimeMillis();
-        PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+                int requestID = (int) System.currentTimeMillis();
+                PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        b.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                .setVibrate(new long[0])
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setContentTitle("Total Notification" + notificationList.size())
-                .setContentText("Total Notification ::::: " + notificationList.size())
-                .setContentIntent(contentIntent)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
-                .setContentInfo("Info");
+                if (launchIntentForPackage != null) {
+                    launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                }
+                Bitmap bitmap = UIUtils.convertBytetoBitmap(notification.getUser_icon());
+                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
+                String time = sdf.format(notification.get_date());
+                RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+                contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+                if (null != bitmap) {
+                    contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
+                } else {
+                    contentView.setImageViewBitmap(R.id.imgUserImage, null);
+                }
+                contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
+                contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+                contentView.setTextViewText(R.id.txtTime, time);
+                contentView.setTextViewText(R.id.txtAppName, CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
+                b.setAutoCancel(true)
+                        .setWhen(System.currentTimeMillis())
+                        .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setContentTitle(notification.get_contact_title())
+                        .setContentText(notification.get_message())
+                        .setContentIntent(contentIntent)
+                        .setCustomContentView(contentView)
+                        .setCustomBigContentView(contentView)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setContentInfo("Info");
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, b.build());
-        DBUtility.getNotificationDao().deleteAll();
+                if (notificationList.size() == 1 || i == (notificationList.size() - 1)) {
+                    if (sharedPreferences.getInt("tempoSoundProfile", 0) == 0) {
+                        b.setVibrate(new long[0]);
+                        b.setSound(null);
+                    } else {
+                        playNotificationSoundVibrate();
+                    }
+                    DBUtility.getNotificationDao().deleteAll();
+                }
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                String CHANNEL_ID = "Siempo";
+                if (Build.VERSION.SDK_INT >= 26) {
+                    CharSequence name = "Siempo";// The user-visible name of the channel.
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+                    NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+                    b.setChannelId(CHANNEL_ID);
+                    if (notificationManager != null) {
+                        notificationManager.createNotificationChannel(mChannel);
+                    }
+
+                }
+                if (notificationManager != null) {
+                    notificationManager.notify(notification.getId().intValue(), b.build());
+                }
+            }
+        }
+    }
+
+    public void playNotificationSoundVibrate() {
+        try {
+            MediaPlayer mMediaPlayer;
+            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setDataSource(this, alert);
+                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    mMediaPlayer.setVolume(100, 100);
+                    mMediaPlayer.setScreenOnWhilePlaying(true);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                    vibrator.vibrate(1000);
+                }
+            }
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
+        }
     }
 
     class MyTimerTask extends TimerTask {

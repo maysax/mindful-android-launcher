@@ -18,9 +18,8 @@ import minium.co.core.log.Tracer;
  */
 public class ServiceUtils {
 
-    private static String ENABLED_NOTIFICATION_LISTENERS = null;
-
     private static final TextUtils.SimpleStringSplitter COLON_SPLITTER = new TextUtils.SimpleStringSplitter(':');
+    private static String ENABLED_NOTIFICATION_LISTENERS = null;
 
     /**
      * @return True if a given {@link NotificationListenerService} is enabled.
@@ -66,7 +65,7 @@ public class ServiceUtils {
                     return true;
             }
         } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
+            // CoreApplication.getInstance().logException(e);
             e.printStackTrace();
             Tracer.e(e, e.getMessage());
         }
@@ -115,7 +114,10 @@ public class ServiceUtils {
     private static boolean isMyServiceRunning(Context context, String serviceClass) {
         if (null == serviceClass || null == context) return false;
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> services = manager.getRunningServices(Integer.MAX_VALUE);
+        List<ActivityManager.RunningServiceInfo> services = null;
+        if (manager != null) {
+            services = manager.getRunningServices(Integer.MAX_VALUE);
+        }
         for (ActivityManager.RunningServiceInfo service : services) {
             if (serviceClass.equals(service.service.getClassName())) {
                 return true;

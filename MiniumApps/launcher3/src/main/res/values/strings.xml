@@ -304,4 +304,6 @@
     <string name="account">Account</string>
     <string name="alpha_settings">Alpha Settings</string>
     <string name="allow_specific_apps">Allow specific apps</string>
+    <string name="app_name_tools">App Name</string>
+    <string name="user_name">User Name</string>
 </resources>

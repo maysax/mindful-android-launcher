@@ -16,6 +16,15 @@ public class DBClient {
         DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
     }
 
+    public void deleteMsgById(int type) {
+        Tracer.d("Deleting Msg by type");
+        List<TableNotificationSms> notificationSmsesList = DBUtility.getNotificationDao().queryBuilder()
+                .where(TableNotificationSmsDao.Properties.Id.eq(type))
+                .list();
+
+        DBUtility.getNotificationDao().deleteInTx(notificationSmsesList);
+    }
+
     public void deleteMsgByPackageName(String packageName) {
         Tracer.d("Deleting Msg by PackageName");
         List<TableNotificationSms> tableNotificationSms = DBUtility.getNotificationDao().queryBuilder()

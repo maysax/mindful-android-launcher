@@ -77,26 +77,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public abstract class CoreApplication extends MultiDexApplication {
 
-    private final String TRACE_TAG = LogConfig.TRACE_TAG + "CoreApplication";
-
     private static CoreApplication sInstance;
-
-    public static synchronized CoreApplication getInstance() {
-        return sInstance;
-    }
-
-    private Crashlytics crashlytics;
-
-    private RefWatcher refWatcher;
+    private final String TRACE_TAG = LogConfig.TRACE_TAG + "CoreApplication";
     public boolean siempoBarLaunch = true;
-    UserManager userManager;
-    LauncherApps launcherApps;
-
-    private boolean isCallisRunning = false;
-
     public boolean isIfScreen = false;
-
-
     //    public String DISABLE_APPLIST="DISABLE_APPLIST";
 //    public String SOCIAL_DISABLE_COUNT="SOCIAL_DISABLE_COUNT";
 //    public String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
@@ -104,15 +88,21 @@ public abstract class CoreApplication extends MultiDexApplication {
 //    public String HEADER_APPLIST="HEADER_APPLIST";
     public String DISABLE_APPLIST = "DISABLE_APPLIST";
     public String BLOCKED_APPLIST = "BLOCKED_APPLIST";
-
-    private List<ApplicationInfo> packagesList = new ArrayList<>();
     public HashMap<String, Bitmap> iconList = new HashMap<>();
+    public MediaPlayer mMediaPlayer;
+    UserManager userManager;
+    LauncherApps launcherApps;
     Handler handler;
+    long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
+    SharedPreferences sharedPref;
+    AudioManager audioManager;
+    NotificationManager notificationManager;
+    private Crashlytics crashlytics;
+    private RefWatcher refWatcher;
+    private boolean isCallisRunning = false;
+    private List<ApplicationInfo> packagesList = new ArrayList<>();
     // include the vibration pattern when call ringing
     private Vibrator vibrator;
-    long[] pattern = {0, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500, 300, 500};
-
-    SharedPreferences sharedPref;
     private ArrayList<String> silentList = new ArrayList<>();
     private ArrayList<String> vibrateList = new ArrayList<>();
     private ArrayList<String> normalModeList = new ArrayList<>();
@@ -128,11 +118,17 @@ public abstract class CoreApplication extends MultiDexApplication {
     private ArrayList<ResolveInfo> emailPackageList = new ArrayList<>();
     private ArrayList<ResolveInfo> notesPackageList = new ArrayList<>();
     private boolean isEditNotOpen = false;
-    AudioManager audioManager;
-    NotificationManager notificationManager;
     private ArrayList<String> disableNotificationApps = new ArrayList<>();
     private ArrayList<String> blockedApps = new ArrayList<>();
 
+    public static synchronized CoreApplication getInstance() {
+        return sInstance;
+    }
+
+    public static RefWatcher getRefWatcher(Context context) {
+        CoreApplication application = (CoreApplication) context.getApplicationContext();
+        return application.refWatcher;
+    }
 
     public Crashlytics getCrashlytics() {
         return crashlytics;
@@ -150,8 +146,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.mMediaPlayer = null;
 
     }
-
-    public MediaPlayer mMediaPlayer;
 
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
@@ -172,7 +166,6 @@ public abstract class CoreApplication extends MultiDexApplication {
     public void setVibrator(Vibrator vibrator) {
         this.vibrator = vibrator;
     }
-
 
     public ArrayList<ResolveInfo> getCallPackageList() {
         return callPackageList;
@@ -293,7 +286,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         new LoadApplications().execute();
     }
 
-
     public void restoreDefaultApplication() {
         String callPackage = CoreApplication.getInstance().getCallPackageName();
         if (!sharedPref.getString("callPackage", "").equalsIgnoreCase("")
@@ -398,7 +390,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         }
     }
 
-
     protected void init() {
         // set initial configurations here
         configTracer();
@@ -444,14 +435,8 @@ public abstract class CoreApplication extends MultiDexApplication {
         Crashlytics.logException(e);
     }
 
-
     private void configIconify() {
         Iconify.with(new FontAwesomeModule());
-    }
-
-    public static RefWatcher getRefWatcher(Context context) {
-        CoreApplication application = (CoreApplication) context.getApplicationContext();
-        return application.refWatcher;
     }
 
     public List<ApplicationInfo> getPackagesList() {
@@ -499,12 +484,8 @@ public abstract class CoreApplication extends MultiDexApplication {
             }
 
         }
-
-
         String disableList = new Gson().toJson(disableNotificationApps);
         sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).commit();
-
-
     }
 
     /**
@@ -582,6 +563,275 @@ public abstract class CoreApplication extends MultiDexApplication {
             }
         }
 
+    }
+
+    public void playAudio() {
+        try {
+            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                if (mMediaPlayer == null) {
+                    mMediaPlayer = new MediaPlayer();
+                    mMediaPlayer.setDataSource(this, alert);
+                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                        mMediaPlayer.setVolume(100, 100);
+                        mMediaPlayer.setScreenOnWhilePlaying(true);
+                        mMediaPlayer.prepare();
+                        mMediaPlayer.start();
+                        vibrator.vibrate(pattern, 0);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * get all default Call application package name
+     */
+    public String getCallPackageName() {
+        Uri number = Uri.parse("tel:");
+        Intent dial = new Intent(Intent.ACTION_DIAL, number);
+        getCallPackageList().clear();
+        getCallPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
+        for (ResolveInfo res : getCallPackageList()) {
+            Log.d("Default App Name", "Call : " + res.activityInfo.name + " :" + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default message application package name
+     */
+    public String getMessagePackageName() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
+        intent.putExtra("sms_body", "Test text...");
+        getMessagePackageList().clear();
+        getMessagePackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getMessagePackageList()) {
+            Log.d("Default App Name", "Message : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default Calender application package name
+     */
+    public String getCalenderPackageName() {
+        Intent dial = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/"));
+        getCalenderPackageList().clear();
+        getCalenderPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
+        for (ResolveInfo res : getCalenderPackageList()) {
+            Log.d("Default App Name", "Calender : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default Contact application package name
+     */
+    public String getContactPackageName() {
+        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        getContactPackageList().clear();
+        getContactPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getContactPackageList()) {
+            Log.d("Default App Name", "Contact : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default Contact application package name
+     */
+    public String getMapPackageName() {
+        Double myLatitude = 44.433106;
+        Double myLongitude = 26.103687;
+        String labelLocation = "Jorgesys @ Bucharest";
+        String urlAddress = "http://maps.google.com/maps?q=" + myLatitude + "," + myLongitude + "(" + labelLocation + ")&iwloc=A&hl=es";
+        getMapPackageList().clear();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
+        getMapPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getMapPackageList()) {
+            Log.d("Default App Name", "Map : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default Contact application package name
+     */
+    public String getPhotosPackageName() {
+        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickIntent.setType("image/* video/*");
+        getPhotosPackageList().clear();
+        getPhotosPackageList().addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
+        for (ResolveInfo res : getPhotosPackageList()) {
+            Log.d("Default App Name", "Photos : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all default Contact application package name
+     */
+    public String getCameraPackageName() {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        getCameraPackageList().clear();
+        getCameraPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getCameraPackageList()) {
+            Log.d("Default App Name", "Camera : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all Browser application package name
+     */
+    public String getBrowserPackageName() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
+        getBrowserPackageList().clear();
+        getBrowserPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getBrowserPackageList()) {
+            Log.d("Default App Name", "Browser : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all Clock application package name
+     */
+    public String getClockPackageName() {
+        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+        getClockPackageList().clear();
+        getClockPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getClockPackageList()) {
+            Log.d("Default App Name", "Clock : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all Mail application package name
+     */
+    public String getMailPackageName() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
+        intent.setData(data);
+        getEmailPackageList().clear();
+        getEmailPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+        for (ResolveInfo res : getEmailPackageList()) {
+            Log.d("Default App Name", "Mail : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res.activityInfo.packageName;
+        }
+        return "";
+    }
+
+    /**
+     * get all Notes application package name
+     */
+    public String getNotesPackageName() {
+        String filepath = "mnt/sdcard/doc.txt";
+        File file = new File(filepath);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                CoreApplication.getInstance().logException(e);
+                e.printStackTrace();
+            }
+        }
+
+        Intent intent = new Intent(Intent.ACTION_EDIT);
+        intent.setDataAndType(Uri.fromFile(file), "text/plain");
+        getNotesPackageList().clear();
+        getNotesPackageList().add(null);
+        getNotesPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
+
+        if (UIUtils.isAppInstalled(this, "com.google.android.keep")) {
+            Intent keepIntent = new Intent();
+            keepIntent.setPackage("com.google.android.keep");
+            List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
+            if (resolveInfo != null && resolveInfo.size() > 0) {
+                getNotesPackageList().add(resolveInfo.get(0));
+            }
+        }
+
+
+        for (ResolveInfo res : getNotesPackageList()) {
+//            Log.d("Default App Name", "Notes : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
+            return res != null ? res.activityInfo.packageName : "Notes";
+        }
+        return "";
+    }
+
+    public void declinePhone() {
+
+        try {
+            String serviceManagerName = "android.os.ServiceManager";
+            String serviceManagerNativeName = "android.os.ServiceManagerNative";
+            String telephonyName = "com.android.internal.telephony.ITelephony";
+            Class<?> telephonyClass;
+            Class<?> telephonyStubClass;
+            Class<?> serviceManagerClass;
+            Class<?> serviceManagerNativeClass;
+            Method telephonyEndCall;
+            Object telephonyObject;
+            Object serviceManagerObject;
+            telephonyClass = Class.forName(telephonyName);
+            telephonyStubClass = telephonyClass.getClasses()[0];
+            serviceManagerClass = Class.forName(serviceManagerName);
+            serviceManagerNativeClass = Class.forName(serviceManagerNativeName);
+            Method getService = // getDefaults[29];
+                    serviceManagerClass.getMethod("getService", String.class);
+            Method tempInterfaceMethod = serviceManagerNativeClass.getMethod("asInterface", IBinder.class);
+            Binder tmpBinder = new Binder();
+            tmpBinder.attachInterface(null, "fake");
+            serviceManagerObject = tempInterfaceMethod.invoke(null, tmpBinder);
+            IBinder retbinder = (IBinder) getService.invoke(serviceManagerObject, "phone");
+            Method serviceMethod = telephonyStubClass.getMethod("asInterface", IBinder.class);
+            telephonyObject = serviceMethod.invoke(null, retbinder);
+            telephonyEndCall = telephonyClass.getMethod("endCall");
+            telephonyEndCall.invoke(telephonyObject);
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.d("Decline call exception.." + e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public void playNotificationSoundVibrate() {
+        try {
+            MediaPlayer mMediaPlayer = null;
+            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                mMediaPlayer = new MediaPlayer();
+                mMediaPlayer.setDataSource(this, alert);
+                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    mMediaPlayer.setVolume(100, 100);
+                    mMediaPlayer.setScreenOnWhilePlaying(true);
+                    mMediaPlayer.prepare();
+                    mMediaPlayer.start();
+                    vibrator.vibrate(200);
+                }
+            }
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
+        }
     }
 
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {
@@ -692,258 +942,6 @@ public abstract class CoreApplication extends MultiDexApplication {
             return bitmap;
         }
 
-    }
-
-    public void playAudio() {
-        try {
-            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                if (mMediaPlayer == null) {
-                    mMediaPlayer = new MediaPlayer();
-                    mMediaPlayer.setDataSource(this, alert);
-                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                        mMediaPlayer.setVolume(100, 100);
-                        mMediaPlayer.setScreenOnWhilePlaying(true);
-                        mMediaPlayer.prepare();
-                        mMediaPlayer.start();
-                        vibrator.vibrate(pattern, 0);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * get all default Call application package name
-     */
-    public String getCallPackageName() {
-        Uri number = Uri.parse("tel:");
-        Intent dial = new Intent(Intent.ACTION_DIAL, number);
-        getCallPackageList().clear();
-        getCallPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
-        for (ResolveInfo res : getCallPackageList()) {
-            Log.d("Default App Name", "Call : " + res.activityInfo.name + " :" + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-
-    /**
-     * get all default message application package name
-     */
-    public String getMessagePackageName() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
-        intent.putExtra("sms_body", "Test text...");
-        getMessagePackageList().clear();
-        getMessagePackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-        for (ResolveInfo res : getMessagePackageList()) {
-            Log.d("Default App Name", "Message : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-    /**
-     * get all default Calender application package name
-     */
-    public String getCalenderPackageName() {
-        Intent dial = new Intent(Intent.ACTION_VIEW, android.net.Uri.parse("content://com.android.calendar/time/"));
-        getCalenderPackageList().clear();
-        getCalenderPackageList().addAll(getPackageManager().queryIntentActivities(dial, 0));
-        for (ResolveInfo res : getCalenderPackageList()) {
-            Log.d("Default App Name", "Calender : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-
-    /**
-     * get all default Contact application package name
-     */
-    public String getContactPackageName() {
-        Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-        getContactPackageList().clear();
-        getContactPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-        for (ResolveInfo res : getContactPackageList()) {
-            Log.d("Default App Name", "Contact : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-    /**
-     * get all default Contact application package name
-     */
-    public String getMapPackageName() {
-        Double myLatitude = 44.433106;
-        Double myLongitude = 26.103687;
-        String labelLocation = "Jorgesys @ Bucharest";
-        String urlAddress = "http://maps.google.com/maps?q=" + myLatitude + "," + myLongitude + "(" + labelLocation + ")&iwloc=A&hl=es";
-        getMapPackageList().clear();
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
-        getMapPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-        for (ResolveInfo res : getMapPackageList()) {
-            Log.d("Default App Name", "Map : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-    /**
-     * get all default Contact application package name
-     */
-    public String getPhotosPackageName() {
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickIntent.setType("image/* video/*");
-        getPhotosPackageList().clear();
-        getPhotosPackageList().addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
-        for (ResolveInfo res : getPhotosPackageList()) {
-            Log.d("Default App Name", "Photos : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-
-    /**
-     * get all default Contact application package name
-     */
-    public String getCameraPackageName() {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        getCameraPackageList().clear();
-        getCameraPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-        for (ResolveInfo res : getCameraPackageList()) {
-            Log.d("Default App Name", "Camera : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-    /**
-     * get all Browser application package name
-     */
-    public String getBrowserPackageName() {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
-        getBrowserPackageList().clear();
-        getBrowserPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-        for (ResolveInfo res : getBrowserPackageList()) {
-            Log.d("Default App Name", "Browser : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-    /**
-     * get all Clock application package name
-     */
-    public String getClockPackageName() {
-        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
-        getClockPackageList().clear();
-        getClockPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-        for (ResolveInfo res : getClockPackageList()) {
-            Log.d("Default App Name", "Clock : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-
-    /**
-     * get all Mail application package name
-     */
-    public String getMailPackageName() {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
-        intent.setData(data);
-        getEmailPackageList().clear();
-        getEmailPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-        for (ResolveInfo res : getEmailPackageList()) {
-            Log.d("Default App Name", "Mail : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res.activityInfo.packageName;
-        }
-        return "";
-    }
-
-    /**
-     * get all Notes application package name
-     */
-    public String getNotesPackageName() {
-        String filepath = "mnt/sdcard/doc.txt";
-        File file = new File(filepath);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                CoreApplication.getInstance().logException(e);
-                e.printStackTrace();
-            }
-        }
-
-        Intent intent = new Intent(Intent.ACTION_EDIT);
-        intent.setDataAndType(Uri.fromFile(file), "text/plain");
-        getNotesPackageList().clear();
-        getNotesPackageList().add(null);
-        getNotesPackageList().addAll(getPackageManager().queryIntentActivities(intent, 0));
-
-        if (UIUtils.isAppInstalled(this, "com.google.android.keep")) {
-            Intent keepIntent = new Intent();
-            keepIntent.setPackage("com.google.android.keep");
-            List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
-            if (resolveInfo != null && resolveInfo.size() > 0) {
-                getNotesPackageList().add(resolveInfo.get(0));
-            }
-        }
-
-
-        for (ResolveInfo res : getNotesPackageList()) {
-//            Log.d("Default App Name", "Notes : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
-            return res != null ? res.activityInfo.packageName : "Notes";
-        }
-        return "";
-    }
-
-
-    public void declinePhone() {
-
-        try {
-            String serviceManagerName = "android.os.ServiceManager";
-            String serviceManagerNativeName = "android.os.ServiceManagerNative";
-            String telephonyName = "com.android.internal.telephony.ITelephony";
-            Class<?> telephonyClass;
-            Class<?> telephonyStubClass;
-            Class<?> serviceManagerClass;
-            Class<?> serviceManagerNativeClass;
-            Method telephonyEndCall;
-            Object telephonyObject;
-            Object serviceManagerObject;
-            telephonyClass = Class.forName(telephonyName);
-            telephonyStubClass = telephonyClass.getClasses()[0];
-            serviceManagerClass = Class.forName(serviceManagerName);
-            serviceManagerNativeClass = Class.forName(serviceManagerNativeName);
-            Method getService = // getDefaults[29];
-                    serviceManagerClass.getMethod("getService", String.class);
-            Method tempInterfaceMethod = serviceManagerNativeClass.getMethod("asInterface", IBinder.class);
-            Binder tmpBinder = new Binder();
-            tmpBinder.attachInterface(null, "fake");
-            serviceManagerObject = tempInterfaceMethod.invoke(null, tmpBinder);
-            IBinder retbinder = (IBinder) getService.invoke(serviceManagerObject, "phone");
-            Method serviceMethod = telephonyStubClass.getMethod("asInterface", IBinder.class);
-            telephonyObject = serviceMethod.invoke(null, retbinder);
-            telephonyEndCall = telephonyClass.getMethod("endCall");
-            telephonyEndCall.invoke(telephonyObject);
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            Tracer.d("Decline call exception.." + e.toString());
-            e.printStackTrace();
-        }
     }
 
 }
