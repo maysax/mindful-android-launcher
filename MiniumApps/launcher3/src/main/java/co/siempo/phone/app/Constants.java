@@ -39,6 +39,7 @@ public class Constants {
     public static final int BROWSER_PACKAGE = 24;
     public static final int CLOCK_PACKAGE = 21;
     public static final int EMAIL_PACKAGE = 16;
+    public static final int ERROR_VERSION_EVENT = -1000;
     public static final String WHATSAPP = "WhatsApp";
     public static final String ALPHA_SETTING = "0x0p9o8i7u6y";
     public static final String HUAWEI = "huawei";
