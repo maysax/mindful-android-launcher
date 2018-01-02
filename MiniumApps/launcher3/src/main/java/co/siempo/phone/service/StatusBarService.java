@@ -179,11 +179,10 @@ public class StatusBarService extends Service {
             if (!notification.getPackageName().equalsIgnoreCase("android")) {
                 NotificationCompat.Builder b = new NotificationCompat.Builder(context, "" + notification.getId());
                 Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-
-                int requestID = (int) System.currentTimeMillis();
-                PendingIntent contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-
+                PendingIntent contentIntent = null;
                 if (launchIntentForPackage != null) {
+                    int requestID = (int) System.currentTimeMillis();
+                    contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
                     launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 }
                 Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
@@ -230,7 +229,6 @@ public class StatusBarService extends Service {
                     if (notificationManager != null) {
                         notificationManager.createNotificationChannel(mChannel);
                     }
-
                 }
                 if (notificationManager != null) {
                     notificationManager.notify(notification.getId().intValue(), b.build());

@@ -37,6 +37,7 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import co.siempo.phone.HelpActivity;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -451,6 +452,8 @@ public class MainFragment extends CoreFragment {
                     public void onClick(View view) {
                         UIUtils.clearDim(root);
                         mPopupWindow.dismiss();
+                        Intent intent = new Intent(getActivity(), HelpActivity.class);
+                        startActivity(intent);
                     }
                 });
                 mPopupWindow.setOutsideTouchable(true);

@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -150,17 +149,13 @@ public class SiempoNotificationListener extends NotificationListenerService {
 //                    SiempoNotificationListener.this.cancelAllNotifications();
                 StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
                 for (StatusBarNotification statusBarNotification : statusBarNotifications) {
-                    if (!statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName()))
+                    if (!statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(statusBarNotification.getKey());
-                }
-            }
-            if (PackageUtil.isSiempoLauncher(this) && notification.getNotification().getSortKey() != null && notification.getNotification().getSortKey().equalsIgnoreCase(getResources().getString(R.string.lock_screen_label)) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
-//                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()))
-//                    SiempoNotificationListener.this.cancelAllNotifications();
-                StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
-                for (StatusBarNotification statusBarNotification : statusBarNotifications) {
-                    if (!statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName()))
-                        SiempoNotificationListener.this.cancelNotification(statusBarNotification.getKey());
+                    } else if (statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName())
+                            && statusBarNotification.getNotification().getSortKey().equalsIgnoreCase("SiempoLockScreeen")
+                            && statusBarNotification.getId() == 96) {
+
+                    }
                 }
             }
 
@@ -731,7 +726,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         } else {
                             text = extras.getCharSequence(NotificationCompat.EXTRA_TEXT).toString();
                         }
-
+                        if (title.equalsIgnoreCase("You may have a new messages")) {
+                            return;
+                        }
                         text = Build.VERSION.SDK_INT >= 21 ? getNotificationTextLegacy(statusBarNotification.getNotification(), text) : getNotificationTextLegacy(statusBarNotification.getNotification(), text);
                         if (title == null || title.isEmpty() || Constants.WHATSAPP.equals(title.trim())) {
                             title = getTitleLegacy(text);
