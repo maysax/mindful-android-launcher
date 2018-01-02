@@ -1,6 +1,8 @@
 package co.siempo.phone.tempo;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -9,8 +11,11 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.helper.ActivityHelper;
+import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
@@ -33,6 +38,8 @@ public class TempoSettingsFragment extends CoreFragment {
     TextView titleActionBar;
     @Pref
     Launcher3Prefs_ launcherPrefs;
+    @Pref
+    DroidPrefs_ droidPrefs_;
 
     public TempoSettingsFragment() {
         // Required empty public constructor
@@ -40,8 +47,27 @@ public class TempoSettingsFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
-        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
-        titleActionBar.setText(R.string.settings);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
+        toolbar.setTitle(R.string.settings);
+        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
+                .colorAccent));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
+
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
+            txtAlphaSettings.setVisibility(View.VISIBLE);
+        } else {
+            if (droidPrefs_.isAlphaSettingEnable().get()) {
+                txtAlphaSettings.setVisibility(View.VISIBLE);
+            } else {
+                txtAlphaSettings.setVisibility(View.GONE);
+            }
+        }
 
 
     }
@@ -50,11 +76,13 @@ public class TempoSettingsFragment extends CoreFragment {
     @Click
     void txtHome() {
 
+        ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder()
+                .build(), R.id.tempoView);
     }
 
     @Click
     void txtAppMenus() {
-
+        ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
@@ -64,25 +92,15 @@ public class TempoSettingsFragment extends CoreFragment {
 
     @Click
     void txtAccount() {
-
+        ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
     void txtAlphaSettings() {
 
+        new ActivityHelper(context).openSiempoAlphaSettingsApp();
+//        ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder().build(), R.id.tempoView);
     }
-
-    @Click
-    void imgLeft() {
-        getActivity().finish();
-    }
-
-
-//
-//    @Click
-//    void imgRight() {
-//        ((CoreActivity) getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(), R.id.tempoView);
-//    }
 
 
 }

@@ -3,6 +3,7 @@ package co.siempo.phone.tempo;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -22,7 +23,6 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
 
@@ -74,18 +74,22 @@ public class TempoNotificationFragment extends CoreFragment {
         // Required empty public constructor
     }
 
-    @Click
-    void imgLeft() {
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStack();
-        //((CoreActivity)getActivity()).finish();
-    }
-
 
     @AfterViews
     void afterViews() {
-        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
-        titleActionBar.setText(R.string.string_notification_title);
+//        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
+//        titleActionBar.setText(R.string.string_notification_title);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
+        toolbar.setTitle(R.string.string_notification_title);
+        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
+                .colorAccent));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                fm.popBackStack();
+            }
+        });
 
         if (droidPrefs.isTempoNotificationControlsDisabled().get()) {
             switchDisableNotificationControls.setChecked(true);
@@ -174,6 +178,28 @@ public class TempoNotificationFragment extends CoreFragment {
 
             }
         });
+
+        switchAllowOnLockScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                launcherPrefs.isHidenotificationOnLockScreen().put(!isChecked);
+                if (isChecked) {
+                    txtAllowOnLockScreenText.setText("On. New notifications will be visible from the lock screen.");
+                } else {
+                    txtAllowOnLockScreenText.setText("Off. All notifications will be hidden from the lock screen.");
+                }
+            }
+        });
+
+
+        if (launcherPrefs.isHidenotificationOnLockScreen().get()) {
+            switchAllowOnLockScreen.setChecked(false);
+        } else {
+            switchAllowOnLockScreen.setChecked(true);
+        }
+
+
+
     }
 
 
@@ -200,15 +226,6 @@ public class TempoNotificationFragment extends CoreFragment {
 //        }
 //
 //    }
-
-    @CheckedChange
-    void switchAllowOnLockScreen(CompoundButton btn, boolean isChecked) {
-        if (isChecked) {
-            txtAllowOnLockScreenText.setText("On. New notifications will be visible from the lock screen.");
-        } else {
-            txtAllowOnLockScreenText.setText("Off. All notifications will be hidden from the lock screen.");
-        }
-    }
 
     @CheckedChange
     void switchAllowPeaking(CompoundButton btn, boolean isChecked) {

@@ -266,12 +266,12 @@ public class SiempoSettingsActivity extends CoreActivity {
             }
         });
 
-        switch_notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                launcherPrefs.isHidenotificationOnLockScreen().put(isChecked);
-            }
-        });
+//        switch_notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                launcherPrefs.isHidenotificationOnLockScreen().put(isChecked);
+//            }
+//        });
 
 
     }
