@@ -146,12 +146,22 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
             if (PackageUtil.isSiempoLauncher(this) && (myKM != null && myKM.inKeyguardRestrictedInputMode()) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
-                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()))
-                    SiempoNotificationListener.this.cancelAllNotifications();
+//                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()))
+//                    SiempoNotificationListener.this.cancelAllNotifications();
+                StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
+                for (StatusBarNotification statusBarNotification : statusBarNotifications) {
+                    if (!statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName()))
+                        SiempoNotificationListener.this.cancelNotification(statusBarNotification.getKey());
+                }
             }
             if (PackageUtil.isSiempoLauncher(this) && notification.getNotification().getSortKey() != null && notification.getNotification().getSortKey().equalsIgnoreCase(getResources().getString(R.string.lock_screen_label)) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
-                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()))
-                    SiempoNotificationListener.this.cancelAllNotifications();
+//                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()))
+//                    SiempoNotificationListener.this.cancelAllNotifications();
+                StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
+                for (StatusBarNotification statusBarNotification : statusBarNotifications) {
+                    if (!statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName()))
+                        SiempoNotificationListener.this.cancelNotification(statusBarNotification.getKey());
+                }
             }
 
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
