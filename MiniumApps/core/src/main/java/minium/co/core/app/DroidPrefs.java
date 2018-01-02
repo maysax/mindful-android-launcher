@@ -195,7 +195,7 @@ public interface DroidPrefs {
     @DefaultInt(15)
     int batchTime();
 
-    @DefaultString("")
+    @DefaultString("12:01")
     String onlyAt();
 
     // 0 for mute,1 for Sound
