@@ -12,9 +12,9 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
-            android:minHeight="?android:attr/actionBarSize"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:minHeight="?android:attr/actionBarSize" />
 
         <RelativeLayout
             android:id="@+id/relAllowSpecificApps"
@@ -63,7 +63,8 @@
             android:padding="8dp"
             android:text="Allow peaking"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <Switch
             android:id="@+id/switchAllowPeaking"
@@ -73,7 +74,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/txtAllowPeakingText"
             android:layout_below="@+id/txtAllowPeaking"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="8dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/txtAllowPeakingText"
@@ -88,7 +90,8 @@
             android:paddingRight="8dp"
             android:paddingTop="4dp"
             android:text="Off. The status bar will show you when you have new notifications in your tray, but your tray won't pop up automatically."
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
 
 
         <TextView
