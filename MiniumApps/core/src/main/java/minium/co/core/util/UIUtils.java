@@ -140,14 +140,10 @@ public class UIUtils {
                 .setCancelable(false)
                 .setPositiveButton(okButton, listener)
                 .setNegativeButton(cancelButton, listenerNo);
-        if (alertDialog != null) {
-            if (!alertDialog.isShowing()) {
-                alertDialog.show();
-            }
-        } else {
-            alertDialog = alertDialogBuilder.create();
+
+        alertDialog = alertDialogBuilder.create();
             alertDialog.show();
-        }
+
 
     }
 

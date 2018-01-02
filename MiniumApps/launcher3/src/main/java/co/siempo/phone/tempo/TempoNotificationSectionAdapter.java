@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -29,7 +30,6 @@ import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
 import co.siempo.phone.settings.NoticationFooterViewHolder;
 import co.siempo.phone.settings.SectionedRecyclerViewAdapter;
-import minium.co.core.util.UIUtils;
 
 public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapter<TempoNotificationHeaderViewHolder,
         TempoNotificationItemViewHolder,
@@ -40,6 +40,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     ArrayList<String> disableNotificationApps = new ArrayList<>();
     ArrayList<String> blockedApps = new ArrayList<>();
     ArrayList<String> disableSections = new ArrayList<>();
+    AlertDialog alertDialog;
     private PackageManager packageManager;
     private List<DisableAppList> appList, blockedList, messengerList;
     private List<HeaderAppList> headerList;
@@ -187,52 +188,75 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                                 changeHeaderNotification(section, true, disableSections, context);
                             } else {
+
                                 showUnblockAlert = false;
-                                UIUtils.confirmWithCancel(context, "Siempo won't block this app's notifications, but they might be blocked by your Android system settings.", "OK", "OPEN SYSTEM SETTINGS", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                                        .setMessage("Siempo won't block this app's notifications, but they might be blocked by your Android system settings.")
+                                        .setCancelable(false)
 
-                                        holder.addToBlockList(blockedList.get(position).applicationInfo, true, blockedApps, context);
-                                        DisableAppList d = blockedList.get(position);
-                                        blockedList.remove(d);
-                                        if (messengerAppList.contains(d.applicationInfo.packageName)) {
-                                            messengerList.add(d);
-                                            int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
-                                            launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
-                                        } else {
-                                            appList.add(d);
-                                            int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
-                                            launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
-                                        }
+                                        .setPositiveButton("OK", null)
+                                        .setNegativeButton("OPEN SYSTEM " +
+                                                "SETTINGS", null);
 
-                                        changeHeaderNotification(section, true, disableSections, context);
+                                alertDialog = alertDialogBuilder.create();
+//                                alertDialog.setCanceledOnTouchOutside(false);
 
 
-                                    }
-                                }, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        Intent intent = new Intent();
-                                        intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+                                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                                                  @Override
+                                                                  public void onShow(DialogInterface dialog) {
+                                                                      alertDialog.getButton(AlertDialog
+                                                                              .BUTTON_NEGATIVE)
+                                                                              .setOnClickListener(new View.OnClickListener() {
+                                                                                  @Override
+                                                                                  public void onClick(View v) {
+                                                                                      alertDialog.dismiss();
+                                                                                      Intent intent = new Intent();
+                                                                                      intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
 
 //for Android 5-7
 
-                                        if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT <= 25) {
-                                            intent.putExtra("app_package", d.applicationInfo.packageName);
-                                            intent.putExtra("app_uid", d.applicationInfo.uid);
-                                        } else if (Build.VERSION.SDK_INT >= 26) {
+                                                                                      if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT <= 25) {
+                                                                                          intent.putExtra("app_package", d.applicationInfo.packageName);
+                                                                                          intent.putExtra("app_uid", d.applicationInfo.uid);
+                                                                                      } else if (Build.VERSION.SDK_INT >= 26) {
 // for Android O
-                                            intent.putExtra("android.provider.extra.APP_PACKAGE", d.applicationInfo.packageName);
+                                                                                          intent.putExtra("android.provider.extra.APP_PACKAGE", d.applicationInfo.packageName);
 
-                                        }
-                                        context.startActivity(intent);
+                                                                                      }
+                                                                                      context.startActivity(intent);
+                                                                                  }
+                                                                              });
+
+                                                                      alertDialog.getButton(AlertDialog
+                                                                              .BUTTON_POSITIVE)
+                                                                              .setOnClickListener(new View.OnClickListener() {
+                                                                                  @Override
+                                                                                  public void onClick(View v) {
+                                                                                      alertDialog.dismiss();
+                                                                                      holder.addToBlockList(blockedList.get(position).applicationInfo, true, blockedApps, context);
+                                                                                      DisableAppList d = blockedList.get(position);
+                                                                                      blockedList.remove(d);
+                                                                                      if (messengerAppList.contains(d.applicationInfo.packageName)) {
+                                                                                          messengerList.add(d);
+                                                                                          int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
+                                                                                          launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
+                                                                                      } else {
+                                                                                          appList.add(d);
+                                                                                          int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
+                                                                                          launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
+                                                                                      }
+
+                                                                                      changeHeaderNotification(section, true, disableSections, context);
+                                                                                  }
+                                                                              });
+                                                                  }
+                                                              }
 
 
-                                    }
-                                });
+                                );
 
-
+                                alertDialog.show();
                             }
                             return true;
 
