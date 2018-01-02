@@ -16,10 +16,10 @@ Lint:
     paths:
      - /home/gitlab-runner/builds/57a3942f/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
     #- /home/gitlab-runner/builds/6ec47538/0/siempo/siem-android-app/MiniumApps/launcher3/build/outputs/lint-results-debug.html
-    sleep: 2
 
 Build:
   script:
+    - sleep 2
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew assembleDebug
