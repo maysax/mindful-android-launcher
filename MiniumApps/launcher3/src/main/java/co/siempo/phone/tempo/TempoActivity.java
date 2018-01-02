@@ -196,7 +196,7 @@ public class TempoActivity extends CoreActivity {
                                 droidPrefs.onlyAt().put(android.text.TextUtils.join(",", listdata));
                                 enableRadioOnPosition(2);
                             } else {
-                                Toast.makeText(TempoActivity.this, "You can set same time multiple times", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TempoActivity.this, "You can't set same time multiple times", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             listdata.set(i, strSelectedTime);
@@ -216,8 +216,13 @@ public class TempoActivity extends CoreActivity {
             timePickerDialog.setCancelText("CANCEL");
             isCancelButton = true;
         } else {
-            timePickerDialog.setCancelText("REMOVE");
-            isCancelButton = false;
+            if (isNewAdded) {
+                timePickerDialog.setCancelText("CANCEL");
+                isCancelButton = true;
+            } else {
+                timePickerDialog.setCancelText("REMOVE");
+                isCancelButton = false;
+            }
         }
 
         timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
