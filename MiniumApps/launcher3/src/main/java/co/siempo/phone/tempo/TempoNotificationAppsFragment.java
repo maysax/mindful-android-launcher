@@ -1,6 +1,7 @@
 package co.siempo.phone.tempo;
 
 import android.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -62,18 +63,28 @@ public class TempoNotificationAppsFragment extends CoreFragment {
         // Required empty public constructor
     }
 
-    @Click
-    void imgLeft() {
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStack();
-        //((CoreActivity)getActivity()).finish();
-    }
-
 
     @AfterViews
     void afterViews() {
-        ((CoreActivity) getActivity()).setSupportActionBar(toolbar);
-        titleActionBar.setText(R.string.string_notification_title);
+
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
+        toolbar.setTitle(R.string.allow_specific_apps);
+        toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
+                .colorAccent));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                fm.popBackStack();
+            }
+        });
+
     }
 
 

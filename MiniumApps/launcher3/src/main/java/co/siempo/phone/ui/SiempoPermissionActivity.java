@@ -234,7 +234,9 @@ public class SiempoPermissionActivity extends CoreActivity {
             txtPermissionLabel.setText(getString(R.string.permission_siempo_alpha_title));
         }
 
-        if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
+        if (isFromHome && permissionUtil.hasGiven(PermissionUtil
+                .CONTACT_PERMISSION) &&
+                permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
             finish();
         }

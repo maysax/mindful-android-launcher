@@ -10,15 +10,17 @@
         android:layout_height="wrap_content"
         tools:context="co.siempo.phone.pause.PauseActivity">
 
-        <include
-            android:id="@+id/includeLayout"
-            layout="@layout/tempo_toolbar" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:minHeight="?android:attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <RelativeLayout
             android:id="@+id/relAllowSpecificApps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/includeLayout">
+            android:layout_below="@+id/toolbar">
 
 
             <TextView
@@ -45,7 +47,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="4dp"
-                android:text="Notifications from all apps ar blocked, except that you specifically choose to allow."
+                android:text="Notifications from all apps are blocked, except that you specifically choose to allow."
                 android:textSize="16sp" />
         </RelativeLayout>
 

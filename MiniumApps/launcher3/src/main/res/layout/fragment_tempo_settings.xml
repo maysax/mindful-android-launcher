@@ -8,9 +8,11 @@
     tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
-    <include
-        android:id="@+id/includeLayout"
-        layout="@layout/tempo_toolbar" />
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?android:attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
     <TextView

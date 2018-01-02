@@ -11,7 +11,6 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.ActivityHelper;
@@ -28,14 +27,13 @@ import minium.co.core.ui.CoreActivity;
 @EActivity(R.layout.activity_settings_main)
 public class SiempoMainSettingsActivity extends CoreActivity {
 
+    @Pref
+    DroidPrefs_ droidPrefs_;
     private ListView lst_settings;
     private ArrayList<SettingsData> arr_menuList;
     private SettingsAdapter adapter;
     private Context context;
     private long startTime = 0;
-
-    @Pref
-    DroidPrefs_ droidPrefs_;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -90,21 +88,6 @@ public class SiempoMainSettingsActivity extends CoreActivity {
         s2.setSettingType(getString(R.string.str_siemposettings));
         s2.setId(2);
         arr_menuList.add(s2);
-
-        if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
-            SettingsData s3 = new SettingsData();
-            s3.setSettingType(getString(R.string.str_siempo_alphasettings));
-            s3.setId(3);
-            arr_menuList.add(s3);
-        } else {
-            if (droidPrefs_.isAlphaSettingEnable().get()) {
-                SettingsData s3 = new SettingsData();
-                s3.setSettingType(getString(R.string.str_siempo_alphasettings));
-                s3.setId(3);
-                arr_menuList.add(s3);
-            }
-        }
-
 
         adapter = new SettingsAdapter(this, arr_menuList);
         lst_settings.setAdapter(adapter);
