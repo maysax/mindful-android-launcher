@@ -68,6 +68,7 @@ public class StatusBarService extends Service {
     ArrayList<Integer> everyHourList = new ArrayList<>();
     ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     ArrayList<Integer> everyFourHoursList = new ArrayList<>();
+    MediaPlayer notificationMediaPlayer;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
     private AudioManager audioManager;
@@ -185,7 +186,7 @@ public class StatusBarService extends Service {
                 if (launchIntentForPackage != null) {
                     launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 }
-                Bitmap bitmap = UIUtils.convertBytetoBitmap(notification.getUser_icon());
+                Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
                 DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
                 String time = sdf.format(notification.get_date());
                 RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
@@ -198,7 +199,8 @@ public class StatusBarService extends Service {
                 contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
                 contentView.setTextViewText(R.id.txtMessage, notification.get_message());
                 contentView.setTextViewText(R.id.txtTime, time);
-                contentView.setTextViewText(R.id.txtAppName, CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName()));
+                String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
+                contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
                 b.setAutoCancel(true)
                         .setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.drawable.ic_airplane_air_balloon)
@@ -221,12 +223,10 @@ public class StatusBarService extends Service {
                     DBUtility.getNotificationDao().deleteAll();
                 }
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                String CHANNEL_ID = "Siempo";
                 if (Build.VERSION.SDK_INT >= 26) {
-                    CharSequence name = "Siempo";// The user-visible name of the channel.
                     int importance = NotificationManager.IMPORTANCE_HIGH;
-                    NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-                    b.setChannelId(CHANNEL_ID);
+                    NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
+                    b.setChannelId(applicationNameFromPackageName);
                     if (notificationManager != null) {
                         notificationManager.createNotificationChannel(mChannel);
                     }
@@ -241,21 +241,28 @@ public class StatusBarService extends Service {
 
     public void playNotificationSoundVibrate() {
         try {
-            MediaPlayer mMediaPlayer;
             if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
                 Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                mMediaPlayer = new MediaPlayer();
-                mMediaPlayer.setDataSource(this, alert);
+                notificationMediaPlayer = new MediaPlayer();
+                notificationMediaPlayer.setDataSource(this, alert);
                 final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    mMediaPlayer.setVolume(100, 100);
-                    mMediaPlayer.setScreenOnWhilePlaying(true);
-                    mMediaPlayer.prepare();
-                    mMediaPlayer.start();
-                    vibrator.vibrate(1000);
+                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                    notificationMediaPlayer.setVolume(100, 100);
+                    notificationMediaPlayer.setScreenOnWhilePlaying(true);
+                    notificationMediaPlayer.prepare();
+                    notificationMediaPlayer.start();
+                    vibrator.vibrate(500);
+                    notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            notificationMediaPlayer.release();
+                            notificationMediaPlayer = null;
+                        }
+                    });
                 }
             }
+            // }
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
