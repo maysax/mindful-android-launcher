@@ -289,7 +289,7 @@
     <string name="btn_continue">Continue</string>
     <string name="userid">UserId:</string>
     <string name="deliver_notifications">Deliver notifications:</string>
-    <string name="individually_as_soon_as_they_arrive">Individually,as soon as they arrive</string>
+    <string name="individually_as_soon_as_they_arrive">Individually, as soon as they arrive</string>
     <string name="batched_every_15_minutes">Batched, every 15 minutes</string>
     <string name="batched_every_30_minutes">Batched, every 30 minutes</string>
     <string name="batched_every_1_hour">Batched, every 1 hour</string>
