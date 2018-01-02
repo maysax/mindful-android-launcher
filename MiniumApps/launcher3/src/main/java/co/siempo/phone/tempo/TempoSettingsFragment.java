@@ -99,7 +99,6 @@ public class TempoSettingsFragment extends CoreFragment {
     void txtAlphaSettings() {
 
         new ActivityHelper(context).openSiempoAlphaSettingsApp();
-//        ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder().build(), R.id.tempoView);
     }
 
 

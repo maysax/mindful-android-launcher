@@ -37,17 +37,11 @@ public class TempoNotificationHeaderViewHolder extends RecyclerView.ViewHolder {
         txt_headerName.setText(text);
     }
 
-//    public void setHeaderData(boolean ischecked){
-//        switch_headerNotification.setChecked(ischecked);
-//    }
 
     public TextView getHeaderToggle() {
         return switch_headerNotification;
     }
 
-//    public void setData(boolean ischecked){
-//        switch_headerNotification.setChecked(ischecked);
-//    }
 
     public void showHeaderView() {
         headerList.setVisibility(View.VISIBLE);

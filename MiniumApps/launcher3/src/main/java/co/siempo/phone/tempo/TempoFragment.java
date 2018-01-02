@@ -178,12 +178,6 @@ public class TempoFragment extends CoreFragment {
         Tracer.d("NotificationScheduleAlarm set at: " + DateUtils.log() + " || Next fire: " + DateUtils.log(nextIntervalMillis));
 
         launcherPrefs.tempoNextNotificationMillis().put(nextIntervalMillis);
-
-//        else {
-//            prefs.isNotificationSupressed().put(true);
-//            getActivity().sendBroadcast(new Intent(getActivity(), TempoReceiver_.class));
-//            Tracer.d("NotificationScheduleAlarm cancelled");
-//        }
     }
 
     private void tempoHandler() {

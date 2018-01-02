@@ -54,8 +54,6 @@ public class TempoNotificationAppsFragment extends CoreFragment {
     TextView txtAllowOnLockScreen;
     @ViewById
     TextView txtDisableNotificationControls;
-//    @ViewById
-//    ImageView imgLeft;
 
     @ViewById
     RelativeLayout relAllowSpecificApps;
@@ -63,13 +61,6 @@ public class TempoNotificationAppsFragment extends CoreFragment {
 
     public TempoNotificationAppsFragment() {
         // Required empty public constructor
-    }
-
-    @Click
-    void imgLeft() {
-        FragmentManager fm = getFragmentManager();
-        fm.popBackStack();
-        //((CoreActivity)getActivity()).finish();
     }
 
 
