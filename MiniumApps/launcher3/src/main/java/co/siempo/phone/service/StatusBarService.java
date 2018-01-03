@@ -217,7 +217,8 @@ public class StatusBarService extends Service {
                         b.setVibrate(new long[0]);
                         b.setSound(null);
                     } else {
-                        playNotificationSoundVibrate();
+                        if (!CoreApplication.getInstance().isCallisRunning())
+                            playNotificationSoundVibrate();
                     }
                     DBUtility.getNotificationDao().deleteAll();
                 }
