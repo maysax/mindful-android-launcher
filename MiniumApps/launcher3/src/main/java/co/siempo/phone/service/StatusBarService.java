@@ -254,7 +254,6 @@ public class StatusBarService extends Service {
                     notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
-                            notificationMediaPlayer.release();
                             notificationMediaPlayer = null;
                         }
                     });
