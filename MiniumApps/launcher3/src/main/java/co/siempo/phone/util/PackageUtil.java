@@ -145,7 +145,9 @@ public class PackageUtil {
             if (tempoSound == 0) {
                 b.setDefaults(Notification.DEFAULT_LIGHTS);
             } else {
-                CoreApplication.getInstance().playNotificationSoundVibrate();
+                if (!CoreApplication.getInstance().isCallisRunning()) {
+                    CoreApplication.getInstance().playNotificationSoundVibrate();
+                }
             }
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             if (Build.VERSION.SDK_INT >= 26) {
