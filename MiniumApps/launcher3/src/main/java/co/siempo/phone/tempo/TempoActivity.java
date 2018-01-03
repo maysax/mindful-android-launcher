@@ -428,7 +428,8 @@ public class TempoActivity extends CoreActivity {
     }
 
     private void bindOnlyAt() {
-        strMessage = "Do not disturb is on between deliveries.";
+
+
         String timeString;
         if (android.text.format.DateFormat.is24HourFormat(this)) {
             timeString = "HH:mm";
@@ -438,168 +439,179 @@ public class TempoActivity extends CoreActivity {
         SimpleDateFormat df = new SimpleDateFormat(timeString, Locale.getDefault());
         String strTimeData = droidPrefs.onlyAt().get();
         String strTime[] = strTimeData.split(",");
-        if (strTimeData.equalsIgnoreCase("")) {
+
+
+        if (strTime.length == 1) {
             txtSign1.setVisibility(View.GONE);
             txtSign2.setVisibility(View.GONE);
-            txtOnlyAtTime1.setVisibility(View.GONE);
+            txtOnlyAtTime1.setVisibility(View.VISIBLE);
             txtOnlyAtTime2.setVisibility(View.GONE);
             txtOnlyAtTime3.setVisibility(View.GONE);
             txtAdd.setVisibility(View.VISIBLE);
-        } else {
-            if (strTime.length == 1) {
-                txtSign1.setVisibility(View.GONE);
-                txtSign2.setVisibility(View.GONE);
-                txtOnlyAtTime1.setVisibility(View.VISIBLE);
-                txtOnlyAtTime2.setVisibility(View.GONE);
-                txtOnlyAtTime3.setVisibility(View.GONE);
-                txtAdd.setVisibility(View.VISIBLE);
 
-                Calendar calendar1 = Calendar.getInstance();
-                Calendar currentTime = Calendar.getInstance();
-                String str1 = strTime[0];
-                int setMinute, setHours;
+            Calendar calendar1 = Calendar.getInstance();
+            Calendar currentTime = Calendar.getInstance();
+            String str1 = strTime[0];
+            int setMinute, setHours;
 
-                setHours = Integer.parseInt(str1.split(":")[0]);
-                setMinute = Integer.parseInt(str1.split(":")[1]);
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
 
-                calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                calendar1.set(Calendar.MINUTE, setMinute);
-                txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
-
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
+            if (radioOnlyAt.isChecked()) {
+                strMessage = "Do not disturb is on between deliveries.";
                 strMessage = strMessage + "\nNext delivery: " + df.format(calendar1.getTime());
-
-            } else if (strTime.length == 2) {
-                txtSign2.setVisibility(View.GONE);
-                txtSign1.setVisibility(View.VISIBLE);
-                txtSign2.setText(" & ");
-                txtOnlyAtTime1.setVisibility(View.VISIBLE);
-                txtOnlyAtTime2.setVisibility(View.VISIBLE);
-                txtOnlyAtTime3.setVisibility(View.GONE);
-                txtAdd.setVisibility(View.VISIBLE);
-                Calendar calendar1 = Calendar.getInstance();
-                Calendar currentTime = Calendar.getInstance();
-
-                int systemMinute, setMinute, systemHours, setHours;
-
-                ArrayList<Data> hourList = new ArrayList<>();
-
-                systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
-                systemMinute = currentTime.get(Calendar.MINUTE);
-
-                String str1 = strTime[0];
-                setHours = Integer.parseInt(str1.split(":")[0]);
-                setMinute = Integer.parseInt(str1.split(":")[1]);
-                calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                calendar1.set(Calendar.MINUTE, setMinute);
-                txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
-                hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
-
-
-                String str2 = strTime[1];
-                setHours = Integer.parseInt(str2.split(":")[0]);
-                setMinute = Integer.parseInt(str2.split(":")[1]);
-                calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                calendar1.set(Calendar.MINUTE, setMinute);
-                txtOnlyAtTime2.setText("" + df.format(calendar1.getTime()));
-                hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
-                try {
-                    Collections.sort(hourList, new HoursComparator());
-
-                    for (int i = 0; i <= hourList.size(); i++) {
-                        if (hourList.get(i).getHours() == systemHours) {
-                            if (hourList.get(i).getMinute() > systemMinute) {
-                                String str4 = strTime[i];
-                                setHours = Integer.parseInt(str4.split(":")[0]);
-                                setMinute = Integer.parseInt(str4.split(":")[1]);
-                                calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                                calendar1.set(Calendar.MINUTE, setMinute);
-                                strMessage = strMessage + "\nNext delivery: " + hourList.get(i).getIndex();
-                                break;
-                            }
-                        } else if (hourList.get(i).getHours() > systemHours) {
-                            String str4 = strTime[i];
-                            setHours = Integer.parseInt(str4.split(":")[0]);
-                            setMinute = Integer.parseInt(str4.split(":")[1]);
-                            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                            calendar1.set(Calendar.MINUTE, setMinute);
-                            strMessage = strMessage + "\nNext delivery: " + hourList.get(i).getIndex();
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    CoreApplication.getInstance().logException(e);
-                }
-
-            } else if (strTime.length == 3) {
-                txtSign1.setVisibility(View.VISIBLE);
-                txtSign2.setVisibility(View.VISIBLE);
-                txtOnlyAtTime1.setVisibility(View.VISIBLE);
-                txtOnlyAtTime2.setVisibility(View.VISIBLE);
-                txtOnlyAtTime3.setVisibility(View.VISIBLE);
-                txtAdd.setVisibility(View.GONE);
-
-                Calendar calendar1 = Calendar.getInstance();
-                Calendar currentTime = Calendar.getInstance();
-
-                ArrayList<Data> hourList = new ArrayList<>();
-
-                int systemMinute, setMinute, systemHours, setHours;
-                systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
-                systemMinute = currentTime.get(Calendar.MINUTE);
-
-
-                String str1 = strTime[0];
-                setHours = Integer.parseInt(str1.split(":")[0]);
-                setMinute = Integer.parseInt(str1.split(":")[1]);
-                calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                calendar1.set(Calendar.MINUTE, setMinute);
-                txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
-                hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
-
-                String str2 = strTime[1];
-                setHours = Integer.parseInt(str2.split(":")[0]);
-                setMinute = Integer.parseInt(str2.split(":")[1]);
-                calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                calendar1.set(Calendar.MINUTE, setMinute);
-                txtOnlyAtTime2.setText("" + df.format(calendar1.getTime()));
-                hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
-
-                String str3 = strTime[2];
-                setHours = Integer.parseInt(str3.split(":")[0]);
-                setMinute = Integer.parseInt(str3.split(":")[1]);
-                calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                calendar1.set(Calendar.MINUTE, setMinute);
-                txtOnlyAtTime3.setText("" + df.format(calendar1.getTime()));
-                hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
-                try {
-                    Collections.sort(hourList, new HoursComparator());
-                    for (int i = 0; i <= hourList.size(); i++) {
-                        if (hourList.get(i).getHours() == systemHours) {
-                            if (hourList.get(i).getMinute() > systemMinute) {
-                                String str4 = strTime[i];
-                                setHours = Integer.parseInt(str4.split(":")[0]);
-                                setMinute = Integer.parseInt(str4.split(":")[1]);
-                                calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                                calendar1.set(Calendar.MINUTE, setMinute);
-                                strMessage = strMessage + "\nNext delivery: " + hourList.get(i).getIndex();
-                                break;
-                            }
-                        } else if (hourList.get(i).getHours() > systemHours) {
-                            String str4 = strTime[i];
-                            setHours = Integer.parseInt(str4.split(":")[0]);
-                            setMinute = Integer.parseInt(str4.split(":")[1]);
-                            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
-                            calendar1.set(Calendar.MINUTE, setMinute);
-                            strMessage = strMessage + "\nNext delivery: " + hourList.get(i).getIndex();
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    CoreApplication.getInstance().logException(e);
-                }
-
+                txtMessage.setText(strMessage);
             }
-            txtMessage.setText(strMessage);
+        } else if (strTime.length == 2) {
+            txtSign2.setVisibility(View.GONE);
+            txtSign1.setVisibility(View.VISIBLE);
+            txtSign2.setText(" & ");
+            txtOnlyAtTime1.setVisibility(View.VISIBLE);
+            txtOnlyAtTime2.setVisibility(View.VISIBLE);
+            txtOnlyAtTime3.setVisibility(View.GONE);
+            txtAdd.setVisibility(View.VISIBLE);
+            Calendar calendar1 = Calendar.getInstance();
+            Calendar currentTime = Calendar.getInstance();
+
+            int systemMinute, setMinute, systemHours, setHours;
+
+            ArrayList<Data> hourList = new ArrayList<>();
+
+            systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
+            systemMinute = currentTime.get(Calendar.MINUTE);
+
+            String str1 = strTime[0];
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
+            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+
+
+            String str2 = strTime[1];
+            setHours = Integer.parseInt(str2.split(":")[0]);
+            setMinute = Integer.parseInt(str2.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            txtOnlyAtTime2.setText("" + df.format(calendar1.getTime()));
+            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+            try {
+                Collections.sort(hourList, new HoursComparator());
+
+                for (int i = 0; i <= hourList.size(); i++) {
+                    if (hourList.get(i).getHours() == systemHours) {
+                        if (hourList.get(i).getMinute() > systemMinute) {
+                            String str4 = strTime[i];
+                            setHours = Integer.parseInt(str4.split(":")[0]);
+                            setMinute = Integer.parseInt(str4.split(":")[1]);
+                            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                            calendar1.set(Calendar.MINUTE, setMinute);
+                            if (radioOnlyAt.isChecked()) {
+                                strMessage = "Do not disturb is on between deliveries.";
+                                strMessage = strMessage + "\nNext delivery: " + hourList.get(i).getIndex();
+                                txtMessage.setText(strMessage);
+                            }
+                            break;
+                        }
+                    } else if (hourList.get(i).getHours() > systemHours) {
+                        String str4 = strTime[i];
+                        setHours = Integer.parseInt(str4.split(":")[0]);
+                        setMinute = Integer.parseInt(str4.split(":")[1]);
+                        calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                        calendar1.set(Calendar.MINUTE, setMinute);
+                        if (radioOnlyAt.isChecked()) {
+                            strMessage = "Do not disturb is on between deliveries.";
+                            strMessage = strMessage + "\nNext delivery: " + hourList.get(i).getIndex();
+                            txtMessage.setText(strMessage);
+                        }
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+            }
+
+        } else if (strTime.length == 3) {
+            txtSign1.setVisibility(View.VISIBLE);
+            txtSign2.setVisibility(View.VISIBLE);
+            txtOnlyAtTime1.setVisibility(View.VISIBLE);
+            txtOnlyAtTime2.setVisibility(View.VISIBLE);
+            txtOnlyAtTime3.setVisibility(View.VISIBLE);
+            txtAdd.setVisibility(View.GONE);
+
+            Calendar calendar1 = Calendar.getInstance();
+            Calendar currentTime = Calendar.getInstance();
+
+            ArrayList<Data> hourList = new ArrayList<>();
+
+            int systemMinute, setMinute, systemHours, setHours;
+            systemHours = currentTime.get(Calendar.HOUR_OF_DAY);
+            systemMinute = currentTime.get(Calendar.MINUTE);
+
+
+            String str1 = strTime[0];
+            setHours = Integer.parseInt(str1.split(":")[0]);
+            setMinute = Integer.parseInt(str1.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
+            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+
+            String str2 = strTime[1];
+            setHours = Integer.parseInt(str2.split(":")[0]);
+            setMinute = Integer.parseInt(str2.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            txtOnlyAtTime2.setText("" + df.format(calendar1.getTime()));
+            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+
+            String str3 = strTime[2];
+            setHours = Integer.parseInt(str3.split(":")[0]);
+            setMinute = Integer.parseInt(str3.split(":")[1]);
+            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+            calendar1.set(Calendar.MINUTE, setMinute);
+            txtOnlyAtTime3.setText("" + df.format(calendar1.getTime()));
+            hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
+            try {
+                Collections.sort(hourList, new HoursComparator());
+                for (int i = 0; i <= hourList.size(); i++) {
+                    if (hourList.get(i).getHours() == systemHours) {
+                        if (hourList.get(i).getMinute() > systemMinute) {
+                            String str4 = strTime[i];
+                            setHours = Integer.parseInt(str4.split(":")[0]);
+                            setMinute = Integer.parseInt(str4.split(":")[1]);
+                            calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                            calendar1.set(Calendar.MINUTE, setMinute);
+                            if (radioOnlyAt.isChecked()) {
+                                strMessage = "Do not disturb is on between deliveries.";
+                                strMessage = strMessage + "\nNext delivery: " + hourList.get(i).getIndex();
+                                txtMessage.setText(strMessage);
+                            }
+                            break;
+                        }
+                    } else if (hourList.get(i).getHours() > systemHours) {
+                        String str4 = strTime[i];
+                        setHours = Integer.parseInt(str4.split(":")[0]);
+                        setMinute = Integer.parseInt(str4.split(":")[1]);
+                        calendar1.set(Calendar.HOUR_OF_DAY, setHours);
+                        calendar1.set(Calendar.MINUTE, setMinute);
+                        if (radioOnlyAt.isChecked()) {
+                            strMessage = "Do not disturb is on between deliveries.";
+                            strMessage = strMessage + "\nNext delivery: " + hourList.get(i).getIndex();
+                            txtMessage.setText(strMessage);
+                        }
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+            }
+
+
         }
     }
 
