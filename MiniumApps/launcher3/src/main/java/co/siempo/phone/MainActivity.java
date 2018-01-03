@@ -46,8 +46,6 @@ import java.util.ArrayList;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainSlidePagerAdapter;
@@ -464,10 +462,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onNewIntent(Intent intent) {
         currentItem = 0;
-        long notificationCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
-        if (notificationCount == 0) {
-            EventBus.getDefault().post(new NotificationSwipeEvent(true));
-        }
         Log.d(TAG, "ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
