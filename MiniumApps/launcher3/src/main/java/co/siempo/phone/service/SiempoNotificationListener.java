@@ -151,10 +151,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 for (StatusBarNotification statusBarNotification : statusBarNotifications) {
                     if (!statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(statusBarNotification.getKey());
-                    } else if (statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName())
-                            && statusBarNotification.getNotification().getSortKey().equalsIgnoreCase("SiempoLockScreeen")
-                            && statusBarNotification.getId() == 96) {
-
                     }
                 }
             }
