@@ -253,7 +253,9 @@ public class MainFragment extends CoreFragment {
 
     @ItemClick(R.id.listView)
     public void listItemClicked(int position) {
-        mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
+        if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
+            mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
+        }
     }
 
 
