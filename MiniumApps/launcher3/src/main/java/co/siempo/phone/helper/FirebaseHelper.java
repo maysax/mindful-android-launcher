@@ -16,8 +16,6 @@ import minium.co.core.log.Tracer;
 public class FirebaseHelper {
 
 
-    private static FirebaseHelper firebaseHelper;
-
     //Action
     public static String ACTION_CALL = "call";
     public static String ACTION_SMS = "send_as_sms";
@@ -25,19 +23,18 @@ public class FirebaseHelper {
     public static String ACTION_CREATE_CONTACT = "create_contact";
     public static String ACTION_CONTACT_PICK = "contact_picked";
     public static String ACTION_APPLICATION_PICK = "application_picked";
-
+    public static String IF_SCREEN = "if_screen";
+    public static String SIEMPO_MENU = "siempo_menu";
+    private static FirebaseHelper firebaseHelper;
     // Screen Name
     private static String MENU_SCREEN = "menu_screen";
-    public static String IF_SCREEN = "if_screen";
-
-
     //Event
     private static String IF_ACTION = "if_action";
-    public static String SIEMPO_MENU = "siempo_menu";
     private static String THIRD_PARTY_APPLICATION = "third_party";
     private static String SCREEN_USAGE = "screen_usage";
     private static String SIEMPO_DEFAULT = "siempo_default";
     private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
+    private static String TEMPO_INTERVAL = "tempo_interval";
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -48,6 +45,9 @@ public class FirebaseHelper {
     private String ACTION = "action";
     private String IF_DATA = "if_data";
     private String SUPPRESSED_COUNT = "suppressed_count";
+    private String INTERVAL = "interval";
+    private String TIME = "time";
+
 
     public FirebaseHelper() {
 
@@ -208,6 +208,19 @@ public class FirebaseHelper {
 //            e.printStackTrace();
 //        }
         return endTime - startTime;
+    }
+
+    /**
+     * Used for Log the interval and time stamp when change the tempo setting.
+     *
+     * @param interval
+     */
+    public void logTempoIntervalTime(int interval) {
+        Bundle bundle = new Bundle();
+        bundle.putLong(TIME, System.currentTimeMillis());
+        bundle.putInt(INTERVAL, interval);
+        Tracer.d("Firebase:" + TEMPO_INTERVAL + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(TEMPO_INTERVAL, bundle);
     }
 
 }
