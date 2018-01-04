@@ -67,7 +67,7 @@ public class ServiceUtils {
         } catch (Exception e) {
             // CoreApplication.getInstance().logException(e);
             e.printStackTrace();
-            Tracer.e(e, e.getMessage());
+
         }
 
         return false;
