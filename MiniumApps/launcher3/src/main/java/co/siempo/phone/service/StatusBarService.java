@@ -245,12 +245,14 @@ public class StatusBarService extends Service {
                 notificationMediaPlayer = new MediaPlayer();
                 notificationMediaPlayer.setDataSource(this, alert);
                 final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
+                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     notificationMediaPlayer.setVolume(100, 100);
                     notificationMediaPlayer.setScreenOnWhilePlaying(true);
                     notificationMediaPlayer.prepare();
-                    notificationMediaPlayer.start();
+                    if (!notificationMediaPlayer.isPlaying()) {
+                        notificationMediaPlayer.start();
+                    }
                     vibrator.vibrate(500);
                     notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
