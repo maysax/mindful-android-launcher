@@ -227,7 +227,7 @@ public class FirebaseHelper {
             bundle.putInt(TEMPO_INTERVAL, tempo_interval);
         }
         Tracer.d("Firebase:" + TEMPO + ": " + bundle.toString());
-        //  getFirebaseAnalytics().logEvent(TEMPO, bundle);
+        getFirebaseAnalytics().logEvent(TEMPO, bundle);
     }
 
 }
