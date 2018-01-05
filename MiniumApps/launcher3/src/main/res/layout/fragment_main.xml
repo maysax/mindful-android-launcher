@@ -44,6 +44,12 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <EditText
+        android:id="@+id/tempEdt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""/>
+
     <co.siempo.phone.ui.SearchLayout
         android:id="@+id/searchLayout"
         android:layout_width="match_parent"

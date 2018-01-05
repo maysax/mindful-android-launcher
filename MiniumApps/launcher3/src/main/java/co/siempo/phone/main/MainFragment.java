@@ -356,9 +356,11 @@ public class MainFragment extends CoreFragment {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     if (isUp) {
-                        relTop.setVisibility(View.GONE);
+                        if(relTop!=null)
+                            relTop.setVisibility(View.GONE);
                     } else {
-                        relTop.setVisibility(View.VISIBLE);
+                        if(relTop!=null)
+                            relTop.setVisibility(View.VISIBLE);
                     }
                 }
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_account_setting"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/dp_10"
+            android:background="@android:color/white"
+            android:minHeight="?android:attr/actionBarSize" />
+
+
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:layout_marginTop="30dp"
+                android:paddingRight="8dp">
+
+                <EditText
+                    android:id="@+id/edt_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/lbl_email"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/colorAccent"
+                    android:text="">
+                    <requestFocus/>
+                </EditText>
+            </android.support.design.widget.TextInputLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>
+
+
