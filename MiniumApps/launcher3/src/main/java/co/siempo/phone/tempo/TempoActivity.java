@@ -89,7 +89,20 @@ public class TempoActivity extends CoreActivity {
     String strMessage;
     TimePickerDialog timePickerDialog;
     boolean isCancelButton = false;
+    long startTime = 0;
     private String TAG = "TempoActivity";
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseHelper.getIntance().logScreenUsageTime(TempoActivity.class.getSimpleName(), startTime);
+    }
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -144,52 +157,44 @@ public class TempoActivity extends CoreActivity {
 
     @Click
     void radioIndividual() {
-        if (droidPrefs.tempoType().get() == 1) {
-            FirebaseHelper.getIntance().logTempoIntervalTime(0);
-        }
         enableRadioOnPosition(0);
+        FirebaseHelper.getIntance().logTempoIntervalTime(0, 0, "");
     }
 
     @Click
     void radioBatched() {
         enableRadioOnPosition(1);
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.batchTime().get(), "");
     }
 
     @Click
     void radioOnlyAt() {
-        if (droidPrefs.tempoType().get() == 1) {
-            FirebaseHelper.getIntance().logTempoIntervalTime(0);
-        }
         enableRadioOnPosition(2);
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
     }
 
     @Click
     void relIndividual() {
-        if (droidPrefs.tempoType().get() == 1) {
-            FirebaseHelper.getIntance().logTempoIntervalTime(0);
-        }
         enableRadioOnPosition(0);
+        FirebaseHelper.getIntance().logTempoIntervalTime(0, 0, "");
     }
 
     @Click
     void relBatched() {
         enableRadioOnPosition(1);
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.batchTime().get(), "");
     }
 
     @Click
     void relOnlyAt() {
-        if (droidPrefs.tempoType().get() == 1) {
-            FirebaseHelper.getIntance().logTempoIntervalTime(0);
-        }
         enableRadioOnPosition(2);
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
     }
 
     @Click
     void txtAdd() {
-        if (droidPrefs.tempoType().get() == 1) {
-            FirebaseHelper.getIntance().logTempoIntervalTime(0);
-        }
         enableRadioOnPosition(2);
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
         Calendar now = Calendar.getInstance();
         showTimePicker(now, -1, true);
     }
@@ -211,6 +216,7 @@ public class TempoActivity extends CoreActivity {
                                 listdata.add(strSelectedTime);
                                 droidPrefs.onlyAt().put(android.text.TextUtils.join(",", listdata));
                                 enableRadioOnPosition(2);
+                                FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
                             } else {
                                 Toast.makeText(TempoActivity.this, "You can't set same time multiple times", Toast.LENGTH_SHORT).show();
                             }
@@ -218,6 +224,7 @@ public class TempoActivity extends CoreActivity {
                             listdata.set(i, strSelectedTime);
                             droidPrefs.onlyAt().put(android.text.TextUtils.join(",", listdata));
                             enableRadioOnPosition(2);
+                            FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
                         }
 
                     }
@@ -253,6 +260,7 @@ public class TempoActivity extends CoreActivity {
                             droidPrefs.onlyAt().put("");
                         }
                         enableRadioOnPosition(2);
+                        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
                     }
                 }
             }
@@ -266,26 +274,22 @@ public class TempoActivity extends CoreActivity {
             if (droidPrefs.batchTime().get() == 15) {
                 txtBatch.setText(getString(R.string.batched_every_4_hour));
                 droidPrefs.batchTime().put(4);
-                FirebaseHelper.getIntance().logTempoIntervalTime(4);
             } else if (droidPrefs.batchTime().get() == 4) {
                 txtBatch.setText(getString(R.string.batched_every_2_hour));
                 droidPrefs.batchTime().put(2);
-                FirebaseHelper.getIntance().logTempoIntervalTime(2);
             } else if (droidPrefs.batchTime().get() == 2) {
                 txtBatch.setText(getString(R.string.batched_every_1_hour));
                 droidPrefs.batchTime().put(1);
-                FirebaseHelper.getIntance().logTempoIntervalTime(1);
             } else if (droidPrefs.batchTime().get() == 1) {
                 txtBatch.setText(getString(R.string.batched_every_30_minutes));
                 droidPrefs.batchTime().put(30);
-                FirebaseHelper.getIntance().logTempoIntervalTime(30);
             } else if (droidPrefs.batchTime().get() == 30) {
                 txtBatch.setText(getString(R.string.batched_every_15_minutes));
                 droidPrefs.batchTime().put(15);
-                FirebaseHelper.getIntance().logTempoIntervalTime(15);
             }
         }
         enableRadioOnPosition(1);
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.batchTime().get(), "");
     }
 
     @Click
@@ -294,27 +298,22 @@ public class TempoActivity extends CoreActivity {
             if (droidPrefs.batchTime().get() == 15) {
                 txtBatch.setText(getString(R.string.batched_every_30_minutes));
                 droidPrefs.batchTime().put(30);
-                FirebaseHelper.getIntance().logTempoIntervalTime(30);
             } else if (droidPrefs.batchTime().get() == 30) {
                 txtBatch.setText(getString(R.string.batched_every_1_hour));
                 droidPrefs.batchTime().put(1);
-                FirebaseHelper.getIntance().logTempoIntervalTime(1);
             } else if (droidPrefs.batchTime().get() == 1) {
                 txtBatch.setText(getString(R.string.batched_every_2_hour));
                 droidPrefs.batchTime().put(2);
-                FirebaseHelper.getIntance().logTempoIntervalTime(2);
             } else if (droidPrefs.batchTime().get() == 2) {
                 txtBatch.setText(getString(R.string.batched_every_4_hour));
                 droidPrefs.batchTime().put(4);
-                FirebaseHelper.getIntance().logTempoIntervalTime(4);
             } else if (droidPrefs.batchTime().get() == 4) {
                 txtBatch.setText(getString(R.string.batched_every_15_minutes));
                 droidPrefs.batchTime().put(15);
-                FirebaseHelper.getIntance().logTempoIntervalTime(15);
             }
         }
-
         enableRadioOnPosition(1);
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.batchTime().get(), "");
     }
 
     @Click
@@ -345,9 +344,6 @@ public class TempoActivity extends CoreActivity {
 
     @Click
     void txtOnlyAtTime1() {
-        if (droidPrefs.tempoType().get() == 1) {
-            FirebaseHelper.getIntance().logTempoIntervalTime(0);
-        }
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
@@ -361,9 +357,6 @@ public class TempoActivity extends CoreActivity {
 
     @Click
     void txtOnlyAtTime2() {
-        if (droidPrefs.tempoType().get() == 1) {
-            FirebaseHelper.getIntance().logTempoIntervalTime(0);
-        }
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
@@ -377,9 +370,6 @@ public class TempoActivity extends CoreActivity {
 
     @Click
     void txtOnlyAtTime3() {
-        if (droidPrefs.tempoType().get() == 1) {
-            FirebaseHelper.getIntance().logTempoIntervalTime(0);
-        }
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
@@ -466,7 +456,6 @@ public class TempoActivity extends CoreActivity {
     }
 
     private void bindOnlyAt() {
-
 
         String timeString;
         if (android.text.format.DateFormat.is24HourFormat(this)) {
