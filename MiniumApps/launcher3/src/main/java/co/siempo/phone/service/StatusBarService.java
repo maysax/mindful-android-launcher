@@ -174,67 +174,74 @@ public class StatusBarService extends Service {
     }
 
     public void recreateNotification(List<TableNotificationSms> notificationList, Context context) {
-        for (int i = 0; i < notificationList.size(); i++) {
-            TableNotificationSms notification = notificationList.get(i);
-            if (!notification.getPackageName().equalsIgnoreCase("android")) {
-                NotificationCompat.Builder b = new NotificationCompat.Builder(context, "" + notification.getId());
-                Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-                PendingIntent contentIntent = null;
-                if (launchIntentForPackage != null) {
-                    int requestID = (int) System.currentTimeMillis();
-                    contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-                    launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                }
-                Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
-                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
-                String time = sdf.format(notification.get_date());
-                RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
-                contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
-                if (null != bitmap) {
-                    contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
-                } else {
-                    contentView.setImageViewBitmap(R.id.imgUserImage, null);
-                }
-                contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
-                contentView.setTextViewText(R.id.txtMessage, notification.get_message());
-                contentView.setTextViewText(R.id.txtTime, time);
-                String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-                contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
-                b.setAutoCancel(true)
-                        .setWhen(System.currentTimeMillis())
-                        .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setContentTitle(notification.get_contact_title())
-                        .setContentText(notification.get_message())
-                        .setContentIntent(contentIntent)
-                        .setCustomContentView(contentView)
-                        .setCustomBigContentView(contentView)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setContentInfo("Info");
-
-                if (notificationList.size() == 1 || i == (notificationList.size() - 1)) {
-                    if (sharedPreferences.getInt("tempoSoundProfile", 0) == 0) {
-                        b.setVibrate(new long[0]);
-                        b.setSound(null);
+        try {
+            for (int i = 0; i < notificationList.size(); i++) {
+                TableNotificationSms notification = notificationList.get(i);
+                if (!notification.getPackageName().equalsIgnoreCase("android")) {
+                    NotificationCompat.Builder b = new NotificationCompat.Builder(context, "" + notification.getId());
+                    Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
+                    PendingIntent contentIntent = null;
+                    if (launchIntentForPackage != null) {
+                        int requestID = (int) System.currentTimeMillis();
+                        contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+                        launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    }
+                    Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
+                    DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
+                    String time = sdf.format(notification.get_date());
+                    RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+                    contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+                    if (null != bitmap) {
+                        contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
                     } else {
-                        if (!CoreApplication.getInstance().isCallisRunning())
-                            playNotificationSoundVibrate();
+                        contentView.setImageViewBitmap(R.id.imgUserImage, null);
                     }
-                    DBUtility.getNotificationDao().deleteAll();
-                }
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                if (Build.VERSION.SDK_INT >= 26) {
-                    int importance = NotificationManager.IMPORTANCE_HIGH;
-                    NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
-                    b.setChannelId(applicationNameFromPackageName);
+                    contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
+                    contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+                    contentView.setTextViewText(R.id.txtTime, time);
+                    String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
+                    contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
+                    b.setAutoCancel(true)
+                            .setWhen(System.currentTimeMillis())
+                            .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                            .setPriority(Notification.PRIORITY_HIGH)
+                            .setContentTitle(notification.get_contact_title())
+                            .setContentText(notification.get_message())
+                            .setContentIntent(contentIntent)
+                            .setCustomContentView(contentView)
+                            .setCustomBigContentView(contentView)
+                            .setDefaults(Notification.DEFAULT_ALL)
+                            .setContentInfo("Info");
+
+                    if (notificationList.size() == 1 || i == (notificationList.size() - 1)) {
+                        if (sharedPreferences.getInt("tempoSoundProfile", 0) == 0) {
+                            b.setVibrate(new long[0]);
+                            b.setSound(null);
+                        } else {
+                            if (!CoreApplication.getInstance().isCallisRunning())
+                                playNotificationSoundVibrate();
+                        }
+                        DBUtility.getNotificationDao().deleteAll();
+                    }
+                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    if (Build.VERSION.SDK_INT >= 26) {
+                        int importance = NotificationManager.IMPORTANCE_HIGH;
+                        if (applicationNameFromPackageName != null) {
+                            NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
+                            b.setChannelId(applicationNameFromPackageName);
+                            if (notificationManager != null) {
+                                notificationManager.createNotificationChannel(mChannel);
+                            }
+                        }
+                    }
                     if (notificationManager != null) {
-                        notificationManager.createNotificationChannel(mChannel);
+                        notificationManager.notify(notification.getId().intValue(), b.build());
                     }
-                }
-                if (notificationManager != null) {
-                    notificationManager.notify(notification.getId().intValue(), b.build());
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
         }
     }
 
@@ -245,12 +252,14 @@ public class StatusBarService extends Service {
                 notificationMediaPlayer = new MediaPlayer();
                 notificationMediaPlayer.setDataSource(this, alert);
                 final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
+                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     notificationMediaPlayer.setVolume(100, 100);
                     notificationMediaPlayer.setScreenOnWhilePlaying(true);
                     notificationMediaPlayer.prepare();
-                    notificationMediaPlayer.start();
+                    if (!notificationMediaPlayer.isPlaying()) {
+                        notificationMediaPlayer.start();
+                    }
                     vibrator.vibrate(500);
                     notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override

@@ -108,59 +108,65 @@ public class PackageUtil {
 
     public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound) {
         if (tempoType == 0) {
-            NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
-            Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-            PendingIntent contentIntent = null;
-            if (launchIntentForPackage != null) {
-                int requestID = (int) System.currentTimeMillis();
-                contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-                launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            }
-            Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
-            DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
-            String time = sdf.format(notification.get_date());
-            RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
-            contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
-            if (null != bitmap) {
-                contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
-            } else {
-                contentView.setImageViewBitmap(R.id.imgUserImage, null);
-            }
-            contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
-            contentView.setTextViewText(R.id.txtMessage, notification.get_message());
-            contentView.setTextViewText(R.id.txtTime, time);
-            String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-            contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
-            b.setAutoCancel(true)
-                    .setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setContentTitle(notification.get_contact_title())
-                    .setContentText(notification.get_message())
-                    .setContentIntent(contentIntent)
-                    .setCustomContentView(contentView)
-                    .setCustomBigContentView(contentView)
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setContentInfo("Info");
-            if (tempoSound == 0) {
-                b.setDefaults(Notification.DEFAULT_LIGHTS);
-            } else {
-                if (!CoreApplication.getInstance().isCallisRunning()) {
-                    CoreApplication.getInstance().playNotificationSoundVibrate();
+            try {
+                NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
+                Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
+                PendingIntent contentIntent = null;
+                if (launchIntentForPackage != null) {
+                    int requestID = (int) System.currentTimeMillis();
+                    contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+                    launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 }
-            }
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (Build.VERSION.SDK_INT >= 26) {
-                int importance = NotificationManager.IMPORTANCE_HIGH;
-                NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
-                b.setChannelId(applicationNameFromPackageName);
+                Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
+                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
+                String time = sdf.format(notification.get_date());
+                RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+                contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+                if (null != bitmap) {
+                    contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
+                } else {
+                    contentView.setImageViewBitmap(R.id.imgUserImage, null);
+                }
+                contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
+                contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+                contentView.setTextViewText(R.id.txtTime, time);
+                String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
+                contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
+                b.setAutoCancel(true)
+                        .setWhen(System.currentTimeMillis())
+                        .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setContentTitle(notification.get_contact_title())
+                        .setContentText(notification.get_message())
+                        .setContentIntent(contentIntent)
+                        .setCustomContentView(contentView)
+                        .setCustomBigContentView(contentView)
+                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setContentInfo("Info");
+                if (tempoSound == 0) {
+                    b.setDefaults(Notification.DEFAULT_LIGHTS);
+                } else {
+                    if (!CoreApplication.getInstance().isCallisRunning()) {
+                        CoreApplication.getInstance().playNotificationSoundVibrate();
+                    }
+                }
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+                    if (applicationNameFromPackageName != null) {
+                        NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
+                        b.setChannelId(applicationNameFromPackageName);
+                        if (notificationManager != null) {
+                            notificationManager.createNotificationChannel(mChannel);
+                        }
+                    }
+                }
                 if (notificationManager != null) {
-                    notificationManager.createNotificationChannel(mChannel);
+                    notificationManager.notify(notification.getId().intValue(), b.build());
                 }
-
-            }
-            if (notificationManager != null) {
-                notificationManager.notify(notification.getId().intValue(), b.build());
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+                e.printStackTrace();
             }
         }
     }

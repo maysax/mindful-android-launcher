@@ -19,6 +19,7 @@ Lint:
 
 Build:
   script:
+    - sleep 120
     - cd MiniumApps
     - chmod +x ./gradlew
     - ./gradlew assembleDebug
