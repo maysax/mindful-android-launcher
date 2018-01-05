@@ -202,4 +202,10 @@ public interface DroidPrefs {
     @DefaultInt(0)
     int tempoSoundProfile();
 
+    @DefaultBoolean(true)
+    boolean isIntentionEnable();
+
+    @DefaultString("")
+    String defaultIntention();
+
 }

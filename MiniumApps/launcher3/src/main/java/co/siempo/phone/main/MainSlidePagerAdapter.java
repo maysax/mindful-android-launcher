@@ -21,6 +21,8 @@ public class MainSlidePagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return MainFragment_.builder().build();
             case 1:
+                return IntentionFieldFragment_.builder().build();
+            case 2:
                 return OldMenuFragment_.builder().build();
             default:
                 break;
@@ -31,6 +33,6 @@ public class MainSlidePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 }
