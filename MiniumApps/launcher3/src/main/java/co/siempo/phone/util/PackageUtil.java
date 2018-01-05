@@ -153,12 +153,13 @@ public class PackageUtil {
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 if (Build.VERSION.SDK_INT >= 26) {
                     int importance = NotificationManager.IMPORTANCE_HIGH;
-                    NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
-                    b.setChannelId(applicationNameFromPackageName);
-                    if (notificationManager != null) {
-                        notificationManager.createNotificationChannel(mChannel);
+                    if (applicationNameFromPackageName != null) {
+                        NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
+                        b.setChannelId(applicationNameFromPackageName);
+                        if (notificationManager != null) {
+                            notificationManager.createNotificationChannel(mChannel);
+                        }
                     }
-
                 }
                 if (notificationManager != null) {
                     notificationManager.notify(notification.getId().intValue(), b.build());
