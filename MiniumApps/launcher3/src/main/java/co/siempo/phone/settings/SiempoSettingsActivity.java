@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.provider.Settings;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
@@ -152,7 +151,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
 
-        if (launcherPrefs.isHidenotificationOnLockScreen().get()) {
+        if (launcherPrefs.isAllowNotificationOnLockScreen().get()) {
             switch_notification.setChecked(true);
         } else {
             switch_notification.setChecked(false);
@@ -165,10 +164,8 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_launcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
-//                ((CoreActivity) context).loadDialog();
-                Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-                startActivity(intent);
+                new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
+                ((CoreActivity) context).loadDialog();
             }
         });
 

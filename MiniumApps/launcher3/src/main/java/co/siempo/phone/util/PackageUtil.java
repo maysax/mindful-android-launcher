@@ -107,7 +107,7 @@ public class PackageUtil {
     }
 
 
-    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound, Boolean isHidenotificationOnLockScreen) {
+    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound, Boolean isAllowNotificationOnLockScreen) {
         if (tempoType == 0) try {
             NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
             Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
@@ -148,8 +148,11 @@ public class PackageUtil {
             } else {
                 if (!CoreApplication.getInstance().isCallisRunning()) {
                     KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-                    if (!((myKM != null && myKM.inKeyguardRestrictedInputMode()) && isHidenotificationOnLockScreen))
+                    if (((myKM != null && myKM.inKeyguardRestrictedInputMode()) && !isAllowNotificationOnLockScreen)) {
+                        // hide notification on lock screen so mute the notification sound.
+                    } else {
                         CoreApplication.getInstance().playNotificationSoundVibrate();
+                    }
                 }
             }
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
