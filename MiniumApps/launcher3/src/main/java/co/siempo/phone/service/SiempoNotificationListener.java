@@ -149,9 +149,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
 //                    SiempoNotificationListener.this.cancelAllNotifications();
                 StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
                 for (StatusBarNotification statusBarNotification : statusBarNotifications) {
-                    if (!statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName())) {
+                    // if (!statusBarNotification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(statusBarNotification.getKey());
-                    }
+                    //}
                 }
             }
 
