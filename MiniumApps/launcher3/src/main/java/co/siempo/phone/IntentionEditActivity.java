@@ -11,8 +11,10 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toolbar;
+import android.widget.ViewFlipper;
 
 import org.androidannotations.annotations.AfterTextChange;
 import org.androidannotations.annotations.AfterViews;
@@ -34,12 +36,30 @@ import minium.co.core.util.UIUtils;
 public class IntentionEditActivity extends CoreActivity {
     @ViewById
     Toolbar toolbar;
+
     @ViewById
     TextView txtSave;
+
+    @ViewById
+    TextView txtOne;
+
+    @ViewById
+    TextView txtTwo;
+
+    @ViewById
+    ViewFlipper viewFlipper;
+
+    @ViewById
+    TextView txtHelp;
+
     @ViewById
     EditText edtIntention;
     @ViewById
     ImageView imgClear;
+
+    @ViewById
+    LinearLayout linHelpWindow;
+
     @Pref
     DroidPrefs_ droidPrefs;
     String strIntentField;
@@ -131,11 +151,53 @@ public class IntentionEditActivity extends CoreActivity {
         finish();
     }
 
+    @Click
+    public void txtOne() {
+        if (viewFlipper.getDisplayedChild() == 0) {
+            linHelpWindow.setVisibility(View.GONE);
+            txtHelp.setVisibility(View.VISIBLE);
+        } else if (viewFlipper.getDisplayedChild() == 1) {
+            txtOne.setText("CLOSE");
+            txtTwo.setText("NEXT");
+            viewFlipper.showPrevious();
+        } else if (viewFlipper.getDisplayedChild() == 2) {
+            viewFlipper.showNext();
+        } else if (viewFlipper.getDisplayedChild() == 3) {
+            viewFlipper.showNext();
+        }
+
+    }
+
+    @Click
+    public void txtTwo() {
+        if (viewFlipper.getDisplayedChild() == 0) {
+            txtOne.setText("PREVIOUS");
+            txtTwo.setText("NEXT");
+            viewFlipper.showNext();
+        } else if (viewFlipper.getDisplayedChild() == 1) {
+            txtOne.setText("PREVIOUS");
+            txtTwo.setText("NEXT");
+            viewFlipper.showNext();
+        } else if (viewFlipper.getDisplayedChild() == 2) {
+            txtOne.setText("PREVIOUS");
+            txtTwo.setText("CLOSE");
+            viewFlipper.showNext();
+        } else if (viewFlipper.getDisplayedChild() == 3) {
+            linHelpWindow.setVisibility(View.GONE);
+            txtHelp.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Click
+    public void txtHelp() {
+        txtHelp.setVisibility(View.GONE);
+        linHelpWindow.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
 
