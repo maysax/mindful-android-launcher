@@ -1,5 +1,6 @@
 package co.siempo.phone.service;
 
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -61,7 +62,7 @@ import static co.siempo.phone.SiempoNotificationBar.NotificationUtils.ANDROID_CH
 
 public class StatusBarService extends Service {
 
-    SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences, sharedPreferencesLauncher3;
     Timer timer;
     MyTimerTask timerTask;
     Context context;
@@ -94,6 +95,7 @@ public class StatusBarService extends Service {
         super.onCreate();
         context = this;
         sharedPreferences = getSharedPreferences("DroidPrefs", 0);
+        sharedPreferencesLauncher3 = getSharedPreferences("Launcher3Prefs", 0);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         registerObserverForContact();
@@ -173,7 +175,7 @@ public class StatusBarService extends Service {
         super.onDestroy();
     }
 
-    public void recreateNotification(List<TableNotificationSms> notificationList, Context context) {
+    public void recreateNotification(List<TableNotificationSms> notificationList, Context context, boolean isHidenotificationOnLockScreen) {
         try {
             for (int i = 0; i < notificationList.size(); i++) {
                 TableNotificationSms notification = notificationList.get(i);
@@ -218,8 +220,12 @@ public class StatusBarService extends Service {
                             b.setVibrate(new long[0]);
                             b.setSound(null);
                         } else {
-                            if (!CoreApplication.getInstance().isCallisRunning())
-                                playNotificationSoundVibrate();
+                            if (!CoreApplication.getInstance().isCallisRunning()) {
+                                KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+                                if (!((myKM != null && myKM.inKeyguardRestrictedInputMode()) && isHidenotificationOnLockScreen)) {
+                                    playNotificationSoundVibrate();
+                                }
+                            }
                         }
                         DBUtility.getNotificationDao().deleteAll();
                     }
@@ -290,31 +296,31 @@ public class StatusBarService extends Service {
                         if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
                             Tracer.d("Batch::" + "15 minute interval");
                             List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            recreateNotification(notificationList, context);
+                            recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isHidenotificationOnLockScreen", true));
                         }
                     } else if (batchTime == 30) {
                         if (systemMinutes == 0 || systemMinutes == 30) {
                             Tracer.d("Batch::" + "30 minute interval");
                             List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            recreateNotification(notificationList, context);
+                            recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isHidenotificationOnLockScreen", true));
                         }
                     } else if (batchTime == 1) {
                         if (everyHourList.contains(systemHours) && systemMinutes == 0) {
                             Tracer.d("Batch::" + "Every Hour interval");
                             List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            recreateNotification(notificationList, context);
+                            recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isHidenotificationOnLockScreen", true));
                         }
                     } else if (batchTime == 2) {
                         if (everyTwoHourList.contains(systemHours) && systemMinutes == 0) {
                             Tracer.d("Batch::" + "Every 2 Hour interval");
                             List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            recreateNotification(notificationList, context);
+                            recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isHidenotificationOnLockScreen", true));
                         }
                     } else if (batchTime == 4) {
                         if (everyFourHoursList.contains(systemHours) && systemMinutes == 0) {
                             Tracer.d("Batch::" + "Every 4 Hour interval");
                             List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            recreateNotification(notificationList, context);
+                            recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isHidenotificationOnLockScreen", true));
                         }
                     }
 
@@ -328,7 +334,7 @@ public class StatusBarService extends Service {
                             if (hours == systemHours && minutes == systemMinutes) {
                                 Tracer.d("Only at::" + str);
                                 List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                                recreateNotification(notificationList, context);
+                                recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isHidenotificationOnLockScreen", true));
                             }
                         }
                     }
