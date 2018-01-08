@@ -340,6 +340,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
             CoreApplication.getInstance().logException(e);
         }
 
+        if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equals(Notification.CATEGORY_PROGRESS)) {
+            return;
+        }
 
         //Parse the Whats App messages.
         if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
