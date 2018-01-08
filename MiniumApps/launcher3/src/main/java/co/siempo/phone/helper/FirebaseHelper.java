@@ -16,8 +16,6 @@ import minium.co.core.log.Tracer;
 public class FirebaseHelper {
 
 
-    private static FirebaseHelper firebaseHelper;
-
     //Action
     public static String ACTION_CALL = "call";
     public static String ACTION_SMS = "send_as_sms";
@@ -25,19 +23,18 @@ public class FirebaseHelper {
     public static String ACTION_CREATE_CONTACT = "create_contact";
     public static String ACTION_CONTACT_PICK = "contact_picked";
     public static String ACTION_APPLICATION_PICK = "application_picked";
-
+    public static String IF_SCREEN = "if_screen";
+    public static String SIEMPO_MENU = "siempo_menu";
+    private static FirebaseHelper firebaseHelper;
     // Screen Name
     private static String MENU_SCREEN = "menu_screen";
-    public static String IF_SCREEN = "if_screen";
-
-
     //Event
     private static String IF_ACTION = "if_action";
-    public static String SIEMPO_MENU = "siempo_menu";
     private static String THIRD_PARTY_APPLICATION = "third_party";
     private static String SCREEN_USAGE = "screen_usage";
     private static String SIEMPO_DEFAULT = "siempo_default";
     private static String SUPPRESSED_NOTIFICATION = "suppressed_notification";
+    private static String TEMPO = "tempo";
 
     //Attribute
     private String SCREEN_NAME = "screen_name";
@@ -48,6 +45,10 @@ public class FirebaseHelper {
     private String ACTION = "action";
     private String IF_DATA = "if_data";
     private String SUPPRESSED_COUNT = "suppressed_count";
+    private String TEMPO_INTERVAL_ONLY_AT = "tempo_interval_onlyat";
+    private String TEMPO_INTERVAL = "tempo_interval";
+    private String TEMPO_TYPE = "tempo_type";
+
 
     public FirebaseHelper() {
 
@@ -208,6 +209,25 @@ public class FirebaseHelper {
 //            e.printStackTrace();
 //        }
         return endTime - startTime;
+    }
+
+    /**
+     * Used for Log the interval and time stamp when change the tempo setting.
+     *
+     * @param tempoType             shows the user selected type of tempo 0 for individual,1 batch,2 OnlyAt
+     * @param tempo_interval        which used for 0 and 1 tempo type option.
+     * @param tempo_interval_onlyat used for 2 tempo type option.
+     */
+    public void logTempoIntervalTime(int tempoType, int tempo_interval, String tempo_interval_onlyat) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(TEMPO_TYPE, tempoType);
+        if (tempoType == 2) {
+            bundle.putString(TEMPO_INTERVAL_ONLY_AT, tempo_interval_onlyat);
+        } else {
+            bundle.putInt(TEMPO_INTERVAL, tempo_interval);
+        }
+        Tracer.d("Firebase:" + TEMPO + ": " + bundle.toString());
+        getFirebaseAnalytics().logEvent(TEMPO, bundle);
     }
 
 }
