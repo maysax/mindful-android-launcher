@@ -3,9 +3,11 @@ package co.siempo.phone.tempo;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +28,8 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 import org.w3c.dom.Text;
+
+import javax.net.ssl.HandshakeCompletedListener;
 
 import co.siempo.phone.R;
 import minium.co.core.app.DroidPrefs_;
@@ -55,11 +59,9 @@ public class TempoUpdateEmailFragment extends CoreFragment {
     }
 
 
-
     @AfterViews
     void afterViews() {
         setHasOptionsMenu(true);
-        Toast.makeText(getActivity(), "After Views", Toast.LENGTH_SHORT).show();
         edt_email.setText("");
         InputMethodManager im = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         im.showSoftInput(edt_email, 0);
@@ -92,6 +94,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
             @Override
             public void onClick(View v) {
                 hideSoftKeyboard();
+
                 FragmentManager fm = getFragmentManager();
                 fm.popBackStack();
             }

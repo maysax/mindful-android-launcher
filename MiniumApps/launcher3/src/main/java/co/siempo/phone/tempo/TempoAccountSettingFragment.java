@@ -60,6 +60,13 @@ public class TempoAccountSettingFragment extends CoreFragment {
             }
         });
 
+
+        if(droidPrefs_.isFireBaseAnalyticsEnable().get()){
+            swtch_analytics.setChecked(true);
+        }
+        else{
+            swtch_analytics.setChecked(false);
+        }
         swtch_analytics.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

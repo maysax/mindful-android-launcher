@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pauseContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="co.siempo.phone.HelpActivity">
+    android:orientation="vertical"
+    tools:ignore="UnusedIds">
 
-    <TextView
-        android:id="@+id/txtAllowApps"
+
+    <RelativeLayout
+        android:id="@+id/helpView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="@string/tbd"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:background="?android:attr/detailsElementBackground" />
+
+    <FrameLayout
+        android:id="@+id/mainView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </RelativeLayout>

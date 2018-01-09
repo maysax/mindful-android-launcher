@@ -221,7 +221,7 @@
         <activity android:name=".ui.SiempoPermissionActivity_" />
         <activity android:name=".tempo.TempoSettingsActivity_" />
         <activity android:name=".tempo.TempoAppNotificationActivity" />
-        <activity android:name=".HelpActivity"></activity>
+        <activity android:name=".HelpActivity_"></activity>
     </application>
 
 </manifest>

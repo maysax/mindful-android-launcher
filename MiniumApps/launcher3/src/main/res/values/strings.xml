@@ -324,4 +324,14 @@
     <string name="success_email">Email address Updated</string>
 
 
+    <!-- Help Section -->
+    <string name="faq">View FAQ</string>
+    <string name="privacy_policyy">View Privacy Policy</string>
+    <string name="feedback">Send Feedback</string>
+    <string name="version">Version</string>
+    <string name="feedback_email">feedback@siempo.co</string>
+    <string name="feedback_title">Message received!</string>
+    <string name="feedback_success_message">Thank you for your feedback! We read every message, and we try to respond to them as soon as we can. We\'re a small team, so please be patient with us.</string>
+
+
 </resources>

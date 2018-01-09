@@ -75,6 +75,8 @@ public class UIUtils {
         alertDialog.show();
     }
 
+
+
     public static void alert(Context context, int layoutRes) {
         new AlertDialog.Builder(context)
                 .setView(layoutRes)

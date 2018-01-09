@@ -13,73 +13,75 @@
         android:minHeight="?android:attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="@dimen/dp_5"
-        android:background="@android:color/white"/>
+        android:background="@color/white"
+        android:elevation="@dimen/dp_5"/>
 
 
     <TextView
-        android:id="@+id/txtHome"
+        android:id="@+id/txtFaq"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
         android:padding="8dp"
-        android:text="@string/home_screen"
+        android:text="@string/faq"
         android:textSize="@dimen/text.size.large" />
 
 
     <TextView
-        android:id="@+id/txtAppMenus"
+        android:id="@+id/txtPrivacyPolicy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
         android:padding="8dp"
-        android:text="@string/app_menus"
+        android:text="@string/privacy_policyy"
         android:textSize="@dimen/text.size.large" />
 
 
     <TextView
-        android:id="@+id/txtNotification"
+        android:id="@+id/txtSendFeedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
         android:padding="8dp"
-        android:text="@string/string_notification_title"
+        android:text="@string/feedback"
         android:textSize="@dimen/text.size.large" />
 
 
     <TextView
-        android:id="@+id/txtAccount"
+        android:id="@+id/txtVersion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
         android:padding="8dp"
-        android:text="@string/account"
+        android:text="@string/version"
         android:textSize="@dimen/text.size.large" />
 
 
     <TextView
-        android:id="@+id/txtAlphaSettings"
+        android:id="@+id/txtVersionValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:text="@string/alpha_settings"
-        android:textSize="@dimen/text.size.large" />
+        android:text=""
+        android:textSize="@dimen/text.size.regular" />
 
 
 </LinearLayout>
