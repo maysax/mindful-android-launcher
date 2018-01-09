@@ -184,6 +184,10 @@ public class AlarmService extends IntentService {
                     notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
+                            if (notificationMediaPlayer != null) {
+                                notificationMediaPlayer.stop();
+                                notificationMediaPlayer.release();
+                            }
                             notificationMediaPlayer = null;
                         }
                     });
