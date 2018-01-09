@@ -32,6 +32,7 @@ import java.util.Locale;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -453,7 +454,9 @@ public class TempoActivity extends CoreActivity {
             droidPrefs.tempoType().put(2);
             bindOnlyAt();
         }
+        PackageUtil.enableAlarm(this);
     }
+
 
     private void bindOnlyAt() {
 
@@ -529,7 +532,7 @@ public class TempoActivity extends CoreActivity {
             try {
                 Collections.sort(hourList, new HoursComparator());
 
-                for (int i = 0; i <= hourList.size(); i++) {
+                for (int i = 0; i < hourList.size(); i++) {
                     if (hourList.get(i).getHours() == systemHours) {
                         if (hourList.get(i).getMinute() > systemMinute) {
                             String str4 = strTime[i];
@@ -605,7 +608,7 @@ public class TempoActivity extends CoreActivity {
             hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
             try {
                 Collections.sort(hourList, new HoursComparator());
-                for (int i = 0; i <= hourList.size(); i++) {
+                for (int i = 0; i < hourList.size(); i++) {
                     if (hourList.get(i).getHours() == systemHours) {
                         if (hourList.get(i).getMinute() > systemMinute) {
                             String str4 = strTime[i];
