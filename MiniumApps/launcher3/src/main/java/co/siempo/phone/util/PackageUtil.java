@@ -1,5 +1,6 @@
 package co.siempo.phone.util;
 
+import android.app.AlarmManager;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,6 +14,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
@@ -24,6 +26,7 @@ import java.util.Locale;
 
 import co.siempo.phone.R;
 import co.siempo.phone.db.TableNotificationSms;
+import co.siempo.phone.service.AlarmBroadcast;
 import co.siempo.phone.service.SiempoDndService;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.util.UIUtils;
@@ -141,6 +144,7 @@ public class PackageUtil {
                     .setContentIntent(contentIntent)
                     .setCustomContentView(contentView)
                     .setCustomBigContentView(contentView)
+                    .setGroup(applicationNameFromPackageName)
                     .setDefaults(Notification.DEFAULT_SOUND)
                     .setContentInfo("Info");
             if (tempoSound == 0) {
@@ -168,6 +172,9 @@ public class PackageUtil {
             }
             if (notificationManager != null) {
                 notificationManager.notify(notification.getId().intValue(), b.build());
+                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+                wl.acquire(3000);
             }
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
@@ -186,6 +193,32 @@ public class PackageUtil {
             format = "hh:mm a";
         }
         return format;
+    }
+
+    public static void enableAlarm(Context context) {
+        try {
+            Intent intentToFire = new Intent(context, AlarmBroadcast.class);
+            intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            long delay = 30000;
+            long time = System.currentTimeMillis() + delay;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // Wakes up the device in Doze Mode
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // Wakes up the device in Idle Mode
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
+        }
     }
 
 }
