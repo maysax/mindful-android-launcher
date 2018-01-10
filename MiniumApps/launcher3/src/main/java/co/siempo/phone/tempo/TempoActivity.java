@@ -32,7 +32,6 @@ import java.util.Locale;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -116,6 +115,7 @@ public class TempoActivity extends CoreActivity {
     public void onBackPressed() {
         if (fabMenu.isOpened()) {
             fabMenu.close(true);
+            fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
             txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
         } else {
             super.onBackPressed();
@@ -148,12 +148,22 @@ public class TempoActivity extends CoreActivity {
             public void onClick(View v) {
                 if (fabMenu.isOpened()) {
                     fabMenu.close(true);
+                    fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
                     txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
                 } else {
                     onBackPressed();
                 }
             }
         });
+        top.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
+                txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
+            }
+        });
+
+
     }
 
     @Click
@@ -215,6 +225,7 @@ public class TempoActivity extends CoreActivity {
                         if (isNewAdded) {
                             if (!listdata.contains(strSelectedTime)) {
                                 listdata.add(strSelectedTime);
+                                Collections.sort(listdata);
                                 droidPrefs.onlyAt().put(android.text.TextUtils.join(",", listdata));
                                 enableRadioOnPosition(2);
                                 FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
@@ -223,6 +234,7 @@ public class TempoActivity extends CoreActivity {
                             }
                         } else {
                             listdata.set(i, strSelectedTime);
+                            Collections.sort(listdata);
                             droidPrefs.onlyAt().put(android.text.TextUtils.join(",", listdata));
                             enableRadioOnPosition(2);
                             FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
@@ -322,12 +334,6 @@ public class TempoActivity extends CoreActivity {
         fabMenu.close(true);
         droidPrefs.tempoSoundProfile().put(0);
         txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 300L);
     }
 
     @Click
@@ -335,12 +341,7 @@ public class TempoActivity extends CoreActivity {
         fabMenu.close(true);
         droidPrefs.tempoSoundProfile().put(1);
         txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
-        new android.os.Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 300L);
+
     }
 
     @Click
@@ -454,7 +455,6 @@ public class TempoActivity extends CoreActivity {
             droidPrefs.tempoType().put(2);
             bindOnlyAt();
         }
-        PackageUtil.enableAlarm(this);
     }
 
 
@@ -531,7 +531,6 @@ public class TempoActivity extends CoreActivity {
             hourList.add(new Data(setHours, setMinute, df.format(calendar1.getTime())));
             try {
                 Collections.sort(hourList, new HoursComparator());
-
                 for (int i = 0; i < hourList.size(); i++) {
                     if (hourList.get(i).getHours() == systemHours) {
                         if (hourList.get(i).getMinute() > systemMinute) {
@@ -546,6 +545,13 @@ public class TempoActivity extends CoreActivity {
                                 txtMessage.setText(strMessage);
                             }
                             break;
+                        } else {
+                            if (radioOnlyAt.isChecked()) {
+                                strMessage = "Do not disturb is on between deliveries.";
+                                strMessage = strMessage + "\nNext delivery: " + hourList.get(0).getIndex();
+                                txtMessage.setText(strMessage);
+                            }
+
                         }
                     } else if (hourList.get(i).getHours() > systemHours) {
                         String str4 = strTime[i];
@@ -559,6 +565,12 @@ public class TempoActivity extends CoreActivity {
                             txtMessage.setText(strMessage);
                         }
                         break;
+                    } else {
+                        if (radioOnlyAt.isChecked()) {
+                            strMessage = "Do not disturb is on between deliveries.";
+                            strMessage = strMessage + "\nNext delivery: " + hourList.get(0).getIndex();
+                            txtMessage.setText(strMessage);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -622,6 +634,12 @@ public class TempoActivity extends CoreActivity {
                                 txtMessage.setText(strMessage);
                             }
                             break;
+                        } else {
+                            if (radioOnlyAt.isChecked()) {
+                                strMessage = "Do not disturb is on between deliveries.";
+                                strMessage = strMessage + "\nNext delivery: " + hourList.get(0).getIndex();
+                                txtMessage.setText(strMessage);
+                            }
                         }
                     } else if (hourList.get(i).getHours() > systemHours) {
                         String str4 = strTime[i];
@@ -635,6 +653,12 @@ public class TempoActivity extends CoreActivity {
                             txtMessage.setText(strMessage);
                         }
                         break;
+                    } else {
+                        if (radioOnlyAt.isChecked()) {
+                            strMessage = "Do not disturb is on between deliveries.";
+                            strMessage = strMessage + "\nNext delivery: " + hourList.get(0).getIndex();
+                            txtMessage.setText(strMessage);
+                        }
                     }
                 }
             } catch (Exception e) {
