@@ -362,6 +362,7 @@ public class TempoActivity extends CoreActivity {
 
     @Click
     void fabMute() {
+        fabMenu.setClickable(false);
         fabMenu.close(true);
         droidPrefs.tempoSoundProfile().put(0);
         txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
@@ -369,6 +370,7 @@ public class TempoActivity extends CoreActivity {
 
     @Click
     void fabSound() {
+        fabMenu.setClickable(false);
         fabMenu.close(true);
         droidPrefs.tempoSoundProfile().put(1);
         txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
