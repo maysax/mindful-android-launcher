@@ -9,6 +9,7 @@
         <item name="android:windowBackground">@drawable/bg_siempo</item>
     </style>
 
+
     <style name="MenuButtonsSmall">
         <item name="fab_size">mini</item>
         <item name="fab_colorNormal">#1565C0</item>
@@ -68,6 +69,7 @@
     <style name="SiempoAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="SiempoAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="Autocomplete">
         <item name="colorControlNormal">@color/automcoplete</item>
         <item name="colorControlActivated">@color/automcoplete</item>
