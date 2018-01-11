@@ -109,13 +109,13 @@ public class TempoNotificationFragment extends CoreFragment {
         {
             switchDisableNotificationControls.setChecked(false);
             txtAllowOnLockScreen.setVisibility(View.VISIBLE);
-            txtAllowPeaking.setVisibility(View.VISIBLE);
+            txtAllowPeaking.setVisibility(View.GONE);
             txtAllowApps.setVisibility(View.VISIBLE);
             txtAllowAppsText.setVisibility(View.VISIBLE);
             txtAllowOnLockScreenText.setVisibility(View.VISIBLE);
-            switchAllowPeaking.setVisibility(View.VISIBLE);
+            switchAllowPeaking.setVisibility(View.GONE);
             switchAllowOnLockScreen.setVisibility(View.VISIBLE);
-            txtAllowPeakingText.setVisibility(View.VISIBLE);
+            txtAllowPeakingText.setVisibility(View.GONE);
             isDisableChecked = false;
             txtDisableNotificationControlsTxt.setText("Disabling Siempo's notifications controls means that you can no longer schedule nor control the appearance of notifications.");
         }
@@ -222,7 +222,7 @@ public class TempoNotificationFragment extends CoreFragment {
         switchAllowOnLockScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                launcherPrefs.isHidenotificationOnLockScreen().put(!isChecked);
+                launcherPrefs.isAllowNotificationOnLockScreen().put(isChecked);
                 if (isChecked) {
                     txtAllowOnLockScreenText.setText("On. New notifications will be visible from the lock screen.");
                 } else {
@@ -231,14 +231,7 @@ public class TempoNotificationFragment extends CoreFragment {
             }
         });
 
-
-        if (launcherPrefs.isHidenotificationOnLockScreen().get()) {
-            switchAllowOnLockScreen.setChecked(false);
-        } else {
-            switchAllowOnLockScreen.setChecked(true);
-        }
-
-
+        switchAllowOnLockScreen.setChecked(launcherPrefs.isAllowNotificationOnLockScreen().get());
     }
 
 

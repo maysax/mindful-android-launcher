@@ -1,5 +1,7 @@
 package co.siempo.phone.util;
 
+import android.app.AlarmManager;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,6 +14,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
@@ -23,6 +26,7 @@ import java.util.Locale;
 
 import co.siempo.phone.R;
 import co.siempo.phone.db.TableNotificationSms;
+import co.siempo.phone.service.AlarmBroadcast;
 import co.siempo.phone.service.SiempoDndService;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.util.UIUtils;
@@ -106,68 +110,75 @@ public class PackageUtil {
     }
 
 
-    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound) {
-        if (tempoType == 0) {
-            try {
-                NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
-                Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-                PendingIntent contentIntent = null;
-                if (launchIntentForPackage != null) {
-                    int requestID = (int) System.currentTimeMillis();
-                    contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-                    launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                }
-                Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
-                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
-                String time = sdf.format(notification.get_date());
-                RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
-                contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
-                if (null != bitmap) {
-                    contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
-                } else {
-                    contentView.setImageViewBitmap(R.id.imgUserImage, null);
-                }
-                contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
-                contentView.setTextViewText(R.id.txtMessage, notification.get_message());
-                contentView.setTextViewText(R.id.txtTime, time);
-                String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-                contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
-                b.setAutoCancel(true)
-                        .setWhen(System.currentTimeMillis())
-                        .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setContentTitle(notification.get_contact_title())
-                        .setContentText(notification.get_message())
-                        .setContentIntent(contentIntent)
-                        .setCustomContentView(contentView)
-                        .setCustomBigContentView(contentView)
-                        .setDefaults(Notification.DEFAULT_SOUND)
-                        .setContentInfo("Info");
-                if (tempoSound == 0) {
-                    b.setDefaults(Notification.DEFAULT_LIGHTS);
-                } else {
-                    if (!CoreApplication.getInstance().isCallisRunning()) {
+    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound, Boolean isAllowNotificationOnLockScreen) {
+        if (tempoType == 0) try {
+            NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
+            Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
+            PendingIntent contentIntent = null;
+            if (launchIntentForPackage != null) {
+                int requestID = (int) System.currentTimeMillis();
+                contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+                launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            }
+            Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
+            DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
+            String time = sdf.format(notification.get_date());
+            RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+            contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+            if (null != bitmap) {
+                contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
+            } else {
+                contentView.setImageViewBitmap(R.id.imgUserImage, null);
+            }
+            contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
+            contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+            contentView.setTextViewText(R.id.txtTime, time);
+            String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
+            contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
+            b.setAutoCancel(true)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setContentTitle(notification.get_contact_title())
+                    .setContentText(notification.get_message())
+                    .setContentIntent(contentIntent)
+                    .setCustomContentView(contentView)
+                    .setCustomBigContentView(contentView)
+                    .setGroup(applicationNameFromPackageName)
+                    .setDefaults(Notification.DEFAULT_SOUND)
+                    .setContentInfo("Info");
+            if (tempoSound == 0) {
+                b.setDefaults(Notification.DEFAULT_LIGHTS);
+            } else {
+                if (!CoreApplication.getInstance().isCallisRunning()) {
+                    KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+                    if (((myKM != null && myKM.inKeyguardRestrictedInputMode()) && !isAllowNotificationOnLockScreen)) {
+                        // hide notification on lock screen so mute the notification sound.
+                    } else {
                         CoreApplication.getInstance().playNotificationSoundVibrate();
                     }
                 }
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                if (Build.VERSION.SDK_INT >= 26) {
-                    int importance = NotificationManager.IMPORTANCE_HIGH;
-                    if (applicationNameFromPackageName != null) {
-                        NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
-                        b.setChannelId(applicationNameFromPackageName);
-                        if (notificationManager != null) {
-                            notificationManager.createNotificationChannel(mChannel);
-                        }
+            }
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            if (Build.VERSION.SDK_INT >= 26) {
+                int importance = NotificationManager.IMPORTANCE_HIGH;
+                if (applicationNameFromPackageName != null) {
+                    NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
+                    b.setChannelId(applicationNameFromPackageName);
+                    if (notificationManager != null) {
+                        notificationManager.createNotificationChannel(mChannel);
                     }
                 }
-                if (notificationManager != null) {
-                    notificationManager.notify(notification.getId().intValue(), b.build());
-                }
-            } catch (Exception e) {
-                CoreApplication.getInstance().logException(e);
-                e.printStackTrace();
             }
+            if (notificationManager != null) {
+                notificationManager.notify(notification.getId().intValue(), b.build());
+                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+                wl.acquire(3000);
+            }
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
         }
     }
 
@@ -182,6 +193,32 @@ public class PackageUtil {
             format = "hh:mm a";
         }
         return format;
+    }
+
+    public static void enableAlarm(Context context) {
+        try {
+            Intent intentToFire = new Intent(context, AlarmBroadcast.class);
+            intentToFire.setAction(AlarmBroadcast.ACTION_ALARM);
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 1234, intentToFire, PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            long delay = 30000;
+            long time = System.currentTimeMillis() + delay;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // Wakes up the device in Doze Mode
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // Wakes up the device in Idle Mode
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            CoreApplication.getInstance().logException(e);
+        }
     }
 
 }

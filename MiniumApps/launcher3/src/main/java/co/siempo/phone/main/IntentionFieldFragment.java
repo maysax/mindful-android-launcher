@@ -110,6 +110,7 @@ public class IntentionFieldFragment extends CoreFragment {
     void txtIntention() {
         Intent intent = new Intent(getActivity(), IntentionEditActivity_.class);
         startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Click
@@ -201,31 +202,10 @@ public class IntentionFieldFragment extends CoreFragment {
             } else {
                 animY = ObjectAnimator.ofFloat(linIF, "y", UIUtils.getScreenHeight(getActivity()) / 3);
             }
-            animY.setDuration(100);
+            animY.setDuration(10);
             AnimatorSet animSet = new AnimatorSet();
             animSet.play(animY);
             animSet.start();
-            animSet.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
         }
     }
 }

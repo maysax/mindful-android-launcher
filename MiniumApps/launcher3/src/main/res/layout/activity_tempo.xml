@@ -104,7 +104,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:gravity="center_vertical"
-                        android:text="@string/batched_every_30_minutes"
+                        android:text="@string/batched_every_15_minutes"
                         android:textColor="#202020"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -275,6 +275,7 @@
 
         <TextView
             android:id="@+id/txtTop"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/linearLayout"

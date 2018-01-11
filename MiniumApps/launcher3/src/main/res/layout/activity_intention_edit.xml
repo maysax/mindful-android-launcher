@@ -12,7 +12,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent">
+        android:background="@color/colorAccent"
+        android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -39,32 +40,37 @@
         android:layout_below="@+id/toolbar"
         android:background="@color/colorAccent"
         android:orientation="vertical"
+        android:gravity="center"
         android:paddingBottom="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_10"
-        android:paddingTop="@dimen/dp_10">
+        android:paddingTop="@dimen/dp_5">
 
         <TextView
+            android:id="@+id/hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alpha="0.7"
-            android:paddingBottom="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_2"
             android:paddingLeft="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_2"
             android:text="@string/what_s_your_intention"
             android:textColor="#99C2FB"
-            android:textSize="16sp"
+            android:textSize="15sp"
+            android:visibility="visible"
             tools:ignore="RtlSymmetry" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/dp_5"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/dp_2"
             android:paddingLeft="@dimen/dp_5"
-            android:paddingTop="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_2"
             tools:ignore="RtlSymmetry">
 
-            <EditText
+            <co.siempo.phone.LockEditText
                 android:id="@+id/edtIntention"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,12 +91,13 @@
                 android:textColor="@color/white"
                 android:textColorHint="#99C2FB"
                 android:textCursorDrawable="@drawable/custom_edit_text_cursor"
-                android:textSize="20sp"
+                android:textSize="19sp"
                 tools:targetApi="o"
+                android:transitionName=""
                 tools:text="Try out new music">
 
                 <requestFocus />
-            </EditText>
+            </co.siempo.phone.LockEditText>
 
             <ImageView
                 android:id="@+id/imgClear"
@@ -115,6 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:animateLayoutChanges="true"
             android:gravity="right"
             android:paddingBottom="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_15"
@@ -122,7 +130,7 @@
             android:paddingTop="@dimen/dp_5"
             android:text="@string/help"
             android:textColor="@color/colorAccent"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:visibility="gone" />
 
         <LinearLayout
@@ -142,64 +150,64 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:ellipsize="end"
-                    android:gravity="center|left"
+                    android:gravity="top|left"
                     android:lineSpacingExtra="@dimen/dp_2"
                     android:maxLines="5"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:paddingTop="10dp"
                     android:text="@string/message1"
                     android:textColor="#7F7F7F"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:ellipsize="end"
-                    android:gravity="center|left"
+                    android:gravity="top|left"
                     android:lineSpacingExtra="@dimen/dp_2"
                     android:maxLines="5"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:paddingTop="10dp"
                     android:text="@string/message2"
                     android:textColor="#7F7F7F"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:ellipsize="end"
-                    android:gravity="center|left"
+                    android:gravity="top|left"
                     android:lineSpacingExtra="@dimen/dp_2"
                     android:maxLines="5"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:paddingTop="10dp"
                     android:text="@string/message3"
                     android:textColor="#7F7F7F"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:ellipsize="end"
-                    android:gravity="center|left"
+                    android:gravity="top|left"
                     android:lineSpacingExtra="@dimen/dp_2"
                     android:maxLines="5"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:paddingTop="10dp"
                     android:text="@string/message4"
                     android:textColor="#7F7F7F"
-                    android:textSize="18sp" />
+                    android:textSize="16sp" />
             </ViewFlipper>
             <!--</ScrollView>-->
 
@@ -224,7 +232,7 @@
 
                 <TextView
                     android:id="@+id/txtTwo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"

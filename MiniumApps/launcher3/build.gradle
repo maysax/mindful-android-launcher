@@ -42,7 +42,7 @@ android {
         alpha {
 //            versionCode 1
 //            versionName "1"
-            versionCode 11103
+            versionCode 11104
             versionName "${0}.${0}.${11}.${1}-${buildTime}"
         }
         beta {
@@ -79,6 +79,7 @@ dependencies {
     /**
      * =================== Test suit  ===================
      */
+    compile 'com.android.support:support-v4:26.1.0'
     testCompile "junit:junit:$junitVersion"
     androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'

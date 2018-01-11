@@ -819,10 +819,10 @@ public abstract class CoreApplication extends MultiDexApplication {
                 notificationMediaPlayer = new MediaPlayer();
                 notificationMediaPlayer.setDataSource(this, alert);
                 final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != 0) {
+                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
                     notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    notificationMediaPlayer.setVolume(100, 100);
-                    // notificationMediaPlayer.setScreenOnWhilePlaying(true);
+                    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, max, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                     notificationMediaPlayer.setLooping(false);
                     notificationMediaPlayer.prepare();
                     if (!notificationMediaPlayer.isPlaying()) {
@@ -832,6 +832,10 @@ public abstract class CoreApplication extends MultiDexApplication {
                     notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
+                            if (notificationMediaPlayer != null) {
+                                notificationMediaPlayer.stop();
+                                notificationMediaPlayer.release();
+                            }
                             notificationMediaPlayer = null;
                         }
                     });

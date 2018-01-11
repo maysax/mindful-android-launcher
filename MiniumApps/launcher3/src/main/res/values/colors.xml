@@ -16,4 +16,6 @@
     <color name="automcoplete">#bcbcbc</color>
     <color name="temp_bg">#B9B9B9</color>
     <color name="temp_bg_fab_menu">#ccffffff</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

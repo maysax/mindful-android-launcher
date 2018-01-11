@@ -35,6 +35,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -225,6 +226,20 @@
         <activity
             android:name=".IntentionEditActivity_"
             android:windowSoftInputMode="stateAlwaysVisible" />
+
+        <receiver android:name=".service.AlarmBroadcast">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.AlarmService" />
+
+        <activity
+            android:name=".IntentionConfirmationActivity_"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_intention_confirmation"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

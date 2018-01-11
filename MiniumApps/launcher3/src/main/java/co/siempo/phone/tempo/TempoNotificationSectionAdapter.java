@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
@@ -19,7 +20,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -35,6 +35,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         TempoNotificationItemViewHolder,
         NoticationFooterViewHolder> {
 
+    private final List<String> messengerAppList;
     protected Context context = null;
     SharedPreferences launcherPrefs;
     ArrayList<String> disableNotificationApps = new ArrayList<>();
@@ -76,6 +77,15 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
             disableSections = new Gson().fromJson(disable_HeaderAppList, type);
+        }
+
+        messengerAppList = new ArrayList<>();
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        List<ResolveInfo> messagingResolveList = context.getPackageManager()
+                .queryIntentActivities(intent, 0);
+        for (ResolveInfo resolveInfo : messagingResolveList) {
+            messengerAppList.add(resolveInfo.activityInfo.packageName);
         }
     }
 
@@ -149,8 +159,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     protected void onBindItemViewHolder(final TempoNotificationItemViewHolder holder, final int section, final int position) {
 
         holder.displayToggle();
-        final List<String> messengerAppList = new ArrayList<>();
-        messengerAppList.addAll(Arrays.asList(context.getResources().getStringArray(R.array.messengerAppList)));
+
 
         if (headerList.get(section).name.equals("All Other Apps")) {
             holder.render(blockedList.get(position).applicationInfo.name);

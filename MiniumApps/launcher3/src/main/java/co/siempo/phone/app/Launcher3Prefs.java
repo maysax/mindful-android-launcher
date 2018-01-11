@@ -61,8 +61,8 @@ public interface Launcher3Prefs {
     @DefaultBoolean(false)
     boolean isKeyBoardDisplay();
 
-    @DefaultBoolean(true)
-    boolean isHidenotificationOnLockScreen();
+    @DefaultBoolean(false)
+    boolean isAllowNotificationOnLockScreen();
 
     @DefaultInt(0)
     int getCurrentProfile();

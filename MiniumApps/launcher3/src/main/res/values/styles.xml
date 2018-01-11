@@ -7,7 +7,12 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorControlHighlight">@color/colorAccent</item>
         <item name="android:windowBackground">@drawable/bg_siempo</item>
+        <item name="android:windowContentTransitions">true</item>
+        <!-- enable overlapping of exiting and entering activities-->
+        <!--<item name="android:windowAllowEnterTransitionOverlap">true</item>-->
+        <!--<item name="android:windowAllowReturnTransitionOverlap">true</item>-->
     </style>
+
 
     <style name="MenuButtonsSmall">
         <item name="fab_size">mini</item>
@@ -68,8 +73,21 @@
     <style name="SiempoAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="SiempoAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
     <style name="Autocomplete">
         <item name="colorControlNormal">@color/automcoplete</item>
         <item name="colorControlActivated">@color/automcoplete</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="SiempoAppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 </resources>
