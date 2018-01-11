@@ -17,7 +17,7 @@
     </Preference>
 
     <Preference android:title="@string/pref_printing"
-        android:key="@string/accessibility_key">
+        android:key="@string/print_key">
         <!--<intent android:action="android.settings.ACTION_PRINT_SETTINGS" />-->
     </Preference>
 
