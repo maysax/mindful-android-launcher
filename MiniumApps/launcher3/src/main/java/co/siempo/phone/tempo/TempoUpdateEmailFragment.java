@@ -116,7 +116,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                 edt_email.setTextColor(getResources().getColor(R.color.black));
                 text_input_layout.setErrorEnabled(false);
             } else {
-                text_input_layout.setError("Please enter valid email");
+                text_input_layout.setError(getResources().getString(R.string.feedback_email));
                 text_input_layout.setErrorEnabled(true);
             }
         }
@@ -134,7 +134,7 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                 text_input_layout.setErrorEnabled(false);
             }
             else{
-                text_input_layout.setError("Please enter valid email");
+                text_input_layout.setError(getResources().getString(R.string.error_email));
                 text_input_layout.setErrorEnabled(true);
             }
         }else{

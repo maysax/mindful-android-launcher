@@ -32,7 +32,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginTop="30dp"
         android:visibility="gone"
-        android:textColorHint="@color/redcolor"
+        android:textColorHint="@color/errorColor"
         app:errorTextAppearance="@style/error_appearance"
         android:paddingRight="8dp"
         >

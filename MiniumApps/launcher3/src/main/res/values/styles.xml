@@ -74,7 +74,7 @@
     </style>
 
     <style name="error_appearance" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/redcolor</item>
+        <item name="android:textColor">@color/errorColor</item>
         <item name="android:textSize">12sp</item>
 
     </style>

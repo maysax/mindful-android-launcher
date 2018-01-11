@@ -219,7 +219,7 @@ public class FeedbackFragment extends CoreFragment{
             if(isValidEmail){
                 layout_email.setErrorEnabled(false);
             }else{
-                layout_email.setError("Please enter valid email");
+                layout_email.setError(getResources().getString(R.string.error_email));
                 layout_email.setErrorEnabled(true);
             }
 
