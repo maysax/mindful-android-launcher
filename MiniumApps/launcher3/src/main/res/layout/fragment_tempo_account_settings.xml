@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_account_setting"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,15 +14,20 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/toolbar_bg"
             android:elevation="@dimen/dp_5"
-            android:background="@android:color/white"
             android:minHeight="?android:attr/actionBarSize" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:paddingLeft="50dp">
 
         <RelativeLayout
             android:id="@+id/relUpdateEmail"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar">
+            android:layout_height="wrap_content">
 
 
             <TextView
@@ -42,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/txtUpdateEmailAddress"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginRight="60dp"
                 android:paddingBottom="4dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
@@ -129,11 +135,11 @@
 
         </LinearLayout>
 
-
+        </RelativeLayout>
 
 
     </RelativeLayout>
 
-</ScrollView>
+</LinearLayout>
 
 

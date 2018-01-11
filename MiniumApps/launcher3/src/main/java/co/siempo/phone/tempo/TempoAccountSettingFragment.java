@@ -16,6 +16,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
+import co.siempo.phone.helper.FirebaseHelper;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
@@ -72,8 +73,11 @@ public class TempoAccountSettingFragment extends CoreFragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     droidPrefs_.isFireBaseAnalyticsEnable().put(true);
+                    FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
                 }
                 else{
+
+                    FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
                     droidPrefs_.isFireBaseAnalyticsEnable().put(false);
                 }
             }

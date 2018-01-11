@@ -3,7 +3,9 @@ package co.siempo.phone.tempo;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Environment;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -52,6 +54,9 @@ public class TempoUpdateEmailFragment extends CoreFragment {
     @ViewById
     EditText edt_email;
 
+    @ViewById
+    TextInputLayout text_input_layout;
+
     @Pref
     DroidPrefs_ droidPrefs_;
     public TempoUpdateEmailFragment() {
@@ -74,9 +79,11 @@ public class TempoUpdateEmailFragment extends CoreFragment {
                 switch (menuItem.getItemId()) {
                     case R.id.tick:
                         String val_email=edt_email.getText().toString().trim();
+                        if(!droidPrefs_.userEmailId().get().equals(val_email)){
+                            Toast.makeText(getActivity(),getResources().getString(R.string.success_email),Toast.LENGTH_LONG).show();
+                        }
                         droidPrefs_.userEmailId().put(val_email);
                         hideSoftKeyboard();
-                        Toast.makeText(getActivity(),getResources().getString(R.string.success_email),Toast.LENGTH_LONG).show();
                         FragmentManager fm = getFragmentManager();
                         fm.popBackStack();
                         return true;
@@ -89,7 +96,6 @@ public class TempoUpdateEmailFragment extends CoreFragment {
         toolbar.setTitle(R.string.string_update_email_title);
         toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
                 .colorAccent));
-        toolbar.setElevation(100);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,19 +109,36 @@ public class TempoUpdateEmailFragment extends CoreFragment {
             edt_email.setText(droidPrefs_.userEmailId().get());
             edt_email.setSelection(edt_email.getText().length());
         }
+
+        if(edt_email.getText().toString().trim().length()>0) {
+            if (isValidEmail(edt_email.getText().toString().trim())) {
+                toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+                edt_email.setTextColor(getResources().getColor(R.color.black));
+                text_input_layout.setErrorEnabled(false);
+            } else {
+                text_input_layout.setError("Please enter valid email");
+                text_input_layout.setErrorEnabled(true);
+            }
+        }
     }
 
 
     @AfterTextChange
     void edt_email(){
-        if(!TextUtils.isEmpty(edt_email.getText().toString())){
+        if(!TextUtils.isEmpty(edt_email.getText().toString().trim())){
             String val_email=edt_email.getText().toString().trim();
             boolean isValidEmail= isValidEmail(val_email);
-
             toolbar.getMenu().findItem(R.id.tick).setVisible(false);
             if(isValidEmail){
                 toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+                text_input_layout.setErrorEnabled(false);
             }
+            else{
+                text_input_layout.setError("Please enter valid email");
+                text_input_layout.setErrorEnabled(true);
+            }
+        }else{
+            text_input_layout.setErrorEnabled(false);
         }
     }
 
@@ -126,7 +149,12 @@ public class TempoUpdateEmailFragment extends CoreFragment {
     }
 
     private void hideSoftKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        try {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

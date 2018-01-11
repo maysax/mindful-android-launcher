@@ -16,4 +16,8 @@
     <color name="automcoplete">#bcbcbc</color>
     <color name="temp_bg">#B9B9B9</color>
     <color name="temp_bg_fab_menu">#ccffffff</color>
+    <color name="toolbar_bg">#EEEEEE</color>
+    <color name="layout_bg">#F3F3F3</color>
+    <color name="redcolor">#ff0000</color>
+    <color name="blackcolor">#000000</color>
 </resources>

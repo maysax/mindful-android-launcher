@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/layout_bg"
     tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
@@ -14,8 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="@dimen/dp_5"
-        android:background="@android:color/white"/>
+        android:background="@color/toolbar_bg"
+        />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="50dp">
 
     <TextView
         android:id="@+id/txtHome"
@@ -81,5 +88,5 @@
         android:text="@string/alpha_settings"
         android:textSize="@dimen/text.size.large" />
 
-
+    </LinearLayout>
 </LinearLayout>

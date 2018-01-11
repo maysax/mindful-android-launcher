@@ -72,4 +72,11 @@
         <item name="colorControlNormal">@color/automcoplete</item>
         <item name="colorControlActivated">@color/automcoplete</item>
     </style>
+
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/redcolor</item>
+        <item name="android:textSize">12sp</item>
+
+    </style>
+
 </resources>

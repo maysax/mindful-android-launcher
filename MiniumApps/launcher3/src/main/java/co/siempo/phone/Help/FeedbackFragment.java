@@ -60,7 +60,7 @@ public class FeedbackFragment extends CoreFragment{
     @ViewById
     Toolbar toolbar;
 
-    String[] feedbackArr = { "Feedback type","Something I like", "Something I don't like", "I have a question", "I have an idea"  };
+    String[] feedbackArr = { "Something I like", "Something I don't like", "I have a question", "I have an idea"  };
 
 
     @ViewById
@@ -103,7 +103,7 @@ public class FeedbackFragment extends CoreFragment{
                                 version = "BETA-" + BuildConfig.VERSION_NAME;
                             }
                             String body="User Email :"+droidPrefs_.userEmailId().get()+"\nFeedBack Type : "+selectedItemText+"\n"+
-                                    "Message :"+txtMessage.getText().toString().trim()+"\n"+
+                                    "Message :"+txtMessage.getText().toString()+"\n"+
                                     "Phone Data : Manufacturer - " + android.os.Build.MANUFACTURER+
                                     ", Model - "+android.os.Build.MODEL+
                                     ", OS Version - "+android.os.Build.VERSION.SDK_INT+
@@ -127,7 +127,7 @@ public class FeedbackFragment extends CoreFragment{
                         FragmentManager fm = getFragmentManager();
                         fm.popBackStack();
 
-                        UIUtils.alert(getActivity(),getResources().getString(R.string.feedback_title),getResources().getString(R.string.feedback_success_message));
+                        UIUtils.feedbackAlert(getActivity(),getResources().getString(R.string.feedback_title),getResources().getString(R.string.feedback_success_message));
                         return true;
                 }
                 return false ;
@@ -137,7 +137,6 @@ public class FeedbackFragment extends CoreFragment{
         toolbar.setTitle(R.string.feedback);
         toolbar.setTitleTextColor(ContextCompat.getColor(getActivity(), R.color
                 .colorAccent));
-        toolbar.setElevation(100);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,29 +162,15 @@ public class FeedbackFragment extends CoreFragment{
                 getActivity(),android.R.layout.simple_spinner_dropdown_item,plantsList){
             @Override
             public boolean isEnabled(int position){
-                if(position == 0)
-                {
-                    // Disable the first item from Spinner
-                    // First item will be use for hint
-                    return false;
-                }
-                else
-                {
+
                     return true;
-                }
             }
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
-                if(position == 0){
-                    // Set the hint text color gray
-                    tv.setTextColor(Color.GRAY);
-                }
-                else {
                     tv.setTextColor(Color.BLACK);
-                }
                 return view;
             }
         };
@@ -208,13 +193,9 @@ public class FeedbackFragment extends CoreFragment{
                 }
                 // Validate if fields email, Message & feedback type is filled by user or not
 
-                if(position > 0 && isValidEmail(email) && isValidMessage(txtMessage.getText().toString().trim())){
+                if(isValidEmail(email) && isValidMessage(txtMessage.getText().toString())){
                     // Notify the selected item text
                     toolbar.getMenu().findItem(R.id.tick).setVisible(true);
-
-                    Toast.makeText
-                            (getActivity().getApplicationContext(), "Selected : " + selectedItemText, Toast.LENGTH_SHORT)
-                            .show();
                 }
                 else{
                     toolbar.getMenu().findItem(R.id.tick).setVisible(false);
@@ -225,8 +206,6 @@ public class FeedbackFragment extends CoreFragment{
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-
-
         });
 
     }
@@ -237,17 +216,26 @@ public class FeedbackFragment extends CoreFragment{
         if(!TextUtils.isEmpty(edt_email.getText().toString())){
             String val_email=edt_email.getText().toString().trim();
             boolean isValidEmail= isValidEmail(val_email);
+            if(isValidEmail){
+                layout_email.setErrorEnabled(false);
+            }else{
+                layout_email.setError("Please enter valid email");
+                layout_email.setErrorEnabled(true);
+            }
 
             toolbar.getMenu().findItem(R.id.tick).setVisible(false);
-            if(isValidEmail && isValidMessage(txtMessage.getText().toString().trim()) && feedbackType.getSelectedItemPosition()>0){
+            if(isValidEmail && isValidMessage(txtMessage.getText().toString())){
                 toolbar.getMenu().findItem(R.id.tick).setVisible(true);
+                layout_email.setErrorEnabled(false);
             }
             else{
                 toolbar.getMenu().findItem(R.id.tick).setVisible(false);
+
             }
         }
         else
         {
+            layout_email.setErrorEnabled(false);
             toolbar.getMenu().findItem(R.id.tick).setVisible(false);
         }
     }
@@ -264,7 +252,7 @@ public class FeedbackFragment extends CoreFragment{
                 email=edt_email.getText().toString().trim();
             }
             // Validate if fields email, Message & feedback type is filled by user or not
-            if(isValidEmail(email) && isValidMessage(txtMessage.getText().toString().trim()) && feedbackType.getSelectedItemPosition()>0){
+            if(isValidEmail(email) && isValidMessage(txtMessage.getText().toString())){
                 toolbar.getMenu().findItem(R.id.tick).setVisible(true);
             }
             else{
@@ -282,7 +270,8 @@ public class FeedbackFragment extends CoreFragment{
 
     public final static boolean isValidMessage(String msg){
         boolean statusMessage=false;
-        if(!TextUtils.isEmpty(msg) && msg.length()>=8 && msg.contains(" ")){
+        Log.d("hardikkamothi","New Line ::: "+msg.contains("\n"));
+        if(!TextUtils.isEmpty(msg) && msg.length()>=8 && (msg.contains(" ") || msg.contains("\n")) ){
             return  true;
         }
         return false;

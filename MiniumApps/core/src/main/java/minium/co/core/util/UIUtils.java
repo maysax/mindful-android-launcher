@@ -76,6 +76,15 @@ public class UIUtils {
     }
 
 
+    public static void feedbackAlert(Context context, String title, String msg) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context,R.style.feedbackDialogStyle)
+                .setTitle(title)
+                .setMessage(msg)
+                .setPositiveButton(android.R.string.ok, null);
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
 
     public static void alert(Context context, int layoutRes) {
         new AlertDialog.Builder(context)

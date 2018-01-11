@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/layout_bg"
     tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
@@ -13,10 +14,16 @@
         android:minHeight="?android:attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="@dimen/dp_5"/>
+        android:elevation="@dimen/dp_5"
+        android:background="@color/toolbar_bg"/>
 
 
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="50dp"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/txtFaq"
         android:layout_width="match_parent"
@@ -82,6 +89,7 @@
         android:layout_marginRight="16dp"
         android:text=""
         android:textSize="@dimen/text.size.regular" />
+    </LinearLayout>
 
 
 </LinearLayout>

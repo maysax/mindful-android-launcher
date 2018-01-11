@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_account_setting"
     android:layout_width="match_parent"
+    android:background="@color/layout_bg"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -15,27 +16,33 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/toolbar_bg"
             android:elevation="@dimen/dp_5"
-            android:background="@android:color/white"
             android:minHeight="?android:attr/actionBarSize" />
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/text_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
+                android:hint="@string/lbl_email"
+                android:textColorHint="@color/redcolor"
                 android:layout_marginTop="30dp"
-                android:paddingRight="8dp">
+                android:paddingRight="8dp"
+                app:errorTextAppearance="@style/error_appearance">
 
                 <EditText
                     android:id="@+id/edt_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/lbl_email"
                     android:focusable="true"
+                    android:maxLines="1"
+                    android:imeOptions="actionGo"
+                    android:inputType="textEmailAddress"
                     android:focusableInTouchMode="true"
                     android:textColorHint="@color/colorAccent"
                     android:text="">
-                    <requestFocus/>
+                    <requestFocus />
                 </EditText>
             </android.support.design.widget.TextInputLayout>
 
