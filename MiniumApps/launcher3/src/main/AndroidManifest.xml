@@ -238,8 +238,7 @@
         <activity
             android:name=".IntentionConfirmationActivity_"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_intention_confirmation"
-            ></activity>
+            android:label="@string/title_activity_intention_confirmation"></activity>
     </application>
 
 </manifest>

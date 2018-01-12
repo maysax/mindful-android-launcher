@@ -73,7 +73,7 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logScreenUsageTime(String screenName, long startTime) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             long longDifference = getTime(startTime, System.currentTimeMillis());
             if (longDifference != 0) {
                 Bundle bundle = new Bundle();
@@ -93,7 +93,7 @@ public class FirebaseHelper {
      * @param count
      */
     public void logSuppressedNotification(String applicationName, long count) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putLong(SUPPRESSED_COUNT, count);
             bundle.putString(APPLICATION_NAME, applicationName);
@@ -108,7 +108,7 @@ public class FirebaseHelper {
      * @param applicationName
      */
     public void logAppUsage(String applicationName) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putString(APPLICATION_NAME, applicationName);
             Tracer.d("Firebase:" + THIRD_PARTY_APPLICATION + ": " + bundle.toString());
@@ -125,7 +125,7 @@ public class FirebaseHelper {
      * @param actionFor
      */
     public void logSiempoMenuUsage(String applicationName, int actionFor) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putString(MENU_NAME, applicationName);
             if (actionFor == 0) {
@@ -145,7 +145,7 @@ public class FirebaseHelper {
      * @param applicationName
      */
     public void logIFAction(String action, String applicationName, String data) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putString(ACTION, action);
             if (!applicationName.equalsIgnoreCase("")) {
@@ -165,7 +165,7 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logSiempoAsDefault(String action, long startTime) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putString(ACTION, action);
             if (startTime != 0) {

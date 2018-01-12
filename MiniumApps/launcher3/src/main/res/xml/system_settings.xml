@@ -5,19 +5,21 @@
     android:title="@string/system_settings_title">
 
     <Preference
-        android:title="@string/pref_date_time"
         android:key="@string/date_time_key"
-        android:summary="@string/date_time_settings_summary">
+        android:summary="@string/date_time_settings_summary"
+        android:title="@string/pref_date_time">
         <!--<intent android:action="android.settings.DATE_SETTINGS" />-->
     </Preference>
 
-    <Preference android:title="@string/pref_accessibility"
-        android:key="@string/accessibility_key">
+    <Preference
+        android:key="@string/accessibility_key"
+        android:title="@string/pref_accessibility">
         <!--<intent android:action="android.settings.ACCESSIBILITY_SETTINGS" />-->
     </Preference>
 
-    <Preference android:title="@string/pref_printing"
-        android:key="@string/print_key">
+    <Preference
+        android:key="@string/print_key"
+        android:title="@string/pref_printing">
         <!--<intent android:action="android.settings.ACTION_PRINT_SETTINGS" />-->
     </Preference>
 
@@ -25,8 +27,9 @@
         <!--<intent android:action="android.settings.APPLICATION_DEVELOPMENT_SETTINGS" />-->
     <!--</Preference>-->
 
-    <Preference android:title="@string/pref_about_phone"
-        android:key="@string/about_key">
+    <Preference
+        android:key="@string/about_key"
+        android:title="@string/pref_about_phone">
         <!--<intent android:action="android.settings.DEVICE_INFO_SETTINGS" />-->
     </Preference>
 

@@ -1,13 +1,8 @@
 package co.siempo.phone.tempo;
 
 
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OptionsMenu;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
@@ -39,8 +34,6 @@ public class TempoSettingsActivity extends CoreActivity {
         super.onResume();
 
     }
-
-
 
 
 }
