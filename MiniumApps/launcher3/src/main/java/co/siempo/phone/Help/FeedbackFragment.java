@@ -103,7 +103,7 @@ public class FeedbackFragment extends CoreFragment{
                                 version = "BETA-" + BuildConfig.VERSION_NAME;
                             }
                             String body="User Email :"+droidPrefs_.userEmailId().get()+"\nFeedBack Type : "+selectedItemText+"\n"+
-                                    "Message :"+txtMessage.getText().toString()+"\n"+
+                                    "Message :"+txtMessage.getText().toString().trim()+"\n"+
                                     "Phone Data : Manufacturer - " + android.os.Build.MANUFACTURER+
                                     ", Model - "+android.os.Build.MODEL+
                                     ", OS Version - "+android.os.Build.VERSION.SDK_INT+
@@ -193,7 +193,7 @@ public class FeedbackFragment extends CoreFragment{
                 }
                 // Validate if fields email, Message & feedback type is filled by user or not
 
-                if(isValidEmail(email) && isValidMessage(txtMessage.getText().toString())){
+                if(isValidEmail(email) && isValidMessage(txtMessage.getText().toString().trim())){
                     // Notify the selected item text
                     toolbar.getMenu().findItem(R.id.tick).setVisible(true);
                 }
@@ -224,7 +224,7 @@ public class FeedbackFragment extends CoreFragment{
             }
 
             toolbar.getMenu().findItem(R.id.tick).setVisible(false);
-            if(isValidEmail && isValidMessage(txtMessage.getText().toString())){
+            if(isValidEmail && isValidMessage(txtMessage.getText().toString().trim())){
                 toolbar.getMenu().findItem(R.id.tick).setVisible(true);
                 layout_email.setErrorEnabled(false);
             }
@@ -242,7 +242,7 @@ public class FeedbackFragment extends CoreFragment{
 
     @AfterTextChange
     void txtMessage(){
-        if(!TextUtils.isEmpty(txtMessage.getText().toString())){
+        if(!TextUtils.isEmpty(txtMessage.getText().toString().trim())){
             String email="";
             // Check if email is store in database , If not get the latest value from email textbox
             if(!TextUtils.isEmpty(droidPrefs_.userEmailId().get())){
@@ -252,7 +252,7 @@ public class FeedbackFragment extends CoreFragment{
                 email=edt_email.getText().toString().trim();
             }
             // Validate if fields email, Message & feedback type is filled by user or not
-            if(isValidEmail(email) && isValidMessage(txtMessage.getText().toString())){
+            if(isValidEmail(email) && isValidMessage(txtMessage.getText().toString().trim())){
                 toolbar.getMenu().findItem(R.id.tick).setVisible(true);
             }
             else{
