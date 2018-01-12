@@ -222,7 +222,7 @@
         <activity android:name=".ui.SiempoPermissionActivity_" />
         <activity android:name=".tempo.TempoSettingsActivity_" />
         <activity android:name=".tempo.TempoAppNotificationActivity" />
-        <activity android:name=".HelpActivity" />
+        <activity android:name=".HelpActivity_" />
         <activity
             android:name=".IntentionEditActivity_"
             android:windowSoftInputMode="stateAlwaysVisible" />
@@ -239,7 +239,7 @@
             android:name=".IntentionConfirmationActivity_"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_intention_confirmation"
-            android:theme="@style/FullscreenTheme"></activity>
+            ></activity>
     </application>
 
 </manifest>

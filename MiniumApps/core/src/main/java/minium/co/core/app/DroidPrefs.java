@@ -185,6 +185,9 @@ public interface DroidPrefs {
     boolean isAlphaSettingEnable();
 
     @DefaultBoolean(false)
+    boolean isFireBaseAnalyticsEnable();
+
+    @DefaultBoolean(false)
     boolean isTempoNotificationControlsDisabled();
 
     //0 Individual,1 batch,2 Only at.
@@ -201,6 +204,9 @@ public interface DroidPrefs {
     // 0 for mute,1 for Sound
     @DefaultInt(0)
     int tempoSoundProfile();
+
+    @DefaultString("")
+    String userEmailId();
 
     @DefaultBoolean(true)
     boolean isIntentionEnable();

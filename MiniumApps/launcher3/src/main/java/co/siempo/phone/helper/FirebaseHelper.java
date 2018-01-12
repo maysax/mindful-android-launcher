@@ -73,13 +73,15 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logScreenUsageTime(String screenName, long startTime) {
-        long longDifference = getTime(startTime, System.currentTimeMillis());
-        if (longDifference != 0) {
-            Bundle bundle = new Bundle();
-            bundle.putString(SCREEN_NAME, screenName);
-            bundle.putLong(TIME_SPENT, longDifference);
-            Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
-            getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+            long longDifference = getTime(startTime, System.currentTimeMillis());
+            if (longDifference != 0) {
+                Bundle bundle = new Bundle();
+                bundle.putString(SCREEN_NAME, screenName);
+                bundle.putLong(TIME_SPENT, longDifference);
+                Tracer.d("Firebase:" + SCREEN_USAGE + ": " + bundle.toString());
+                getFirebaseAnalytics().logEvent(SCREEN_USAGE, bundle);
+            }
         }
 
     }
@@ -91,11 +93,13 @@ public class FirebaseHelper {
      * @param count
      */
     public void logSuppressedNotification(String applicationName, long count) {
-        Bundle bundle = new Bundle();
-        bundle.putLong(SUPPRESSED_COUNT, count);
-        bundle.putString(APPLICATION_NAME, applicationName);
-        Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
+        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+            Bundle bundle = new Bundle();
+            bundle.putLong(SUPPRESSED_COUNT, count);
+            bundle.putString(APPLICATION_NAME, applicationName);
+            Tracer.d("Firebase:" + SUPPRESSED_NOTIFICATION + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(SUPPRESSED_NOTIFICATION, bundle);
+        }
     }
 
     /**
@@ -104,10 +108,12 @@ public class FirebaseHelper {
      * @param applicationName
      */
     public void logAppUsage(String applicationName) {
-        Bundle bundle = new Bundle();
-        bundle.putString(APPLICATION_NAME, applicationName);
-        Tracer.d("Firebase:" + THIRD_PARTY_APPLICATION + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(THIRD_PARTY_APPLICATION, bundle);
+        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(APPLICATION_NAME, applicationName);
+            Tracer.d("Firebase:" + THIRD_PARTY_APPLICATION + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(THIRD_PARTY_APPLICATION, bundle);
+        }
     }
 
     /**
@@ -119,15 +125,17 @@ public class FirebaseHelper {
      * @param actionFor
      */
     public void logSiempoMenuUsage(String applicationName, int actionFor) {
-        Bundle bundle = new Bundle();
-        bundle.putString(MENU_NAME, applicationName);
-        if (actionFor == 0) {
-            bundle.putString(INTENT_FROM, MENU_SCREEN);
-        } else {
-            bundle.putString(INTENT_FROM, IF_SCREEN);
+        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(MENU_NAME, applicationName);
+            if (actionFor == 0) {
+                bundle.putString(INTENT_FROM, MENU_SCREEN);
+            } else {
+                bundle.putString(INTENT_FROM, IF_SCREEN);
+            }
+            Tracer.d("Firebase:" + SIEMPO_MENU + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(SIEMPO_MENU, bundle);
         }
-        Tracer.d("Firebase:" + SIEMPO_MENU + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(SIEMPO_MENU, bundle);
     }
 
     /**
@@ -137,15 +145,17 @@ public class FirebaseHelper {
      * @param applicationName
      */
     public void logIFAction(String action, String applicationName, String data) {
-        Bundle bundle = new Bundle();
-        bundle.putString(ACTION, action);
-        if (!applicationName.equalsIgnoreCase("")) {
-            bundle.putString(APPLICATION_NAME, applicationName);
-        } else {
-            bundle.putString(IF_DATA, data);
+        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(ACTION, action);
+            if (!applicationName.equalsIgnoreCase("")) {
+                bundle.putString(APPLICATION_NAME, applicationName);
+            } else {
+                bundle.putString(IF_DATA, data);
+            }
+            Tracer.d(IF_ACTION + ": " + bundle.toString());
+            getFirebaseAnalytics().logEvent(IF_ACTION, bundle);
         }
-        Tracer.d(IF_ACTION + ": " + bundle.toString());
-        getFirebaseAnalytics().logEvent(IF_ACTION, bundle);
     }
 
     /**
@@ -155,18 +165,20 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logSiempoAsDefault(String action, long startTime) {
-        Bundle bundle = new Bundle();
-        bundle.putString(ACTION, action);
-        if (startTime != 0) {
-            long longDifference = getTime(startTime, System.currentTimeMillis());
-            if (longDifference != 0) {
-                bundle.putLong(TIME_SPENT, longDifference);
+        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+            Bundle bundle = new Bundle();
+            bundle.putString(ACTION, action);
+            if (startTime != 0) {
+                long longDifference = getTime(startTime, System.currentTimeMillis());
+                if (longDifference != 0) {
+                    bundle.putLong(TIME_SPENT, longDifference);
+                    Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
+                    getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
+                }
+            } else {
                 Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
                 getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
             }
-        } else {
-            Tracer.d("Firebase:" + SIEMPO_DEFAULT + ": " + bundle.toString());
-            getFirebaseAnalytics().logEvent(SIEMPO_DEFAULT, bundle);
         }
     }
 

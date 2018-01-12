@@ -15,6 +15,7 @@ android {
         applicationId "co.siempo.phone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        multiDexEnabled true
 //        versionCode "${versionMajor}".toInteger() * 1000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
 //        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}-${buildTime}"
 
@@ -108,6 +109,16 @@ dependencies {
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.wdullaer:materialdatetimepicker:3.4.1'
+    compile files('libs/activation.jar')
+    compile files('libs/additionnal.jar')
+    compile files('libs/mail.jar')
+
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2') {
+        exclude module: 'support-annotations'
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
 }
 greendao {
     schemaVersion "${databaseVersion}".toInteger()
