@@ -35,6 +35,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -222,6 +223,14 @@
         <activity android:name=".tempo.TempoSettingsActivity_" />
         <activity android:name=".tempo.TempoAppNotificationActivity" />
         <activity android:name=".HelpActivity_"></activity>
+
+        <receiver android:name=".service.AlarmBroadcast">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".service.AlarmService" />
+
     </application>
 
 </manifest>

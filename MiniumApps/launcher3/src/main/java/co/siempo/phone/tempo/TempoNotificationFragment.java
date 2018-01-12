@@ -225,7 +225,7 @@ public class TempoNotificationFragment extends CoreFragment {
         switchAllowOnLockScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                launcherPrefs.isHidenotificationOnLockScreen().put(!isChecked);
+                launcherPrefs.isAllowNotificationOnLockScreen().put(isChecked);
                 if (isChecked) {
                     txtAllowOnLockScreenText.setText("On. New notifications will be visible from the lock screen.");
                 } else {
@@ -234,14 +234,7 @@ public class TempoNotificationFragment extends CoreFragment {
             }
         });
 
-
-        if (launcherPrefs.isHidenotificationOnLockScreen().get()) {
-            switchAllowOnLockScreen.setChecked(false);
-        } else {
-            switchAllowOnLockScreen.setChecked(true);
-        }
-
-
+        switchAllowOnLockScreen.setChecked(launcherPrefs.isAllowNotificationOnLockScreen().get());
     }
 
 

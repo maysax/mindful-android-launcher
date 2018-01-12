@@ -823,22 +823,28 @@ public abstract class CoreApplication extends MultiDexApplication {
                 notificationMediaPlayer.setDataSource(this, alert);
                 final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                    notificationMediaPlayer.setVolume(100, 100);
-                    notificationMediaPlayer.setScreenOnWhilePlaying(true);
+                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, max, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                    notificationMediaPlayer.setLooping(false);
                     notificationMediaPlayer.prepare();
-                    notificationMediaPlayer.start();
+                    if (!notificationMediaPlayer.isPlaying()) {
+                        notificationMediaPlayer.start();
+                    }
                     vibrator.vibrate(200);
                     notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
-                            notificationMediaPlayer.release();
+                            if (notificationMediaPlayer != null) {
+                                notificationMediaPlayer.stop();
+                                notificationMediaPlayer.release();
+                            }
                             notificationMediaPlayer = null;
                         }
                     });
                 }
             }
-            // }
+
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();

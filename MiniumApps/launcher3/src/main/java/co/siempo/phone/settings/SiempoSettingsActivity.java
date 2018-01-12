@@ -151,7 +151,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
 
-        if (launcherPrefs.isHidenotificationOnLockScreen().get()) {
+        if (launcherPrefs.isAllowNotificationOnLockScreen().get()) {
             switch_notification.setChecked(true);
         } else {
             switch_notification.setChecked(false);

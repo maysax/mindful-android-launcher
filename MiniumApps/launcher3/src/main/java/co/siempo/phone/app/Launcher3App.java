@@ -54,31 +54,24 @@ import minium.co.core.log.Tracer;
 @EApplication
 public class Launcher3App extends CoreApplication {
 
-    private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
     public static final String DND_START_STOP_ACTION = "siempo.intent.action.DND_START_STOP";
-    private DaoSession daoSession;
+    private final String TRACE_TAG = LogConfig.TRACE_TAG + "Launcher3App";
     private final String TAG = "SiempoActivityLifeCycle";
-
     @Pref
     public DroidPrefs_ prefs;
-
+    public Dialog dialog;
     @Pref
     Launcher3Prefs_ launcherPrefs;
-
-    private FirebaseAnalytics mFirebaseAnalytics;
-
     @SystemService
     AudioManager audioManager;
-
     @SystemService
     NotificationManager notificationManager;
-
+    private DaoSession daoSession;
+    private FirebaseAnalytics mFirebaseAnalytics;
     private boolean isSiempoLauncher = false;
     private long startTime;
     private ResolveInfo resolveInfo;
     private ArrayList<ResolveInfo> appList;
-    public Dialog dialog;
-
 
     @Trace(tag = TRACE_TAG)
     @Override
@@ -109,87 +102,8 @@ public class Launcher3App extends CoreApplication {
         setAllDefaultMenusApplication();
         AppLifecycleTracker handler = new AppLifecycleTracker();
         registerActivityLifecycleCallbacks(handler);
+        PackageUtil.enableAlarm(this);
     }
-
-
-    class AppLifecycleTracker implements Application.ActivityLifecycleCallbacks {
-
-        private int numStarted = 0;
-
-        @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
-        }
-
-        @Override
-        public void onActivityStarted(Activity activity) {
-            if (numStarted == 0) {
-                // app went to foreground
-                Log.d(TAG, "Siempo is on foreground");
-                KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                if (myKM != null && !myKM.inKeyguardRestrictedInputMode()) {
-                    checkProfile();
-                }
-                launcherPrefs.isAppDefaultOrFront().put(true);
-
-            }
-            numStarted++;
-        }
-
-        @Override
-        public void onActivityResumed(Activity activity) {
-            if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                isSiempoLauncher = true;
-                if (startTime == 0) {
-                    startTime = System.currentTimeMillis();
-                    FirebaseHelper.getIntance().logSiempoAsDefault("On", 0);
-                }
-            } else {
-                isSiempoLauncher = false;
-            }
-        }
-
-        @Override
-        public void onActivityPaused(Activity activity) {
-            if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                isSiempoLauncher = true;
-            } else {
-                if (isSiempoLauncher && startTime != 0) {
-                    FirebaseHelper.getIntance().logSiempoAsDefault("Off", startTime);
-                    startTime = 0;
-                }
-                isSiempoLauncher = false;
-            }
-        }
-
-        @Override
-        public void onActivityStopped(Activity activity) {
-            numStarted--;
-
-            if (numStarted == 0) {
-                Log.d(TAG, "Siempo is on background");
-
-                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
-                    isSiempoLauncher = true;
-                    launcherPrefs.isAppDefaultOrFront().put(true);
-                } else {
-                    launcherPrefs.isAppDefaultOrFront().put(false);
-                    changeProfileToNormalMode();
-                }
-            }
-        }
-
-        @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
-        }
-
-        @Override
-        public void onActivityDestroyed(Activity activity) {
-
-        }
-    }
-
 
     public void checkProfile() {
 //         0 - Show as Normal mode(In System it will be silent mode).
@@ -206,7 +120,6 @@ public class Launcher3App extends CoreApplication {
             changeProfileToVibrateMode();
         }
     }
-
 
     /**
      * Configure the default application when application installed
@@ -257,7 +170,6 @@ public class Launcher3App extends CoreApplication {
             prefs.notesPackage().put(notesPackage);
 
     }
-
 
     /**
      * Dialog to show the change the default application
@@ -541,11 +453,9 @@ public class Launcher3App extends CoreApplication {
         dialog.show();
     }
 
-
     public DaoSession getDaoSession() {
         return daoSession;
     }
-
 
     private void loadConfigurationValues() {
         int flowSegmentCount = 4;
@@ -576,6 +486,84 @@ public class Launcher3App extends CoreApplication {
 
     public FirebaseAnalytics getFirebaseAnalytics() {
         return mFirebaseAnalytics;
+    }
+
+    class AppLifecycleTracker implements Application.ActivityLifecycleCallbacks {
+
+        private int numStarted = 0;
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            if (numStarted == 0) {
+                // app went to foreground
+                Log.d(TAG, "Siempo is on foreground");
+                KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+                if (myKM != null && !myKM.inKeyguardRestrictedInputMode()) {
+                    checkProfile();
+                }
+                launcherPrefs.isAppDefaultOrFront().put(true);
+
+            }
+            numStarted++;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+            if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                isSiempoLauncher = true;
+                if (startTime == 0) {
+                    startTime = System.currentTimeMillis();
+                    FirebaseHelper.getIntance().logSiempoAsDefault("On", 0);
+                }
+            } else {
+                isSiempoLauncher = false;
+            }
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+            if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                isSiempoLauncher = true;
+            } else {
+                if (isSiempoLauncher && startTime != 0) {
+                    FirebaseHelper.getIntance().logSiempoAsDefault("Off", startTime);
+                    startTime = 0;
+                }
+                isSiempoLauncher = false;
+            }
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            numStarted--;
+
+            if (numStarted == 0) {
+                Log.d(TAG, "Siempo is on background");
+
+                if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
+                    isSiempoLauncher = true;
+                    launcherPrefs.isAppDefaultOrFront().put(true);
+                } else {
+                    launcherPrefs.isAppDefaultOrFront().put(false);
+                    changeProfileToNormalMode();
+                }
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+
+        }
     }
 
 }

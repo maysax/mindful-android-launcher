@@ -60,8 +60,8 @@ public class SmsReceiver extends BroadcastReceiver {
         Tracer.d("Messages: onReceive in Launcher3");
         if (intent != null && intent.getAction() != null && intent.getAction().equals("android.provider.Telephony.SMS_RECEIVED")) {
             Bundle bundle = intent.getExtras();
-            Tracer.d("Notification posted: " + (bundle != null ? bundle.toString() : null));
             if (bundle != null) {
+                Tracer.d("Notification posted: " + bundle.toString());
                 Object messages[] = (Object[]) bundle.get("pdus");
                 SmsMessage smsMessage[] = new SmsMessage[messages.length];
 
@@ -163,7 +163,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 // notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
-                PackageUtil.recreateNotification(notificationSms, context, prefs.tempoType().get(), prefs.tempoSoundProfile().get());
+                PackageUtil.recreateNotification(notificationSms, context, prefs.tempoType().get(), prefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
                 notificationSms.set_date(date);
@@ -171,7 +171,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 notificationSms.set_contact_title(address);
                 notificationSms.set_message(notificationSms.get_message() + "\n" + body);
                 smsDao.update(notificationSms);
-                PackageUtil.recreateNotification(notificationSms, context, prefs.tempoType().get(), prefs.tempoSoundProfile().get());
+                PackageUtil.recreateNotification(notificationSms, context, prefs.tempoType().get(), prefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
         } catch (Exception e) {
