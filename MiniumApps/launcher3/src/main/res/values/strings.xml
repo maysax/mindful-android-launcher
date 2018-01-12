@@ -45,6 +45,8 @@
 
     <string name="label_multiple_numbers">Multiple numbers</string>
     <string name="string_notification_title">Notifications</string>
+    <string name="string_account_title">Account</string>
+    <string name="string_update_email_title">Update Email</string>
 
     <string name="icon.outgoingCall">{fa-arrow-up @color/material.core.green 12dp}</string>
     <string name="icon.incomingCall">{fa-arrow-down @color/material.core.indigo 12dp}</string>
@@ -307,6 +309,32 @@
     <string name="app_name_tools">App Name</string>
     <string name="user_name">User Name</string>
     <string name="tbd">TBD</string>
+
+    <!--Account Setting Section-->
+
+    <string name="lbl_updateEmail">Update email address</string>
+    <string name="lbl_updateEmailDescription">Siempo will never email you unless you request support or opt-in.</string>
+    <string name="lbl_analytics">Share analytics &amp; diagnostics</string>
+    <string name="lbl_analytics_description">Help improve your Siempo experience by automatically sending analytics, diagnostics, and usage data to Siempo. </string>
+    <string name="lbl_analytics_description2">\nThe data you share is anonymous and aggregated with data from other users.  We use that data, for example, to recommend a healthy amount of phone use. \n\nTo learn more, please view our <a href="">Privacy Policy</a>.</string>
+
+    <!--Update Email Section-->
+
+    <string name="lbl_email">Your email address</string>
+    <string name="success_email">Email address Updated</string>
+
+
+    <!-- Help Section -->
+    <string name="faq">View FAQ</string>
+    <string name="privacy_policyy">View Privacy Policy</string>
+    <string name="feedback">Send Feedback</string>
+    <string name="version">Version</string>
+    <string name="feedback_email">hardik.kamothi@volansystech.com</string>
+    <string name="error_email">Please enter a valid email address</string>
+    <string name="feedback_title">Message received!</string>
+    <string name="feedback_success_message">Thank you for your feedback! We read every message, and we try to respond to them as soon as we can. We\'re a small team, so please be patient with us.</string>
+
+
     <string name="cancel">CANCEL</string>
     <string name="save">SAVE</string>
     <string name="remove">REMOVE</string>

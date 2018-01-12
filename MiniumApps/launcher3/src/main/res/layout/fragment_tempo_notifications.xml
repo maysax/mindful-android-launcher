@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_pause"
+    android:background="@color/layout_bg"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,13 +16,23 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/toolbar_bg"
+            android:elevation="@dimen/dp_5"
             android:minHeight="?android:attr/actionBarSize" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:paddingLeft="50dp"
+            android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/relAllowSpecificApps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar">
+            android:paddingRight="60dp">
 
 
             <TextView
@@ -172,9 +184,9 @@
             android:text="Disabling Siempo's notification controls means that you can no longer schedule nor control the appearance of notifications."
             android:textSize="16sp" />
 
-
+        </RelativeLayout>
     </RelativeLayout>
 
-</ScrollView>
+</LinearLayout>
 
 
