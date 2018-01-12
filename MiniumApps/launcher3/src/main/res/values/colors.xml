@@ -18,4 +18,7 @@
     <color name="temp_bg_fab_menu">#ccffffff</color>
 
     <color name="black_overlay">#66000000</color>
+
+    <color name="toolbar_bg">#EEEEEE</color>
+    <color name="layout_bg">#F3F3F3</color>
 </resources>

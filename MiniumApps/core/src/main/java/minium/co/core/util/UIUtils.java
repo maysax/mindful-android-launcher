@@ -142,7 +142,7 @@ public class UIUtils {
                 .setNegativeButton(cancelButton, listenerNo);
 
         alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+        alertDialog.show();
 
 
     }
@@ -197,14 +197,13 @@ public class UIUtils {
 
     public static void showKeyboard(EditText editText) {
         try {
-            if(editText!=null) {
+            if (editText != null) {
                 InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -260,6 +259,15 @@ public class UIUtils {
                 + "\nMODEL : " + Build.MODEL
                 + "\nOS VERSION : " + Build.VERSION.RELEASE
                 + "\nDISPLAY : " + getScreenDisplaySize(context);
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
     /**

@@ -133,7 +133,7 @@ public class TempoActivity extends CoreActivity {
     void afterViews() {
         enableRadioOnPosition(droidPrefs.tempoType().get());
         bindOnlyAt();
-        fabMenu.setClosedOnTouchOutside(false);
+        fabMenu.setClosedOnTouchOutside(true);
         fabMenu.setAnimated(false);
         fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
         fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {

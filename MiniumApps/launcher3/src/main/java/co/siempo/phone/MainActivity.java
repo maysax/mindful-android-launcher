@@ -70,6 +70,7 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
+
     public static final String IS_FROM_HOME = "isFromHome";
     private static final String TAG = "MainActivity";
     public static int currentItem = -1;
@@ -78,6 +79,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     Launcher3Prefs_ launcher3Prefs;
     @ViewById
     ViewPager pager;
+
 
     MainSlidePagerAdapter sliderAdapter;
 
@@ -259,9 +261,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @UiThread(delay = 500)
     void loadViews() {
-        sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
+        sliderAdapter = new MainSlidePagerAdapter(getFragmentManager(), MainActivity.this);
         pager.setAdapter(sliderAdapter);
-        pager.setCurrentItem(1);
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+            pager.setCurrentItem(1);
+        }
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -270,20 +274,26 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
             @Override
             public void onPageSelected(int position) {
-//                if (currentItem != -1 && currentItem != position) {
-//                    if (position == 0) {
-//                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
-//                        startTime = System.currentTimeMillis();
-//                    } else if (position == 1) {
-//                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
-//                        startTime = System.currentTimeMillis();
-//                    }
-//                }
+                if (currentItem != -1 && currentItem != position) {
+                    if (position == 0) {
+                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+                        startTime = System.currentTimeMillis();
+                    } else if (position == 1) {
+                        FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+                        startTime = System.currentTimeMillis();
+                    }
+                }
                 currentItem = position;
                 try {
-                    if ((position == 1 || position == 2) && getCurrentFocus() != null)
-                        //noinspection ConstantConditions
-                        UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
+                    if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+                        if ((position == 1 || position == 2) && getCurrentFocus() != null)
+                            //noinspection ConstantConditions
+                            UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
+                    } else {
+                        if (position == 1 && getCurrentFocus() != null)
+                            //noinspection ConstantConditions
+                            UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     CoreApplication.getInstance().logException(e);
@@ -433,6 +443,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             if (pager != null) pager.setCurrentItem(currentItem, true);
             //  currentIndex = currentItem;
         }
+
+
     }
 
 
@@ -441,17 +453,25 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onPause();
         Log.d(TAG, "ACTION ONPAUSE");
         enableNfc(false);
-//        if (currentItem == 0) {
-//            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
-//        } else if (currentItem == 1) {
-//            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
-//        }
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+
+        } else {
+            if (currentItem == 0) {
+                FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+            } else if (currentItem == 1) {
+                FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+            }
+        }
 
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        currentItem = 1;
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+            currentItem = 1;
+        } else {
+            currentItem = 0;
+        }
         Log.d(TAG, "ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
             Tracer.i("NFC Tag detected");
@@ -487,10 +507,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     public void onBackPressed() {
         try {
-            //Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
-            if (pager != null && pager.getCurrentItem() == 2) {
-                pager.setCurrentItem(1);
+            if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+                if (pager != null && pager.getCurrentItem() == 2) {
+                    pager.setCurrentItem(1);
+                }
+            } else {
+                if (pager != null && pager.getCurrentItem() == 1) {
+                    pager.setCurrentItem(0);
+                }
             }
+            //Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
 
         } catch (Exception e) {
             e.printStackTrace();

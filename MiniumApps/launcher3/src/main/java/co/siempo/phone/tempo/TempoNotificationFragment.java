@@ -31,7 +31,6 @@ import minium.co.core.ui.CoreFragment;
 @EFragment(R.layout.fragment_tempo_notifications)
 public class TempoNotificationFragment extends CoreFragment {
 
-
     @ViewById
     Toolbar toolbar;
 

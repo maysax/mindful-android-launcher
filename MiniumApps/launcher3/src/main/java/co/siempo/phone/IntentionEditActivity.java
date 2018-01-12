@@ -1,20 +1,25 @@
 package co.siempo.phone;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.transition.Explode;
+import android.transition.Slide;
+import android.transition.Transition;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toolbar;
 import android.widget.ViewFlipper;
@@ -24,7 +29,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.WindowFeature;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.app.Launcher3App;
@@ -35,7 +39,6 @@ import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
-@WindowFeature({Window.FEATURE_CONTENT_TRANSITIONS})
 @EActivity(R.layout.activity_intention_edit)
 public class IntentionEditActivity extends CoreActivity {
     @ViewById
@@ -57,12 +60,18 @@ public class IntentionEditActivity extends CoreActivity {
     TextView txtHelp;
 
     @ViewById
+    TextView hint;
+
+    @ViewById
     LockEditText edtIntention;
     @ViewById
     ImageView imgClear;
 
     @ViewById
     LinearLayout linHelpWindow;
+
+    @ViewById
+    RelativeLayout pauseContainer;
 
     @ViewById
     LinearLayout linEditText;
@@ -82,6 +91,14 @@ public class IntentionEditActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
+
+        Transition enterTrans = new Explode();
+        getWindow().setEnterTransition(enterTrans);
+
+        Transition returnTrans = new Slide();
+        getWindow().setReturnTransition(returnTrans);
+
+
         // inside your activity (if you did not enable transitions in your theme)
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -108,7 +125,7 @@ public class IntentionEditActivity extends CoreActivity {
         } else {
             imgClear.setVisibility(View.GONE);
         }
-        linEditText.setTransitionName("linEditText");
+
         edtIntention.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @SuppressLint("RestrictedApi")
             @Override
@@ -117,11 +134,12 @@ public class IntentionEditActivity extends CoreActivity {
                     if (txtSave.getVisibility() == View.VISIBLE) {
                         droidPrefs.defaultIntention().put(strIntentField);
                         UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());
-                        Intent intent = new Intent(IntentionEditActivity.this, IntentionConfirmationActivity_.class);
-                        ActivityOptionsCompat options = ActivityOptionsCompat.
-                                makeSceneTransitionAnimation(IntentionEditActivity.this, linEditText, "linEditText");
-                        startActivity(intent, options.toBundle());
-                        finish();
+//                        Intent intent = new Intent(IntentionEditActivity.this, IntentionConfirmationActivity_.class);
+//                        ActivityOptionsCompat options = ActivityOptionsCompat.
+//                                makeSceneTransitionAnimation(IntentionEditActivity.this, pauseContainer, getString(R.string.what_s_your_intention));
+//                        startActivity(intent, options.toBundle());
+//                        finish();
+                        runAnimation();
                     }
                     return true;
                 }
@@ -129,8 +147,6 @@ public class IntentionEditActivity extends CoreActivity {
             }
         });
     }
-
-
 
 
     @AfterTextChange(R.id.edtIntention)
@@ -155,18 +171,56 @@ public class IntentionEditActivity extends CoreActivity {
         edtIntention.setText("");
     }
 
-    @SuppressLint("RestrictedApi")
     @Click
     void txtSave() {
         droidPrefs.defaultIntention().put(strIntentField);
         UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());
         if (!strIntentField.equalsIgnoreCase("")) {
-            Intent intent = new Intent(IntentionEditActivity.this, IntentionConfirmationActivity_.class);
-            ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(IntentionEditActivity.this, linEditText, "linEditText");
-            startActivity(intent, options.toBundle());
-            finish();
+//            Intent intent = new Intent(IntentionEditActivity.this, IntentionConfirmationActivity_.class);
+//            ActivityOptionsCompat options = ActivityOptionsCompat.
+//                    makeSceneTransitionAnimation(IntentionEditActivity.this, pauseContainer, getString(R.string.what_s_your_intention));
+//            startActivity(intent, options.toBundle());
+//            finish();a
+            runAnimation();
         }
+    }
+
+    private void runAnimation() {
+        toolbar.animate().alpha(0.0f).setDuration(200);
+        hint.animate().alpha(0.0f).setDuration(200);
+        imgClear.animate().alpha(0.0f).setDuration(200);
+        linHelpWindow.animate().alpha(0.0f).setDuration(200);
+        hint.setVisibility(View.GONE);
+
+        imgClear.setVisibility(View.GONE);
+        edtIntention.setFocusable(false);
+
+        ValueAnimator anim = ValueAnimator.ofInt(linEditText.getMeasuredHeight() + UIUtils.getStatusBarHeight(this) + 40, pauseContainer.getHeight());
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = linEditText.getLayoutParams();
+                layoutParams.height = val;
+                toolbar.setVisibility(View.GONE);
+                linEditText.setLayoutParams(layoutParams);
+            }
+        });
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                getWindow().setNavigationBarColor(ContextCompat.getColor(IntentionEditActivity.this, R.color.colorAccent));
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    }
+                }, 1500);
+            }
+        });
+        anim.setDuration(500);
+        anim.start();
     }
 
     @Click

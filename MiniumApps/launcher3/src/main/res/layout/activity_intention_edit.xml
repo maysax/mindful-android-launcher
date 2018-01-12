@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:transitionName="@string/what_s_your_intention"
     tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
@@ -39,8 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:background="@color/colorAccent"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_10"
@@ -92,8 +93,8 @@
                 android:textColorHint="#99C2FB"
                 android:textCursorDrawable="@drawable/custom_edit_text_cursor"
                 android:textSize="19sp"
-                tools:targetApi="o"
                 android:transitionName=""
+                tools:targetApi="o"
                 tools:text="Try out new music">
 
                 <requestFocus />

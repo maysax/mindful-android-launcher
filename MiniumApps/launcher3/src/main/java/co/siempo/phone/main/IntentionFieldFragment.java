@@ -1,7 +1,6 @@
 package co.siempo.phone.main;
 
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -92,10 +91,15 @@ public class IntentionFieldFragment extends CoreFragment {
                 prefs.isAppUpdated().put(false);
             }
         }
-        if (prefs.isIntentionEnable().get()) {
-            imgTempo.setVisibility(View.VISIBLE);
-        } else {
+        if (prefs.isTempoNotificationControlsDisabled().get()) {
             imgTempo.setVisibility(View.GONE);
+        } else {
+            imgTempo.setVisibility(View.VISIBLE);
+        }
+        if (prefs.isIntentionEnable().get()) {
+            linIF.setVisibility(View.VISIBLE);
+        } else {
+            linIF.setVisibility(View.GONE);
         }
         txtIntention.setText(prefs.defaultIntention().get());
     }
@@ -181,6 +185,7 @@ public class IntentionFieldFragment extends CoreFragment {
                 mPopupWindow.setFocusable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
+//                mPopupWindow.showAtLocation(relTop, Gravity.TOP| Gravity.RIGHT, 0, 10);
                 UIUtils.applyDim(root, 0.6f);
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {

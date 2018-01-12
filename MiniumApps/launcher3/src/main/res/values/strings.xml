@@ -331,4 +331,7 @@
     <string name="title_activity_intention_confirmation">IntentionConfirmationActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="disable_intentions">Disable intentions</string>
+    <string name="when_intentions_are_disabled_your_home_screen_will_be_blank">When intentions are disabled, your home screen will be blank.</string>
+    <string name="homescreen">Home Screen</string>
 </resources>

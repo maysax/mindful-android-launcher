@@ -9,6 +9,40 @@
     android:paddingTop="@dimen/margin.2"
     tools:context="co.siempo.phone.main.MainFragment">
 
+    <RelativeLayout
+        android:id="@+id/relTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:background="@color/white"
+        android:padding="@dimen/dp_5"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+
+            <ImageView
+                android:id="@+id/imgTempo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_5"
+                android:padding="@dimen/dp_5"
+                android:src="@drawable/ic_tempo_dailog" />
+
+            <ImageView
+                android:id="@+id/imgOverFlow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dp_5"
+                android:src="@drawable/ic_more_vert_black_24dp" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <co.siempo.phone.ui.SearchLayout
         android:id="@+id/searchLayout"
