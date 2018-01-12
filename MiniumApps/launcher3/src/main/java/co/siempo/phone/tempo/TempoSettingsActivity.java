@@ -18,7 +18,6 @@ import minium.co.core.ui.CoreActivity;
 
 @EActivity(R.layout.activity_tempo_settings)
 public class TempoSettingsActivity extends CoreActivity {
-    private String TAG = "TempoActivity";
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {

@@ -80,6 +80,7 @@ dependencies {
     /**
      * =================== Test suit  ===================
      */
+    compile 'com.android.support:support-v4:26.1.0'
     testCompile "junit:junit:$junitVersion"
     androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'

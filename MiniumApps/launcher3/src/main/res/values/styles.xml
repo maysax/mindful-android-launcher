@@ -5,8 +5,13 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <!--<item name="android:colorPrimaryDark">@color/layout_bg</item>-->
         <item name="android:colorControlHighlight">@color/colorAccent</item>
-        <item name="android:windowBackground">@drawable/bg_siempo</item>
+        <item name="android:windowBackground">@color/layout_bg</item>
+        <!-- enable overlapping of exiting and entering activities-->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
 

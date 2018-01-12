@@ -1,27 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/activity_pause"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_pause"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/txtAllowApps"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:padding="8dp"
-        android:text="TBD"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
+        tools:context="co.siempo.phone.pause.PauseActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?android:attr/actionBarSize" />
+
+        <RelativeLayout
+            android:id="@+id/relAllowSpecificApps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:paddingLeft="50dp">
+
+            <TextView
+                android:id="@+id/txtDisableNotificationControls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:text="@string/disable_intentions"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Switch
+                android:id="@+id/switchDisableIntentionsControls"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/txtDisableNotificationControlsTxt"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/txtDisableNotificationControlsTxt"
+                android:layout_below="@+id/txtDisableNotificationControls"
+                android:layout_marginRight="8dp" />
 
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/txtDisableIntentions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txtDisableNotificationControls"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_toLeftOf="@+id/switchDisableIntentionsControls"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="0dp"
+                android:text="@string/when_intentions_are_disabled_your_home_screen_will_be_blank"
+                android:textSize="16sp" />
 
 
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</ScrollView>
 
 
