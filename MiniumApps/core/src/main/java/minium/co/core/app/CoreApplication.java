@@ -236,11 +236,12 @@ public abstract class CoreApplication extends MultiDexApplication {
         return clockPackageList;
     }
 
-    public SharedPreferences getSharedPref(){
-        return  sharedPref;
-    }
     public void setClockPackageList(ArrayList<ResolveInfo> clockPackageList) {
         this.clockPackageList = clockPackageList;
+    }
+
+    public SharedPreferences getSharedPref() {
+        return sharedPref;
     }
 
     public ArrayList<ResolveInfo> getEmailPackageList() {

@@ -62,20 +62,18 @@ public class TempoAccountSettingFragment extends CoreFragment {
         });
 
 
-        if(droidPrefs_.isFireBaseAnalyticsEnable().get()){
+        if (droidPrefs_.isFireBaseAnalyticsEnable().get()) {
             swtch_analytics.setChecked(true);
-        }
-        else{
+        } else {
             swtch_analytics.setChecked(false);
         }
         swtch_analytics.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     droidPrefs_.isFireBaseAnalyticsEnable().put(true);
                     FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
-                }
-                else{
+                } else {
 
                     FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
                     droidPrefs_.isFireBaseAnalyticsEnable().put(false);
@@ -83,7 +81,6 @@ public class TempoAccountSettingFragment extends CoreFragment {
             }
         });
     }
-
 
 
     @Click

@@ -38,7 +38,6 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
-import co.siempo.phone.HelpActivity;
 import co.siempo.phone.HelpActivity_;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;

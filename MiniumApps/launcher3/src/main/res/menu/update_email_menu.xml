@@ -6,6 +6,6 @@
         android:id="@+id/tick"
         android:icon="@drawable/tick"
         android:title="Done"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
 </menu>

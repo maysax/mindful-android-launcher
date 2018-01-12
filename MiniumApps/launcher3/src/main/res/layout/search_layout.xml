@@ -9,34 +9,33 @@
         android:id="@+id/txtSearchBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="54dp"
         android:layout_weight="1"
         android:background="@color/white"
-        android:lines="3"
-        android:text=""
-        android:minLines="1"
-        android:maxLines="3"
-        android:padding="8dp"
         android:ellipsize="end"
-        android:textSize="@dimen/text.size.medium"
-        android:textColor="@color/text.primary"
-        android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
         android:hint="@string/hint.intentionField"
+        android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
         android:lineSpacingMultiplier="1.5"
-        tools:background="@color/material.core.blue" >
-    </com.eyeem.chips.ChipsEditText>
+        android:lines="3"
+        android:maxLines="3"
+        android:minHeight="54dp"
+        android:minLines="1"
+        android:padding="8dp"
+        android:text=""
+        android:textColor="@color/text.primary"
+        android:textSize="@dimen/text.size.medium"
+        tools:background="@color/material.core.blue"></com.eyeem.chips.ChipsEditText>
 
 
     <ImageView
         android:id="@+id/btnClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="4dp"
-        android:paddingEnd="8dp"
-        android:visibility="gone"
-        android:src="@drawable/icon_clear_field"
         android:layout_gravity="center_vertical"
         android:contentDescription="@null"
+        android:paddingEnd="8dp"
+        android:paddingStart="4dp"
+        android:src="@drawable/icon_clear_field"
+        android:visibility="gone"
         tools:ignore="UnusedIds" />
 
 </LinearLayout>
