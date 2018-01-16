@@ -115,7 +115,7 @@ public class FeedbackFragment extends CoreFragment{
 
 
                             //Creating SendMail object
-                            SendMail sm = new SendMail(getActivity(), getActivity().getResources().getString(R.string.feedback_email), "Thanks for your feedback!  Siempo support ID: "+currentTimeMills, body);
+                            SendMail sm = new SendMail(getActivity(), getActivity().getResources().getString(R.string.feedback_email), "Thanks for your feedback!  Siempo support ID: "+telephonyManager.getDeviceId(), body);
 
                             //Executing sendmail to send email
                             sm.execute();

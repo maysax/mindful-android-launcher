@@ -329,7 +329,7 @@
     <string name="privacy_policyy">View Privacy Policy</string>
     <string name="feedback">Send Feedback</string>
     <string name="version">Version</string>
-    <string name="feedback_email">hardik.kamothi@volansystech.com</string>
+    <string name="feedback_email">feedback@siempo.co</string>
     <string name="error_email">Please enter a valid email address</string>
     <string name="feedback_title">Message received!</string>
     <string name="feedback_success_message">Thank you for your feedback! We read every message, and we try to respond to them as soon as we can. We\'re a small team, so please be patient with us.</string>
@@ -347,4 +347,5 @@
     <string name="msg_2hour">Batches will arrive every 2 hour.</string>
     <string name="msg_4hour">Batches will arrive every 4 hour.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
+    <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
 </resources>

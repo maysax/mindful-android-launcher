@@ -10,6 +10,7 @@ import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,19 +24,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.applist.DisableAppList;
 import co.siempo.phone.applist.HeaderAppList;
 import co.siempo.phone.settings.NoticationFooterViewHolder;
 import co.siempo.phone.settings.SectionedRecyclerViewAdapter;
-
+import minium.co.core.log.Tracer;
+/**
+ *
+ * Below adapter is use to Display the section wise below apps
+ *  1. Humand Direct Messaging
+ *  2. Helpful Robots
+ *  3. All Other Apps
+ */
 public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapter<TempoNotificationHeaderViewHolder,
         TempoNotificationItemViewHolder,
         NoticationFooterViewHolder> {
 
-    private final List<String> messengerAppList;
+    private List<String> messengerAppList = new ArrayList<>();;
     protected Context context = null;
     SharedPreferences launcherPrefs;
     ArrayList<String> disableNotificationApps = new ArrayList<>();
@@ -160,187 +167,206 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
         holder.displayToggle();
 
-
         if (headerList.get(section).name.equals("All Other Apps")) {
-            holder.render(blockedList.get(position).applicationInfo.name);
-            holder.displayImage(blockedList.get(position).applicationInfo, packageManager);
 
-            holder.getToggle().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            final DisableAppList otherAppsItems=blockedList.get(position);
+            if(!TextUtils.isEmpty(otherAppsItems.errorMessage)){
+                holder.render(otherAppsItems.errorMessage);
+                holder.disableViews();
+            }
+            else{
+                holder.enableViews();
+                holder.render(otherAppsItems.applicationInfo.name);
+                holder.displayImage(otherAppsItems.applicationInfo, packageManager,otherAppsItems.errorMessage);
 
-
-                    final DisableAppList d = blockedList.get(position);
-                    PopupMenu popup = new PopupMenu(context, v);
-                    popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
-                    MenuItem menuItem = popup.getMenu().findItem(R.id.block);
-                    menuItem.setTitle("Unblock app notifications");
-
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
+                holder.getToggle().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
 
-                            if (!showUnblockAlert) {
+                        final DisableAppList d = otherAppsItems;
+                        PopupMenu popup = new PopupMenu(context, v);
+                        popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
+                        MenuItem menuItem = popup.getMenu().findItem(R.id.block);
+                        menuItem.setTitle("Unblock app notifications");
 
-                                holder.addToBlockList(blockedList.get(position).applicationInfo, true, blockedApps, context);
-                                blockedList.remove(d);
-                                if (messengerAppList.contains(d.applicationInfo.packageName)) {
-                                    messengerList.add(d);
-                                    int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
-                                    launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            public boolean onMenuItemClick(MenuItem item) {
+
+
+                                if (!showUnblockAlert) {
+
+                                    holder.addToBlockList(d.applicationInfo, true, blockedApps, context);
+                                    blockedList.remove(d);
+                                    if (messengerAppList.contains(d.applicationInfo.packageName)) {
+                                        messengerList.add(d);
+                                        int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
+                                        launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
+                                    } else {
+                                        appList.add(d);
+                                        int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
+                                        launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
+                                    }
+
+
+                                    changeHeaderNotification(section, true, disableSections, context);
                                 } else {
-                                    appList.add(d);
-                                    int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
-                                    launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
-                                }
 
+                                    showUnblockAlert = false;
+                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
+                                            .setMessage("Siempo won't block this app's notifications, but they might be blocked by your Android system settings.")
+                                            .setCancelable(false)
 
-                                changeHeaderNotification(section, true, disableSections, context);
-                            } else {
+                                            .setPositiveButton("OK", null)
+                                            .setNegativeButton("OPEN SYSTEM " +
+                                                    "SETTINGS", null);
 
-                                showUnblockAlert = false;
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
-                                        .setMessage("Siempo won't block this app's notifications, but they might be blocked by your Android system settings.")
-                                        .setCancelable(false)
+                                    alertDialog = alertDialogBuilder.create();
+                                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                                                                      @Override
+                                                                      public void onShow(DialogInterface dialog) {
+                                                                          alertDialog.getButton(AlertDialog
+                                                                                  .BUTTON_NEGATIVE)
+                                                                                  .setOnClickListener(new View.OnClickListener() {
+                                                                                      @Override
+                                                                                      public void onClick(View v) {
+                                                                                          alertDialog.dismiss();
+                                                                                          Intent intent = new Intent();
+                                                                                          intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
 
-                                        .setPositiveButton("OK", null)
-                                        .setNegativeButton("OPEN SYSTEM " +
-                                                "SETTINGS", null);
-
-                                alertDialog = alertDialogBuilder.create();
-//                                alertDialog.setCanceledOnTouchOutside(false);
-
-
-                                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                                                                  @Override
-                                                                  public void onShow(DialogInterface dialog) {
-                                                                      alertDialog.getButton(AlertDialog
-                                                                              .BUTTON_NEGATIVE)
-                                                                              .setOnClickListener(new View.OnClickListener() {
-                                                                                  @Override
-                                                                                  public void onClick(View v) {
-                                                                                      alertDialog.dismiss();
-                                                                                      Intent intent = new Intent();
-                                                                                      intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-
-//for Android 5-7
-
-                                                                                      if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT <= 25) {
-                                                                                          intent.putExtra("app_package", d.applicationInfo.packageName);
-                                                                                          intent.putExtra("app_uid", d.applicationInfo.uid);
-                                                                                      } else if (Build.VERSION.SDK_INT >= 26) {
-// for Android O
-                                                                                          intent.putExtra("android.provider.extra.APP_PACKAGE", d.applicationInfo.packageName);
-
+                                                                                          //for Android 5-7
+                                                                                          if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT <= 25) {
+                                                                                              intent.putExtra("app_package", d.applicationInfo.packageName);
+                                                                                              intent.putExtra("app_uid", d.applicationInfo.uid);
+                                                                                          } else if (Build.VERSION.SDK_INT >= 26) {
+                                                                                          // for Android O
+                                                                                              intent.putExtra("android.provider.extra.APP_PACKAGE", d.applicationInfo.packageName);
+                                                                                          }
+                                                                                          context.startActivity(intent);
                                                                                       }
-                                                                                      context.startActivity(intent);
-                                                                                  }
-                                                                              });
+                                                                                  });
 
-                                                                      alertDialog.getButton(AlertDialog
-                                                                              .BUTTON_POSITIVE)
-                                                                              .setOnClickListener(new View.OnClickListener() {
-                                                                                  @Override
-                                                                                  public void onClick(View v) {
-                                                                                      alertDialog.dismiss();
-                                                                                      holder.addToBlockList(blockedList.get(position).applicationInfo, true, blockedApps, context);
-                                                                                      DisableAppList d = blockedList.get(position);
-                                                                                      blockedList.remove(d);
-                                                                                      if (messengerAppList.contains(d.applicationInfo.packageName)) {
-                                                                                          messengerList.add(d);
-                                                                                          int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
-                                                                                          launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
-                                                                                      } else {
-                                                                                          appList.add(d);
-                                                                                          int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
-                                                                                          launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
+                                                                          alertDialog.getButton(AlertDialog
+                                                                                  .BUTTON_POSITIVE)
+                                                                                  .setOnClickListener(new View.OnClickListener() {
+                                                                                      @Override
+                                                                                      public void onClick(View v) {
+                                                                                          alertDialog.dismiss();
+                                                                                          holder.addToBlockList(blockedList.get(position).applicationInfo, true, blockedApps, context);
+                                                                                          DisableAppList d = blockedList.get(position);
+                                                                                          blockedList.remove(d);
+                                                                                          if (messengerAppList.contains(d.applicationInfo.packageName)) {
+                                                                                              messengerList.add(d);
+                                                                                              int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
+                                                                                              launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
+                                                                                          } else {
+                                                                                              appList.add(d);
+                                                                                              int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
+                                                                                              launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
+                                                                                          }
+                                                                                          changeHeaderNotification(section, true, disableSections, context);
                                                                                       }
-
-                                                                                      changeHeaderNotification(section, true, disableSections, context);
-                                                                                  }
-                                                                              });
+                                                                                  });
+                                                                      }
                                                                   }
-                                                              }
 
 
-                                );
+                                    );
 
-                                alertDialog.show();
+                                    alertDialog.show();
+                                }
+                                return true;
+
                             }
-                            return true;
+                        });
 
-                        }
-                    });
+                        popup.show();
+                    }
+                });
+            }
 
-                    popup.show();
-
-
-                }
-            });
         } else if (headerList.get(section).name.equals("Human Direct Messaging")) {
-            holder.render(messengerList.get(position).applicationInfo.name);
 
-            holder.displayImage(messengerList.get(position).applicationInfo, packageManager);
-            holder.getToggle().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            final DisableAppList messengerAppsItem=messengerList.get(position);
+            if(!TextUtils.isEmpty(messengerAppsItem.errorMessage)){
+                holder.render(messengerAppsItem.errorMessage);
+                holder.disableViews();
+            }
+            else{
+                holder.render(messengerAppsItem.applicationInfo.name);
+                holder.enableViews();
+                holder.displayImage(messengerAppsItem.applicationInfo, packageManager,messengerAppsItem.errorMessage);
+                holder.getToggle().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                    PopupMenu popup = new PopupMenu(context, v);
-                    popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
+                        PopupMenu popup = new PopupMenu(context, v);
+                        popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
 
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            holder.addToBlockList(messengerList.get(position).applicationInfo, false, blockedApps, context);
-                            DisableAppList d = messengerList.get(position);
-                            messengerList.remove(d);
-                            blockedList.add(d);
-                            int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
-                            launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount + 1).commit();
-                            changeHeaderNotification(section, true, disableSections, context);
-                            return true;
-                        }
-                    });
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            public boolean onMenuItemClick(MenuItem item) {
+                                holder.addToBlockList(messengerAppsItem.applicationInfo, false, blockedApps, context);
+                                DisableAppList d = messengerAppsItem;
+                                messengerList.remove(d);
+                                blockedList.add(d);
+                                int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
+                                launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount + 1).commit();
+                                changeHeaderNotification(section, true, disableSections, context);
+                                return true;
+                            }
+                        });
 
-                    popup.show();
+                        popup.show();
 
 
-                }
-            });
+                    }
+                });
+
+            }
 
 
         }
 
 
         if (headerList.get(section).name.equals("Helpful Robots")) {
-            holder.render(appList.get(position).applicationInfo.name);
+            final DisableAppList appListItem=appList.get(position);
+            if(!TextUtils.isEmpty(appListItem.errorMessage)){
+                holder.render(appListItem.errorMessage);
+                holder.disableViews();
+            }
+            else{
+                holder.enableViews();
+                holder.render(appListItem.applicationInfo.name);
 
-            holder.displayImage(appList.get(position).applicationInfo, packageManager);
+                holder.displayImage(appListItem.applicationInfo, packageManager,appListItem.errorMessage);
 
-            holder.getToggle().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                holder.getToggle().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-                    PopupMenu popup = new PopupMenu(context, v);
-                    popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
+                        PopupMenu popup = new PopupMenu(context, v);
+                        popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
 
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            holder.addToBlockList(appList.get(position).applicationInfo, false, blockedApps, context);
-                            DisableAppList d = appList.get(position);
-                            appList.remove(d);
-                            blockedList.add(d);
-                            int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
-                            launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount + 1).commit();
-                            changeHeaderNotification(section, true, disableSections, context);
-                            return true;
-                        }
-                    });
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            public boolean onMenuItemClick(MenuItem item) {
+                                holder.addToBlockList(appListItem.applicationInfo, false, blockedApps, context);
+                                DisableAppList d = appListItem;
+                                appList.remove(d);
+                                blockedList.add(d);
+                                int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
+                                launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount + 1).commit();
+                                changeHeaderNotification(section, true, disableSections, context);
+                                return true;
+                            }
+                        });
 
-                    popup.show();
+                        popup.show();
 
 
-                }
-            });
+                    }
+                });
+            }
+
         }
 
 
@@ -358,52 +384,103 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     }
 
 
+    /**
+     * This method is used to remove apps from Open Category to Blocked List - true
+     * Or to move Blocked app to normal open app - false
+     *
+     *
+     * @param position
+     * @param ischecked
+     * @param disableHeaderApps
+     * @param context
+     */
     public void changeHeaderNotification(int position, boolean ischecked, ArrayList<String> disableHeaderApps, Context context) {
 
         HeaderAppList headerAppList = headerList.get(position);
 
         SharedPreferences launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
-        if (ischecked && null != disableHeaderApps && disableHeaderApps
-                .contains(headerAppList
-                        .name)) {
-            disableHeaderApps.remove(headerAppList.name);
-        }
-        if (!ischecked && null != disableHeaderApps && !disableHeaderApps.contains(headerAppList.name)) {
-            disableHeaderApps.add(headerAppList.name);
-        }
-        String disableList = "";
-        if (null != disableHeaderApps) {
-            disableList = new Gson().toJson(disableHeaderApps);
-        }
 
-        launcherPrefs.edit().putString(Constants.HEADER_APPLIST, disableList).commit();
 
-        HeaderAppList d = headerList.get(position);
-        d.ischecked = ischecked;
-        headerList.set(position, d);
-
-        Collections.sort(blockedList, new Comparator<DisableAppList>() {
-            @Override
-            public int compare(DisableAppList o1, DisableAppList o2) {
-                return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+        try{
+            if(messengerList.size()>1) {
+                for (int i=0;i<messengerList.size();i++)
+                    if(!TextUtils.isEmpty(messengerList.get(i).errorMessage)) {
+                        messengerList.remove(messengerList.get(i));
+                    }
             }
-        });
 
-        Collections.sort(messengerList, new Comparator<DisableAppList>() {
-            @Override
-            public int compare(DisableAppList o1, DisableAppList o2) {
-                return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+            if(appList.size()>1) {
+                for (int i=0;i<appList.size();i++)
+                    if(!TextUtils.isEmpty(appList.get(i).errorMessage)) {
+                        appList.remove(appList.get(i));
+                    }
             }
-        });
-        Collections.sort(appList, new Comparator<DisableAppList>() {
-            @Override
-            public int compare(DisableAppList o1, DisableAppList o2) {
-                return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+
+            if(blockedList.size()>1) {
+                for (int i=0;i<blockedList.size();i++)
+                    if(!TextUtils.isEmpty(blockedList.get(i).errorMessage)) {
+                        blockedList.remove(blockedList.get(i));
+                    }
             }
-        });
+        }
+        catch (Exception e){
+            Tracer.d("Exception in remove error message");
+        }
+
+
+        if(messengerList.size()>0 ) {
+            Collections.sort(messengerList, new Comparator<DisableAppList>() {
+                @Override
+                public int compare(DisableAppList o1, DisableAppList o2) {
+                    return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+                }
+            });
+        }
+
+        if(appList.size()>0) {
+            Collections.sort(appList, new Comparator<DisableAppList>() {
+                @Override
+                public int compare(DisableAppList o1, DisableAppList o2) {
+                    return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+                }
+            });
+        }
+
+        if(blockedList.size()>0) {
+
+            Collections.sort(blockedList, new Comparator<DisableAppList>() {
+                @Override
+                public int compare(DisableAppList o1, DisableAppList o2) {
+                    return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
+                }
+            });
+        }
+
+
+        if(messengerList.size() == 0){
+            DisableAppList d= new DisableAppList();
+            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+            messengerList.add(d);
+        }
+
+        if(appList.size() == 0){
+            DisableAppList d= new DisableAppList();
+            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+            appList.add(d);
+        }
+
+        if(blockedList.size() == 0){
+            DisableAppList d= new DisableAppList();
+            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+            blockedList.add(d);
+        }
+
 
         notifyDataSetChanged();
     }
 
 
+    public void validationMessage(){
+
+    }
 }
