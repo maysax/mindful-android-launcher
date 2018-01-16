@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:background="@color/white"
         android:ellipsize="end"
-        android:hint="@string/hint.intentionField"
+        android:hint="@string/search_hint"
         android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
         android:lineSpacingMultiplier="1.5"
         android:lines="3"

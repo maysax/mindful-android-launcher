@@ -363,4 +363,5 @@
     <string name="when_intentions_are_disabled_your_home_screen_will_be_blank">When intentions are disabled, your home screen will be blank.</string>
     <string name="homescreen">Home Screen</string>
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
+    <string name="search_hint">Find app, send message, or save note</string>
 </resources>
