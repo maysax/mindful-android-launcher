@@ -190,36 +190,6 @@ public class FirebaseHelper {
      * @return
      */
     private long getTime(long startTime, long endTime) {
-        String strTime = "0";
-        //        try {
-//            long msInSecond = 1000;
-//            long msInMinute = msInSecond * 60;
-//            long msInHour = msInMinute * 60;
-//            long msInDay = msInHour * 24;
-//
-//            long days = duration / msInDay;
-//            duration = duration % msInDay;
-//
-//            long hours = duration / msInHour;
-//            duration = duration % msInHour;
-//
-//            long minutes = duration / msInMinute;
-//            duration = duration % msInMinute;
-//
-//            double seconds = (double) duration / msInSecond;
-//            String strMilli = "" + seconds;
-//            long strSecond;
-//            String strMilliSecond;
-//            String str[] = strMilli.split("\\.");
-//            strSecond = Long.parseLong(str[0]);
-//            strMilliSecond = str[1];
-//            if (days != 0 || hours != 0 || minutes != 0 || strSecond != 0) {
-//                strTime = "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", strSecond) + ":" + strMilliSecond;
-//            }
-//        } catch (Exception e) {
-//            CoreApplication.getInstance().logException(e);
-//            e.printStackTrace();
-//        }
         return endTime - startTime;
     }
 
@@ -227,8 +197,8 @@ public class FirebaseHelper {
      * Used for Log the interval and time stamp when change the tempo setting.
      *
      * @param tempoType             shows the user selected type of tempo 0 for individual,1 batch,2 OnlyAt
-     * @param tempo_interval        which used for 0 and 1 tempo type option.
-     * @param tempo_interval_onlyat used for 2 tempo type option.
+     * @param tempo_interval        which used for 0 and 1 tempo type option(individual,batch)
+     * @param tempo_interval_onlyat used for OnlyAt tempo type.
      */
     public void logTempoIntervalTime(int tempoType, int tempo_interval, String tempo_interval_onlyat) {
         Bundle bundle = new Bundle();
