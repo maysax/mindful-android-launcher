@@ -208,7 +208,7 @@ public interface DroidPrefs {
     @DefaultString("")
     String userEmailId();
 
-    @DefaultBoolean(true)
+    @DefaultBoolean(false)
     boolean isIntentionEnable();
 
     @DefaultString("")

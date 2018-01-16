@@ -97,11 +97,16 @@ public class IntentionFieldFragment extends CoreFragment {
             imgTempo.setVisibility(View.VISIBLE);
         }
         if (prefs.isIntentionEnable().get()) {
-            linIF.setVisibility(View.VISIBLE);
-        } else {
             linIF.setVisibility(View.GONE);
+        } else {
+            linIF.setVisibility(View.VISIBLE);
         }
         txtIntention.setText(prefs.defaultIntention().get());
+        try {
+            UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Click
