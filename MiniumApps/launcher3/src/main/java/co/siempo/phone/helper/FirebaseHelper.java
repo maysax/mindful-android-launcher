@@ -73,7 +73,7 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logScreenUsageTime(String screenName, long startTime) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             long longDifference = getTime(startTime, System.currentTimeMillis());
             if (longDifference != 0) {
                 Bundle bundle = new Bundle();
@@ -93,7 +93,7 @@ public class FirebaseHelper {
      * @param count
      */
     public void logSuppressedNotification(String applicationName, long count) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putLong(SUPPRESSED_COUNT, count);
             bundle.putString(APPLICATION_NAME, applicationName);
@@ -108,7 +108,7 @@ public class FirebaseHelper {
      * @param applicationName
      */
     public void logAppUsage(String applicationName) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putString(APPLICATION_NAME, applicationName);
             Tracer.d("Firebase:" + THIRD_PARTY_APPLICATION + ": " + bundle.toString());
@@ -125,7 +125,7 @@ public class FirebaseHelper {
      * @param actionFor
      */
     public void logSiempoMenuUsage(String applicationName, int actionFor) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putString(MENU_NAME, applicationName);
             if (actionFor == 0) {
@@ -145,7 +145,7 @@ public class FirebaseHelper {
      * @param applicationName
      */
     public void logIFAction(String action, String applicationName, String data) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putString(ACTION, action);
             if (!applicationName.equalsIgnoreCase("")) {
@@ -165,7 +165,7 @@ public class FirebaseHelper {
      * @param startTime
      */
     public void logSiempoAsDefault(String action, long startTime) {
-        if(CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable",true)) {
+        if (CoreApplication.getInstance().getSharedPref().getBoolean("isFireBaseAnalyticsEnable", true)) {
             Bundle bundle = new Bundle();
             bundle.putString(ACTION, action);
             if (startTime != 0) {
@@ -190,36 +190,6 @@ public class FirebaseHelper {
      * @return
      */
     private long getTime(long startTime, long endTime) {
-        String strTime = "0";
-        //        try {
-//            long msInSecond = 1000;
-//            long msInMinute = msInSecond * 60;
-//            long msInHour = msInMinute * 60;
-//            long msInDay = msInHour * 24;
-//
-//            long days = duration / msInDay;
-//            duration = duration % msInDay;
-//
-//            long hours = duration / msInHour;
-//            duration = duration % msInHour;
-//
-//            long minutes = duration / msInMinute;
-//            duration = duration % msInMinute;
-//
-//            double seconds = (double) duration / msInSecond;
-//            String strMilli = "" + seconds;
-//            long strSecond;
-//            String strMilliSecond;
-//            String str[] = strMilli.split("\\.");
-//            strSecond = Long.parseLong(str[0]);
-//            strMilliSecond = str[1];
-//            if (days != 0 || hours != 0 || minutes != 0 || strSecond != 0) {
-//                strTime = "" + String.format("%02d", days) + "," + String.format("%02d", hours) + ":" + String.format("%02d", minutes) + ":" + String.format("%02d", strSecond) + ":" + strMilliSecond;
-//            }
-//        } catch (Exception e) {
-//            CoreApplication.getInstance().logException(e);
-//            e.printStackTrace();
-//        }
         return endTime - startTime;
     }
 
@@ -227,8 +197,8 @@ public class FirebaseHelper {
      * Used for Log the interval and time stamp when change the tempo setting.
      *
      * @param tempoType             shows the user selected type of tempo 0 for individual,1 batch,2 OnlyAt
-     * @param tempo_interval        which used for 0 and 1 tempo type option.
-     * @param tempo_interval_onlyat used for 2 tempo type option.
+     * @param tempo_interval        which used for 0 and 1 tempo type option(individual,batch)
+     * @param tempo_interval_onlyat used for OnlyAt tempo type.
      */
     public void logTempoIntervalTime(int tempoType, int tempo_interval, String tempo_interval_onlyat) {
         Bundle bundle = new Bundle();

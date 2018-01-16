@@ -37,7 +37,7 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import co.siempo.phone.HelpActivity;
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.HelpActivity_;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
@@ -164,8 +164,11 @@ public class MainFragment extends CoreFragment {
             }
         });
         moveSearchBar(false);
-
-
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+            relTop.setVisibility(View.GONE);
+        } else {
+            relTop.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -358,12 +361,12 @@ public class MainFragment extends CoreFragment {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    if (isUp) {
-                        if(relTop!=null)
+                    if (!BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+                        if (isUp) {
                             relTop.setVisibility(View.GONE);
-                    } else {
-                        if(relTop!=null)
+                        } else {
                             relTop.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
 
@@ -465,6 +468,7 @@ public class MainFragment extends CoreFragment {
                 mPopupWindow.setFocusable(true);
                 mPopupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 mPopupWindow.showAsDropDown(imgOverFlow, 0, (int) -imgOverFlow.getX() - 10);
+//                mPopupWindow.showAtLocation(relTop, Gravity.TOP| Gravity.RIGHT, 0, 10);
                 UIUtils.applyDim(root, 0.6f);
                 UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
                 mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {

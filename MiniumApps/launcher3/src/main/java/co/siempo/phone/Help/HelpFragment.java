@@ -1,26 +1,17 @@
 package co.siempo.phone.Help;
 
-import android.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Patterns;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import org.androidannotations.annotations.AfterTextChange;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
@@ -62,14 +53,13 @@ public class HelpFragment extends CoreFragment {
             }
         });
 
-        String version="";
+        String version = "";
         if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
-            version= "Siempo version : ALPHA-" + BuildConfig.VERSION_NAME;
+            version = "Siempo version : ALPHA-" + BuildConfig.VERSION_NAME;
         } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
             version = "Siempo version : BETA-" + BuildConfig.VERSION_NAME;
         }
-        txtVersionValue.setText(""+version);
-
+        txtVersionValue.setText("" + version);
 
 
     }

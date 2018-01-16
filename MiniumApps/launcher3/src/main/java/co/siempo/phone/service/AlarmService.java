@@ -119,7 +119,7 @@ public class AlarmService extends IntentService {
                             .setContentIntent(contentIntent)
                             .setCustomContentView(contentView)
                             .setCustomBigContentView(contentView)
-                            .setGroup(applicationNameFromPackageName)
+                            .setGroup("Siempo")
                             .setDefaults(Notification.DEFAULT_ALL)
                             .setDefaults(Notification.DEFAULT_LIGHTS)
                             .setContentInfo("Info");

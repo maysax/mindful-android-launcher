@@ -1,13 +1,9 @@
 package co.siempo.phone;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 
 import co.siempo.phone.Help.HelpFragment_;
-import co.siempo.phone.tempo.TempoSettingsFragment_;
 import minium.co.core.ui.CoreActivity;
 
 

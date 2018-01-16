@@ -3,7 +3,7 @@
     <color name="colorPrimary">#FBFBFA</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
     <!--<color name="colorAccent">#331749</color>-->
-    <color name="colorAccent">#4B7EF4</color>
+    <color name="colorAccent">#448AFF</color>
     <color name="menu_circle">#F3F3F3</color>
     <color name="pointer">#f7f8f9</color>
     <color name="pointerHalo">@color/colorAccent</color>
@@ -18,6 +18,8 @@
     <color name="temp_bg_fab_menu">#ccffffff</color>
     <color name="toolbar_bg">#EEEEEE</color>
     <color name="layout_bg">#F3F3F3</color>
+    <color name="black_overlay">#66000000</color>
     <color name="errorColor">#EA3D85</color>
     <color name="blackcolor">#000000</color>
+
 </resources>

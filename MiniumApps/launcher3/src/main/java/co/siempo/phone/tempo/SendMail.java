@@ -1,9 +1,7 @@
 package co.siempo.phone.tempo;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import java.util.Properties;
 
@@ -17,7 +15,7 @@ import javax.mail.internet.MimeMessage;
 
 
 //Class is extending AsyncTask because this class is going to perform a networking operation
-public class SendMail extends AsyncTask<Void,Void,Void> {
+public class SendMail extends AsyncTask<Void, Void, Void> {
 
     //Declaring Variables
     private Context context;
@@ -29,7 +27,7 @@ public class SendMail extends AsyncTask<Void,Void,Void> {
     private String message;
 
     //Class Constructor
-    public SendMail(Context context, String email, String subject, String message){
+    public SendMail(Context context, String email, String subject, String message) {
         //Initializing variables
         this.context = context;
         this.email = email;
