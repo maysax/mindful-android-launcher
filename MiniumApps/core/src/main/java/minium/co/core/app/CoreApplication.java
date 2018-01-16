@@ -17,11 +17,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.UserManager;
@@ -265,7 +263,7 @@ public abstract class CoreApplication extends MultiDexApplication {
         super.onCreate();
         sharedPref = getSharedPreferences("DroidPrefs", 0);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -536,62 +534,62 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void changeProfileToNormalMode() {
-        int currentMode = audioManager.getRingerMode();
-        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-            } else {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            }
-        }
+//        int currentMode = audioManager.getRingerMode();
+//        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+//            } else {
+//                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+//            }
+//        }
 
     }
 
     public void changeProfileToVibrateMode() {
-        int currentMode = audioManager.getRingerMode();
-        if (currentMode != AudioManager.RINGER_MODE_VIBRATE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-            } else {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-            }
-        }
+//        int currentMode = audioManager.getRingerMode();
+//        if (currentMode != AudioManager.RINGER_MODE_VIBRATE) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+//            } else {
+//                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+//            }
+//        }
     }
 
     public void changeProfileToSilentMode() {
-        int currentMode = audioManager.getRingerMode();
-        if (currentMode != AudioManager.RINGER_MODE_SILENT) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-            } else {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-            }
-        }
+//        int currentMode = audioManager.getRingerMode();
+//        if (currentMode != AudioManager.RINGER_MODE_SILENT) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+//            } else {
+//                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+//            }
+//        }
 
     }
 
     public void playAudio() {
-        try {
-            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                if (mMediaPlayer == null) {
-                    mMediaPlayer = new MediaPlayer();
-                    mMediaPlayer.setDataSource(this, alert);
-                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-                        mMediaPlayer.setVolume(100, 100);
-                        mMediaPlayer.setScreenOnWhilePlaying(true);
-                        mMediaPlayer.prepare();
-                        mMediaPlayer.start();
-                        vibrator.vibrate(pattern, 0);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
-        }
+//        try {
+//            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+//                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+//                if (mMediaPlayer == null) {
+//                    mMediaPlayer = new MediaPlayer();
+//                    mMediaPlayer.setDataSource(this, alert);
+//                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//                    if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+//                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+//                        mMediaPlayer.setVolume(100, 100);
+//                        mMediaPlayer.setScreenOnWhilePlaying(true);
+//                        mMediaPlayer.prepare();
+//                        mMediaPlayer.start();
+//                        vibrator.vibrate(pattern, 0);
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            CoreApplication.getInstance().logException(e);
+//            e.printStackTrace();
+//        }
     }
 
     /**
@@ -817,39 +815,39 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void playNotificationSoundVibrate() {
-        try {
-            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                notificationMediaPlayer = new MediaPlayer();
-                notificationMediaPlayer.setDataSource(this, alert);
-                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, max, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                    notificationMediaPlayer.setLooping(false);
-                    notificationMediaPlayer.prepare();
-                    if (!notificationMediaPlayer.isPlaying()) {
-                        notificationMediaPlayer.start();
-                    }
-                    vibrator.vibrate(200);
-                    notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mp) {
-                            if (notificationMediaPlayer != null) {
-                                notificationMediaPlayer.stop();
-                                notificationMediaPlayer.release();
-                            }
-                            notificationMediaPlayer = null;
-                        }
-                    });
-                }
-            }
-
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
-        }
+//        try {
+//            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+//                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                notificationMediaPlayer = new MediaPlayer();
+//                notificationMediaPlayer.setDataSource(this, alert);
+//                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+//                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+//                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, max, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+//                    notificationMediaPlayer.setLooping(false);
+//                    notificationMediaPlayer.prepare();
+//                    if (!notificationMediaPlayer.isPlaying()) {
+//                        notificationMediaPlayer.start();
+//                    }
+//                    vibrator.vibrate(200);
+//                    notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                        @Override
+//                        public void onCompletion(MediaPlayer mp) {
+//                            if (notificationMediaPlayer != null) {
+//                                notificationMediaPlayer.stop();
+//                                notificationMediaPlayer.release();
+//                            }
+//                            notificationMediaPlayer = null;
+//                        }
+//                    });
+//                }
+//            }
+//
+//        } catch (Exception e) {
+//            CoreApplication.getInstance().logException(e);
+//            e.printStackTrace();
+//        }
     }
 
     private class LoadApplications extends AsyncTask<Object, Object, List<ApplicationInfo>> {

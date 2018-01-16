@@ -7,7 +7,6 @@ import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.ResolveInfo;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -62,8 +61,8 @@ public class Launcher3App extends CoreApplication {
     public Dialog dialog;
     @Pref
     Launcher3Prefs_ launcherPrefs;
-    @SystemService
-    AudioManager audioManager;
+    //    @SystemService
+//    AudioManager audioManager;
     @SystemService
     NotificationManager notificationManager;
     private DaoSession daoSession;

@@ -174,6 +174,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 } else {
                     if (!notification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 1, AudioManager.ADJUST_MUTE);
+//                        PackageUtil.MuteAudio(this);
+                        vibrationUtils.cancel();
                         filterByCategory(notification);
                         return;
                     }
@@ -181,26 +184,26 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }
             }
         }
-        if (launcherPrefs.isAppDefaultOrFront().get()) {
-            if (launcherPrefs.getCurrentProfile().get() == 0) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0");
-                if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
-                    CoreApplication.getInstance().changeProfileToSilentMode();
-                } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
-                    Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0 - Vibrate");
-                    CoreApplication.getInstance().changeProfileToSilentMode();
-                    if (!enableNotificationList.contains(notification.getPackageName())) {
-                        vibrationUtils.vibrate(500);
-                    }
-                }
-            } else if (launcherPrefs.getCurrentProfile().get() == 1) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Vibrate 1");
-                CoreApplication.getInstance().changeProfileToVibrateMode();
-            } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Silent 2 ");
+//        if (launcherPrefs.isAppDefaultOrFront().get()) {
+//            if (launcherPrefs.getCurrentProfile().get() == 0) {
+//                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0");
+//                if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
+//                    CoreApplication.getInstance().changeProfileToSilentMode();
+//                } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
+//                    Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0 - Vibrate");
+//                    CoreApplication.getInstance().changeProfileToSilentMode();
+//                    if (!enableNotificationList.contains(notification.getPackageName())) {
+//                        vibrationUtils.vibrate(500);
+//                    }
+//                }
+//            } else if (launcherPrefs.getCurrentProfile().get() == 1) {
+//                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Vibrate 1");
+//                CoreApplication.getInstance().changeProfileToVibrateMode();
+//            } else if (launcherPrefs.getCurrentProfile().get() == 2) {
+//                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Silent 2 ");
                 CoreApplication.getInstance().changeProfileToSilentMode();
-            }
-        }
+//            }
+//        }
     }
 
     private void printLog(StatusBarNotification notification) {

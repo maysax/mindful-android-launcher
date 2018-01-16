@@ -3,7 +3,6 @@ package co.siempo.phone.ui;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
@@ -48,36 +47,28 @@ import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreFragment;
 
-;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 @EFragment(R.layout.fragment_top)
 public class TopFragment extends CoreFragment {
 
-    private String TAG = "TopFragment";
-
     @Pref
     DroidPrefs_ prefs;
-
     @Pref
     Launcher3Prefs_ launcherPrefs;
-
     @ViewById
     ImageView imgTempo;
-
     @ViewById
     ImageView imgNotification;
-
     @ViewById
     ImageView imgBattery;
-
     @ViewById
     ImageView imgSignal;
-
     @ViewById
     ImageView imgWifi;
+    @ViewById
+    ImageView imgAirplane; // SSA-206 Quick Setting for feature reference.
 
 //    @ViewById
 //    TextView txtType; // SSA-206 Quick Setting for feature reference.
@@ -87,19 +78,13 @@ public class TopFragment extends CoreFragment {
 
 //    @ViewById
 //    ImageView imgDND; // SSA-206 Quick Setting for feature reference.
-
-    @ViewById
-    ImageView imgAirplane; // SSA-206 Quick Setting for feature reference.
-
     @SystemService
     WifiManager wifiManager;
-
-    @SystemService
-    AudioManager audioManager;
-
     @SystemService
     ConnectivityManager connectivityManager;
 
+    //    @SystemService
+//    AudioManager audioManager;
     FontAwesomeIcons[] batteryIcons = {
             FontAwesomeIcons.fa_battery_0,
             FontAwesomeIcons.fa_battery_1,
@@ -107,15 +92,14 @@ public class TopFragment extends CoreFragment {
             FontAwesomeIcons.fa_battery_3,
             FontAwesomeIcons.fa_battery_4
     };
-
     TelephonyManager telephonyManager;
     SignalStrengthListener listener;
-    private int currentBatteryLevel;
-
     IDynamicStatus airplaneModeDataReceiver;
     IDynamicStatus batteryDataReceiver;
     IDynamicStatus networkDataReceiver;
     IDynamicStatus wifiDataReceiver;
+    private String TAG = "TopFragment";
+    private int currentBatteryLevel;
 
     public TopFragment() {
     }
@@ -284,16 +268,6 @@ public class TopFragment extends CoreFragment {
         return batteryIcons[2];
     }
 
-    private class SignalStrengthListener extends PhoneStateListener {
-        @Override
-        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-            super.onSignalStrengthsChanged(signalStrength);
-            int strengthVal = signalStrength.getGsmSignalStrength();
-            strengthVal = (2 * strengthVal) - 113;
-            updateSignalText(strengthVal);
-        }
-    }
-
     private void updateSignalText(int strength) {
 //        Tracer.i("Signal strength: " + strength + " Operator: " + telephonyManager.getNetworkOperatorName());
 //        if (isAdded())
@@ -413,5 +387,15 @@ public class TopFragment extends CoreFragment {
         };
 
         return icons[level + 1];
+    }
+
+    private class SignalStrengthListener extends PhoneStateListener {
+        @Override
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            super.onSignalStrengthsChanged(signalStrength);
+            int strengthVal = signalStrength.getGsmSignalStrength();
+            strengthVal = (2 * strengthVal) - 113;
+            updateSignalText(strengthVal);
+        }
     }
 }

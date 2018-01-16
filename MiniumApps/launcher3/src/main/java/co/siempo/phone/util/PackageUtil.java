@@ -12,6 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
@@ -112,6 +113,10 @@ public class PackageUtil {
 
     public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound, Boolean isAllowNotificationOnLockScreen) {
         if (tempoType == 0) try {
+            String groupId = "Siempo";
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
+            audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, streamMaxVolume, AudioManager.ADJUST_SAME);
             NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
             Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
             PendingIntent contentIntent = null;
@@ -136,6 +141,8 @@ public class PackageUtil {
             String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
             contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
             b.setAutoCancel(true)
+                    .setGroup(groupId)
+                    .setGroupSummary(true)
                     .setWhen(System.currentTimeMillis())
                     .setSmallIcon(R.drawable.ic_airplane_air_balloon)
                     .setPriority(Notification.PRIORITY_HIGH)
@@ -144,7 +151,6 @@ public class PackageUtil {
                     .setContentIntent(contentIntent)
                     .setCustomContentView(contentView)
                     .setCustomBigContentView(contentView)
-                    .setGroup(applicationNameFromPackageName)
                     .setDefaults(Notification.DEFAULT_SOUND)
                     .setContentInfo("Info");
             if (tempoSound == 0) {
@@ -155,7 +161,7 @@ public class PackageUtil {
                     if (((myKM != null && myKM.inKeyguardRestrictedInputMode()) && !isAllowNotificationOnLockScreen)) {
                         // hide notification on lock screen so mute the notification sound.
                     } else {
-                        CoreApplication.getInstance().playNotificationSoundVibrate();
+                        // CoreApplication.getInstance().playNotificationSoundVibrate();
                     }
                 }
             }
@@ -171,7 +177,8 @@ public class PackageUtil {
                 }
             }
             if (notificationManager != null) {
-                notificationManager.notify(notification.getId().intValue(), b.build());
+                notificationManager.notify(groupId, notification.getId().intValue(), b.build());
+//                notificationManager.notify(notification.getId().intValue(), b.build());
                 PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
                 PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
                 wl.acquire(3000);
@@ -221,4 +228,37 @@ public class PackageUtil {
         }
     }
 
+    public static void MuteAudio(Context context) {
+        AudioManager mAlramMAnager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
+////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
+////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
+////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
+////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
+//        } else {
+//            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
+////            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, true);
+////            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+////            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, true);
+////            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
+//        }
+    }
+
+    public static void UnMuteAudio(Context context) {
+//        AudioManager mAlramMAnager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_UNMUTE, 0);
+////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_UNMUTE, 0);
+////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
+////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_UNMUTE, 0);
+////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_UNMUTE, 0);
+//        } else {
+//            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
+////            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, false);
+////            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+////            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, false);
+////            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
+//        }
+    }
 }

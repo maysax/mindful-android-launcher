@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -91,8 +90,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @SystemService
     NotificationManager notificationManager;
-    @SystemService
-    AudioManager audioManager;
+//    @SystemService
+//    AudioManager audioManager;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;

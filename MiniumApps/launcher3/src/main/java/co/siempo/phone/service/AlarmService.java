@@ -11,10 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.Vibrator;
@@ -51,7 +48,7 @@ public class AlarmService extends IntentService {
     Context context;
     private SharedPreferences sharedPreferences;
     private SharedPreferences sharedPreferencesLauncher3;
-    private AudioManager audioManager;
+    //    private AudioManager audioManager;
     private Vibrator vibrator;
     private ArrayList<Integer> everyHourList = new ArrayList<>();
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
@@ -72,7 +69,7 @@ public class AlarmService extends IntentService {
         Tracer.d("-1");
         sharedPreferences = getSharedPreferences("DroidPrefs", 0);
         sharedPreferencesLauncher3 = getSharedPreferences("Launcher3Prefs", 0);
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        //audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         everyHourList.addAll(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24));
         everyTwoHourList.addAll(Arrays.asList(1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23));
@@ -165,39 +162,39 @@ public class AlarmService extends IntentService {
     }
 
     public void playNotificationSoundVibrate() {
-        try {
-            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                notificationMediaPlayer = new MediaPlayer();
-                notificationMediaPlayer.setDataSource(this, alert);
-                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, max, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                    notificationMediaPlayer.setLooping(false);
-                    notificationMediaPlayer.prepare();
-                    if (!notificationMediaPlayer.isPlaying()) {
-                        notificationMediaPlayer.start();
-                    }
-                    vibrator.vibrate(500);
-                    notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mp) {
-                            if (notificationMediaPlayer != null) {
-                                notificationMediaPlayer.stop();
-                                notificationMediaPlayer.release();
-                            }
-                            notificationMediaPlayer = null;
-                        }
-                    });
-                }
-            }
-            // }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
-        }
+//        try {
+//            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+//                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+//                notificationMediaPlayer = new MediaPlayer();
+//                notificationMediaPlayer.setDataSource(this, alert);
+//                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
+//                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//                    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+//                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, max, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+//                    notificationMediaPlayer.setLooping(false);
+//                    notificationMediaPlayer.prepare();
+//                    if (!notificationMediaPlayer.isPlaying()) {
+//                        notificationMediaPlayer.start();
+//                    }
+//                    vibrator.vibrate(500);
+//                    notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                        @Override
+//                        public void onCompletion(MediaPlayer mp) {
+//                            if (notificationMediaPlayer != null) {
+//                                notificationMediaPlayer.stop();
+//                                notificationMediaPlayer.release();
+//                            }
+//                            notificationMediaPlayer = null;
+//                        }
+//                    });
+//                }
+//            }
+//            // }
+//        } catch (Exception e) {
+//            CoreApplication.getInstance().logException(e);
+//            e.printStackTrace();
+//        }
     }
 
 

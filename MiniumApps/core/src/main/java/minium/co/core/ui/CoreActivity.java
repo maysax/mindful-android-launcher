@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.PixelFormat;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.nfc.NdefRecord;
 import android.nfc.Tag;
@@ -29,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.SystemService;
@@ -100,7 +100,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setVolumeControlStream(AudioManager.STREAM_ALARM);
+//        this.setVolumeControlStream(AudioManager.STREAM_ALARM);
         //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
@@ -147,6 +147,30 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         });
         mHomeWatcher.startWatch();
 
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_MENU:
+                Toast.makeText(this, "Menu key pressed", Toast.LENGTH_SHORT).show();
+                return true;
+            case KeyEvent.KEYCODE_SEARCH:
+                Toast.makeText(this, "Search key pressed", Toast.LENGTH_SHORT).show();
+                return true;
+            case KeyEvent.KEYCODE_BACK:
+                onBackPressed();
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_UP:
+//                event.startTracking();
+                Toast.makeText(this, "Volumen Up pressed", Toast.LENGTH_SHORT).show();
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                Toast.makeText(this, "Volumen Down pressed", Toast.LENGTH_SHORT).show();
+                return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
