@@ -1,5 +1,6 @@
 package co.siempo.phone.tempo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -211,6 +212,8 @@ public class TempoAppNotificationActivity extends CoreActivity {
         }
 
 
+        checkAppListEmpty(this,appList,messengerList,blockedAppList);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
@@ -218,5 +221,48 @@ public class TempoAppNotificationActivity extends CoreActivity {
 
 
         lst_appList.setAdapter(adapter);
+    }
+
+    public void checkAppListEmpty(Context context,List<DisableAppList> appList,List<DisableAppList> messengerList,List<DisableAppList> blockedAppList){
+        if(messengerList.size()>1) {
+            for (int i=0;i<messengerList.size();i++)
+                if(!TextUtils.isEmpty(messengerList.get(i).errorMessage)) {
+                    messengerList.remove(messengerList.get(i));
+                }
+        }
+
+        if(appList.size()>1) {
+            for (int i=0;i<appList.size();i++)
+                if(!TextUtils.isEmpty(appList.get(i).errorMessage)) {
+                    appList.remove(appList.get(i));
+                }
+        }
+
+        if(blockedAppList.size()>1) {
+            for (int i=0;i<blockedAppList.size();i++)
+                if(!TextUtils.isEmpty(blockedAppList.get(i).errorMessage)) {
+                    blockedAppList.remove(blockedAppList.get(i));
+                }
+        }
+
+        if(messengerList.size() == 0){
+            DisableAppList d= new DisableAppList();
+            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+            messengerList.add(d);
+        }
+
+        if(appList.size() == 0){
+            DisableAppList d= new DisableAppList();
+            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+            appList.add(d);
+        }
+
+
+        if(blockedAppList.size() == 0){
+            DisableAppList d= new DisableAppList();
+            d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
+            blockedAppList.add(d);
+        }
+
     }
 }

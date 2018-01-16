@@ -24,6 +24,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.HelpActivity;
+import co.siempo.phone.HelpActivity_;
 import co.siempo.phone.IntentionEditActivity_;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -182,7 +183,7 @@ public class IntentionFieldFragment extends CoreFragment {
                     public void onClick(View view) {
                         UIUtils.clearDim(root);
                         mPopupWindow.dismiss();
-                        Intent intent = new Intent(getActivity(), HelpActivity.class);
+                        Intent intent = new Intent(getActivity(), HelpActivity_.class);
                         startActivity(intent);
                     }
                 });
