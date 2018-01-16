@@ -174,9 +174,10 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 } else {
                     if (!notification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 1, AudioManager.ADJUST_MUTE);
+                        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 1, 0);
 //                        PackageUtil.MuteAudio(this);
-                        vibrationUtils.cancel();
+//                        vibrationUtils.cancel();
+                        vibrationUtils.vibrate(0);
                         filterByCategory(notification);
                         return;
                     }
@@ -201,7 +202,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
 //                CoreApplication.getInstance().changeProfileToVibrateMode();
 //            } else if (launcherPrefs.getCurrentProfile().get() == 2) {
 //                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Silent 2 ");
-                CoreApplication.getInstance().changeProfileToSilentMode();
+//        CoreApplication.getInstance().changeProfileToSilentMode();
 //            }
 //        }
     }
