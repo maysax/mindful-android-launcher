@@ -132,14 +132,14 @@
             android:text="@string/help"
             android:textColor="@color/colorAccent"
             android:textSize="17sp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/linHelpWindow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ViewFlipper
                 android:id="@+id/viewFlipper"

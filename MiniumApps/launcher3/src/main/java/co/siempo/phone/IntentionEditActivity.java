@@ -134,12 +134,11 @@ public class IntentionEditActivity extends CoreActivity {
                     if (txtSave.getVisibility() == View.VISIBLE) {
                         droidPrefs.defaultIntention().put(strIntentField);
                         UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());
-//                        Intent intent = new Intent(IntentionEditActivity.this, IntentionConfirmationActivity_.class);
-//                        ActivityOptionsCompat options = ActivityOptionsCompat.
-//                                makeSceneTransitionAnimation(IntentionEditActivity.this, pauseContainer, getString(R.string.what_s_your_intention));
-//                        startActivity(intent, options.toBundle());
-//                        finish();
-                        runAnimation();
+                        if (!strIntentField.equalsIgnoreCase("")) {
+                            runAnimation();
+                        } else {
+                            finish();
+                        }
                     }
                     return true;
                 }
@@ -176,12 +175,9 @@ public class IntentionEditActivity extends CoreActivity {
         droidPrefs.defaultIntention().put(strIntentField);
         UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());
         if (!strIntentField.equalsIgnoreCase("")) {
-//            Intent intent = new Intent(IntentionEditActivity.this, IntentionConfirmationActivity_.class);
-//            ActivityOptionsCompat options = ActivityOptionsCompat.
-//                    makeSceneTransitionAnimation(IntentionEditActivity.this, pauseContainer, getString(R.string.what_s_your_intention));
-//            startActivity(intent, options.toBundle());
-//            finish();a
             runAnimation();
+        } else {
+            finish();
         }
     }
 
@@ -206,10 +202,23 @@ public class IntentionEditActivity extends CoreActivity {
                 linEditText.setLayoutParams(layoutParams);
             }
         });
+        int from = getWindow().getNavigationBarColor();
+        int to = ContextCompat.getColor(this, R.color.colorAccent); // new color to animate to
+
+        ValueAnimator colorAnimation = ValueAnimator.ofArgb(from, to);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                getWindow().setNavigationBarColor((Integer) animator.getAnimatedValue());
+            }
+        });
+        colorAnimation.setDuration(500);
+        colorAnimation.start();
+
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                getWindow().setNavigationBarColor(ContextCompat.getColor(IntentionEditActivity.this, R.color.colorAccent));
+//                getWindow().setNavigationBarColor(ContextCompat.getColor(IntentionEditActivity.this, R.color.colorAccent));
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
