@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -131,6 +132,9 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
             Tracer.d("Notes Edit" + bundle.getInt(NOTE_REQUEST_CODE));
             if (bundle.getInt(NOTE_REQUEST_CODE) != NEW_NOTE_REQUEST) {
                 colour = bundle.getString(NOTE_COLOUR);
+                if(TextUtils.isEmpty(colour)){
+                    colour = "#FFFFFF";
+                }
                 fontSize = bundle.getInt(NOTE_FONT_SIZE);
                 hideBody = bundle.getBoolean(NOTE_HIDE_BODY);
 
@@ -148,8 +152,11 @@ public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClic
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
 
+
             // Set background colour to note colour
-            relativeLayoutEdit.setBackgroundColor(Color.parseColor(colour));
+            if(!TextUtils.isEmpty(colour)) {
+                relativeLayoutEdit.setBackgroundColor(Color.parseColor(colour));
+            }
         }
 
         initDialogs(this);
