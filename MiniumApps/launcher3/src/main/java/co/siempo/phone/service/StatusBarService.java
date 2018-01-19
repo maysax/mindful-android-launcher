@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
-import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -48,7 +47,6 @@ public class StatusBarService extends Service {
     Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
-    private AudioManager audioManager;
     private Vibrator vibrator;
 
     public StatusBarService() {
@@ -72,7 +70,6 @@ public class StatusBarService extends Service {
         context = this;
         sharedPreferences = getSharedPreferences("DroidPrefs", 0);
         sharedPreferencesLauncher3 = getSharedPreferences("Launcher3Prefs", 0);
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();

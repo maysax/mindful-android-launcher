@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Build;
 import android.util.Log;
 
@@ -16,8 +15,6 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.service.SiempoDndService_;
 import minium.co.core.log.Tracer;
 
-import static android.media.AudioManager.RINGER_MODE_SILENT;
-
 /**
  * Created by Shahab on 5/16/2017.
  */
@@ -28,19 +25,16 @@ public class DndStartStopReceiver extends BroadcastReceiver {
     @Pref
     Launcher3Prefs_ prefs;
 
-    @SystemService
-    AudioManager audioManager;
-
-    private boolean shouldStart;
-
+    //    @SystemService
+//    AudioManager audioManager;
     @SystemService
     NotificationManager notificationManager;
+    private boolean shouldStart;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         if (prefs.isPauseActive().get()) shouldStart = true;
-        else if (prefs.isTempoActive().get()) shouldStart = true;
-        else shouldStart = false;
+        else shouldStart = prefs.isTempoActive().get();
 
 
         if (shouldStart) {
@@ -62,17 +56,17 @@ public class DndStartStopReceiver extends BroadcastReceiver {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                     && !notificationManager.isNotificationPolicyAccessGranted()) {
             } else {
-                audioManager.setRingerMode(RINGER_MODE_SILENT);
+//                audioManager.setRingerMode(RINGER_MODE_SILENT);
             }
             Log.d("Check Silent ", "" + DndStartStopReceiver.class.getClass().getName());
         } else {
             Tracer.d("Stopping Dnd mode");
             SiempoDndService_.intent(context).start();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-            } else {
-                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
+//            } else {
+//                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+//            }
         }
     }
 }
