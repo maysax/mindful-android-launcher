@@ -275,7 +275,6 @@
 
         <TextView
             android:id="@+id/txtTop"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/linearLayout"
@@ -291,7 +290,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/top"
         android:paddingRight="@dimen/dp_20"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_anchorGravity="bottom|right|end"
         fab:menu_colorNormal="#1565C0"
         fab:menu_colorPressed="#2272CD"
