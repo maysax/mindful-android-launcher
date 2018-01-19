@@ -5,14 +5,11 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,22 +113,6 @@ public class MainFragment extends CoreFragment {
     private MainFragmentMediator mediator;
 
     private boolean isKeyboardOpen;
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            boolean isVisible = false;
-            if (intent != null && intent.hasExtra("IsNotificationVisible")) {
-                isVisible = intent.getBooleanExtra("IsNotificationVisible", false);
-            }
-            if (searchLayout != null && searchLayout.getTxtSearchBox() != null) {
-                searchLayout.getTxtSearchBox().setNotificationVisible(isVisible);
-            }
-            if (isVisible && getActivity() != null) {
-                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
-            }
-        }
-    };
 
     public MainFragment() {
         // Required empty public constructor
@@ -153,7 +134,6 @@ public class MainFragment extends CoreFragment {
     void afterViews() {
         Intent myService = new Intent(getActivity(), StatusBarService.class);
         getActivity().startService(myService);
-//        PackageUtil.enableAlarm(context);
         if (listViewLayout != null) listViewLayout.setVisibility(View.GONE);
         if (afterEffectLayout != null) afterEffectLayout.setVisibility(View.GONE);
         KeyboardVisibilityEvent.setEventListener(getActivity(), new KeyboardVisibilityEventListener() {
@@ -174,8 +154,7 @@ public class MainFragment extends CoreFragment {
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
-                new IntentFilter("IsNotificationVisible"));
+
         if (adapter != null) adapter.getFilter().filter("");
         if (searchLayout != null) {
             searchLayout.askFocus();
@@ -198,12 +177,6 @@ public class MainFragment extends CoreFragment {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        // Unregister since the activity is about to be closed.
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
-        super.onDestroy();
-    }
 
     private synchronized void updateListViewLayout() {
         if (getActivity() != null) {

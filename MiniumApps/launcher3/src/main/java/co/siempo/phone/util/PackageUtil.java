@@ -1,9 +1,9 @@
 package co.siempo.phone.util;
 
 import android.app.AlarmManager;
-import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
@@ -112,80 +112,70 @@ public class PackageUtil {
 
 
     public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound, Boolean isAllowNotificationOnLockScreen) {
-        if (tempoType == 0) try {
-            String groupId = "Siempo";
-            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-            int streamMaxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
-            audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, streamMaxVolume, AudioManager.ADJUST_SAME);
-            NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
-            Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-            PendingIntent contentIntent = null;
-            if (launchIntentForPackage != null) {
-                int requestID = (int) System.currentTimeMillis();
-                contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-                launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            }
-            Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
-            DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
-            String time = sdf.format(notification.get_date());
-            RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
-            contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
-            if (null != bitmap) {
-                contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
-            } else {
-                contentView.setImageViewBitmap(R.id.imgUserImage, null);
-            }
-            contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
-            contentView.setTextViewText(R.id.txtMessage, notification.get_message());
-            contentView.setTextViewText(R.id.txtTime, time);
-            String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-            contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
-            b.setAutoCancel(true)
-                    .setGroup(groupId)
-                    .setGroupSummary(true)
-                    .setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setContentTitle(notification.get_contact_title())
-                    .setContentText(notification.get_message())
-                    .setContentIntent(contentIntent)
-                    .setCustomContentView(contentView)
-                    .setCustomBigContentView(contentView)
-                    .setDefaults(Notification.DEFAULT_SOUND)
-                    .setContentInfo("Info");
-            if (tempoSound == 0) {
-                b.setDefaults(Notification.DEFAULT_LIGHTS);
-            } else {
-                if (!CoreApplication.getInstance().isCallisRunning()) {
-                    KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-                    if (((myKM != null && myKM.inKeyguardRestrictedInputMode()) && !isAllowNotificationOnLockScreen)) {
-                        // hide notification on lock screen so mute the notification sound.
-                    } else {
-                        // CoreApplication.getInstance().playNotificationSoundVibrate();
+        if (tempoType == 0) {
+            try {
+                String groupId = "Siempo";
+                NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
+                Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
+                PendingIntent contentIntent = null;
+                if (launchIntentForPackage != null) {
+                    int requestID = (int) System.currentTimeMillis();
+                    contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
+                    launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                }
+                Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
+                DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
+                String time = sdf.format(notification.get_date());
+                RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+                contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+                if (null != bitmap) {
+                    contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
+                } else {
+                    contentView.setImageViewBitmap(R.id.imgUserImage, null);
+                }
+                contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
+                contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+                contentView.setTextViewText(R.id.txtTime, time);
+                String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
+                contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
+
+                b.setAutoCancel(true)
+                        .setGroup(groupId)
+                        .setGroupSummary(true)
+                        .setWhen(System.currentTimeMillis())
+                        .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setContentTitle(notification.get_contact_title())
+                        .setContentText(notification.get_message())
+                        .setContentIntent(contentIntent)
+                        .setCustomContentView(contentView)
+                        .setCustomBigContentView(contentView)
+                        .setOnlyAlertOnce(true)
+                        .setLights(Color.MAGENTA, 500, 500)
+                        .setDefaults(Notification.DEFAULT_SOUND)
+                        .setContentInfo("Info");
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                if (Build.VERSION.SDK_INT >= 26) {
+                    int importance = NotificationManager.IMPORTANCE_HIGH;
+                    if (applicationNameFromPackageName != null) {
+                        NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
+                        b.setChannelId(applicationNameFromPackageName);
+                        if (notificationManager != null) {
+                            notificationManager.createNotificationChannel(mChannel);
+                            notificationManager.createNotificationChannelGroup(new NotificationChannelGroup(groupId, groupId));
+                        }
                     }
                 }
-            }
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            if (Build.VERSION.SDK_INT >= 26) {
-                int importance = NotificationManager.IMPORTANCE_HIGH;
-                if (applicationNameFromPackageName != null) {
-                    NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
-                    b.setChannelId(applicationNameFromPackageName);
-                    if (notificationManager != null) {
-                        notificationManager.createNotificationChannel(mChannel);
-                    }
+                if (notificationManager != null) {
+                    notificationManager.notify(groupId, notification.getId().intValue(), b.build());
+                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                    PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+                    wl.acquire(3000);
                 }
+            } catch (Exception e) {
+                CoreApplication.getInstance().logException(e);
+                e.printStackTrace();
             }
-            if (notificationManager != null) {
-                notificationManager.notify(groupId, notification.getId().intValue(), b.build());
-//                notificationManager.notify(notification.getId().intValue(), b.build());
-                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-                wl.acquire(3000);
-            }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
         }
     }
 
@@ -226,39 +216,5 @@ public class PackageUtil {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
         }
-    }
-
-    public static void MuteAudio(Context context) {
-        AudioManager mAlramMAnager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_MUTE, 0);
-////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_MUTE, 0);
-////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_MUTE, 0);
-////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_MUTE, 0);
-////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_MUTE, 0);
-//        } else {
-//            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, true);
-////            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, true);
-////            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, true);
-////            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, true);
-////            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, true);
-//        }
-    }
-
-    public static void UnMuteAudio(Context context) {
-//        AudioManager mAlramMAnager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_NOTIFICATION, AudioManager.ADJUST_UNMUTE, 0);
-////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_ALARM, AudioManager.ADJUST_UNMUTE, 0);
-////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_MUSIC, AudioManager.ADJUST_UNMUTE,0);
-////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_UNMUTE, 0);
-////            mAlramMAnager.adjustStreamVolume(AudioManager.STREAM_SYSTEM, AudioManager.ADJUST_UNMUTE, 0);
-//        } else {
-//            mAlramMAnager.setStreamMute(AudioManager.STREAM_NOTIFICATION, false);
-////            mAlramMAnager.setStreamMute(AudioManager.STREAM_ALARM, false);
-////            mAlramMAnager.setStreamMute(AudioManager.STREAM_MUSIC, false);
-////            mAlramMAnager.setStreamMute(AudioManager.STREAM_RING, false);
-////            mAlramMAnager.setStreamMute(AudioManager.STREAM_SYSTEM, false);
-//        }
     }
 }

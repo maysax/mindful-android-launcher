@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,8 +12,10 @@ import android.util.Log;
 import java.util.Date;
 
 import co.siempo.phone.event.NotificationTrayEvent;
+import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
+import minium.co.core.log.Tracer;
 
 /**
  * Created by Shahab on 7/27/2016.
@@ -22,23 +25,34 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
 
     //The receiver will be recreated whenever android feels like it.  We need a static variable to remember data between instantiations
 
+    private static final String TAG = "PhoneCallReceiver";
     private static int lastState = TelephonyManager.CALL_STATE_IDLE;
     private static Date callStartTime;
     private static boolean isIncoming;
     private static String savedNumber = "";  //because the passed incoming is only valid in ringing
-    private static final String TAG = "PhoneCallReceiver";
-    private int currentProfile = -1;
     private static boolean isCallRunning = false;
-    private SharedPreferences sharedPref;
+    int tempoType;
+    Context mContext;
+    private int currentProfile = -1;
+    private SharedPreferences sharedPref, droidPref;
     private boolean isAppDefaultOrFront = false;
+    private AudioManager audioManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         //We listen to two intents.  The new outgoing call only tells us of an outgoing call.  We use it to get the number.
+        mContext = context;
         sharedPref =
                 context.getSharedPreferences("Launcher3Prefs", 0);
-        currentProfile = sharedPref.getInt("getCurrentProfile", 0);
-
+        droidPref =
+                context.getSharedPreferences("DroidPrefs", 0);
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        int sound = 0;
+        if (audioManager != null) {
+            sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+        }
+        Tracer.d("VolumeCheck Call Coming", sound);
+        changeSoundProfile(true);
         if (intent != null) {
             Log.d(TAG, "Phone Call Receiver :: " + intent.getAction() + currentProfile);
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
@@ -46,7 +60,6 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
                     isCallRunning = true;
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
-                    CoreApplication.getInstance().changeProfileToNormalMode();
                 }
             } else {
                 EventBus.getDefault().post(new NotificationTrayEvent(true));
@@ -75,28 +88,9 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
 
     //Derived classes should override these to respond to specific events of interest
     protected void onIncomingCallStarted(Context ctx, String number, Date start) {
-        if (CoreApplication.getInstance().getMediaPlayer() != null) {
-            CoreApplication.getInstance().getMediaPlayer().stop();
-            CoreApplication.getInstance().setMediaPlayerNull();
-            CoreApplication.getInstance().getVibrator().cancel();
-        }
+        changeSoundProfile(false);
     }
 
-    private void changeDeviceMode() {
-        isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
-        if (isAppDefaultOrFront) {
-            int currentModeDeviceMode = sharedPref.getInt("getCurrentProfile", 0);
-            if (currentModeDeviceMode == 0) {
-                CoreApplication.getInstance().changeProfileToSilentMode();
-            } else if (currentModeDeviceMode == 1) {
-                CoreApplication.getInstance().changeProfileToVibrateMode();
-            } else if (currentModeDeviceMode == 2) {
-                CoreApplication.getInstance().changeProfileToSilentMode();
-            }
-            Log.d(TAG, "changeDeviceMode : currentModeDeviceMode - isAppDefaultOrFront" + currentModeDeviceMode + " :: isAppDefaultOrFront " + isAppDefaultOrFront);
-        }
-
-    }
 
     protected void onOutgoingCallStarted(Context ctx, String number, Date start) {
     }
@@ -139,6 +133,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 isAppDefaultOrFront = sharedPref.getBoolean("isAppDefaultOrFront", false);
                 if (isAppDefaultOrFront) {
                     if (currentProfile == 0 && !isCallRunning) {
+                        changeSoundProfile(true);
                         CoreApplication.getInstance().playAudio();
                         isCallRunning = true;
                     }
@@ -146,13 +141,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                 onIncomingCallStarted(context, number, callStartTime);
                 break;
             case TelephonyManager.CALL_STATE_OFFHOOK:
-
-                //Transition of ringing->offhook are pickups of incoming calls.  Nothing done on them
-                if (CoreApplication.getInstance().getMediaPlayer() != null) {
-                    CoreApplication.getInstance().getMediaPlayer().stop();
-                    CoreApplication.getInstance().setMediaPlayerNull();
-                    CoreApplication.getInstance().getVibrator().cancel();
-                }
+                changeSoundProfile(false);
                 if (lastState != TelephonyManager.CALL_STATE_RINGING) {
                     isIncoming = false;
                     callStartTime = new Date();
@@ -172,23 +161,43 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     //Ring but no pickup-  a miss
                     CoreApplication.getInstance().setCallisRunning(false);
                     onMissedCall(context, savedNumber, callStartTime);
-                    changeDeviceMode();
                 } else if (isIncoming) {
                     CoreApplication.getInstance().setCallisRunning(false);
                     onIncomingCallEnded(context, savedNumber, callStartTime, new Date());
                 } else {
                     CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
-                    changeDeviceMode();
                 }
-                if (CoreApplication.getInstance().getMediaPlayer() != null) {
-                    CoreApplication.getInstance().getMediaPlayer().stop();
-                    CoreApplication.getInstance().setMediaPlayerNull();
-                    CoreApplication.getInstance().getVibrator().cancel();
-                }
+                changeSoundProfile(false);
                 isCallRunning = false;
                 break;
         }
         lastState = state;
+    }
+
+    private void changeSoundProfile(boolean isIncreaseSound) {
+        if (PackageUtil.isSiempoLauncher(mContext)) {
+            tempoType = droidPref.getInt("tempoType", 0);
+            if (isIncreaseSound) {
+                Tracer.d("VolumeCheck Call Coming When call comes");
+                if (tempoType == 1 || tempoType == 2) {
+                    int sound = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+                    int soundMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                    Tracer.d("VolumeCheck Call Coming + user sound", sound);
+                    Tracer.d("VolumeCheck Call Coming + max sound", soundMax);
+                    if (sound == 1
+                            && (audioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE || audioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT)) {
+                        audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, soundMax, 0);
+                        Tracer.d("VolumeCheck Call Coming Update Sound");
+                    }
+                }
+            } else {
+                Tracer.d("VolumeCheck Call Coming When call disconnected or miscall");
+                if (tempoType == 1 || tempoType == 2) {
+                    audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                    Tracer.d("VolumeCheck Call Coming Update Sound");
+                }
+            }
+        }
     }
 }

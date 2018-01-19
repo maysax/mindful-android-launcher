@@ -148,19 +148,6 @@ public class TopFragment extends CoreFragment {
 
 
     }
-// SSA-206 Quick Setting for feature reference.
-//    private void bindDnd() {
-//        int currentModeDeviceMode = audioManager.getRingerMode();
-//        if (currentModeDeviceMode == AudioManager.RINGER_MODE_NORMAL) {
-//            imgDND.setVisibility(View.GONE);
-//        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_SILENT) {
-//            imgDND.setVisibility(View.VISIBLE);
-//            imgDND.setImageResource(R.drawable.ic_do_not_disturb_on_black_24dp);
-//        } else if (currentModeDeviceMode == AudioManager.RINGER_MODE_VIBRATE) {
-//            imgDND.setVisibility(View.VISIBLE);
-//            imgDND.setImageResource(R.drawable.ic_vibration_black_24dp);
-//        }
-//    }
 
     @Override
     public void onResume() {
