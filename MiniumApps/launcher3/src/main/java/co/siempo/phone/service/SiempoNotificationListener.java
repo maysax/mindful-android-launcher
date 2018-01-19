@@ -399,7 +399,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.talk")
                 && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
                 && !statusBarNotification.getPackageName().trim().equalsIgnoreCase("android"))) {
-            Log.d("Rajesh", "package ::" + statusBarNotification.getPackageName());
+
+            if(launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING,false) ){
+                Log.d(TAG,"OnGoing Call is Running.. no need to generate notification");
+                return;
+            }
             try {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();

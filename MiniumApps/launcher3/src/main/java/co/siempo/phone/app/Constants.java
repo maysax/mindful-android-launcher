@@ -64,4 +64,5 @@ public class Constants {
     public static String MESSENGER_DISABLE_COUNT="MESSENGER_DISABLE_COUNT";
     public static String APP_DISABLE_COUNT="APP_DISABLE_COUNT";
     public static String HEADER_APPLIST="HEADER_APPLIST";
+    public static String CALL_RUNNING = "CALLRUNNING";
 }
