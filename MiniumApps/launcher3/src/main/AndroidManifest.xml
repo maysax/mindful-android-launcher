@@ -36,7 +36,7 @@
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -193,6 +193,12 @@
         </receiver>
 
         <service android:name=".service.AlarmService" />
+
+        <receiver android:name=".notification.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".IntentionConfirmationActivity_"

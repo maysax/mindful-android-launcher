@@ -11,6 +11,7 @@ import android.util.Log;
 
 import java.util.Date;
 
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
@@ -58,6 +59,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
+                    sharedPref.edit().putBoolean(Constants.CALL_RUNNING,true).commit();
                     isCallRunning = true;
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
                 }
@@ -135,6 +137,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     if (currentProfile == 0 && !isCallRunning) {
                         changeSoundProfile(true);
                         CoreApplication.getInstance().playAudio();
+                        sharedPref.edit().putBoolean(Constants.CALL_RUNNING,true).commit();
                         isCallRunning = true;
                     }
                 }
@@ -168,6 +171,7 @@ public abstract class PhonecallReceiver extends BroadcastReceiver {
                     CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                 }
+                sharedPref.edit().putBoolean(Constants.CALL_RUNNING,false).commit();
                 changeSoundProfile(false);
                 isCallRunning = false;
                 break;
