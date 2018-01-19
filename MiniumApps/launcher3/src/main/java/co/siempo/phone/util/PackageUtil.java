@@ -17,6 +17,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.service.notification.StatusBarNotification;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -39,6 +41,8 @@ import minium.co.core.util.UIUtils;
 public class PackageUtil {
 
     private static final String SYSTEM_PACKAGE_NAME = "android";
+    static int current_group_id;
+    private static int GROUP_ID = 0;
 
     public static boolean isCallPackage(String pkg) {
         return pkg != null && !pkg.equalsIgnoreCase("") && (pkg.contains("telecom") || pkg.contains("dialer"));
@@ -111,39 +115,55 @@ public class PackageUtil {
     }
 
 
-    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound, Boolean isAllowNotificationOnLockScreen) {
+    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, Integer tempoType, Integer tempoSound, Boolean isAllowNotificationOnLockScreen, int icon) {
         if (tempoType == 0) {
             try {
-                String groupId = "Siempo";
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 NotificationCompat.Builder b = new NotificationCompat.Builder(context, "11111");
                 Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
+
                 PendingIntent contentIntent = null;
                 if (launchIntentForPackage != null) {
                     int requestID = (int) System.currentTimeMillis();
                     contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
                     launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 }
+
                 Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
                 DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
                 String time = sdf.format(notification.get_date());
+                String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
+
                 RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
                 contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
-                if (null != bitmap) {
-                    contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
-                } else {
-                    contentView.setImageViewBitmap(R.id.imgUserImage, null);
-                }
+                contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
                 contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
                 contentView.setTextViewText(R.id.txtMessage, notification.get_message());
                 contentView.setTextViewText(R.id.txtTime, time);
-                String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
                 contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
 
+                NotificationCompat.Builder groupBuilder = null;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (getNumberOfNotifications(applicationNameFromPackageName, notificationManager) == 0) {
+                        groupBuilder =
+                                new NotificationCompat.Builder(context, "111")
+                                        .setContentTitle("")
+                                        .setContentText("")
+                                        .setLargeIcon(bitmap)
+                                        .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                                        .setGroupSummary(true)
+                                        .setGroup(applicationNameFromPackageName)
+                                        .setStyle(new NotificationCompat.BigTextStyle().bigText(applicationNameFromPackageName))
+                                        .setContentIntent(contentIntent);
+                    }
+
+                }
+
                 b.setAutoCancel(true)
-                        .setGroup(groupId)
-                        .setGroupSummary(true)
+                        .setGroup(applicationNameFromPackageName)
                         .setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.drawable.ic_airplane_air_balloon)
+                        .setLargeIcon(bitmap)
                         .setPriority(Notification.PRIORITY_HIGH)
                         .setContentTitle(notification.get_contact_title())
                         .setContentText(notification.get_message())
@@ -154,7 +174,7 @@ public class PackageUtil {
                         .setLights(Color.MAGENTA, 500, 500)
                         .setDefaults(Notification.DEFAULT_SOUND)
                         .setContentInfo("Info");
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
                 if (Build.VERSION.SDK_INT >= 26) {
                     int importance = NotificationManager.IMPORTANCE_HIGH;
                     if (applicationNameFromPackageName != null) {
@@ -162,21 +182,45 @@ public class PackageUtil {
                         b.setChannelId(applicationNameFromPackageName);
                         if (notificationManager != null) {
                             notificationManager.createNotificationChannel(mChannel);
-                            notificationManager.createNotificationChannelGroup(new NotificationChannelGroup(groupId, groupId));
+                            notificationManager.createNotificationChannelGroup(new NotificationChannelGroup(applicationNameFromPackageName, applicationNameFromPackageName));
                         }
                     }
                 }
                 if (notificationManager != null) {
-                    notificationManager.notify(groupId, notification.getId().intValue(), b.build());
+                    if (groupBuilder != null) {
+                        notificationManager.notify(icon, groupBuilder.build());
+                    }
+                    notificationManager.notify(applicationNameFromPackageName, notification.getId().intValue(), b.build());
                     PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                    PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-                    wl.acquire(3000);
+                    PowerManager.WakeLock wl = null;
+                    if (pm != null) {
+                        wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+                    }
+                    wl.acquire(2000);
                 }
             } catch (Exception e) {
                 CoreApplication.getInstance().logException(e);
                 e.printStackTrace();
             }
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private static int getNumberOfNotifications(String name, NotificationManager notificationManager) {
+        // [BEGIN get_active_notifications]
+        // Query the currently displayed notifications.
+        final StatusBarNotification[] activeNotifications = notificationManager
+                .getActiveNotifications();
+        // [END get_active_notifications]
+        int count = 0;
+        // Since the notifications might include a summary notification remove it from the count if
+        // it is present.
+        for (StatusBarNotification notification : activeNotifications) {
+            if (name.equals(notification.getPackageName())) {
+                count++;
+            }
+        }
+        return count;
     }
 
 

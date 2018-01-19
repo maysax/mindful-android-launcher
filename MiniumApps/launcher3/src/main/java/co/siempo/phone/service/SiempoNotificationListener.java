@@ -404,7 +404,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     long id = smsDao.insert(notificationSms);
                     notificationSms.setId(id);
                     //Todo check with droid prefs Tempo type is 0 that is deliver individually
-                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 } else {
                     notificationSms.set_date(date);
@@ -416,7 +416,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.set_message(strBigText);
                     }
                     smsDao.update(notificationSms);
-                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 }
             } catch (Exception e) {
@@ -458,7 +458,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.setNotification_id(statusBarNotification.getId());
                         long id = smsDao.insert(notificationSms);
                         notificationSms.setId(id);
-                        PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                        PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                     } else {
                         notificationSms.setPackageName(strPackageName);
@@ -468,7 +468,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             notificationSms.set_message(strText + "\n" + notificationSms.get_message());
                             notificationSms.set_contact_title(strTitle);
                             smsDao.update(notificationSms);
-                            PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                            PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                             EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                         }
                     }
@@ -505,7 +505,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             notificationSms.setNotification_id(statusBarNotification.getId());
                             long id = smsDao.insert(notificationSms);
                             notificationSms.setId(id);
-                            PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                            PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                             EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                         } else {
                             notificationSms.set_date(date);
@@ -517,7 +517,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             if (!tickerText.equalsIgnoreCase("Missed call")
                                     && !strText.equalsIgnoreCase("Missed call")) {
                                 smsDao.update(notificationSms);
-                                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                             }
                         }
@@ -562,7 +562,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
-                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
                 notificationSms.setPackageName(strPackageName);
@@ -575,7 +575,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }
                 notificationSms.set_contact_title(strTitle);
                 smsDao.update(notificationSms);
-                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
             if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
@@ -611,7 +611,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setNotification_id(statusBarNotification.getId());
                     long id = smsDao.insert(notificationSms);
                     notificationSms.setId(id);
-                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                 } else {
                     notificationSms.setPackageName(strPackageName);
                     notificationSms.set_date(date);
@@ -619,7 +619,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_message(strText + "\n" + notificationSms.get_message());
                     notificationSms.set_contact_title(strTitle);
                     smsDao.update(notificationSms);
-                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                 }
             }
         } catch (Exception e) {
@@ -644,7 +644,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             notificationSms.setNotification_id(statusBarNotification.getId());
             long id = smsDao.insert(notificationSms);
             notificationSms.setId(id);
-            PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+            PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
@@ -672,7 +672,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
-                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
                 notificationSms.set_date(date);
@@ -684,7 +684,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_message(strBigText);
                 }
                 smsDao.update(notificationSms);
-                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
 
@@ -770,7 +770,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 notificationSms.setUser_icon(largeIcon);
                                 long id = smsDao.insertOrReplace(notificationSms);
                                 notificationSms.setId(id);
-                                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                             }
                         } else {
                             if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
@@ -778,7 +778,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                 notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
                                 smsDao.updateInTx(notificationSms);
-                                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                                PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                             }
                         }
                     }
@@ -809,7 +809,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     notificationSms.setUser_icon(largeIcon);
                                     long id = smsDao.insertOrReplace(notificationSms);
                                     notificationSms.setId(id);
-                                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                                 }
                             } else {
                                 if (!title.contains("WhatsApp")) {
@@ -823,7 +823,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                         notificationSms.set_message(text + "\n" + notificationSms.get_message());
                                     }
                                     smsDao.updateInTx(notificationSms);
-                                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get());
+                                    PackageUtil.recreateNotification(notificationSms, context, droidPrefs.tempoType().get(), droidPrefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), icon);
                                 }
                             }
                         }
