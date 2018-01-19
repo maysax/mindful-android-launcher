@@ -139,9 +139,40 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
         context = this;
+        Notification notification1 = notification.getNotification();
 
         printLog(notification);
         if (PackageUtil.isSiempoLauncher(context)) {
+
+            try {
+                if (notification1 != null) {
+                    if ((notification1.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) {
+                        Tracer.d("Not forwarding notification, FLAG_ONGOING_EVENT is set. Notification flags: " + notification1.flags);
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            /* do not display messages from "android"
+            * This includes keyboard selection message, usb connection messages, etc
+             * Hope it does not filter out too much, we will see...
+            */
+            try {
+                if (notification != null) {
+                    if (notification.getPackageName().equals("android") ||
+                            notification.equals("com.android.systemui") ||
+                            notification.equals("com.cyanogenmod.eleven")) {
+                        Tracer.d("Not forwarding notification, is a system event");
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
             if (PackageUtil.isSiempoLauncher(this) && (myKM != null && myKM.inKeyguardRestrictedInputMode()) && !launcherPrefs.isAllowNotificationOnLockScreen().get()) {
                 StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
@@ -383,8 +414,8 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
                 && !statusBarNotification.getPackageName().trim().equalsIgnoreCase("android"))) {
 
-            if(launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING,false) ){
-                Log.d(TAG,"OnGoing Call is Running.. no need to generate notification");
+            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
+                Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
                 return;
             }
             try {
