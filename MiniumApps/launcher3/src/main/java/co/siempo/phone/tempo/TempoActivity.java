@@ -2,8 +2,10 @@ package co.siempo.phone.tempo;
 
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.media.AudioManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,6 +23,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
@@ -39,6 +42,7 @@ import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.event.AppInstalledEvent;
+import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 
 @EActivity(R.layout.activity_tempo)
@@ -97,6 +101,10 @@ public class TempoActivity extends CoreActivity {
     TimePickerDialog timePickerDialog;
     boolean isCancelButton = false;
     long startTime = 0;
+    @SystemService
+    AudioManager audioManager;
+    @SystemService
+    NotificationManager notificationManager;
     private String TAG = "TempoActivity";
 
     @Override
@@ -417,6 +425,16 @@ public class TempoActivity extends CoreActivity {
     }
 
     private void enableRadioOnPosition(int pos) {
+        if (pos == 0) {
+            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
+            Tracer.d("VolumeInTempo", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+        } else {
+            Tracer.d("VolumeInTempo Before", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+            Tracer.d("VolumeInTempo after", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+        }
+
         String timeString;
         if (android.text.format.DateFormat.is24HourFormat(this)) {
             timeString = "HH:mm";
@@ -491,6 +509,7 @@ public class TempoActivity extends CoreActivity {
 
 
     private void bindOnlyAt() {
+
 
         String timeString;
         if (android.text.format.DateFormat.is24HourFormat(this)) {

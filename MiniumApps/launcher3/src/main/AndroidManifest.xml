@@ -90,37 +90,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="RUN_AT_BOOT" />
             </intent-filter>
-
-            <!--
-                <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-            </intent-filter>
-            <meta-data android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
-            -->
-
         </activity>
 
-        <receiver android:name=".battery.BatteryChangeReceiver_">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-            </intent-filter>
-        </receiver>
-
-        <activity
-            android:name=".pause.PauseActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".tempo.TempoActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".mm.MMTimePickerActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".mm.MindfulMorningActivity_"
             android:screenOrientation="portrait" />
         <activity
             android:name=".launcher.FakeLauncherActivity"
@@ -142,15 +115,6 @@
             </intent-filter>
         </service>
 
-        <receiver
-            android:name=".receiver.DndStartStopReceiver_"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="siempo.intent.action.DND_START_STOP" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name=".service.SiempoDndService_" />
 
         <receiver
             android:name=".call.CallReceiver_"
@@ -170,11 +134,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".mm.AlarmReciever_" />
-        <receiver
-            android:name=".tempo.TempoReceiver_"
-            android:enabled="true" />
-
         <activity
             android:name=".debug.DebugActivity"
             android:exported="true">

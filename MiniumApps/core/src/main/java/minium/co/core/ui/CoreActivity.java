@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -100,7 +99,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setVolumeControlStream(AudioManager.STREAM_ALARM);
+        this.setVolumeControlStream(AudioManager.STREAM_SYSTEM);
         //onCreateAnimation(savedInstanceState);
         windowManager = (WindowManager) getBaseContext().getSystemService(Context.WINDOW_SERVICE);
 
@@ -108,7 +107,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
         userPresentBroadcastReceiver = new UserPresentBroadcastReceiver();
         registerReceiver(userPresentBroadcastReceiver, intentFilter);
 
@@ -120,9 +118,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
             @Override
             public void onHomePressed() {
                 UIUtils.hideSoftKeyboard(CoreActivity.this, getWindow().getDecorView().getWindowToken());
-//                if (CoreApplication.getInstance().isEditNotOpen()) {
-//                    EventBus.getDefault().post(new HomePressEvent(true));
-//                } else {
                 EventBus.getDefault().post(new HomePressEvent(true));
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -148,6 +143,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         mHomeWatcher.startWatch();
 
     }
+
 
     @Override
     protected void onResume() {
@@ -407,34 +403,6 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
                     }
                 } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                     if (mTestView != null) mTestView.setVisibility(View.INVISIBLE);
-                    if (CoreApplication.getInstance().getMediaPlayer() != null) {
-                        CoreApplication.getInstance().getMediaPlayer().stop();
-                        CoreApplication.getInstance().getMediaPlayer().reset();
-                        CoreApplication.getInstance().setMediaPlayerNull();
-                        CoreApplication.getInstance().getVibrator().cancel();
-                        CoreApplication.getInstance().declinePhone();
-                    }
-                    if (CoreApplication.getInstance().isCallisRunning()) {
-                        CoreApplication.getInstance().declinePhone();
-                    }
-                } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                    KeyguardManager myKM = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-                    boolean locked = myKM.inKeyguardRestrictedInputMode();
-                    boolean isHideNotificationOnLockScreen = launcherPrefs.getBoolean("isHidenotificationOnLockScreen", true);
-                    if (locked && isSiempoLauncher(getApplicationContext()) && isHideNotificationOnLockScreen) {
-//                        int icon = minium.co.core.R.drawable.ic_tooltip;
-//                        NotificationManager mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-//                        int notifyID = 96;
-//                        NotificationCompat.Builder mNotifyBuilder = new NotificationCompat.Builder(getApplicationContext())
-//                                .setContentTitle("SiempoApp")
-//                                .setSortKey("SiempoLockScreeen")
-//                                .setDefaults(android.app.Notification.DEFAULT_ALL)
-//                                .setAutoCancel(true)
-//                                .setSmallIcon(icon);
-//                        android.app.Notification notification = mNotifyBuilder.build();
-//                        mNotificationManager.notify(notifyID, notification);
-
-                    }
                 }
             }
         }

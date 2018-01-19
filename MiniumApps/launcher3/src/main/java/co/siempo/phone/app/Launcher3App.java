@@ -548,6 +548,7 @@ public class Launcher3App extends CoreApplication {
                 if (PackageUtil.isSiempoLauncher(getApplicationContext())) {
                     isSiempoLauncher = true;
                     launcherPrefs.isAppDefaultOrFront().put(true);
+
                 } else {
                     launcherPrefs.isAppDefaultOrFront().put(false);
                     changeProfileToNormalMode();

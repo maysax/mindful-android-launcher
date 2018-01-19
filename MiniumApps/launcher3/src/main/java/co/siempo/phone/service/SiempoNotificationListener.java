@@ -139,10 +139,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
         context = this;
+
         printLog(notification);
         if (PackageUtil.isSiempoLauncher(context)) {
-            Log.d(TAG, "Suppress Notification Section" + notification.getPackageName());
-
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
             if (PackageUtil.isSiempoLauncher(this) && (myKM != null && myKM.inKeyguardRestrictedInputMode()) && !launcherPrefs.isAllowNotificationOnLockScreen().get()) {
                 StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
@@ -167,38 +166,22 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 blockedAppList = new Gson().fromJson(block_AppList, type);
             }
             if (!droidPrefs.isTempoNotificationControlsDisabled().get()) {
-
                 if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
                     SiempoNotificationListener.this.cancelNotification(notification.getKey());
                     return;
                 } else {
                     if (!notification.getPackageName().equalsIgnoreCase(getPackageName())) {
                         SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                        if (droidPrefs.tempoType().get() == 1 && droidPrefs.tempoType().get() == 2) {
+                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                            if (sound != 1) {
+                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                            }
+                        }
                         filterByCategory(notification);
                         return;
                     }
-
                 }
-            }
-        }
-        if (launcherPrefs.isAppDefaultOrFront().get()) {
-            if (launcherPrefs.getCurrentProfile().get() == 0) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0");
-                if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
-                    CoreApplication.getInstance().changeProfileToSilentMode();
-                } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
-                    Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0 - Vibrate");
-                    CoreApplication.getInstance().changeProfileToSilentMode();
-                    if (!enableNotificationList.contains(notification.getPackageName())) {
-                        vibrationUtils.vibrate(500);
-                    }
-                }
-            } else if (launcherPrefs.getCurrentProfile().get() == 1) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Vibrate 1");
-                CoreApplication.getInstance().changeProfileToVibrateMode();
-            } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Silent 2 ");
-                CoreApplication.getInstance().changeProfileToSilentMode();
             }
         }
     }

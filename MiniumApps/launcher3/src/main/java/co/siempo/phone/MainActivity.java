@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -91,8 +90,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @SystemService
     NotificationManager notificationManager;
-    @SystemService
-    AudioManager audioManager;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
@@ -324,14 +321,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onUserLeaveHint();
     }
 
-    /**
-     * Below function is use for further development when pause feature will enable.
-     *
-     * @KeyDown(KeyEvent.KEYCODE_VOLUME_UP) void volumeUpPressed() {
-     * Tracer.i("Volume up pressed in MainActivity");
-     * PauseActivity_.intent(this).start();
-     * }
-     */
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {

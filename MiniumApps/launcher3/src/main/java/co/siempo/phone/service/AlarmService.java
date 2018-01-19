@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -13,8 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.Vibrator;
@@ -84,6 +83,8 @@ public class AlarmService extends IntentService {
 
     public void recreateNotification(List<TableNotificationSms> notificationList, Context context, boolean isAllowNotificationOnLockScreen) {
         try {
+            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
             for (int i = 0; i < notificationList.size(); i++) {
                 TableNotificationSms notification = notificationList.get(i);
                 if (!notification.getPackageName().equalsIgnoreCase("android")) {
@@ -119,7 +120,9 @@ public class AlarmService extends IntentService {
                             .setContentIntent(contentIntent)
                             .setCustomContentView(contentView)
                             .setCustomBigContentView(contentView)
-                            .setGroup("Siempo")
+                            .setGroup(applicationNameFromPackageName)
+                            .setOnlyAlertOnce(true)
+                            .setGroupAlertBehavior(Notification.GROUP_ALERT_SUMMARY)
                             .setDefaults(Notification.DEFAULT_ALL)
                             .setDefaults(Notification.DEFAULT_LIGHTS)
                             .setContentInfo("Info");
@@ -134,6 +137,7 @@ public class AlarmService extends IntentService {
                             b.setChannelId(applicationNameFromPackageName);
                             if (notificationManager != null) {
                                 notificationManager.createNotificationChannel(mChannel);
+                                notificationManager.createNotificationChannelGroup(new NotificationChannelGroup(applicationNameFromPackageName, applicationNameFromPackageName));
                             }
                         }
                     }
@@ -150,7 +154,7 @@ public class AlarmService extends IntentService {
                         // hide notification on lock screen so mute the notification sound.
                     } else {
                         Tracer.d("Play Sound Vibrate");
-                        playNotificationSoundVibrate();
+//                        playNotificationSoundVibrate();
                     }
                 }
                 PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -164,41 +168,6 @@ public class AlarmService extends IntentService {
         }
     }
 
-    public void playNotificationSoundVibrate() {
-        try {
-            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                notificationMediaPlayer = new MediaPlayer();
-                notificationMediaPlayer.setDataSource(this, alert);
-                final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-                    notificationMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                    int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, max, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                    notificationMediaPlayer.setLooping(false);
-                    notificationMediaPlayer.prepare();
-                    if (!notificationMediaPlayer.isPlaying()) {
-                        notificationMediaPlayer.start();
-                    }
-                    vibrator.vibrate(500);
-                    notificationMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                        @Override
-                        public void onCompletion(MediaPlayer mp) {
-                            if (notificationMediaPlayer != null) {
-                                notificationMediaPlayer.stop();
-                                notificationMediaPlayer.release();
-                            }
-                            notificationMediaPlayer = null;
-                        }
-                    });
-                }
-            }
-            // }
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            e.printStackTrace();
-        }
-    }
 
 
     public void run() {
