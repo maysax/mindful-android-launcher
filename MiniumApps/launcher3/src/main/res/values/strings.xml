@@ -329,7 +329,7 @@
     <string name="privacy_policyy">View Privacy Policy</string>
     <string name="feedback">Send Feedback</string>
     <string name="version">Version</string>
-    <string name="feedback_email">hardik.kamothi@volansystech.com</string>
+    <string name="feedback_email">feedback@siempo.co</string>
     <string name="error_email">Please enter a valid email address</string>
     <string name="feedback_title">Message received!</string>
     <string name="feedback_success_message">Thank you for your feedback! We read every message, and we try to respond to them as soon as we can. We\'re a small team, so please be patient with us.</string>
@@ -347,7 +347,7 @@
     <string name="msg_4hour">Batches will arrive every 4 hour.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
     <string name="message1">For the next day, week, or month, what do you want to remind yourself about whenever you unlock your phone?</string>
-    <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be "complete", but your top priority may change.</string>
+    <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be \"complete\", but your top priority may change.</string>
     <string name="message3">Keep it short and positive. Try using command verbs. Whenever you unlock, try focusing on your intention for awhile, and see what thoughts come to mind!</string>
     <string name="message4"><b>Sample intentions:</b>\nKeep my phone locked\nFocus on family\nEat healthy foods</string>
     <string name="save">SAVE</string>
@@ -362,4 +362,6 @@
     <string name="disable_intentions">Disable intentions</string>
     <string name="when_intentions_are_disabled_your_home_screen_will_be_blank">When intentions are disabled, your home screen will be blank.</string>
     <string name="homescreen">Home Screen</string>
+    <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
+    <string name="search_hint">Find app, send message, or save note</string>
 </resources>

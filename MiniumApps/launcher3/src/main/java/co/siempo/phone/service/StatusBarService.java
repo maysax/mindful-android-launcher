@@ -19,7 +19,14 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.EventBus;
@@ -176,6 +183,8 @@ public class StatusBarService extends Service {
                             Log.d("Testing with device.", "Removed" + uninstallPackageName);
                             if (!TextUtils.isEmpty(uninstallPackageName)) {
                                 new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                                removeAppFromBlockedList(uninstallPackageName);
+
                             }
                         }
                     }
@@ -185,6 +194,29 @@ public class StatusBarService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
                 CoreApplication.getInstance().logException(e);
+            }
+
+        }
+    }
+
+    public void removeAppFromBlockedList(String uninstallPackageName){
+        ArrayList<String> blockedApps = new ArrayList<>();
+        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
+        if (!TextUtils.isEmpty(block_AppList)) {
+            try{
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                blockedApps = new Gson().fromJson(block_AppList, type);
+                for (String blockedAppName:blockedApps) {
+                    if(blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())){
+                        blockedApps.remove(blockedAppName);
+                    }
+                }
+                String blockedList = new Gson().toJson(blockedApps);
+                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+            }
+            catch (Exception e){
+                e.printStackTrace();
             }
 
         }

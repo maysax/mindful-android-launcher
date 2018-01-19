@@ -18,4 +18,6 @@ public class DisableAppList {
      * -False: app notifications are blocked
      */
     public boolean ischecked;
+
+    public String errorMessage="";
 }

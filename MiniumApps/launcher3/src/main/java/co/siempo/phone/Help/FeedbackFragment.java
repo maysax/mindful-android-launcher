@@ -74,7 +74,7 @@ public class FeedbackFragment extends CoreFragment {
     @ViewById
     EditText txtMessage;
 
-    String selectedItemText = "";
+    String selectedItemText="";
 
 
     @SystemService
@@ -86,7 +86,6 @@ public class FeedbackFragment extends CoreFragment {
 
     public final static boolean isValidMessage(String msg) {
         boolean statusMessage = false;
-        Log.d("hardikkamothi", "New Line ::: " + msg.contains("\n"));
         return !TextUtils.isEmpty(msg) && msg.length() >= 8 && (msg.contains(" ") || msg.contains("\n"));
     }
 
@@ -134,7 +133,7 @@ public class FeedbackFragment extends CoreFragment {
 
 
                             //Creating SendMail object
-                            SendMail sm = new SendMail(getActivity(), getActivity().getResources().getString(R.string.feedback_email), "Thanks for your feedback!  Siempo support ID: " + currentTimeMills, body);
+                            SendMail sm = new SendMail(getActivity(), getActivity().getResources().getString(R.string.feedback_email), "Thanks for your feedback!  Siempo support ID: " + telephonyManager.getDeviceId(), body);
 
                             //Executing sendmail to send email
                             sm.execute();
