@@ -428,11 +428,11 @@ public class TempoActivity extends CoreActivity {
         if (pos == 0) {
             int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
-            Tracer.d("Rajesh", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+            Tracer.d("VolumeInTempo", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
         } else {
-            Tracer.d("Rajesh Before", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+            Tracer.d("VolumeInTempo Before", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-            Tracer.d("Rajesh after", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
+            Tracer.d("VolumeInTempo after", audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM));
         }
 
         String timeString;
