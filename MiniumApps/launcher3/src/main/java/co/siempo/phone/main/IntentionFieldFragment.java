@@ -23,7 +23,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import co.siempo.phone.HelpActivity;
 import co.siempo.phone.HelpActivity_;
 import co.siempo.phone.IntentionEditActivity_;
 import co.siempo.phone.R;
@@ -76,6 +75,11 @@ public class IntentionFieldFragment extends CoreFragment {
 
     @AfterViews
     void afterViews() {
+        try {
+            UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Intent myService = new Intent(getActivity(), StatusBarService.class);
         getActivity().startService(myService);
         moveSearchBar(false);

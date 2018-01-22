@@ -262,6 +262,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         pager.setAdapter(sliderAdapter);
         if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
             pager.setCurrentItem(1);
+            currentItem = 1;
         }
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

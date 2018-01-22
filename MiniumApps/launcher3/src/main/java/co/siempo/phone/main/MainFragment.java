@@ -335,10 +335,12 @@ public class MainFragment extends CoreFragment {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     if (!BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
-                        if (isUp) {
-                            relTop.setVisibility(View.GONE);
-                        } else {
-                            relTop.setVisibility(View.VISIBLE);
+                        if (getActivity() != null) {
+                            if (isUp) {
+                                relTop.setVisibility(View.GONE);
+                            } else {
+                                relTop.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }

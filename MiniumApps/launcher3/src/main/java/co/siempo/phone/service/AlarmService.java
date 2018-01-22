@@ -1,16 +1,10 @@
 package co.siempo.phone.service;
 
 import android.app.IntentService;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -19,27 +13,18 @@ import android.os.Vibrator;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
-import android.widget.RemoteViews;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
-import co.siempo.phone.R;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.util.PackageUtil;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
-
-import static co.siempo.phone.service.StatusBarService.getTimeFormat;
 
 /**
  * Created by rajeshjadi on 8/1/18.
@@ -84,85 +69,13 @@ public class AlarmService extends IntentService {
 
     public void recreateNotification(List<TableNotificationSms> notificationList, Context context, boolean isAllowNotificationOnLockScreen) {
         try {
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
             for (int i = 0; i < notificationList.size(); i++) {
                 TableNotificationSms notification = notificationList.get(i);
-                if (!notification.getPackageName().equalsIgnoreCase("android")) {
-                    NotificationCompat.Builder b = new NotificationCompat.Builder(context, "" + notification.getId());
-                    Intent launchIntentForPackage = context.getPackageManager().getLaunchIntentForPackage(notification.getPackageName());
-                    PendingIntent contentIntent = null;
-                    if (launchIntentForPackage != null) {
-                        int requestID = (int) System.currentTimeMillis();
-                        contentIntent = PendingIntent.getActivity(context, requestID, launchIntentForPackage, PendingIntent.FLAG_UPDATE_CURRENT);
-                        launchIntentForPackage.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    }
-                    Bitmap bitmap = notification.getUser_icon() != null ? UIUtils.convertBytetoBitmap(notification.getUser_icon()) : null;
-                    DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
-                    String time = sdf.format(notification.get_date());
-                    String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-
-                    RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
-                    contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
-                    contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
-                    contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
-                    contentView.setTextViewText(R.id.txtMessage, notification.get_message());
-                    contentView.setTextViewText(R.id.txtTime, time);
-                    contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
-
-                    NotificationCompat.Builder groupBuilder = null;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (getNumberOfNotifications(applicationNameFromPackageName, notificationManager) == 0) {
-                            groupBuilder =
-                                    new NotificationCompat.Builder(context, "111")
-                                            .setContentTitle("")
-                                            .setContentText("")
-                                            .setLargeIcon(bitmap)
-                                            .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                                            .setGroupSummary(true)
-                                            .setGroup(applicationNameFromPackageName)
-                                            .setStyle(new NotificationCompat.BigTextStyle().bigText(applicationNameFromPackageName))
-                                            .setContentIntent(contentIntent);
-                        }
-
-                    }
-
-                    b.setAutoCancel(true)
-                            .setGroup(applicationNameFromPackageName)
-                            .setWhen(System.currentTimeMillis())
-                            .setSmallIcon(R.drawable.ic_airplane_air_balloon)
-                            .setLargeIcon(bitmap)
-                            .setPriority(Notification.PRIORITY_HIGH)
-                            .setContentTitle(notification.get_contact_title())
-                            .setContentText(notification.get_message())
-                            .setContentIntent(contentIntent)
-                            .setCustomContentView(contentView)
-                            .setCustomBigContentView(contentView)
-                            .setOnlyAlertOnce(true)
-                            .setLights(Color.MAGENTA, 500, 500)
-                            .setDefaults(Notification.DEFAULT_SOUND)
-                            .setContentInfo("Info");
-
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        int importance = NotificationManager.IMPORTANCE_HIGH;
-                        if (applicationNameFromPackageName != null) {
-                            NotificationChannel mChannel = new NotificationChannel(applicationNameFromPackageName, applicationNameFromPackageName, importance);
-                            mChannel.enableLights(true);
-                            mChannel.setLightColor(Color.RED);
-                            b.setChannelId(applicationNameFromPackageName);
-                            if (notificationManager != null) {
-                                notificationManager.createNotificationChannel(mChannel);
-                                notificationManager.createNotificationChannelGroup(new NotificationChannelGroup(applicationNameFromPackageName, applicationNameFromPackageName));
-                            }
-                        }
-                    }
-                    if (notificationManager != null) {
-                        notificationManager.notify(notificationList.get(i).getApp_icon(), groupBuilder.build());
-                        notificationManager.notify(applicationNameFromPackageName, notification.getId().intValue(), b.build());
-                    }
+                if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
+                    PackageUtil.recreateNotification(notification, context, notification.getApp_icon(), true);
                 }
-
             }
             if (notificationList.size() >= 1) {
                 PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
