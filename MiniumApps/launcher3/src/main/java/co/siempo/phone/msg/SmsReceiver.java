@@ -163,7 +163,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 // notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
-                PackageUtil.recreateNotification(notificationSms, context, prefs.tempoType().get(), prefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), 1234);
+                PackageUtil.recreateNotification(notificationSms, context, 1234, prefs.tempoType().get() == 0);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
                 notificationSms.set_date(date);
@@ -171,7 +171,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 notificationSms.set_contact_title(address);
                 notificationSms.set_message(notificationSms.get_message() + "\n" + body);
                 smsDao.update(notificationSms);
-                PackageUtil.recreateNotification(notificationSms, context, prefs.tempoType().get(), prefs.tempoSoundProfile().get(), launcherPrefs.isAllowNotificationOnLockScreen().get(), 1234);
+                PackageUtil.recreateNotification(notificationSms, context, 1234, prefs.tempoType().get() == 0);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
         } catch (Exception e) {
