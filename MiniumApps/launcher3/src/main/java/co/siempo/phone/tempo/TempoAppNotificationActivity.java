@@ -88,6 +88,8 @@ public class TempoAppNotificationActivity extends CoreActivity {
         messengerList.clear();
         messengerAppList.clear();
         appList.clear();
+        blockedAppList.clear();
+        blockedApps.clear();
         socialAppList.clear();
         headerList.clear();
 
