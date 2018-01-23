@@ -334,8 +334,8 @@ public class MainFragment extends CoreFragment {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    if (!BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
-                        if (getActivity() != null) {
+                    if (getActivity() != null) {
+                        if (!BuildConfig.FLAVOR.equalsIgnoreCase(getActivity().getString(R.string.alpha))) {
                             if (isUp) {
                                 relTop.setVisibility(View.GONE);
                             } else {
