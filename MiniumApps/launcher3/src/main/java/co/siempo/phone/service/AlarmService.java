@@ -71,19 +71,22 @@ public class AlarmService extends IntentService {
         try {
             int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
-            for (int i = 0; i < notificationList.size(); i++) {
-                TableNotificationSms notification = notificationList.get(i);
-                if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
-                    PackageUtil.recreateNotification(notification, context, notification.getApp_icon(), true);
+            boolean isTempoNotificationControlsDisabled = sharedPreferences.getBoolean("isTempoNotificationControlsDisabled", false);
+            if (!isTempoNotificationControlsDisabled) {
+                for (int i = 0; i < notificationList.size(); i++) {
+                    TableNotificationSms notification = notificationList.get(i);
+                    if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
+                        PackageUtil.recreateNotification(notification, context, notification.getApp_icon(), true);
+                    }
                 }
-            }
-            if (notificationList.size() >= 1) {
-                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                PowerManager.WakeLock wl = pm != null ? pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG") : null;
-                if (wl != null) {
-                    wl.acquire(2000);
+                if (notificationList.size() >= 1) {
+                    PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                    PowerManager.WakeLock wl = pm != null ? pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG") : null;
+                    if (wl != null) {
+                        wl.acquire(2000);
+                    }
+                    DBUtility.getNotificationDao().deleteAll();
                 }
-                DBUtility.getNotificationDao().deleteAll();
             }
         } catch (Exception e) {
             e.printStackTrace();

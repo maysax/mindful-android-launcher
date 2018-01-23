@@ -28,7 +28,6 @@ import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
-import co.siempo.phone.event.TopBarUpdateEvent;
 import co.siempo.phone.notification.NotificationUtility;
 import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
@@ -84,8 +83,8 @@ public class SmsReceiver extends BroadcastReceiver {
                 mDate = new Date(sms.getTimestampMillis());
 
                 if (launcherPrefs.isAppDefaultOrFront().get()) {
-                    SharedPreferences prefs = context.getSharedPreferences("Launcher3Prefs", 0);
-                    String disable_AppList = prefs.getString(Constants.DISABLE_APPLIST, "");
+                    SharedPreferences prefs1 = context.getSharedPreferences("Launcher3Prefs", 0);
+                    String disable_AppList = prefs1.getString(Constants.DISABLE_APPLIST, "");
                     if (!TextUtils.isEmpty(disable_AppList)) {
                         Type type = new TypeToken<ArrayList<String>>() {
                         }.getType();
@@ -111,38 +110,17 @@ public class SmsReceiver extends BroadcastReceiver {
                         }
 
                         if (disableNotificationApps.contains(messagingAppPackage) && isShowNotification) {
-                            saveMessage(mAddress, mBody, mDate, context);
+                            if (!prefs.isTempoNotificationControlsDisabled().get()) {
+                                saveMessage(mAddress, mBody, mDate, context);
+                            }
                         }
                     }
-                }
-
-
-                //new ReceivedSMSItem(mAddress, mDate, mBody, 0).save();
-                EventBus.getDefault().post(new TopBarUpdateEvent());
-
-                if (launcherPrefs.isPauseActive().get() || launcherPrefs.isTempoActive().get()) {
-                    abortBroadcast();
                 }
             }
         }
     }
 
     private void saveMessage(String address, String body, Date date, Context context) {
-//        DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
-//        smsDao = daoSession.getTableNotificationSmsDao();
-//
-//        TableNotificationSms sms = new TableNotificationSms();
-//        sms.set_contact_title(address);
-//        sms.set_message(body);
-//        sms.setPackageName("com.google.android.apps.messaging");
-//        sms.setNotification_date(System.currentTimeMillis());
-//        sms.set_date(date);
-//        sms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);
-//        long id = smsDao.insert(sms);
-//        sms.setId(id);
-//        EventBus.getDefault().post(new NewNotificationEvent(sms));
-
-
         try {
             DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
             TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
@@ -158,9 +136,6 @@ public class SmsReceiver extends BroadcastReceiver {
                 notificationSms.setNotification_date(System.currentTimeMillis());
                 notificationSms.setNotification_type(NotificationUtility.NOTIFICATION_TYPE_SMS);
                 notificationSms.setPackageName(Telephony.Sms.getDefaultSmsPackage(context));
-//                notificationSms.setApp_icon(icon);
-//                notificationSms.setUser_icon(largeIcon);
-                // notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
                 PackageUtil.recreateNotification(notificationSms, context, 1234, prefs.tempoType().get() == 0);

@@ -364,4 +364,5 @@
     <string name="homescreen">Home Screen</string>
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
+    <string name="msg_tempo_disable">All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.</string>
 </resources>
