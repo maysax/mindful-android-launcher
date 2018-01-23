@@ -23,6 +23,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.db.DBUtility;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
@@ -189,8 +190,8 @@ public class TempoNotificationFragment extends CoreFragment {
 //                                                                          txtAllowPeakingText.setVisibility(View.GONE);
                                                                           isDisableChecked = true;
                                                                           droidPrefs.isTempoNotificationControlsDisabled().put(true);
-                                                                          txtDisableNotificationControlsTxt.setText("All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.");
-
+                                                                          txtDisableNotificationControlsTxt.setText(R.string.msg_tempo_disable);
+                                                                          DBUtility.getNotificationDao().deleteAll();
                                                                       }
                                                                   });
                                                       }
