@@ -254,6 +254,8 @@ public class IntentionEditActivity extends CoreActivity {
             viewFlipper.setInAnimation(this, R.anim.in_from_left);
             viewFlipper.setOutAnimation(this, R.anim.out_to_right);
             viewFlipper.showPrevious();
+            txtOne.setText("PREVIOUS");
+            txtTwo.setText("NEXT");
         }
 
     }

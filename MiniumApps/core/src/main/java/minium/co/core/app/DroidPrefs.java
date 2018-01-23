@@ -184,7 +184,7 @@ public interface DroidPrefs {
     @DefaultBoolean(false)
     boolean isAlphaSettingEnable();
 
-    @DefaultBoolean(false)
+    @DefaultBoolean(true)
     boolean isFireBaseAnalyticsEnable();
 
     @DefaultBoolean(false)
