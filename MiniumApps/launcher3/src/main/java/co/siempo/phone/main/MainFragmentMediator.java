@@ -1,7 +1,6 @@
 package co.siempo.phone.main;
 
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.List;
 
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.contact.ContactsLoader;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SendSmsEvent;
@@ -115,7 +113,7 @@ class MainFragmentMediator {
 
     void listItemClicked(TokenRouter router, int position, String data) {
         MainListItemType type;
-        type = getAdapter().getItem(position).getItemType() != null ? getAdapter().getItem(position).getItemType() : null;
+        type = getAdapter().getItem(position).getItemType();
         if (type != null)
             switch (type) {
                 case CONTACT:
@@ -131,9 +129,9 @@ class MainFragmentMediator {
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
                         if (fragment != null) {
+                            MainActivity.isTextLenghGreater = "";
                             UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
                             new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
-                            MainActivity.isTextLenghGreater = "";
                             FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getApplicationInfo().packageName, "");
                         }
                     }

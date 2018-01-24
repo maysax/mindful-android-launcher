@@ -155,8 +155,10 @@ public class MainFragment extends CoreFragment {
     public void onResume() {
         super.onResume();
 
-        if (adapter != null) adapter.getFilter().filter("");
-        if (searchLayout != null) {
+        if (adapter != null) {
+            adapter.getFilter().filter("");
+        }
+        if (searchLayout != null && MainActivity.currentItem == 0) {
             searchLayout.askFocus();
         }
         // If new app installed or if any contact is update/create this booleans
@@ -484,8 +486,11 @@ public class MainFragment extends CoreFragment {
     public void setMenuVisibility(boolean menuVisible) {
         super.setMenuVisibility(menuVisible);
         if (menuVisible) {
-            if (searchLayout != null)
+            if (searchLayout != null && MainActivity.currentItem == 0)
                 searchLayout.askFocus();
+        } else {
+            if (getActivity() != null)
+                UIUtils.hideSoftKeyboard(getActivity(), getActivity().getWindow().getDecorView().getWindowToken());
         }
     }
 
