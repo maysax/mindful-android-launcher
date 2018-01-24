@@ -31,13 +31,21 @@ public class HomeWatcher {
 
     public void startWatch() {
         if (mRecevier != null) {
-            mContext.registerReceiver(mRecevier, mFilter);
+            try {
+                mContext.registerReceiver(mRecevier, mFilter);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
     public void stopWatch() {
         if (mRecevier != null) {
-            mContext.unregisterReceiver(mRecevier);
+            try {
+                mContext.unregisterReceiver(mRecevier);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
