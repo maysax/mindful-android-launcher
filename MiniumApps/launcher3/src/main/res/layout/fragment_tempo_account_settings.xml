@@ -137,7 +137,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="2dp"
                     android:textSize="15sp"
-                    android:text="Privacy Policy"
+                    android:text="@string/privacypolicy_link"
                     />
                 </LinearLayout>
                 <Switch

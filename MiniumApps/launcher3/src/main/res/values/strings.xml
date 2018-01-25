@@ -359,7 +359,7 @@
     <string name="next">NEXT</string>
     
     <string name="faqlink">http://www.getsiempo.com/apps/android/beta/faq.htm</string>
-
+<string name="privacypolicy_link"><a href="" >Privacy Policy</a></string>
     <string name="title_activity_intention_confirmation">IntentionConfirmationActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
