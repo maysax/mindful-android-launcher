@@ -109,6 +109,10 @@
                 android:layout_below="@+id/lbl_analytics_description"
                 android:orientation="horizontal">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -118,10 +122,24 @@
                     android:paddingBottom="4dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:paddingTop="4dp"
+                    android:paddingTop="2dp"
                     android:text="@string/lbl_analytics_description2"
                     android:textSize="16sp" />
 
+                <TextView
+                    android:id="@+id/txt_privacyPolicy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="2dp"
+                    android:textSize="15sp"
+                    android:text="Privacy Policy"
+                    />
+                </LinearLayout>
                 <Switch
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

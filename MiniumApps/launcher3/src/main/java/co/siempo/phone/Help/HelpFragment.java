@@ -29,6 +29,14 @@ public class HelpFragment extends CoreFragment {
     TextView txtSendFeedback;
 
     @ViewById
+    TextView txtPrivacyPolicy;
+
+    @ViewById
+    TextView txtFaq;
+
+
+
+    @ViewById
     TextView txtVersionValue;
 
 
@@ -36,6 +44,20 @@ public class HelpFragment extends CoreFragment {
     void txtSendFeedback() {
 
         ((CoreActivity) getActivity()).loadChildFragment(FeedbackFragment_.builder()
+                .build(), R.id.helpView);
+    }
+
+    @Click
+    void txtFaq() {
+
+        ((CoreActivity) getActivity()).loadChildFragment(FaqFragment_.builder()
+                .build(), R.id.helpView);
+    }
+
+    @Click
+    void txtPrivacyPolicy() {
+
+        ((CoreActivity) getActivity()).loadChildFragment(PrivacyPolicyFragment_.builder()
                 .build(), R.id.helpView);
     }
 

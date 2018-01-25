@@ -15,6 +15,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
+import co.siempo.phone.Help.PrivacyPolicyFragment_;
 import co.siempo.phone.R;
 import co.siempo.phone.helper.FirebaseHelper;
 import minium.co.core.app.DroidPrefs_;
@@ -27,6 +28,9 @@ public class TempoAccountSettingFragment extends CoreFragment {
 
     @Pref
     DroidPrefs_ droidPrefs_;
+
+    @ViewById
+    TextView txt_privacyPolicy;
 
     @ViewById
     Toolbar toolbar;
@@ -61,6 +65,12 @@ public class TempoAccountSettingFragment extends CoreFragment {
             }
         });
 
+        txt_privacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CoreActivity) getActivity()).loadChildFragment(PrivacyPolicyFragment_.builder().build(), R.id.tempoView);
+            }
+        });
 
         if (droidPrefs_.isFireBaseAnalyticsEnable().get()) {
             swtch_analytics.setChecked(true);

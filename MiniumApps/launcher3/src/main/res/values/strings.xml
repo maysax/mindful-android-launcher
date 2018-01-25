@@ -271,6 +271,8 @@
     <string name="tempo">Tempo</string>
     <string name="settings">Settings</string>
     <string name="help">Help</string>
+    <string name="privacypolicy">Privacy Policy</string>
+    <string name="faq_section">FAQ</string>
     <string name="app_permission">App permission</string>
     <string name="contact_permission">Contacts</string>
     <string name="call_permission">Calls</string>
@@ -316,7 +318,7 @@
     <string name="lbl_updateEmailDescription">Siempo will never email you unless you request support or opt-in.</string>
     <string name="lbl_analytics">Share analytics &amp; diagnostics</string>
     <string name="lbl_analytics_description">Help improve your Siempo experience by automatically sending analytics, diagnostics, and usage data to Siempo. </string>
-    <string name="lbl_analytics_description2">\nThe data you share is anonymous and aggregated with data from other users.  We use that data, for example, to recommend a healthy amount of phone use. \n\nTo learn more, please view our <a href="">Privacy Policy</a>.</string>
+    <string name="lbl_analytics_description2">\nThe data you share is anonymous and aggregated with data from other users.  We use that data, for example, to recommend a healthy amount of phone use. \n\nTo learn more, please view our </string>
 
     <!--Update Email Section-->
 
@@ -355,6 +357,8 @@
     <string name="type_a_few_words">Type a few words</string>
     <string name="close">CLOSE</string>
     <string name="next">NEXT</string>
+    
+    <string name="faqlink">http://www.getsiempo.com/apps/android/beta/faq.htm</string>
 
     <string name="title_activity_intention_confirmation">IntentionConfirmationActivity</string>
     <string name="dummy_button">Dummy Button</string>
