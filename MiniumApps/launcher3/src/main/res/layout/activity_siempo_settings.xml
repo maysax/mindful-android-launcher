@@ -88,6 +88,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 tools:ignore="UseCompoundDrawables">
 
@@ -198,6 +199,7 @@ Screen-->
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:paddingRight="5dp"
                 tools:ignore="UseCompoundDrawables">

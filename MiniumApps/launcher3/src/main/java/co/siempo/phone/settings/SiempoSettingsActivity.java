@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
@@ -48,10 +50,6 @@ import minium.co.core.util.UIUtils;
 
 
 /**
- * Created by hardik on 17/8/17.
- */
-
-/**
  * This class contain all the siempo settings feature.
  * 1. Switc home app
  * 2. Keyboard hide & show in IF Screen when launch
@@ -59,22 +57,21 @@ import minium.co.core.util.UIUtils;
  */
 @EActivity(R.layout.activity_siempo_settings)
 public class SiempoSettingsActivity extends CoreActivity {
+    private final String TAG = "SiempoSettingsActivity";
+    @SystemService
+    ConnectivityManager connectivityManager;
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
     private Context context;
-    private ImageView icon_launcher, icon_KeyBoardNotification,icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp,icon_AppNotifications,icon_SuppressedNotifications;
+    private ImageView icon_launcher, icon_KeyBoardNotification, icon_Faq, icon_Feedback, icon_version, icon_changeDefaultApp, icon_AppNotifications, icon_SuppressedNotifications;
     private TextView txt_version;
     private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_Faq, ln_changeDefaultApp, ln_AppListNotifications;
-    private final String TAG = "SiempoSettingsActivity";
     private ProgressDialog pd;
     private AppUpdaterUtils appUpdaterUtils;
     private ImageView icon_hideNotification;
     private SwitchCompat switch_notification;
     private SwitchCompat switch_KeyBoardnotification;
-    @SystemService
-    ConnectivityManager connectivityManager;
-
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
-    private long startTime=0;
+    private long startTime = 0;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -129,8 +126,8 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-       // In case if suppressed notification bar is to be invoked from this
-      //  screen
+        // In case if suppressed notification bar is to be invoked from this
+        //  screen
 //        try {
 //            icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
 //        }catch (Exception e){
@@ -144,7 +141,7 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_version.setImageDrawable(new IconDrawable(context, "fa-info-circle")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        icon_AppNotifications.setImageDrawable(new IconDrawable(context,"fa-bell").colorRes(R.color.text_primary).sizeDp(18));
+        icon_AppNotifications.setImageDrawable(new IconDrawable(context, "fa-bell").colorRes(R.color.text_primary).sizeDp(18));
         icon_KeyBoardNotification.setImageDrawable(new IconDrawable(context, "fa-keyboard-o")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -155,7 +152,7 @@ public class SiempoSettingsActivity extends CoreActivity {
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
 
-        if (launcherPrefs.isHidenotificationOnLockScreen().get()) {
+        if (launcherPrefs.isAllowNotificationOnLockScreen().get()) {
             switch_notification.setChecked(true);
         } else {
             switch_notification.setChecked(false);
@@ -168,8 +165,10 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_launcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
-                ((CoreActivity) context).loadDialog();
+//                new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
+//                ((CoreActivity) context).loadDialog();
+                Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
+                startActivity(intent);
             }
         });
 
@@ -200,17 +199,21 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_Faq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = "http://www.getsiempo.com/apps/android/beta/faq.htm";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
+                try {
+                    String url = "http://www.getsiempo.com/apps/android/beta/faq.htm";
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                } catch (Exception e) {
+                    UIUtils.alert(context, context.getString(R.string.app_not_found));
+                }
             }
         });
         ln_AppListNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(SiempoSettingsActivity.this,AppListNotificationSetting.class);
+                Intent i = new Intent(SiempoSettingsActivity.this, AppListNotificationSetting.class);
                 startActivity(i);
             }
         });
@@ -267,13 +270,6 @@ public class SiempoSettingsActivity extends CoreActivity {
             }
         });
 
-        switch_notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                launcherPrefs.isHidenotificationOnLockScreen().put(isChecked);
-            }
-        });
-
 
     }
 
@@ -294,7 +290,7 @@ public class SiempoSettingsActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(SiempoSettingsActivity.this.getClass().getSimpleName(),startTime);
+        FirebaseHelper.getIntance().logScreenUsageTime(SiempoSettingsActivity.this.getClass().getSimpleName(), startTime);
     }
 
     /**
@@ -320,11 +316,18 @@ public class SiempoSettingsActivity extends CoreActivity {
         Log.d(TAG, "Check Version event...");
 
         if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
-                if (pd != null) {
-                    pd.dismiss();
-                    pd = null;
-                }
+            if (pd != null) {
+                pd.dismiss();
+                pd = null;
+            }
+            if (event.getVersion() == Constants.ERROR_VERSION_EVENT) {
+
+                Toast.makeText(getApplicationContext(), "Some error occurred. Please " +
+                        "try later.", Toast
+                        .LENGTH_LONG).show();
+            } else if (event.getVersion() > UIUtils.getCurrentVersionCode
+                    (this)) {
+
                 Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.ALPHA);
@@ -336,7 +339,13 @@ public class SiempoSettingsActivity extends CoreActivity {
                 pd.dismiss();
                 pd = null;
             }
-            if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
+
+            if (event.getVersion() == Constants.ERROR_VERSION_EVENT) {
+                Toast.makeText(getApplicationContext(), "Some error occurred. Please " +
+                        "try later.", Toast
+                        .LENGTH_LONG).show();
+            } else if (event.getVersion() > UIUtils.getCurrentVersionCode
+                    (this)) {
                 Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 appUpdaterUtils = null;
                 showUpdateDialog(CheckVersionEvent.BETA);

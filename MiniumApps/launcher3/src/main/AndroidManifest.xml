@@ -35,7 +35,8 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -66,6 +67,7 @@
         android:launchMode="singleInstance"
         android:supportsRtl="true"
         android:theme="@style/SiempoAppTheme"
+        tools:ignore="AllowBackup"
         tools:replace="android:theme,name,label">
 
         <!-- Fabric configuration -->
@@ -79,7 +81,8 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:stateNotNeeded="true">
+            android:stateNotNeeded="true"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -88,39 +91,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="RUN_AT_BOOT" />
             </intent-filter>
-
-            <!--
-                <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-            </intent-filter>
-            <meta-data android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
-            -->
-
         </activity>
 
-        <receiver android:name=".battery.BatteryChangeReceiver_">
-            <intent-filter>
-                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-            </intent-filter>
-        </receiver>
-
-        <activity
-            android:name=".pause.PauseActivity_"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".tempo.TempoActivity_"
-            android:screenOrientation="portrait" />
-
-
-        <activity
-            android:name=".mm.MMTimePickerActivity_"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".mm.MindfulMorningActivity_"
             android:screenOrientation="portrait" />
         <activity
             android:name=".launcher.FakeLauncherActivity"
@@ -142,25 +116,7 @@
             </intent-filter>
         </service>
 
-        <receiver
-            android:name=".receiver.DndStartStopReceiver_"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="siempo.intent.action.DND_START_STOP" />
-            </intent-filter>
-        </receiver>
 
-        <service android:name=".service.SiempoDndService_" />
-
-        <receiver
-            android:name=".msg.SmsReceiver_"
-            android:enabled="true"
-            android:permission="android.permission.BROADCAST_SMS">
-            <intent-filter android:priority="999">
-                <action android:name="android.provider.Telephony.SMS_DELIVER" />
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".call.CallReceiver_"
             android:enabled="true">
@@ -179,11 +135,6 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".mm.AlarmReciever_" />
-        <receiver
-            android:name=".tempo.TempoReceiver_"
-            android:enabled="true" />
-
         <activity
             android:name=".debug.DebugActivity"
             android:exported="true">
@@ -193,7 +144,6 @@
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".applist.AppDrawerActivity_"
             android:label="@string/title_activity_installed_app_list"
@@ -210,7 +160,6 @@
             </intent-filter>
         </receiver>
 
-
         <activity android:name=".ui.UpdateActivity_" />
         <activity android:name=".settings.SiempoPhoneSettingsActivity" />
         <activity android:name=".settings.SiempoSettingsActivity_" />
@@ -225,11 +174,37 @@
 
         <activity
             android:name=".settings.AppListNotificationSetting"
-            android:label="@string/title_activity_app_list_notification"></activity>
+            android:label="@string/title_activity_app_list_notification" />
         <activity
             android:name=".settings.AppListNotification"
             android:label="@string/title_activity_app_list_notification" />
-        <activity android:name=".settings.SiempoSupressNotificationActivity"></activity>
+        <activity android:name=".settings.SiempoSupressNotificationActivity" />
+        <activity android:name=".ui.SiempoPermissionActivity_" />
+        <activity android:name=".tempo.TempoSettingsActivity_" />
+        <activity android:name=".tempo.TempoAppNotificationActivity" />
+        <activity android:name=".HelpActivity_" />
+        <activity
+            android:name=".IntentionEditActivity_"
+            android:windowSoftInputMode="stateAlwaysVisible" />
+
+        <receiver android:name=".service.AlarmBroadcast">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".service.AlarmService" />
+
+        <receiver android:name=".notification.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".IntentionConfirmationActivity_"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_intention_confirmation"></activity>
     </application>
 
 </manifest>

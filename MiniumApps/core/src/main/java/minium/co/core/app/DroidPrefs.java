@@ -184,4 +184,34 @@ public interface DroidPrefs {
     @DefaultBoolean(false)
     boolean isAlphaSettingEnable();
 
+    @DefaultBoolean(true)
+    boolean isFireBaseAnalyticsEnable();
+
+    @DefaultBoolean(false)
+    boolean isTempoNotificationControlsDisabled();
+
+    //0 Individual,1 batch,2 Only at.
+    @DefaultInt(0)
+    int tempoType();
+
+    //15 minute,30 minute,1 hour,2 hour,4 hour
+    @DefaultInt(15)
+    int batchTime();
+
+    @DefaultString("12:01")
+    String onlyAt();
+
+    // 0 for mute,1 for Sound
+    @DefaultInt(0)
+    int tempoSoundProfile();
+
+    @DefaultString("")
+    String userEmailId();
+
+    @DefaultBoolean(false)
+    boolean isIntentionEnable();
+
+    @DefaultString("")
+    String defaultIntention();
+
 }

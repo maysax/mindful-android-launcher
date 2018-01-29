@@ -1,6 +1,5 @@
 package co.siempo.phone.service;
 
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -10,22 +9,25 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
-import android.hardware.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
-import co.siempo.phone.db.DBClient;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 import co.siempo.phone.R;
-import co.siempo.phone.event.TorchOnOff;
+import co.siempo.phone.app.Constants;
+import co.siempo.phone.db.DBClient;
 import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
@@ -41,27 +43,37 @@ import static co.siempo.phone.SiempoNotificationBar.NotificationUtils.ANDROID_CH
 
 public class StatusBarService extends Service {
 
-    private CameraManager cameraManager;
-    private String mCameraId;
-    @SuppressWarnings("deprecation")
-    private Camera camera;
-    @SuppressWarnings("deprecation")
-    private Camera.Parameters parameters;
-    public static boolean isFlashOn = false;
-
-    SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences, sharedPreferencesLauncher3;
+    Context context;
     private MyObserver myObserver;
     private AppInstallUninstall appInstallUninstall;
+    private Vibrator vibrator;
 
+    public StatusBarService() {
+    }
+
+    public static String getTimeFormat(Context context) {
+        String format;
+        boolean is24hourformat = android.text.format.DateFormat.is24HourFormat(context);
+
+        if (is24hourformat) {
+            format = "HH:mm";
+        } else {
+            format = "hh:mm a";
+        }
+        return format;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
         sharedPreferences = getSharedPreferences("DroidPrefs", 0);
+        sharedPreferencesLauncher3 = getSharedPreferences("Launcher3Prefs", 0);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         registerObserverForContact();
         registerObserverForAppInstallUninstall();
         EventBus.getDefault().register(this);
-
     }
 
     @Override
@@ -78,7 +90,6 @@ public class StatusBarService extends Service {
         return START_STICKY;
     }
 
-
     /**
      * Observer for when installing new app or uninstalling the app.
      */
@@ -87,6 +98,7 @@ public class StatusBarService extends Service {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        intentFilter.addAction(Intent.ACTION_PACKAGE_CHANGED);
         intentFilter.addDataScheme("package");
         registerReceiver(appInstallUninstall, intentFilter);
     }
@@ -110,101 +122,25 @@ public class StatusBarService extends Service {
         }
     }
 
-
-    public StatusBarService() {
-    }
-
-    @Subscribe
-    public void tourchOnOff(TorchOnOff torchOnOFF) {
-        if (torchOnOFF.isRunning()) {
-            turnONFlash();
-        } else {
-            turnOffFlash();
-        }
-    }
-
     @Subscribe
     public void firebaseEvent(FirebaseEvent firebaseEvent) {
         FirebaseHelper.getIntance().logScreenUsageTime(firebaseEvent.getScreenName(), firebaseEvent.getStrStartTime());
     }
-
 
     @Override
     public IBinder onBind(Intent intent) {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /**
-     * Turning On flash
-     */
-    @TargetApi(23)
-    private void turnONFlash() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            cameraManager = (CameraManager) this.getSystemService(Context.CAMERA_SERVICE);
-            try {
-                if (cameraManager != null) {
-                    mCameraId = cameraManager.getCameraIdList()[0];
-                    cameraManager.setTorchMode(mCameraId, true);
-                }
-
-            } catch (CameraAccessException e) {
-                CoreApplication.getInstance().logException(e);
-                e.printStackTrace();
-            }
-            CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
-
-                @Override
-                public void onTorchModeChanged(@NonNull String cameraId, boolean enabled) {
-                    super.onTorchModeChanged(cameraId, enabled);
-                    isFlashOn = enabled;
-                }
-
-                @Override
-                public void onTorchModeUnavailable(@NonNull String cameraId) {
-                    super.onTorchModeUnavailable(cameraId);
-                }
-            };
-            cameraManager.registerTorchCallback(mTorchCallback, new Handler());
-        } else {
-            //noinspection deprecation
-            camera = Camera.open();
-            parameters = camera.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-            camera.setParameters(parameters);
-            camera.startPreview();
-        }
-        isFlashOn = true;
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        if (myObserver != null)
+            getContentResolver().unregisterContentObserver(myObserver);
+        if (appInstallUninstall != null)
+            unregisterReceiver(appInstallUninstall);
+        super.onDestroy();
     }
-
-    /**
-     * Turning On flash
-     */
-    private void turnOffFlash() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            try {
-                cameraManager.setTorchMode(mCameraId, false);
-            } catch (CameraAccessException e) {
-                CoreApplication.getInstance().logException(e);
-                e.printStackTrace();
-            }
-        } else {
-            try {
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                camera.setParameters(parameters);
-                camera.stopPreview();
-                if (camera != null) {
-                    camera.release();
-                    camera = null;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                CoreApplication.getInstance().logException(e);
-            }
-        }
-
-        isFlashOn = false;
-    }
-
 
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
@@ -235,15 +171,22 @@ public class StatusBarService extends Service {
                 if (intent != null && intent.getAction() != null) {
                     if (intent.getAction().equals(Intent.ACTION_PACKAGE_ADDED)) {
                         String installPackageName;
-                        installPackageName = intent.getData().getEncodedSchemeSpecificPart();
-                        Log.d("Testing with device.", "Added" + installPackageName);
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            installPackageName = intent.getData().getEncodedSchemeSpecificPart();
+                            Log.d("Testing with device.", "Added" + installPackageName);
+                        }
+
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
                         String uninstallPackageName;
-                        uninstallPackageName = intent.getData().getSchemeSpecificPart();
-                        Log.d("Testing with device.", "Removed" + uninstallPackageName);
-                        if(!TextUtils.isEmpty(uninstallPackageName)) {
-                             new DBClient().deleteMsgByPackageName(uninstallPackageName);
-                         }
+                        if (intent.getData().getEncodedSchemeSpecificPart() != null) {
+                            uninstallPackageName = intent.getData().getSchemeSpecificPart();
+                            Log.d("Testing with device.", "Removed" + uninstallPackageName);
+                            if (!TextUtils.isEmpty(uninstallPackageName)) {
+                                new DBClient().deleteMsgByPackageName(uninstallPackageName);
+                                removeAppFromBlockedList(uninstallPackageName);
+
+                            }
+                        }
                     }
                     sharedPreferences.edit().putBoolean("isAppUpdated", true).apply();
                     EventBus.getDefault().post(new AppInstalledEvent(true));
@@ -256,14 +199,26 @@ public class StatusBarService extends Service {
         }
     }
 
+    public void removeAppFromBlockedList(String uninstallPackageName){
+        ArrayList<String> blockedApps = new ArrayList<>();
+        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
+        if (!TextUtils.isEmpty(block_AppList)) {
+            try{
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                blockedApps = new Gson().fromJson(block_AppList, type);
+                for (String blockedAppName:blockedApps) {
+                    if(blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())){
+                        blockedApps.remove(blockedAppName);
+                    }
+                }
+                String blockedList = new Gson().toJson(blockedApps);
+                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 
-    @Override
-    public void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        if (myObserver != null)
-            getContentResolver().unregisterContentObserver(myObserver);
-        if (appInstallUninstall != null)
-            unregisterReceiver(appInstallUninstall);
-        super.onDestroy();
+        }
     }
 }

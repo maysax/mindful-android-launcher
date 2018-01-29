@@ -30,13 +30,13 @@ public class MindfulMorningActivity extends CoreActivity {
     @AfterViews
     public void afterViews() {
 
-        loadFragment(new MindfulMorningFragment_(), R.id.mainView, "Main");
+        // loadFragment(new MindfulMorningFragment_(), R.id.mainView, "Main");
 
     }
 
     @Subscribe
     public void MindfulMorgingEventStart(MindfulMorgingEventStart event) {
-        loadFragment(MinfulMorningActivated_.builder().startPosition(event.getStartPosition()).build(), R.id.mainView, "main");
+        //loadFragment(MinfulMorningActivated_.builder().startPosition(event.getStartPosition()).build(), R.id.mainView, "main");
     }
 
     @Override

@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -84,7 +83,31 @@ public class SiempoNotificationListener extends NotificationListenerService {
 
     Context context;
 
-    ArrayList<String> disableNotificationApps = new ArrayList<>();
+    ArrayList<String> enableNotificationList = new ArrayList<>();
+    ArrayList<String> blockedAppList = new ArrayList<>();
+
+    private static boolean isInteger(String s, int radix) {
+        try {
+            if (s.isEmpty()) {
+                return false;
+            }
+            int i = 0;
+            while (i < s.length()) {
+                if (i == 0 && s.charAt(i) == '-') {
+                    if (s.length() == 1) {
+                        return false;
+                    }
+                } else if (Character.digit(s.charAt(i), radix) < 0) {
+                    return false;
+                }
+                i++;
+            }
+            return true;
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            return true;
+        }
+    }
 
     @Override
     public void onListenerConnected() {
@@ -116,53 +139,80 @@ public class SiempoNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification notification) {
         super.onNotificationPosted(notification);
         context = this;
+        Notification notification1 = notification.getNotification();
+
         printLog(notification);
         if (PackageUtil.isSiempoLauncher(context)) {
-            Log.d(TAG, "Suppress Notification Section" + notification.getPackageName());
 
+            try {
+                if (notification1 != null) {
+                    if ((notification1.flags & Notification.FLAG_ONGOING_EVENT) == Notification.FLAG_ONGOING_EVENT) {
+                        Tracer.d("Not forwarding notification, FLAG_ONGOING_EVENT is set. Notification flags: " + notification1.flags);
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            /* do not display messages from "android"
+            * This includes keyboard selection message, usb connection messages, etc
+             * Hope it does not filter out too much, we will see...
+            */
+            try {
+                if (notification != null) {
+                    if (notification.getPackageName().equals("android") ||
+                            notification.equals("com.android.systemui") ||
+                            notification.equals("com.cyanogenmod.eleven")) {
+                        Tracer.d("Not forwarding notification, is a system event");
+                        return;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (PackageUtil.isSiempoLauncher(this) && (myKM != null && myKM.inKeyguardRestrictedInputMode()) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
-                SiempoNotificationListener.this.cancelAllNotifications();
-            }
-            if (PackageUtil.isSiempoLauncher(this) && notification.getNotification().getSortKey() != null && notification.getNotification().getSortKey().equalsIgnoreCase(getResources().getString(R.string.lock_screen_label)) && launcherPrefs.isHidenotificationOnLockScreen().get()) {
-                SiempoNotificationListener.this.cancelAllNotifications();
+            if (PackageUtil.isSiempoLauncher(this) && (myKM != null && myKM.inKeyguardRestrictedInputMode()) && !launcherPrefs.isAllowNotificationOnLockScreen().get()) {
+                StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
+                for (StatusBarNotification statusBarNotification : statusBarNotifications) {
+                    SiempoNotificationListener.this.cancelNotification(statusBarNotification.getKey());
+                }
             }
 
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
-            String disable_AppList = prefs.getString(Constants.DISABLE_APPLIST, "");
-            if (!TextUtils.isEmpty(disable_AppList)) {
+            String strEnableApps = prefs.getString(Constants.DISABLE_APPLIST, "");
+
+            if (!TextUtils.isEmpty(strEnableApps)) {
                 Type type = new TypeToken<ArrayList<String>>() {
                 }.getType();
-                disableNotificationApps = new ArrayList<>();
-                disableNotificationApps = new Gson().fromJson(disable_AppList, type);
-                if (!TextUtils.isEmpty(notification.getPackageName()) && disableNotificationApps.contains(notification.getPackageName())) {
-                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                    filterByCategory(notification);
-                    return;
-                }
+                enableNotificationList = new Gson().fromJson(strEnableApps, type);
             }
-        }
-        if (launcherPrefs.isAppDefaultOrFront().get()) {
 
-
-            if (launcherPrefs.getCurrentProfile().get() == 0) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0");
-                if (CoreApplication.getInstance().getSilentList().contains(notification.getPackageName())) {
-                    CoreApplication.getInstance().changeProfileToSilentMode();
-                } else if (CoreApplication.getInstance().getVibrateList().contains(notification.getPackageName())) {
-                    Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Normal 0 - Vibrate");
-                    CoreApplication.getInstance().changeProfileToSilentMode();
-                    if (!disableNotificationApps.contains(notification.getPackageName())) {
-                        vibrationUtils.vibrate(500);
+            String block_AppList = prefs.getString(Constants.BLOCKED_APPLIST, "");
+            if (!TextUtils.isEmpty(block_AppList)) {
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                blockedAppList = new Gson().fromJson(block_AppList, type);
+            }
+            if (!droidPrefs.isTempoNotificationControlsDisabled().get()) {
+                if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
+                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                    return;
+                } else {
+                    if (!notification.getPackageName().equalsIgnoreCase(getPackageName())) {
+                        SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                        if (droidPrefs.tempoType().get() == 1 && droidPrefs.tempoType().get() == 2) {
+                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                            if (sound != 1) {
+                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                            }
+                        }
+                        filterByCategory(notification);
+                        return;
                     }
                 }
-            } else if (launcherPrefs.getCurrentProfile().get() == 1) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Vibrate 1");
-                CoreApplication.getInstance().changeProfileToVibrateMode();
-            } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-                Log.d("Profile Check:::", "NotificationListener : getCurrentProfile Silent 2 ");
-                CoreApplication.getInstance().changeProfileToSilentMode();
             }
         }
     }
@@ -304,11 +354,16 @@ public class SiempoNotificationListener extends NotificationListenerService {
             CoreApplication.getInstance().logException(e);
         }
 
+        if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equals(Notification.CATEGORY_PROGRESS)) {
+            return;
+        }
 
         //Parse the Whats App messages.
-        if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE))
+        if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.WHATSAPP_PACKAGE)) {
             parseWhatsappMessage(statusBarNotification, strPackageName, date, data, icon, largeIcon);
-            //Parse the Google Calendar
+
+        }
+        //Parse the Google Calendar
         else if (statusBarNotification.getPackageName().equalsIgnoreCase(Constants.GOOGLE_CALENDAR_PACKAGES))
             parseGoogleCalender(statusBarNotification, strPackageName, strTitle, strText, date, strBigText, icon, largeIcon);
             // Facebook
@@ -337,18 +392,32 @@ public class SiempoNotificationListener extends NotificationListenerService {
             } catch (Exception e) {
                 CoreApplication.getInstance().logException(e);
             }
+
         }
+
 
     }
 
     private void parseOtherMessages(StatusBarNotification statusBarNotification, String strPackageName, String strTitle, String strText, Date date, String strBigText, int icon, byte[] largeIcon, String strCount) {
+        if (statusBarNotification.getNotification() != null
+                && statusBarNotification.getNotification().tickerText != null
+                && !statusBarNotification.getNotification().tickerText.toString().equalsIgnoreCase("USB debugging connected")) {
+            return;
+        }
+
         if (statusBarNotification.getNotification().category == null
                 || (!statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL) &&
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_PROGRESS) &&
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_TRANSPORT) &&
                 !statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_SERVICE) &&
                 !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.talk")
-                && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging"))) {
+                && !statusBarNotification.getPackageName().equalsIgnoreCase("com.google.android.apps.messaging")
+                && !statusBarNotification.getPackageName().trim().equalsIgnoreCase("android"))) {
+
+            if (launcherPrefs.getSharedPreferences().getBoolean(Constants.CALL_RUNNING, false)) {
+                Log.d(TAG, "OnGoing Call is Running.. no need to generate notification");
+                return;
+            }
             try {
                 DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
                 TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
@@ -369,6 +438,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setNotification_id(statusBarNotification.getId());
                     long id = smsDao.insert(notificationSms);
                     notificationSms.setId(id);
+                    PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 } else {
                     notificationSms.set_date(date);
@@ -380,6 +450,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.set_message(strBigText);
                     }
                     smsDao.update(notificationSms);
+                    PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                     EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                 }
             } catch (Exception e) {
@@ -421,6 +492,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         notificationSms.setNotification_id(statusBarNotification.getId());
                         long id = smsDao.insert(notificationSms);
                         notificationSms.setId(id);
+                        PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                         EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                     } else {
                         notificationSms.setPackageName(strPackageName);
@@ -430,6 +502,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             notificationSms.set_message(strText + "\n" + notificationSms.get_message());
                             notificationSms.set_contact_title(strTitle);
                             smsDao.update(notificationSms);
+                            PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                             EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                         }
                     }
@@ -466,6 +539,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             notificationSms.setNotification_id(statusBarNotification.getId());
                             long id = smsDao.insert(notificationSms);
                             notificationSms.setId(id);
+                            PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                             EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                         } else {
                             notificationSms.set_date(date);
@@ -477,6 +551,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             if (!tickerText.equalsIgnoreCase("Missed call")
                                     && !strText.equalsIgnoreCase("Missed call")) {
                                 smsDao.update(notificationSms);
+                                PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
                             }
                         }
@@ -521,6 +596,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
+                PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
                 notificationSms.setPackageName(strPackageName);
@@ -533,6 +609,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }
                 notificationSms.set_contact_title(strTitle);
                 smsDao.update(notificationSms);
+                PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
             if (statusBarNotification.getNotification().category != null && statusBarNotification.getNotification().category.equalsIgnoreCase(Notification.CATEGORY_CALL)) {
@@ -568,6 +645,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.setNotification_id(statusBarNotification.getId());
                     long id = smsDao.insert(notificationSms);
                     notificationSms.setId(id);
+                    PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                 } else {
                     notificationSms.setPackageName(strPackageName);
                     notificationSms.set_date(date);
@@ -575,6 +653,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_message(strText + "\n" + notificationSms.get_message());
                     notificationSms.set_contact_title(strTitle);
                     smsDao.update(notificationSms);
+                    PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                 }
             }
         } catch (Exception e) {
@@ -599,6 +678,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             notificationSms.setNotification_id(statusBarNotification.getId());
             long id = smsDao.insert(notificationSms);
             notificationSms.setId(id);
+            PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
@@ -626,6 +706,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 notificationSms.setNotification_id(statusBarNotification.getId());
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
+                PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
                 notificationSms.set_date(date);
@@ -637,6 +718,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                     notificationSms.set_message(strBigText);
                 }
                 smsDao.update(notificationSms);
+                PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
 
@@ -664,7 +746,9 @@ public class SiempoNotificationListener extends NotificationListenerService {
                         } else {
                             text = extras.getCharSequence(NotificationCompat.EXTRA_TEXT).toString();
                         }
-
+                        if (title.equalsIgnoreCase("You may have a new messages")) {
+                            return;
+                        }
                         text = Build.VERSION.SDK_INT >= 21 ? getNotificationTextLegacy(statusBarNotification.getNotification(), text) : getNotificationTextLegacy(statusBarNotification.getNotification(), text);
                         if (title == null || title.isEmpty() || Constants.WHATSAPP.equals(title.trim())) {
                             title = getTitleLegacy(text);
@@ -685,7 +769,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                             }
                             if (Build.VERSION.SDK_INT > 23) {
                                 title = removeXnewMessageFromSender(title);
-                                if (!"CODE_IGNORE_ME".equals(title)) {
+                                if (!"CODE_IGNORE_ME" .equals(title)) {
                                     title = removeColFromTitle(title);
                                     if (title.contains(":")) {
                                         return;
@@ -720,6 +804,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 notificationSms.setUser_icon(largeIcon);
                                 long id = smsDao.insertOrReplace(notificationSms);
                                 notificationSms.setId(id);
+                                PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                             }
                         } else {
                             if (!title.contains("WhatsApp") && !title.equalsIgnoreCase("Checking for new messages")) {
@@ -727,6 +812,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                 notificationSms.setNotification_date(statusBarNotification.getPostTime());
                                 notificationSms.set_message(text /*+ "\n" + notificationSms.get_message()*/);
                                 smsDao.updateInTx(notificationSms);
+                                PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                             }
                         }
                     }
@@ -757,6 +843,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                     notificationSms.setUser_icon(largeIcon);
                                     long id = smsDao.insertOrReplace(notificationSms);
                                     notificationSms.setId(id);
+                                    PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                                 }
                             } else {
                                 if (!title.contains("WhatsApp")) {
@@ -770,6 +857,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
                                         notificationSms.set_message(text + "\n" + notificationSms.get_message());
                                     }
                                     smsDao.updateInTx(notificationSms);
+                                    PackageUtil.recreateNotification(notificationSms, context, icon, droidPrefs.tempoType().get() == 0);
                                 }
                             }
                         }
@@ -832,6 +920,11 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 new DBClient().deleteMsgByPackageName(notification.getPackageName());
             }
         }
+        if (PackageUtil.isSiempoLauncher(this)) {
+            if (notification.getPackageName().equalsIgnoreCase(getPackageName())) {
+                new DBClient().deleteMsgById(notification.getId());
+            }
+        }
     }
 
     private String getNotificationToString(StatusBarNotification notification) {
@@ -846,29 +939,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
             return "";
         }
 
-    }
-
-    private static boolean isInteger(String s, int radix) {
-        try {
-            if (s.isEmpty()) {
-                return false;
-            }
-            int i = 0;
-            while (i < s.length()) {
-                if (i == 0 && s.charAt(i) == '-') {
-                    if (s.length() == 1) {
-                        return false;
-                    }
-                } else if (Character.digit(s.charAt(i), radix) < 0) {
-                    return false;
-                }
-                i++;
-            }
-            return true;
-        } catch (Exception e) {
-            CoreApplication.getInstance().logException(e);
-            return true;
-        }
     }
 
     private String getNotificationTextLegacy(Notification notification, String defaultText) {

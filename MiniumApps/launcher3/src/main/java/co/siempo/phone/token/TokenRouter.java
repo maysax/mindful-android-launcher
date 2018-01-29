@@ -171,6 +171,7 @@ public class TokenRouter {
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             e.printStackTrace();
+            UIUtils.alert(activity, activity.getString(R.string.app_not_found));
         }
     }
 }

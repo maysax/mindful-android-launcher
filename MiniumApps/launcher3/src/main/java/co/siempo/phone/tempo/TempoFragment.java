@@ -37,38 +37,56 @@ import static co.siempo.phone.app.Launcher3App.DND_START_STOP_ACTION;
 @EFragment(R.layout.fragment_tempo)
 public class TempoFragment extends CoreFragment {
 
+    @ViewById
+    Toolbar toolbar;
+    @ViewById
+    HoloCircleSeekBar seekbar;
+    @ViewById
+    TextView titleActionBar;
+    @ViewById
+    Button btnOff;
+    @ViewById
+    Button btnOn;
+    @SystemService
+    AlarmManager alarmMgr;
+    @Pref
+    Launcher3Prefs_ launcherPrefs;
+    @SystemService
+    Vibrator vibrator;
+    TableNotificationSmsDao smsDao;
+    CallStorageDao callStorageDao;
+    @ViewById
+    TextView text_status;
+    private PendingIntent alarmIntent;
+    private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {
+
+        @Override
+        public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
+            setStatus();
+            setValue();
+        }
+
+        @Override
+        public void onStartTrackingTouch(HoloCircleSeekBar seekBar) {
+        }
+
+        @Override
+        public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
+            int currVal = seekbar.getValue();
+
+            if (currVal <= 22) currVal = 15;
+            else if (currVal <= 45) currVal = 30;
+            else currVal = 60;
+
+            seekbar.setValue(currVal);
+            setStatus();
+            setValue();
+        }
+    };
+
     public TempoFragment() {
         // Required empty public constructor
     }
-
-    @ViewById
-    Toolbar toolbar;
-
-    @ViewById
-    HoloCircleSeekBar seekbar;
-
-    @ViewById
-    TextView titleActionBar;
-
-    @ViewById
-    Button btnOff;
-
-    @ViewById
-    Button btnOn;
-
-    @SystemService
-    AlarmManager alarmMgr;
-
-    private PendingIntent alarmIntent;
-
-    @Pref
-    Launcher3Prefs_ launcherPrefs;
-
-    @SystemService
-    Vibrator vibrator;
-
-    TableNotificationSmsDao smsDao;
-    CallStorageDao callStorageDao;
 
     @AfterViews
     void afterViews() {
@@ -95,10 +113,6 @@ public class TempoFragment extends CoreFragment {
     void imgLeft() {
         getActivity().finish();
     }
-
-
-    @ViewById
-    TextView text_status;
 
     @Click
     void btnOff() {
@@ -137,34 +151,8 @@ public class TempoFragment extends CoreFragment {
 
     @Click
     void imgRight() {
-        ((CoreActivity) getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(), R.id.tempoView);
+        //((CoreActivity) getActivity()).loadChildFragment(TempoPreferenceFragment_.builder().build(), R.id.tempoView);
     }
-
-    private HoloCircleSeekBar.OnCircleSeekBarChangeListener seekbarListener = new HoloCircleSeekBar.OnCircleSeekBarChangeListener() {
-
-        @Override
-        public void onProgressChanged(HoloCircleSeekBar seekBar, int progress, boolean fromUser) {
-            setStatus();
-            setValue();
-        }
-
-        @Override
-        public void onStartTrackingTouch(HoloCircleSeekBar seekBar) {
-        }
-
-        @Override
-        public void onStopTrackingTouch(HoloCircleSeekBar seekBar) {
-            int currVal = seekbar.getValue();
-
-            if (currVal <= 22) currVal = 15;
-            else if (currVal <= 45) currVal = 30;
-            else currVal = 60;
-
-            seekbar.setValue(currVal);
-            setStatus();
-            setValue();
-        }
-    };
 
     private void setValue() {
         launcherPrefs.tempoIntervalMinutes().put(seekbar.getValue());
@@ -190,12 +178,6 @@ public class TempoFragment extends CoreFragment {
         Tracer.d("NotificationScheduleAlarm set at: " + DateUtils.log() + " || Next fire: " + DateUtils.log(nextIntervalMillis));
 
         launcherPrefs.tempoNextNotificationMillis().put(nextIntervalMillis);
-
-//        else {
-//            prefs.isNotificationSupressed().put(true);
-//            getActivity().sendBroadcast(new Intent(getActivity(), TempoReceiver_.class));
-//            Tracer.d("NotificationScheduleAlarm cancelled");
-//        }
     }
 
     private void tempoHandler() {

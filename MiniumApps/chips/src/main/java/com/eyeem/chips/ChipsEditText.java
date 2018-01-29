@@ -23,17 +23,148 @@ import java.util.ArrayList;
 
 public class ChipsEditText extends MultilineEditText {
 
+    public CharSequence savedHint;
+    public String strText;
     EditAction lastEditAction;
     boolean autoShow;
     int maxBubbleCount = -1;
-    public CharSequence savedHint;
-    public String strText;
-
-    public String getStrText() {
-        return strText;
-    }
-
+    Runnable cursorRunnable = new CursorRunnable(this);
+    boolean cursorBlink;
+    CursorDrawable cursorDrawable;
+    boolean finalizing;
+    boolean _manualModeOn;
+    int manualStart;
+    boolean muteHashWatcher;
+    int previousWidth = 0;
+    ArrayList<Listener> listeners = new ArrayList<>();
+    ArrayList<BubbleTextWatcher> bubbleTextWatchers = new ArrayList<>();
+    boolean isNotificationVisible = false;
     private BubbleStyle currentBubbleStyle;
+    TextWatcher autocompleteWatcher = new TextWatcher() {
+        ReplacementSpan manipulatedSpan;
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            manipulatedSpan = null;
+            if (after < count && !_manualModeOn) {
+                ReplacementSpan[] spans = ((Spannable) s).getSpans(start, start + count, ReplacementSpan.class);
+                if (spans.length == 1) {
+                    manipulatedSpan = spans[0];
+                } else {
+                    manipulatedSpan = null;
+                }
+            }
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (!shouldShow())
+                return;
+            String textForAutocomplete = null;
+            try {
+                if (_manualModeOn && manualStart < start) {
+                    // we do dis cause android gives us latest word and we operate on a sentence
+                    count += start - manualStart;
+                    start = manualStart;
+                }
+                textForAutocomplete = s.toString().substring(start, start + count);
+                onBubbleType(textForAutocomplete);
+//            if (!TextUtils.isEmpty(textForAutocomplete)) {
+//               showAutocomplete(new EditAction(textForAutocomplete, start, before, count));
+//            }
+            } catch (Exception e) {
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (_manualModeOn) {
+                int end = getSelectionStart();
+                if (end < manualStart) {
+                    setManualModeOn(false);
+                } else {
+                    makeChip(manualStart, end, false, null);
+                }
+            } else if (!_manualModeOn && manipulatedSpan != null) {
+                int start = s.getSpanStart(manipulatedSpan);
+                int end = s.getSpanEnd(manipulatedSpan);
+                if (start > -1 && end > -1) {
+                    s.delete(start, end);
+                }
+                onBubbleCountChanged();
+                manipulatedSpan = null;
+                setManualModeOn(false);
+            }
+        }
+    };
+    TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+            if (keyEvent == null) {
+                // CustomViewAbove seems to send enter keyevent for some reason (part one)
+                if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED)
+                    actionId = EditorInfo.IME_ACTION_DONE;
+                if (actionId == EditorInfo.IME_ACTION_DONE && _manualModeOn) {
+                    String text = endManualMode();
+                    onActionDone(true, text);
+                    return true;
+                } else if (actionId == EditorInfo.IME_ACTION_DONE && !_manualModeOn) {
+                    hideKeyboard();
+                    onActionDone(false, null);
+                    return true;
+                }
+            } else if (keyEvent != null && actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
+                // CustomViewAbove seems to send enter keyevent for some reason  (part two)
+                return true;
+            }
+            return false;
+        }
+    };
+    private TextWatcher hashWatcher = new TextWatcher() {
+        String before;
+        String after;
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if (muteHashWatcher)
+                return;
+            before = s.toString();
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (muteHashWatcher)
+                return;
+            after = s.toString();
+            strText = s.toString();
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (muteHashWatcher)
+                return;
+         /*if (after.length() > before.length() && after.lastIndexOf('#') > before.lastIndexOf('#')) {
+               int lastIndex = after.lastIndexOf('#');
+            if (_manualModeOn || canAddMoreBubbles())
+               s.delete(lastIndex, lastIndex + 1);
+
+            if (_manualModeOn && manualStart < lastIndex) {
+               // here we end previous hashtag
+               endManualMode();
+            }
+
+            if (canAddMoreBubbles()) {
+               // we start adding a new hash tag
+               startManualMode();
+               onBubbleType("");
+               onHashTyped(true);
+            } else {
+               // no more hash tags allowed
+               onHashTyped(false);
+            }
+         }*/
+        }
+    };
 
     public ChipsEditText(Context context) {
         super(context);
@@ -48,6 +179,10 @@ public class ChipsEditText extends MultilineEditText {
     public ChipsEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
+    }
+
+    public String getStrText() {
+        return strText;
     }
 
     void init() {
@@ -74,34 +209,6 @@ public class ChipsEditText extends MultilineEditText {
         removeCallbacks(cursorRunnable);
     }
 
-    Runnable cursorRunnable = new CursorRunnable(this);
-
-    static class CursorRunnable implements Runnable {
-
-        WeakReference<ChipsEditText> _et;
-
-        public CursorRunnable(ChipsEditText et) {
-            this._et = new WeakReference<ChipsEditText>(et);
-        }
-
-        @Override
-        public void run() {
-            ChipsEditText et = _et.get();
-            if (et == null) return;
-            et.cursorBlink = !et.cursorBlink;
-            et.postInvalidate();
-            et.postDelayed(this, 500);
-        }
-    }
-
-    boolean cursorBlink;
-    CursorDrawable cursorDrawable;
-
-    protected void setManualModeOn(boolean value) {
-        this._manualModeOn = value;
-        onManualModeChanged(value);
-    }
-
     @Override
     public boolean onPreDraw() {
         CharSequence hint = getHint();
@@ -113,7 +220,6 @@ public class ChipsEditText extends MultilineEditText {
         } else if (!_manualModeOn && empty && !TextUtils.isEmpty(savedHint)) {
             setHint(savedHint);
         }
-        ;
         return super.onPreDraw();
     }
 
@@ -139,8 +245,6 @@ public class ChipsEditText extends MultilineEditText {
         onBubbleCountChanged();
     }
 
-    boolean finalizing;
-
     public String makeChip(int start, int end, boolean finalize, Object data) {
         if (finalizing)
             return null;
@@ -165,9 +269,6 @@ public class ChipsEditText extends MultilineEditText {
         finalizing = false;
         return finalText;
     }
-
-    boolean _manualModeOn;
-    int manualStart;
 
     public void setMaxBubbleCount(int maxBubbleCount) {
         this.maxBubbleCount = maxBubbleCount;
@@ -229,91 +330,9 @@ public class ChipsEditText extends MultilineEditText {
         onBubbleType("");
     }
 
-    TextWatcher autocompleteWatcher = new TextWatcher() {
-        ReplacementSpan manipulatedSpan;
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            manipulatedSpan = null;
-            if (after < count && !_manualModeOn) {
-                ReplacementSpan[] spans = ((Spannable) s).getSpans(start, start + count, ReplacementSpan.class);
-                if (spans.length == 1) {
-                    manipulatedSpan = spans[0];
-                } else {
-                    manipulatedSpan = null;
-                }
-            }
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (!shouldShow())
-                return;
-            String textForAutocomplete = null;
-            try {
-                if (_manualModeOn && manualStart < start) {
-                    // we do dis cause android gives us latest word and we operate on a sentence
-                    count += start - manualStart;
-                    start = manualStart;
-                }
-                textForAutocomplete = s.toString().substring(start, start + count);
-                onBubbleType(textForAutocomplete);
-//            if (!TextUtils.isEmpty(textForAutocomplete)) {
-//               showAutocomplete(new EditAction(textForAutocomplete, start, before, count));
-//            }
-            } catch (Exception e) {
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (_manualModeOn) {
-                int end = getSelectionStart();
-                if (end < manualStart) {
-                    setManualModeOn(false);
-                } else {
-                    makeChip(manualStart, end, false, null);
-                }
-            } else if (!_manualModeOn && manipulatedSpan != null) {
-                int start = s.getSpanStart(manipulatedSpan);
-                int end = s.getSpanEnd(manipulatedSpan);
-                if (start > -1 && end > -1) {
-                    s.delete(start, end);
-                }
-                onBubbleCountChanged();
-                manipulatedSpan = null;
-                setManualModeOn(false);
-            }
-        }
-    };
-
     private boolean shouldShow() {
         return autoShow || _manualModeOn;
     }
-
-    TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-            if (keyEvent == null) {
-                // CustomViewAbove seems to send enter keyevent for some reason (part one)
-                if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED)
-                    actionId = EditorInfo.IME_ACTION_DONE;
-                if (actionId == EditorInfo.IME_ACTION_DONE && _manualModeOn) {
-                    String text = endManualMode();
-                    onActionDone(true, text);
-                    return true;
-                } else if (actionId == EditorInfo.IME_ACTION_DONE && !_manualModeOn) {
-                    hideKeyboard();
-                    onActionDone(false, null);
-                    return true;
-                }
-            } else if (keyEvent != null && actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
-                // CustomViewAbove seems to send enter keyevent for some reason  (part two)
-                return true;
-            }
-            return false;
-        }
-    };
 
     public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -351,77 +370,9 @@ public class ChipsEditText extends MultilineEditText {
         return p;
     }
 
-    public static class EditAction {
-        String text;
-        int start;
-        int before;
-        int count;
-
-        int end() {
-            return start + count;
-        }
-
-        public EditAction(String text, int start, int before, int count) {
-            this.text = text;
-            this.start = start;
-            this.before = before;
-            this.count = count;
-        }
-    }
-
-    boolean muteHashWatcher;
-
     void muteHashWatcher(boolean value) {
         muteHashWatcher = value;
     }
-
-    private TextWatcher hashWatcher = new TextWatcher() {
-        String before;
-        String after;
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            if (muteHashWatcher)
-                return;
-            before = s.toString();
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (muteHashWatcher)
-                return;
-            after = s.toString();
-            strText = s.toString();
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (muteHashWatcher)
-                return;
-         /*if (after.length() > before.length() && after.lastIndexOf('#') > before.lastIndexOf('#')) {
-               int lastIndex = after.lastIndexOf('#');
-            if (_manualModeOn || canAddMoreBubbles())
-               s.delete(lastIndex, lastIndex + 1);
-
-            if (_manualModeOn && manualStart < lastIndex) {
-               // here we end previous hashtag
-               endManualMode();
-            }
-
-            if (canAddMoreBubbles()) {
-               // we start adding a new hash tag
-               startManualMode();
-               onBubbleType("");
-               onHashTyped(true);
-            } else {
-               // no more hash tags allowed
-               onHashTyped(false);
-            }
-         }*/
-        }
-    };
-
-    int previousWidth = 0;
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -442,9 +393,6 @@ public class ChipsEditText extends MultilineEditText {
             }
         }
     }
-
-    ArrayList<Listener> listeners = new ArrayList<>();
-    ArrayList<BubbleTextWatcher> bubbleTextWatchers = new ArrayList<>();
 
     protected void onBubbleCountChanged() {
         for (Listener listener : listeners)
@@ -491,14 +439,9 @@ public class ChipsEditText extends MultilineEditText {
         return _manualModeOn;
     }
 
-    public interface Listener {
-        public void onBubbleCountChanged();
-
-        public void onActionDone(boolean wasManualModeOn, String text);
-
-        public void onHashTyped(boolean start);
-
-        public void onManualModeChanged(boolean enabled);
+    protected void setManualModeOn(boolean value) {
+        this._manualModeOn = value;
+        onManualModeChanged(value);
     }
 
     public CursorDrawable getCursorDrawable() {
@@ -520,22 +463,6 @@ public class ChipsEditText extends MultilineEditText {
         return new SpannableString(getText());
     }
 
-    public interface BubbleTextWatcher {
-        public void onType(String query);
-    }
-
-    @Override
-    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-        boolean isReturn = true;
-        if (keyCode == KeyEvent.KEYCODE_BACK)
-            if (isNotificationVisible)
-                isReturn = false;
-        return isReturn;
-
-
-    }
-
-
     public boolean isNotificationVisible() {
         return isNotificationVisible;
     }
@@ -544,5 +471,65 @@ public class ChipsEditText extends MultilineEditText {
         isNotificationVisible = notificationVisible;
     }
 
-    boolean isNotificationVisible = false;
+    public interface Listener {
+        void onBubbleCountChanged();
+
+        void onActionDone(boolean wasManualModeOn, String text);
+
+        void onHashTyped(boolean start);
+
+        void onManualModeChanged(boolean enabled);
+    }
+
+//    @Override
+//    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+//        boolean isReturn = true;
+//        if (keyCode == KeyEvent.KEYCODE_BACK)
+//            if (isNotificationVisible)
+//                isReturn = false;
+//        return isReturn;
+//
+//
+//    }
+
+
+    public interface BubbleTextWatcher {
+        void onType(String query);
+    }
+
+    static class CursorRunnable implements Runnable {
+
+        WeakReference<ChipsEditText> _et;
+
+        public CursorRunnable(ChipsEditText et) {
+            this._et = new WeakReference<ChipsEditText>(et);
+        }
+
+        @Override
+        public void run() {
+            ChipsEditText et = _et.get();
+            if (et == null) return;
+            et.cursorBlink = !et.cursorBlink;
+            et.postInvalidate();
+            et.postDelayed(this, 500);
+        }
+    }
+
+    public static class EditAction {
+        String text;
+        int start;
+        int before;
+        int count;
+
+        public EditAction(String text, int start, int before, int count) {
+            this.text = text;
+            this.start = start;
+            this.before = before;
+            this.count = count;
+        }
+
+        int end() {
+            return start + count;
+        }
+    }
 }

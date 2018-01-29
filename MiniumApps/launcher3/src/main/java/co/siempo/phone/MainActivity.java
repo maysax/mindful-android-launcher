@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -46,8 +45,6 @@ import java.util.ArrayList;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
-import co.siempo.phone.db.DBUtility;
-import co.siempo.phone.db.NotificationSwipeEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainSlidePagerAdapter;
@@ -55,6 +52,8 @@ import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
+import co.siempo.phone.ui.SiempoPermissionActivity_;
+import co.siempo.phone.util.PermissionUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
@@ -71,9 +70,12 @@ import static minium.co.core.log.LogConfig.TRACE_TAG;
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
 
 
+    public static final String IS_FROM_HOME = "isFromHome";
     private static final String TAG = "MainActivity";
-
     public static int currentItem = -1;
+    public static String isTextLenghGreater = "";
+    @Pref
+    Launcher3Prefs_ launcher3Prefs;
     @ViewById
     ViewPager pager;
 
@@ -88,27 +90,52 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @SystemService
     NotificationManager notificationManager;
-    @SystemService
-    AudioManager audioManager;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
-
-    private enum ActivityState {
-        AFTERVIEW,
-        RESTART,
-        ACTIVITY_RESULT,
-        STOP
-    }
-
     ActivityState state;
-
-    private AlertDialog notificationDialog;
-
-    public static String isTextLenghGreater = "";
-
     long startTime;
     boolean isApplicationLaunch = false;
+    /**
+     * Below function is use to check if latest version is available from play store or not
+     * 1) It will check first with Appupdater library if it fails to identify then
+     * 2) It will check with AWS logic.
+     */
+    AppUpdaterUtils appUpdaterUtils;
+    private PermissionUtil permissionUtil;
+    private AlertDialog notificationDialog;
+    PermissionListener permissionlistener = new PermissionListener() {
+        @Override
+        public void onPermissionGranted() {
+            Log.d(TAG, "Permission granted");
+            loadViews();
+            logFirebase();
+            checknavigatePermissions();
+
+        }
+
+        @Override
+        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+            UIUtils.toast(MainActivity.this, "Permission denied");
+            new TedPermission(MainActivity.this)
+                    .setPermissionListener(permissionlistener)
+                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
+                    .setPermissions(Constants.PERMISSIONS)
+                    .check();
+        }
+    };
+
+    /**
+     * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
+     */
+    public static boolean isEnabled(Context mContext) {
+
+        ComponentName cn = new ComponentName(mContext, SiempoNotificationListener_.class);
+        String flat = Settings.Secure.getString(mContext.getContentResolver(), "enabled_notification_listeners");
+        return flat != null && flat.contains(cn.flattenToString());
+
+        //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
+    }
 
     @Trace(tag = TRACE_TAG)
     @AfterViews
@@ -117,13 +144,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         state = ActivityState.AFTERVIEW;
         Log.d(TAG, "afterViews event called");
 
-        new TedPermission(this)
-                .setPermissionListener(permissionlistener)
-                .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                .setPermissions(Constants.PERMISSIONS)
-                .check();
-
+        loadViews();
         logFirebase();
+        checknavigatePermissions();
+
         launcherPrefs.updatePrompt().put(true);
 
     }
@@ -234,8 +258,12 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 
     @UiThread(delay = 500)
     void loadViews() {
-        sliderAdapter = new MainSlidePagerAdapter(getFragmentManager());
+        sliderAdapter = new MainSlidePagerAdapter(getFragmentManager(), MainActivity.this);
         pager.setAdapter(sliderAdapter);
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+            pager.setCurrentItem(1);
+            currentItem = 1;
+        }
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -255,9 +283,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 }
                 currentItem = position;
                 try {
-                    if (position == 1 && getCurrentFocus() != null)
-                        //noinspection ConstantConditions
-                        UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
+                    if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+                        if ((position == 1 || position == 2) && getCurrentFocus() != null)
+                            //noinspection ConstantConditions
+                            UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
+                    } else {
+                        if (position == 1 && getCurrentFocus() != null)
+                            //noinspection ConstantConditions
+                            UIUtils.hideSoftKeyboard(MainActivity.this, getCurrentFocus().getWindowToken());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     CoreApplication.getInstance().logException(e);
@@ -269,39 +303,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             }
         });
     }
-
-    /**
-     * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
-     */
-    public static boolean isEnabled(Context mContext) {
-
-        ComponentName cn = new ComponentName(mContext, SiempoNotificationListener_.class);
-        String flat = Settings.Secure.getString(mContext.getContentResolver(), "enabled_notification_listeners");
-        return flat != null && flat.contains(cn.flattenToString());
-
-        //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
-    }
-
-    PermissionListener permissionlistener = new PermissionListener() {
-        @Override
-        public void onPermissionGranted() {
-            Log.d(TAG, "Permission granted");
-            loadViews();
-            logFirebase();
-            checknavigatePermissions();
-
-        }
-
-        @Override
-        public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-            UIUtils.toast(MainActivity.this, "Permission denied");
-            new TedPermission(MainActivity.this)
-                    .setPermissionListener(permissionlistener)
-                    .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
-                    .setPermissions(Constants.PERMISSIONS)
-                    .check();
-        }
-    };
 
     private void logFirebase() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -321,19 +322,11 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onUserLeaveHint();
     }
 
-    /**
-     * Below function is use for further development when pause feature will enable.
-     *
-     * @KeyDown(KeyEvent.KEYCODE_VOLUME_UP) void volumeUpPressed() {
-     * Tracer.i("Volume up pressed in MainActivity");
-     * PauseActivity_.intent(this).start();
-     * }
-     */
 
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
-        if (event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
+        if (event.getVersionName() != null && event.getVersionName().equalsIgnoreCase(CheckVersionEvent.ALPHA)) {
             if (event.getVersion() > UIUtils.getCurrentVersionCode(this)) {
                 Tracer.d("Installed version: " + UIUtils.getCurrentVersionCode(this) + " Found: " + event.getVersion());
                 showUpdateDialog(CheckVersionEvent.ALPHA);
@@ -413,17 +406,34 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume.. ");
-        startTime = System.currentTimeMillis();
-        try {
-            enableNfc(true);
-        } catch (Exception e) {
-            Tracer.e(e);
-            CoreApplication.getInstance().logException(e);
+
+        permissionUtil = new PermissionUtil(this);
+        if (!permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) || !permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)
+                || !permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) || !permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)
+                ) {
+
+            Intent intent = new Intent(MainActivity.this, SiempoPermissionActivity_.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra(IS_FROM_HOME, true);
+            startActivity(intent);
+
+        } else {
+            Log.d(TAG, "onResume.. ");
+            startTime = System.currentTimeMillis();
+            try {
+                enableNfc(true);
+            } catch (Exception e) {
+                Tracer.e(e);
+                CoreApplication.getInstance().logException(e);
+            }
+            // prevent keyboard up on old menu screen when coming back from other launcher
+            if (pager != null) pager.setCurrentItem(currentItem, true);
+            //  currentIndex = currentItem;
         }
-        // prevent keyboard up on old menu screen when coming back from other launcher
-        if (pager != null) pager.setCurrentItem(currentItem, true);
-        //  currentIndex = currentItem;
+
 
     }
 
@@ -433,20 +443,24 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         super.onPause();
         Log.d(TAG, "ACTION ONPAUSE");
         enableNfc(false);
-        if (currentItem == 0) {
-            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
-        } else if (currentItem == 1) {
-            FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+
+        } else {
+            if (currentItem == 0) {
+                FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.IF_SCREEN, startTime);
+            } else if (currentItem == 1) {
+                FirebaseHelper.getIntance().logScreenUsageTime(FirebaseHelper.SIEMPO_MENU, startTime);
+            }
         }
 
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        currentItem = 0;
-        long notificationCount = DBUtility.getTableNotificationSmsDao().count() + DBUtility.getCallStorageDao().count();
-        if (notificationCount == 0) {
-            EventBus.getDefault().post(new NotificationSwipeEvent(true));
+        if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+            currentItem = 1;
+        } else {
+            currentItem = 0;
         }
         Log.d(TAG, "ACTION onNewIntent");
         if (intent.getAction() != null && intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
@@ -483,10 +497,16 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     @Override
     public void onBackPressed() {
         try {
-            //Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
-            if (pager != null && pager.getCurrentItem() == 1) {
-                pager.setCurrentItem(0);
+            if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
+                if (pager != null && pager.getCurrentItem() == 2) {
+                    pager.setCurrentItem(1);
+                }
+            } else {
+                if (pager != null && pager.getCurrentItem() == 1) {
+                    pager.setCurrentItem(0);
+                }
             }
+            //Below snippet is use to remove notification fragment (Siempo Notification Screen) if visible on screen
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -499,7 +519,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onRestart() {
         super.onRestart();
         if (state != ActivityState.AFTERVIEW && state != ActivityState.ACTIVITY_RESULT) {
-            checkAllPermissions();
+//            checkAllPermissions();
             Log.d(TAG, "Restart ... ");
         }
 
@@ -518,13 +538,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setButtonDismiss("Maybe later")
                 .start();
     }
-
-    /**
-     * Below function is use to check if latest version is available from play store or not
-     * 1) It will check first with Appupdater library if it fails to identify then
-     * 2) It will check with AWS logic.
-     */
-    AppUpdaterUtils appUpdaterUtils;
 
     public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -563,7 +576,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
             Log.d(TAG, getString(R.string.nointernetconnection));
         }
     }
-
 
     public void notificatoinAccessDialog() {
         notificationDialog = new AlertDialog.Builder(MainActivity.this)
@@ -605,7 +617,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-
     public void checkAllPermissions() {
         new TedPermission(MainActivity.this)
                 .setPermissionListener(new PermissionListener() {
@@ -625,6 +636,14 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
                 .setDeniedMessage("If you reject permission, app can not provide you the seamless integration.\n\nPlease consider turn on permissions at Setting > Permission")
                 .setPermissions(Constants.PERMISSIONS)
                 .check();
+    }
+
+
+    private enum ActivityState {
+        AFTERVIEW,
+        RESTART,
+        ACTIVITY_RESULT,
+        STOP
     }
 
 }
