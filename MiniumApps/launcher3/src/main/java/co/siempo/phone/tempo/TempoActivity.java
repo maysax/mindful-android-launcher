@@ -139,7 +139,7 @@ public class TempoActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
-        everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 22));
+        everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
         everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
         enableRadioOnPosition(droidPrefs.tempoType().get());
         bindOnlyAt();
