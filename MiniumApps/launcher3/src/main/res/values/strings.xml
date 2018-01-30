@@ -345,8 +345,8 @@
     <string name="msg_quarter">Batches will arrive on the quarter-hour.</string>
     <string name="msg_half">Batches will arrive on the half-hour.</string>
     <string name="msg_1hour">Batches will arrive on the hour.</string>
-    <string name="msg_2hour">Batches will arrive every 2 hours.</string>
-    <string name="msg_4hour">Batches will arrive every 4 hours.</string>
+    <string name="msg_2hour">Batches will arrive every 12 times per day.</string>
+    <string name="msg_4hour">Batches will arrive every 8 times per day.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
     <string name="message1">For the next day, week, or month, what do you want to remind yourself about whenever you unlock your phone?</string>
     <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be \"complete\", but your top priority may change.</string>
@@ -357,9 +357,9 @@
     <string name="type_a_few_words">Type a few words</string>
     <string name="close">CLOSE</string>
     <string name="next">NEXT</string>
-    
+
     <string name="faqlink">http://www.getsiempo.com/apps/android/beta/faq.htm</string>
-<string name="privacypolicy_link"><a href="" >Privacy Policy</a></string>
+    <string name="privacypolicy_link"><a href="">Privacy Policy</a></string>
     <string name="title_activity_intention_confirmation">IntentionConfirmationActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
