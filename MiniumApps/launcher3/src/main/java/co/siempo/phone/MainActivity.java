@@ -423,12 +423,15 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         } else {
             Log.d(TAG, "onResume.. ");
             startTime = System.currentTimeMillis();
-            try {
-                enableNfc(true);
-            } catch (Exception e) {
-                Tracer.e(e);
-                CoreApplication.getInstance().logException(e);
-            }
+            /**
+             * Below logic is disable for NFC which is not used in existing development.
+             */
+//            try {
+//                enableNfc(true);
+//            } catch (Exception e) {
+//                Tracer.e(e);
+//                CoreApplication.getInstance().logException(e);
+//            }
             // prevent keyboard up on old menu screen when coming back from other launcher
             if (pager != null) pager.setCurrentItem(currentItem, true);
             //  currentIndex = currentItem;
@@ -442,7 +445,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "ACTION ONPAUSE");
-        enableNfc(false);
+//        enableNfc(false);
         if (BuildConfig.FLAVOR.equalsIgnoreCase(getString(R.string.alpha))) {
 
         } else {
@@ -470,22 +473,26 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-    private void enableNfc(boolean isEnable) {
-        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (nfcAdapter != null) {
-            if (isEnable) {
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
-                        getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
-                filter.addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
-                filter.addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
-                nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, techList);
-            } else {
-                nfcAdapter.disableForegroundDispatch(this);
-            }
-        }
-    }
+    /**
+     * Below function is used for NFC logic which will use in further release.
+     * @param event
+     */
+//    private void enableNfc(boolean isEnable) {
+//        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+//        if (nfcAdapter != null) {
+//            if (isEnable) {
+//                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this,
+//                        getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+//                IntentFilter filter = new IntentFilter();
+//                filter.addAction(NfcAdapter.ACTION_TAG_DISCOVERED);
+//                filter.addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
+//                filter.addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
+//                nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, techList);
+//            } else {
+//                nfcAdapter.disableForegroundDispatch(this);
+//            }
+//        }
+//    }
 
     @Subscribe
     public void nfcEvent(NFCEvent event) {
