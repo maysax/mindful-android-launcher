@@ -88,8 +88,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:visibility="gone"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 tools:ignore="UseCompoundDrawables">
 
                 <ImageView
@@ -195,55 +195,7 @@ Screen-->
             </RelativeLayout>
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:visibility="gone"
-                android:orientation="horizontal"
-                android:paddingRight="5dp"
-                tools:ignore="UseCompoundDrawables">
 
-                <ImageView
-                    android:id="@+id/icon_hideNotification"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="15dp"
-                    android:contentDescription="@null"
-                    android:padding="6dp" />
-
-                <TextView
-                    android:id="@+id/txt_hidenotification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_toLeftOf="@+id/swtch_notification"
-                    android:layout_toRightOf="@+id/icon_hideNotification"
-                    android:fontFamily="sans-serif-medium"
-                    android:maxLines="3"
-                    android:text="@string/title.lockScreenNotifications"
-                    android:textSize="14sp" />
-
-                <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/swtch_notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical"
-                    android:background="@android:color/transparent"
-                    android:button="@null"
-                    android:checked="true"
-                    android:textOff=""
-                    android:textOn="" />
-
-            </RelativeLayout>
 
 
             <LinearLayout
