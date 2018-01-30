@@ -11,22 +11,24 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.provider.Settings;
+import android.provider.Telephony;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-
 import co.siempo.phone.R;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
@@ -171,27 +173,29 @@ public class PackageUtil {
         DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
         String time = sdf.format(notification.get_date());
 
+        String title=getNotificationTitle(notification.get_contact_title(),notification.getPackageName(),context);
 
-        RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
-        contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
-        contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
-        contentView.setTextViewText(R.id.txtUserName, notification.get_contact_title());
-        contentView.setTextViewText(R.id.txtMessage, notification.get_message());
-        contentView.setTextViewText(R.id.txtTime, time);
-        contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
-        b.setAutoCancel(true)
-                .setGroup(applicationNameFromPackageName)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.siempo_notification_icon)
-                .setPriority(Notification.PRIORITY_HIGH)
-                .setContentTitle(notification.get_contact_title())
-                .setContentText(notification.get_message())
-                .setContentIntent(contentIntent)
-                .setCustomContentView(contentView)
-                .setCustomBigContentView(contentView)
-                .setLights(Color.MAGENTA, 500, 500)
-                .setDefaults(Notification.DEFAULT_SOUND)
-                .setContentInfo("Info");
+
+            RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+            contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+            contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
+            contentView.setTextViewText(R.id.txtUserName, title);
+            contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+            contentView.setTextViewText(R.id.txtTime, time);
+            contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
+            b.setAutoCancel(true)
+                    .setGroup(applicationNameFromPackageName)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.siempo_notification_icon)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setContentTitle(title)
+                    .setContentText(notification.get_message())
+                    .setContentIntent(contentIntent)
+                    .setCustomContentView(contentView)
+                    .setCustomBigContentView(contentView)
+                    .setLights(Color.MAGENTA, 500, 500)
+                    .setDefaults(Notification.DEFAULT_SOUND)
+                    .setContentInfo("Info");
         return b;
     }
 
@@ -227,8 +231,12 @@ public class PackageUtil {
         List<TableNotificationSms> notificationSms = DBUtility.getNotificationDao().queryBuilder()
                 .where(TableNotificationSmsDao.Properties.PackageName.eq(notification.getPackageName())).list();
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+
         for (int i = 0; i < notificationSms.size(); i++) {
-            inboxStyle.addLine(notificationSms.get(i).get_contact_title() + ": " + notificationSms.get(i).get_message());
+
+            String title=getNotificationTitle(notification.get_contact_title(),notification.getPackageName(),context);
+
+            inboxStyle.addLine(title + ": " + notificationSms.get(i).get_message());
         }
         inboxStyle.setSummaryText("You have " + notificationSms.size() + " unread message");
         PendingIntent pendingIntent = getPendingIntent(context, notification);
@@ -302,4 +310,38 @@ public class PackageUtil {
         return chan;
     }
 
+    /**
+     * Below function is used to get contact name from contact number store in contact list
+     */
+    private static String nameFromContactNumber(String number,Context context) {
+
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+        Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
+        String contactName;
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
+                cursor.close();
+            } else {
+                contactName = number;
+            }
+        } catch (Exception e) {
+            contactName = "";
+            e.printStackTrace();
+        }
+        return contactName;
+    }
+
+    public static String getNotificationTitle(String notificationTitle,String notificationPackageName,Context context){
+        String title="";
+        if(!TextUtils.isEmpty(notificationTitle)){
+            title=notificationTitle;
+            String smsPackage=Telephony.Sms.getDefaultSmsPackage(context);
+            if(!TextUtils.isEmpty(notificationPackageName) && notificationPackageName.equalsIgnoreCase(smsPackage)){
+                title=nameFromContactNumber(notificationTitle,context);
+            }
+        }
+        return  title;
+    }
 }

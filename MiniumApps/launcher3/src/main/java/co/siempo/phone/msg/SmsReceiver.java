@@ -124,7 +124,6 @@ public class SmsReceiver extends BroadcastReceiver {
 
     private void saveMessage(String address, String body, Date date, Context context) {
         try {
-            String contactName=nameFromContactNumber(address.trim(),context);
             DaoSession daoSession = ((Launcher3App) CoreApplication.getInstance()).getDaoSession();
             TableNotificationSmsDao smsDao = daoSession.getTableNotificationSmsDao();
             TableNotificationSms notificationSms = DBUtility.getNotificationDao().queryBuilder()
@@ -133,7 +132,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     .unique();
             if (notificationSms == null) {
                 notificationSms = new TableNotificationSms();
-                notificationSms.set_contact_title(contactName);
+                notificationSms.set_contact_title(address);
                 notificationSms.set_message(body);
                 notificationSms.set_date(date);
                 notificationSms.setNotification_date(System.currentTimeMillis());
@@ -146,7 +145,7 @@ public class SmsReceiver extends BroadcastReceiver {
             } else {
                 notificationSms.set_date(date);
                 notificationSms.setNotification_date(System.currentTimeMillis());
-                notificationSms.set_contact_title(contactName);
+                notificationSms.set_contact_title(address);
                 notificationSms.set_message(notificationSms.get_message() + "\n" + body);
                 smsDao.update(notificationSms);
                 PackageUtil.recreateNotification(notificationSms, context, 1234, prefs.tempoType().get() == 0);
@@ -159,27 +158,6 @@ public class SmsReceiver extends BroadcastReceiver {
     }
 
 
-    /**
-     * Below function is used to get contact name from contact number store in contact list
-     */
-    private String nameFromContactNumber(String number,Context context) {
 
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-        Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.PHOTO_URI}, null, null, null);
-        String contactName;
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
-                contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME));
-                cursor.close();
-            } else {
-                contactName = number;
-            }
-        } catch (Exception e) {
-            contactName = "";
-            e.printStackTrace();
-        }
-        return contactName;
-    }
 
 }
