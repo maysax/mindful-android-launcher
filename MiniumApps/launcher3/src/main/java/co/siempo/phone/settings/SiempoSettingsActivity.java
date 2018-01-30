@@ -68,8 +68,6 @@ public class SiempoSettingsActivity extends CoreActivity {
     private LinearLayout ln_launcher, ln_version, ln_Feedback, ln_Faq, ln_changeDefaultApp, ln_AppListNotifications;
     private ProgressDialog pd;
     private AppUpdaterUtils appUpdaterUtils;
-    private ImageView icon_hideNotification;
-    private SwitchCompat switch_notification;
     private SwitchCompat switch_KeyBoardnotification;
     private long startTime = 0;
 
@@ -119,22 +117,12 @@ public class SiempoSettingsActivity extends CoreActivity {
         ln_Feedback = findViewById(R.id.ln_Feedback);
         ln_AppListNotifications = findViewById(R.id.ln_notifications);
         ln_Faq = findViewById(R.id.ln_Faq);
-        icon_hideNotification = findViewById(R.id.icon_hideNotification);
         ln_changeDefaultApp = findViewById(R.id.ln_changeDefaultApp);
-        switch_notification = findViewById(R.id.swtch_notification);
         switch_KeyBoardnotification = findViewById(R.id.switch_KeyBoardnotification);
         icon_launcher.setImageDrawable(new IconDrawable(context, "fa-certificate")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-        // In case if suppressed notification bar is to be invoked from this
-        //  screen
-//        try {
-//            icon_SuppressedNotifications.setImageDrawable(new IconDrawable(context, "fa-exclamation").colorRes(R.color.text_primary).sizeDp(18));
-//        }catch (Exception e){
-//        }
-        icon_hideNotification.setImageDrawable(new IconDrawable(context, "fa-flag")
-                .colorRes(R.color.text_primary)
-                .sizeDp(18));
+
         icon_changeDefaultApp.setImageDrawable(new IconDrawable(context, "fa-link")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
@@ -151,12 +139,6 @@ public class SiempoSettingsActivity extends CoreActivity {
         icon_Faq.setImageDrawable(new IconDrawable(context, "fa-shield")
                 .colorRes(R.color.text_primary)
                 .sizeDp(18));
-
-        if (launcherPrefs.isAllowNotificationOnLockScreen().get()) {
-            switch_notification.setChecked(true);
-        } else {
-            switch_notification.setChecked(false);
-        }
         switch_KeyBoardnotification.setChecked(isKeyboardDisplay);
 
     }

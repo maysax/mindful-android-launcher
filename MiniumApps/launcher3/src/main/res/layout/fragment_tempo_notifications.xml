@@ -107,49 +107,10 @@
 
 
             <TextView
-                android:id="@+id/txtAllowOnLockScreen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAllowPeakingText"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
-                android:padding="8dp"
-                android:text="Allow on lock screen"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Switch
-                android:id="@+id/switchAllowOnLockScreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/txtAllowOnLockScreenText"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/txtAllowOnLockScreenText"
-                android:layout_below="@+id/txtAllowOnLockScreenText"
-                android:layout_marginRight="8dp" />
-
-            <TextView
-                android:id="@+id/txtAllowOnLockScreenText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAllowOnLockScreen"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_toLeftOf="@+id/switchAllowOnLockScreen"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="4dp"
-                android:text="Off. All notifications will be hidden from the lock screen."
-                android:textSize="16sp" />
-
-
-            <TextView
                 android:id="@+id/txtDisableNotificationControls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAllowOnLockScreenText"
+                android:layout_below="@+id/txtAllowPeakingText"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="8dp"

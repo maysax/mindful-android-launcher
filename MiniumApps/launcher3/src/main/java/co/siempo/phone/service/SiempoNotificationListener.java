@@ -1,6 +1,5 @@
 package co.siempo.phone.service;
 
-import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -171,14 +170,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-
-            KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            if (PackageUtil.isSiempoLauncher(this) && (myKM != null && myKM.inKeyguardRestrictedInputMode()) && !launcherPrefs.isAllowNotificationOnLockScreen().get()) {
-                StatusBarNotification[] statusBarNotifications = SiempoNotificationListener.this.getActiveNotifications();
-                for (StatusBarNotification statusBarNotification : statusBarNotifications) {
-                    SiempoNotificationListener.this.cancelNotification(statusBarNotification.getKey());
-                }
             }
 
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
