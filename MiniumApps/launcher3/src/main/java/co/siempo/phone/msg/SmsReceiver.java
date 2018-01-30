@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
@@ -154,6 +156,8 @@ public class SmsReceiver extends BroadcastReceiver {
             CoreApplication.getInstance().logException(e);
         }
     }
+
+
 
 
 }
