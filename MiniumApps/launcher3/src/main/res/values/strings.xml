@@ -297,8 +297,8 @@
     <string name="batched_every_15_minutes">Batched, every 15 minutes</string>
     <string name="batched_every_30_minutes">Batched, every 30 minutes</string>
     <string name="batched_every_1_hour">Batched, every 1 hour</string>
-    <string name="batched_every_2_hour">Batched, every 2 hour</string>
-    <string name="batched_every_4_hour">Batched, every 4 hour</string>
+    <string name="batched_every_2_hour">Batched, every 2 hours</string>
+    <string name="batched_every_4_hour">Batched, every 4 hours</string>
     <string name="only_at">Only at:</string>
     <string name="_09_15am_amp_05_32pm_amp_05_32pm"><![CDATA[09:15am & 05:32pm & 05:32pm]]></string>
     <string name="add">ADD</string>
@@ -345,8 +345,8 @@
     <string name="msg_quarter">Batches will arrive on the quarter-hour.</string>
     <string name="msg_half">Batches will arrive on the half-hour.</string>
     <string name="msg_1hour">Batches will arrive on the hour.</string>
-    <string name="msg_2hour">Batches will arrive every 2 hour.</string>
-    <string name="msg_4hour">Batches will arrive every 4 hour.</string>
+    <string name="msg_2hour">Batches will arrive every 2 hours.</string>
+    <string name="msg_4hour">Batches will arrive every 4 hours.</string>
     <string name="msg_next_delivery">Next Delivery: </string>
     <string name="message1">For the next day, week, or month, what do you want to remind yourself about whenever you unlock your phone?</string>
     <string name="message2">An intention is a goal or an idea that you want to focus on. Unlike a task, it might never be \"complete\", but your top priority may change.</string>
