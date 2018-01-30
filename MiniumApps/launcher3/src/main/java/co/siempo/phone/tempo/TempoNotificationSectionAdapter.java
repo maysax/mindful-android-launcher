@@ -53,6 +53,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
     private List<DisableAppList> appList, blockedList, messengerList;
     private List<HeaderAppList> headerList;
     private boolean showUnblockAlert = true;
+    PopupMenu popup;
 
 
     public TempoNotificationSectionAdapter(Context context, List<DisableAppList> appList, List<DisableAppList> messengerList, List<DisableAppList> blockedList, List<HeaderAppList> headerList) {
@@ -185,7 +186,10 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
 
                         final DisableAppList d = otherAppsItems;
-                        PopupMenu popup = new PopupMenu(context, v);
+                        if(popup!=null){
+                            popup.dismiss();
+                        }
+                        popup = new PopupMenu(context, v);
                         popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
                         MenuItem menuItem = popup.getMenu().findItem(R.id.block);
                         menuItem.setTitle("Unblock app notifications");
@@ -299,8 +303,10 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                 holder.getToggle().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        PopupMenu popup = new PopupMenu(context, v);
+                        if(popup!=null){
+                            popup.dismiss();
+                        }
+                        popup = new PopupMenu(context, v);
                         popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
 
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -343,8 +349,10 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                 holder.getToggle().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        PopupMenu popup = new PopupMenu(context, v);
+                        if(popup!=null){
+                            popup.dismiss();
+                        }
+                        popup = new PopupMenu(context, v);
                         popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
 
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
