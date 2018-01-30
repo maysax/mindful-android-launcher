@@ -3,7 +3,6 @@ package co.siempo.phone.tempo;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.support.v4.content.ContextCompat;
@@ -98,7 +97,6 @@ public class TempoActivity extends CoreActivity {
     @Pref
     DroidPrefs_ droidPrefs;
     String strMessage;
-    TimePickerDialog timePickerDialog;
     boolean isCancelButton = false;
     long startTime = 0;
     @SystemService
@@ -106,6 +104,8 @@ public class TempoActivity extends CoreActivity {
     @SystemService
     NotificationManager notificationManager;
     private String TAG = "TempoActivity";
+    private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
+    private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
 
     @Override
     protected void onResume() {
@@ -139,6 +139,8 @@ public class TempoActivity extends CoreActivity {
 
     @AfterViews
     void afterViews() {
+        everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 22));
+        everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
         enableRadioOnPosition(droidPrefs.tempoType().get());
         bindOnlyAt();
         fabMenu.setClosedOnTouchOutside(true);
@@ -488,12 +490,18 @@ public class TempoActivity extends CoreActivity {
             } else if (droidPrefs.batchTime().get() == 2) {
                 txtBatch.setText(getString(R.string.batched_every_2_hour));
                 strMessage = strMessage + "\n" + getString(R.string.msg_2hour) + "\n";
-                calendar.add(Calendar.HOUR_OF_DAY, 2);
+                calendar = Calendar.getInstance();
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int intHour = forTwoHours(hour);
+                calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
             } else if (droidPrefs.batchTime().get() == 4) {
                 txtBatch.setText(getString(R.string.batched_every_4_hour));
                 strMessage = strMessage + "\n" + getString(R.string.msg_4hour) + "\n";
-                calendar.add(Calendar.HOUR_OF_DAY, 4);
+                calendar = Calendar.getInstance();
+                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                int intHour = forFourHours(hour);
+                calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
             }
             strMessage = strMessage + getString(R.string.msg_next_delivery) + df.format(calendar.getTime());
@@ -505,6 +513,32 @@ public class TempoActivity extends CoreActivity {
             droidPrefs.tempoType().put(2);
             bindOnlyAt();
         }
+    }
+
+    int forTwoHours(int hour) {
+        if (hour >= 22) {
+            return 0;
+        } else {
+            for (Integer integer : everyTwoHourList) {
+                if (integer > hour) {
+                    return integer;
+                }
+            }
+        }
+        return 0;
+    }
+
+    int forFourHours(int hour) {
+        if (hour >= 20) {
+            return 0;
+        } else {
+            for (Integer integer : everyFourHoursList) {
+                if (integer > hour) {
+                    return integer;
+                }
+            }
+        }
+        return 0;
     }
 
 

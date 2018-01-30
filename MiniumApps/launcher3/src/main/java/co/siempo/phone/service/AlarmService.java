@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.PowerManager;
 import android.os.Vibrator;
@@ -41,7 +40,6 @@ public class AlarmService extends IntentService {
     private ArrayList<Integer> everyHourList = new ArrayList<>();
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
-    private MediaPlayer notificationMediaPlayer;
 
     public AlarmService() {
         super("MyServerOrWhatever");
@@ -146,13 +144,13 @@ public class AlarmService extends IntentService {
                         recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
                     }
                 } else if (batchTime == 2) {
-                    if (everyTwoHourList.contains(systemHours) && systemMinutes == 0) {
+                    if (systemHours % 2 == 0 && systemMinutes == 0) {
                         Tracer.d("Batch::" + "Every 2 Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
                         recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
                     }
                 } else if (batchTime == 4) {
-                    if (everyFourHoursList.contains(systemHours) && systemMinutes == 0) {
+                    if (systemHours % 4 == 0 && systemMinutes == 0) {
                         Tracer.d("Batch::" + "Every 4 Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
                         recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
