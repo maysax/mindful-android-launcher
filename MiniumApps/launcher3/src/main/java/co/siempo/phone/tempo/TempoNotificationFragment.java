@@ -27,6 +27,7 @@ import co.siempo.phone.db.DBUtility;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.log.Tracer;
+import minium.co.core.ui.CoreActivity;
 import minium.co.core.ui.CoreFragment;
 
 /**
@@ -48,24 +49,10 @@ public class TempoNotificationFragment extends CoreFragment {
     DroidPrefs_ droidPrefs;
 
     @ViewById
-    Switch switchDisableNotificationControls;
-
-    @ViewById
-    Switch switchAllowPeaking;
-    @ViewById
-    TextView txtAllowPeakingText;
-
-    @ViewById
     TextView txtAllowAppsText;
     @ViewById
     TextView txtAllowApps;
-    @ViewById
-    TextView txtAllowPeaking;
 
-    @ViewById
-    TextView txtDisableNotificationControls;
-    @ViewById
-    TextView txtDisableNotificationControlsTxt;
 
     @ViewById
     RelativeLayout relAllowSpecificApps;
@@ -92,142 +79,14 @@ public class TempoNotificationFragment extends CoreFragment {
             }
         });
 
-        if (droidPrefs.isTempoNotificationControlsDisabled().get()) {
-            switchDisableNotificationControls.setChecked(true);
-//            txtAllowPeaking.setVisibility(View.GONE);
-            txtAllowApps.setVisibility(View.GONE);
-            txtAllowAppsText.setVisibility(View.GONE);
-            switchAllowPeaking.setVisibility(View.GONE);
-//            txtAllowPeakingText.setVisibility(View.GONE);
-            isDisableChecked = true;
-            txtDisableNotificationControlsTxt.setText("All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.");
-        } else
-
-        {
-            switchDisableNotificationControls.setChecked(false);
-//            txtAllowPeaking.setVisibility(View.VISIBLE);
-            txtAllowApps.setVisibility(View.VISIBLE);
-            txtAllowAppsText.setVisibility(View.VISIBLE);
-//            switchAllowPeaking.setVisibility(View.VISIBLE);
-//            txtAllowPeakingText.setVisibility(View.VISIBLE);
-            isDisableChecked = false;
-            txtDisableNotificationControlsTxt.setText("Disabling Siempo's notifications controls means that you can no longer schedule nor control the appearance of notifications.");
-        }
-
-        switchDisableNotificationControls.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (!isDisableChecked) {
-
-
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
-                            .setMessage("Most users report that phone notifications are a primary cause of unwanted distraction and encourage them to spend too much time on their phones.")
-                            .setCancelable(false)
-                            .setTitle("Are you sure ?")
-                            .setPositiveButton("YES,DISABLE", null)
-                            .setNegativeButton("CANCEL", null);
-
-                    alertDialog = alertDialogBuilder.create();
-//                                alertDialog.setCanceledOnTouchOutside(false);
-
-
-                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                                                      @Override
-                                                      public void onShow(DialogInterface dialog) {
-
-                                                          Button buttonNegative = alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-                                                          buttonNegative.setTypeface(null, Typeface.BOLD);
-                                                          buttonNegative
-                                                                  .setOnClickListener(new View.OnClickListener() {
-                                                                      @Override
-                                                                      public void onClick(View v) {
-                                                                          alertDialog.dismiss();
-                                                                          switchDisableNotificationControls.setChecked(false);
-//                                                                          txtAllowPeaking.setVisibility(View.VISIBLE);
-                                                                          txtAllowApps.setVisibility(View.VISIBLE);
-                                                                          txtAllowAppsText.setVisibility(View.VISIBLE);
-//                                                                          switchAllowPeaking.setVisibility(View.VISIBLE);
-//                                                                          txtAllowPeakingText.setVisibility(View.VISIBLE);
-                                                                          isDisableChecked = false;
-                                                                          droidPrefs.isTempoNotificationControlsDisabled().put(false);
-                                                                      }
-                                                                  });
-
-                                                          Button buttonPositive = alertDialog.getButton(AlertDialog
-                                                                  .BUTTON_POSITIVE);
-
-                                                          buttonPositive
-                                                                  .setTextColor(context.getResources().getColor(R.color.pinktext_background_active_end));
-
-                                                          buttonPositive.setTypeface(null, Typeface.BOLD);
-                                                          buttonPositive
-                                                                  .setOnClickListener(new View.OnClickListener() {
-                                                                      @Override
-                                                                      public void onClick(View v) {
-                                                                          alertDialog.dismiss();
-
-                                                                          switchDisableNotificationControls.setChecked(true);
-//                                                                          txtAllowPeaking.setVisibility(View.GONE);
-                                                                          txtAllowApps.setVisibility(View.GONE);
-                                                                          txtAllowAppsText.setVisibility(View.GONE);
-//                                                                          switchAllowPeaking.setVisibility(View.GONE);
-//                                                                          txtAllowPeakingText.setVisibility(View.GONE);
-                                                                          isDisableChecked = true;
-                                                                          droidPrefs.isTempoNotificationControlsDisabled().put(true);
-                                                                          txtDisableNotificationControlsTxt.setText(R.string.msg_tempo_disable);
-                                                                          DBUtility.getNotificationDao().deleteAll();
-                                                                      }
-                                                                  });
-                                                      }
-                                                  }
-
-
-                    );
-
-                    alertDialog.show();
-
-
-                } else {
-                    switchDisableNotificationControls.setChecked(false);
-//                    txtAllowPeaking.setVisibility(View.VISIBLE);
-                    txtAllowApps.setVisibility(View.VISIBLE);
-                    txtAllowAppsText.setVisibility(View.VISIBLE);
-//                    switchAllowPeaking.setVisibility(View.VISIBLE);
-//                    txtAllowPeakingText.setVisibility(View.VISIBLE);
-                    isDisableChecked = false;
-                    droidPrefs.isTempoNotificationControlsDisabled().put(false);
-                    txtDisableNotificationControlsTxt.setText("Disabling Siempo's notifications controls means that you can no longer schedule nor control the appearance of notifications.");
-                }
-
-
-            }
-        });
-
-    }
-
-
-    @CheckedChange
-    void switchAllowPeaking(CompoundButton btn, boolean isChecked) {
-        if (isChecked) {
-            txtAllowPeakingText.setText("On. When new notifications arrive, they may pop up over the current app. The status bar will also show when you have new notifications.");
-
-        } else {
-            txtAllowPeakingText.setText("Off. The status bar will show you when you have new notifications in your tray, but your tray won't pop up automatically.");
-        }
     }
 
     @Click
     void relAllowSpecificApps() {
 
-        try {
-            Intent i = new Intent(getActivity(), TempoAppNotificationActivity.class);
-            getActivity().startActivity(i);
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-            CoreApplication.getInstance().logException(e);
-        }
-    }
+        Intent i = new Intent(getActivity(),TempoAppNotificationActivity.class);
+        startActivity(i);
+  }
 
 
 }

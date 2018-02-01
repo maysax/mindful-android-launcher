@@ -9,11 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -35,6 +34,9 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
     @Bind({R.id.imv_appicon})
     ImageView imv_appicon;
 
+    @Bind({R.id.linearList})
+    LinearLayout linearList;
+
 
     public TempoNotificationItemViewHolder(View itemView) {
         super(itemView);
@@ -52,6 +54,10 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView getToggle() {
         return img_block_unblock;
+    }
+
+    public LinearLayout getLinearList(){
+        return  linearList;
     }
 
 
@@ -91,7 +97,7 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
             disableNotificationApps.add(applicationInfo.packageName);
         }
         String disableList = new Gson().toJson(disableNotificationApps);
-        launcherPrefs.edit().putString(Constants.DISABLE_APPLIST, disableList).commit();
+        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
     }
 
 

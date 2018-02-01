@@ -10,7 +10,7 @@ import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.applist.DisableAppList;
+import co.siempo.phone.applist.AppListInfo;
 import co.siempo.phone.applist.HeaderAppList;
 import co.siempo.phone.settings.NoticationFooterViewHolder;
 import co.siempo.phone.settings.SectionedRecyclerViewAdapter;
@@ -42,72 +42,72 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
         TempoNotificationItemViewHolder,
         NoticationFooterViewHolder> {
 
-    private List<String> messengerAppList = new ArrayList<>();;
+    private List<String> pref_messengerList = new ArrayList<>();
+    ArrayList<String> pref_helpfulRobots = new ArrayList<>();
+    ArrayList<String> pref_blockedList = new ArrayList<>();
+    ArrayList<String> pref_headerSectionList = new ArrayList<>();
     protected Context context = null;
     SharedPreferences launcherPrefs;
-    ArrayList<String> disableNotificationApps = new ArrayList<>();
-    ArrayList<String> blockedApps = new ArrayList<>();
-    ArrayList<String> disableSections = new ArrayList<>();
     AlertDialog alertDialog;
     private PackageManager packageManager;
-    private List<DisableAppList> appList, blockedList, messengerList;
+    private List<AppListInfo> helpfulRobot_List, blockedList, messengerList;
     private List<HeaderAppList> headerList;
     private boolean showUnblockAlert = true;
     PopupMenu popup;
 
 
-    public TempoNotificationSectionAdapter(Context context, List<DisableAppList> appList, List<DisableAppList> messengerList, List<DisableAppList> blockedList, List<HeaderAppList> headerList) {
+    public TempoNotificationSectionAdapter(Context context, List<AppListInfo> helpfulRobot_List, List<AppListInfo> messengerList, List<AppListInfo> blockedList, List<HeaderAppList> headerList) {
         this.context = context;
-        this.appList = appList;
+        this.helpfulRobot_List = helpfulRobot_List;
         this.blockedList = blockedList;
         this.headerList = headerList;
         this.messengerList = messengerList;
         this.packageManager = context.getPackageManager();
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
 
-        String disable_AppList = launcherPrefs.getString(Constants.DISABLE_APPLIST, "");
-        if (!TextUtils.isEmpty(disable_AppList)) {
+        String pref_helpfulRobots = launcherPrefs.getString(Constants.HELPFUL_ROBOTS, "");
+        if (!TextUtils.isEmpty(pref_helpfulRobots)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
-            disableNotificationApps = new Gson().fromJson(disable_AppList, type);
+            this.pref_helpfulRobots = new Gson().fromJson(pref_helpfulRobots, type);
         }
 
 
-        String block_AppList = launcherPrefs.getString(Constants.BLOCKED_APPLIST, "");
-        if (!TextUtils.isEmpty(block_AppList)) {
+        String str_blockedAppList = launcherPrefs.getString(Constants.BLOCKED_APPLIST, "");
+        if (!TextUtils.isEmpty(str_blockedAppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
-            blockedApps = new Gson().fromJson(block_AppList, type);
+            pref_blockedList = new Gson().fromJson(str_blockedAppList, type);
         }
 
-        String disable_HeaderAppList = launcherPrefs.getString(Constants.HEADER_APPLIST, "");
-        if (!TextUtils.isEmpty(disable_HeaderAppList)) {
+        String headerAppList = launcherPrefs.getString(Constants.HEADER_APPLIST, "");
+        if (!TextUtils.isEmpty(headerAppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
-            disableSections = new Gson().fromJson(disable_HeaderAppList, type);
+            pref_headerSectionList = new Gson().fromJson(headerAppList, type);
         }
 
-        messengerAppList = new ArrayList<>();
+        pref_messengerList = new ArrayList<>();
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         List<ResolveInfo> messagingResolveList = context.getPackageManager()
                 .queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : messagingResolveList) {
-            messengerAppList.add(resolveInfo.activityInfo.packageName);
+            pref_messengerList.add(resolveInfo.activityInfo.packageName);
         }
     }
 
     @Override
     protected int getItemCountForSection(int section) {
         int size = 0;
-        if (headerList.get(section).name.equals("All Other Apps")) {
+        if (headerList.get(section).name.equals("All other apps")) {
             size = blockedList.size();
         }
-        if (headerList.get(section).name.equals("Human Direct Messaging")) {
+        if (headerList.get(section).name.equals("Human direct messaging")) {
             size = messengerList.size();
         }
-        if (headerList.get(section).name.equals("Helpful Robots")) {
-            size = appList.size();
+        if (headerList.get(section).name.equals("Helpful robots")) {
+            size = helpfulRobot_List.size();
         }
         return size;
     }
@@ -149,13 +149,11 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
         holder.render(headerList.get(section).name);
 
-        if (headerList.get(section).name.equalsIgnoreCase("All Other Apps")) {
+        if (headerList.get(section).name.equalsIgnoreCase("All other apps")) {
             holder.getHeaderToggle().setText("(BLOCKED)");
         } else {
             holder.getHeaderToggle().setText("(OK)");
         }
-
-
     }
 
     @Override
@@ -168,9 +166,9 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
         holder.displayToggle();
 
-        if (headerList.get(section).name.equals("All Other Apps")) {
+        if (headerList.get(section).name.equals("All other apps")) {
 
-            final DisableAppList otherAppsItems=blockedList.get(position);
+            final AppListInfo otherAppsItems=blockedList.get(position);
             if(!TextUtils.isEmpty(otherAppsItems.errorMessage)){
                 holder.render(otherAppsItems.errorMessage);
                 holder.disableViews();
@@ -180,19 +178,19 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                 holder.render(otherAppsItems.applicationInfo.name);
                 holder.displayImage(otherAppsItems.applicationInfo, packageManager,otherAppsItems.errorMessage);
 
-                holder.getToggle().setOnClickListener(new View.OnClickListener() {
+                holder.getLinearList().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
 
-                        final DisableAppList d = otherAppsItems;
+                        final AppListInfo d = otherAppsItems;
                         if(popup!=null){
                             popup.dismiss();
                         }
-                        popup = new PopupMenu(context, v);
+                        popup = new PopupMenu(context, v,Gravity.END);
                         popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
                         MenuItem menuItem = popup.getMenu().findItem(R.id.block);
-                        menuItem.setTitle("Unblock app notifications");
+                        menuItem.setTitle(context.getResources().getString(R.string.allow_interrupt_msg));
 
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
@@ -200,20 +198,19 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                                 if (!showUnblockAlert) {
 
-                                    holder.addToBlockList(d.applicationInfo, true, blockedApps, context);
+                                    holder.addToBlockList(d.applicationInfo, true, pref_blockedList, context);
                                     blockedList.remove(d);
-                                    if (messengerAppList.contains(d.applicationInfo.packageName)) {
+                                    if (pref_messengerList.contains(d.applicationInfo.packageName)) {
                                         messengerList.add(d);
                                         int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
                                         launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
                                     } else {
-                                        appList.add(d);
+                                        helpfulRobot_List.add(d);
                                         int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
                                         launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
                                     }
 
-
-                                    changeHeaderNotification(section, true, disableSections, context);
+                                    changeHeaderNotification(section, true, pref_headerSectionList, context);
                                 } else {
 
                                     showUnblockAlert = false;
@@ -256,19 +253,19 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                                                                       @Override
                                                                                       public void onClick(View v) {
                                                                                           alertDialog.dismiss();
-                                                                                          holder.addToBlockList(blockedList.get(position).applicationInfo, true, blockedApps, context);
-                                                                                          DisableAppList d = blockedList.get(position);
+                                                                                          holder.addToBlockList(blockedList.get(position).applicationInfo, true, pref_blockedList, context);
+                                                                                          AppListInfo d = blockedList.get(position);
                                                                                           blockedList.remove(d);
-                                                                                          if (messengerAppList.contains(d.applicationInfo.packageName)) {
+                                                                                          if (pref_messengerList.contains(d.applicationInfo.packageName)) {
                                                                                               messengerList.add(d);
                                                                                               int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
                                                                                               launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
                                                                                           } else {
-                                                                                              appList.add(d);
+                                                                                              helpfulRobot_List.add(d);
                                                                                               int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
                                                                                               launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
                                                                                           }
-                                                                                          changeHeaderNotification(section, true, disableSections, context);
+                                                                                          changeHeaderNotification(section, true, pref_headerSectionList, context);
                                                                                       }
                                                                                   });
                                                                       }
@@ -289,9 +286,9 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                 });
             }
 
-        } else if (headerList.get(section).name.equals("Human Direct Messaging")) {
+        } else if (headerList.get(section).name.equals("Human direct messaging")) {
 
-            final DisableAppList messengerAppsItem=messengerList.get(position);
+            final AppListInfo messengerAppsItem=messengerList.get(position);
             if(!TextUtils.isEmpty(messengerAppsItem.errorMessage)){
                 holder.render(messengerAppsItem.errorMessage);
                 holder.disableViews();
@@ -300,42 +297,43 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                 holder.render(messengerAppsItem.applicationInfo.name);
                 holder.enableViews();
                 holder.displayImage(messengerAppsItem.applicationInfo, packageManager,messengerAppsItem.errorMessage);
-                holder.getToggle().setOnClickListener(new View.OnClickListener() {
+                holder.getLinearList().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(popup!=null){
                             popup.dismiss();
                         }
-                        popup = new PopupMenu(context, v);
+                        popup = new PopupMenu(context, v,Gravity.END);
                         popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
+
+                        MenuItem menuItem = popup.getMenu().findItem(R.id.block);
+                        menuItem.setTitle(context.getResources().getString(R.string.stop_interrupt_msg));
+
 
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
-                                holder.addToBlockList(messengerAppsItem.applicationInfo, false, blockedApps, context);
-                                DisableAppList d = messengerAppsItem;
+                                holder.addToBlockList(messengerAppsItem.applicationInfo, false, pref_blockedList, context);
+                                AppListInfo d = messengerAppsItem;
                                 messengerList.remove(d);
                                 blockedList.add(d);
                                 int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
                                 launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount + 1).commit();
-                                changeHeaderNotification(section, true, disableSections, context);
+                                changeHeaderNotification(section, true, pref_headerSectionList, context);
                                 return true;
                             }
                         });
 
                         popup.show();
-
-
                     }
                 });
 
             }
 
-
         }
 
 
-        if (headerList.get(section).name.equals("Helpful Robots")) {
-            final DisableAppList appListItem=appList.get(position);
+        if (headerList.get(section).name.equals("Helpful robots")) {
+            final AppListInfo appListItem=helpfulRobot_List.get(position);
             if(!TextUtils.isEmpty(appListItem.errorMessage)){
                 holder.render(appListItem.errorMessage);
                 holder.disableViews();
@@ -346,24 +344,27 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
                 holder.displayImage(appListItem.applicationInfo, packageManager,appListItem.errorMessage);
 
-                holder.getToggle().setOnClickListener(new View.OnClickListener() {
+                holder.getLinearList().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(popup!=null){
                             popup.dismiss();
                         }
-                        popup = new PopupMenu(context, v);
+                        popup = new PopupMenu(context, v, Gravity.END);
+
                         popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
+                        MenuItem menuItem = popup.getMenu().findItem(R.id.block);
+                        menuItem.setTitle(context.getResources().getString(R.string.stop_interrupt_msg));
 
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             public boolean onMenuItemClick(MenuItem item) {
-                                holder.addToBlockList(appListItem.applicationInfo, false, blockedApps, context);
-                                DisableAppList d = appListItem;
-                                appList.remove(d);
+                                holder.addToBlockList(appListItem.applicationInfo, false, pref_blockedList, context);
+                                AppListInfo d = appListItem;
+                                helpfulRobot_List.remove(d);
                                 blockedList.add(d);
                                 int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
                                 launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount + 1).commit();
-                                changeHeaderNotification(section, true, disableSections, context);
+                                changeHeaderNotification(section, true, pref_headerSectionList, context);
                                 return true;
                             }
                         });
@@ -417,10 +418,10 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                     }
             }
 
-            if(appList.size()>1) {
-                for (int i=0;i<appList.size();i++)
-                    if(!TextUtils.isEmpty(appList.get(i).errorMessage)) {
-                        appList.remove(appList.get(i));
+            if(helpfulRobot_List.size()>1) {
+                for (int i=0;i<helpfulRobot_List.size();i++)
+                    if(!TextUtils.isEmpty(helpfulRobot_List.get(i).errorMessage)) {
+                        helpfulRobot_List.remove(helpfulRobot_List.get(i));
                     }
             }
 
@@ -437,18 +438,18 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
 
         if(messengerList.size()>0 ) {
-            Collections.sort(messengerList, new Comparator<DisableAppList>() {
+            Collections.sort(messengerList, new Comparator<AppListInfo>() {
                 @Override
-                public int compare(DisableAppList o1, DisableAppList o2) {
+                public int compare(AppListInfo o1, AppListInfo o2) {
                     return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
                 }
             });
         }
 
-        if(appList.size()>0) {
-            Collections.sort(appList, new Comparator<DisableAppList>() {
+        if(helpfulRobot_List.size()>0) {
+            Collections.sort(helpfulRobot_List, new Comparator<AppListInfo>() {
                 @Override
-                public int compare(DisableAppList o1, DisableAppList o2) {
+                public int compare(AppListInfo o1, AppListInfo o2) {
                     return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
                 }
             });
@@ -456,9 +457,9 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
         if(blockedList.size()>0) {
 
-            Collections.sort(blockedList, new Comparator<DisableAppList>() {
+            Collections.sort(blockedList, new Comparator<AppListInfo>() {
                 @Override
-                public int compare(DisableAppList o1, DisableAppList o2) {
+                public int compare(AppListInfo o1, AppListInfo o2) {
                     return o1.applicationInfo.name.compareToIgnoreCase(o2.applicationInfo.name);
                 }
             });
@@ -466,19 +467,19 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
 
 
         if(messengerList.size() == 0){
-            DisableAppList d= new DisableAppList();
+            AppListInfo d= new AppListInfo();
             d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
             messengerList.add(d);
         }
 
-        if(appList.size() == 0){
-            DisableAppList d= new DisableAppList();
+        if(helpfulRobot_List.size() == 0){
+            AppListInfo d= new AppListInfo();
             d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
-            appList.add(d);
+            helpfulRobot_List.add(d);
         }
 
         if(blockedList.size() == 0){
-            DisableAppList d= new DisableAppList();
+            AppListInfo d= new AppListInfo();
             d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
             blockedList.add(d);
         }

@@ -2,7 +2,6 @@ package co.siempo.phone.main;
 
 import android.app.FragmentManager;
 import android.content.Context;
-import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import co.siempo.phone.BuildConfig;

@@ -69,8 +69,7 @@ public class AlarmService extends IntentService {
         try {
             int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
-            boolean isTempoNotificationControlsDisabled = sharedPreferences.getBoolean("isTempoNotificationControlsDisabled", false);
-            if (!isTempoNotificationControlsDisabled) {
+
                 for (int i = 0; i < notificationList.size(); i++) {
                     TableNotificationSms notification = notificationList.get(i);
                     if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
@@ -85,7 +84,7 @@ public class AlarmService extends IntentService {
                     }
                     DBUtility.getNotificationDao().deleteAll();
                 }
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
             CoreApplication.getInstance().logException(e);
@@ -121,8 +120,7 @@ public class AlarmService extends IntentService {
             int systemMinutes = calendar.get(Calendar.MINUTE);
             int tempoType = sharedPreferences.getInt("tempoType", 0);
             Tracer.d("3");
-            boolean isTempoNotificationControlsDisabled = sharedPreferences.getBoolean("isTempoNotificationControlsDisabled", false);
-            if (!isTempoNotificationControlsDisabled && tempoType == 1) {
+              if (tempoType == 1) {
                 Tracer.d("4");
                 int batchTime = sharedPreferences.getInt("batchTime", 15);
                 if (batchTime == 15) {
@@ -157,7 +155,7 @@ public class AlarmService extends IntentService {
                     }
                 }
 
-            } else if (!isTempoNotificationControlsDisabled && tempoType == 2) {
+            } else if (tempoType == 2) {
                 Tracer.d("5");
                 String strTimeData = sharedPreferences.getString("onlyAt", "");
                 if (!strTimeData.equalsIgnoreCase("")) {

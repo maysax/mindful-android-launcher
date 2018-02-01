@@ -30,7 +30,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.dialog.Dialog_Tempo;
 import co.siempo.phone.service.StatusBarService;
-import co.siempo.phone.tempo.TempoSettingsActivity_;
+import co.siempo.phone.tempo.SettingsActivity_;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
@@ -171,7 +171,7 @@ public class IntentionFieldFragment extends CoreFragment {
                     @Override
                     public void onClick(View view) {
                         //Code for opening Tempo Settings
-                        Intent intent = new Intent(getActivity(), TempoSettingsActivity_.class);
+                        Intent intent = new Intent(getActivity(), SettingsActivity_.class);
                         startActivity(intent);
                         UIUtils.clearDim(root);
                         mPopupWindow.dismiss();

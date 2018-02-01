@@ -471,24 +471,41 @@ public abstract class CoreApplication extends MultiDexApplication {
             blockedApps = new Gson().fromJson(block_AppList, type);
         }
 
-
+        boolean isAppInstallFirstTime=sharedPreferences.getBoolean("isAppInstalledFirstTime",true);
+        if(isAppInstallFirstTime){
+            blockedApps.clear();
+        }
         for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
 
-            if (blockedApps.size() > 0) {
-                for (String blockedApp : blockedApps) {
-                    if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
-                        disableNotificationApps.add(applicationInfo.packageName);
+
+            if(isAppInstallFirstTime){
+
+                blockedApps.add(applicationInfo.packageName);
+            }
+            else{
+                if (blockedApps.size() > 0) {
+                    for (String blockedApp : blockedApps) {
+                        if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
+                            disableNotificationApps.add(applicationInfo.packageName);
+                        }
                     }
+
+                } else {
+
+                    disableNotificationApps.add(applicationInfo.packageName);
                 }
 
-            } else {
-
-                disableNotificationApps.add(applicationInfo.packageName);
             }
-
         }
+
+
+        String blockedList = new Gson().toJson(blockedApps);
+        sharedPreferences.edit().putString(BLOCKED_APPLIST, blockedList).apply();
+
         String disableList = new Gson().toJson(disableNotificationApps);
         sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).apply();
+
+
     }
 
     /**

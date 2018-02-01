@@ -173,7 +173,7 @@ public class SiempoNotificationListener extends NotificationListenerService {
             }
 
             SharedPreferences prefs = getSharedPreferences("Launcher3Prefs", 0);
-            String strEnableApps = prefs.getString(Constants.DISABLE_APPLIST, "");
+            String strEnableApps = prefs.getString(Constants.HELPFUL_ROBOTS, "");
 
             if (!TextUtils.isEmpty(strEnableApps)) {
                 Type type = new TypeToken<ArrayList<String>>() {
@@ -187,23 +187,24 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 }.getType();
                 blockedAppList = new Gson().fromJson(block_AppList, type);
             }
-            if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
-                SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                return;
-            } else {
-                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && droidPrefs.tempoType().get() != 0) {
-                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                    if (droidPrefs.tempoType().get() == 1 && droidPrefs.tempoType().get() == 2) {
-                        int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
-                        if (sound != 1) {
-                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+
+                if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
+                     if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && droidPrefs.tempoType().get() != 0) {
+                        SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                        if (droidPrefs.tempoType().get() == 1 && droidPrefs.tempoType().get() == 2) {
+                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                            if (sound != 1) {
+                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+                            }
                         }
+                        filterByCategory(notification);
+                        return;
                     }
-                    filterByCategory(notification);
+                } else {
                     return;
                 }
             }
-        }
+
     }
 
     private void printLog(StatusBarNotification notification) {

@@ -83,7 +83,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 if (launcherPrefs.isAppDefaultOrFront().get()) {
                     SharedPreferences prefs1 = context.getSharedPreferences("Launcher3Prefs", 0);
-                    String disable_AppList = prefs1.getString(Constants.DISABLE_APPLIST, "");
+                    String disable_AppList = prefs1.getString(Constants.HELPFUL_ROBOTS, "");
                     if (!TextUtils.isEmpty(disable_AppList)) {
                         Type type = new TypeToken<ArrayList<String>>() {
                         }.getType();
@@ -98,21 +98,34 @@ public class SmsReceiver extends BroadcastReceiver {
                             blockedApps = new Gson().fromJson(block_AppList, blockType);
                         }
                         boolean isShowNotification = true;
-                        String messagingAppPackage = "com.google.android.apps.messaging";
-                        if (null != blockedApps && blockedApps.size() > 0) {
+
+
+                        String messagingAppPackage=    Telephony.Sms.getDefaultSmsPackage(context);
+                        if (null != blockedApps && blockedApps.size() > 0 && !TextUtils.isEmpty(messagingAppPackage)) {
                             for (String blockedApp : blockedApps) {
                                 if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
-                                    isShowNotification = false;
+                                    if (prefs.tempoType().get() != 0) {
+                                        saveMessage(mAddress, mBody, mDate, context);
+                                    }
                                 }
                             }
-
                         }
 
-                        if (disableNotificationApps.contains(messagingAppPackage) && isShowNotification) {
-                            if (prefs.tempoType().get() != 0) {
-                                saveMessage(mAddress, mBody, mDate, context);
-                            }
-                        }
+
+//                        if (null != blockedApps && blockedApps.size() > 0) {
+//                            for (String blockedApp : blockedApps) {
+//                                if (blockedApp.equalsIgnoreCase(messagingAppPackage)) {
+//                                    isShowNotification = false;
+//                                }
+//                            }
+//
+//                        }
+//
+//                        if (disableNotificationApps.contains(messagingAppPackage) && isShowNotification) {
+//                            if (prefs.tempoType().get() != 0) {
+//                                saveMessage(mAddress, mBody, mDate, context);
+//                            }
+//                        }
                     }
                 }
             }
@@ -151,6 +164,8 @@ public class SmsReceiver extends BroadcastReceiver {
             CoreApplication.getInstance().logException(e);
         }
     }
+
+
 
 
 }
