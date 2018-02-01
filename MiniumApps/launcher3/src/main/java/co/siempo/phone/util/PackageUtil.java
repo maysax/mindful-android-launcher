@@ -25,10 +25,12 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+
 import co.siempo.phone.R;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
@@ -118,34 +120,33 @@ public class PackageUtil {
     /**
      * Create Notification after parsing the notification from notification listener
      *
-     * @param notification           database object
-     * @param context                user context
-     * @param icon                   application icon integer format
-     * @param isGenerateNotification
+     * @param notification database object
+     * @param context      user context
+     * @param icon         application icon integer format
      */
-    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, int icon, boolean isGenerateNotification) {
+    public synchronized static void recreateNotification(TableNotificationSms notification, Context context, int icon) {
         try {
-            if (isGenerateNotification) {
-                if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
-                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        NotificationChannel notificationChannel = createChannel(applicationNameFromPackageName);
-                        if (notificationManager != null) {
-                            notificationManager.createNotificationChannel(notificationChannel);
-                        }
+            if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                String applicationNameFromPackageName = CoreApplication.getInstance().getApplicationNameFromPackageName(notification.getPackageName());
+                if (Build.VERSION.SDK_INT >= 26) {
+                    NotificationChannel notificationChannel = createChannel(applicationNameFromPackageName);
+                    if (notificationManager != null) {
+                        notificationManager.createNotificationChannel(notificationChannel);
+                    }
+                    if (notificationManager != null) {
                         notificationManager.createNotificationChannelGroup(new NotificationChannelGroup(applicationNameFromPackageName, applicationNameFromPackageName));
                     }
-                    NotificationCompat.Builder groupBuilder = createGroupNotification(context, notification, applicationNameFromPackageName);
+                }
+                NotificationCompat.Builder groupBuilder = createGroupNotification(context, notification, applicationNameFromPackageName);
 
-                    NotificationCompat.Builder builder = getNotification(context, notification);
+                NotificationCompat.Builder builder = getNotification(context, notification);
 
-                    if (notificationManager != null) {
-                        notificationManager.notify(icon, groupBuilder.build());
-                    }
-                    if (notificationManager != null) {
-                        notificationManager.notify(notification.getId().intValue(), builder.build());
-                    }
+                if (notificationManager != null) {
+                    notificationManager.notify(icon, groupBuilder.build());
+                }
+                if (notificationManager != null) {
+                    notificationManager.notify(notification.getId().intValue(), builder.build());
                 }
             }
         } catch (Exception e) {
@@ -173,29 +174,29 @@ public class PackageUtil {
         DateFormat sdf = new SimpleDateFormat(getTimeFormat(context), Locale.getDefault());
         String time = sdf.format(notification.get_date());
 
-        String title=getNotificationTitle(notification.get_contact_title(),notification.getPackageName(),context);
+        String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
 
 
-            RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
-            contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
-            contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
-            contentView.setTextViewText(R.id.txtUserName, title);
-            contentView.setTextViewText(R.id.txtMessage, notification.get_message());
-            contentView.setTextViewText(R.id.txtTime, time);
-            contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
-            b.setAutoCancel(true)
-                    .setGroup(applicationNameFromPackageName)
-                    .setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.siempo_notification_icon)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setContentTitle(title)
-                    .setContentText(notification.get_message())
-                    .setContentIntent(contentIntent)
-                    .setCustomContentView(contentView)
-                    .setCustomBigContentView(contentView)
-                    .setLights(Color.MAGENTA, 500, 500)
-                    .setDefaults(Notification.DEFAULT_SOUND)
-                    .setContentInfo("Info");
+        RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.custom_notification_card);
+        contentView.setImageViewBitmap(R.id.imgAppIcon, CoreApplication.getInstance().iconList.get(notification.getPackageName()));
+        contentView.setImageViewBitmap(R.id.imgUserImage, bitmap);
+        contentView.setTextViewText(R.id.txtUserName, title);
+        contentView.setTextViewText(R.id.txtMessage, notification.get_message());
+        contentView.setTextViewText(R.id.txtTime, time);
+        contentView.setTextViewText(R.id.txtAppName, applicationNameFromPackageName);
+        b.setAutoCancel(true)
+                .setGroup(applicationNameFromPackageName)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.siempo_notification_icon)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setContentTitle(title)
+                .setContentText(notification.get_message())
+                .setContentIntent(contentIntent)
+                .setCustomContentView(contentView)
+                .setCustomBigContentView(contentView)
+                .setLights(Color.MAGENTA, 500, 500)
+                .setDefaults(Notification.DEFAULT_SOUND)
+                .setContentInfo("Info");
         return b;
     }
 
@@ -234,7 +235,7 @@ public class PackageUtil {
 
         for (int i = 0; i < notificationSms.size(); i++) {
 
-            String title=getNotificationTitle(notification.get_contact_title(),notification.getPackageName(),context);
+            String title = getNotificationTitle(notification.get_contact_title(), notification.getPackageName(), context);
 
             inboxStyle.addLine(title + ": " + notificationSms.get(i).get_message());
         }
@@ -284,12 +285,18 @@ public class PackageUtil {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // Wakes up the device in Doze Mode
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                if (alarmManager != null) {
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                }
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 // Wakes up the device in Idle Mode
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                if (alarmManager != null) {
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                }
             } else {
-                alarmManager.set(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                if (alarmManager != null) {
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, time, alarmIntent);
+                }
             }
 
         } catch (Exception e) {
@@ -313,7 +320,7 @@ public class PackageUtil {
     /**
      * Below function is used to get contact name from contact number store in contact list
      */
-    private static String nameFromContactNumber(String number,Context context) {
+    private static String nameFromContactNumber(String number, Context context) {
 
         Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
         Cursor cursor = context.getContentResolver().query(uri, new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME,
@@ -333,15 +340,15 @@ public class PackageUtil {
         return contactName;
     }
 
-    public static String getNotificationTitle(String notificationTitle,String notificationPackageName,Context context){
-        String title="";
-        if(!TextUtils.isEmpty(notificationTitle)){
-            title=notificationTitle;
-            String smsPackage=Telephony.Sms.getDefaultSmsPackage(context);
-            if(!TextUtils.isEmpty(notificationPackageName) && notificationPackageName.equalsIgnoreCase(smsPackage)){
-                title=nameFromContactNumber(notificationTitle,context);
+    private static String getNotificationTitle(String notificationTitle, String notificationPackageName, Context context) {
+        String title = "";
+        if (!TextUtils.isEmpty(notificationTitle)) {
+            title = notificationTitle;
+            String smsPackage = Telephony.Sms.getDefaultSmsPackage(context);
+            if (!TextUtils.isEmpty(notificationPackageName) && notificationPackageName.equalsIgnoreCase(smsPackage)) {
+                title = nameFromContactNumber(notificationTitle, context);
             }
         }
-        return  title;
+        return title;
     }
 }

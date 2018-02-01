@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?><!--<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:fab="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:background="#B9B9B9">-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pauseContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
     android:orientation="vertical"
     tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
-
-    <TextView
-        android:id="@+id/txBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.3"
-        android:background="@color/black" />
 
     <RelativeLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/transparent"
         android:paddingBottom="35dp">
 
         <LinearLayout
@@ -32,226 +26,235 @@
             android:orientation="vertical"
             tools:ignore="UselessParent">
 
-            <Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:text="@string/deliver_notifications"
-                    android:textColor="#202020"
-                    android:textSize="18sp" />
-            </Toolbar>
-
-            <RelativeLayout
-                android:id="@+id/relIndividual"
+            <LinearLayout
+                android:id="@+id/linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/dp_5"
-                android:paddingLeft="10dp"
-                android:paddingRight="@dimen/dp_10"
-                android:paddingTop="@dimen/dp_5">
+                android:background="@color/white"
+                android:orientation="vertical"
+                tools:ignore="UselessParent">
 
-                <RadioButton
-                    android:id="@+id/radioIndividual"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false" />
+                <Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <TextView
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/deliver_notifications"
+                        android:textColor="#202020"
+                        android:textSize="18sp" />
+                </Toolbar>
+
+                <RelativeLayout
+                    android:id="@+id/relIndividual"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/radioIndividual"
-                    android:layout_alignTop="@+id/radioIndividual"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:layout_toRightOf="@+id/radioIndividual"
-                    android:gravity="center_vertical"
-                    android:text="@string/individually_as_soon_as_they_arrive"
-                    android:textColor="#202020"
-                    android:textSize="16sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relBatched"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/dp_5"
-                android:paddingLeft="10dp"
-                android:paddingRight="@dimen/dp_10"
-                android:paddingTop="@dimen/dp_5">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/lin1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_5">
 
                     <RadioButton
-                        android:id="@+id/radioBatched"
+                        android:id="@+id/radioIndividual"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:checked="false" />
 
                     <TextView
-                        android:id="@+id/txtBatch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/radioIndividual"
+                        android:layout_alignTop="@+id/radioIndividual"
                         android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_toRightOf="@+id/radioIndividual"
                         android:gravity="center_vertical"
-                        android:text="@string/batched_every_15_minutes"
+                        android:text="@string/individually_as_soon_as_they_arrive"
                         android:textColor="#202020"
                         android:textSize="16sp" />
-                </LinearLayout>
+                </RelativeLayout>
 
-                <LinearLayout
-                    android:id="@+id/lin1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="right"
-                    android:gravity="right">
-
-                    <ImageView
-                        android:id="@+id/imgMinus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:paddingBottom="@dimen/dp_5"
-                        android:paddingLeft="@dimen/dp_10"
-                        android:paddingRight="@dimen/dp_10"
-                        android:paddingTop="@dimen/dp_5"
-                        android:src="@drawable/ic_remove_black_24dp" />
-
-                    <ImageView
-                        android:id="@+id/imgPlus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:paddingBottom="@dimen/dp_5"
-                        android:paddingLeft="@dimen/dp_10"
-                        android:paddingRight="@dimen/dp_10"
-                        android:paddingTop="@dimen/dp_5"
-                        android:src="@drawable/ic_add_black_24dp" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relOnlyAt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/dp_5"
-                android:paddingLeft="10dp"
-                android:paddingRight="@dimen/dp_10"
-                android:paddingTop="@dimen/dp_5">
-
-                <RadioButton
-                    android:id="@+id/radioOnlyAt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:checked="false" />
-
-                <TextView
-                    android:id="@+id/txtOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/radioOnlyAt"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp"
-                    android:text="@string/only_at"
-                    android:textColor="#202020"
-                    android:textSize="16sp" />
-
-                <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/relBatched"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/radioOnlyAt"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dp_5"
-                    android:layout_toRightOf="@+id/txtOnly"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_5">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/lin1"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioBatched"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:checked="false" />
+
+                        <TextView
+                            android:id="@+id/txtBatch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/dp_10"
+                            android:gravity="center_vertical"
+                            android:text="@string/batched_every_15_minutes"
+                            android:textColor="#202020"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lin1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_gravity="right"
+                        android:gravity="right">
+
+                        <ImageView
+                            android:id="@+id/imgMinus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:paddingBottom="@dimen/dp_5"
+                            android:paddingLeft="@dimen/dp_10"
+                            android:paddingRight="@dimen/dp_10"
+                            android:paddingTop="@dimen/dp_5"
+                            android:src="@drawable/ic_remove_black_24dp" />
+
+                        <ImageView
+                            android:id="@+id/imgPlus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:paddingBottom="@dimen/dp_5"
+                            android:paddingLeft="@dimen/dp_10"
+                            android:paddingRight="@dimen/dp_10"
+                            android:paddingTop="@dimen/dp_5"
+                            android:src="@drawable/ic_add_black_24dp" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relOnlyAt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_5">
+
+                    <RadioButton
+                        android:id="@+id/radioOnlyAt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:checked="false" />
+
+                    <TextView
+                        android:id="@+id/txtOnly"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/radioOnlyAt"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:text="@string/only_at"
+                        android:textColor="#202020"
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_alignTop="@+id/radioOnlyAt"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_5"
+                        android:layout_toRightOf="@+id/txtOnly"
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtOnlyAtTime1"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:textColor="#4B7EF4"
-                            android:textSize="15sp"
-                            tools:text="09:15am" />
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/txtSign1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=", "
-                            android:textColor="#202020" />
+                            <TextView
+                                android:id="@+id/txtOnlyAtTime1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:textColor="#4B7EF4"
+                                android:textSize="15sp"
+                                tools:text="09:15am" />
 
-                        <TextView
-                            android:id="@+id/txtOnlyAtTime2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:textColor="#4B7EF4"
-                            android:textSize="15sp"
-                            tools:text="05:32pm" />
+                            <TextView
+                                android:id="@+id/txtSign1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=", "
+                                android:textColor="#202020" />
 
-                        <TextView
-                            android:id="@+id/txtSign2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" &amp; "
-                            android:textColor="#202020" />
+                            <TextView
+                                android:id="@+id/txtOnlyAtTime2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:textColor="#4B7EF4"
+                                android:textSize="15sp"
+                                tools:text="05:32pm" />
 
-                        <TextView
-                            android:id="@+id/txtOnlyAtTime3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:textColor="#4B7EF4"
-                            android:textSize="15sp"
-                            tools:text="05:32pm" />
+                            <TextView
+                                android:id="@+id/txtSign2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" &amp; "
+                                android:textColor="#202020" />
+
+                            <TextView
+                                android:id="@+id/txtOnlyAtTime3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:textColor="#4B7EF4"
+                                android:textSize="15sp"
+                                tools:text="05:32pm" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/txtAdd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/radioOnlyAt"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/radioOnlyAt"
-                    android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingBottom="@dimen/dp_5"
-                    android:paddingLeft="@dimen/dp_15"
-                    android:paddingRight="@dimen/dp_15"
-                    android:paddingTop="@dimen/dp_5"
-                    android:text="@string/add"
-                    android:textColor="#4B7EF4"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:visibility="visible"
-                    tools:ignore="RelativeOverlap" />
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/txtAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/radioOnlyAt"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/radioOnlyAt"
+                        android:layout_centerVertical="true"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/dp_5"
+                        android:paddingLeft="@dimen/dp_15"
+                        android:paddingRight="@dimen/dp_15"
+                        android:paddingTop="@dimen/dp_5"
+                        android:text="@string/add"
+                        android:textColor="#4B7EF4"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:visibility="visible"
+                        tools:ignore="RelativeOverlap" />
+                </RelativeLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/txtMessage"
@@ -270,51 +273,22 @@
                 android:textColor="#7F7F7F"
                 android:textSize="15sp"
                 tools:text="Testing" />
-
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/txtTop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/linearLayout"
-            android:layout_alignTop="@+id/linearLayout"
-            android:visibility="visible" />
     </RelativeLayout>
 
-    <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/fabMenu"
-        android:layout_width="match_parent"
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fabPlay"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/top"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/top"
-        android:paddingRight="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_15"
+        android:src="@drawable/ic_play_arrow_transparent_24dp"
         android:visibility="gone"
-        app:layout_anchorGravity="bottom|right|end"
-        fab:menu_colorNormal="#1565C0"
-        fab:menu_colorPressed="#2272CD"
-        fab:menu_colorRipple="#62B2FF"
-        fab:menu_labels_ellipsize="end"
-        fab:menu_labels_singleLine="true"
-        tools:ignore="RtlSymmetry">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fabMute"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_volume_mute_black_24dp"
-            fab:fab_colorNormal="#F6302F"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/fabSound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_volume_up_black_24dp"
-            fab:fab_colorNormal="#F6302F"
-            fab:fab_size="mini" />
-    </com.github.clans.fab.FloatingActionMenu>
+        fab:fab_colorNormal="#1565C0"
+        fab:fab_colorPressed="#2272CD"
+        fab:fab_colorRipple="#62B2FF"
+        fab:fab_size="normal" />
 
 </RelativeLayout>
 

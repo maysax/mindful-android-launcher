@@ -65,7 +65,7 @@ public class AlarmService extends IntentService {
     }
 
 
-    public void recreateNotification(List<TableNotificationSms> notificationList, Context context, boolean isAllowNotificationOnLockScreen) {
+    public void createNotification(List<TableNotificationSms> notificationList, Context context) {
         try {
             int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
             audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, sound, 0);
@@ -73,7 +73,7 @@ public class AlarmService extends IntentService {
                 for (int i = 0; i < notificationList.size(); i++) {
                     TableNotificationSms notification = notificationList.get(i);
                     if (notification.getPackageName() != null && !notification.getPackageName().equalsIgnoreCase("android")) {
-                        PackageUtil.recreateNotification(notification, context, notification.getApp_icon(), true);
+                        PackageUtil.recreateNotification(notification, context, notification.getApp_icon());
                     }
                 }
                 if (notificationList.size() >= 1) {
@@ -127,31 +127,31 @@ public class AlarmService extends IntentService {
                     if (systemMinutes == 0 || systemMinutes == 15 || systemMinutes == 30 || systemMinutes == 45) {
                         Tracer.d("Batch::" + "15 minute interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 } else if (batchTime == 30) {
                     if (systemMinutes == 0 || systemMinutes == 30) {
                         Tracer.d("Batch::" + "30 minute interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 } else if (batchTime == 1) {
                     if (everyHourList.contains(systemHours) && systemMinutes == 0) {
                         Tracer.d("Batch::" + "Every Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 } else if (batchTime == 2) {
                     if (systemHours % 2 == 0 && systemMinutes == 0) {
                         Tracer.d("Batch::" + "Every 2 Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 } else if (batchTime == 4) {
                     if (systemHours % 4 == 0 && systemMinutes == 0) {
                         Tracer.d("Batch::" + "Every 4 Hour interval");
                         List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                        recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                        createNotification(notificationList, context);
                     }
                 }
 
@@ -170,7 +170,7 @@ public class AlarmService extends IntentService {
                         if (hours == systemHours && minutes == systemMinutes) {
                             Tracer.d("Only at::" + str);
                             List<TableNotificationSms> notificationList = DBUtility.getNotificationDao().queryBuilder().orderDesc(TableNotificationSmsDao.Properties.Notification_date).build().list();
-                            recreateNotification(notificationList, context, sharedPreferencesLauncher3.getBoolean("isAllowNotificationOnLockScreen", true));
+                            createNotification(notificationList, context);
                         }
                     }
                 }
