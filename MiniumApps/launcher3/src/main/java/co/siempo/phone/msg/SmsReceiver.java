@@ -4,10 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
@@ -31,7 +29,6 @@ import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.notification.NotificationUtility;
-import co.siempo.phone.util.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -112,7 +109,7 @@ public class SmsReceiver extends BroadcastReceiver {
                         }
 
                         if (disableNotificationApps.contains(messagingAppPackage) && isShowNotification) {
-                            if (!prefs.isTempoNotificationControlsDisabled().get()) {
+                            if (prefs.tempoType().get() != 0) {
                                 saveMessage(mAddress, mBody, mDate, context);
                             }
                         }
@@ -140,7 +137,6 @@ public class SmsReceiver extends BroadcastReceiver {
                 notificationSms.setPackageName(Telephony.Sms.getDefaultSmsPackage(context));
                 long id = smsDao.insert(notificationSms);
                 notificationSms.setId(id);
-                PackageUtil.recreateNotification(notificationSms, context, 1234, prefs.tempoType().get() == 0);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             } else {
                 notificationSms.set_date(date);
@@ -148,7 +144,6 @@ public class SmsReceiver extends BroadcastReceiver {
                 notificationSms.set_contact_title(address);
                 notificationSms.set_message(notificationSms.get_message() + "\n" + body);
                 smsDao.update(notificationSms);
-                PackageUtil.recreateNotification(notificationSms, context, 1234, prefs.tempoType().get() == 0);
                 EventBus.getDefault().post(new NewNotificationEvent(notificationSms));
             }
         } catch (Exception e) {
@@ -156,8 +151,6 @@ public class SmsReceiver extends BroadcastReceiver {
             CoreApplication.getInstance().logException(e);
         }
     }
-
-
 
 
 }

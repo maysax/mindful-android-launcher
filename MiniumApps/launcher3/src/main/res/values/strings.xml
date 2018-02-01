@@ -340,7 +340,7 @@
     <string name="cancel">CANCEL</string>
     <string name="remove">REMOVE</string>
     <string name="msg_sametime">You can\'t set same time multiple times</string>
-    <string name="msg_individual">Notifications will be delivered up to \n 1 minute late or as soon as they arrive.</string>
+    <string name="msg_individual">Notifications will be delivered up to \n1 minute late or as soon as they arrive.</string>
     <string name="msg_do_not_disturb">Do not disturb is on between deliveries.</string>
     <string name="msg_quarter">Batches will arrive on the quarter-hour.</string>
     <string name="msg_half">Batches will arrive on the half-hour.</string>

@@ -23,7 +23,6 @@ import co.siempo.phone.model.MainListItemType;
 import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
-import co.siempo.phone.tempo.TempoActivity_;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.ui.CoreActivity;
@@ -214,7 +213,7 @@ public class MainListItemLoader {
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
                 break;
             case 10:
-                TempoActivity_.intent(context).start();
+//                DialogTempo_.intent(context).start();
                 break;
             case 11://Map
                 if (context instanceof SiempoSettingsDefaultAppActivity) {

@@ -44,7 +44,6 @@ import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
-import co.siempo.phone.tempo.TempoActivity_;
 import co.siempo.phone.tempo.TempoSettingsActivity_;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
@@ -172,11 +171,9 @@ public class MainFragment extends CoreFragment {
                 prefs.isAppUpdated().put(false);
             }
         }
-        if (prefs.isTempoNotificationControlsDisabled().get()) {
-            imgTempo.setVisibility(View.GONE);
-        } else {
-            imgTempo.setVisibility(View.VISIBLE);
-        }
+
+        imgTempo.setVisibility(View.GONE);
+
     }
 
 
@@ -372,8 +369,8 @@ public class MainFragment extends CoreFragment {
 
     @Click
     void imgTempo() {
-        Intent intent = new Intent(getActivity(), TempoActivity_.class);
-        startActivity(intent);
+//        Intent intent = new Intent(getActivity(), DialogTempo_.class);
+//        startActivity(intent);
     }
 
 
@@ -404,20 +401,15 @@ public class MainFragment extends CoreFragment {
                 LinearLayout linHelp = customView.findViewById(R.id.linHelp);
                 LinearLayout linSettings = customView.findViewById(R.id.linSettings);
                 LinearLayout linTempo = customView.findViewById(R.id.linTempo);
-                if (prefs.isTempoNotificationControlsDisabled().get()) {
-                    linTempo.setVisibility(View.GONE);
-                } else {
-                    linTempo.setVisibility(View.VISIBLE);
-                }
-
+                linTempo.setVisibility(View.GONE);
                 linTempo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (getActivity() != null) {
                             UIUtils.clearDim(root);
                             mPopupWindow.dismiss();
-                            Intent intent = new Intent(getActivity(), TempoActivity_.class);
-                            startActivity(intent);
+//                            Intent intent = new Intent(getActivity(), DialogTempo_.class);
+//                            startActivity(intent);
                             // getActivity().overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
                         }
                     }
