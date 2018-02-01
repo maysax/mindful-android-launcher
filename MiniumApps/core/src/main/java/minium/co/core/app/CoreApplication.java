@@ -447,7 +447,6 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void setPackagesList(List<ApplicationInfo> packagesList) {
-        Log.d("hardikkamothi","Set Package List:::");
         Collections.sort(packagesList, new Comparator<ApplicationInfo>() {
             public int compare(ApplicationInfo v1, ApplicationInfo v2) {
 
@@ -476,7 +475,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         if(isAppInstallFirstTime){
             blockedApps.clear();
         }
-        Log.d("hardikkamothi","First Time :: "+isAppInstallFirstTime);
         for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
 
 
@@ -507,8 +505,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         String disableList = new Gson().toJson(disableNotificationApps);
         sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).apply();
 
-        Log.d("hardikkamothi","Blocked List Size ::"+blockedApps.size());
-        Log.d("hardikkamothi","Disable List Size :: "+disableNotificationApps.size());
 
     }
 
