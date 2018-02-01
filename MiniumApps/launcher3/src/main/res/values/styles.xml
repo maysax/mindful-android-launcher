@@ -15,11 +15,23 @@
     </style>
 
 
+
     <style name="MenuButtonsSmall">
         <item name="fab_size">mini</item>
         <item name="fab_colorNormal">#1565C0</item>
         <item name="fab_colorPressed">#2272CD</item>
         <item name="fab_colorRipple">#62B2FF</item>
+    </style>
+
+    <style name="FullScreenDialogStyle" parent="SiempoAppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorControlHighlight">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/TempoDialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
     <style name="MaterialDialogSheet" parent="@style/Base.Theme.AppCompat.Light.Dialog">
@@ -34,6 +46,11 @@
     <style name="MaterialDialogSheetAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up_dialog</item>
         <item name="android:windowExitAnimation">@anim/slide_out_down</item>
+    </style>
+
+    <style name="TempoDialog">
+        <item name="android:windowEnterAnimation">@anim/slide_in_tempo_dialog</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_tempo_dialog</item>
     </style>
 
     <style name="ListItem">

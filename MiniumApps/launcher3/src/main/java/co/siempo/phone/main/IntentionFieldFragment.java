@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,8 @@ import co.siempo.phone.HelpActivity_;
 import co.siempo.phone.IntentionEditActivity_;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.dialog.Dialog_Tempo;
 import co.siempo.phone.service.StatusBarService;
-import co.siempo.phone.tempo.TempoActivity_;
 import co.siempo.phone.tempo.TempoSettingsActivity_;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
@@ -96,11 +97,7 @@ public class IntentionFieldFragment extends CoreFragment {
                 prefs.isAppUpdated().put(false);
             }
         }
-        if (prefs.isTempoNotificationControlsDisabled().get()) {
-            imgTempo.setVisibility(View.GONE);
-        } else {
-            imgTempo.setVisibility(View.VISIBLE);
-        }
+
         if (prefs.isIntentionEnable().get()) {
             linIF.setVisibility(View.GONE);
         } else {
@@ -116,8 +113,10 @@ public class IntentionFieldFragment extends CoreFragment {
 
     @Click
     void imgTempo() {
-        Intent intent = new Intent(getActivity(), TempoActivity_.class);
-        startActivity(intent);
+        Dialog_Tempo dialogTempo = new Dialog_Tempo(getActivity());
+        if (dialogTempo.getWindow() != null)
+            dialogTempo.getWindow().setGravity(Gravity.TOP);
+        dialogTempo.show();
     }
 
     @Click
@@ -154,11 +153,6 @@ public class IntentionFieldFragment extends CoreFragment {
                 LinearLayout linHelp = customView.findViewById(R.id.linHelp);
                 LinearLayout linSettings = customView.findViewById(R.id.linSettings);
                 LinearLayout linTempo = customView.findViewById(R.id.linTempo);
-                if (prefs.isTempoNotificationControlsDisabled().get()) {
-                    linTempo.setVisibility(View.GONE);
-                } else {
-                    linTempo.setVisibility(View.VISIBLE);
-                }
 
                 linTempo.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -166,9 +160,10 @@ public class IntentionFieldFragment extends CoreFragment {
                         if (getActivity() != null) {
                             UIUtils.clearDim(root);
                             mPopupWindow.dismiss();
-                            Intent intent = new Intent(getActivity(), TempoActivity_.class);
-                            startActivity(intent);
-                            // getActivity().overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+                            Dialog_Tempo dialogTempo = new Dialog_Tempo(getActivity());
+                            if (dialogTempo.getWindow() != null)
+                                dialogTempo.getWindow().setGravity(Gravity.TOP);
+                            dialogTempo.show();
                         }
                     }
                 });

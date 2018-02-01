@@ -1,15 +1,25 @@
-package co.siempo.phone.tempo;
+package co.siempo.phone.dialog;
 
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
-import android.support.v4.content.ContextCompat;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -17,14 +27,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
-
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.SystemService;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,215 +37,143 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import co.siempo.phone.R;
-import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.helper.FirebaseHelper;
-import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 
-@EActivity(R.layout.activity_tempo)
-public class TempoActivity extends CoreActivity {
-    @ViewById
-    RadioButton radioIndividual;
-    @ViewById
-    RelativeLayout top;
-    @ViewById
-    RadioButton radioBatched;
-    @ViewById
-    RadioButton radioOnlyAt;
-    @ViewById
-    TextView txtTop;
-    @ViewById
-    TextView txBackground;
-    @ViewById
-    TextView txtBatch;
-    @ViewById
-    TextView txtOnlyAtTime1;
-    @ViewById
-    TextView txtOnlyAtTime2;
-    @ViewById
-    TextView txtOnlyAtTime3;
-    @ViewById
-    TextView txtSign1;
-    @ViewById
-    TextView txtSign2;
-    @ViewById
-    TextView txtAdd;
-    @ViewById
-    TextView txtMessage;
-    @ViewById
-    ImageView imgMinus;
-    @ViewById
-    ImageView imgPlus;
-    @ViewById
-    RelativeLayout relIndividual;
-    @ViewById
-    RelativeLayout relBatched;
-    @ViewById
-    RelativeLayout relOnlyAt;
-    @ViewById
-    FloatingActionMenu fabMenu;
-    @ViewById
-    FloatingActionButton fabMute;
-    @ViewById
-    FloatingActionButton fabSound;
-
-    @ViewById
-    RelativeLayout pauseContainer;
-
-    @Pref
-    DroidPrefs_ droidPrefs;
-    String strMessage;
-    boolean isCancelButton = false;
-    long startTime = 0;
-    @SystemService
-    AudioManager audioManager;
-    @SystemService
-    NotificationManager notificationManager;
-    private String TAG = "TempoActivity";
+public class Dialog_Tempo extends Dialog implements View.OnClickListener {
+    private RadioButton radioIndividual, radioBatched, radioOnlyAt;
+    private TextView txtBatch, txtOnlyAtTime1, txtOnlyAtTime2, txtOnlyAtTime3, txtSign1, txtSign2, txtAdd, txtMessage;
+    private ImageView imgMinus, imgPlus;
+    private LinearLayout linear;
+    private RelativeLayout relIndividual, top, relBatched, relOnlyAt;
+    private FloatingActionButton fabPlay;
+    private SharedPreferences droidPrefs;
+    private String strMessage;
+    private boolean isCancelButton = false;
+    private long startTime = 0;
+    private AudioManager audioManager;
     private ArrayList<Integer> everyTwoHourList = new ArrayList<>();
     private ArrayList<Integer> everyFourHoursList = new ArrayList<>();
+    private Context context;
+
+    public Dialog_Tempo(@NonNull Context context) {
+        super(context, R.style.FullScreenDialogStyle);
+        this.context = context;
+    }
+
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        setContentView(R.layout.activity_tempo);
+        initView();
+        setCancelable(true);
+        setCanceledOnTouchOutside(true);
         startTime = System.currentTimeMillis();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        FirebaseHelper.getIntance().logScreenUsageTime(TempoActivity.class.getSimpleName(), startTime);
-    }
-
-    @Subscribe
-    public void appInstalledEvent(AppInstalledEvent event) {
-        if (event.isRunning()) {
-            ((Launcher3App) CoreApplication.getInstance()).setAllDefaultMenusApplication();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (fabMenu.isOpened()) {
-            fabMenu.close(true);
-            fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
-            txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @AfterViews
-    void afterViews() {
         everyTwoHourList.addAll(Arrays.asList(0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22));
         everyFourHoursList.addAll(Arrays.asList(0, 4, 8, 12, 16, 20));
-        enableRadioOnPosition(droidPrefs.tempoType().get());
+        enableRadioOnPosition(droidPrefs.getInt("tempoType", 0));
         bindOnlyAt();
-        fabMenu.setClosedOnTouchOutside(true);
-        fabMenu.setAnimated(false);
-        fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
-        fabMenu.setOnMenuButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fabMenu.isOpened()) {
-                    fabMenu.setClickable(false);
-                    fabMenu.close(true);
-                    fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
-                    txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
-                } else {
-                    fabMenu.setClickable(true);
-                    fabMenu.open(true);
-                    fabMenu.getMenuIconView().setImageResource(R.drawable.ic_add_white_24dp);
-                    txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.temp_bg_fab_menu));
-                }
-            }
-        });
-        txBackground.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fabMenu.isOpened()) {
-                    fabMenu.setClickable(false);
-                    fabMenu.close(true);
-                    fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
-                    txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
-                } else {
-                    onBackPressed();
-                }
-            }
-        });
-        top.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
-                txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
-            }
-        });
 
-        fabMenu.setOnClickListener(new View.OnClickListener() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onClick(View v) {
-                if (fabMenu.isOpened()) {
-                    fabMenu.setClickable(false);
-                    fabMenu.close(true);
-                    fabMenu.getMenuIconView().setImageResource(R.drawable.ic_play_arrow_transparent_24dp);
-                    txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
-                }
+            public void run() {
+                Animation in = AnimationUtils.loadAnimation(context, R.anim.fab_scale_up);
+                fabPlay.startAnimation(in);
+                fabPlay.setVisibility(View.VISIBLE);
             }
-        });
+        }, 400);
+    }
 
+    private void initView() {
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        droidPrefs = context.getSharedPreferences("DroidPrefs", 0);
+        radioIndividual = findViewById(R.id.radioIndividual);
+        top = findViewById(R.id.top);
+        radioBatched = findViewById(R.id.radioBatched);
+        radioOnlyAt = findViewById(R.id.radioOnlyAt);
+        txtBatch = findViewById(R.id.txtBatch);
+        txtOnlyAtTime1 = findViewById(R.id.txtOnlyAtTime1);
+        txtOnlyAtTime2 = findViewById(R.id.txtOnlyAtTime2);
+        txtOnlyAtTime3 = findViewById(R.id.txtOnlyAtTime3);
+        txtSign1 = findViewById(R.id.txtSign1);
+        txtSign2 = findViewById(R.id.txtSign2);
+        txtAdd = findViewById(R.id.txtAdd);
+        txtMessage = findViewById(R.id.txtMessage);
+        imgMinus = findViewById(R.id.imgMinus);
+        imgPlus = findViewById(R.id.imgPlus);
+        linear = findViewById(R.id.linear);
+        relIndividual = findViewById(R.id.relIndividual);
+        relBatched = findViewById(R.id.relBatched);
+        relOnlyAt = findViewById(R.id.relOnlyAt);
+        fabPlay = findViewById(R.id.fabPlay);
+
+        radioIndividual.setOnClickListener(this);
+        radioBatched.setOnClickListener(this);
+        radioOnlyAt.setOnClickListener(this);
+        relIndividual.setOnClickListener(this);
+        relBatched.setOnClickListener(this);
+        relOnlyAt.setOnClickListener(this);
+        txtAdd.setOnClickListener(this);
+        imgMinus.setOnClickListener(this);
+        imgPlus.setOnClickListener(this);
+        fabPlay.setOnClickListener(this);
+        txtOnlyAtTime1.setOnClickListener(this);
+        txtOnlyAtTime2.setOnClickListener(this);
+        txtOnlyAtTime3.setOnClickListener(this);
 
     }
 
-    @Click
-    void radioIndividual() {
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FirebaseHelper.getIntance().logScreenUsageTime(Dialog_Tempo.class.getSimpleName(), startTime);
+        fabPlay.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_scale_down));
+        fabPlay.setVisibility(View.INVISIBLE);
+    }
+
+    private void radioIndividual() {
         enableRadioOnPosition(0);
         FirebaseHelper.getIntance().logTempoIntervalTime(0, 0, "");
     }
 
-    @Click
-    void radioBatched() {
+    private void radioBatched() {
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.batchTime().get(), "");
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.getInt("batchTime", 15), "");
     }
 
-    @Click
-    void radioOnlyAt() {
+    private void radioOnlyAt() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
     }
 
-    @Click
-    void relIndividual() {
+    private void relIndividual() {
         enableRadioOnPosition(0);
         FirebaseHelper.getIntance().logTempoIntervalTime(0, 0, "");
     }
 
-    @Click
-    void relBatched() {
+    private void relBatched() {
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.batchTime().get(), "");
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.getInt("batchTime", 15), "");
     }
 
-    @Click
-    void relOnlyAt() {
+    private void relOnlyAt() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
     }
 
-    @Click
-    void txtAdd() {
+    private void txtAdd() {
         enableRadioOnPosition(2);
-        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
+        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
         Calendar now = Calendar.getInstance();
         showTimePicker(now, -1, true);
     }
 
     private void showTimePicker(final Calendar now, final int i, final boolean isNewAdded) {
-        String strTime[] = droidPrefs.onlyAt().get().split(",");
+        String strTime[] = droidPrefs.getString("onlyAt", "12:01").split(",");
         final ArrayList listdata = new ArrayList(Arrays.asList(strTime));
         listdata.remove("");
         String strPositiveText;
@@ -251,26 +181,26 @@ public class TempoActivity extends CoreActivity {
 
 
         if (listdata.size() <= 1) {
-            strNegativeText = getString(R.string.cancel);
-            strPositiveText = getString(R.string.save);
+            strNegativeText = context.getString(R.string.cancel);
+            strPositiveText = context.getString(R.string.save);
             isCancelButton = true;
         } else {
             if (isNewAdded) {
-                strNegativeText = getString(R.string.cancel);
-                strPositiveText = getString(R.string.save);
+                strNegativeText = context.getString(R.string.cancel);
+                strPositiveText = context.getString(R.string.save);
                 isCancelButton = true;
             } else {
-                strNegativeText = getString(R.string.remove);
-                strPositiveText = getString(R.string.save);
+                strNegativeText = context.getString(R.string.remove);
+                strPositiveText = context.getString(R.string.save);
                 isCancelButton = false;
             }
         }
-        final TimePicker timePicker = new TimePicker(this);
-        timePicker.setIs24HourView(android.text.format.DateFormat.is24HourFormat(this));
+        final TimePicker timePicker = new TimePicker(context);
+        timePicker.setIs24HourView(android.text.format.DateFormat.is24HourFormat(context));
         timePicker.setCurrentHour(now.get(Calendar.HOUR_OF_DAY));
         timePicker.setCurrentMinute(now.get(Calendar.MINUTE));
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(context)
                 .setPositiveButton(strPositiveText, new DialogInterface.OnClickListener() {
 
                     @Override
@@ -284,18 +214,18 @@ public class TempoActivity extends CoreActivity {
                             if (!listdata.contains(strSelectedTime)) {
                                 listdata.add(strSelectedTime);
                                 Collections.sort(listdata);
-                                droidPrefs.onlyAt().put(TextUtils.join(",", listdata));
+                                droidPrefs.edit().putString("onlyAt", TextUtils.join(",", listdata)).apply();
                                 enableRadioOnPosition(2);
-                                FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
+                                FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
                             } else {
-                                Toast.makeText(TempoActivity.this, R.string.msg_sametime, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, R.string.msg_sametime, Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             listdata.set(i, strSelectedTime);
                             Collections.sort(listdata);
-                            droidPrefs.onlyAt().put(TextUtils.join(",", listdata));
+                            droidPrefs.edit().putString("onlyAt", TextUtils.join(",", listdata)).apply();
                             enableRadioOnPosition(2);
-                            FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
+                            FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
                         }
 
 
@@ -310,89 +240,109 @@ public class TempoActivity extends CoreActivity {
                                     if (listdata.size() != 0) {
                                         listdata.remove(i);
                                         if (listdata.size() >= 1) {
-                                            droidPrefs.onlyAt().put(TextUtils.join(",", listdata));
+                                            droidPrefs.edit().putString("onlyAt", TextUtils.join(",", listdata)).apply();
                                         } else {
-                                            droidPrefs.onlyAt().put("");
+                                            droidPrefs.edit().putString("onlyAt", "").apply();
                                         }
                                         enableRadioOnPosition(2);
-                                        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.onlyAt().get());
+                                        FirebaseHelper.getIntance().logTempoIntervalTime(2, 0, droidPrefs.getString("onlyAt", "12:01"));
                                     }
                                 }
                             }
                         }).setView(timePicker).show();
     }
 
-    @Click
-    void imgMinus() {
+    private void imgMinus() {
         if (radioBatched.isChecked()) {
-            if (droidPrefs.batchTime().get() == 15) {
-                txtBatch.setText(getString(R.string.batched_every_4_hour));
-                droidPrefs.batchTime().put(4);
-            } else if (droidPrefs.batchTime().get() == 4) {
-                txtBatch.setText(getString(R.string.batched_every_2_hour));
-                droidPrefs.batchTime().put(2);
-            } else if (droidPrefs.batchTime().get() == 2) {
-                txtBatch.setText(getString(R.string.batched_every_1_hour));
-                droidPrefs.batchTime().put(1);
-            } else if (droidPrefs.batchTime().get() == 1) {
-                txtBatch.setText(getString(R.string.batched_every_30_minutes));
-                droidPrefs.batchTime().put(30);
-            } else if (droidPrefs.batchTime().get() == 30) {
-                txtBatch.setText(getString(R.string.batched_every_15_minutes));
-                droidPrefs.batchTime().put(15);
+            if (droidPrefs.getInt("batchTime", 15) == 15) {
+                txtBatch.setText(context.getString(R.string.batched_every_4_hour));
+                droidPrefs.edit().putInt("batchTime", 4).apply();
+            } else if (droidPrefs.getInt("batchTime", 15) == 4) {
+                txtBatch.setText(context.getString(R.string.batched_every_2_hour));
+                droidPrefs.edit().putInt("batchTime", 2).apply();
+            } else if (droidPrefs.getInt("batchTime", 15) == 2) {
+                txtBatch.setText(context.getString(R.string.batched_every_1_hour));
+                droidPrefs.edit().putInt("batchTime", 1).apply();
+            } else if (droidPrefs.getInt("batchTime", 15) == 1) {
+                txtBatch.setText(context.getString(R.string.batched_every_30_minutes));
+                droidPrefs.edit().putInt("batchTime", 30).apply();
+            } else if (droidPrefs.getInt("batchTime", 15) == 30) {
+                txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
+                droidPrefs.edit().putInt("batchTime", 15).apply();
             }
         }
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.batchTime().get(), "");
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.getInt("batchTime", 15), "");
     }
 
-    @Click
-    void imgPlus() {
+    private void imgPlus() {
         if (radioBatched.isChecked()) {
-            if (droidPrefs.batchTime().get() == 15) {
-                txtBatch.setText(getString(R.string.batched_every_30_minutes));
-                droidPrefs.batchTime().put(30);
-            } else if (droidPrefs.batchTime().get() == 30) {
-                txtBatch.setText(getString(R.string.batched_every_1_hour));
-                droidPrefs.batchTime().put(1);
-            } else if (droidPrefs.batchTime().get() == 1) {
-                txtBatch.setText(getString(R.string.batched_every_2_hour));
-                droidPrefs.batchTime().put(2);
-            } else if (droidPrefs.batchTime().get() == 2) {
-                txtBatch.setText(getString(R.string.batched_every_4_hour));
-                droidPrefs.batchTime().put(4);
-            } else if (droidPrefs.batchTime().get() == 4) {
-                txtBatch.setText(getString(R.string.batched_every_15_minutes));
-                droidPrefs.batchTime().put(15);
+            if (droidPrefs.getInt("batchTime", 15) == 15) {
+                txtBatch.setText(context.getString(R.string.batched_every_30_minutes));
+                droidPrefs.edit().putInt("batchTime", 30).apply();
+            } else if (droidPrefs.getInt("batchTime", 15) == 30) {
+                txtBatch.setText(context.getString(R.string.batched_every_1_hour));
+                droidPrefs.edit().putInt("batchTime", 1).apply();
+            } else if (droidPrefs.getInt("batchTime", 15) == 1) {
+                txtBatch.setText(context.getString(R.string.batched_every_2_hour));
+                droidPrefs.edit().putInt("batchTime", 2).apply();
+            } else if (droidPrefs.getInt("batchTime", 15) == 2) {
+                txtBatch.setText(context.getString(R.string.batched_every_4_hour));
+                droidPrefs.edit().putInt("batchTime", 4).apply();
+            } else if (droidPrefs.getInt("batchTime", 15) == 4) {
+                txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
+                droidPrefs.edit().putInt("batchTime", 15).apply();
             }
         }
         enableRadioOnPosition(1);
-        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.batchTime().get(), "");
+        FirebaseHelper.getIntance().logTempoIntervalTime(1, droidPrefs.getInt("batchTime", 15), "");
     }
 
-    @Click
-    void fabMute() {
-        fabMenu.setClickable(false);
-        fabMenu.close(true);
-        droidPrefs.tempoSoundProfile().put(0);
-        txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
+    private void fabPlay() {
+        try {
+            fabPlay.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fab_scale_down));
+            fabPlay.setVisibility(View.INVISIBLE);
+            linear.setVisibility(View.INVISIBLE);
+            ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(txtMessage, "translationY", 0, -500).setDuration(400);
+            objectAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            dismiss();
+                        }
+                    }, 500);
+
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            objectAnimator.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
-    @Click
-    void fabSound() {
-        fabMenu.setClickable(false);
-        fabMenu.close(true);
-        droidPrefs.tempoSoundProfile().put(1);
-        txtTop.setBackgroundColor(ContextCompat.getColor(TempoActivity.this, R.color.transparent));
-
-    }
-
-    @Click
-    void txtOnlyAtTime1() {
+    private void txtOnlyAtTime1() {
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
-            String str1 = droidPrefs.onlyAt().get().split(",")[0];
+            String str1 = droidPrefs.getString("onlyAt", "12:01").split(",")[0];
             calendar1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(str1.split(":")[0]));
             calendar1.set(Calendar.MINUTE, Integer.parseInt(str1.split(":")[1]));
             showTimePicker(calendar1, 0, false);
@@ -400,12 +350,11 @@ public class TempoActivity extends CoreActivity {
 
     }
 
-    @Click
-    void txtOnlyAtTime2() {
+    private void txtOnlyAtTime2() {
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
-            String str1 = droidPrefs.onlyAt().get().split(",")[1];
+            String str1 = droidPrefs.getString("onlyAt", "12:01").split(",")[1];
             calendar1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(str1.split(":")[0]));
             calendar1.set(Calendar.MINUTE, Integer.parseInt(str1.split(":")[1]));
             showTimePicker(calendar1, 1, false);
@@ -413,12 +362,11 @@ public class TempoActivity extends CoreActivity {
 
     }
 
-    @Click
-    void txtOnlyAtTime3() {
+    private void txtOnlyAtTime3() {
         enableRadioOnPosition(2);
         if (radioOnlyAt.isChecked()) {
             Calendar calendar1 = Calendar.getInstance();
-            String str1 = droidPrefs.onlyAt().get().split(",")[2];
+            String str1 = droidPrefs.getString("onlyAt", "12:01").split(",")[2];
             calendar1.set(Calendar.HOUR_OF_DAY, Integer.parseInt(str1.split(":")[0]));
             calendar1.set(Calendar.MINUTE, Integer.parseInt(str1.split(":")[1]));
             showTimePicker(calendar1, 2, false);
@@ -438,32 +386,32 @@ public class TempoActivity extends CoreActivity {
         }
 
         String timeString;
-        if (android.text.format.DateFormat.is24HourFormat(this)) {
+        if (android.text.format.DateFormat.is24HourFormat(context)) {
             timeString = "HH:mm";
         } else {
             timeString = "hh:mm a";
         }
         SimpleDateFormat df = new SimpleDateFormat(timeString, Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int hour;
         int minute = calendar.get(Calendar.MINUTE);
         int str = calendar.get(Calendar.AM_PM);
         if (pos == 0) {
             radioIndividual.setChecked(true);
             radioBatched.setChecked(false);
             radioOnlyAt.setChecked(false);
-            droidPrefs.tempoType().put(0);
-            strMessage = getString(R.string.msg_individual);
+            droidPrefs.edit().putInt("tempoType", 0).apply();
+            strMessage = context.getString(R.string.msg_individual);
             txtMessage.setText(strMessage);
         } else if (pos == 1) {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(true);
             radioOnlyAt.setChecked(false);
-            droidPrefs.tempoType().put(1);
-            strMessage = getString(R.string.msg_do_not_disturb);
-            if (droidPrefs.batchTime().get() == 15) {
-                txtBatch.setText(getString(R.string.batched_every_15_minutes));
-                strMessage = strMessage + "\n" + getString(R.string.msg_quarter) + "\n";
+            droidPrefs.edit().putInt("tempoType", 1).apply();
+            strMessage = context.getString(R.string.msg_do_not_disturb);
+            if (droidPrefs.getInt("batchTime", 15) == 15) {
+                txtBatch.setText(context.getString(R.string.batched_every_15_minutes));
+                strMessage = strMessage + "\n" + context.getString(R.string.msg_quarter) + "\n";
                 if (minute >= 0 && minute < 15) {
                     calendar.set(Calendar.MINUTE, 15);
                 } else if (minute >= 15 && minute < 30) {
@@ -473,49 +421,49 @@ public class TempoActivity extends CoreActivity {
                 } else if (minute >= 45 && minute < 60) {
                     calendar.set(Calendar.MINUTE, 60);
                 }
-            } else if (droidPrefs.batchTime().get() == 30) {
-                txtBatch.setText(getString(R.string.batched_every_30_minutes));
-                strMessage = strMessage + "\n" + getString(R.string.msg_half) + "\n";
+            } else if (droidPrefs.getInt("batchTime", 15) == 30) {
+                txtBatch.setText(context.getString(R.string.batched_every_30_minutes));
+                strMessage = strMessage + "\n" + context.getString(R.string.msg_half) + "\n";
                 if (minute >= 0 && minute < 30) {
                     calendar.set(Calendar.MINUTE, 30);
                 } else if (minute >= 30 && minute < 60) {
                     calendar.add(Calendar.HOUR_OF_DAY, 1);
                     calendar.set(Calendar.MINUTE, 0);
                 }
-            } else if (droidPrefs.batchTime().get() == 1) {
-                txtBatch.setText(getString(R.string.batched_every_1_hour));
-                strMessage = strMessage + "\n" + getString(R.string.msg_1hour) + "\n";
+            } else if (droidPrefs.getInt("batchTime", 15) == 1) {
+                txtBatch.setText(context.getString(R.string.batched_every_1_hour));
+                strMessage = strMessage + "\n" + context.getString(R.string.msg_1hour) + "\n";
                 calendar.add(Calendar.HOUR_OF_DAY, 1);
                 calendar.set(Calendar.MINUTE, 0);
-            } else if (droidPrefs.batchTime().get() == 2) {
-                txtBatch.setText(getString(R.string.batched_every_2_hour));
-                strMessage = strMessage + "\n" + getString(R.string.msg_2hour) + "\n";
+            } else if (droidPrefs.getInt("batchTime", 15) == 2) {
+                txtBatch.setText(context.getString(R.string.batched_every_2_hour));
+                strMessage = strMessage + "\n" + context.getString(R.string.msg_2hour) + "\n";
                 calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int intHour = forTwoHours(hour);
                 calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
-            } else if (droidPrefs.batchTime().get() == 4) {
-                txtBatch.setText(getString(R.string.batched_every_4_hour));
-                strMessage = strMessage + "\n" + getString(R.string.msg_4hour) + "\n";
+            } else if (droidPrefs.getInt("batchTime", 15) == 4) {
+                txtBatch.setText(context.getString(R.string.batched_every_4_hour));
+                strMessage = strMessage + "\n" + context.getString(R.string.msg_4hour) + "\n";
                 calendar = Calendar.getInstance();
                 hour = calendar.get(Calendar.HOUR_OF_DAY);
                 int intHour = forFourHours(hour);
                 calendar.set(Calendar.HOUR_OF_DAY, intHour);
                 calendar.set(Calendar.MINUTE, 0);
             }
-            strMessage = strMessage + getString(R.string.msg_next_delivery) + df.format(calendar.getTime());
+            strMessage = strMessage + context.getString(R.string.msg_next_delivery) + df.format(calendar.getTime());
             txtMessage.setText(strMessage);
         } else if (pos == 2) {
             radioIndividual.setChecked(false);
             radioBatched.setChecked(false);
             radioOnlyAt.setChecked(true);
-            droidPrefs.tempoType().put(2);
+            droidPrefs.edit().putInt("tempoType", 2).apply();
             bindOnlyAt();
         }
     }
 
-    int forTwoHours(int hour) {
+    private int forTwoHours(int hour) {
         if (hour >= 22) {
             return 0;
         } else {
@@ -528,7 +476,7 @@ public class TempoActivity extends CoreActivity {
         return 0;
     }
 
-    int forFourHours(int hour) {
+    private int forFourHours(int hour) {
         if (hour >= 20) {
             return 0;
         } else {
@@ -541,18 +489,17 @@ public class TempoActivity extends CoreActivity {
         return 0;
     }
 
-
     private void bindOnlyAt() {
 
 
         String timeString;
-        if (android.text.format.DateFormat.is24HourFormat(this)) {
+        if (android.text.format.DateFormat.is24HourFormat(context)) {
             timeString = "HH:mm";
         } else {
             timeString = "hh:mm a";
         }
         SimpleDateFormat df = new SimpleDateFormat(timeString, Locale.getDefault());
-        String strTimeData = droidPrefs.onlyAt().get();
+        String strTimeData = droidPrefs.getString("onlyAt", "12:01");
         String strTime[] = strTimeData.split(",");
 
 
@@ -576,8 +523,8 @@ public class TempoActivity extends CoreActivity {
             calendar1.set(Calendar.MINUTE, setMinute);
             txtOnlyAtTime1.setText("" + df.format(calendar1.getTime()));
             if (radioOnlyAt.isChecked()) {
-                strMessage = getString(R.string.msg_do_not_disturb);
-                strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + df.format(calendar1.getTime());
+                strMessage = context.getString(R.string.msg_do_not_disturb);
+                strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + df.format(calendar1.getTime());
                 txtMessage.setText(strMessage);
             }
         } else if (strTime.length == 2) {
@@ -625,15 +572,15 @@ public class TempoActivity extends CoreActivity {
                             calendar1.set(Calendar.HOUR_OF_DAY, setHours);
                             calendar1.set(Calendar.MINUTE, setMinute);
                             if (radioOnlyAt.isChecked()) {
-                                strMessage = getString(R.string.msg_do_not_disturb);
-                                strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + hourList.get(i).getIndex();
+                                strMessage = context.getString(R.string.msg_do_not_disturb);
+                                strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + hourList.get(i).getIndex();
                                 txtMessage.setText(strMessage);
                             }
                             break;
                         } else {
                             if (radioOnlyAt.isChecked()) {
-                                strMessage = getString(R.string.msg_do_not_disturb);
-                                strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + hourList.get(0).getIndex();
+                                strMessage = context.getString(R.string.msg_do_not_disturb);
+                                strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + hourList.get(0).getIndex();
                                 txtMessage.setText(strMessage);
                             }
 
@@ -645,15 +592,15 @@ public class TempoActivity extends CoreActivity {
                         calendar1.set(Calendar.HOUR_OF_DAY, setHours);
                         calendar1.set(Calendar.MINUTE, setMinute);
                         if (radioOnlyAt.isChecked()) {
-                            strMessage = getString(R.string.msg_do_not_disturb);
-                            strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + hourList.get(i).getIndex();
+                            strMessage = context.getString(R.string.msg_do_not_disturb);
+                            strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + hourList.get(i).getIndex();
                             txtMessage.setText(strMessage);
                         }
                         break;
                     } else {
                         if (radioOnlyAt.isChecked()) {
-                            strMessage = getString(R.string.msg_do_not_disturb);
-                            strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + hourList.get(0).getIndex();
+                            strMessage = context.getString(R.string.msg_do_not_disturb);
+                            strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + hourList.get(0).getIndex();
                             txtMessage.setText(strMessage);
                         }
                     }
@@ -716,15 +663,15 @@ public class TempoActivity extends CoreActivity {
                             calendar1.set(Calendar.HOUR_OF_DAY, setHours);
                             calendar1.set(Calendar.MINUTE, setMinute);
                             if (radioOnlyAt.isChecked()) {
-                                strMessage = getString(R.string.msg_do_not_disturb);
-                                strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + hourList.get(i).getIndex();
+                                strMessage = context.getString(R.string.msg_do_not_disturb);
+                                strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + hourList.get(i).getIndex();
                                 txtMessage.setText(strMessage);
                             }
                             break;
                         } else {
                             if (radioOnlyAt.isChecked()) {
-                                strMessage = getString(R.string.msg_do_not_disturb);
-                                strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + hourList.get(0).getIndex();
+                                strMessage = context.getString(R.string.msg_do_not_disturb);
+                                strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + hourList.get(0).getIndex();
                                 txtMessage.setText(strMessage);
                             }
                         }
@@ -735,15 +682,15 @@ public class TempoActivity extends CoreActivity {
                         calendar1.set(Calendar.HOUR_OF_DAY, setHours);
                         calendar1.set(Calendar.MINUTE, setMinute);
                         if (radioOnlyAt.isChecked()) {
-                            strMessage = getString(R.string.msg_do_not_disturb);
-                            strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + hourList.get(i).getIndex();
+                            strMessage = context.getString(R.string.msg_do_not_disturb);
+                            strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + hourList.get(i).getIndex();
                             txtMessage.setText(strMessage);
                         }
                         break;
                     } else {
                         if (radioOnlyAt.isChecked()) {
-                            strMessage = getString(R.string.msg_do_not_disturb);
-                            strMessage = strMessage + "\n" + getString(R.string.msg_next_delivery) + hourList.get(0).getIndex();
+                            strMessage = context.getString(R.string.msg_do_not_disturb);
+                            strMessage = strMessage + "\n" + context.getString(R.string.msg_next_delivery) + hourList.get(0).getIndex();
                             txtMessage.setText(strMessage);
                         }
                     }
@@ -753,6 +700,53 @@ public class TempoActivity extends CoreActivity {
             }
 
 
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.radioIndividual:
+                radioIndividual();
+                break;
+            case R.id.radioBatched:
+                radioBatched();
+                break;
+            case R.id.radioOnlyAt:
+                radioOnlyAt();
+                break;
+            case R.id.relIndividual:
+                relIndividual();
+                break;
+            case R.id.relBatched:
+                relBatched();
+                break;
+            case R.id.relOnlyAt:
+                relOnlyAt();
+                break;
+            case R.id.txtAdd:
+                txtAdd();
+                break;
+            case R.id.imgMinus:
+                imgMinus();
+                break;
+            case R.id.imgPlus:
+                imgPlus();
+                break;
+            case R.id.fabPlay:
+                fabPlay();
+                break;
+            case R.id.txtOnlyAtTime1:
+                txtOnlyAtTime1();
+                break;
+            case R.id.txtOnlyAtTime2:
+                txtOnlyAtTime2();
+                break;
+            case R.id.txtOnlyAtTime3:
+                txtOnlyAtTime3();
+                break;
+            default:
+                break;
         }
     }
 
