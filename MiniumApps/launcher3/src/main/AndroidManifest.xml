@@ -180,7 +180,7 @@
             android:label="@string/title_activity_app_list_notification" />
         <activity android:name=".settings.SiempoSupressNotificationActivity" />
         <activity android:name=".ui.SiempoPermissionActivity_" />
-        <activity android:name=".tempo.TempoSettingsActivity_" />
+        <activity android:name=".tempo.SettingsActivity_" />
         <activity android:name=".tempo.TempoAppNotificationActivity" />
         <activity android:name=".HelpActivity_" />
         <activity

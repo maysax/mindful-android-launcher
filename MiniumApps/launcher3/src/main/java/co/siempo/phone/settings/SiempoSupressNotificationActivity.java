@@ -2,7 +2,6 @@ package co.siempo.phone.settings;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -36,9 +35,7 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
-import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.ItemClickSupport;
 import co.siempo.phone.notification.Notification;
 import co.siempo.phone.notification.NotificationContactModel;
 import co.siempo.phone.notification.NotificationUtility;
@@ -46,7 +43,6 @@ import co.siempo.phone.notification.SuppressNotificationAdapter;
 import co.siempo.phone.notification.remove_notification_strategy.DeleteItem;
 import co.siempo.phone.notification.remove_notification_strategy.MultipleItemDelete;
 import minium.co.core.app.CoreApplication;
-import minium.co.core.util.UIUtils;
 
 public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
@@ -155,7 +151,7 @@ public class SiempoSupressNotificationActivity extends AppCompatActivity {
 
     private void loadData() {
 
-        String disable_AppList = launcherPrefs.getString(Constants.DISABLE_APPLIST, "");
+        String disable_AppList = launcherPrefs.getString(Constants.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(disable_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();

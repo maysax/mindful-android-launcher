@@ -12,6 +12,7 @@
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
     </style>
 
 
@@ -21,6 +22,7 @@
         <item name="fab_colorPressed">#2272CD</item>
         <item name="fab_colorRipple">#62B2FF</item>
     </style>
+
 
     <style name="MaterialDialogSheet" parent="@style/Base.Theme.AppCompat.Light.Dialog">
         <item name="android:windowContentOverlay">@null</item>
@@ -84,6 +86,11 @@
         <item name="android:textColor">@color/errorColor</item>
         <item name="android:textSize">12sp</item>
 
+    </style>
+
+    <style name="interrupt_popup_menu" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:dropDownHorizontalOffset">-8dp</item>
+        <item name="android:dropDownVerticalOffset">12dp</item>
     </style>
 
 </resources>

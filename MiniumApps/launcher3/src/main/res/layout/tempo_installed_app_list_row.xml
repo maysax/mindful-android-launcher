@@ -15,12 +15,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp">
 
         <ImageView
             android:id="@+id/imv_appicon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             tools:ignore="ContentDescription,PrivateResource" />
 
         <TextView
@@ -59,6 +62,5 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="0.8dp"
-
         android:background="@android:color/darker_gray" />
 </LinearLayout>

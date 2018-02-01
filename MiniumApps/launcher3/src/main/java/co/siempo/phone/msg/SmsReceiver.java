@@ -4,10 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.Telephony;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
@@ -86,7 +84,7 @@ public class SmsReceiver extends BroadcastReceiver {
 
                 if (launcherPrefs.isAppDefaultOrFront().get()) {
                     SharedPreferences prefs1 = context.getSharedPreferences("Launcher3Prefs", 0);
-                    String disable_AppList = prefs1.getString(Constants.DISABLE_APPLIST, "");
+                    String disable_AppList = prefs1.getString(Constants.HELPFUL_ROBOTS, "");
                     if (!TextUtils.isEmpty(disable_AppList)) {
                         Type type = new TypeToken<ArrayList<String>>() {
                         }.getType();
@@ -112,9 +110,9 @@ public class SmsReceiver extends BroadcastReceiver {
                         }
 
                         if (disableNotificationApps.contains(messagingAppPackage) && isShowNotification) {
-                            if (!prefs.isTempoNotificationControlsDisabled().get()) {
+
                                 saveMessage(mAddress, mBody, mDate, context);
-                            }
+
                         }
                     }
                 }

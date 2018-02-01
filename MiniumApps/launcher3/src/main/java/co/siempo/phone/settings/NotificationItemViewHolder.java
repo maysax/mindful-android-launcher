@@ -72,7 +72,7 @@ public class NotificationItemViewHolder extends RecyclerView.ViewHolder {
             disableNotificationApps.add(applicationInfo.packageName);
         }
         String disableList = new Gson().toJson(disableNotificationApps);
-        launcherPrefs.edit().putString(Constants.DISABLE_APPLIST, disableList).commit();
+        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
         switch_appNotification.setChecked(ischecked);
     }
 

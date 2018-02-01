@@ -28,32 +28,14 @@ public class TempoNotificationAppsFragment extends CoreFragment {
     @ViewById
     Toolbar toolbar;
 
-    @ViewById
-    TextView titleActionBar;
-
     @Pref
     Launcher3Prefs_ launcherPrefs;
-
-    @ViewById
-    Switch switchDisableNotificationControls;
-
-    @ViewById
-    Switch switchAllowPeaking;
-    @ViewById
-    TextView txtAllowPeakingText;
 
     @ViewById
     TextView txtAllowAppsText;
     @ViewById
     TextView txtAllowApps;
-    @ViewById
-    TextView txtAllowPeaking;
 
-    @ViewById
-    TextView txtDisableNotificationControls;
-
-    @ViewById
-    RelativeLayout relAllowSpecificApps;
 
 
     public TempoNotificationAppsFragment() {
@@ -84,35 +66,6 @@ public class TempoNotificationAppsFragment extends CoreFragment {
 
     }
 
-
-    @CheckedChange
-    void switchDisableNotificationControls(CompoundButton btn, boolean isChecked) {
-        if (isChecked) {
-            txtAllowPeaking.setVisibility(View.GONE);
-            txtAllowApps.setVisibility(View.GONE);
-            txtAllowAppsText.setVisibility(View.GONE);
-            switchAllowPeaking.setVisibility(View.GONE);
-            txtAllowPeakingText.setVisibility(View.GONE);
-        } else {
-            txtAllowPeaking.setVisibility(View.VISIBLE);
-            txtAllowApps.setVisibility(View.VISIBLE);
-            txtAllowAppsText.setVisibility(View.VISIBLE);
-            switchAllowPeaking.setVisibility(View.VISIBLE);
-            txtAllowPeakingText.setVisibility(View.VISIBLE);
-        }
-
-    }
-
-
-    @CheckedChange
-    void switchAllowPeaking(CompoundButton btn, boolean isChecked) {
-        if (isChecked) {
-            txtAllowPeakingText.setText("On. The status bar will show you when you have new notifications in your tray, but your tray won't pop up automatically.");
-
-        } else {
-            txtAllowPeakingText.setText("Off. The status bar will show you when you have new notifications in your tray, but your tray won't pop up automatically.");
-        }
-    }
 
     @Click
     void relAllowSpecificApps() {

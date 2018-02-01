@@ -447,6 +447,7 @@ public abstract class CoreApplication extends MultiDexApplication {
     }
 
     public void setPackagesList(List<ApplicationInfo> packagesList) {
+        Log.d("hardikkamothi","Set Package List:::");
         Collections.sort(packagesList, new Comparator<ApplicationInfo>() {
             public int compare(ApplicationInfo v1, ApplicationInfo v2) {
 
@@ -471,24 +472,44 @@ public abstract class CoreApplication extends MultiDexApplication {
             blockedApps = new Gson().fromJson(block_AppList, type);
         }
 
-
+        boolean isAppInstallFirstTime=sharedPreferences.getBoolean("isAppInstalledFirstTime",true);
+        if(isAppInstallFirstTime){
+            blockedApps.clear();
+        }
+        Log.d("hardikkamothi","First Time :: "+isAppInstallFirstTime);
         for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
 
-            if (blockedApps.size() > 0) {
-                for (String blockedApp : blockedApps) {
-                    if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
-                        disableNotificationApps.add(applicationInfo.packageName);
+
+            if(isAppInstallFirstTime){
+
+                blockedApps.add(applicationInfo.packageName);
+            }
+            else{
+                if (blockedApps.size() > 0) {
+                    for (String blockedApp : blockedApps) {
+                        if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
+                            disableNotificationApps.add(applicationInfo.packageName);
+                        }
                     }
+
+                } else {
+
+                    disableNotificationApps.add(applicationInfo.packageName);
                 }
 
-            } else {
-
-                disableNotificationApps.add(applicationInfo.packageName);
             }
-
         }
+
+
+        String blockedList = new Gson().toJson(blockedApps);
+        sharedPreferences.edit().putString(BLOCKED_APPLIST, blockedList).apply();
+
         String disableList = new Gson().toJson(disableNotificationApps);
         sharedPreferences.edit().putString(DISABLE_APPLIST, disableList).apply();
+
+        Log.d("hardikkamothi","Blocked List Size ::"+blockedApps.size());
+        Log.d("hardikkamothi","Disable List Size :: "+disableNotificationApps.size());
+
     }
 
     /**

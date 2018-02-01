@@ -28,8 +28,8 @@ import co.siempo.phone.IntentionEditActivity_;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.service.StatusBarService;
+import co.siempo.phone.tempo.SettingsActivity_;
 import co.siempo.phone.tempo.TempoActivity_;
-import co.siempo.phone.tempo.TempoSettingsActivity_;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
@@ -96,11 +96,7 @@ public class IntentionFieldFragment extends CoreFragment {
                 prefs.isAppUpdated().put(false);
             }
         }
-        if (prefs.isTempoNotificationControlsDisabled().get()) {
-            imgTempo.setVisibility(View.GONE);
-        } else {
-            imgTempo.setVisibility(View.VISIBLE);
-        }
+
         if (prefs.isIntentionEnable().get()) {
             linIF.setVisibility(View.GONE);
         } else {
@@ -154,11 +150,7 @@ public class IntentionFieldFragment extends CoreFragment {
                 LinearLayout linHelp = customView.findViewById(R.id.linHelp);
                 LinearLayout linSettings = customView.findViewById(R.id.linSettings);
                 LinearLayout linTempo = customView.findViewById(R.id.linTempo);
-                if (prefs.isTempoNotificationControlsDisabled().get()) {
-                    linTempo.setVisibility(View.GONE);
-                } else {
-                    linTempo.setVisibility(View.VISIBLE);
-                }
+
 
                 linTempo.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -176,7 +168,7 @@ public class IntentionFieldFragment extends CoreFragment {
                     @Override
                     public void onClick(View view) {
                         //Code for opening Tempo Settings
-                        Intent intent = new Intent(getActivity(), TempoSettingsActivity_.class);
+                        Intent intent = new Intent(getActivity(), SettingsActivity_.class);
                         startActivity(intent);
                         UIUtils.clearDim(root);
                         mPopupWindow.dismiss();

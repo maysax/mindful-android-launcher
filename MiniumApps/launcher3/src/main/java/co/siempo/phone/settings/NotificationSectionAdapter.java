@@ -19,7 +19,7 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.applist.DisableAppList;
+import co.siempo.phone.applist.AppListInfo;
 import co.siempo.phone.applist.HeaderAppList;
 
 public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<NotificationHeaderViewHolder,
@@ -31,11 +31,11 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
     ArrayList<String> disableNotificationApps = new ArrayList<>();
     ArrayList<String> disableSections = new ArrayList<>();
     private PackageManager packageManager;
-    private List<DisableAppList> appList, socialList, messengerList;
+    private List<AppListInfo> appList, socialList, messengerList;
     private List<HeaderAppList> headerList;
 
 
-    public NotificationSectionAdapter(Context context, List<DisableAppList> appList, List<DisableAppList> socialList, List<DisableAppList> messengerList, List<HeaderAppList> headerList) {
+    public NotificationSectionAdapter(Context context, List<AppListInfo> appList, List<AppListInfo> socialList, List<AppListInfo> messengerList, List<HeaderAppList> headerList) {
         this.context = context;
         this.appList = appList;
         this.socialList = socialList;
@@ -44,7 +44,7 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
         this.packageManager = context.getPackageManager();
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
 
-        String disable_AppList = launcherPrefs.getString(Constants.DISABLE_APPLIST, "");
+        String disable_AppList = launcherPrefs.getString(Constants.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(disable_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
@@ -138,7 +138,7 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
                         android.os.Handler handler = new android.os.Handler();
                         for (int i = 0; i < socialList.size(); i++) {
                             changeAppNotification(socialList.get(i).applicationInfo, isChecked, disableNotificationApps, context);
-                            DisableAppList d1 = socialList.get(i);
+                            AppListInfo d1 = socialList.get(i);
                             d1.ischecked = isChecked;
                             socialList.set(i, d1);
                             notifyDataSetChanged();
@@ -154,7 +154,7 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
                         }
                         for (int i = 0; i < messengerList.size(); i++) {
                             changeAppNotification(messengerList.get(i).applicationInfo, isChecked, disableNotificationApps, context);
-                            DisableAppList d1 = messengerList.get(i);
+                            AppListInfo d1 = messengerList.get(i);
                             d1.ischecked = isChecked;
                             messengerList.set(i, d1);
                             notifyDataSetChanged();
@@ -169,7 +169,7 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
                         }
                         for (int i = 0; i < appList.size(); i++) {
                             changeAppNotification(appList.get(i).applicationInfo, isChecked, disableNotificationApps, context);
-                            DisableAppList d1 = appList.get(i);
+                            AppListInfo d1 = appList.get(i);
                             d1.ischecked = isChecked;
                             appList.set(i, d1);
                             notifyDataSetChanged();
@@ -206,7 +206,7 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
                         holder.changeNotification(socialList.get(position).applicationInfo, isChecked, disableNotificationApps, context);
 
                         // Below logic is use to disable social app names for update existing (Current display) list
-                        DisableAppList d = socialList.get(position);
+                        AppListInfo d = socialList.get(position);
                         d.ischecked = isChecked;
                         socialList.set(position, d);
                         holder.setData(isChecked);
@@ -245,7 +245,7 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
                         holder.changeNotification(messengerList.get(position).applicationInfo, isChecked, disableNotificationApps, context);
 
                         // Below logic is use to disable app names for update existing (Current display) list
-                        DisableAppList d = messengerList.get(position);
+                        AppListInfo d = messengerList.get(position);
                         d.ischecked = isChecked;
                         messengerList.set(position, d);
                         holder.setData(isChecked);
@@ -282,7 +282,7 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
                         holder.changeNotification(appList.get(position).applicationInfo, isChecked, disableNotificationApps, context);
 
                         // Below logic is use to disable app names for update existing (Current display) list
-                        DisableAppList d = appList.get(position);
+                        AppListInfo d = appList.get(position);
                         d.ischecked = isChecked;
                         appList.set(position, d);
                         holder.setData(isChecked);
@@ -362,7 +362,7 @@ public class NotificationSectionAdapter extends SectionedRecyclerViewAdapter<Not
         }
 
         String disableList = new Gson().toJson(disableNotificationApps);
-        launcherPrefs.edit().putString(Constants.DISABLE_APPLIST, disableList).commit();
+        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
     }
 
 }

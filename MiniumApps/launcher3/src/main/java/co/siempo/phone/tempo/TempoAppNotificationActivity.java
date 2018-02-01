@@ -26,7 +26,7 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.applist.DisableAppList;
+import co.siempo.phone.applist.AppListInfo;
 import co.siempo.phone.applist.HeaderAppList;
 import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.Subscribe;
@@ -45,24 +45,22 @@ public class TempoAppNotificationActivity extends CoreActivity {
     private RecyclerView lst_appList;
     private TextView titleActionBar;
     private ImageView imgBack;
-    // App list contain all the apps except social apps for display in list
-    private List<DisableAppList> appList = new ArrayList<>();
-    // App list contain all the messenger apps for display in list
-    private List<DisableAppList> messengerList = new ArrayList<>();
-    // App list contain all the messenger apps for display in list
-    private List<DisableAppList> blockedAppList = new ArrayList<>();
-    // App list contain all the section names for display in header list
-    private List<HeaderAppList> headerList = new ArrayList<>();
-    // App list contain all the social apps which are fetch from string array
-    private List<String> socialAppList = new ArrayList<>();
-    // App list contain all the messenger apps which are fetch from string array
-    private List<String> messengerAppList = new ArrayList<>();
+
+    private List<String> pref_messengerList = new ArrayList<>();
+    private ArrayList<String> pref_helpfulRobots = new ArrayList<>();
+    private ArrayList<String> pref_blockedList = new ArrayList<>();
+
+    private List<AppListInfo> messengerList = new ArrayList<>();
+    private List<AppListInfo> blockedList = new ArrayList<>();
+    private List<AppListInfo> helpfulRobot_List = new ArrayList<>();
+
+    private ArrayList<String> pref_headerSectionList = new ArrayList<>();
+    private List<HeaderAppList> headerSectionList = new ArrayList<>();
+
+    private List<String> systemAppList = new ArrayList<>();
+
     private PackageManager packageManager;
     private SharedPreferences launcherPrefs;
-    private ArrayList<String> disableNotificationApps = new ArrayList<>();
-    private ArrayList<String> blockedApps = new ArrayList<>();
-    private ArrayList<String> disableSectionList = new ArrayList<>();
-    private List<String> systemAppList = new ArrayList<>();
 
     @Override
     protected void onResume() {
@@ -85,13 +83,14 @@ public class TempoAppNotificationActivity extends CoreActivity {
 
     public void initView() {
 
+        pref_messengerList.clear();
+        pref_helpfulRobots.clear();
+        pref_blockedList.clear();
+
+        blockedList.clear();
         messengerList.clear();
-        messengerAppList.clear();
-        appList.clear();
-        blockedAppList.clear();
-        blockedApps.clear();
-        socialAppList.clear();
-        headerList.clear();
+        helpfulRobot_List.clear();
+        headerSectionList.clear();
 
         // Initialize components
         toolbar = findViewById(R.id.toolbar);
@@ -108,52 +107,53 @@ public class TempoAppNotificationActivity extends CoreActivity {
         lst_appList = findViewById(R.id.lst_appList);
         packageManager = getPackageManager();
         launcherPrefs = getSharedPreferences("Launcher3Prefs", 0);
-
         systemAppList = Arrays.asList(getResources().getStringArray(R.array.systemAppList));
 
+        /**
+         * Load all preference list based on share preference
+         * Constants.HELPFUL_ROBOTS
+         * Constants.BLOCKED_APPLIST
+         */
 
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         List<ResolveInfo> messagingResolveList = getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : messagingResolveList) {
-            messengerAppList.add(resolveInfo.activityInfo.packageName);
+            pref_messengerList.add(resolveInfo.activityInfo.packageName);
         }
 
-
-        // disableNotificationApps contains of disable app list
-        String disable_AppList = launcherPrefs.getString(Constants.DISABLE_APPLIST, "");
-        if (!TextUtils.isEmpty(disable_AppList)) {
+        String str_helpfulRobots = launcherPrefs.getString(Constants.HELPFUL_ROBOTS, "");
+        if (!TextUtils.isEmpty(str_helpfulRobots)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
-            disableNotificationApps = new Gson().fromJson(disable_AppList, type);
+            pref_helpfulRobots = new Gson().fromJson(str_helpfulRobots, type);
         }
-        String block_AppList = launcherPrefs.getString(Constants.BLOCKED_APPLIST, "");
-        if (!TextUtils.isEmpty(block_AppList)) {
+
+        String str_blockedList = launcherPrefs.getString(Constants.BLOCKED_APPLIST, "");
+        if (!TextUtils.isEmpty(str_blockedList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
-            blockedApps = new Gson().fromJson(block_AppList, type);
+            pref_blockedList = new Gson().fromJson(str_blockedList, type);
         }
 
         for (ApplicationInfo applicationInfo : CoreApplication.getInstance().getPackagesList()) {
-
-            for (String blockedApp : blockedApps) {
+            for (String blockedApp : pref_blockedList) {
                 if (!applicationInfo.packageName.equalsIgnoreCase(blockedApp)) {
-                    disableNotificationApps.add(applicationInfo.packageName);
+                    pref_helpfulRobots.add(applicationInfo.packageName);
                 }
             }
         }
 
-        String disableList = new Gson().toJson(disableNotificationApps);
-        launcherPrefs.edit().putString(Constants.DISABLE_APPLIST, disableList).commit();
+        String disableList = new Gson().toJson(pref_helpfulRobots);
+        launcherPrefs.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
 
-
-        // disableSectionList contains of disable section list
-        String disable_Header_AppList = launcherPrefs.getString(Constants.HEADER_APPLIST, "");
-        if (!TextUtils.isEmpty(disable_Header_AppList)) {
+        String str_Header_AppList = launcherPrefs.getString(Constants.HEADER_APPLIST, "");
+        if (!TextUtils.isEmpty(str_Header_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
-            disableSectionList = new Gson().fromJson(disable_Header_AppList, type);
+            pref_headerSectionList = new Gson().fromJson(str_Header_AppList, type);
         }
+
         loadAndDisplayAppList();
     }
 
@@ -164,26 +164,27 @@ public class TempoAppNotificationActivity extends CoreActivity {
         }
     }
 
+    /**
+     * Prepare List for display based on preference list
+     */
     public void loadAndDisplayAppList() {
-        // Load social Media Apps & Filter from app list
         for (int i = 0; i < CoreApplication.getInstance().getPackagesList().size(); i++) {
-            if (blockedApps.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
-                DisableAppList d = new DisableAppList();
+            if (pref_blockedList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
+                AppListInfo d = new AppListInfo();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                d.ischecked = !blockedApps.contains(d.applicationInfo.packageName);
-                blockedAppList.add(d);
-            } else if (messengerAppList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
-                DisableAppList d = new DisableAppList();
+                d.ischecked = !pref_blockedList.contains(d.applicationInfo.packageName);
+                blockedList.add(d);
+            } else if (pref_messengerList.contains(CoreApplication.getInstance().getPackagesList().get(i).packageName)) {
+                AppListInfo d = new AppListInfo();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
-                d.ischecked = !disableNotificationApps.contains(d.applicationInfo.packageName);
+                d.ischecked = !pref_helpfulRobots.contains(d.applicationInfo.packageName);
                 messengerList.add(d);
             } else {
-
-                DisableAppList d = new DisableAppList();
+                AppListInfo d = new AppListInfo();
                 d.applicationInfo = CoreApplication.getInstance().getPackagesList().get(i);
                 if (!TextUtils.isEmpty(d.applicationInfo.packageName) && !systemAppList.contains(d.applicationInfo.packageName)) {
-                    d.ischecked = !disableNotificationApps.contains(d.applicationInfo.packageName);
-                    appList.add(d);
+                    d.ischecked = !pref_helpfulRobots.contains(d.applicationInfo.packageName);
+                    helpfulRobot_List.add(d);
                 }
             }
         }
@@ -191,41 +192,38 @@ public class TempoAppNotificationActivity extends CoreActivity {
 
         if (messengerList.size() >= 0) {
             HeaderAppList d1 = new HeaderAppList();
-            d1.name = "Human Direct Messaging";
-            d1.ischecked = !disableSectionList.contains("Human Direct Messaging");
-            headerList.add(d1);
+            d1.name = "Human direct messaging";
+            d1.ischecked = !pref_headerSectionList.contains("Human direct messaging");
+            headerSectionList.add(d1);
         }
 
-
-        if (appList.size() >= 0) {
+        if (helpfulRobot_List.size() >= 0) {
             HeaderAppList d2 = new HeaderAppList();
-            d2.name = "Helpful Robots";
+            d2.name = "Helpful robots";
 
-            d2.ischecked = !disableSectionList.contains("Helpful Robots");
-            headerList.add(d2);
+            d2.ischecked = !pref_headerSectionList.contains("Helpful robots");
+            headerSectionList.add(d2);
         }
 
-        if (blockedApps.size() >= 0) {
+        if (pref_blockedList.size() >= 0) {
             HeaderAppList d3 = new HeaderAppList();
-            d3.name = "All Other Apps";
+            d3.name = "All other apps";
 
-            d3.ischecked = !disableSectionList.contains("All Other Apps");
-            headerList.add(d3);
+            d3.ischecked = !pref_headerSectionList.contains("All other apps");
+            headerSectionList.add(d3);
         }
 
-
-        checkAppListEmpty(this,appList,messengerList,blockedAppList);
+        checkAppListEmpty(this, helpfulRobot_List,messengerList, blockedList);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         lst_appList.setLayoutManager(linearLayoutManager);
         lst_appList.setHasFixedSize(true);
-        TempoNotificationSectionAdapter adapter = new TempoNotificationSectionAdapter(this, appList, messengerList, blockedAppList, headerList);
-
+        TempoNotificationSectionAdapter adapter = new TempoNotificationSectionAdapter(this, helpfulRobot_List, messengerList, blockedList, headerSectionList);
 
         lst_appList.setAdapter(adapter);
     }
 
-    public void checkAppListEmpty(Context context,List<DisableAppList> appList,List<DisableAppList> messengerList,List<DisableAppList> blockedAppList){
+    public void checkAppListEmpty(Context context, List<AppListInfo> appList, List<AppListInfo> messengerList, List<AppListInfo> blockedAppList){
         if(messengerList.size()>1) {
             for (int i=0;i<messengerList.size();i++)
                 if(!TextUtils.isEmpty(messengerList.get(i).errorMessage)) {
@@ -248,20 +246,20 @@ public class TempoAppNotificationActivity extends CoreActivity {
         }
 
         if(messengerList.size() == 0){
-            DisableAppList d= new DisableAppList();
+            AppListInfo d= new AppListInfo();
             d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
             messengerList.add(d);
         }
 
         if(appList.size() == 0){
-            DisableAppList d= new DisableAppList();
+            AppListInfo d= new AppListInfo();
             d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
             appList.add(d);
         }
 
 
         if(blockedAppList.size() == 0){
-            DisableAppList d= new DisableAppList();
+            AppListInfo d= new AppListInfo();
             d.errorMessage=context.getResources().getString(R.string.msg_no_apps);
             blockedAppList.add(d);
         }

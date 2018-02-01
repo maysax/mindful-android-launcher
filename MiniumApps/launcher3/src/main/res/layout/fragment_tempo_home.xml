@@ -14,6 +14,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/toolbar_bg"
+            android:elevation="@dimen/dp_5"
             android:minHeight="?android:attr/actionBarSize" />
 
         <RelativeLayout
@@ -39,9 +41,7 @@
                 android:id="@+id/switchDisableIntentionsControls"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/txtDisableNotificationControlsTxt"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/txtDisableNotificationControlsTxt"
+                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/txtDisableNotificationControls"
                 android:layout_marginRight="8dp" />
 

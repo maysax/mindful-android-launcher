@@ -7,7 +7,7 @@ import android.content.pm.ApplicationInfo;
  * Model Class for the app packages
  * whose notifications have been blocked
  */
-public class DisableAppList {
+public class AppListInfo {
     /**
      * It will hold information about the installed application information
      */
