@@ -1,13 +1,16 @@
-package co.siempo.phone;
+package co.siempo.phone.activities;
 
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.transition.Explode;
 import android.transition.Slide;
 import android.transition.Transition;
@@ -24,62 +27,30 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 import android.widget.ViewFlipper;
 
-import org.androidannotations.annotations.AfterTextChange;
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
-import org.androidannotations.annotations.sharedpreferences.Pref;
-
+import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.customviews.LockEditText;
+import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
 import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
 
-@EActivity(R.layout.activity_intention_edit)
-public class IntentionEditActivity extends CoreActivity {
-    @ViewById
-    Toolbar toolbar;
+public class IntentionEditActivity extends BaseActivity implements View.OnClickListener {
 
-    @ViewById
-    TextView txtSave;
-
-    @ViewById
-    TextView txtOne;
-
-    @ViewById
-    TextView txtTwo;
-
-    @ViewById
-    ViewFlipper viewFlipper;
-
-    @ViewById
-    TextView txtHelp;
-
-    @ViewById
-    TextView hint;
-
-    @ViewById
-    LockEditText edtIntention;
-    @ViewById
-    ImageView imgClear;
-
-    @ViewById
-    LinearLayout linHelpWindow;
-
-    @ViewById
-    RelativeLayout pauseContainer;
-
-    @ViewById
-    LinearLayout linEditText;
-
-    @Pref
-    DroidPrefs_ droidPrefs;
-    String strIntentField;
-    private String TAG = "IntentionEditActivity";
+    private TextView txtSave;
+    private Toolbar toolbar;
+    private TextView hint;
+    private LockEditText edtIntention;
+    private ImageView imgClear;
+    private LinearLayout linEditText;
+    private TextView txtHelp;
+    private ViewFlipper viewFlipper;
+    private TextView txtOne;
+    private TextView txtTwo;
+    private LinearLayout linHelpWindow;
+    private RelativeLayout pauseContainer;
+    private String strIntentField;
 
     @Subscribe
     public void appInstalledEvent(AppInstalledEvent event) {
@@ -88,21 +59,25 @@ public class IntentionEditActivity extends CoreActivity {
         }
     }
 
-
-    @AfterViews
-    void afterViews() {
-
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Transition enterTrans = new Explode();
         getWindow().setEnterTransition(enterTrans);
 
         Transition returnTrans = new Slide();
         getWindow().setReturnTransition(returnTrans);
-
-
         // inside your activity (if you did not enable transitions in your theme)
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorAccent));
+        setContentView(R.layout.activity_intention_edit);
+        initView();
+        bindView();
+    }
+
+
+    void bindView() {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +87,7 @@ public class IntentionEditActivity extends CoreActivity {
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
-        strIntentField = droidPrefs.defaultIntention().get();
+        strIntentField = PrefSiempo.getInstance(this).read(PrefSiempo.DEFAULT_INTENTION, "");
         edtIntention.setText(strIntentField);
         edtIntention.setHorizontallyScrolling(false);
         edtIntention.setMaxLines(2);
@@ -132,7 +107,7 @@ public class IntentionEditActivity extends CoreActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     if (txtSave.getVisibility() == View.VISIBLE) {
-                        droidPrefs.defaultIntention().put(strIntentField);
+                        PrefSiempo.getInstance(IntentionEditActivity.this).write(PrefSiempo.DEFAULT_INTENTION, strIntentField);
                         UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());
                         if (!strIntentField.equalsIgnoreCase("")) {
                             runAnimation();
@@ -145,34 +120,41 @@ public class IntentionEditActivity extends CoreActivity {
                 return false;
             }
         });
+        edtIntention.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().trim().length() > 0) {
+                    imgClear.setVisibility(View.VISIBLE);
+                } else {
+                    imgClear.setVisibility(View.GONE);
+                }
+
+                if (PrefSiempo.getInstance(IntentionEditActivity.this).read(PrefSiempo.DEFAULT_INTENTION, "").equalsIgnoreCase(s.toString())) {
+                    txtSave.setVisibility(View.GONE);
+                } else {
+                    strIntentField = s.toString();
+                    txtSave.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
-
-    @AfterTextChange(R.id.edtIntention)
-    void edtIntention(Editable s, TextView hello) {
-        if (s.toString().trim().length() > 0) {
-            imgClear.setVisibility(View.VISIBLE);
-        } else {
-            imgClear.setVisibility(View.GONE);
-        }
-
-        if (droidPrefs.defaultIntention().get().equalsIgnoreCase(s.toString())) {
-            txtSave.setVisibility(View.GONE);
-        } else {
-            strIntentField = s.toString();
-            txtSave.setVisibility(View.VISIBLE);
-        }
-    }
-
-
-    @Click
     void imgClear() {
         edtIntention.setText("");
     }
 
-    @Click
     void txtSave() {
-        droidPrefs.defaultIntention().put(strIntentField);
+        PrefSiempo.getInstance(IntentionEditActivity.this).write(PrefSiempo.DEFAULT_INTENTION, strIntentField);
         UIUtils.hideSoftKeyboard(IntentionEditActivity.this, getWindow().getDecorView().getWindowToken());
         if (!strIntentField.equalsIgnoreCase("")) {
             runAnimation();
@@ -218,7 +200,6 @@ public class IntentionEditActivity extends CoreActivity {
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-//                getWindow().setNavigationBarColor(ContextCompat.getColor(IntentionEditActivity.this, R.color.colorAccent));
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -232,7 +213,6 @@ public class IntentionEditActivity extends CoreActivity {
         anim.start();
     }
 
-    @Click
     public void txtOne() {
         if (viewFlipper.getDisplayedChild() == 0) {
             linHelpWindow.setVisibility(View.GONE);
@@ -260,7 +240,6 @@ public class IntentionEditActivity extends CoreActivity {
 
     }
 
-    @Click
     public void txtTwo() {
         if (viewFlipper.getDisplayedChild() == 0) {
             txtOne.setText("PREVIOUS");
@@ -287,7 +266,6 @@ public class IntentionEditActivity extends CoreActivity {
         }
     }
 
-    @Click
     public void txtHelp() {
         txtOne.setText("CLOSE");
         txtTwo.setText("NEXT");
@@ -298,11 +276,50 @@ public class IntentionEditActivity extends CoreActivity {
         linHelpWindow.setVisibility(View.VISIBLE);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
     }
 
+    private void initView() {
+        txtSave = findViewById(R.id.txtSave);
+        txtSave.setOnClickListener(this);
+        toolbar = findViewById(R.id.toolbar);
+        hint = findViewById(R.id.hint);
+        edtIntention = findViewById(R.id.edtIntention);
+        imgClear = findViewById(R.id.imgClear);
+        imgClear.setOnClickListener(this);
+        linEditText = findViewById(R.id.linEditText);
+        txtHelp = findViewById(R.id.txtHelp);
+        txtHelp.setOnClickListener(this);
+        viewFlipper = findViewById(R.id.viewFlipper);
+        txtOne = findViewById(R.id.txtOne);
+        txtOne.setOnClickListener(this);
+        txtTwo = findViewById(R.id.txtTwo);
+        txtTwo.setOnClickListener(this);
+        linHelpWindow = findViewById(R.id.linHelpWindow);
+        pauseContainer = findViewById(R.id.pauseContainer);
+    }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.txtSave:
+                txtSave();
+                break;
+            case R.id.imgClear:
+                break;
+            case R.id.txtHelp:
+                txtHelp();
+                break;
+            case R.id.txtOne:
+                txtOne();
+                break;
+            case R.id.txtTwo:
+                txtTwo();
+                break;
+        }
+    }
 }

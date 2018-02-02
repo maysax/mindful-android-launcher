@@ -71,7 +71,7 @@
             android:paddingTop="@dimen/dp_2"
             tools:ignore="RtlSymmetry">
 
-            <co.siempo.phone.LockEditText
+            <co.siempo.phone.customviews.LockEditText
                 android:id="@+id/edtIntention"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
                 tools:text="Try out new music">
 
                 <requestFocus />
-            </co.siempo.phone.LockEditText>
+            </co.siempo.phone.customviews.LockEditText>
 
             <ImageView
                 android:id="@+id/imgClear"

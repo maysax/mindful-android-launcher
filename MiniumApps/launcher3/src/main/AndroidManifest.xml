@@ -84,14 +84,14 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateHidden">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="RUN_AT_BOOT" />
-            </intent-filter>
+            <!--<category android:name="android.intent.category.HOME" />-->
+            <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="RUN_AT_BOOT" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".launcher.FakeLauncherActivity"
@@ -181,7 +181,7 @@
         <activity android:name=".tempo.TempoAppNotificationActivity" />
         <activity android:name=".HelpActivity_" />
         <activity
-            android:name=".IntentionEditActivity_"
+            android:name=".activities.IntentionEditActivity"
             android:windowSoftInputMode="stateAlwaysVisible" />
 
         <receiver android:name=".service.AlarmBroadcast">
@@ -199,13 +199,19 @@
         </receiver>
 
         <activity
-            android:name=".IntentionConfirmationActivity_"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_intention_confirmation" />
-        <activity
             android:name=".activities.DashboardActivity"
             android:label="@string/title_activity_dashboard"
-            android:theme="@style/SiempoAppTheme"></activity>
+            android:theme="@style/SiempoAppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="RUN_AT_BOOT" />
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

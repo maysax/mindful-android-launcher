@@ -1,4 +1,4 @@
-package co.siempo.phone.main;
+package co.siempo.phone.fragments;
 
 
 import android.animation.AnimatorSet;
@@ -25,8 +25,8 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.HelpActivity_;
-import co.siempo.phone.IntentionEditActivity_;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.IntentionEditActivity;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.dialog.Dialog_Tempo;
 import co.siempo.phone.service.StatusBarService;
@@ -73,6 +73,7 @@ public class IntentionFieldFragment extends CoreFragment {
     public IntentionFieldFragment() {
         // Required empty public constructor
     }
+
 
     @AfterViews
     void afterViews() {
@@ -121,7 +122,7 @@ public class IntentionFieldFragment extends CoreFragment {
 
     @Click
     void txtIntention() {
-        Intent intent = new Intent(getActivity(), IntentionEditActivity_.class);
+        Intent intent = new Intent(getActivity(), IntentionEditActivity.class);
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }

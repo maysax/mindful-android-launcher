@@ -22,4 +22,8 @@
     <color name="errorColor">#EA3D85</color>
     <color name="blackcolor">#000000</color>
 
+
+    <!--colors new added for design-->
+    <color name="indicator_inactive">#3342A4FF</color>
+    <color name="indicator_active">#33000000</color>
 </resources>
