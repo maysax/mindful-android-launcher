@@ -93,7 +93,6 @@
                 <category android:name="RUN_AT_BOOT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".launcher.FakeLauncherActivity"
             android:enabled="false">
@@ -113,7 +112,6 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-
 
         <receiver
             android:name=".call.CallReceiver_"
@@ -203,7 +201,11 @@
         <activity
             android:name=".IntentionConfirmationActivity_"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_intention_confirmation"></activity>
+            android:label="@string/title_activity_intention_confirmation" />
+        <activity
+            android:name=".activities.DashboardActivity"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/SiempoAppTheme"></activity>
     </application>
 
 </manifest>
