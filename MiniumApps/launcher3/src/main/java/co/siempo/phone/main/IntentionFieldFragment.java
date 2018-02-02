@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -60,11 +61,17 @@ public class IntentionFieldFragment extends CoreFragment {
     @ViewById
     TextView txtIntention;
 
+    @ViewById
+    RelativeLayout rootLayout;
+
     @Pref
     DroidPrefs_ prefs;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;
+
+    @ViewById
+    ImageView pullTab;
 
 
     private PopupWindow mPopupWindow;
@@ -119,6 +126,14 @@ public class IntentionFieldFragment extends CoreFragment {
         dialogTempo.show();
     }
 
+    @Click
+    void pullTab(){
+        ObjectAnimator animY = ObjectAnimator.ofFloat(rootLayout, "translationX", 100f, 0f);
+        animY.setDuration(700);//1sec
+        animY.setInterpolator(new BounceInterpolator());
+        animY.setRepeatCount(0);
+        animY.start();
+    }
     @Click
     void txtIntention() {
         Intent intent = new Intent(getActivity(), IntentionEditActivity_.class);
