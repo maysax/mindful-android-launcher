@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="co.siempo.phone.main.MainFragment">
@@ -19,10 +20,12 @@
             android:layout_centerVertical="true">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/imgPullTab"
+                android:layout_width="70dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:background="@drawable/ic_subtract" />
+                android:background="@drawable/app_menus_icon"
+                android:scaleType="centerInside" />
         </LinearLayout>
 
         <LinearLayout

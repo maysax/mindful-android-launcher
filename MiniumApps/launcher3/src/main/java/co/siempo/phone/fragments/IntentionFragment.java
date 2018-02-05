@@ -1,5 +1,6 @@
 package co.siempo.phone.fragments;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
@@ -10,9 +11,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import co.siempo.phone.HelpActivity_;
@@ -29,10 +32,11 @@ public class IntentionFragment extends Fragment implements View.OnClickListener 
 
     private View view;
     private ImageView imgTempo;
-    private ImageView imgOverFlow;
+    private ImageView imgOverFlow, imgPullTab;
     private TextView txtIntention;
     private LinearLayout linIF;
     private PopupWindow mPopupWindow;
+    private RelativeLayout relRootLayout;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -58,8 +62,11 @@ public class IntentionFragment extends Fragment implements View.OnClickListener 
     }
 
     private void initView(View view) {
+        relRootLayout = view.findViewById(R.id.relRootLayout);
         imgTempo = view.findViewById(R.id.imgTempo);
         imgTempo.setOnClickListener(this);
+        imgPullTab = view.findViewById(R.id.imgPullTab);
+        imgPullTab.setOnClickListener(this);
         imgOverFlow = view.findViewById(R.id.imgOverFlow);
         imgOverFlow.setOnClickListener(this);
         txtIntention = view.findViewById(R.id.txtIntention);
@@ -86,6 +93,13 @@ public class IntentionFragment extends Fragment implements View.OnClickListener 
                 if (dialogTempo.getWindow() != null)
                     dialogTempo.getWindow().setGravity(Gravity.TOP);
                 dialogTempo.show();
+                break;
+            case R.id.imgPullTab:
+                ObjectAnimator animY = ObjectAnimator.ofFloat(relRootLayout, "translationX", 100f, 0f);
+                animY.setDuration(700);//1sec
+                animY.setInterpolator(new BounceInterpolator());
+                animY.setRepeatCount(0);
+                animY.start();
                 break;
             case R.id.imgOverFlow:
                 showOverflowDialog();
