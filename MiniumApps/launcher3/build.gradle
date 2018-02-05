@@ -112,6 +112,7 @@ dependencies {
     compile files('libs/activation.jar')
     compile files('libs/additionnal.jar')
     compile files('libs/mail.jar')
+    compile 'me.relex:circleindicator:1.2.2@aar'// indicator for view pager
 
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2') {
         exclude module: 'support-annotations'

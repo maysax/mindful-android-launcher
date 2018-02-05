@@ -373,4 +373,5 @@
     <string name="msg_tempo_disable">All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.</string>
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
+    <string name="title_activity_dashboard">DashboardActivity</string>
 </resources>

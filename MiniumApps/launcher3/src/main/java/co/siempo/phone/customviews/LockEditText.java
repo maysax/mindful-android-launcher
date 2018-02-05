@@ -1,4 +1,4 @@
-package co.siempo.phone;
+package co.siempo.phone.customviews;
 
 import android.content.Context;
 import android.util.AttributeSet;

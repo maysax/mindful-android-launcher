@@ -16,7 +16,6 @@
     </style>
 
 
-
     <style name="MenuButtonsSmall">
         <item name="fab_size">mini</item>
         <item name="fab_colorNormal">#1565C0</item>
