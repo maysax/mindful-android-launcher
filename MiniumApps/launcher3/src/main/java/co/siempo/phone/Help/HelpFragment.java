@@ -1,14 +1,17 @@
 package co.siempo.phone.Help;
 
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.res.ColorStateListRes;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
@@ -34,32 +37,44 @@ public class HelpFragment extends CoreFragment {
     @ViewById
     TextView txtFaq;
 
+    @ViewById
+    RelativeLayout relFaq;
 
+    @ViewById
+    RelativeLayout relPrivacyPolicy;
+
+    @ViewById
+    RelativeLayout relFeedback;
+
+    @ViewById
+    RelativeLayout relVersion;
 
     @ViewById
     TextView txtVersionValue;
 
 
-    @Click
-    void txtSendFeedback() {
-
-        ((CoreActivity) getActivity()).loadChildFragment(FeedbackFragment_.builder()
-                .build(), R.id.helpView);
-    }
 
     @Click
-    void txtFaq() {
-
+    void relFaq(){
         ((CoreActivity) getActivity()).loadChildFragment(FaqFragment_.builder()
                 .build(), R.id.helpView);
     }
 
     @Click
-    void txtPrivacyPolicy() {
+    void relPrivacyPolicy(){
 
         ((CoreActivity) getActivity()).loadChildFragment(PrivacyPolicyFragment_.builder()
                 .build(), R.id.helpView);
     }
+
+    @Click
+    void relFeedback(){
+
+        ((CoreActivity) getActivity()).loadChildFragment(FeedbackFragment_.builder()
+                .build(), R.id.helpView);
+    }
+
+
 
     @AfterViews
     void afterViews() {

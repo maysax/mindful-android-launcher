@@ -21,22 +21,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar"
-            android:paddingLeft="50dp">
+           >
 
             <RelativeLayout
                 android:id="@+id/relUpdateEmail"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:layout_marginLeft="5dp">
 
 
                 <TextView
                     android:id="@+id/txtUpdateEmailAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="8dp"
-                    android:padding="8dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="35dp"
                     android:text="@string/lbl_updateEmail"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -46,12 +47,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txtUpdateEmailAddress"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="60dp"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="55dp"
+                    android:layout_marginLeft="50dp"
                     android:text="@string/lbl_updateEmailDescription"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -62,10 +60,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relUpdateEmail"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
-                android:padding="8dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="30dp"
                 android:text="@string/lbl_analytics"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -75,20 +72,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtShareAnalytics"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingRight="16dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="16dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="0dp">
 
 
                 <TextView
                     android:id="@+id/txt_analytics_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="50dp"
                     android:layout_weight="1"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
                     android:text="@string/lbl_analytics_description"
                     android:textSize="16sp" />
 
@@ -97,6 +94,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginRight="8dp" />
 
 
@@ -106,6 +104,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_marginLeft="5dp"
                 android:layout_below="@+id/lbl_analytics_description"
                 android:orientation="horizontal">
 
@@ -116,13 +117,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="55dp"
                     android:layout_weight="1"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="2dp"
                     android:text="@string/lbl_analytics_description2"
                     android:textSize="16sp" />
 
@@ -130,12 +127,8 @@
                     android:id="@+id/txt_privacyPolicy"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="2dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="55dp"
                     android:textSize="15sp"
                     android:text="@string/privacypolicy_link"
                     />
@@ -145,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="8dp"
+                    android:layout_marginLeft="10dp"
                     android:visibility="invisible" />
 
             </LinearLayout>

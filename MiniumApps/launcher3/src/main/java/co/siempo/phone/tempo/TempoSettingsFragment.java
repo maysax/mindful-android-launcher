@@ -3,6 +3,8 @@ package co.siempo.phone.tempo;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -40,6 +42,16 @@ public class TempoSettingsFragment extends CoreFragment {
     Launcher3Prefs_ launcherPrefs;
     @Pref
     DroidPrefs_ droidPrefs_;
+    @ViewById
+    LinearLayout relHome;
+    @ViewById
+    LinearLayout relAppMenus;
+    @ViewById
+    LinearLayout relNotification;
+    @ViewById
+    LinearLayout relAccount;
+    @ViewById
+    LinearLayout relAppAlphaSetting;
 
     public TempoSettingsFragment() {
         // Required empty public constructor
@@ -74,29 +86,29 @@ public class TempoSettingsFragment extends CoreFragment {
 
 
     @Click
-    void txtHome() {
+    void relHome() {
 
         ((CoreActivity) getActivity()).loadChildFragment(TempoHomeFragment_.builder()
                 .build(), R.id.tempoView);
     }
 
     @Click
-    void txtAppMenus() {
+    void relAppMenus() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoTbdFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
-    void txtNotification() {
+    void relNotification() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoNotificationFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
-    void txtAccount() {
+    void relAccount() {
         ((CoreActivity) getActivity()).loadChildFragment(TempoAccountSettingFragment_.builder().build(), R.id.tempoView);
     }
 
     @Click
-    void txtAlphaSettings() {
+    void relAppAlphaSetting() {
 
         new ActivityHelper(context).openSiempoAlphaSettingsApp();
     }

@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -34,6 +35,9 @@ public class TempoAccountSettingFragment extends CoreFragment {
 
     @ViewById
     Toolbar toolbar;
+
+    @ViewById
+    LinearLayout lbl_analytics_description;
 
     @ViewById
     TextView titleActionBar;
@@ -77,6 +81,23 @@ public class TempoAccountSettingFragment extends CoreFragment {
         } else {
             swtch_analytics.setChecked(false);
         }
+
+
+        lbl_analytics_description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(swtch_analytics.isChecked()){
+                    swtch_analytics.setChecked(false);
+                    FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
+                    droidPrefs_.isFireBaseAnalyticsEnable().put(false);
+                }
+                else{
+                    swtch_analytics.setChecked(true);
+                    droidPrefs_.isFireBaseAnalyticsEnable().put(true);
+                    FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
+                }
+            }
+        });
         swtch_analytics.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -84,7 +105,6 @@ public class TempoAccountSettingFragment extends CoreFragment {
                     droidPrefs_.isFireBaseAnalyticsEnable().put(true);
                     FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
                 } else {
-
                     FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
                     droidPrefs_.isFireBaseAnalyticsEnable().put(false);
                 }

@@ -65,7 +65,7 @@ public class SiempoDndService extends Service {
         Notification notification = builder.setContentIntent(null)
                 .setContentTitle(getString(R.string.msg_siempo_active_title))
                 .setContentText(getString(R.string.msg_siempo_active_text))
-                .setSmallIcon(R.drawable.ic_siempo_notification)
+                .setSmallIcon(R.drawable.siempo_notification_icon)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setWhen(System.currentTimeMillis())
                 .build();

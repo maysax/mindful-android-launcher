@@ -20,72 +20,93 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="50dp">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txtHome"
+
+        <LinearLayout
+            android:id="@+id/relHome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="@string/home_screen"
-            android:textSize="@dimen/text.size.large" />
+            android:padding="16dp"
+            android:layout_marginLeft="5dp">
+            <TextView
+                android:id="@+id/txtHome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/home_screen"
+                android:layout_marginLeft="50dp"
+                android:textSize="@dimen/text.size.large" />
+        </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/txtAppMenus"
+        <LinearLayout
+            android:id="@+id/relAppMenus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="@string/app_menus"
-            android:textSize="@dimen/text.size.large" />
+            android:padding="16dp"
+            android:layout_marginLeft="5dp">
+
+            <TextView
+                android:id="@+id/txtAppMenus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_menus"
+                android:layout_marginLeft="50dp"
+                android:textSize="@dimen/text.size.large" />
+
+        </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/txtNotification"
+
+
+        <LinearLayout
+            android:id="@+id/relNotification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="@string/string_notification_title"
-            android:textSize="@dimen/text.size.large" />
+            android:padding="16dp"
+            android:layout_marginLeft="5dp">
+            <TextView
+                android:id="@+id/txtNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:text="@string/string_notification_title"
+                android:textSize="@dimen/text.size.large" />
+        </LinearLayout>
 
+
+
+
+        <LinearLayout
+            android:id="@+id/relAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:layout_marginLeft="5dp">
 
         <TextView
             android:id="@+id/txtAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
+            android:layout_marginLeft="50dp"
             android:text="@string/account"
             android:textSize="@dimen/text.size.large" />
+        </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/relAppAlphaSetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:layout_marginLeft="5dp">
         <TextView
             android:id="@+id/txtAlphaSettings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
+            android:layout_marginLeft="50dp"
             android:text="@string/alpha_settings"
             android:textSize="@dimen/text.size.large" />
-
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

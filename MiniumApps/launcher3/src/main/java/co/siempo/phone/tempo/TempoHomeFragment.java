@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 
 import org.androidannotations.annotations.AfterViews;
@@ -26,6 +27,9 @@ public class TempoHomeFragment extends CoreFragment {
     DroidPrefs_ droidPrefs;
 
     @ViewById
+    RelativeLayout relAllowSpecificApps;
+
+    @ViewById
     Switch switchDisableIntentionsControls;
 
     public TempoHomeFragment() {
@@ -44,6 +48,20 @@ public class TempoHomeFragment extends CoreFragment {
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
                 fm.popBackStack();
+            }
+        });
+
+        relAllowSpecificApps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(switchDisableIntentionsControls.isChecked()){
+                    switchDisableIntentionsControls.setChecked(false);
+                    droidPrefs.isIntentionEnable().put(false);
+                }
+                else{
+                    switchDisableIntentionsControls.setChecked(true);
+                    droidPrefs.isIntentionEnable().put(true);
+                }
             }
         });
         switchDisableIntentionsControls.setChecked(droidPrefs.isIntentionEnable().get());

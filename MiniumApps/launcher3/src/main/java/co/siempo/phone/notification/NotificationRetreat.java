@@ -72,7 +72,7 @@ public class NotificationRetreat {
 
         try {
             android.app.Notification.Builder mBuilder = new android.app.Notification.Builder(context)
-                    .setSmallIcon(R.drawable.ic_siempo_notification)
+                    .setSmallIcon(R.drawable.siempo_notification_icon)
                     .setContentTitle(getAppName(storage.getPackageName()))
                     .setContentText(storage.getContent())
                     .setAutoCancel(true);
