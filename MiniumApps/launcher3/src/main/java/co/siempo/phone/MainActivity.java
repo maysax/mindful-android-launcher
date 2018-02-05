@@ -39,9 +39,7 @@ import org.androidannotations.annotations.Trace;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
-
 import java.util.ArrayList;
-
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -63,7 +61,6 @@ import minium.co.core.event.NFCEvent;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
-
 import static minium.co.core.log.LogConfig.TRACE_TAG;
 
 @EActivity(R.layout.activity_main)
