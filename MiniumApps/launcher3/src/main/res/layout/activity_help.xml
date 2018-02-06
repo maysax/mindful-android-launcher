@@ -8,15 +8,11 @@
     tools:ignore="UnusedIds">
 
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/helpView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/detailsElementBackground" />
 
-    <FrameLayout
-        android:id="@+id/mainView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
 </RelativeLayout>

@@ -18,12 +18,12 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import co.siempo.phone.HelpActivity_;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
+import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.dialog.Dialog_Tempo;
 import co.siempo.phone.service.StatusBarService;
-import co.siempo.phone.tempo.SettingsActivity_;
 import co.siempo.phone.utils.PrefSiempo;
 import minium.co.core.util.UIUtils;
 
@@ -169,7 +169,7 @@ public class IntentionFragment extends Fragment implements View.OnClickListener 
                     public void onClick(View view) {
                         UIUtils.clearDim(root);
                         mPopupWindow.dismiss();
-                        Intent intent = new Intent(getActivity(), HelpActivity_.class);
+                        Intent intent = new Intent(getActivity(), HelpActivity.class);
                         startActivity(intent);
                     }
                 });

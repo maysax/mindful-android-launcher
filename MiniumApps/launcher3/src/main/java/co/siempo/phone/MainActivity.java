@@ -2,12 +2,10 @@ package co.siempo.phone;
 
 import android.Manifest;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -42,6 +40,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.activities.SiempoPermissionActivity_;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
@@ -49,11 +48,9 @@ import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.main.MainSlidePagerAdapter;
 import co.siempo.phone.msg.SmsObserver;
-import co.siempo.phone.pause.PauseActivity_;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
-import co.siempo.phone.ui.SiempoPermissionActivity_;
-import co.siempo.phone.util.PermissionUtil;
+import co.siempo.phone.utils.PermissionUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
@@ -473,11 +470,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         }
     }
 
-    /**
-     * Below function is used for NFC logic which will use in further release.
-     * @param event
-     */
-//    private void enableNfc(boolean isEnable) {
+
+    //    private void enableNfc(boolean isEnable) {
 //        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 //        if (nfcAdapter != null) {
 //            if (isEnable) {
@@ -493,14 +487,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
 //            }
 //        }
 //    }
-
-    @Subscribe
-    public void nfcEvent(NFCEvent event) {
-        if (event.isConnected()) {
-            PauseActivity_.intent(this).tag(event.getTag()).start();
-        }
-    }
-
     @Override
     public void onBackPressed() {
         try {

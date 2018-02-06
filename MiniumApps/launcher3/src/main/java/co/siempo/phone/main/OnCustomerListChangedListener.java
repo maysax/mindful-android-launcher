@@ -2,7 +2,7 @@ package co.siempo.phone.main;
 
 import java.util.List;
 
-import co.siempo.phone.model.MainListItem;
+import co.siempo.phone.models.MainListItem;
 
 /**
  * Created by rajeshjadi on 18/10/17.

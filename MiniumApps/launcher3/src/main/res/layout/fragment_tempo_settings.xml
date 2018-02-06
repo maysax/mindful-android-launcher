@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/layout_bg"
     android:orientation="vertical"
-    tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
     <android.support.v7.widget.Toolbar

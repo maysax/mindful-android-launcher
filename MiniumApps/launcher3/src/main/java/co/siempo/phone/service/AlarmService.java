@@ -21,7 +21,7 @@ import java.util.List;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
-import co.siempo.phone.util.PackageUtil;
+import co.siempo.phone.utils.PackageUtil;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 
