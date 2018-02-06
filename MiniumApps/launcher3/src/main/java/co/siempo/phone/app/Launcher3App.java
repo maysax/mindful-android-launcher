@@ -39,7 +39,7 @@ import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.old.PreferenceListAdapter;
-import co.siempo.phone.util.PackageUtil;
+import co.siempo.phone.utils.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.BuildConfig;
 import minium.co.core.app.CoreApplication;
@@ -476,10 +476,10 @@ public class Launcher3App extends CoreApplication {
 
     private void configureEverNote() {
         new EvernoteSession.Builder(this)
-                .setEvernoteService(minium.co.notes.app.Config.EVERNOTE_SERVICE)
+                .setEvernoteService(EverNoteConfig.EVERNOTE_SERVICE)
                 .setSupportAppLinkedNotebooks(true)
                 .setForceAuthenticationInThirdPartyApp(true)
-                .build(minium.co.notes.app.Config.CONSUMER_KEY, minium.co.notes.app.Config.CONSUMER_SECRET)
+                .build(EverNoteConfig.CONSUMER_KEY, EverNoteConfig.CONSUMER_SECRET)
                 .asSingleton();
 
     }

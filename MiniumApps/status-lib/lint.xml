@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<lint>
-    <issue id="ConvertToWebp">
-        <ignore path="src/main/res/drawable-xhdpi/ic_notification_invisible.png" />
-    </issue>
-    <issue id="IconExpectedSize">
-        <ignore path="src/main/res/mipmap-xxxhdpi/ic_launcher_web.png" />
-    </issue>
-</lint>

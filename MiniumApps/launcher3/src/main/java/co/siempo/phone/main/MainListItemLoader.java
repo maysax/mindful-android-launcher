@@ -11,18 +11,14 @@ import java.util.List;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.applist.AppDrawerActivity_;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.mm.MMTimePickerActivity_;
-import co.siempo.phone.mm.MindfulMorningActivity_;
-import co.siempo.phone.model.MainListItem;
-import co.siempo.phone.model.MainListItemType;
-import co.siempo.phone.pause.PauseActivity_;
+import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.service.ApiClient_;
-import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.CheckVersionEvent;
 import minium.co.core.ui.CoreActivity;
@@ -183,7 +179,6 @@ public class MainListItemLoader {
                 }
                 break;
             case 4:
-                PauseActivity_.intent(context).start();
                 break;
             case 5:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
@@ -239,10 +234,8 @@ public class MainListItemLoader {
                 ((CoreActivity) context).loadDialog();
                 break;
             case 13:
-                MMTimePickerActivity_.intent(context).start();
                 break;
             case 14:
-                MindfulMorningActivity_.intent(context).start();
                 break;
             case 15:
                 if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
@@ -277,7 +270,7 @@ public class MainListItemLoader {
                 new ActivityHelper(context).openFeedback();
                 break;
             case 19:
-                AppDrawerActivity_.intent(context).start();
+                new ActivityHelper(context).openInstallledApp();
                 break;
             case 20://Calender
                 if (context instanceof SiempoSettingsDefaultAppActivity) {

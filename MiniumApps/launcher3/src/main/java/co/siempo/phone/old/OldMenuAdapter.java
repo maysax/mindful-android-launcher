@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.app.Constants;
-import co.siempo.phone.model.MainListItem;
-import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity;
+import co.siempo.phone.models.MainListItem;
 import minium.co.core.app.CoreApplication;
 
 /**

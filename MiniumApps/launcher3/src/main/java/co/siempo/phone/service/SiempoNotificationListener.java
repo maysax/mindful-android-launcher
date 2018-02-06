@@ -23,7 +23,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EService;
 import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -46,9 +45,8 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.helper.FirebaseHelper;
-import co.siempo.phone.notification.NotificationUtility;
-import co.siempo.phone.util.PackageUtil;
-import co.siempo.phone.util.VibrationUtils;
+import co.siempo.phone.utils.NotificationUtility;
+import co.siempo.phone.utils.PackageUtil;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -77,8 +75,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
     @SystemService
     NotificationManager notificationManager;
 
-    @Bean
-    VibrationUtils vibrationUtils;
 
     Context context;
 
@@ -188,22 +184,22 @@ public class SiempoNotificationListener extends NotificationListenerService {
                 blockedAppList = new Gson().fromJson(block_AppList, type);
             }
 
-                if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
-                     if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && droidPrefs.tempoType().get() != 0) {
-                        SiempoNotificationListener.this.cancelNotification(notification.getKey());
-                        if (droidPrefs.tempoType().get() == 1 && droidPrefs.tempoType().get() == 2) {
-                            int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
-                            if (sound != 1) {
-                                audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
-                            }
+            if (null != blockedAppList && blockedAppList.size() > 0 && blockedAppList.contains(notification.getPackageName())) {
+                if (!notification.getPackageName().equalsIgnoreCase(getPackageName()) && droidPrefs.tempoType().get() != 0) {
+                    SiempoNotificationListener.this.cancelNotification(notification.getKey());
+                    if (droidPrefs.tempoType().get() == 1 && droidPrefs.tempoType().get() == 2) {
+                        int sound = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+                        if (sound != 1) {
+                            audioManager.setStreamVolume(AudioManager.STREAM_SYSTEM, 1, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
                         }
-                        filterByCategory(notification);
-                        return;
                     }
-                } else {
+                    filterByCategory(notification);
                     return;
                 }
+            } else {
+                return;
             }
+        }
 
     }
 
@@ -880,9 +876,6 @@ public class SiempoNotificationListener extends NotificationListenerService {
         super.onNotificationRemoved(notification);
         Tracer.d("Notification removed: " + getNotificationToString(notification));
 
-        if (PackageUtil.isSiempoBlocker(notification.getId())) {
-            launcherPrefs.isNotificationBlockerRunning().put(false);
-        }
         if (!PackageUtil.isSiempoLauncher(this)
                 && !launcherPrefs.isAppDefaultOrFront().get()) {
             if (PackageUtil.isMsgPackage(notification.getPackageName())) {

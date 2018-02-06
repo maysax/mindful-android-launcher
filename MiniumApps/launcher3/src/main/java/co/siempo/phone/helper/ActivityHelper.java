@@ -11,19 +11,19 @@ import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.InstalledAppsActivity;
+import co.siempo.phone.activities.NoteListActivity;
+import co.siempo.phone.activities.SiempoAlphaSettingsActivity_;
+import co.siempo.phone.activities.SiempoMainSettingsActivity_;
+import co.siempo.phone.activities.SiempoPhoneSettingsActivity;
+import co.siempo.phone.activities.SiempoSettingsActivity_;
+import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity_;
+import co.siempo.phone.activities.SiempoSupressNotificationActivity;
 import co.siempo.phone.launcher.FakeLauncherActivity;
-import co.siempo.phone.settings.AppListNotification;
-import co.siempo.phone.settings.SiempoAlphaSettingsActivity_;
-import co.siempo.phone.settings.SiempoMainSettingsActivity_;
-import co.siempo.phone.settings.SiempoPhoneSettingsActivity;
-import co.siempo.phone.settings.SiempoSettingsActivity_;
-import co.siempo.phone.settings.SiempoSettingsDefaultAppActivity_;
-import co.siempo.phone.settings.SiempoSupressNotificationActivity;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.log.Tracer;
 import minium.co.core.ui.CoreActivity;
 import minium.co.core.util.UIUtils;
-import minium.co.notes.ui.MainActivity;
 
 
 public class ActivityHelper {
@@ -40,8 +40,8 @@ public class ActivityHelper {
 
     public void openNotesApp(boolean openLast) {
         try {
-            Intent intent = new Intent(getContext(), MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_OPEN_LATEST, openLast);
+            Intent intent = new Intent(getContext(), NoteListActivity.class);
+            intent.putExtra(NoteListActivity.EXTRA_OPEN_LATEST, openLast);
             getContext().startActivity(intent);
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
@@ -161,9 +161,17 @@ public class ActivityHelper {
 
     public void openPhoneSettingsApp() {
         try {
-            // Below logic is use for further development
-            //SiempoPhoneSettingsActivity_.intent(getContext()).start();
             Intent i = new Intent(getContext(), SiempoPhoneSettingsActivity.class);
+            getContext().startActivity(i);
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
+    public void openInstallledApp() {
+        try {
+            Intent i = new Intent(getContext(), InstalledAppsActivity.class);
             getContext().startActivity(i);
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
@@ -196,16 +204,6 @@ public class ActivityHelper {
         }
     }
 
-
-    public void openAppListNotifications() {
-        try {
-            Intent i = new Intent(context, AppListNotification.class);
-            context.startActivity(i);
-        } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-            CoreApplication.getInstance().logException(e);
-        }
-    }
 
     public void openSiempoSettingsApp() {
         try {

@@ -3,22 +3,22 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="co.siempo.phone.settings.SiempoPhoneSettingsActivity$ConnectionFragment"
+        android:fragment="co.siempo.phone.activities.SiempoPhoneSettingsActivity$ConnectionFragment"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/pref_connection" />
 
     <header
-        android:fragment="co.siempo.phone.settings.SiempoPhoneSettingsActivity$DeviceSettingsFragment"
+        android:fragment="co.siempo.phone.activities.SiempoPhoneSettingsActivity$DeviceSettingsFragment"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/pref_device" />
 
     <header
-        android:fragment="co.siempo.phone.settings.SiempoPhoneSettingsActivity$PersonalSettingsFragment"
+        android:fragment="co.siempo.phone.activities.SiempoPhoneSettingsActivity$PersonalSettingsFragment"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/pref_personal" />
 
     <header
-        android:fragment="co.siempo.phone.settings.SiempoPhoneSettingsActivity$SystemSettingsFragment"
+        android:fragment="co.siempo.phone.activities.SiempoPhoneSettingsActivity$SystemSettingsFragment"
         android:icon="@drawable/ic_notifications_black_24dp"
         android:title="@string/pref_system" />
 

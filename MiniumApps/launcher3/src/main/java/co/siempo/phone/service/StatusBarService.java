@@ -35,7 +35,7 @@ import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;
 import minium.co.core.event.FirebaseEvent;
 
-import static co.siempo.phone.SiempoNotificationBar.NotificationUtils.ANDROID_CHANNEL_ID;
+import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 
 /**
  * This background service used for detect torch status and feature used for any other background status.
@@ -142,6 +142,79 @@ public class StatusBarService extends Service {
         super.onDestroy();
     }
 
+    /**
+     * Remove uninstall app if it contains in blocked list OR HelpfulRobots
+     * @param uninstallPackageName
+     */
+    public void removeAppFromBlockedList(String uninstallPackageName){
+        ArrayList<String> blockedApps = new ArrayList<>();
+        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
+        if (!TextUtils.isEmpty(block_AppList)) {
+            try{
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                blockedApps = new Gson().fromJson(block_AppList, type);
+                for (String blockedAppName:blockedApps) {
+                    if(blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())){
+                        blockedApps.remove(blockedAppName);
+                    }
+                }
+                String blockedList = new Gson().toJson(blockedApps);
+                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+        ArrayList<String> disableApps= new ArrayList<>();
+        String disable_AppList = sharedPreferencesLauncher3.getString(Constants.HELPFUL_ROBOTS, "");
+        if (!TextUtils.isEmpty(disable_AppList)) {
+            Type type = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            disableApps = new Gson().fromJson(disable_AppList, type);
+            for (String disableAppName:disableApps) {
+                if(disableAppName.equalsIgnoreCase(uninstallPackageName.trim())){
+                    disableApps.remove(disableAppName);
+                }
+            }
+            String disableList = new Gson().toJson(disableApps);
+            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
+        }
+
+    }
+
+    /**
+     * Add install app in blocked list
+     * @param installPackageName
+     */
+    public void addAppFromBlockedList(String installPackageName){
+        ArrayList<String> blockedApps = new ArrayList<>();
+        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
+        if (!TextUtils.isEmpty(block_AppList)) {
+            try{
+                Type type = new TypeToken<ArrayList<String>>() {
+                }.getType();
+                blockedApps = new Gson().fromJson(block_AppList, type);
+                boolean isAppExist=false;
+                for (String blockedAppName:blockedApps) {
+                    if(blockedAppName.equalsIgnoreCase(installPackageName.trim())){
+                        isAppExist=true;
+                    }
+                }
+                if(!isAppExist){
+                    blockedApps.add(installPackageName.trim());
+                }
+                String blockedList = new Gson().toJson(blockedApps);
+                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     private class MyObserver extends ContentObserver {
         MyObserver(Handler handler) {
             super(handler);
@@ -194,81 +267,6 @@ public class StatusBarService extends Service {
             } catch (Exception e) {
                 e.printStackTrace();
                 CoreApplication.getInstance().logException(e);
-            }
-
-        }
-    }
-
-    /**
-     * Remove uninstall app if it contains in blocked list OR HelpfulRobots
-     * @param uninstallPackageName
-     */
-    public void removeAppFromBlockedList(String uninstallPackageName){
-        ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
-        if (!TextUtils.isEmpty(block_AppList)) {
-            try{
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                blockedApps = new Gson().fromJson(block_AppList, type);
-                for (String blockedAppName:blockedApps) {
-                    if(blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())){
-                        blockedApps.remove(blockedAppName);
-                    }
-                }
-                String blockedList = new Gson().toJson(blockedApps);
-                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-
-        }
-
-        ArrayList<String> disableApps= new ArrayList<>();
-        String disable_AppList = sharedPreferencesLauncher3.getString(Constants.HELPFUL_ROBOTS, "");
-        if (!TextUtils.isEmpty(disable_AppList)) {
-            Type type = new TypeToken<ArrayList<String>>() {
-            }.getType();
-            disableApps = new Gson().fromJson(disable_AppList, type);
-            for (String disableAppName:disableApps) {
-                if(disableAppName.equalsIgnoreCase(uninstallPackageName.trim())){
-                    disableApps.remove(disableAppName);
-                }
-            }
-            String disableList = new Gson().toJson(disableApps);
-            sharedPreferencesLauncher3.edit().putString(Constants.HELPFUL_ROBOTS, disableList).commit();
-        }
-
-    }
-
-
-    /**
-     * Add install app in blocked list
-     * @param installPackageName
-     */
-    public void addAppFromBlockedList(String installPackageName){
-        ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
-        if (!TextUtils.isEmpty(block_AppList)) {
-            try{
-                Type type = new TypeToken<ArrayList<String>>() {
-                }.getType();
-                blockedApps = new Gson().fromJson(block_AppList, type);
-                boolean isAppExist=false;
-                for (String blockedAppName:blockedApps) {
-                    if(blockedAppName.equalsIgnoreCase(installPackageName.trim())){
-                        isAppExist=true;
-                    }
-                }
-                if(!isAppExist){
-                    blockedApps.add(installPackageName.trim());
-                }
-                String blockedList = new Gson().toJson(blockedApps);
-                sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
-            }
-            catch (Exception e){
-                e.printStackTrace();
             }
 
         }
