@@ -45,6 +45,9 @@ public class TempoAccountSettingFragment extends CoreFragment {
     @ViewById
     Switch swtch_analytics;
 
+    @ViewById
+    LinearLayout ln_shareAnalytics;
+
 
     @ViewById
     RelativeLayout relUpdateEmail;
@@ -83,6 +86,22 @@ public class TempoAccountSettingFragment extends CoreFragment {
         }
 
 
+
+        ln_shareAnalytics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(swtch_analytics.isChecked()){
+                    swtch_analytics.setChecked(false);
+                    FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(false);
+                    droidPrefs_.isFireBaseAnalyticsEnable().put(false);
+                }
+                else{
+                    swtch_analytics.setChecked(true);
+                    droidPrefs_.isFireBaseAnalyticsEnable().put(true);
+                    FirebaseHelper.getIntance().getFirebaseAnalytics().setAnalyticsCollectionEnabled(true);
+                }
+            }
+        });
         lbl_analytics_description.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

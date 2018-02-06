@@ -78,6 +78,7 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
         img_block_unblock.setVisibility(View.INVISIBLE);
         txt_app_name.setTextColor(Color.parseColor("#777777"));
         txt_app_name.setTextSize(12);
+        linearList.setClickable(false);
 
     }
 
@@ -86,6 +87,7 @@ public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {
         txt_app_name.setTextColor(Color.parseColor("#000000"));
         img_block_unblock.setVisibility(View.VISIBLE);
         imv_appicon.setVisibility(View.VISIBLE);
+        linearList.setClickable(true);
     }
 
     public void changeNotification(ApplicationInfo applicationInfo, boolean ischecked, ArrayList<String> disableNotificationApps, Context context) {
