@@ -5,9 +5,9 @@ import android.content.Context;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.interfaces.ITelephony;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.log.Tracer;
 
 public class CallReceiver extends PhoneCallReceiver {
 

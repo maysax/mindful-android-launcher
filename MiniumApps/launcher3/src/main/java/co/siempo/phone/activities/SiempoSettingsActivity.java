@@ -33,20 +33,19 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
 
 
 /**

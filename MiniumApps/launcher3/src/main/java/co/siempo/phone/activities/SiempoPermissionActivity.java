@@ -31,8 +31,7 @@ import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.utils.PermissionUtil;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.utils.UIUtils;
 
 @EActivity(R.layout.activity_permission)
 public class SiempoPermissionActivity extends CoreActivity {

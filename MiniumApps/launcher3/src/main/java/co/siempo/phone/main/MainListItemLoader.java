@@ -11,18 +11,18 @@ import java.util.List;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.service.ApiClient_;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.utils.UIUtils;
 
 /**
  * Created by Shahab on 5/4/2017.

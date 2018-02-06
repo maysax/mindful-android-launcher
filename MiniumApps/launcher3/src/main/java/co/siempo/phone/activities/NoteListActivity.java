@@ -36,29 +36,28 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.NoteAdapter;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.FirebaseEvent;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.managers.EvernoteManager;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.FirebaseEvent;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 
-import static minium.co.core.util.DataUtils.BACKUP_FILE_NAME;
-import static minium.co.core.util.DataUtils.BACKUP_FOLDER_PATH;
-import static minium.co.core.util.DataUtils.NEW_NOTE_REQUEST;
-import static minium.co.core.util.DataUtils.NOTES_FILE_NAME;
-import static minium.co.core.util.DataUtils.NOTE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_COLOUR;
-import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
-import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_REQUEST_CODE;
-import static minium.co.core.util.DataUtils.NOTE_TITLE;
-import static minium.co.core.util.DataUtils.deleteNotes;
-import static minium.co.core.util.DataUtils.isExternalStorageReadable;
-import static minium.co.core.util.DataUtils.isExternalStorageWritable;
-import static minium.co.core.util.DataUtils.retrieveData;
-import static minium.co.core.util.DataUtils.saveData;
+import static co.siempo.phone.utils.DataUtils.BACKUP_FILE_NAME;
+import static co.siempo.phone.utils.DataUtils.BACKUP_FOLDER_PATH;
+import static co.siempo.phone.utils.DataUtils.NEW_NOTE_REQUEST;
+import static co.siempo.phone.utils.DataUtils.NOTES_FILE_NAME;
+import static co.siempo.phone.utils.DataUtils.NOTE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_COLOUR;
+import static co.siempo.phone.utils.DataUtils.NOTE_FAVOURED;
+import static co.siempo.phone.utils.DataUtils.NOTE_FONT_SIZE;
+import static co.siempo.phone.utils.DataUtils.NOTE_HIDE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_REQUEST_CODE;
+import static co.siempo.phone.utils.DataUtils.NOTE_TITLE;
+import static co.siempo.phone.utils.DataUtils.deleteNotes;
+import static co.siempo.phone.utils.DataUtils.isExternalStorageReadable;
+import static co.siempo.phone.utils.DataUtils.isExternalStorageWritable;
+import static co.siempo.phone.utils.DataUtils.retrieveData;
+import static co.siempo.phone.utils.DataUtils.saveData;
 
 
 public class NoteListActivity extends CoreActivity implements AdapterView.OnItemClickListener,

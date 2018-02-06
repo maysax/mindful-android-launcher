@@ -13,16 +13,15 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.SettingsAdapter;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.SettingsData;
 import co.siempo.phone.utils.PackageUtil;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.ui.CoreActivity;
 
 
 @EActivity(R.layout.activity_settings_main)

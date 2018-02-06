@@ -71,8 +71,7 @@
         android:launchMode="singleInstance"
         android:supportsRtl="true"
         android:theme="@style/SiempoAppTheme"
-        tools:ignore="AllowBackup"
-        tools:replace="android:theme,name,label">
+        tools:ignore="AllowBackup">
 
         <!-- Fabric configuration -->
         <meta-data

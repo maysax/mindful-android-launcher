@@ -27,12 +27,11 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.TempoNotificationSectionAdapter;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.AppListInfo;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.ui.CoreActivity;
 
 /**
  * Created by hardik on 22/11/17.

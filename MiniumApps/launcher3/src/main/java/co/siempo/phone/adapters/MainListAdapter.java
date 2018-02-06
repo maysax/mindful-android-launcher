@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.main.MainListAdapterEvent;
 import co.siempo.phone.models.ContactListItem;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.token.TokenManager;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 2/16/2017.

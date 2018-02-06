@@ -31,6 +31,7 @@ import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
@@ -38,15 +39,11 @@ import co.siempo.phone.db.GreenDaoOpenHelper;
 import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.LogConfig;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.old.PreferenceListAdapter;
 import co.siempo.phone.utils.PackageUtil;
 import de.greenrobot.event.EventBus;
-import minium.co.core.BuildConfig;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.config.Config;
-import minium.co.core.log.LogConfig;
-import minium.co.core.log.Tracer;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -77,13 +74,13 @@ public class Launcher3App extends CoreApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Tracer.i("Application Id: " + co.siempo.phone.BuildConfig.APPLICATION_ID
-                + " || Version code: " + co.siempo.phone.BuildConfig.VERSION_CODE
-                + " || Version name: " + co.siempo.phone.BuildConfig.VERSION_NAME
+        Tracer.i("Application Id: " + BuildConfig.APPLICATION_ID
+                + " || Version code: " + BuildConfig.VERSION_CODE
+                + " || Version name: " + BuildConfig.VERSION_NAME
                 + "\nGit Sha: " + BuildConfig.GIT_SHA
                 + " || Build time:  " + BuildConfig.BUILD_TIME
-                + " || Build flavor: " + co.siempo.phone.BuildConfig.FLAVOR
-                + " || Build type: " + co.siempo.phone.BuildConfig.BUILD_TYPE);
+                + " || Build flavor: " + BuildConfig.FLAVOR
+                + " || Build type: " + BuildConfig.BUILD_TYPE);
 
         Tracer.i("Model: " + Build.MODEL
                 + " || Build No: " + Build.FINGERPRINT

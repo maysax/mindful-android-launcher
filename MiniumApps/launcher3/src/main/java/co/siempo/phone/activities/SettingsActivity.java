@@ -5,12 +5,11 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.fragments.TempoSettingsFragment_;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.ui.CoreActivity;
 
 @EActivity(R.layout.activity_tempo_settings)
 public class SettingsActivity extends CoreActivity {

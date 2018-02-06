@@ -20,18 +20,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.siempo.phone.R;
-import minium.co.core.app.CoreApplication;
+import co.siempo.phone.app.CoreApplication;
 
 import static co.siempo.phone.activities.NoteListActivity.checkedArray;
 import static co.siempo.phone.activities.NoteListActivity.deleteActive;
 import static co.siempo.phone.activities.NoteListActivity.searchActive;
 import static co.siempo.phone.activities.NoteListActivity.setFavourite;
-import static minium.co.core.util.DataUtils.NOTE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_COLOUR;
-import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
-import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_TITLE;
+import static co.siempo.phone.utils.DataUtils.NOTE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_COLOUR;
+import static co.siempo.phone.utils.DataUtils.NOTE_FAVOURED;
+import static co.siempo.phone.utils.DataUtils.NOTE_FONT_SIZE;
+import static co.siempo.phone.utils.DataUtils.NOTE_HIDE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_TITLE;
 
 /**
  * Adapter class for custom notes ListView

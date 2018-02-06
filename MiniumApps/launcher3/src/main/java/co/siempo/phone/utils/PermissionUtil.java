@@ -8,9 +8,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.SiempoNotificationListener_;
-import minium.co.core.log.Tracer;
-import minium.co.core.util.ServiceUtils;
 
 /**
  * Created by Shahab on 1/12/2017.

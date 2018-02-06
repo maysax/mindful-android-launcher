@@ -12,11 +12,11 @@ import android.util.Log;
 import java.util.Date;
 
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.NotificationTrayEvent;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
 
 
 public abstract class PhoneCallReceiver extends BroadcastReceiver {

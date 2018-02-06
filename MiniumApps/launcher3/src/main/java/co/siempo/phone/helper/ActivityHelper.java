@@ -11,6 +11,7 @@ import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.InstalledAppsActivity;
 import co.siempo.phone.activities.NoteListActivity;
 import co.siempo.phone.activities.SiempoAlphaSettingsActivity_;
@@ -19,11 +20,10 @@ import co.siempo.phone.activities.SiempoPhoneSettingsActivity;
 import co.siempo.phone.activities.SiempoSettingsActivity_;
 import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity_;
 import co.siempo.phone.activities.SiempoSupressNotificationActivity;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.launcher.FakeLauncherActivity;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.UIUtils;
 
 
 public class ActivityHelper {

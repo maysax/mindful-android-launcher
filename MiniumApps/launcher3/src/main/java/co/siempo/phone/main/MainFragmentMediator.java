@@ -9,10 +9,12 @@ import java.util.List;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.MainListAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.ContactListItem;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
@@ -20,10 +22,8 @@ import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.utils.ContactsLoader;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by shahab on 2/16/17.

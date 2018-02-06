@@ -33,6 +33,7 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.SuppressNotificationAdapter;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.MultipleItemDelete;
 import co.siempo.phone.db.TableNotificationSms;
@@ -42,7 +43,6 @@ import co.siempo.phone.models.DeleteItem;
 import co.siempo.phone.models.Notification;
 import co.siempo.phone.models.NotificationContactModel;
 import co.siempo.phone.utils.NotificationUtility;
-import minium.co.core.app.CoreApplication;
 
 public class SiempoSupressNotificationActivity extends AppCompatActivity {
 

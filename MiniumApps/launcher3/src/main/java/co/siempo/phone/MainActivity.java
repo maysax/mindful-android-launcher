@@ -40,28 +40,27 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.SiempoPermissionActivity_;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.CheckVersionEvent;
+import co.siempo.phone.event.NFCEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.LogConfig;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainSlidePagerAdapter;
 import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.utils.PermissionUtil;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.event.NFCEvent;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
-
-import static minium.co.core.log.LogConfig.TRACE_TAG;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentListener {
@@ -134,7 +133,7 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
     }
 
-    @Trace(tag = TRACE_TAG)
+    @Trace(tag = LogConfig.TRACE_TAG)
     @AfterViews
     void afterViews() {
         isApplicationLaunch = true;

@@ -11,7 +11,6 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
-import minium.co.core.ui.CoreFragment;
 
 /**
  * This screen is use to display privacy policy which is load from assets folder.

@@ -11,19 +11,19 @@ import org.json.JSONObject;
 import java.io.File;
 
 import co.siempo.phone.R;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.UIUtils;
 
-import static minium.co.core.util.DataUtils.NOTES_FILE_NAME;
-import static minium.co.core.util.DataUtils.NOTE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_COLOUR;
-import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
-import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_TITLE;
-import static minium.co.core.util.DataUtils.retrieveData;
-import static minium.co.core.util.DataUtils.saveData;
+import static co.siempo.phone.utils.DataUtils.NOTES_FILE_NAME;
+import static co.siempo.phone.utils.DataUtils.NOTE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_COLOUR;
+import static co.siempo.phone.utils.DataUtils.NOTE_FAVOURED;
+import static co.siempo.phone.utils.DataUtils.NOTE_FONT_SIZE;
+import static co.siempo.phone.utils.DataUtils.NOTE_HIDE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_TITLE;
+import static co.siempo.phone.utils.DataUtils.retrieveData;
+import static co.siempo.phone.utils.DataUtils.saveData;
 
 public class NoteEventReceiver extends BroadcastReceiver {
     public NoteEventReceiver() {

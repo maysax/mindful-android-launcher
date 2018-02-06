@@ -25,7 +25,7 @@ import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.dialog.Dialog_Tempo;
 import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.utils.PrefSiempo;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.utils.UIUtils;
 
 
 public class IntentionFragment extends Fragment implements View.OnClickListener {

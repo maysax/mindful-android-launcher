@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.log.Tracer;
 
 /**
  * Created by Volansys
