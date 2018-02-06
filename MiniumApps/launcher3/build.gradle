@@ -87,10 +87,10 @@ dependencies {
     })
     compile project(':chips')
     // compile project(':color-picker')
-    compile project(':notes')
-    compile project(':halo-circle-seekbar')
-    compile project(':horizontal-timepicker')
-    compile project(':status-lib')
+    compile project(':core')
+    //compile project(':halo-circle-seekbar')
+    //compile project(':horizontal-timepicker')
+    // compile project(':status-lib')
     //compile "com.github.satyan:sugar:$sugarOrmVersion"
     compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
     compile("com.github.paolorotolo:appintro:$appIntroVersion") {
@@ -113,6 +113,7 @@ dependencies {
     compile files('libs/additionnal.jar')
     compile files('libs/mail.jar')
     compile 'me.relex:circleindicator:1.2.2@aar'// indicator for view pager
+    compile 'com.evernote:android-sdk:2.0.0-RC4'
 
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2') {
         exclude module: 'support-annotations'

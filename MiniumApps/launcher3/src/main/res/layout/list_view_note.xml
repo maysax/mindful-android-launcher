@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_card"
+    android:descendantFocusability="blocksDescendants"
+    android:focusableInTouchMode="false"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/titleView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/favourite"
+        android:maxLines="1"
+        android:paddingBottom="8dp"
+        android:text="@string/label.title"
+        android:textColor="@color/black_95"
+        android:textSize="@dimen/text.size.xl"
+        android:textStyle="bold"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/bodyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/titleView"
+        android:layout_alignLeft="@+id/titleView"
+        android:layout_alignRight="@+id/titleView"
+        android:layout_alignStart="@+id/titleView"
+        android:layout_below="@+id/titleView"
+        android:maxLines="5"
+        android:paddingBottom="8dp"
+        android:text="@string/label.note"
+        android:textColor="@color/black_95"
+        android:textSize="@dimen/text.size.medium"
+        tools:ignore="RtlHardcoded" />
+
+    <ImageButton
+        android:id="@+id/favourite"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:background="@color/transparent"
+        android:contentDescription="@string/label.favorite"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_star_border_black_24dp"
+        tools:ignore="RtlHardcoded" />
+
+</RelativeLayout>

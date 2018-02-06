@@ -25,13 +25,13 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import co.siempo.phone.HelpActivity_;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.IntentionEditActivity;
+import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.dialog.Dialog_Tempo;
 import co.siempo.phone.service.StatusBarService;
-import co.siempo.phone.tempo.SettingsActivity_;
 import minium.co.core.app.DroidPrefs_;
 import minium.co.core.ui.CoreFragment;
 import minium.co.core.util.UIUtils;
@@ -128,13 +128,14 @@ public class IntentionFieldFragment extends CoreFragment {
     }
 
     @Click
-    void pullTab(){
+    void pullTab() {
         ObjectAnimator animY = ObjectAnimator.ofFloat(rootLayout, "translationX", 100f, 0f);
         animY.setDuration(700);//1sec
         animY.setInterpolator(new BounceInterpolator());
         animY.setRepeatCount(0);
         animY.start();
     }
+
     @Click
     void txtIntention() {
         Intent intent = new Intent(getActivity(), IntentionEditActivity.class);
@@ -198,7 +199,7 @@ public class IntentionFieldFragment extends CoreFragment {
                     public void onClick(View view) {
                         UIUtils.clearDim(root);
                         mPopupWindow.dismiss();
-                        Intent intent = new Intent(getActivity(), HelpActivity_.class);
+                        Intent intent = new Intent(getActivity(), HelpActivity.class);
                         startActivity(intent);
                     }
                 });

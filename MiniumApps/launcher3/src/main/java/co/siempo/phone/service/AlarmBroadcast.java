@@ -6,7 +6,7 @@ import android.content.Intent;
 
 import java.util.Calendar;
 
-import co.siempo.phone.util.PackageUtil;
+import co.siempo.phone.utils.PackageUtil;
 import minium.co.core.log.Tracer;
 
 /**

@@ -12,7 +12,7 @@ import org.androidannotations.annotations.ViewById;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.util.PackageUtil;
+import co.siempo.phone.utils.PackageUtil;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.event.AppInstalledEvent;

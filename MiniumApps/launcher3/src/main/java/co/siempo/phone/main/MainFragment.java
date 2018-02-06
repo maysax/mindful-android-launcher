@@ -35,16 +35,18 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
-import co.siempo.phone.HelpActivity_;
 import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.HelpActivity;
+import co.siempo.phone.activities.SettingsActivity_;
+import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.service.StatusBarService;
-import co.siempo.phone.tempo.SettingsActivity_;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
 import co.siempo.phone.token.TokenItemType;
@@ -52,7 +54,6 @@ import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
-import co.siempo.phone.ui.SearchLayout;
 import de.greenrobot.event.Subscribe;
 import minium.co.core.app.CoreApplication;
 import minium.co.core.app.DroidPrefs_;
@@ -428,7 +429,7 @@ public class MainFragment extends CoreFragment {
                     public void onClick(View view) {
                         UIUtils.clearDim(root);
                         mPopupWindow.dismiss();
-                        Intent intent = new Intent(getActivity(), HelpActivity_.class);
+                        Intent intent = new Intent(getActivity(), HelpActivity.class);
                         startActivity(intent);
                     }
                 });

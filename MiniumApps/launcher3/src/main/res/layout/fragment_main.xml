@@ -45,7 +45,7 @@
     </RelativeLayout>
 
 
-    <co.siempo.phone.ui.SearchLayout
+    <co.siempo.phone.customviews.SearchLayout
         android:id="@+id/searchLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
