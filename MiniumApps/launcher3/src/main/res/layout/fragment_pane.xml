@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="3"
-    tools:context="co.siempo.phone.fragments.IntentionFragment">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="3"
+                tools:context="co.siempo.phone.fragments.IntentionFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,8 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
-            android:background="@color/temp_bg"
+            android:background="@color/transparent"
             android:orientation="vertical">
+
+            <include layout="@layout/layout_top_dock"/>
 
         </LinearLayout>
 
@@ -34,7 +36,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/pagerPane"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
         </LinearLayout>
 
         <LinearLayout
@@ -51,7 +53,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 app:ci_drawable="@drawable/indicator_active"
-                app:ci_drawable_unselected="@drawable/indicator_inactive" />
+                app:ci_drawable_unselected="@drawable/indicator_inactive"/>
         </LinearLayout>
 
         <LinearLayout
@@ -66,7 +68,7 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/activities_row" />
+                tools:listitem="@layout/activities_row"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

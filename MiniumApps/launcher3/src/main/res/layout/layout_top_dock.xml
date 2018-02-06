@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/txtTopDockDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+        android:text="Thursday, September 5th"
+        android:textSize="16sp"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtTopDockDate"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        >
+
+
+        <co.siempo.phone.ui.ClearableEditText
+            android:id="@+id/autoTextTopDockSearch"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rounded_auto_text_view"
+            android:gravity="left|center_vertical"
+            android:hint="Find app, send message, or save note "
+            android:maxLines="1"
+            android:paddingBottom="12dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:paddingTop="12dp"
+            android:textColorHint="@color/find_friends_tw_bg"
+            android:textSize="14sp"/>
+
+        <!--<Button-->
+        <!--android:id="@+id/btnClearSearch"-->
+        <!--android:layout_width="24dp"-->
+        <!--android:layout_height="24dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_gravity="right|center_vertical"-->
+        <!--android:layout_marginRight="16dp"-->
+        <!--android:background="@drawable/ic_close_black"-->
+        <!--android:visibility="gone"/>-->
+
+    </RelativeLayout>
+
+</RelativeLayout>
