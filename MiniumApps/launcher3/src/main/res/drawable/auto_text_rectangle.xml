@@ -2,16 +2,16 @@
 
 
     <item
-        android:bottom="4dp"
-        android:left="-2dp"
-        android:right="-2dp"
-        android:top="-2dp">
+        android:bottom="0dp"
+        android:left="-8dp"
+        android:right="-8dp"
+        android:top="-8dp">
         <shape>
             <solid android:color="@android:color/transparent"/>
             <stroke
 
-                android:width="2dp"
-                android:color="#28A8E0"/>
+                android:width="4dp"
+                android:color="#42A4FF"/>
         </shape>
     </item>
 

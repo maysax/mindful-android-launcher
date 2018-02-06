@@ -179,6 +179,7 @@
         <activity
             android:name=".activities.DashboardActivity"
             android:label="@string/title_activity_dashboard"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:theme="@style/SiempoAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

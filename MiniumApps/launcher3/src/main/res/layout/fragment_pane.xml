@@ -16,7 +16,7 @@
             android:id="@+id/linTopDoc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.65"
             android:background="@color/transparent"
             android:orientation="vertical">
 
@@ -60,8 +60,11 @@
             android:id="@+id/linSearchList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
             android:layout_weight="2.5"
             android:orientation="vertical"
+
             android:visibility="gone">
 
             <android.support.v7.widget.RecyclerView
