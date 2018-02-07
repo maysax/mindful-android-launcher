@@ -1,10 +1,16 @@
 package co.siempo.phone.main;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.joanzapata.iconify.IconDrawable;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +33,9 @@ import co.siempo.phone.model.ContactListItem;
 import co.siempo.phone.model.MainListItem;
 import co.siempo.phone.model.MainListItemType;
 import co.siempo.phone.token.TokenManager;
+import co.siempo.phone.util.ColorGenerator;
+import co.siempo.phone.util.DrawableProvider;
+import co.siempo.phone.util.TextDrawable;
 import de.greenrobot.event.EventBus;
 import minium.co.core.app.CoreApplication;
 
@@ -38,10 +50,17 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private List<MainListItem> originalData = null;
     private List<MainListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
+    private TextDrawable.IBuilder mDrawableBuilder;
+    private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
+    private static final int HIGHLIGHT_COLOR = 0x999be6ff;
+    private DrawableProvider mProvider;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
         this.context = context;
+        mDrawableBuilder = TextDrawable.builder()
+                .round();
+        mProvider = new DrawableProvider(context);
         loadData(items);
     }
 
@@ -115,7 +134,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     }
 
     private View getContactItemView(int position, View view, ViewGroup parent) {
-        ContactViewHolder holder;
+        final ContactViewHolder holder;
         if (view == null) {
             holder = new ContactViewHolder();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -137,12 +156,23 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         if (item != null) {
             holder.text.setText(item.getContactName());
+            if(item.getImageUri()!=null && !TextUtils.isEmpty(item.getImageUri())){
 
-            if (item.getImageUri() != null) {
-                Glide.with(context)
-                        .load(Uri.parse(item.getImageUri()))
-                        .placeholder(R.drawable.placeholder_blank_contact)
-                        .into(holder.icon);
+               Glide.with(context).load(Uri.parse(item.getImageUri())).asBitmap().centerCrop().placeholder(R.drawable.placeholder_blank_contact).into(new BitmapImageViewTarget(holder.icon) {
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        holder.icon.setImageDrawable(circularBitmapDrawable);
+                    }
+                });
+            }
+            else{
+                if(!TextUtils.isEmpty(item.getContactName())){
+                    Drawable drawable = mProvider.getRound(""+item.getContactName().charAt(0));
+                    holder.icon.setImageDrawable(drawable);
+                }
             }
 
             if (item.hasMultipleNumber()) {
@@ -170,7 +200,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
                 view.setTag(holder);
             }
-
 
         } else {
             holder = (ActionViewHolder) view.getTag();
