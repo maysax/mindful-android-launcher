@@ -196,8 +196,6 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                             public boolean onMenuItemClick(MenuItem item) {
 
 
-                                if (!showUnblockAlert) {
-
                                     holder.addToBlockList(d.applicationInfo, true, pref_blockedList, context);
                                     blockedList.remove(d);
                                     if (pref_messengerList.contains(d.applicationInfo.packageName)) {
@@ -211,71 +209,7 @@ public class TempoNotificationSectionAdapter extends SectionedRecyclerViewAdapte
                                     }
 
                                     changeHeaderNotification(section, true, pref_headerSectionList, context);
-                                } else {
 
-                                    showUnblockAlert = false;
-                                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context)
-                                            .setMessage("Siempo won't block this app's notifications, but they might be blocked by your Android system settings.")
-                                            .setCancelable(false)
-
-                                            .setPositiveButton("OK", null)
-                                            .setNegativeButton("OPEN SYSTEM " +
-                                                    "SETTINGS", null);
-
-                                    alertDialog = alertDialogBuilder.create();
-                                    alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                                                                      @Override
-                                                                      public void onShow(DialogInterface dialog) {
-                                                                          alertDialog.getButton(AlertDialog
-                                                                                  .BUTTON_NEGATIVE)
-                                                                                  .setOnClickListener(new View.OnClickListener() {
-                                                                                      @Override
-                                                                                      public void onClick(View v) {
-                                                                                          alertDialog.dismiss();
-                                                                                          Intent intent = new Intent();
-                                                                                          intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-
-                                                                                          //for Android 5-7
-                                                                                          if (Build.VERSION.SDK_INT >= 21 && Build.VERSION.SDK_INT <= 25) {
-                                                                                              intent.putExtra("app_package", d.applicationInfo.packageName);
-                                                                                              intent.putExtra("app_uid", d.applicationInfo.uid);
-                                                                                          } else if (Build.VERSION.SDK_INT >= 26) {
-                                                                                          // for Android O
-                                                                                              intent.putExtra("android.provider.extra.APP_PACKAGE", d.applicationInfo.packageName);
-                                                                                          }
-                                                                                          context.startActivity(intent);
-                                                                                      }
-                                                                                  });
-
-                                                                          alertDialog.getButton(AlertDialog
-                                                                                  .BUTTON_POSITIVE)
-                                                                                  .setOnClickListener(new View.OnClickListener() {
-                                                                                      @Override
-                                                                                      public void onClick(View v) {
-                                                                                          alertDialog.dismiss();
-                                                                                          holder.addToBlockList(blockedList.get(position).applicationInfo, true, pref_blockedList, context);
-                                                                                          AppListInfo d = blockedList.get(position);
-                                                                                          blockedList.remove(d);
-                                                                                          if (pref_messengerList.contains(d.applicationInfo.packageName)) {
-                                                                                              messengerList.add(d);
-                                                                                              int disableCount = launcherPrefs.getInt(Constants.MESSENGER_DISABLE_COUNT, 0);
-                                                                                              launcherPrefs.edit().putInt(Constants.MESSENGER_DISABLE_COUNT, disableCount - 1).commit();
-                                                                                          } else {
-                                                                                              helpfulRobot_List.add(d);
-                                                                                              int disableCount = launcherPrefs.getInt(Constants.APP_DISABLE_COUNT, 0);
-                                                                                              launcherPrefs.edit().putInt(Constants.APP_DISABLE_COUNT, disableCount - 1).commit();
-                                                                                          }
-                                                                                          changeHeaderNotification(section, true, pref_headerSectionList, context);
-                                                                                      }
-                                                                                  });
-                                                                      }
-                                                                  }
-
-
-                                    );
-
-                                    alertDialog.show();
-                                }
                                 return true;
 
                             }
