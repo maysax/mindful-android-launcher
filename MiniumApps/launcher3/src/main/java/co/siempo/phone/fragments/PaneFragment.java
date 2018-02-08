@@ -9,10 +9,14 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,11 +26,13 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.PanePagerAdapter;
 import co.siempo.phone.adapters.ToolsListAdapter;
 import co.siempo.phone.customviews.ClearableEditText;
+import co.siempo.phone.utils.PrefSiempo;
 import me.relex.circleindicator.CircleIndicator;
 
 
@@ -49,6 +55,11 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
     private ToolsListAdapter adapter;
     private CardView cardViewEdtSearch;
     private ArrayList<String> toolsList;
+    private View blueLineView;
+    private TextView txtIntentionLabelJunkPane;
+    private TextView txtIntention;
+    private Window mWindow;
+    private int defaultStatusBarColor;
     //    private View btnClearSearch;
     //    private View btnClearSearch;
 
@@ -79,10 +90,13 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         linTopDoc.setOnClickListener(this);
         linPane = view.findViewById(R.id.linPane);
         edtSearchTools = view.findViewById(R.id.edtSearchTools);
+        blueLineView = view.findViewById(R.id.blueLineView);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
         edtSearchListView = view.findViewById(R.id.edtSearchListView);
         relSearchTools = view.findViewById(R.id.relSearchTools);
         txtTopDockDate = view.findViewById(R.id.txtTopDockDate);
+        txtIntentionLabelJunkPane = view.findViewById(R.id.txtIntentionLabelJunkPane);
+        txtIntention = view.findViewById(R.id.txtIntention);
         linPane.setOnClickListener(this);
         linBottomDoc = view.findViewById(R.id.linBottomDoc);
         linSearchList = view.findViewById(R.id.linSearchList);
@@ -96,7 +110,31 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         indicator.setViewPager(pagerPane);
         pagerPane.setCurrentItem(2);
 
+        mWindow = getActivity().getWindow();
 
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        defaultStatusBarColor = mWindow.getStatusBarColor();
+
+        searchEditTextFocusChanged();
+
+        //Code for Date setting
+
+        setToolsPaneDate();
+
+        //Code for List Setting
+        setSearchToolsList();
+
+        //Code for Page change
+        setViewPagerPageChanged();
+
+
+    }
+
+    private void searchEditTextFocusChanged() {
         //Circular Edit Text
         edtSearchTools.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -114,6 +152,7 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+
         //Listview edit Text
         edtSearchListView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -122,10 +161,12 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
 
                     linPane.setVisibility(View.GONE);
                     linBottomDoc.setVisibility(View.GONE);
+                    blueLineView.setVisibility(View.VISIBLE);
                     linSearchList.setVisibility(View.VISIBLE);
                 } else {
 
                     linPane.setVisibility(View.VISIBLE);
+                    blueLineView.setVisibility(View.VISIBLE);
                     edtSearchListView.setVisibility(View.GONE);
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
@@ -135,17 +176,89 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
+    }
 
-        //Code for Date setting
-        Calendar c = Calendar.getInstance();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL);
-        txtTopDockDate.setText(df.format(c.getTime()));
+    /**
+     * Page Change Listener and modification of UI based on Page change
+     */
+    private void setViewPagerPageChanged() {
+        pagerPane.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                //Make the junk food pane visible
+                if (i == 0) {
+                    linTopDoc.setBackgroundColor(getResources().getColor(R.color
+                            .bg_junk_apps_top_dock));
+                    txtTopDockDate.setVisibility(View.GONE);
+                    edtSearchListView.setVisibility(View.GONE);
+                    edtSearchTools.setVisibility(View.GONE);
+
+                    txtIntention.setVisibility(View.VISIBLE);
+                    txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
+
+                    String strIntention = PrefSiempo.getInstance(getActivity()).read
+                            (PrefSiempo.DEFAULT_INTENTION, "");
+                    if (TextUtils.isEmpty(strIntention)) {
+                        txtIntention.setText("You chose to hide these apps.");
+                        txtIntentionLabelJunkPane.setVisibility(View.INVISIBLE);
+
+                    } else {
+                        txtIntentionLabelJunkPane.setText(getString(R.string
+                                .you_ve_flag));
+                        txtIntention.setText(strIntention);
+                        txtIntention.setVisibility(View.VISIBLE);
+                        txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
+                    }
+
+
+                    // finally change the color
+                    mWindow.setStatusBarColor(getResources().getColor(R.color
+                            .appland_blue_bright));
+
+
+                }
+
+                //Tools and Favourite Pane
+                else {
+                    linTopDoc.setBackground(getResources().getDrawable(R
+                            .drawable.top_bar_bg));
+                    txtTopDockDate.setVisibility(View.VISIBLE);
+                    edtSearchListView.setVisibility(View.VISIBLE);
+                    edtSearchTools.setVisibility(View.VISIBLE);
+                    txtIntention.setVisibility(View.GONE);
+                    txtIntentionLabelJunkPane.setVisibility(View.GONE);
+
+                    // finally change the color
+                    mWindow.setStatusBarColor(defaultStatusBarColor);
+
+
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+    }
+
+    /**
+     * Adpater settings for Tools List
+     */
+    private void setSearchToolsList() {
 
 
         //Code for listview adapter
         layoutManager = new LinearLayoutManager(getContext());
         recyclerSearchList.setLayoutManager(layoutManager);
 
+        //Need to update the model
         toolsList = new ArrayList<>();
         toolsList.add("Calendar");
         toolsList.add("Calculator");
@@ -157,7 +270,6 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
 
         adapter = new ToolsListAdapter(toolsList, getContext());
         recyclerSearchList.setAdapter(adapter);
-
         edtSearchListView.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -179,8 +291,24 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+    }
 
+    /**
+     * Set Date for Tools Pane
+     */
+    private void setToolsPaneDate() {
+        Calendar c = Calendar.getInstance();
+        int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR;
+        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, Locale
+                .getDefault());
+        txtTopDockDate.setText(df.format(c.getTime()));
 
+        //Need to find solution for truncating year
+//        DateFormat sdf = new SimpleDateFormat("EEEE, MMMM d", Locale
+//                .getDefault());
+//
+//        String now = sdf.format(c.getTime());
+//        txtTopDockDate.setText(now);
     }
 
     @Override
@@ -199,6 +327,11 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * filter the list based on edit text value
+     *
+     * @param text
+     */
     public void filter(String text) {
         ArrayList<String> temp = new ArrayList();
         for (String d : toolsList) {
@@ -211,4 +344,15 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         //update recyclerview
         adapter.updateList(temp);
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        //Changing the status bar default value on page change
+        if (!isVisibleToUser && null != mWindow) {
+            mWindow.setStatusBarColor(defaultStatusBarColor);
+        }
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+
 }

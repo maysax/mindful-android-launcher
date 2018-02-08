@@ -4,6 +4,8 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
+
     >
 
 
@@ -11,12 +13,11 @@
         android:id="@+id/txtTopDockDate"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
         android:gravity="right|center"
-        android:text="Thursday, September 5th"
         android:textColor="@color/appland_date"
-        android:textSize="20sp"/>
+        android:textSize="@dimen/sp_20"/>
 
 
     <RelativeLayout
@@ -24,10 +25,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/txtTopDockDate"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_4"
         android:background="@null"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -37,15 +38,14 @@
         <EditText
             android:id="@+id/edtSearchTools"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="@dimen/dp_48"
             android:layout_centerVertical="true"
-            android:alpha="0.9"
             android:background="@drawable/rounded_auto_text_view"
             android:ellipsize="start"
             android:gravity="center_vertical"
             android:hint="Find app, send message, or save note "
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_10"
             android:textColorHint="@color/appland_blue"
             android:textSize="16sp"/>
 
@@ -55,30 +55,63 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardViewEdtSearch"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="@dimen/dp_48"
         android:layout_below="@+id/relSearchTools"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginLeft="@dimen/dp_16"
+        android:layout_marginRight="@dimen/dp_16"
+        android:layout_marginTop="@dimen/dp_4"
         android:visibility="gone"
-        card_view:cardElevation="2dp"
+        card_view:cardElevation="@dimen/dp_2"
+
+
         >
 
         <co.siempo.phone.customviews.ClearableEditText
             android:id="@+id/edtSearchListView"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="48dp"
             android:background="@drawable/auto_text_rectangle"
             android:ellipsize="start"
             android:gravity="center_vertical"
             android:hint="Find app, send message, or save note "
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_10"
             android:singleLine="true"
             android:textColorHint="#61000000"
-            android:textSize="16sp"
+            android:textSize="@dimen/sp_16"
             android:visibility="gone"
             />
     </android.support.v7.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/txtIntentionLabelJunkPane"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:layout_below="@id/cardViewEdtSearch"
+        android:gravity="center_horizontal|bottom"
+        android:paddingLeft="@dimen/dp_16"
+        android:paddingRight="@dimen/dp_16"
+        android:text="@string/you_ve_flag"
+        android:textColor="#BFFFFFFF"
+        android:textSize="@dimen/sp_15"
+
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtIntention"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_46"
+        android:layout_below="@id/txtIntentionLabelJunkPane"
+        android:layout_marginTop="@dimen/dp_6"
+        android:gravity="center_horizontal|top"
+        android:paddingLeft="@dimen/dp_16"
+        android:paddingRight="@dimen/dp_16"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+
 </RelativeLayout>

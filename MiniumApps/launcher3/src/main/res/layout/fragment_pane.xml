@@ -16,20 +16,26 @@
             android:id="@+id/linTopDoc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.65"
-            android:background="@color/transparent"
+            android:layout_weight="0.68"
+            android:background="@drawable/top_bar_drawable"
             android:orientation="vertical">
 
             <include layout="@layout/layout_top_dock"/>
 
         </LinearLayout>
 
+        <View
+            android:id="@+id/blueLineView"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#3342A4FF"/>
+
         <LinearLayout
             android:id="@+id/linPane"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.85"
-            android:background="@color/actionbar_background_end"
+            android:background="#CCFFFFFF"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -60,10 +66,11 @@
             android:id="@+id/linSearchList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:layout_weight="2.5"
+            android:background="#EDEDED"
             android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingRight="@dimen/dp_16"
 
             android:visibility="gone">
 

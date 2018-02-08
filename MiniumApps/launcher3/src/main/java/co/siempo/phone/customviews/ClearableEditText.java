@@ -9,7 +9,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -90,14 +89,19 @@ public class ClearableEditText extends AppCompatEditText implements TextWatcher 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (hasFocus()) {
-            showClearIcon(!TextUtils.isEmpty(s));
+//            showClearIcon(!TextUtils.isEmpty(s));
+            showClearIcon(true);
         }
     }
 
     @Override
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
+//        showClearIcon(
+//                (!mClearIconDrawWhenFocused || focused) && !TextUtils.isEmpty(getText().toString()));
         showClearIcon(
-                (!mClearIconDrawWhenFocused || focused) && !TextUtils.isEmpty(getText().toString()));
+                (!mClearIconDrawWhenFocused || focused));
+
+
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
     }
 

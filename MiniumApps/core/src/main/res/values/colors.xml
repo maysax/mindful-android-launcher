@@ -191,6 +191,7 @@
     <!-- Android core colors for easy access -->
     <color name="dialog_text">#202020</color>
     <color name="white">@android:color/white</color>
+    <color name="status_bar_gray">#CCFFFFFF</color>
     <color name="headerLine">#E6E6E6</color>
     <color name="black">@android:color/black</color>
     <color name="shadow">#727272</color>

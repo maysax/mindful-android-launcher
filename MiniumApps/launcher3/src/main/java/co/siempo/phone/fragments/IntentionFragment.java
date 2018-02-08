@@ -11,6 +11,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,6 +39,8 @@ public class IntentionFragment extends Fragment implements View.OnClickListener 
     private LinearLayout linIF;
     private PopupWindow mPopupWindow;
     private RelativeLayout relRootLayout;
+    private Window mWindow;
+    private int defaultStatusBarColor;
 
     public IntentionFragment() {
         // Required empty public constructor
@@ -58,6 +62,8 @@ public class IntentionFragment extends Fragment implements View.OnClickListener 
         Intent myService = new Intent(getActivity(), StatusBarService.class);
         getActivity().startService(myService);
         initView(view);
+
+
         return view;
     }
 
@@ -72,6 +78,15 @@ public class IntentionFragment extends Fragment implements View.OnClickListener 
         txtIntention = view.findViewById(R.id.txtIntention);
         txtIntention.setOnClickListener(this);
         linIF = view.findViewById(R.id.linIF);
+        mWindow = getActivity().getWindow();
+
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        mWindow.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        defaultStatusBarColor = mWindow.getStatusBarColor();
+
     }
 
     @Override
@@ -83,6 +98,7 @@ public class IntentionFragment extends Fragment implements View.OnClickListener 
             linIF.setVisibility(View.VISIBLE);
         }
         txtIntention.setText(PrefSiempo.getInstance(getActivity()).read(PrefSiempo.DEFAULT_INTENTION, ""));
+        mWindow.setStatusBarColor(defaultStatusBarColor);
     }
 
     @Override
