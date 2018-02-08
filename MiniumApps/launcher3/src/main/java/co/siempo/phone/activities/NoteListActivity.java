@@ -72,12 +72,10 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     public static boolean deleteActive = false; // True if delete mode is active, false otherwise
     // For disabling long clicks, favourite clicks and modifying the item click pattern
     public static boolean searchActive = false;
-    // Layout components
-    @SuppressLint("StaticFieldLeak")
-    private static ListView listView;
     private static JSONArray notes; // Main notes array
-    @SuppressLint("StaticFieldLeak")
-    private static NoteAdapter adapter; // Custom ListView notes adapter
+    // Layout components
+    private ListView listView;
+    private NoteAdapter adapter; // Custom ListView notes adapter
     private FloatingActionButton newNote;
     private TextView noNotes;
     private Toolbar toolbar;
@@ -95,7 +93,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
      * @param favourite true to favourite, false to un-favourite
      * @param position  position of note
      */
-    public static void setFavourite(Context context, boolean favourite, int position) {
+    public void setFavourite(Context context, boolean favourite, int position) {
         JSONObject newFavourite = null;
 
         // Get note at position and store in newFavourite
@@ -1023,7 +1021,6 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             searchMenu.collapseActionView();
             return;
         }
-
         super.onBackPressed();
     }
 

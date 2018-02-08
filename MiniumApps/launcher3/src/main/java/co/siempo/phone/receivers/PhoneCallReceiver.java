@@ -54,7 +54,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
             if (intent.getAction().equals("android.intent.action.NEW_OUTGOING_CALL")) {
                 if (intent.getExtras() != null && intent.getExtras().containsKey("android.intent.extra.PHONE_NUMBER")) {
                     savedNumber = intent.getExtras().getString("android.intent.extra.PHONE_NUMBER");
-                    sharedPref.edit().putBoolean(Constants.CALL_RUNNING, true).commit();
+                    sharedPref.edit().putBoolean(Constants.CALL_RUNNING, true).apply();
                     isCallRunning = true;
                     EventBus.getDefault().post(new NotificationTrayEvent(true));
                 }
@@ -131,8 +131,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                 if (isAppDefaultOrFront) {
                     if (currentProfile == 0 && !isCallRunning) {
                         changeSoundProfile(true);
-                        CoreApplication.getInstance().playAudio();
-                        sharedPref.edit().putBoolean(Constants.CALL_RUNNING, true).commit();
+                        sharedPref.edit().putBoolean(Constants.CALL_RUNNING, true).apply();
                         isCallRunning = true;
                     }
                 }
@@ -166,7 +165,7 @@ public abstract class PhoneCallReceiver extends BroadcastReceiver {
                     CoreApplication.getInstance().setCallisRunning(false);
                     onOutgoingCallEnded(context, savedNumber, callStartTime, new Date());
                 }
-                sharedPref.edit().putBoolean(Constants.CALL_RUNNING, false).commit();
+                sharedPref.edit().putBoolean(Constants.CALL_RUNNING, false).apply();
                 changeSoundProfile(false);
                 isCallRunning = false;
                 break;

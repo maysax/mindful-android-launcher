@@ -116,12 +116,18 @@ public class FileLogger {
     }
 
     public static void log(String message, Throwable tr) {
-        LogFormatter.EclipseFormatter formatter = new LogFormatter.EclipseFormatter();
-        String formatMsg = formatter.format(LogFormatter.LEVEL.DEBUG, LogConfig.LOG_TAG, message, tr);
-        String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
-        File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
-        if (externalFilesDir != null) {
-            log2file(externalFilesDir.getAbsolutePath() + File.separator + getFileName(), formatMsg);
+        try {
+            LogFormatter.EclipseFormatter formatter = new LogFormatter.EclipseFormatter();
+            String formatMsg = formatter.format(LogFormatter.LEVEL.DEBUG, LogConfig.LOG_TAG, message, tr);
+            String dataDirPath = Environment.getDataDirectory().getAbsolutePath();
+            File externalFilesDir = CoreApplication.getInstance().getExternalFilesDir(dataDirPath);
+            if (dataDirPath != null) {
+                if (externalFilesDir != null) {
+                    log2file(externalFilesDir.getAbsolutePath() + File.separator + getFileName(), formatMsg);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

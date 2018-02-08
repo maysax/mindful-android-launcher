@@ -6,6 +6,7 @@
     <dimen name="text_margin" tools:ignore="UnusedResources">16dp</dimen>
     <integer name="grid_column">3</integer>
     <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
     <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_10">10sp</dimen>
     <dimen name="sp_16">16sp</dimen>

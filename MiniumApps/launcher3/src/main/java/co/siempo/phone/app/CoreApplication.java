@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
+import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -49,14 +50,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.log.LogConfig;
 import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.FontUtils;
 import co.siempo.phone.utils.LifecycleHandler;
+import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 import co.siempo.phone.utils.UserHandle;
 import de.greenrobot.event.EventBus;
@@ -275,8 +280,6 @@ public abstract class CoreApplication extends MultiDexApplication {
         sInstance = this;
         init();
         getAllApplicationPackageName();
-
-
     }
 
     /**
@@ -400,6 +403,60 @@ public abstract class CoreApplication extends MultiDexApplication {
         configIconify();
         configureLifecycle();
         configureNetworking();
+        configureToolsPane();
+    }
+
+    /**
+     * first time called when user launch the application to set the default value for the
+     * application show/hide bind tools to specific package name.
+     */
+    private void configureToolsPane() {
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "").equalsIgnoreCase("")) {
+            HashMap<Integer, AppMenu> map = new HashMap<>();
+            map.put(1, new AppMenu(true, false, ""));
+            map.put(2, new AppMenu(true, false, ""));
+            map.put(3, new AppMenu(true, false, ""));
+            map.put(4, new AppMenu(true, false, ""));
+            map.put(5, new AppMenu(true, false, ""));
+            map.put(6, new AppMenu(true, false, ""));
+            map.put(7, new AppMenu(true, false, ""));
+            map.put(8, new AppMenu(true, false, ""));
+            map.put(9, new AppMenu(true, false, ""));
+            map.put(10, new AppMenu(true, false, ""));
+            map.put(11, new AppMenu(true, false, ""));
+            map.put(12, new AppMenu(true, false, ""));
+            map.put(13, new AppMenu(true, true, ""));
+            map.put(14, new AppMenu(true, true, ""));
+            map.put(15, new AppMenu(true, true, ""));
+            map.put(16, new AppMenu(true, true, ""));
+            String hashMapToolSettings = new Gson().toJson(map);
+            PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+
+//            Set<String> junkfoodList = new HashSet<>();
+//            junkfoodList.add("net.sourceforge.opencamera");
+//            PrefSiempo.getInstance(this).write(PrefSiempo.JUNKFOOD_APPS, junkfoodList);
+        }
+    }
+
+    /**
+     * HashMap to store tools settings data.
+     *
+     * @return HashMap<Integer, AppMenu>
+     */
+    public HashMap<Integer, AppMenu> getToolsSettings() {
+        String storedHashMapString = PrefSiempo.getInstance(this).read(PrefSiempo.TOOLS_SETTING, "");
+        java.lang.reflect.Type type = new TypeToken<HashMap<Integer, AppMenu>>() {
+        }.getType();
+        return new Gson().fromJson(storedHashMapString, type);
+    }
+
+    /**
+     * get junk food application package name list from preference
+     *
+     * @return
+     */
+    public Set<String> getJunkFoodAppList() {
+        return PrefSiempo.getInstance(this).read(PrefSiempo.JUNKFOOD_APPS, new HashSet<String>());
     }
 
     private void configureNetworking() {
@@ -513,16 +570,32 @@ public abstract class CoreApplication extends MultiDexApplication {
      * @return application name
      */
     public String getApplicationNameFromPackageName(String packagename) {
-
-        if (packagename != null && !packagename.equalsIgnoreCase("")) {
-            for (ApplicationInfo applicationInfo : getPackagesList()) {
-                if (applicationInfo.packageName.equalsIgnoreCase(packagename)) {
-                    return applicationInfo.name;
-                }
-            }
+        PackageManager packageManager = getPackageManager();
+        ApplicationInfo applicationInfo = null;
+        try {
+            applicationInfo = packageManager.getApplicationInfo(packagename, 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
-        return "";
+        return (String) (applicationInfo != null ? packageManager.getApplicationLabel(applicationInfo) : "");
     }
+
+    /**
+     * Return the application icon by providing it's package name.
+     *
+     * @param packagename
+     * @return application name
+     */
+    public Drawable getApplicationIconFromPackageName(String packagename) {
+        Drawable icon = null;
+        try {
+            icon = getPackageManager().getApplicationIcon(packagename);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return icon;
+    }
+
 
     public ArrayList<String> getSilentList() {
         return silentList;
@@ -548,63 +621,99 @@ public abstract class CoreApplication extends MultiDexApplication {
         this.normalModeList = normalModeList;
     }
 
-    public void changeProfileToNormalMode() {
-//        int currentMode = audioManager.getRingerMode();
-//        if (currentMode != AudioManager.RINGER_MODE_NORMAL) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-//            } else {
-//                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-//            }
-//        }
 
-    }
+    public ArrayList<ResolveInfo> getApplicationByCategory(int id) {
+        ArrayList<ResolveInfo> list = new ArrayList<>();
+        switch (id) {
+            case 1:// Map
+                Double myLatitude = 44.433106;
+                Double myLongitude = 26.103687;
+                String labelLocation = "Jorgesys @ Bucharest";
+                String urlAddress = "http://maps.google.com/maps?q=" + myLatitude + "," + myLongitude + "(" + labelLocation + ")&iwloc=A&hl=es";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
+                list.addAll(getPackageManager().queryIntentActivities(intent, 0));
+                break;
+            case 2:// Transport
+                break;
+            case 3://Calender
+                Intent calenderIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("content://com.android.calendar/time/"));
+                list.addAll(getPackageManager().queryIntentActivities(calenderIntent, 0));
+                break;
+            case 4://Weather
+                break;
+            case 5://Notes
+                String filepath = "mnt/sdcard/doc.txt";
+                File file = new File(filepath);
+                if (!file.exists()) {
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        CoreApplication.getInstance().logException(e);
+                        e.printStackTrace();
+                    }
+                }
 
-    public void changeProfileToVibrateMode() {
-//        int currentMode = audioManager.getRingerMode();
-//        if (currentMode != AudioManager.RINGER_MODE_VIBRATE) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-//            } else {
-//                audioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-//            }
-//        }
-    }
+                Intent intentNotes = new Intent(Intent.ACTION_EDIT);
+                intentNotes.setDataAndType(Uri.fromFile(file), "text/plain");
+//                list.clear();
+//                list.add(null);
+                list.addAll(getPackageManager().queryIntentActivities(intentNotes, 0));
 
-    public void changeProfileToSilentMode() {
-//        int currentMode = audioManager.getRingerMode();
-//        if (currentMode != AudioManager.RINGER_MODE_SILENT) {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-//                    && !notificationManager.isNotificationPolicyAccessGranted()) {
-//            } else {
-//                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-//            }
-//        }
-
-    }
-
-    public void playAudio() {
-//        try {
-//            if (audioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-//                Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-//                if (mMediaPlayer == null) {
-//                    mMediaPlayer = new MediaPlayer();
-//                    mMediaPlayer.setDataSource(this, alert);
-//                    final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-//                    if (audioManager != null && audioManager.getStreamVolume(AudioManager.STREAM_ALARM) != 0) {
-//                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-//                        mMediaPlayer.setVolume(100, 100);
-//                        mMediaPlayer.setScreenOnWhilePlaying(true);
-//                        mMediaPlayer.prepare();
-//                        mMediaPlayer.start();
-//                        vibrator.vibrate(pattern, 0);
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            CoreApplication.getInstance().logException(e);
-//            e.printStackTrace();
-//        }
+                if (UIUtils.isAppInstalled(this, "com.google.android.keep")) {
+                    Intent keepIntent = new Intent();
+                    keepIntent.setPackage("com.google.android.keep");
+                    List<ResolveInfo> resolveInfo = getPackageManager().queryIntentActivities(keepIntent, 0);
+                    if (resolveInfo != null && resolveInfo.size() > 0) {
+                        list.add(resolveInfo.get(0));
+                    }
+                }
+                break;
+            case 6://Recorder
+                break;
+            case 7://Camera
+                Intent intentCamera = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                list.addAll(getPackageManager().queryIntentActivities(intentCamera, 0));
+                break;
+            case 8://Photos
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/* video/*");
+                list.addAll(getPackageManager().queryIntentActivities(pickIntent, 0));
+                break;
+            case 9://Payment
+                break;
+            case 10://Wellness
+                break;
+            case 11://Browser
+                Intent intentBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/"));
+                getBrowserPackageList().clear();
+                list.addAll(getPackageManager().queryIntentActivities(intentBrowser, 0));
+                break;
+            case 12:// blank
+                break;
+            case 13://Call
+                Uri number = Uri.parse("tel:");
+                Intent dial = new Intent(Intent.ACTION_DIAL, number);
+                list.addAll(getPackageManager().queryIntentActivities(dial, 0));
+                break;
+            case 14://Clock
+                Intent intentClock = new Intent(AlarmClock.ACTION_SET_ALARM);
+                list.addAll(getPackageManager().queryIntentActivities(intentClock, 0));
+                break;
+            case 15://message
+                Intent message = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + ""));
+                message.putExtra("sms_body", "Test text...");
+                list.addAll(getPackageManager().queryIntentActivities(message, 0));
+                break;
+            case 16://email
+                Intent intentEmail = new Intent(Intent.ACTION_VIEW);
+                Uri data = Uri.parse("mailto:recipient@example.com?subject=" + "" + "&body=" + "");
+                intentEmail.setData(data);
+                list.addAll(getPackageManager().queryIntentActivities(intentEmail, 0));
+                break;
+            default:
+                break;
+        }
+        return list;
     }
 
     /**

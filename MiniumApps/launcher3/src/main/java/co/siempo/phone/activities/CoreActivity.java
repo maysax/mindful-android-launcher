@@ -151,7 +151,7 @@ public abstract class CoreActivity extends AppCompatActivity implements NFCInter
         super.onResume();
         if (mHomeWatcher != null) mHomeWatcher.startWatch();
         isOnStopCalled = false;
-        CoreApplication.getInstance().restoreDefaultApplication();
+//        CoreApplication.getInstance().restoreDefaultApplication();
     }
 
     public void loadDialog() {

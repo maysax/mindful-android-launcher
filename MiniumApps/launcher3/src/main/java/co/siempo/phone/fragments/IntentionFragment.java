@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +27,7 @@ import co.siempo.phone.utils.PrefSiempo;
 import co.siempo.phone.utils.UIUtils;
 
 
-public class IntentionFragment extends Fragment implements View.OnClickListener {
+public class IntentionFragment extends CoreFragment implements View.OnClickListener {
 
     private View view;
     private ImageView imgTempo;

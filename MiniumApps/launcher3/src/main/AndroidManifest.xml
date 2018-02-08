@@ -37,7 +37,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -86,14 +85,16 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateHidden">
-            <!--<intent-filter>-->
-            <!--<action android:name="android.intent.action.MAIN" />-->
 
-            <!--<category android:name="android.intent.category.HOME" />-->
-            <!--<category android:name="android.intent.category.DEFAULT" />-->
-            <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--<category android:name="RUN_AT_BOOT" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.HOME" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- <category android:name="RUN_AT_BOOT" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".launcher.FakeLauncherActivity"
@@ -138,7 +139,6 @@
             android:name=".activities.InstalledAppsActivity"
             android:label="@string/title_activity_installed_app_list"
             android:screenOrientation="portrait" />
-
         <activity android:name=".ui.UpdateActivity_" />
         <activity android:name=".activities.SiempoPhoneSettingsActivity" />
         <activity android:name=".activities.SiempoSettingsActivity_" />
@@ -150,7 +150,6 @@
             android:name=".service.StatusBarService"
             android:enabled="true"
             android:exported="false" />
-
 
         <activity android:name=".activities.SiempoSupressNotificationActivity" />
         <activity android:name=".activities.SiempoPermissionActivity_" />
@@ -177,7 +176,7 @@
 
         <activity
             android:name=".activities.DashboardActivity"
-            android:label="@string/title_activity_dashboard"
+            android:label="@string/app_name"
             android:theme="@style/SiempoAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -192,7 +191,7 @@
             android:name=".activities.NoteListActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/CoreTheme"></activity>
+            android:theme="@style/CoreTheme" />
         <activity
             android:name=".activities.EditActivity"
             android:configChanges="orientation|screenSize"
@@ -219,7 +218,8 @@
 
         <activity android:name="com.evernote.client.android.EvernoteOAuthActivity" />
         <activity android:name="com.evernote.client.android.login.EvernoteLoginActivity" />
-
+        <activity android:name=".activities.AppAssignmentActivity" />
+        <activity android:name=".activities.JunkfoodFlaggingActivity" />
     </application>
 
 </manifest>

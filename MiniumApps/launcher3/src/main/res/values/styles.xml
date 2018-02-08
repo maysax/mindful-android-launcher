@@ -13,8 +13,16 @@
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
+        <item name="actionMenuTextColor">@color/colorAccent</item>
     </style>
 
+    <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+    </style>
 
     <style name="MenuButtonsSmall">
         <item name="fab_size">mini</item>

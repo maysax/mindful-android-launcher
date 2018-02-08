@@ -3,7 +3,6 @@ package co.siempo.phone.app;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
-import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.ResolveInfo;
@@ -96,27 +95,13 @@ public class Launcher3App extends CoreApplication {
         Database db = helper2.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
-        setAllDefaultMenusApplication();
+        //setAllDefaultMenusApplication();
         AppLifecycleTracker handler = new AppLifecycleTracker();
         registerActivityLifecycleCallbacks(handler);
         PackageUtil.enableAlarm(this);
+
     }
 
-    public void checkProfile() {
-//         0 - Show as Normal mode(In System it will be silent mode).
-//         1 - Vibrate mode(In System it will be silent mode).
-//         2 - Show as Silent mode(In System it will be silent mode).
-        if (launcherPrefs.getCurrentProfile().get() == 0) {
-            Log.d("Profile Check:::", "checkProfile : Normal" + launcherPrefs.getCurrentProfile().get());
-            changeProfileToSilentMode();
-        } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-            Log.d("Profile Check:::", "checkProfile : Silent" + launcherPrefs.getCurrentProfile().get());
-            changeProfileToSilentMode();
-        } else {
-            Log.d("Profile Check:::", "checkProfile : Vibrate" + launcherPrefs.getCurrentProfile().get());
-            changeProfileToVibrateMode();
-        }
-    }
 
     /**
      * Configure the default application when application installed
@@ -499,10 +484,6 @@ public class Launcher3App extends CoreApplication {
             if (numStarted == 0) {
                 // app went to foreground
                 Log.d(TAG, "Siempo is on foreground");
-                KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                if (myKM != null && !myKM.inKeyguardRestrictedInputMode()) {
-                    checkProfile();
-                }
                 launcherPrefs.isAppDefaultOrFront().put(true);
 
             }
@@ -548,7 +529,6 @@ public class Launcher3App extends CoreApplication {
 
                 } else {
                     launcherPrefs.isAppDefaultOrFront().put(false);
-                    changeProfileToNormalMode();
                 }
             }
         }

@@ -81,7 +81,7 @@ public class TempoSettingsFragment extends CoreFragment {
 
     @Click
     void txtAppMenus() {
-        ((CoreActivity) getActivity()).loadChildFragment(TempoTbdFragment_.builder().build(), R.id.tempoView);
+        ((CoreActivity) getActivity()).loadChildFragment(AppMenuFragment.newInstance(), R.id.tempoView);
     }
 
     @Click

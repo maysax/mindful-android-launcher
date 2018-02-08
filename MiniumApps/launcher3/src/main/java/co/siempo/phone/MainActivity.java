@@ -158,7 +158,6 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private void checkAppLoadFirstTime() {
         if (launcherPrefs.isAppInstalledFirstTime().get()) {
             launcherPrefs.isAppInstalledFirstTime().put(false);
-            ((Launcher3App) CoreApplication.getInstance()).checkProfile();
             final ActivityHelper activityHelper = new ActivityHelper(MainActivity.this);
             if (!UIUtils.isMyLauncherDefault(MainActivity.this)) {
 
@@ -419,8 +418,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
         } else {
             Log.d(TAG, "onResume.. ");
             startTime = System.currentTimeMillis();
-            /**
-             * Below logic is disable for NFC which is not used in existing development.
+            /*
+              Below logic is disable for NFC which is not used in existing development.
              */
 //            try {
 //                enableNfc(true);

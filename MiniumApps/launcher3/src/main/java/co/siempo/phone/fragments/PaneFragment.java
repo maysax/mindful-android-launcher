@@ -1,8 +1,6 @@
 package co.siempo.phone.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +12,13 @@ import co.siempo.phone.adapters.PanePagerAdapter;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class PaneFragment extends Fragment implements View.OnClickListener {
+public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     private View view;
     private LinearLayout linTopDoc;
     private CircleIndicator indicator;
     private ViewPager pagerPane;
-    private PagerAdapter mPagerAdapter;
+    private PanePagerAdapter mPagerAdapter;
     private LinearLayout linPane;
     private LinearLayout linBottomDoc;
 

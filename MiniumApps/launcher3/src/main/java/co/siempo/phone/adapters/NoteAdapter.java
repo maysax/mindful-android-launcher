@@ -20,12 +20,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.siempo.phone.R;
+import co.siempo.phone.activities.NoteListActivity;
 import co.siempo.phone.app.CoreApplication;
 
-import static co.siempo.phone.activities.NoteListActivity.checkedArray;
-import static co.siempo.phone.activities.NoteListActivity.deleteActive;
-import static co.siempo.phone.activities.NoteListActivity.searchActive;
-import static co.siempo.phone.activities.NoteListActivity.setFavourite;
 import static co.siempo.phone.utils.DataUtils.NOTE_BODY;
 import static co.siempo.phone.utils.DataUtils.NOTE_COLOUR;
 import static co.siempo.phone.utils.DataUtils.NOTE_FAVOURED;
@@ -138,7 +135,7 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
 
 
             // If search or delete modes are active -> hide favourite button; Show otherwise
-            if (searchActive || deleteActive)
+            if (NoteListActivity.searchActive || NoteListActivity.deleteActive)
                 favourite.setVisibility(View.INVISIBLE);
 
             else
@@ -159,7 +156,7 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
             }
 
             // If current note is selected for deletion -> highlight
-            if (checkedArray.contains(position)) {
+            if (NoteListActivity.checkedArray.contains(position)) {
                 ((GradientDrawable) roundedCard.findDrawableByLayerId(R.id.card))
                         .setColor(ContextCompat.getColor(context, R.color.colorPrimary));
             }
@@ -178,7 +175,7 @@ public class NoteAdapter extends BaseAdapter implements ListAdapter {
                 // If favourite button was clicked -> change that note to favourite or un-favourite
                 @Override
                 public void onClick(View v) {
-                    setFavourite(context, !finalFavoured, position);
+                    ((NoteListActivity) context).setFavourite(context, !finalFavoured, position);
                 }
             });
         }
