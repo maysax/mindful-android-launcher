@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -298,17 +298,10 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
      */
     private void setToolsPaneDate() {
         Calendar c = Calendar.getInstance();
-        int flags = DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR;
-        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, Locale
+        DateFormat df = getDateInstanceWithoutYears(Locale
                 .getDefault());
         txtTopDockDate.setText(df.format(c.getTime()));
 
-        //Need to find solution for truncating year
-//        DateFormat sdf = new SimpleDateFormat("EEEE, MMMM d", Locale
-//                .getDefault());
-//
-//        String now = sdf.format(c.getTime());
-//        txtTopDockDate.setText(now);
     }
 
     @Override
@@ -352,6 +345,13 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
             mWindow.setStatusBarColor(defaultStatusBarColor);
         }
         super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    public DateFormat getDateInstanceWithoutYears(Locale locale) {
+        SimpleDateFormat sdf = (SimpleDateFormat) DateFormat.getDateInstance
+                (DateFormat.FULL, locale);
+        sdf.applyPattern(sdf.toPattern().replaceAll("[^\\p{Alpha}]*y+[^\\p{Alpha}]*", ""));
+        return sdf;
     }
 
 
