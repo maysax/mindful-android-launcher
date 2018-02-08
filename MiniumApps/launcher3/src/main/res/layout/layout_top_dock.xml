@@ -95,6 +95,7 @@
         android:paddingRight="@dimen/dp_16"
         android:text="@string/you_ve_flag"
         android:textColor="#BFFFFFFF"
+        android:fontFamily="sans-serif-condensed"
         android:textSize="@dimen/sp_15"
 
         android:visibility="gone"/>
@@ -109,6 +110,7 @@
         android:paddingLeft="@dimen/dp_16"
         android:paddingRight="@dimen/dp_16"
         android:textColor="@color/white"
+        android:fontFamily="sans-serif-condensed"
         android:textSize="@dimen/sp_18"
         android:textStyle="bold"
         android:visibility="gone"/>
