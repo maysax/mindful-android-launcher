@@ -43,12 +43,12 @@ public class DrawableProvider {
                 .buildRect(text, mGenerator.getColor(text));
     }
 
-    public TextDrawable getRound(String text) {
+    public TextDrawable getRound(String text,int color) {
         return TextDrawable.builder()
                 .beginConfig()
                 .useFont(Typeface.DEFAULT)
                 .fontSize(toPx(25))
-                .textColor(Color.BLACK)
+                .textColor(color)
                 .bold()
                 .endConfig()
                 .buildRound(text, R.color.white);

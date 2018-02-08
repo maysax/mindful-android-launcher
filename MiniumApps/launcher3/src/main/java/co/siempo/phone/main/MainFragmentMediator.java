@@ -2,6 +2,7 @@ package co.siempo.phone.main;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ class MainFragmentMediator {
         contactItems = new ArrayList<>();
         loadActions();
         loadContacts();
+
         loadDefaults();
     }
 
@@ -51,6 +53,7 @@ class MainFragmentMediator {
         items.clear();
         loadActions();
         loadContacts();
+
         loadDefaults();
         if (getAdapter() != null) {
             getAdapter().loadData(items);
@@ -81,6 +84,7 @@ class MainFragmentMediator {
     private void loadDefaults() {
         try {
             if (fragment != null) {
+
                 if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
                     items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
                 } else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
@@ -88,13 +92,13 @@ class MainFragmentMediator {
                     items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
                 } else if (fragment.getManager().hasCompleted(TokenItemType.DATA)) {
                     items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
                     items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
                 } else {
-                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(3, fragment.getString(R.string.title_createContact), R.drawable.icon_create_user, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
                     items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
+                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
                 }
             }
         } catch (Exception e) {
@@ -219,6 +223,7 @@ class MainFragmentMediator {
 
     void defaultData() {
         items.clear();
+
         loadDefaults();
         getAdapter().loadData(items);
         getAdapter().notifyDataSetChanged();

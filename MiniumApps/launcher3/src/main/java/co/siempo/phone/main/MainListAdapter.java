@@ -170,7 +170,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             }
             else{
                 if(!TextUtils.isEmpty(item.getContactName())){
-                    Drawable drawable = mProvider.getRound(""+item.getContactName().charAt(0));
+                    Drawable drawable = mProvider.getRound(""+item.getContactName().charAt(0),Color.BLACK);
                     holder.icon.setImageDrawable(drawable);
                 }
             }
@@ -246,7 +246,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
             int count = originalData.size();
             List<MainListItem> buildData = new ArrayList<>();
-
+            boolean isValidNumber = false;
             if (!searchString.isEmpty()) {
 
                 for (int i = 0; i < count; i++) {
@@ -257,43 +257,51 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             buildData.clear();
                             for (MainListItem menuMainListItem : originalData) {
                                 if (!(menuMainListItem instanceof ContactListItem)) {
+                                    isValidNumber = true;
                                     buildData.add(menuMainListItem);
                                 }
                             }
                         } else {
                             String strSearch = searchString.substring(1).toLowerCase();
                             if (originalData.get(i).getItemType() == MainListItemType.ACTION
-                                    && originalData.get(i).getTitle().toLowerCase().startsWith(strSearch)) {
-                                if (checkDuplicate(buildData, strSearch))
+                                    && originalData.get(i).getTitle().toLowerCase().contains(strSearch)) {
+                                if (checkDuplicate(buildData, strSearch)) {
+                                    isValidNumber= true;
                                     buildData.add(originalData.get(i));
+                                }
                             }
                         }
                     } else {
                         switch (originalData.get(i).getItemType()) {
                             case CONTACT:
-                                if (searchString.equals("@")) {
-                                    buildData.add(originalData.get(i));
-                                } else {
+                                if(searchString.startsWith("@")) {
+                                    if (searchString.equals("@")) {
+                                        isValidNumber = true;
+                                        buildData.add(originalData.get(i));
+                                    } else {
                                     /*
                                       A blank space was added with searchString2. After using trim the search problem is resolved
                                      */
-                                    String searchString2 = searchString.replaceAll("@", "").trim();
-                                    ContactListItem item = (ContactListItem) originalData.get(i);
-                                    filterableString = item.getContactName();
-                                    boolean isAdded = false;
-                                    if (filterableString.toLowerCase().contains(searchString2)) {
-                                        buildData.add(originalData.get(i));
-                                        isAdded = true;
-                                    }
+                                        String searchString2 = searchString.replaceAll("@", "").trim();
+                                        ContactListItem item = (ContactListItem) originalData.get(i);
+                                        filterableString = item.getContactName();
+                                        boolean isAdded = false;
+                                        if (filterableString.toLowerCase().contains(searchString2)) {
+                                            isValidNumber = true;
+                                            buildData.add(originalData.get(i));
+                                            isAdded = true;
+                                        }
 
-                                    if (!isAdded) {
-                                        searchString2 = phoneNumberString(searchString);
-                                        List<ContactListItem.ContactNumber> numbers = item.getNumbers();
-                                        for (ContactListItem.ContactNumber number : numbers) {
-                                            String phoneNum = phoneNumberString(number.getNumber());
-                                            if (phoneNum.contains(searchString2)) {
-                                                buildData.add(originalData.get(i));
-                                                break;
+                                        if (!isAdded) {
+                                            searchString2 = phoneNumberString(searchString);
+                                            List<ContactListItem.ContactNumber> numbers = item.getNumbers();
+                                            for (ContactListItem.ContactNumber number : numbers) {
+                                                String phoneNum = phoneNumberString(number.getNumber());
+                                                if (phoneNum.contains(searchString2)) {
+                                                    isValidNumber = true;
+                                                    buildData.add(originalData.get(i));
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
@@ -303,34 +311,42 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             case ACTION:
                                 filterableString = originalData.get(i).getTitle();
                                 if (originalData.get(i).getApplicationInfo() == null) {
-                                    splits = filterableString.split(" ");
-                                    for (String str : splits) {
-                                        if (str.toLowerCase().startsWith(searchString)) {
-                                            buildData.add(originalData.get(i));
-                                            break;
-                                        }
+                                    if(filterableString.contains(searchString.toLowerCase().trim())){
+                                        buildData.add(originalData.get(i));
+                                        break;
                                     }
                                 } else {
-                                    if (originalData.get(i).getTitle().toLowerCase().startsWith(searchString.toLowerCase())) {
-                                        if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase()))
+                                    if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
+                                        if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
                                             buildData.add(originalData.get(i));
+                                        }
                                     }
                                 }
                                 break;
-                            case DEFAULT:
-                                if (checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase()))
-                                    buildData.add(originalData.get(i));
-                                break;
                             case NUMBERS:
                                 if (PhoneNumberUtils.isGlobalPhoneNumber(searchString)) {
+                                    isValidNumber = true;
                                     TokenManager.getInstance().getCurrent().setExtra2(searchString);
                                     buildData.add(originalData.get(i));
                                 }
                                 break;
+                            case DEFAULT:
+                                if (checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase())) {
+                                    if(originalData.get(i).getTitle().toLowerCase().equalsIgnoreCase("Send as SMS") && !isValidNumber){
+
+                                    }
+                                    else{
+                                        buildData.add(originalData.get(i));
+                                    }
+                                }
+                                break;
+
                         }
                     }
                 }
             }
+
+
             ret.values = buildData;
             ret.count = buildData.size();
             return ret;
