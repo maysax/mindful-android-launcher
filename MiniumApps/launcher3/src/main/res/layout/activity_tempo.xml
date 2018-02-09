@@ -8,7 +8,6 @@
     android:layout_height="wrap_content"
     android:background="@color/transparent"
     android:orientation="vertical"
-    tools:context="co.siempo.phone.pause.PauseActivity"
     tools:ignore="UnusedIds">
 
     <RelativeLayout

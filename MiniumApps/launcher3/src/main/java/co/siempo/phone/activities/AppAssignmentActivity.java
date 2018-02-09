@@ -23,6 +23,7 @@ import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.Sorting;
 
 public class AppAssignmentActivity extends CoreActivity {
 
@@ -91,6 +92,7 @@ public class AppAssignmentActivity extends CoreActivity {
         if (appList != null && appList.size() > 1) {
             recyclerView.setVisibility(View.VISIBLE);
             txtErrorMessage.setVisibility(View.INVISIBLE);
+            appList = Sorting.sortAppAssignment(this, appList);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.addItemDecoration(
