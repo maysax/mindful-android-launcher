@@ -6,20 +6,17 @@
     <string name="format.duration">(Duration: %1$s)</string>
 
     <string name="title.text" tools:ignore="UnusedResources">Text</string>
-    <string name="title.call">Call</string>
     <string name="title.note" tools:ignore="UnusedResources">Note</string>
-    <string name="title.messages">Messages</string>
+
     <string name="title.callLog" tools:ignore="UnusedResources">Call Log</string>
-    <string name="title.calls">Calls</string>
     <string name="title.contacts">Contacts</string>
     <string name="title.pause">Pause</string>
     <string name="title.voicemail" tools:ignore="UnusedResources">Voicemail</string>
-    <string name="title.notes">Notes</string>
-    <string name="title.clock">Clock</string>
+
     <string name="title.settings">Settings</string>
     <string name="title.theme" tools:ignore="UnusedResources">Theme</string>
-    <string name="title.map">Map</string>
-    <string name="title.email">Email</string>
+
+
     <string name="title.feedback">Feedback</string>
     <string name="title.faq">FAQ</string>
     <string name="title.appNotifications">Notification manager</string>
@@ -61,9 +58,6 @@
     <string name="msg_tempo_active" tools:ignore="PluralsCandidate">"Notifications now come batched every %1$d minutes, starting at the top of the hour"</string>
     <string name="msg_siempo_active_title">Siempo</string>
     <string name="msg_siempo_active_text">Siempo is running</string>
-    <string name="title_photos">Photos</string>
-    <string name="title_camera">Camera</string>
-    <string name="title_browser">Browser</string>
     <string name="msg.notificationEmpty">Nothing new. Feel free to take a breath and look at your surroundings.</string>
     <string name="nointernetconnection">No internet connection available</string>
 
@@ -303,7 +297,6 @@
     <string name="_09_15am_amp_05_32pm_amp_05_32pm"><![CDATA[09:15am & 05:32pm & 05:32pm]]></string>
     <string name="add">ADD</string>
     <string name="individually">Individually</string>
-    <string name="app_menus">App Menus</string>
     <string name="home_screen">Home Screen</string>
     <string name="account">Account</string>
     <string name="alpha_settings">Alpha Settings</string>
@@ -366,6 +359,7 @@
     <string name="disable_intentions">Disable intentions</string>
     <string name="when_intentions_are_disabled_your_home_screen_will_be_blank">When intentions are disabled, your home screen will be blank.</string>
     <string name="homescreen">Home Screen</string>
+    <string name="app_menus">App menus</string>
     <string name="msg_no_apps">You haven\'t moved any apps into this category.</string>
     <string name="search_hint">Find app, send message, or save note</string>
     <string name="notification_interrupt_title">Select apps that may interrupt you</string>
@@ -413,6 +407,103 @@
         <item>Medium</item>
         <item>Large</item>
     </string-array>
+
+
+    <!-- errors -->
+    <string name="error.requiredField">This field is required</string>
+    <string name="error.invalidEmail">This email address is not valid</string>
+    <string name="error.invalidPassword">This password has to be at least 8 characters and can contain alpha-numeric characters and/or @#$%</string>
+    <string name="error.mismatchPassword">The passwords do not match</string>
+    <string name="error.incorrectCredential">Please check your user name and password and try again</string>
+    <string name="error.locationServiceUnavailable">Sorry, the service is not available</string>
+    <string name="error.locationInvalidLatlong">Invalid latitude or longitude used</string>
+    <string name="error.locationNoAddressFound">Sorry, no address found</string>
+    <string name="error.locationNoDataProvided">No location data provided</string>
+    <string name="error.connection">It appears that you are not connected with internet. Please make sure you have an active connection and try again.</string>
+    <string name="error.connectionLost">We have lost you. It appears that you are not connected with internet.</string>
+    <string name="error.genericServer">We are experiencing technical difficulties on our end. Please try again after some time.</string>
+    <string name="error.genericInternal">We are sorry. This feature is not available right now. Please try again later.</string>
+    <string name="error.externalStorageSpace">No external storage is available. Please make sure that external storage is mounted so that the app can work properly.</string>
+
+    <!-- messages -->
+    <string name="msg.not.yet.implemented">Not yet implemented</string>
+    <string name="msg.noteSaved">Your note has been saved.</string>
+    <string name="msg.noteCreated">Note created</string>
+    <!-- Icons -->
+    <string name="ic_comment">{fa-comment 48sp}</string>
+
+    <string-array name="appNames">
+        <item>Contacts</item>
+        <item>Messages</item>
+        <item>Focus</item>
+        <item>Clock</item>
+        <item>Call</item>
+        <item>Calculator</item>
+        <item>Notes</item>
+        <item>Favorites</item>
+        <item>Settings</item>
+    </string-array>
+
+    <string-array name="appNamesWithIcon">
+        <item>{fa-users 36dp}\n\nContacts</item>
+        <item>{fa-envelope-o 36dp}\n\nMessages</item>
+        <item>{fa-clock-o 36dp}\n\nFocus</item>
+        <item>{fa-clock-o 36dp}\n\nClock</item>
+        <item>{fa-phone 36dp}\n\nCall</item>
+        <item>{fa-calculator 36dp}\n\nCalculator</item>
+        <item>{fa-sticky-note-o 36dp}\n\nNotes</item>
+        <item>{fa-heart-o 36dp}\n\nFavorites</item>
+        <item>{fa-cogs 36dp}\n\nSettings</item>
+    </string-array>
+
+    <string name="demo.text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui augue, volutpat vel euismod quis, eleifend non elit. Cras ut cursus eros, placerat ornare ante. Aliquam scelerisque, risus sit amet tincidunt eleifend, diam est vestibulum nisl, at faucibus turpis nisi id lacus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras commodo turpis placerat, luctus justo non, rutrum risus. Fusce et felis et erat suscipit fermentum. Aliquam aliquet maximus consectetur. Praesent nec dictum lorem, non vehicula velit. Pellentesque vel augue tristique, consectetur sem ac, tempor ex. Suspendisse feugiat dictum egestas. Nullam non tortor fermentum, euismod orci bibendum, blandit eros. Quisque dictum rutrum purus eget porta. Fusce sagittis non sem nec aliquam. Nulla id suscipit magna.</string>
+    <string name="demo.text.2">Integer faucibus mattis nunc eget finibus. Sed diam nisl, euismod id urna egestas, laoreet porta felis. Quisque a dolor ultricies, gravida nisl sit amet, accumsan diam. Suspendisse nisi tellus, scelerisque id consectetur nec, malesuada eleifend magna. Vestibulum in tortor facilisis, dapibus massa non, molestie risus. Aliquam erat volutpat. Nam auctor elementum dolor, sodales mattis eros bibendum at. Praesent iaculis risus nec lobortis congue. Ut dapibus sagittis lectus nec condimentum. Quisque ligula arcu, finibus et suscipit id, pharetra ut lectus. Nulla quis gravida nibh, sed sodales purus. Donec molestie tortor nec posuere ullamcorper.</string>
+    <string name="demo.text.3">Integer vel sapien nec sapien pharetra venenatis in a mi. Aliquam at varius arcu. Integer condimentum nec risus et mattis. Phasellus nec erat tempor, venenatis mauris vitae, lacinia metus. Aenean vestibulum venenatis massa. Mauris congue porttitor purus, in congue nulla commodo eu. Nulla blandit dui at felis tempor rhoncus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In mollis aliquam neque nec ullamcorper. Nulla posuere tortor suscipit, mattis nulla quis, dignissim tortor. Vivamus nunc tellus, convallis eu erat malesuada, feugiat ultrices neque. Mauris feugiat eu erat ac eleifend. Fusce sed consectetur lacus. Donec non efficitur quam. Praesent pretium urna quis dolor semper efficitur. Etiam ac nibh feugiat, porta arcu in, consectetur dolor.</string>
+    <string name="demo.text.4">Vestibulum sed tortor id felis pharetra tincidunt in ut risus. Suspendisse iaculis, ex ac vehicula commodo, arcu mauris condimentum tortor, sed porta erat arcu vulputate massa. Nulla dignissim justo sed cursus molestie. Nulla et metus sapien. In faucibus luctus dictum. Aliquam dapibus volutpat urna, a sollicitudin orci placerat vitae. Quisque massa orci, interdum nec hendrerit sed, tincidunt quis ante. Vestibulum lobortis pretium ultricies. Cras eget ex a enim iaculis fringilla et mollis est. Fusce ac commodo eros. Sed ultrices iaculis urna. In pharetra tellus non nulla ullamcorper condimentum.</string>
+    <string name="demo.text.5">Donec placerat ipsum augue. Nulla ex felis, luctus a mauris vel, tincidunt egestas dolor. Nullam in lacinia magna. In aliquet nisi non nulla iaculis placerat quis nec enim. Cras sed ante in dui rhoncus porttitor vel a massa. Donec non posuere diam. Curabitur finibus, augue sed blandit auctor, mi turpis maximus magna, vel semper magna ex at sapien. Sed a tortor nec risus ultricies mollis id non risus. Praesent ut dolor turpis. Sed justo lacus, tincidunt at rhoncus eget, pellentesque sed risus. Nulla at mauris a nibh laoreet pulvinar sit amet eu tellus. Integer ut interdum arcu. Vestibulum aliquam dolor in libero porta, in placerat ipsum semper. Curabitur ex ante, dignissim mattis porta quis, cursus sit amet elit. Sed ultrices, lorem id pretium tincidunt, metus turpis lobortis felis, a pellentesque nibh ligula vel orci. Pellentesque dictum diam ac lacus fermentum, id tempor arcu fermentum.</string>
+
+    <string name="label.yes">Yes</string>
+    <string name="label.no">No</string>
+    <string name="label.search">Search</string>
+    <string name="label.rateApp">Rate app</string>
+    <string name="label.backup">Backup</string>
+    <string name="label.restore">Restore</string>
+    <string name="label.color">Color</string>
+    <string name="label.delete">Delete</string>
+    <string name="label.fontSize">Font size</string>
+    <string name="label.title">Title</string>
+    <string name="label.note">Note</string>
+    <string name="label.favorite">Favorite</string>
+    <string name="make_siempo_your_default_home_app">Make Siempo your default home app:</string>
+    <string name="select">Select</string>
+    <string name="select_your_prefered_home_app">Select your preferred Home app</string>
+    <string name="tap_always" tools:ignore="TypographyQuotes">Tap \"Always\"</string>
+    <string name="ok">OK</string>
+    <string name="notes">Notes</string>
+
+
+    <!--name tools menu-->
+    <string name="title.map">Maps</string>
+    <string name="title.transport">Transport</string>
+    <string name="title.calender">Calender</string>
+    <string name="title.weather">Weather</string>
+    <string name="title.notes">Notes</string>
+    <string name="title.recorder">Recorder</string>
+    <string name="title.camera">Camera</string>
+    <string name="title.photos">Photos</string>
+    <string name="title.payment">Payment</string>
+    <string name="title.wellness">Wellness</string>
+    <string name="title.browser">Browser</string>
+    <string name="title.call">Calls</string>
+    <string name="title.clock">Clock</string>
+    <string name="title.messages">Messages</string>
+    <string name="title.email">Email</string>
+    <string name="hide_icon_branding">Hide icon branding</string>
+    <string name="randomize_junkfood">Randomize junk-food icons</string>
+    <string name="junkfood_description_setting">App icons will have a different position each time you open the junk-food menu.</string>
+    <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
+    <string name="assign_an_app">Assign an app to </string>
+    <string name="title_flagging_screen">Flag apps you want to use less</string>
 
 
 </resources>

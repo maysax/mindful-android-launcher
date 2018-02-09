@@ -9,8 +9,8 @@ import android.os.Handler;
 import android.provider.Telephony;
 import android.telephony.PhoneNumberUtils;
 
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.log.Tracer;
 
 /**
  * Created by Shahab on 5/10/2016.
@@ -23,10 +23,6 @@ public class SmsObserver extends ContentObserver {
     private final ContentResolver resolver;
     private final String address;
     private final String body;
-
-    public interface OnSmsSentListener {
-        void onSmsSent(int threadId);
-    }
 
     public SmsObserver(Context context, String address, String body) {
         super(handler);
@@ -86,5 +82,9 @@ public class SmsObserver extends ContentObserver {
                 cursor.close();
             }
         }
+    }
+
+    public interface OnSmsSentListener {
+        void onSmsSent(int threadId);
     }
 }

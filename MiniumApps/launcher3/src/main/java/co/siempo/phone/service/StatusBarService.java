@@ -27,13 +27,13 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
+import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.FirebaseEvent;
 import co.siempo.phone.helper.FirebaseHelper;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.FirebaseEvent;
 
 import static co.siempo.phone.utils.NotificationUtils.ANDROID_CHANNEL_ID;
 

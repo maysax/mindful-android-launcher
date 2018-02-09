@@ -2,9 +2,9 @@ package co.siempo.phone.db;
 
 import java.util.List;
 
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.interfaces.DeleteStrategy;
 import co.siempo.phone.models.Notification;
-import minium.co.core.app.CoreApplication;
 
 /**
  * Created by tkb on 2017-04-03.

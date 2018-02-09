@@ -26,28 +26,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.colorpicker.ColorPickerDialog;
 import co.siempo.phone.colorpicker.ColorPickerSwatch;
+import co.siempo.phone.event.FirebaseEvent;
+import co.siempo.phone.event.HomePressEvent;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.managers.EvernoteManager;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.FirebaseEvent;
-import minium.co.core.event.HomePressEvent;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
 
-import static minium.co.core.util.DataUtils.NEW_NOTE_REQUEST;
-import static minium.co.core.util.DataUtils.NOTE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_COLOUR;
-import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
-import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_REQUEST_CODE;
-import static minium.co.core.util.DataUtils.NOTE_TITLE;
-import static minium.co.core.util.DataUtils.retrieveData;
-import static minium.co.core.util.DataUtils.saveData;
+import static co.siempo.phone.utils.DataUtils.NEW_NOTE_REQUEST;
+import static co.siempo.phone.utils.DataUtils.NOTE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_COLOUR;
+import static co.siempo.phone.utils.DataUtils.NOTE_FAVOURED;
+import static co.siempo.phone.utils.DataUtils.NOTE_FONT_SIZE;
+import static co.siempo.phone.utils.DataUtils.NOTE_HIDE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_REQUEST_CODE;
+import static co.siempo.phone.utils.DataUtils.NOTE_TITLE;
+import static co.siempo.phone.utils.DataUtils.retrieveData;
+import static co.siempo.phone.utils.DataUtils.saveData;
 
 
 public class EditActivity extends CoreActivity implements Toolbar.OnMenuItemClickListener {

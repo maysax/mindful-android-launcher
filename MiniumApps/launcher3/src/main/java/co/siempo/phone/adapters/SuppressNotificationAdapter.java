@@ -37,14 +37,14 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.SingleItemDelete;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
 import co.siempo.phone.models.DeleteItem;
 import co.siempo.phone.models.Notification;
 import co.siempo.phone.utils.NotificationUtility;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.utils.UIUtils;
 
 
 public class SuppressNotificationAdapter extends RecyclerView.Adapter<SuppressNotificationAdapter.ItemViewHolder>

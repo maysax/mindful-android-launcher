@@ -40,12 +40,16 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.HelpActivity;
 import co.siempo.phone.activities.SettingsActivity_;
 import co.siempo.phone.adapters.MainListAdapter;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.event.SendSmsEvent;
+import co.siempo.phone.fragments.CoreFragment;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.StatusBarService;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
@@ -54,12 +58,8 @@ import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenParser;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.token.TokenUpdateEvent;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreFragment;
-import minium.co.core.util.UIUtils;
 
 /**
  * A simple {@link Fragment} subclass.

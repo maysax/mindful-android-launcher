@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBUtility;
@@ -27,11 +29,9 @@ import co.siempo.phone.db.DaoSession;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.NotificationUtility;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.log.Tracer;
 
 /**
  * Created by Shahab on 7/29/2016.

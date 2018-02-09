@@ -30,8 +30,8 @@ import co.siempo.phone.adapters.viewholder.NoticationFooterViewHolder;
 import co.siempo.phone.adapters.viewholder.TempoNotificationHeaderViewHolder;
 import co.siempo.phone.adapters.viewholder.TempoNotificationItemViewHolder;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.AppListInfo;
-import minium.co.core.log.Tracer;
 /**
  *
  * Below adapter is use to Display the section wise below apps

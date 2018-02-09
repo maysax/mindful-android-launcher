@@ -23,8 +23,7 @@ import org.androidannotations.annotations.ViewById;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.ui.CoreFragment;
+import co.siempo.phone.app.DroidPrefs_;
 
 @EFragment(R.layout.fragment_tempo_update_email)
 public class TempoUpdateEmailFragment extends CoreFragment {

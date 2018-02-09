@@ -11,18 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.old.OldMenuAdapter;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 
 @EActivity(R.layout.activity_siempo_settings_default)
 public class SiempoSettingsDefaultAppActivity extends CoreActivity {

@@ -31,8 +31,8 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.FirebaseHelper;
-import minium.co.core.app.CoreApplication;
 
 /**
  * This class contain all the native settings feature.

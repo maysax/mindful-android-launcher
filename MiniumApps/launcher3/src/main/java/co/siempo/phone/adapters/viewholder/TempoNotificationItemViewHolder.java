@@ -20,7 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
-import minium.co.core.app.CoreApplication;
+import co.siempo.phone.app.CoreApplication;
 
 
 public class TempoNotificationItemViewHolder extends RecyclerView.ViewHolder {

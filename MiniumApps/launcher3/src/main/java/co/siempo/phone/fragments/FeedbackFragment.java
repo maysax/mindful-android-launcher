@@ -36,10 +36,9 @@ import java.util.List;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.utils.SendMail;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.ui.CoreFragment;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.utils.UIUtils;
 
 /**
  * This fragment is use to send feedback to feedback@siempo.co mail

@@ -32,12 +32,11 @@ import java.util.List;
 import java.util.Locale;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.service.AlarmBroadcast;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 5/17/2017.
@@ -347,4 +346,5 @@ public class PackageUtil {
         }
         return title;
     }
+
 }
