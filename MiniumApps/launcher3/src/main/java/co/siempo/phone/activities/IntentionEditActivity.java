@@ -28,13 +28,13 @@ import android.widget.Toolbar;
 import android.widget.ViewFlipper;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.customviews.LockEditText;
+import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.util.UIUtils;
 
 public class IntentionEditActivity extends BaseActivity implements View.OnClickListener {
 

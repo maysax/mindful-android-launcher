@@ -2,22 +2,25 @@ package co.siempo.phone.models;
 
 import android.content.pm.ApplicationInfo;
 
+import java.io.Serializable;
+
 import co.siempo.phone.R;
 
 /**
  * Created by Shahab on 2/16/2017.
  */
 
-public class MainListItem {
+public class MainListItem implements Serializable {
 
     private int id;
     private String title;
+    private int drawable;
     private String subTitle;
     private boolean isEnabled = true;
     private MainListItemType itemType = MainListItemType.ACTION;
     private String icon;
     private int iconRes;
-    private ApplicationInfo applicationInfo=null;
+    private ApplicationInfo applicationInfo = null;
 
 
     public MainListItem(int id, String title, ApplicationInfo applicationInfo) {
@@ -46,11 +49,25 @@ public class MainListItem {
         this.iconRes = iconRes;
     }
 
-    public MainListItem(int id, String title, int iconRes, MainListItemType itemType) {
+    public MainListItem(int id, String title, int drawable, MainListItemType itemType) {
         this.id = id;
         this.title = title;
         this.itemType = itemType;
-        this.iconRes = iconRes;
+        this.drawable = drawable;
+    }
+
+    /**
+     * This constructor is used for load menu item in apps pane
+     *
+     * @param id       constant id
+     * @param title    name
+     * @param drawable image id
+     */
+    public MainListItem(int id, String title, int drawable) {
+        this.id = id;
+        this.title = title;
+        this.drawable = drawable;
+
     }
 
     public int getId() {
@@ -103,6 +120,14 @@ public class MainListItem {
 
     public void setApplicationInfo(ApplicationInfo applicationInfo) {
         this.applicationInfo = applicationInfo;
+    }
+
+    public int getDrawable() {
+        return drawable;
+    }
+
+    public void setDrawable(int drawable) {
+        this.drawable = drawable;
     }
 
     @Override

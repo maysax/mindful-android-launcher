@@ -36,29 +36,28 @@ import java.util.ArrayList;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.NoteAdapter;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.event.FirebaseEvent;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.managers.EvernoteManager;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.FirebaseEvent;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
 
-import static minium.co.core.util.DataUtils.BACKUP_FILE_NAME;
-import static minium.co.core.util.DataUtils.BACKUP_FOLDER_PATH;
-import static minium.co.core.util.DataUtils.NEW_NOTE_REQUEST;
-import static minium.co.core.util.DataUtils.NOTES_FILE_NAME;
-import static minium.co.core.util.DataUtils.NOTE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_COLOUR;
-import static minium.co.core.util.DataUtils.NOTE_FAVOURED;
-import static minium.co.core.util.DataUtils.NOTE_FONT_SIZE;
-import static minium.co.core.util.DataUtils.NOTE_HIDE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_REQUEST_CODE;
-import static minium.co.core.util.DataUtils.NOTE_TITLE;
-import static minium.co.core.util.DataUtils.deleteNotes;
-import static minium.co.core.util.DataUtils.isExternalStorageReadable;
-import static minium.co.core.util.DataUtils.isExternalStorageWritable;
-import static minium.co.core.util.DataUtils.retrieveData;
-import static minium.co.core.util.DataUtils.saveData;
+import static co.siempo.phone.utils.DataUtils.BACKUP_FILE_NAME;
+import static co.siempo.phone.utils.DataUtils.BACKUP_FOLDER_PATH;
+import static co.siempo.phone.utils.DataUtils.NEW_NOTE_REQUEST;
+import static co.siempo.phone.utils.DataUtils.NOTES_FILE_NAME;
+import static co.siempo.phone.utils.DataUtils.NOTE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_COLOUR;
+import static co.siempo.phone.utils.DataUtils.NOTE_FAVOURED;
+import static co.siempo.phone.utils.DataUtils.NOTE_FONT_SIZE;
+import static co.siempo.phone.utils.DataUtils.NOTE_HIDE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_REQUEST_CODE;
+import static co.siempo.phone.utils.DataUtils.NOTE_TITLE;
+import static co.siempo.phone.utils.DataUtils.deleteNotes;
+import static co.siempo.phone.utils.DataUtils.isExternalStorageReadable;
+import static co.siempo.phone.utils.DataUtils.isExternalStorageWritable;
+import static co.siempo.phone.utils.DataUtils.retrieveData;
+import static co.siempo.phone.utils.DataUtils.saveData;
 
 
 public class NoteListActivity extends CoreActivity implements AdapterView.OnItemClickListener,
@@ -73,12 +72,10 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
     public static boolean deleteActive = false; // True if delete mode is active, false otherwise
     // For disabling long clicks, favourite clicks and modifying the item click pattern
     public static boolean searchActive = false;
-    // Layout components
-    @SuppressLint("StaticFieldLeak")
-    private static ListView listView;
     private static JSONArray notes; // Main notes array
-    @SuppressLint("StaticFieldLeak")
-    private static NoteAdapter adapter; // Custom ListView notes adapter
+    // Layout components
+    private ListView listView;
+    private NoteAdapter adapter; // Custom ListView notes adapter
     private FloatingActionButton newNote;
     private TextView noNotes;
     private Toolbar toolbar;
@@ -96,7 +93,7 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
      * @param favourite true to favourite, false to un-favourite
      * @param position  position of note
      */
-    public static void setFavourite(Context context, boolean favourite, int position) {
+    public void setFavourite(Context context, boolean favourite, int position) {
         JSONObject newFavourite = null;
 
         // Get note at position and store in newFavourite
@@ -1024,7 +1021,6 @@ public class NoteListActivity extends CoreActivity implements AdapterView.OnItem
             searchMenu.collapseActionView();
             return;
         }
-
         super.onBackPressed();
     }
 

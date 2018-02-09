@@ -41,7 +41,7 @@
                 android:id="@+id/switchDisableIntentionsControls"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 android:layout_alignParentRight="true"
+                android:layout_alignParentRight="true"
                 android:layout_below="@+id/txtDisableNotificationControls"
                 android:layout_marginRight="8dp" />
 
@@ -60,7 +60,6 @@
                 android:paddingTop="0dp"
                 android:text="@string/when_intentions_are_disabled_your_home_screen_will_be_blank"
                 android:textSize="16sp" />
-
 
         </RelativeLayout>
 

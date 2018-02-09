@@ -13,8 +13,29 @@ import java.util.Set;
 
 public class PrefSiempo {
     //Key Names
+
+    // This field is used for show/hide the IF
     public static final String IS_INTENTION_ENABLE = "isIntentionEnable";
+
+    // This field is used to store IF data.
     public static final String DEFAULT_INTENTION = "defaultIntention";
+
+    // This field is used to store check application installed first time or not.
+    public static final String IS_APP_INSTALLED_FIRSTTIME = "is_app_installed_firsttime";
+
+    // This field is used for icon branding : True to show siempo icon and False for default application icon
+    public static final String IS_ICON_BRANDING = "is_icon_branding";
+
+    // This field is used for App icons will have a different position each time you open the junk-food menu
+    public static final String IS_RANDOMIZE_JUNKFOOD = "is_randomize_junkfood";
+
+    // This field is used for to store tools pane visible/hide and its connected application.
+    public static final String TOOLS_SETTING = "tools_setting";
+
+    // This field is used for to store junkfood application package name.
+    public static final String JUNKFOOD_APPS = "junkfood_apps";
+//
+
     private static final PrefSiempo ourInstance = new PrefSiempo();
     private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;

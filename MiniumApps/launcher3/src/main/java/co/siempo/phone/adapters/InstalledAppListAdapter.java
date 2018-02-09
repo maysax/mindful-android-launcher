@@ -20,12 +20,12 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.InstalledAppsActivity;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBClient;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.PackageUtil;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
 
 
 public class InstalledAppListAdapter extends RecyclerView.Adapter<InstalledAppListAdapter.ViewHolder> {

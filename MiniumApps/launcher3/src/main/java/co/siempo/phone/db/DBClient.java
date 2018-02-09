@@ -2,7 +2,7 @@ package co.siempo.phone.db;
 
 import java.util.List;
 
-import minium.co.core.log.Tracer;
+import co.siempo.phone.log.Tracer;
 
 
 public class DBClient {

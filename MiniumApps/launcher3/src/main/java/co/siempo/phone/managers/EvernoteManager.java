@@ -16,11 +16,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.log.Tracer;
 
-import static minium.co.core.util.DataUtils.NOTE_BODY;
-import static minium.co.core.util.DataUtils.NOTE_TITLE;
+import static co.siempo.phone.utils.DataUtils.NOTE_BODY;
+import static co.siempo.phone.utils.DataUtils.NOTE_TITLE;
 
 /**
  * Created by Shahab on 2/7/2017.

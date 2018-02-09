@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
-import minium.co.core.ui.CoreActivity;
+import co.siempo.phone.activities.CoreActivity;
 
 /**
  * Created by hardik on 5/1/18.

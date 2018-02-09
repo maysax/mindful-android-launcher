@@ -35,6 +35,8 @@ import java.util.Date;
 import java.util.List;
 
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.db.DBClient;
@@ -45,13 +47,11 @@ import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.event.NewNotificationEvent;
 import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.utils.NotificationUtility;
 import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.log.Tracer;
-import minium.co.core.util.UIUtils;
 
 /**
  * Created by Shahab on 5/16/2017.

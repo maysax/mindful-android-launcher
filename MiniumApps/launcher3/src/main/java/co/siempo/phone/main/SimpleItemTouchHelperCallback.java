@@ -29,7 +29,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
 import co.siempo.phone.old.OldMenuFragment;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.utils.UIUtils;
 
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and

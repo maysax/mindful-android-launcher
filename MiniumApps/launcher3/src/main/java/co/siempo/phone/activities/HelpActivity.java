@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 
 import co.siempo.phone.R;
 import co.siempo.phone.fragments.HelpFragment;
-import minium.co.core.ui.CoreActivity;
 
 
 public class HelpActivity extends CoreActivity {

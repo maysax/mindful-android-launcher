@@ -1,4 +1,4 @@
 include ':launcher3'
-include ':tracking'
-include ':core'
+//include ':tracking'
+//include ':core'
 include ':chips'

@@ -20,8 +20,8 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.models.MainListItem;
-import minium.co.core.app.CoreApplication;
 
 /**
  * Created by Shahab on 2/23/2017.

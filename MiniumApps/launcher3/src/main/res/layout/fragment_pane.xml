@@ -34,14 +34,14 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.85"
-            android:background="#CCFFFFFF"
+            android:background="@drawable/ic_center_dock_bg"
             android:orientation="vertical"
             android:visibility="visible">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/pagerPane"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </LinearLayout>
 
         <LinearLayout
@@ -49,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.65"
+            android:background="@drawable/ic_bottom_dock_bg"
             android:orientation="vertical"
             android:visibility="visible">
 

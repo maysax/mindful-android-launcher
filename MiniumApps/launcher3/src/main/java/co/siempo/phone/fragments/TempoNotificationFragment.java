@@ -17,9 +17,8 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.TempoAppNotificationActivity;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3Prefs_;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.ui.CoreFragment;
 
 /**
  * Note : AllowPicking related stuff is now disable.

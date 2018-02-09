@@ -17,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
@@ -25,8 +27,6 @@ import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.models.MainListItem;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
 
 
 class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {

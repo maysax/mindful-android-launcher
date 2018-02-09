@@ -13,11 +13,10 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.helper.ActivityHelper;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.ui.CoreFragment;
 
 @EFragment(R.layout.fragment_tempo_settings)
 public class TempoSettingsFragment extends CoreFragment {
@@ -82,7 +81,7 @@ public class TempoSettingsFragment extends CoreFragment {
 
     @Click
     void txtAppMenus() {
-        ((CoreActivity) getActivity()).loadChildFragment(TempoTbdFragment_.builder().build(), R.id.tempoView);
+        ((CoreActivity) getActivity()).loadChildFragment(AppMenuFragment.newInstance(), R.id.tempoView);
     }
 
     @Click
