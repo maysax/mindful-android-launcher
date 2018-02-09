@@ -35,8 +35,10 @@ import java.util.Locale;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.adapters.PanePagerAdapter;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.SearchLayout;
 import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
@@ -48,9 +50,6 @@ import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.Subscribe;
 import me.relex.circleindicator.CircleIndicator;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreFragment;
 
 
 public class PaneFragment extends CoreFragment implements View.OnClickListener {

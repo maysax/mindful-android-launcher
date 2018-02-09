@@ -37,22 +37,20 @@ import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.app.Launcher3Prefs;
+import co.siempo.phone.event.AppInstalledEvent;
+import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.utils.PermissionUtil;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.event.AppInstalledEvent;
-import minium.co.core.event.CheckVersionEvent;
-import minium.co.core.event.NFCEvent;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreActivity;
-import minium.co.core.util.UIUtils;
 
 public class DashboardActivity extends CoreActivity {
 
@@ -227,7 +225,6 @@ public class DashboardActivity extends CoreActivity {
     private void checkAppLoadFirstTime() {
         if (launcher3Prefs.getBoolean("isAppInstalledFirstTime",true)) {
             launcher3Prefs.edit().putBoolean("isAppInstalledFirstTime",false).apply();
-            ((Launcher3App) CoreApplication.getInstance()).checkProfile();
             final ActivityHelper activityHelper = new ActivityHelper(DashboardActivity.this);
             if (!UIUtils.isMyLauncherDefault(DashboardActivity.this)) {
 

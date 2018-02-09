@@ -14,6 +14,7 @@ import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.models.MainListItem;
@@ -69,7 +70,7 @@ public class MainListItemLoader {
         items.add(new MainListItem(15, getString(R.string.title_messages), R.drawable.ic_menu_msg, MainListItemType.ACTION));
         items.add(new MainListItem(16, getString(R.string.title_email), R.drawable.ic_menu_mail));
 
-        if (fragment instanceof MainFragment || fragment instanceof ToolsPaneFragment) {
+        if (fragment instanceof PaneFragment || fragment instanceof ToolsPaneFragment) {
             try {
                 if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
                     for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {

@@ -1,6 +1,10 @@
 package co.siempo.phone.adapters;
 
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.support.v13.app.FragmentStatePagerAdapter;
+
 import co.siempo.phone.fragments.IntentionFragment;
 import co.siempo.phone.fragments.PaneFragment;
 

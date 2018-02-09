@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import co.siempo.phone.R;
-import minium.co.core.ui.CoreFragment;
 
 
 public class JunkFoodPaneFragment extends CoreFragment {
