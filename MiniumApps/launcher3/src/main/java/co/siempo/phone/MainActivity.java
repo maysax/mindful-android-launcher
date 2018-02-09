@@ -70,6 +70,8 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     private static final String TAG = "MainActivity";
     public static int currentItem = -1;
     public static String isTextLenghGreater = "";
+
+
     @Pref
     Launcher3Prefs_ launcher3Prefs;
     @ViewById

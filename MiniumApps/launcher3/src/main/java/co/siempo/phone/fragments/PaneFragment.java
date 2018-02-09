@@ -172,7 +172,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
 
         router = new TokenRouter();
-        parser = new TokenParser();
+        parser = new TokenParser(router);
         mWindow = getActivity().getWindow();
 
         // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -279,8 +279,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                 listView.smoothScrollToPosition(0);
             }
             parser.parse(event.getString());
-            if (adapter != null)
+            if (adapter != null) {
                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+            }
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());

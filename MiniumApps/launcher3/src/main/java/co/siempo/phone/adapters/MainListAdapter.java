@@ -262,6 +262,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         TextView txtNumber;
     }
 
+    /**
+     * Filter class for filtering Search Pane list in tools
+     */
     private class ItemFilter extends Filter {
 
         @Override
@@ -337,15 +340,17 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 break;
                             case ACTION:
                                 filterableString = originalData.get(i).getTitle();
-                                if (originalData.get(i).getApplicationInfo() == null) {
-                                    if (filterableString.contains(searchString.toLowerCase().trim())) {
-                                        buildData.add(originalData.get(i));
-                                        break;
-                                    }
-                                } else {
-                                    if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
-                                        if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
+                                if(!TextUtils.isEmpty(filterableString)){
+                                    if (originalData.get(i).getApplicationInfo() == null) {
+                                        if (filterableString.contains(searchString.toLowerCase().trim())) {
                                             buildData.add(originalData.get(i));
+                                            break;
+                                        }
+                                    } else {
+                                        if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
+                                            if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
+                                                buildData.add(originalData.get(i));
+                                            }
                                         }
                                     }
                                 }
@@ -359,7 +364,11 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 break;
                             case DEFAULT:
                                 if (checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase())) {
-                                    if (originalData.get(i).getTitle().toLowerCase().equalsIgnoreCase("Send as SMS") && !isValidNumber) {
+                                    if (originalData.get(i).getTitle()
+                                            .toLowerCase().equalsIgnoreCase
+                                                    ("Send as SMS") &&
+                                            !isValidNumber && searchString
+                                            .startsWith("@")) {
 
                                     } else {
                                         buildData.add(originalData.get(i));
@@ -372,11 +381,12 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 }
             }
             else{
-                buildData=originalData;
+                for (MainListItem menuMainListItem : originalData) {
+                    if(!TextUtils.isEmpty(menuMainListItem.getTitle())){
+                        buildData.add(menuMainListItem);
+                    }
+                }
             }
-
-            Log.d("List Size , Hardk", String.valueOf(buildData.size()));
-            Log.d("List Size , Hardk", String.valueOf(originalData.size()));
             ret.values = buildData;
             ret.count = buildData.size();
             return ret;

@@ -4,19 +4,22 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
+import co.siempo.phone.activities.DashboardActivity;
 import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
-import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.fragments.ToolsPaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
+import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.utils.UIUtils;
@@ -26,6 +29,21 @@ import co.siempo.phone.utils.UIUtils;
  */
 public class MainListItemLoader {
 
+    public static final int TOOLS_MAP = 1;
+    public static final int TOOLS_TRANSPORT = 2;
+    public static final int TOOLS_CALENDAR = 3;
+    public static final int TOOLS_WEATHER = 4;
+    public static final int TOOLS_NOTES = 5;
+    public static final int TOOLS_RECORDER = 6;
+    public static final int TOOLS_CAMERA = 7;
+    public static final int TOOLS_PHOTOS = 8;
+    public static final int TOOLS_PAYMENT = 9;
+    public static final int TOOLS_WELLNESS = 10;
+    public static final int TOOLS_BROWSER = 11;
+    public static final int TOOLS_CALL = 13;
+    public static final int TOOLS_CLOCK = 14;
+    public static final int TOOLS_MESSAGE = 15;
+    public static final int TOOLS_EMAIL = 16;
     private Context context;
 
     public MainListItemLoader(Context context) {
@@ -33,59 +51,127 @@ public class MainListItemLoader {
     }
 
     public void loadItemsDefaultApp(List<MainListItem> items) {
-        items.add(new MainListItem(1, getString(R.string.title_map), R.drawable.ic_menu_map));
-        items.add(new MainListItem(2, getString(R.string.title_transport), R.drawable.ic_menu_tranport));
-        items.add(new MainListItem(3, getString(R.string.title_calendar), R.drawable.ic_menu_calender));
-        items.add(new MainListItem(4, getString(R.string.title_weather), R.drawable.ic_menu_weather));
-        items.add(new MainListItem(5, getString(R.string.title_note), R.drawable.ic_menu_notes, MainListItemType.ACTION));
-        items.add(new MainListItem(6, getString(R.string.title_recorder), R.drawable.ic_menu_recorder));
-        items.add(new MainListItem(7, getString(R.string.title_camera), R.drawable.ic_menu_camera));
-        items.add(new MainListItem(8, getString(R.string.title_photos), R.drawable.ic_menu_photos));
-        items.add(new MainListItem(9, getString(R.string.title_payment), R.drawable.ic_menu_payment));
-        items.add(new MainListItem(10, getString(R.string.title_wellness), R.drawable.ic_menu_wellness));
-        items.add(new MainListItem(11, getString(R.string.title_browser), R.drawable.ic_menu_browser));
+        items.add(new MainListItem(TOOLS_MAP, getString(R.string.title_map), R.drawable.ic_menu_map));
+        items.add(new MainListItem(TOOLS_TRANSPORT, getString(R.string.title_transport), R.drawable.ic_menu_tranport));
+        items.add(new MainListItem(TOOLS_CALENDAR, getString(R.string.title_calendar), R.drawable.ic_menu_calender));
+        items.add(new MainListItem(TOOLS_WEATHER, getString(R.string.title_weather), R.drawable.ic_menu_weather));
+        items.add(new MainListItem(TOOLS_NOTES, getString(R.string.title_note), R.drawable.ic_menu_notes, MainListItemType.ACTION));
+        items.add(new MainListItem(TOOLS_RECORDER, getString(R.string.title_recorder), R.drawable.ic_menu_recorder));
+        items.add(new MainListItem(TOOLS_CAMERA, getString(R.string.title_camera), R.drawable.ic_menu_camera));
+        items.add(new MainListItem(TOOLS_PHOTOS, getString(R.string.title_photos), R.drawable.ic_menu_photos));
+        items.add(new MainListItem(TOOLS_PAYMENT, getString(R.string.title_payment), R.drawable.ic_menu_payment));
+        items.add(new MainListItem(TOOLS_WELLNESS, getString(R.string.title_wellness), R.drawable.ic_menu_wellness));
+        items.add(new MainListItem(TOOLS_BROWSER, getString(R.string.title_browser), R.drawable.ic_menu_browser));
         items.add(new MainListItem(12, "", 0));
-        items.add(new MainListItem(13, getString(R.string.title_call), R.drawable.ic_menu_call, MainListItemType.ACTION));
-        items.add(new MainListItem(14, getString(R.string.title_clock), R.drawable.ic_menu_clock));
-        items.add(new MainListItem(15, getString(R.string.title_messages), R.drawable.ic_menu_msg, MainListItemType.ACTION));
-        items.add(new MainListItem(16, getString(R.string.title_email), R.drawable.ic_menu_mail));
+        items.add(new MainListItem(TOOLS_CALL, getString(R.string.title_call), R.drawable.ic_menu_call, MainListItemType.ACTION));
+        items.add(new MainListItem(TOOLS_CLOCK, getString(R.string.title_clock), R.drawable.ic_menu_clock));
+        items.add(new MainListItem(TOOLS_MESSAGE, getString(R.string.title_messages), R.drawable.ic_menu_msg, MainListItemType.ACTION));
+        items.add(new MainListItem(TOOLS_EMAIL, getString(R.string.title_email), R.drawable.ic_menu_mail));
     }
 
 
     public void loadItems(List<MainListItem> items, Fragment fragment) {
-        items.add(new MainListItem(1, getString(R.string.title_map), R.drawable.ic_menu_map));
-        items.add(new MainListItem(2, getString(R.string.title_transport), R.drawable.ic_menu_tranport));
-        items.add(new MainListItem(3, getString(R.string.title_calendar), R.drawable.ic_menu_calender));
-        items.add(new MainListItem(4, getString(R.string.title_weather), R.drawable.ic_menu_weather));
-        items.add(new MainListItem(5, getString(R.string.title_note), R.drawable.ic_menu_notes, MainListItemType.ACTION));
-        items.add(new MainListItem(6, getString(R.string.title_recorder), R.drawable.ic_menu_recorder));
-        items.add(new MainListItem(7, getString(R.string.title_camera), R.drawable.ic_menu_camera));
-        items.add(new MainListItem(8, getString(R.string.title_photos), R.drawable.ic_menu_photos));
-        items.add(new MainListItem(9, getString(R.string.title_payment), R.drawable.ic_menu_payment));
-        items.add(new MainListItem(10, getString(R.string.title_wellness), R.drawable.ic_menu_wellness));
-        items.add(new MainListItem(11, getString(R.string.title_browser), R.drawable.ic_menu_browser));
-        items.add(new MainListItem(12, "", 0));
-        items.add(new MainListItem(13, getString(R.string.title_call), R.drawable.ic_menu_call, MainListItemType.ACTION));
-        items.add(new MainListItem(14, getString(R.string.title_clock), R.drawable.ic_menu_clock));
-        items.add(new MainListItem(15, getString(R.string.title_messages), R.drawable.ic_menu_msg, MainListItemType.ACTION));
-        items.add(new MainListItem(16, getString(R.string.title_email), R.drawable.ic_menu_mail));
+
+        HashMap<Integer, AppMenu> toolsSettings = CoreApplication.getInstance().getToolsSettings
+                ();
+
+
+
+
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MAP)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_MAP, getString(R.string.title_map), R.drawable.ic_menu_map));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_TRANSPORT)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_TRANSPORT, getString(R.string.title_transport), R.drawable.ic_menu_tranport));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CALENDAR)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_CALENDAR, getString(R.string.title_calendar), R.drawable.ic_menu_calender));
+
+        }
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_WEATHER)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_WEATHER, getString(R.string.title_weather), R.drawable.ic_menu_weather));
+        }
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_NOTES)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_NOTES, getString(R.string.title_note), R.drawable.ic_menu_notes, MainListItemType.ACTION));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_RECORDER)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_RECORDER, getString(R.string.title_recorder), R.drawable.ic_menu_recorder));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CAMERA)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_CAMERA, getString(R.string.title_camera), R.drawable.ic_menu_camera));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_PHOTOS)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_PHOTOS, getString(R.string.title_photos), R.drawable.ic_menu_photos));
+        }
+
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_PAYMENT)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_PAYMENT, getString(R.string.title_payment), R.drawable.ic_menu_payment));
+        }
+
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_WELLNESS)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_WELLNESS, getString(R.string.title_wellness), R.drawable.ic_menu_wellness));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_BROWSER)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_BROWSER, getString(R.string.title_browser), R.drawable.ic_menu_browser));
+        }
+        if (!TextUtils.isEmpty(toolsSettings.get(12)
+                .getApplicationName())) {
+            items.add(new MainListItem(12, "", 0));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CALL)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_CALL, getString(R.string.title_call), R.drawable.ic_menu_call, MainListItemType.ACTION));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_CLOCK)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_CLOCK, getString(R.string.title_clock), R.drawable.ic_menu_clock));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MESSAGE)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_MESSAGE, getString(R.string.title_messages), R.drawable.ic_menu_msg, MainListItemType.ACTION));
+        }
+
+        if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_EMAIL)
+                .getApplicationName())) {
+            items.add(new MainListItem(TOOLS_EMAIL, getString(R.string.title_email), R.drawable.ic_menu_mail));
+        }
+
 
         if (fragment instanceof PaneFragment || fragment instanceof ToolsPaneFragment) {
             try {
                 if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
+                    ArrayList<String> appList = new ArrayList<>();
+                    for (AppMenu appMenu : toolsSettings.values()) {
+                        if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                            appList.add(appMenu.getApplicationName());
+                        }
+                    }
                     for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
                         String packageName = applicationInfo.packageName;
-                        if (!packageName.equalsIgnoreCase(((MainActivity) context).prefs.callPackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.messagePackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.calenderPackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.contactPackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.mapPackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.photosPackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.cameraPackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.browserPackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.clockPackage().get())
-                                && !packageName.equalsIgnoreCase(((MainActivity) context).prefs.emailPackage().get())
-                                && !packageName.equalsIgnoreCase(Constants.SETTINGS_APP_PACKAGE)) {
+                        if (!appList.contains(packageName)) {
                             String appName = applicationInfo.name;
                             items.add(new MainListItem(-1, appName, applicationInfo));
                         }
@@ -104,139 +190,67 @@ public class MainListItemLoader {
 
     public void listItemClicked(int id) {
         switch (id) {
-            case 1://Map
-                if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getMapPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 11, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (!((MainActivity) context).prefs.isMapClicked().get()) {
-                        if (CoreApplication.getInstance().getMapPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 11, false);
-                        } else {
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.mapPackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.mapPackage().get());
-                    }
-                }
-                break;
-            case 2://Transport
-                break;
-            case 3://Calender
-                if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getCalenderPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 20, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (!((MainActivity) context).prefs.isCalenderClicked().get()) {
-                        if (CoreApplication.getInstance().getCalenderPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 20, false);
-                        } else {
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.calenderPackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.calenderPackage().get());
-                    }
-                }
-                break;
-            case 4://Weather
-                break;
-            case 5:// Notes
-                if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getNotesPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 6, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (!((MainActivity) context).prefs.notesPackage().get().equalsIgnoreCase("Notes")) {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.notesPackage().get());
-                    } else {
-                        new ActivityHelper(context).openNotesApp(false);
-                    }
-                }
-                break;
-            case 6://Recorder
-                break;
-            case 7:// Camera
-                if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getCameraPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 23, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (!((MainActivity) context).prefs.isCameraClicked().get()) {
-                        if (CoreApplication.getInstance().getCameraPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 23, false);
-                        } else {
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.cameraPackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.cameraPackage().get());
-                    }
-                }
-                break;
-            case 8://Photos
-                if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getPhotosPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 22, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (!((MainActivity) context).prefs.isPhotosClicked().get()) {
-                        if (CoreApplication.getInstance().getPhotosPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 22, false);
-                        } else {
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.photosPackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.photosPackage().get());
-                    }
+            case TOOLS_MAP://Map
 
-                }
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_MAP).getApplicationName().trim());
                 break;
-            case 9://Payment
+            case TOOLS_TRANSPORT://Transport
                 break;
-            case 10://Wellness
+            case TOOLS_CALENDAR://Calender
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_CALENDAR).getApplicationName().trim());
+
                 break;
-            case 11:// Browser
-                if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getBrowserPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 24, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (!((MainActivity) context).prefs.isBrowserClicked().get()) {
-                        if (CoreApplication.getInstance().getBrowserPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 24, false);
-                        } else {
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.browserPackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.browserPackage().get());
-                    }
-                }
+            case TOOLS_WEATHER://Weather
+                break;
+            case TOOLS_NOTES:// Notes
+
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_NOTES).getApplicationName().trim());
+
+                break;
+            case TOOLS_RECORDER://Recorder
+                break;
+            case TOOLS_CAMERA:// Camera
+
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_CAMERA).getApplicationName().trim());
+                break;
+            case TOOLS_PHOTOS://Photos
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_PHOTOS).getApplicationName().trim());
+                break;
+            case TOOLS_PAYMENT://Payment
+                break;
+            case TOOLS_WELLNESS://Wellness
+                break;
+            case TOOLS_BROWSER:// Browser
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_BROWSER).getApplicationName().trim());
                 break;
 
-            case 13:// Call
-                if (context instanceof MainActivity) {
-                    if (!((MainActivity) context).prefs.isCallClicked().get()) {
+            case TOOLS_CALL:// Call
+
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_CALL).getApplicationName().trim());
+                if (context instanceof DashboardActivity) {
+                    if (!((DashboardActivity) context).prefs.isCallClicked().get()) {
                         if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
                             ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
                         } else {
-                            ((MainActivity) context).prefs.isCallClickedFirstTime().put(true);
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.callPackage().get());
+                            ((DashboardActivity) context).prefs.isCallClickedFirstTime().put(true);
+                            new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.callPackage().get());
                         }
                     } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.callPackage().get());
+                        new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.callPackage().get());
                     }
                 } else if (context instanceof SiempoSettingsDefaultAppActivity) {
                     if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
@@ -246,64 +260,25 @@ public class MainListItemLoader {
                     }
                 }
                 break;
-            case 14://Clock
-                if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getClockPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 21, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    if (!((MainActivity) context).prefs.isClockClicked().get()) {
-                        if (CoreApplication.getInstance().getClockPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 21, false);
-                        } else {
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.clockPackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.clockPackage().get());
-                    }
-                }
+            case TOOLS_CLOCK://Clock
+
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_CLOCK).getApplicationName().trim());
                 break;
-            case 15:// Message
-                if (context instanceof MainActivity) {
-                    if (!((MainActivity) context).prefs.isMessageClicked().get()) {
-                        if (CoreApplication.getInstance().getMessagePackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, false);
-                        } else {
-                            ((MainActivity) context).prefs.isMessageClickedFirstTime().put(true);
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.messagePackage().get());
-                    }
-                } else if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getMessagePackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 1, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                }
+            case TOOLS_MESSAGE:// Message
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_MESSAGE).getApplicationName().trim());
+
+
                 break;
-            case 16:// Email
-                if (context instanceof MainActivity) {
-                    if (!((MainActivity) context).prefs.isEmailClicked().get()) {
-                        if (CoreApplication.getInstance().getEmailPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 16, false);
-                        } else {
-                            ((MainActivity) context).prefs.isEmailClickedFirstTime().put(true);
-                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.emailPackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.emailPackage().get());
-                    }
-                } else if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getEmailPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 16, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                }
+            case TOOLS_EMAIL:// Email
+
+                new ActivityHelper(context).openAppWithPackageName
+                        (CoreApplication.getInstance().getToolsSettings().get
+                                (TOOLS_EMAIL).getApplicationName().trim());
+
                 break;
             case 18:
                 new ActivityHelper(context).openFeedback();
@@ -319,15 +294,15 @@ public class MainListItemLoader {
 //                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
 //                    }
 //                } else {
-////                    new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.contactPackage().get());
-//                    if (!((MainActivity) context).prefs.isContactClicked().get()) {
+////                    new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.contactPackage().get());
+//                    if (!((DashboardActivity) context).prefs.isContactClicked().get()) {
 //                        if (CoreApplication.getInstance().getContactPackageList().size() > 1) {
 //                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 3, false);
 //                        } else {
-//                            new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.contactPackage().get());
+//                            new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.contactPackage().get());
 //                        }
 //                    } else {
-//                        new ActivityHelper(context).openAppWithPackageName(((MainActivity) context).prefs.contactPackage().get());
+//                        new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.contactPackage().get());
 //                    }
 //                }
 //                break;
@@ -346,7 +321,7 @@ public class MainListItemLoader {
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
                 break;
         }
-        MainActivity.isTextLenghGreater = "";
+        DashboardActivity.isTextLenghGreater = "";
 
     }
 

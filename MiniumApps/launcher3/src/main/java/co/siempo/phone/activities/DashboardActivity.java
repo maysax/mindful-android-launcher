@@ -9,8 +9,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -29,64 +27,44 @@ import com.github.javiersantos.appupdater.objects.Update;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
-import java.security.interfaces.DSAKey;
 import java.util.ArrayList;
 
 import co.siempo.phone.BuildConfig;
-import co.siempo.phone.MainActivity;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.app.Launcher3Prefs;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.CheckVersionEvent;
 import co.siempo.phone.helper.ActivityHelper;
-import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.ApiClient_;
 import co.siempo.phone.service.SiempoNotificationListener_;
 import co.siempo.phone.utils.PermissionUtil;
 import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
 public class DashboardActivity extends CoreActivity {
 
+    public static final String IS_FROM_HOME = "isFromHome";
+    public static String isTextLenghGreater = "";
+    PermissionUtil permissionUtil;
+    ConnectivityManager connectivityManager;
+    AppUpdaterUtils appUpdaterUtils;
+    boolean isApplicationLaunch = false;
+    NotificationManager notificationManager;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
     private ViewPager mPager;
-
-    PermissionUtil permissionUtil;
-
     private SharedPreferences launcher3Prefs;
-
-
-    public static final String IS_FROM_HOME = "isFromHome";
     private String TAG = "DashboardActivity";
-
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private DashboardPagerAdapter mPagerAdapter;
-
-    ConnectivityManager connectivityManager;
-
-    AppUpdaterUtils appUpdaterUtils;
-
-
-    boolean isApplicationLaunch = false;
-
-
-    private AlertDialog notificationDialog;
-
-
-    NotificationManager notificationManager;
-
-
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
@@ -104,7 +82,19 @@ public class DashboardActivity extends CoreActivity {
                     .check();
         }
     };
+    private AlertDialog notificationDialog;
 
+    /**
+     * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
+     */
+    public static boolean isEnabled(Context mContext) {
+
+        ComponentName cn = new ComponentName(mContext, SiempoNotificationListener_.class);
+        String flat = Settings.Secure.getString(mContext.getContentResolver(), "enabled_notification_listeners");
+        return flat != null && flat.contains(cn.flattenToString());
+
+        //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
+    }
 
     @Override
     protected void onResume() {
@@ -158,10 +148,6 @@ public class DashboardActivity extends CoreActivity {
         initView();
     }
 
-
-
-
-
     private void initView() {
 
         connectivityManager = (ConnectivityManager) getSystemService(Context
@@ -180,7 +166,7 @@ public class DashboardActivity extends CoreActivity {
         checknavigatePermissions();
     }
 
-    public void loadViews(){
+    public void loadViews() {
         mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
@@ -196,7 +182,7 @@ public class DashboardActivity extends CoreActivity {
 
     public void checknavigatePermissions() {
 
-        if (!launcher3Prefs.getBoolean("isAppInstalledFirstTime",true)) {
+        if (!launcher3Prefs.getBoolean("isAppInstalledFirstTime", true)) {
             Log.d(TAG, "Display upgrade dialog.");
             if (isApplicationLaunch) {
                 checkUpgradeVersion();
@@ -221,10 +207,9 @@ public class DashboardActivity extends CoreActivity {
         }
     }
 
-
     private void checkAppLoadFirstTime() {
-        if (launcher3Prefs.getBoolean("isAppInstalledFirstTime",true)) {
-            launcher3Prefs.edit().putBoolean("isAppInstalledFirstTime",false).apply();
+        if (launcher3Prefs.getBoolean("isAppInstalledFirstTime", true)) {
+            launcher3Prefs.edit().putBoolean("isAppInstalledFirstTime", false).apply();
             final ActivityHelper activityHelper = new ActivityHelper(DashboardActivity.this);
             if (!UIUtils.isMyLauncherDefault(DashboardActivity.this)) {
 
@@ -238,24 +223,23 @@ public class DashboardActivity extends CoreActivity {
                 }, 1000);
             }
         } else {
-            if (launcher3Prefs.getInt("getCurrentVersion",0) != 0) {
+            if (launcher3Prefs.getInt("getCurrentVersion", 0) != 0) {
                 if (!UIUtils.isMyLauncherDefault(this)
-                        && BuildConfig.VERSION_CODE > launcher3Prefs.getInt("getCurrentVersion",0)) {
+                        && BuildConfig.VERSION_CODE > launcher3Prefs.getInt("getCurrentVersion", 0)) {
                     new ActivityHelper(this).handleDefaultLauncher(this);
                     loadDialog();
-                    launcher3Prefs.edit().putInt("getCurrentVersion",UIUtils
+                    launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
                             .getCurrentVersionCode(this)).apply();
                 } else {
-                    launcher3Prefs.edit().putInt("getCurrentVersion",UIUtils
+                    launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
                             .getCurrentVersionCode(this)).apply();
                 }
             } else {
-                launcher3Prefs.edit().putInt("getCurrentVersion",UIUtils
+                launcher3Prefs.edit().putInt("getCurrentVersion", UIUtils
                         .getCurrentVersionCode(this)).apply();
             }
         }
     }
-
 
     public void checkUpgradeVersion() {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
@@ -297,8 +281,6 @@ public class DashboardActivity extends CoreActivity {
         }
     }
 
-
-
     public void checkVersionFromAppUpdater() {
         new AppUpdater(this)
                 .setDisplay(Display.DIALOG)
@@ -312,20 +294,6 @@ public class DashboardActivity extends CoreActivity {
                 .setButtonDismiss("Maybe later")
                 .start();
     }
-
-
-    /**
-     * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
-     */
-    public static boolean isEnabled(Context mContext) {
-
-        ComponentName cn = new ComponentName(mContext, SiempoNotificationListener_.class);
-        String flat = Settings.Secure.getString(mContext.getContentResolver(), "enabled_notification_listeners");
-        return flat != null && flat.contains(cn.flattenToString());
-
-        //return ServiceUtils.isNotificationListenerServiceRunning(mContext, SiempoNotificationListener_.class);
-    }
-
 
     @Override
     protected void onStop() {
@@ -351,8 +319,6 @@ public class DashboardActivity extends CoreActivity {
     }
 
 
-
-
     @Subscribe
     public void checkVersionEvent(CheckVersionEvent event) {
         Log.d(TAG, "Check Version event...");
@@ -376,7 +342,6 @@ public class DashboardActivity extends CoreActivity {
     }
 
 
-
     private void showUpdateDialog(String str) {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         if (activeNetwork != null) { // connected to the internet
@@ -384,7 +349,7 @@ public class DashboardActivity extends CoreActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == DialogInterface.BUTTON_POSITIVE) {
-                        launcher3Prefs.edit().putBoolean("updatePrompt",false)
+                        launcher3Prefs.edit().putBoolean("updatePrompt", false)
                                 .apply();
                         new ActivityHelper(DashboardActivity.this).openBecomeATester();
                     }
@@ -465,6 +430,11 @@ public class DashboardActivity extends CoreActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DashboardActivity.isTextLenghGreater = "";
+    }
 
 
 }
