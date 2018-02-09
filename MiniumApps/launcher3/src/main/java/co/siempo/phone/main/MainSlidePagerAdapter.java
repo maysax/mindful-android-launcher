@@ -27,7 +27,7 @@ public class MainSlidePagerAdapter extends FragmentStatePagerAdapter {
         if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
             switch (position) {
                 case 0:
-                    return MainFragment_.builder().build();
+//                    return MainFragment_.builder().build();
                 case 1:
                     return IntentionFieldFragment_.builder().build();
                 case 2:
@@ -38,7 +38,7 @@ public class MainSlidePagerAdapter extends FragmentStatePagerAdapter {
         } else {
             switch (position) {
                 case 0:
-                    return MainFragment_.builder().build();
+//                    return MainFragment_.builder().build();
                 case 1:
                     return OldMenuFragment_.builder().build();
                 default:

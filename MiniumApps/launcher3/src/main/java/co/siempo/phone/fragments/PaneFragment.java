@@ -1,26 +1,30 @@
 package co.siempo.phone.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
+import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.eyeem.chips.ChipsEditText;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,30 +33,42 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import co.siempo.phone.R;
+import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.adapters.PanePagerAdapter;
-import co.siempo.phone.adapters.ToolsListAdapter;
-import co.siempo.phone.customviews.ClearableEditText;
+import co.siempo.phone.customviews.SearchLayout;
+import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.main.MainFragmentMediator;
+import co.siempo.phone.token.TokenCompleteType;
+import co.siempo.phone.token.TokenItem;
+import co.siempo.phone.token.TokenItemType;
+import co.siempo.phone.token.TokenManager;
+import co.siempo.phone.token.TokenParser;
+import co.siempo.phone.token.TokenRouter;
+import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.Subscribe;
 import me.relex.circleindicator.CircleIndicator;
+import minium.co.core.app.CoreApplication;
+import minium.co.core.log.Tracer;
+import minium.co.core.ui.CoreFragment;
 
 
-public class PaneFragment extends Fragment implements View.OnClickListener {
+public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     private View view;
     private LinearLayout linTopDoc;
     private CircleIndicator indicator;
     private ViewPager pagerPane;
-    private PagerAdapter mPagerAdapter;
+    private PanePagerAdapter mPagerAdapter;
     private LinearLayout linPane;
     private LinearLayout linBottomDoc;
     private EditText edtSearchTools;
     private TextView txtTopDockDate;
     private View linSearchList;
-    private ClearableEditText edtSearchListView;
+    private SearchLayout searchLayout;
     private RelativeLayout relSearchTools;
     private LinearLayoutManager layoutManager;
-    private RecyclerView recyclerSearchList;
-    private ToolsListAdapter adapter;
+    private ListView listView;
     private CardView cardViewEdtSearch;
     private ArrayList<String> toolsList;
     private View blueLineView;
@@ -60,6 +76,12 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
     private TextView txtIntention;
     private Window mWindow;
     private int defaultStatusBarColor;
+    private MainFragmentMediator mediator;
+    private TokenRouter router;
+    private MainListAdapter adapter;
+    private TokenParser parser;
+    private ChipsEditText chipsEditText;
+    private ImageView imageClear;
     //    private View btnClearSearch;
     //    private View btnClearSearch;
 
@@ -77,6 +99,7 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,6 +108,42 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mediator = new MainFragmentMediator(this);
+
+        Handler handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                loadData();
+            }
+        });
+    }
+
+    public void loadData() {
+        mediator.loadData();
+        loadView();
+    }
+
+    public void loadView() {
+        if (getActivity() != null) {
+            adapter = new MainListAdapter(getActivity(), mediator.getItems());
+            listView.setAdapter(adapter);
+            adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
+            adapter.getFilter().filter("");
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void initView(View view) {
         linTopDoc = view.findViewById(R.id.linTopDoc);
         linTopDoc.setOnClickListener(this);
@@ -92,7 +151,7 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         edtSearchTools = view.findViewById(R.id.edtSearchTools);
         blueLineView = view.findViewById(R.id.blueLineView);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
-        edtSearchListView = view.findViewById(R.id.edtSearchListView);
+        searchLayout = view.findViewById(R.id.edtSearchListView);
         relSearchTools = view.findViewById(R.id.relSearchTools);
         txtTopDockDate = view.findViewById(R.id.txtTopDockDate);
         txtIntentionLabelJunkPane = view.findViewById(R.id.txtIntentionLabelJunkPane);
@@ -100,16 +159,21 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         linPane.setOnClickListener(this);
         linBottomDoc = view.findViewById(R.id.linBottomDoc);
         linSearchList = view.findViewById(R.id.linSearchList);
-        recyclerSearchList = view.findViewById(R.id.recyclerView);
+        listView = view.findViewById(R.id.listView);
         linBottomDoc.setOnClickListener(this);
         indicator = view.findViewById(R.id.indicator);
         pagerPane = view.findViewById(R.id.pagerPane);
+        chipsEditText = searchLayout.getTxtSearchBox();
+        imageClear = searchLayout.getBtnClear();
 
         mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
         pagerPane.setCurrentItem(2);
 
+
+        router = new TokenRouter();
+        parser = new TokenParser();
         mWindow = getActivity().getWindow();
 
         // clear FLAG_TRANSLUCENT_STATUS flag:
@@ -131,21 +195,48 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         //Code for Page change
         setViewPagerPageChanged();
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (router != null && searchLayout != null && searchLayout.getTxtSearchBox() != null) {
+                    mediator.listItemClicked(router, position, searchLayout.getTxtSearchBox().getStrText());
+                }
+            }
+        });
 
+        imageClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                chipsEditText.clearFocus();
+                chipsEditText.setText("");
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+
+            }
+        });
+
+
+    }
+
+
+    public MainListAdapter getAdapter() {
+        return adapter;
     }
 
     private void searchEditTextFocusChanged() {
         //Circular Edit Text
         edtSearchTools.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    edtSearchListView.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.VISIBLE);
                     cardViewEdtSearch.setVisibility(View.VISIBLE);
                     relSearchTools.setVisibility(View.GONE);
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInputFromWindow(
-                            edtSearchListView.getApplicationWindowToken(),
+                            searchLayout.getApplicationWindowToken(),
                             InputMethodManager.SHOW_FORCED, 0);
 
                 }
@@ -154,7 +245,7 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
 
 
         //Listview edit Text
-        edtSearchListView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        chipsEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
@@ -163,20 +254,78 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
                     linBottomDoc.setVisibility(View.GONE);
                     blueLineView.setVisibility(View.VISIBLE);
                     linSearchList.setVisibility(View.VISIBLE);
+                    imageClear.setVisibility(View.VISIBLE);
                 } else {
 
                     linPane.setVisibility(View.VISIBLE);
                     blueLineView.setVisibility(View.VISIBLE);
-                    edtSearchListView.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.GONE);
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
                     linBottomDoc.setVisibility(View.VISIBLE);
                     linSearchList.setVisibility(View.GONE);
+                    imageClear.setVisibility(View.VISIBLE);
 
                 }
             }
         });
     }
+
+
+    @Subscribe
+    public void searchLayoutEvent(SearchLayoutEvent event) {
+        try {
+            if (event.getString().equalsIgnoreCase("") || event.getString().equalsIgnoreCase("/")
+                    || (event.getString().startsWith("/") && event.getString().length() == 2)) {
+                listView.smoothScrollToPosition(0);
+            }
+            parser.parse(event.getString());
+            if (adapter != null)
+                adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
+
+    @Subscribe
+    public void tokenManagerEvent(TokenUpdateEvent event) {
+        try {
+            TokenItem current = TokenManager.getInstance().getCurrent();
+            if (current != null) {
+                if (current.getItemType() == TokenItemType.END_OP) {
+                    mediator.defaultData();
+                } else if (current.getItemType() == TokenItemType.CONTACT) {
+                    if (current.getCompleteType() == TokenCompleteType.HALF) {
+                        mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
+                    } else {
+                        mediator.contactPicker();
+                    }
+                } else if (current.getItemType() == TokenItemType.DATA) {
+                    if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
+                        mediator.resetData();
+                        if (adapter != null)
+                            adapter.getFilter().filter(current.getTitle());
+                    } else {
+                        mediator.resetData();
+                        if (current.getTitle().trim().isEmpty()) {
+                            if (adapter != null)
+                                adapter.getFilter().filter("^");
+                        } else {
+                            if (adapter != null)
+                                adapter.getFilter().filter(current.getTitle());
+                        }
+
+                    }
+                }
+            }
+        } catch (Exception e) {
+            CoreApplication.getInstance().logException(e);
+            Tracer.e(e, e.getMessage());
+        }
+    }
+
 
     /**
      * Page Change Listener and modification of UI based on Page change
@@ -195,7 +344,7 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
                     linTopDoc.setBackgroundColor(getResources().getColor(R.color
                             .bg_junk_apps_top_dock));
                     txtTopDockDate.setVisibility(View.GONE);
-                    edtSearchListView.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.GONE);
                     edtSearchTools.setVisibility(View.GONE);
 
                     txtIntention.setVisibility(View.VISIBLE);
@@ -228,7 +377,7 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
                     linTopDoc.setBackground(getResources().getDrawable(R
                             .drawable.top_bar_bg));
                     txtTopDockDate.setVisibility(View.VISIBLE);
-                    edtSearchListView.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.VISIBLE);
                     edtSearchTools.setVisibility(View.VISIBLE);
                     txtIntention.setVisibility(View.GONE);
                     txtIntentionLabelJunkPane.setVisibility(View.GONE);
@@ -251,12 +400,13 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
     /**
      * Adpater settings for Tools List
      */
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setSearchToolsList() {
 
 
         //Code for listview adapter
         layoutManager = new LinearLayoutManager(getContext());
-        recyclerSearchList.setLayoutManager(layoutManager);
+//        recyclerSearchList.setLayoutManager(layoutManager);
 
         //Need to update the model
         toolsList = new ArrayList<>();
@@ -268,29 +418,29 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         toolsList.add("Travel");
 
 
-        adapter = new ToolsListAdapter(toolsList, getContext());
-        recyclerSearchList.setAdapter(adapter);
-        edtSearchListView.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-                                          int arg3) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                // TODO Auto-generated method stub
-                filter(arg0.toString());
-
-            }
-        });
+//        adapter = new ToolsListAdapter(toolsList, getContext());
+//        recyclerSearchList.setAdapter(adapter);
+//        edtSearchListView.addTextChangedListener(new TextWatcher() {
+//
+//            @Override
+//            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+//                // TODO Auto-generated method stub
+//            }
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+//                                          int arg3) {
+//                // TODO Auto-generated method stub
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable arg0) {
+//                // TODO Auto-generated method stub
+//                filter(arg0.toString());
+//
+//            }
+//        });
     }
 
     /**
@@ -335,7 +485,7 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
             }
         }
         //update recyclerview
-        adapter.updateList(temp);
+//        adapter.updateList(temp);
     }
 
     @Override
@@ -354,5 +504,9 @@ public class PaneFragment extends Fragment implements View.OnClickListener {
         return sdf;
     }
 
+
+    public TokenManager getManager() {
+        return TokenManager.getInstance();
+    }
 
 }

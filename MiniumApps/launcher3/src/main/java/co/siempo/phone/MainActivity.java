@@ -83,10 +83,10 @@ public class MainActivity extends CoreActivity implements SmsObserver.OnSmsSentL
     TelephonyManager telephonyManager;
 
     @SystemService
-    ConnectivityManager connectivityManager;
+    NotificationManager notificationManager;
 
     @SystemService
-    NotificationManager notificationManager;
+    ConnectivityManager connectivityManager;
 
     @Pref
     Launcher3Prefs_ launcherPrefs;

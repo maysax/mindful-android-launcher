@@ -1,26 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relMenu"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:tag="list">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/linearList"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              tools:ignore="UseCompoundDrawables,UselessParent">
 
-    <ImageView
-        android:id="@+id/imgView"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="54dp"
-        android:layout_centerInParent="true"
-        android:tag="0"
-        tools:ignore="ContentDescription" />
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/linearList"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:orientation="horizontal"
-        tools:ignore="UseCompoundDrawables,UselessParent">
+        android:background="@drawable/rounded_tools_list_item"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/icon"
@@ -29,7 +21,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="18dp"
             android:contentDescription="@null"
-            android:padding="6dp" />
+            android:padding="6dp"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -43,9 +35,19 @@
                 android:id="@+id/text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:textSize="14sp"
-                tools:text="Send as SMS" />
+                android:ellipsize="end"
+                android:fontFamily="sans-serif"
+                android:gravity="center|left"
+                android:lines="1"
+                android:maxLines="2"
+                android:padding="4dp"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingRight="@dimen/dp_20"
+                android:text="Sound"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText"
+                tools:text="Send as SMS"/>
 
             <TextView
                 android:id="@+id/textDefaultApp"
@@ -54,8 +56,20 @@
                 android:fontFamily="sans-serif-medium"
                 android:textSize="12sp"
                 android:visibility="gone"
-                tools:text="Default App" />
+                tools:text="Default App"/>
         </LinearLayout>
 
     </LinearLayout>
-</RelativeLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@android:color/transparent"/>
+
+
+</LinearLayout>
+
+

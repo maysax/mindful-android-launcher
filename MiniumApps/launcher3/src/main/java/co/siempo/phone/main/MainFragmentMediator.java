@@ -2,6 +2,7 @@ package co.siempo.phone.main;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SendSmsEvent;
+import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.ContactListItem;
@@ -29,18 +31,18 @@ import minium.co.core.util.UIUtils;
  * Created by shahab on 2/16/17.
  */
 
-class MainFragmentMediator {
+public class MainFragmentMediator {
 
-    private MainFragment fragment;
+    private PaneFragment fragment;
 
     private List<MainListItem> items;
     private List<ContactListItem> contactItems;
 
-    MainFragmentMediator(MainFragment mainFragment) {
-        this.fragment = mainFragment;
+    public MainFragmentMediator(PaneFragment paneFragment) {
+        this.fragment = paneFragment;
     }
 
-    void loadData() {
+    public void loadData() {
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
@@ -48,7 +50,7 @@ class MainFragmentMediator {
         loadDefaults();
     }
 
-    void resetData() {
+    public void resetData() {
         items.clear();
         loadActions();
         loadContacts();
@@ -66,12 +68,16 @@ class MainFragmentMediator {
 
     private void loadContacts() {
         try {
+            Log.d("hardikkamothi","Load Contacts :::");
             if (fragment != null && fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                 return;
             }
             if (fragment != null && contactItems.size() == 0) {
+                Log.d("hardikkamothi","Contact Size 0 so load");
                 contactItems = new ContactsLoader().loadContacts(fragment.getActivity());
             }
+            Log.d("hardikkamothi","Final Contact Size :::"+contactItems
+                    .size());
             items.addAll(contactItems);
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
@@ -104,7 +110,7 @@ class MainFragmentMediator {
         }
     }
 
-    List<MainListItem> getItems() {
+    public List<MainListItem> getItems() {
         return items;
     }
 
@@ -112,7 +118,7 @@ class MainFragmentMediator {
         return fragment.getAdapter();
     }
 
-    void listItemClicked(TokenRouter router, int position, String data) {
+    public void listItemClicked(TokenRouter router, int position, String data) {
         MainListItemType type;
         type = getAdapter().getItem(position).getItemType();
         if (type != null)
@@ -195,7 +201,7 @@ class MainFragmentMediator {
             }
     }
 
-    void contactPicker() {
+    public void contactPicker() {
         items.clear();
         loadContacts();
         loadDefaults();
@@ -203,7 +209,7 @@ class MainFragmentMediator {
         getAdapter().notifyDataSetChanged();
     }
 
-    void contactNumberPicker(int selectedContactId) {
+    public void contactNumberPicker(int selectedContactId) {
         items.clear();
         if (contactItems != null) {
             for (ContactListItem item : contactItems) {
@@ -218,7 +224,7 @@ class MainFragmentMediator {
         }
     }
 
-    void defaultData() {
+    public void defaultData() {
         items.clear();
         loadDefaults();
         getAdapter().loadData(items);

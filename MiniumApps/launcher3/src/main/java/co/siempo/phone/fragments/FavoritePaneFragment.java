@@ -1,15 +1,15 @@
 package co.siempo.phone.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import co.siempo.phone.R;
+import minium.co.core.ui.CoreFragment;
 
 
-public class FavoritePaneFragment extends Fragment {
+public class FavoritePaneFragment extends CoreFragment {
 
     private View view;
 

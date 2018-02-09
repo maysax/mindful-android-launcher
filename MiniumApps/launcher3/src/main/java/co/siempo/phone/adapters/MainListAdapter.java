@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -228,9 +229,22 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
             String searchString = constraint.toString().toLowerCase().trim();
 
+
+
+            Log.d("hardikkamothi","Search String : "+searchString);
             FilterResults ret = new FilterResults();
 
             int count = originalData.size();
+
+            Log.d("hardikkamothi","Original Data Size ::: "+originalData
+                    .size());
+
+
+            for(int i=0;i<originalData.size();i++){
+                Log.d("hardikkamothi","Item  :::"+originalData.get(i)
+                        .getTitle());
+            }
+
             List<MainListItem> buildData = new ArrayList<>();
 
             if (!searchString.isEmpty()) {
@@ -257,7 +271,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                     } else {
                         switch (originalData.get(i).getItemType()) {
                             case CONTACT:
+                                Log.d("hardikkamothi","Contact :::: ");
                                 if (searchString.equals("@")) {
+                                    Log.d("hardikkamothi","@....");
                                     buildData.add(originalData.get(i));
                                 } else {
                                     /*

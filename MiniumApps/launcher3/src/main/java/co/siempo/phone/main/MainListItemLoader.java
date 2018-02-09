@@ -14,6 +14,7 @@ import co.siempo.phone.R;
 import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.Launcher3App;
+import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.models.MainListItem;
@@ -64,7 +65,6 @@ public class MainListItemLoader {
         items.add(new MainListItem(24, getString(R.string.title_browser), "fa-hand-pointer-o"));
 
         items.add(new MainListItem(21, getString(R.string.title_clock), "fa-clock-o"));
-        //if (fragment instanceof MainFragment) {
         items.add(new MainListItem(8, getString(R.string.title_settings), "fa-cogs", R.drawable.icon_settings, MainListItemType.ACTION));
         //  }
         // items.add(new MainListItem(4, getString(R.string.title_pause), "fa-ban"));
@@ -84,7 +84,7 @@ public class MainListItemLoader {
         // items.add(new MainListItem(13, getString(R.string.title_mindfulMorning), "fa-coffee"));
         //items.add(new MainListItem(14, getString(R.string.title_mindfulMorningAlarm), "fa-coffee"));
 //        items.add(new MainListItem(15, getString(R.string.title_version, BuildConfig.VERSION_NAME), "fa-info-circle"));
-        if (fragment instanceof MainFragment) {
+        if (fragment instanceof PaneFragment) {
             try {
                 if (Launcher3App.getInstance().getPackagesList() != null && Launcher3App.getInstance().getPackagesList().size() > 0) {
                     for (ApplicationInfo applicationInfo : Launcher3App.getInstance().getPackagesList()) {
