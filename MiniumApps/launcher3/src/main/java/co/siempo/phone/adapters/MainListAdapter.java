@@ -1,17 +1,21 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,7 +25,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.joanzapata.iconify.IconDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +56,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private DrawableProvider mProvider;
     private TextDrawable.IBuilder mDrawableBuilder;
+    private PopupMenu popup;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
@@ -139,6 +143,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             holder = (ContactViewHolder) view.getTag();
         }
 
+
         ContactListItem item = (ContactListItem) getItem(position);
 
         if (item != null) {
@@ -183,6 +188,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 view = inflater.inflate(R.layout.list_item, parent, false);
                 holder.icon = view.findViewById(R.id.icon);
                 holder.text = view.findViewById(R.id.text);
+                holder.imgChevron = view.findViewById(R.id.imgChevron);
 
                 view.setTag(holder);
             }
@@ -191,41 +197,63 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             holder = (ActionViewHolder) view.getTag();
         }
 
-        MainListItem item = getItem(position);
+
+        ImageView imgChevron = view.findViewById(R.id.imgChevron);
+
+
+        final MainListItem item = getItem(position);
 
         if (item != null) {
-            Log.d("hardikkamothi","Item not null");
             if (item.getId() == -1) {
                 if (!TextUtils.isEmpty(item.getApplicationInfo().packageName)) {
 
-                    Log.d("hardikkamothi","Icon set 1");
                     holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
                 }
                 holder.text.setText(item.getApplicationInfo().name);
+                holder.imgChevron.setVisibility(View.VISIBLE);
             } else {
                 if (item.getDrawable() != 0) {
 
-                    Log.d("hardikkamothi","Icon set 2");
                     holder.icon.setImageResource(item.getDrawable());
-                } else {
-
-                    Log.d("hardikkamothi","Icon set 3");
-//                    holder.icon.setImageResource(item.getIconRes());
                 }
                 holder.text.setText(item.getTitle());
+                holder.imgChevron.setVisibility(View.GONE);
             }
 
-            if(item.getItemType() == MainListItemType.DEFAULT){
+            if (item.getItemType() == MainListItemType.DEFAULT) {
                 holder.text.setTextColor(context.getResources().getColor(R
                         .color.appland_blue_bright));
-            }
-            else
-            {
+            } else {
                 holder.text.setTextColor(context.getResources().getColor(R
                         .color.black));
             }
 
         }
+
+        imgChevron.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup = new PopupMenu(context, v, Gravity.END);
+                popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
+                MenuItem menuItem = popup.getMenu().findItem(R.id.block);
+                menuItem.setTitle(context.getResources().getString(R.string.info_or_uninstall));
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", item.getApplicationInfo().packageName, null);
+                        intent.setData(uri);
+                        context.startActivity(intent);
+                        return true;
+                    }
+                });
+                popup.show();
+
+            }
+        });
 
         return view;
     }
@@ -254,6 +282,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private static class ActionViewHolder {
         ImageView icon;
         TextView text;
+        ImageView imgChevron;
     }
 
     private static class ContactViewHolder {
@@ -340,7 +369,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 break;
                             case ACTION:
                                 filterableString = originalData.get(i).getTitle();
-                                if(!TextUtils.isEmpty(filterableString)){
+                                if (!TextUtils.isEmpty(filterableString)) {
                                     if (originalData.get(i).getApplicationInfo() == null) {
                                         if (filterableString.contains(searchString.toLowerCase().trim())) {
                                             buildData.add(originalData.get(i));
@@ -379,10 +408,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         }
                     }
                 }
-            }
-            else{
+            } else {
                 for (MainListItem menuMainListItem : originalData) {
-                    if(!TextUtils.isEmpty(menuMainListItem.getTitle())){
+                    if (!TextUtils.isEmpty(menuMainListItem.getTitle())) {
                         buildData.add(menuMainListItem);
                     }
                 }

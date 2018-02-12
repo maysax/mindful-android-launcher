@@ -23,7 +23,7 @@
             android:contentDescription="@null"
             android:padding="6dp"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -33,14 +33,16 @@
 
             <TextView
                 android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/imgChevron"
                 android:ellipsize="end"
                 android:fontFamily="sans-serif"
                 android:gravity="center|left"
                 android:lines="1"
                 android:maxLines="2"
                 android:padding="4dp"
+
                 android:paddingLeft="@dimen/dp_20"
                 android:paddingRight="@dimen/dp_20"
                 android:text="Sound"
@@ -57,7 +59,19 @@
                 android:textSize="12sp"
                 android:visibility="gone"
                 tools:text="Default App"/>
-        </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imgChevron"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_16"
+                android:padding="5dp"
+                android:src="@drawable/ic_chevron"/>
+
+
+        </RelativeLayout>
 
     </LinearLayout>
 

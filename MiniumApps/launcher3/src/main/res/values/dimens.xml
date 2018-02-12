@@ -7,6 +7,7 @@
     <integer name="grid_column">3</integer>
     <dimen name="dp_5">5dp</dimen>
     <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_12">12dp</dimen>
     <dimen name="sp_12">12sp</dimen>
     <dimen name="sp_10">10sp</dimen>
     <dimen name="sp_16">16sp</dimen>
@@ -54,6 +55,7 @@
     <dimen name="dp_3">3dp</dimen>
     <dimen name="dp_15">15dp</dimen>
     <dimen name="dp_16">16dp</dimen>
+    <dimen name="dp_24">24dp</dimen>
     <dimen name="sp_20">20sp</dimen>
     <dimen name="dp_4">4dp</dimen>
     <dimen name="dp_20">20dp</dimen>
