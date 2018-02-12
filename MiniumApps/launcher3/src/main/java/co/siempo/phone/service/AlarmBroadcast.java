@@ -6,8 +6,8 @@ import android.content.Intent;
 
 import java.util.Calendar;
 
-import co.siempo.phone.util.PackageUtil;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.utils.PackageUtil;
 
 /**
  * Created by rajeshjadi on 8/1/18.

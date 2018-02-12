@@ -26,8 +26,10 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import co.siempo.phone.R;
+import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
+import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
 import co.siempo.phone.old.OldMenuFragment;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.utils.UIUtils;
 
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
@@ -42,9 +44,9 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private static final float ALPHA_FULL = 1.0f;
 
     private final ItemTouchHelperAdapter mAdapter;
+    private int dragFrom = -1;
+    private int dragTo = -1;
     private OldMenuFragment oldMenuFragment = null;
-    int dragFrom = -1;
-    int dragTo = -1;
     private Context mContext = null;
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter, Context context) {
@@ -132,7 +134,9 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             int bottom = itemView.getBottom() - itemView.getHeight() / 2 + r;
 
 //          d.setBounds(itemView.getLeft(), itemView.getTop(), (int) dx, itemView.getBottom());
-            d.setBounds(left, top, right, bottom);
+            if (d != null) {
+                d.setBounds(left, top, right, bottom);
+            }
 
             d.draw(c);
 

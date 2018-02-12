@@ -13,9 +13,16 @@
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="popupMenuStyle">@style/interrupt_popup_menu</item>
+        <item name="actionMenuTextColor">@color/colorAccent</item>
     </style>
 
+    <style name="myCustomMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
 
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+    </style>
 
     <style name="MenuButtonsSmall">
         <item name="fab_size">mini</item>
@@ -109,5 +116,161 @@
         <item name="android:dropDownHorizontalOffset">-8dp</item>
         <item name="android:dropDownVerticalOffset">12dp</item>
     </style>
+
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="android:colorForeground">@android:color/primary_text_dark</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="CoreTheme" parent="BaseTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorButtonNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/text.primary</item>
+        <item name="android:textColorSecondary">@color/text.secondary</item>
+    </style>
+
+    <style name="CoreTheme.Red">
+        <item name="colorPrimary">@color/colorPrimaryRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>
+        <item name="colorAccent">@color/colorAccentRed</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightRed</item>
+    </style>
+
+    <style name="CoreTheme.Pink">
+        <item name="colorPrimary">@color/colorPrimaryPink</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkPink</item>
+        <item name="colorAccent">@color/colorAccentPink</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightPink</item>
+    </style>
+
+    <style name="CoreTheme.Purple">
+        <item name="colorPrimary">@color/colorPrimaryPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkPurple</item>
+        <item name="colorAccent">@color/colorAccentPurple</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightPurple</item>
+    </style>
+
+    <style name="CoreTheme.DeepPurple">
+        <item name="colorPrimary">@color/colorPrimaryDeepPurple</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDeepPurple</item>
+        <item name="colorAccent">@color/colorAccentDeepPurple</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightDeepPurple</item>
+    </style>
+
+    <style name="CoreTheme.Indigo">
+        <item name="colorPrimary">@color/colorPrimaryIndigo</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkIndigo</item>
+        <item name="colorAccent">@color/colorAccentIndigo</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightIndigo</item>
+    </style>
+
+    <style name="CoreTheme.Blue">
+        <item name="colorPrimary">@color/colorPrimaryBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkBlue</item>
+        <item name="colorAccent">@color/colorAccentBlue</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightBlue</item>
+    </style>
+
+    <style name="CoreTheme.LightBlue">
+        <item name="colorPrimary">@color/colorPrimaryLightBlue</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkLightBlue</item>
+        <item name="colorAccent">@color/colorAccentLightBlue</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightLightBlue</item>
+    </style>
+
+    <style name="CoreTheme.Cyan">
+        <item name="colorPrimary">@color/colorPrimaryCyan</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkCyan</item>
+        <item name="colorAccent">@color/colorAccentCyan</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightCyan</item>
+    </style>
+
+    <style name="CoreTheme.Teal">
+        <item name="colorPrimary">@color/colorPrimaryTeal</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkTeal</item>
+        <item name="colorAccent">@color/colorAccentTeal</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightTeal</item>
+    </style>
+
+    <style name="CoreTheme.Green">
+        <item name="colorPrimary">@color/colorPrimaryGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkGreen</item>
+        <item name="colorAccent">@color/colorAccentGreen</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightGreen</item>
+    </style>
+
+    <style name="CoreTheme.LightGreen">
+        <item name="colorPrimary">@color/colorPrimaryLightGreen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkLightGreen</item>
+        <item name="colorAccent">@color/colorAccentLightGreen</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightLightGreen</item>
+    </style>
+
+    <style name="CoreTheme.Lime">
+        <item name="colorPrimary">@color/colorPrimaryLime</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkLime</item>
+        <item name="colorAccent">@color/colorAccentLime</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightLime</item>
+    </style>
+
+    <style name="CoreTheme.Yellow">
+        <item name="colorPrimary">@color/colorPrimaryYellow</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkYellow</item>
+        <item name="colorAccent">@color/colorAccentYellow</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightYellow</item>
+    </style>
+
+    <style name="CoreTheme.Amber">
+        <item name="colorPrimary">@color/colorPrimaryAmber</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkAmber</item>
+        <item name="colorAccent">@color/colorAccentAmber</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightAmber</item>
+    </style>
+
+    <style name="CoreTheme.Orange">
+        <item name="colorPrimary">@color/colorPrimaryOrange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkOrange</item>
+        <item name="colorAccent">@color/colorAccentOrange</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightOrange</item>
+    </style>
+
+    <style name="CoreTheme.DeepOrange">
+        <item name="colorPrimary">@color/colorPrimaryDeepOrange</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDeepOrange</item>
+        <item name="colorAccent">@color/colorAccentDeepOrange</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightDeepOrange</item>
+    </style>
+
+    <style name="CoreTheme.Brown">
+        <item name="colorPrimary">@color/colorPrimaryBrown</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkBrown</item>
+        <item name="colorAccent">@color/colorAccentBrown</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightBrown</item>
+    </style>
+
+    <style name="CoreTheme.Grey">
+        <item name="colorPrimary">@color/colorPrimaryGrey</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkGrey</item>
+        <item name="colorAccent">@color/colorAccentGrey</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightGrey</item>
+    </style>
+
+    <style name="CoreTheme.BlueGrey">
+        <item name="colorPrimary">@color/colorPrimaryBlueGrey</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkBlueGrey</item>
+        <item name="colorAccent">@color/colorAccentBlueGrey</item>
+        <item name="colorControlHighlight">@color/colorControlHighlightBlueGrey</item>
+    </style>
+
+
+    <style name="feedbackDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorPrimary">#A3A3A3</item>
+    </style>
+
 
 </resources>

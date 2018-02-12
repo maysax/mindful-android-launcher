@@ -3,7 +3,6 @@ package co.siempo.phone.app;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
-import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.ResolveInfo;
@@ -31,6 +30,7 @@ import org.greenrobot.greendao.database.Database;
 
 import java.util.ArrayList;
 
+import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.db.DaoMaster;
 import co.siempo.phone.db.DaoSession;
@@ -38,15 +38,11 @@ import co.siempo.phone.db.GreenDaoOpenHelper;
 import co.siempo.phone.event.DefaultAppUpdate;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.log.LogConfig;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.old.PreferenceListAdapter;
-import co.siempo.phone.util.PackageUtil;
+import co.siempo.phone.utils.PackageUtil;
 import de.greenrobot.event.EventBus;
-import minium.co.core.BuildConfig;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.config.Config;
-import minium.co.core.log.LogConfig;
-import minium.co.core.log.Tracer;
 
 /**
  * Created by Shahab on 2/16/2017.
@@ -77,13 +73,13 @@ public class Launcher3App extends CoreApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Tracer.i("Application Id: " + co.siempo.phone.BuildConfig.APPLICATION_ID
-                + " || Version code: " + co.siempo.phone.BuildConfig.VERSION_CODE
-                + " || Version name: " + co.siempo.phone.BuildConfig.VERSION_NAME
+        Tracer.i("Application Id: " + BuildConfig.APPLICATION_ID
+                + " || Version code: " + BuildConfig.VERSION_CODE
+                + " || Version name: " + BuildConfig.VERSION_NAME
                 + "\nGit Sha: " + BuildConfig.GIT_SHA
                 + " || Build time:  " + BuildConfig.BUILD_TIME
-                + " || Build flavor: " + co.siempo.phone.BuildConfig.FLAVOR
-                + " || Build type: " + co.siempo.phone.BuildConfig.BUILD_TYPE);
+                + " || Build flavor: " + BuildConfig.FLAVOR
+                + " || Build type: " + BuildConfig.BUILD_TYPE);
 
         Tracer.i("Model: " + Build.MODEL
                 + " || Build No: " + Build.FINGERPRINT
@@ -99,27 +95,13 @@ public class Launcher3App extends CoreApplication {
         Database db = helper2.getWritableDb();
         DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
-        setAllDefaultMenusApplication();
+        //setAllDefaultMenusApplication();
         AppLifecycleTracker handler = new AppLifecycleTracker();
         registerActivityLifecycleCallbacks(handler);
         PackageUtil.enableAlarm(this);
+
     }
 
-    public void checkProfile() {
-//         0 - Show as Normal mode(In System it will be silent mode).
-//         1 - Vibrate mode(In System it will be silent mode).
-//         2 - Show as Silent mode(In System it will be silent mode).
-        if (launcherPrefs.getCurrentProfile().get() == 0) {
-            Log.d("Profile Check:::", "checkProfile : Normal" + launcherPrefs.getCurrentProfile().get());
-            changeProfileToSilentMode();
-        } else if (launcherPrefs.getCurrentProfile().get() == 2) {
-            Log.d("Profile Check:::", "checkProfile : Silent" + launcherPrefs.getCurrentProfile().get());
-            changeProfileToSilentMode();
-        } else {
-            Log.d("Profile Check:::", "checkProfile : Vibrate" + launcherPrefs.getCurrentProfile().get());
-            changeProfileToVibrateMode();
-        }
-    }
 
     /**
      * Configure the default application when application installed
@@ -476,10 +458,10 @@ public class Launcher3App extends CoreApplication {
 
     private void configureEverNote() {
         new EvernoteSession.Builder(this)
-                .setEvernoteService(minium.co.notes.app.Config.EVERNOTE_SERVICE)
+                .setEvernoteService(EverNoteConfig.EVERNOTE_SERVICE)
                 .setSupportAppLinkedNotebooks(true)
                 .setForceAuthenticationInThirdPartyApp(true)
-                .build(minium.co.notes.app.Config.CONSUMER_KEY, minium.co.notes.app.Config.CONSUMER_SECRET)
+                .build(EverNoteConfig.CONSUMER_KEY, EverNoteConfig.CONSUMER_SECRET)
                 .asSingleton();
 
     }
@@ -502,10 +484,6 @@ public class Launcher3App extends CoreApplication {
             if (numStarted == 0) {
                 // app went to foreground
                 Log.d(TAG, "Siempo is on foreground");
-                KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-                if (myKM != null && !myKM.inKeyguardRestrictedInputMode()) {
-                    checkProfile();
-                }
                 launcherPrefs.isAppDefaultOrFront().put(true);
 
             }
@@ -551,7 +529,6 @@ public class Launcher3App extends CoreApplication {
 
                 } else {
                     launcherPrefs.isAppDefaultOrFront().put(false);
-                    changeProfileToNormalMode();
                 }
             }
         }

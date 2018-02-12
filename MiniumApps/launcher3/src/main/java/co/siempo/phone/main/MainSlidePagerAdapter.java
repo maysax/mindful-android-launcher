@@ -6,6 +6,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
+import co.siempo.phone.fragments.IntentionFieldFragment_;
 import co.siempo.phone.old.OldMenuFragment_;
 
 /**

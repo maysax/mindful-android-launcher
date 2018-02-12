@@ -19,17 +19,17 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
 import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.app.Constants;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
-import co.siempo.phone.model.ContactListItem;
-import co.siempo.phone.model.MainListItem;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.ContactListItem;
+import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
+import co.siempo.phone.utils.DataUtils;
+import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.log.Tracer;
-import minium.co.core.util.DataUtils;
-import minium.co.core.util.UIUtils;
 
 
 @EBean
@@ -150,14 +150,12 @@ public class TokenRouter {
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
-//            UIUtils.toast(context, "The message will not get sent.");
         }
     }
 
     public void call(Activity activity) {
 
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,

@@ -8,7 +8,6 @@ import com.github.paolorotolo.appintro.AppIntro2;
 import com.github.paolorotolo.appintro.AppIntroFragment;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Fullscreen;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import minium.co.core.app.DroidPrefs_;

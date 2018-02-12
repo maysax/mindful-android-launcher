@@ -10,7 +10,6 @@
     <color name="pauseSeekBarActive">#332d6d</color>
     <color name="pauseSeekBarInactive">#26000000</color>
     <color name="dim_foreground_dark_inverse">#323232</color>
-    <color name="transparent">#00000000</color>
     <color name="text.ongoingcall">#646464</color>
     <color name="border.color">#42000000</color>"
     <color name="automcoplete">#bcbcbc</color>
@@ -21,5 +20,247 @@
     <color name="black_overlay">#66000000</color>
     <color name="errorColor">#EA3D85</color>
     <color name="blackcolor">#000000</color>
+
+
+    <!--colors new added for design-->
+    <color name="indicator_inactive">#3342A4FF</color>
+    <color name="indicator_active">#33000000</color>
+
+    <!--color used in notes-->
+    <color name="drop_shadow_grey">#87737373</color>
+
+    <color name="black_95">#F2000000</color>
+    <color name="black_90">#E6000000</color>
+    <color name="black_85">#D9000000</color>
+    <color name="black_80">#CC000000</color>
+    <color name="black_75">#B000000F</color>
+    <color name="black_70">#B3000000</color>
+    <color name="black_65">#A6000000</color>
+    <color name="black_60">#99000000</color>
+    <color name="black_55">#8C000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="black_45">#73000000</color>
+    <color name="black_40">#66000000</color>
+    <color name="black_35">#59000000</color>
+    <color name="black_30">#4D000000</color>
+    <color name="black_25">#40000000</color>
+    <color name="black_20">#33000000</color>
+    <color name="black_15">#26000000</color>
+    <color name="black_10">#1A000000</color>
+    <color name="black_05">#0E000000</color>
+
+    <string-array name="colours" translatable="false">
+        <item>#44A1EB</item> <!-- blue -->
+        <item>#77DDBB</item> <!-- teal -->
+        <item>#BBE535</item> <!-- green -->
+        <item>#F56545</item> <!-- red -->
+        <item>#FFBB22</item> <!-- orange -->
+        <item>#EEEE22</item> <!-- yellow -->
+        <item>#FF5997</item> <!-- pink -->
+        <item>#A767FF</item> <!-- purple -->
+        <item>#FFFFFF</item> <!-- white -->
+    </string-array>
+
+
+    <!-- Theme Red -->
+    <color name="colorPrimaryRed">@color/material.core.red</color>
+    <color name="colorPrimaryDarkRed">#D32F2F</color>
+    <color name="colorAccentRed">#EF9A9A</color>
+    <color name="colorControlHighlightRed">#FFCDD2</color>
+
+    <!-- Theme Pink -->
+    <color name="colorPrimaryPink">@color/material.core.pink</color>
+    <color name="colorPrimaryDarkPink">#C2185B</color>
+    <color name="colorAccentPink">#F48FB1</color>
+    <color name="colorControlHighlightPink">#F8BBD0</color>
+
+    <!-- Theme Purple -->
+    <color name="colorPrimaryPurple">@color/material.core.purple</color>
+    <color name="colorPrimaryDarkPurple">#7B1FA2</color>
+    <color name="colorAccentPurple">#CE93D8</color>
+    <color name="colorControlHighlightPurple">#E1BEE7</color>
+
+    <!-- Theme Deep Purple -->
+    <color name="colorPrimaryDeepPurple">@color/material.core.deepPurple</color>
+    <color name="colorPrimaryDarkDeepPurple">#512DA8</color>
+    <color name="colorAccentDeepPurple">#B39DDB</color>
+    <color name="colorControlHighlightDeepPurple">#D1C4E9</color>
+
+    <!-- Theme Indigo -->
+    <color name="colorPrimaryIndigo">@color/material.core.indigo</color>
+    <color name="colorPrimaryDarkIndigo">#303F9F</color>
+    <color name="colorAccentIndigo">#9FA8DA</color>
+    <color name="colorControlHighlightIndigo">#C5CAE9</color>
+
+    <!-- Theme Blue -->
+    <color name="colorPrimaryBlue">@color/material.core.blue</color>
+    <color name="colorPrimaryDarkBlue">#1976D2</color>
+    <color name="colorAccentBlue">#90CAF9</color>
+    <color name="colorControlHighlightBlue">#BBDEFB</color>
+
+    <!-- Theme Light Blue -->
+    <color name="colorPrimaryLightBlue">@color/material.core.lightBlue</color>
+    <color name="colorPrimaryDarkLightBlue">#0288D1</color>
+    <color name="colorAccentLightBlue">#81D4FA</color>
+    <color name="colorControlHighlightLightBlue">#B3E5FC</color>
+
+    <!-- Theme Cyan -->
+    <color name="colorPrimaryCyan">@color/material.core.cyan</color>
+    <color name="colorPrimaryDarkCyan">#0097A7</color>
+    <color name="colorAccentCyan">#80DEEA</color>
+    <color name="colorControlHighlightCyan">#B2EBF2</color>
+
+    <!-- Theme Teal -->
+    <color name="colorPrimaryTeal">@color/material.core.teal</color>
+    <color name="colorPrimaryDarkTeal">#00796B</color>
+    <color name="colorAccentTeal">#80CBC4</color>
+    <color name="colorControlHighlightTeal">#B2DFDB</color>
+
+    <!-- Theme Green -->
+    <color name="colorPrimaryGreen">@color/material.core.green</color>
+    <color name="colorPrimaryDarkGreen">#388E3C</color>
+    <color name="colorAccentGreen">#A5D6A7</color>
+    <color name="colorControlHighlightGreen">#C8E6C9</color>
+
+    <!-- Theme Light Green -->
+    <color name="colorPrimaryLightGreen">@color/material.core.lightGreen</color>
+    <color name="colorPrimaryDarkLightGreen">#689F38</color>
+    <color name="colorAccentLightGreen">#C5E1A5</color>
+    <color name="colorControlHighlightLightGreen">#DCEDC8</color>
+
+    <!-- Theme Lime -->
+    <color name="colorPrimaryLime">@color/material.core.lime</color>
+    <color name="colorPrimaryDarkLime">#AFB42B</color>
+    <color name="colorAccentLime">#E6EE9C</color>
+    <color name="colorControlHighlightLime">#F0F4C3</color>
+
+    <!-- Theme Yellow -->
+    <color name="colorPrimaryYellow">@color/material.core.yellow</color>
+    <color name="colorPrimaryDarkYellow">#FBC02D</color>
+    <color name="colorAccentYellow">#FFF59D</color>
+    <color name="colorControlHighlightYellow">#FFF9C4</color>
+
+    <!-- Theme Amber -->
+    <color name="colorPrimaryAmber">@color/material.core.amber</color>
+    <color name="colorPrimaryDarkAmber">#FFA000</color>
+    <color name="colorAccentAmber">#FFE082</color>
+    <color name="colorControlHighlightAmber">#FFECB3</color>
+
+    <!-- Theme Orange -->
+    <color name="colorPrimaryOrange">@color/material.core.orange</color>
+    <color name="colorPrimaryDarkOrange">#F57C00</color>
+    <color name="colorAccentOrange">#FFCC80</color>
+    <color name="colorControlHighlightOrange">#FFE0B2</color>
+
+    <!-- Theme DeepOrange -->
+    <color name="colorPrimaryDeepOrange">@color/material.core.deepOrange</color>
+    <color name="colorPrimaryDarkDeepOrange">#E64A19</color>
+    <color name="colorAccentDeepOrange">#FFAB91</color>
+    <color name="colorControlHighlightDeepOrange">#FFCCBC</color>
+
+    <!-- Theme Brown -->
+    <color name="colorPrimaryBrown">@color/material.core.brown</color>
+    <color name="colorPrimaryDarkBrown">#5D4037</color>
+    <color name="colorAccentBrown">#BCAAA4</color>
+    <color name="colorControlHighlightBrown">#D7CCC8</color>
+
+    <!-- Theme Grey -->
+    <color name="colorPrimaryGrey">@color/material.core.grey</color>
+    <color name="colorPrimaryDarkGrey">#616161</color>
+    <color name="colorAccentGrey">#EEEEEE</color>
+    <color name="colorControlHighlightGrey">#F5F5F5</color>
+
+    <!-- Theme Blue Grey -->
+    <color name="colorPrimaryBlueGrey">@color/material.core.blueGrey</color>
+    <color name="colorPrimaryDarkBlueGrey">#455A64</color>
+    <color name="colorAccentBlueGrey">#B0BEC5</color>
+    <color name="colorControlHighlightBlueGrey">#CFD8DC</color>
+
+    <!-- Material flat UI colors -->
+    <color name="materialFlatTurquoise">#1abc9c</color>
+    <color name="materialFlatTurquoise.dark">#16a085</color>
+    <color name="materialFlatEmerland">#2ecc71</color>
+    <color name="materialFlatEmerland.dark">#27ae60</color>
+    <color name="materialFlatPeterriver">#3498db</color>
+    <color name="material.flat.peterriver.dark">#2980b9</color>
+    <color name="material.flat.amethyst">#9b59b6</color>
+    <color name="material.flat.amethyst.dark">#8e44ad</color>
+    <color name="material.flat.wetasphalt">#34495e</color>
+    <color name="material.flat.wetasphalt.dark">#2c3e50</color>
+    <color name="material.flat.sunflower">#f1c40f</color>
+    <color name="material.flat.sunflower.dark">#f39c12</color>
+    <color name="material.flat.carrot">#e67e22</color>
+    <color name="material.flat.carrot.dark">#d35400</color>
+    <color name="material.flat.alizarin">#e74c3c</color>
+    <color name="material.flat.alizarin.dark">#c0392b</color>
+    <color name="material.flat.clouds">#ecf0f1</color>
+    <color name="material.flat.clouds.dark">#bdc3c7</color>
+    <color name="material.flat.concrete">#95a5a6</color>
+    <color name="material.flat.concrete.dark">#7f8c8d</color>
+
+
+    <!-- Material core colors -->
+    <color name="material.core.red">#f44336</color>
+    <color name="material.core.pink">#E91E63</color>
+    <color name="material.core.purple">#9C27B0</color>
+    <color name="material.core.deepPurple">#673AB7</color>
+    <color name="material.core.indigo">#3F51B5</color>
+    <color name="material.core.blue">#2196F3</color>
+    <color name="material.core.lightBlue">#03A9F4</color>
+    <color name="material.core.cyan">#00BCD4</color>
+    <color name="material.core.teal">#009688</color>
+    <color name="material.core.green">#4CAF50</color>
+    <color name="material.core.lightGreen">#8BC34A</color>
+    <color name="material.core.lime">#CDDC39</color>
+    <color name="material.core.yellow">#FFEB3B</color>
+    <color name="material.core.amber">#FFC107</color>
+    <color name="material.core.orange">#FF9800</color>
+    <color name="material.core.deepOrange">#FF5722</color>
+    <color name="material.core.brown">#795548</color>
+    <color name="material.core.grey">#9E9E9E</color>
+    <color name="material.core.blueGrey">#607D8B</color>
+    <color name="material.core.black">@color/black</color>
+
+    <array name="material_core_colors">
+        <item>@color/material.core.red</item>
+        <item>@color/material.core.pink</item>
+        <item>@color/material.core.purple</item>
+        <item>@color/material.core.deepPurple</item>
+        <item>@color/material.core.indigo</item>
+        <item>@color/material.core.blue</item>
+        <item>@color/material.core.lightBlue</item>
+        <item>@color/material.core.cyan</item>
+        <item>@color/material.core.teal</item>
+        <item>@color/material.core.green</item>
+        <item>@color/material.core.lightGreen</item>
+        <item>@color/material.core.lime</item>
+        <item>@color/material.core.yellow</item>
+        <item>@color/material.core.amber</item>
+        <item>@color/material.core.orange</item>
+        <item>@color/material.core.deepOrange</item>
+        <item>@color/material.core.brown</item>
+        <item>@color/material.core.grey</item>
+        <item>@color/material.core.blueGrey</item>
+        <item>@color/material.core.black</item>
+    </array>
+
+    <!-- Android core colors for easy access -->
+    <color name="dialog_text">#202020</color>
+    <color name="white">@android:color/white</color>
+    <color name="headerLine">#E6E6E6</color>
+    <color name="black">@android:color/black</color>
+    <color name="shadow">#727272</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="darker_gray">@android:color/darker_gray</color>
+
+    <!-- Text colors -->
+    <color name="text.primary">#212121</color>
+    <color name="text.secondary">#727272</color>
+    <color name="text.hint">#98A4A9</color>
+    <color name="text.link">@color/colorAccent</color>
+
+    <!-- Complementary colors -->
+    <color name="light.highlight">#DDDDDD</color>
+    <color name="dark.highlight">#414141</color>
 
 </resources>

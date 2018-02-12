@@ -30,47 +30,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.app.Launcher3Prefs_;
+import co.siempo.phone.fragments.CoreFragment;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
-import co.siempo.phone.model.MainListItem;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.app.DroidPrefs_;
-import minium.co.core.log.Tracer;
-import minium.co.core.ui.CoreFragment;
-import minium.co.core.util.UIUtils;
+import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.UIUtils;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link Fragment} subclass.onNoteListChanged
  */
 @EFragment(R.layout.fragment_old_menu)
 public class OldMenuFragment extends CoreFragment implements OnCustomerListChangedListener,
         OnStartDragListener {
 
-    private List<MainListItem> items = new ArrayList<>();
-
     @Pref
     public DroidPrefs_ prefs;
-
     @Pref
     public Launcher3Prefs_ launcher3Prefs_;
-
-
     @ViewById
     RecyclerView activity_grid_view;
-
     @ViewById
     ImageView btnListOrGrid;
-
-
     @ViewById
     ImageView icon;
-
     @ViewById
     CardView cardView;
-
+    private List<MainListItem> items = new ArrayList<>();
     private MenuAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemOffsetDecoration itemDecoration;
@@ -165,7 +156,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         //check for null
         if (!jsonListOfSortedCustomerId.isEmpty()) {
 
-            //convert JSON array into a List<Long>
+            //convert onNoteListChangedJSON array into a List<Long>
             Gson gson = new Gson();
             List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedCustomerId, new TypeToken<List<Long>>() {
             }.getType());
@@ -193,26 +184,6 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
             return sortedCustomers;
         } else {
             return customerList;
-        }
-    }
-
-    private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
-
-        private final int mItemOffset;
-
-        ItemOffsetDecoration(int itemOffset) {
-            mItemOffset = itemOffset;
-        }
-
-        ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
-            this(context.getResources().getDimensionPixelSize(itemOffsetId));
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                                   RecyclerView.State state) {
-            super.getItemOffsets(outRect, view, parent, state);
-            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
         }
     }
 
@@ -290,6 +261,26 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
                 CoreApplication.getInstance().logException(e);
                 Tracer.e(e, e.getMessage());
             }
+        }
+    }
+
+    private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+
+        private final int mItemOffset;
+
+        ItemOffsetDecoration(int itemOffset) {
+            mItemOffset = itemOffset;
+        }
+
+        ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
+            this(context.getResources().getDimensionPixelSize(itemOffsetId));
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                                   RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
         }
     }
 }

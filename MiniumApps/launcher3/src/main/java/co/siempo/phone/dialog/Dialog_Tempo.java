@@ -37,9 +37,9 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import co.siempo.phone.R;
+import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.FirebaseHelper;
-import minium.co.core.app.CoreApplication;
-import minium.co.core.log.Tracer;
+import co.siempo.phone.log.Tracer;
 
 public class Dialog_Tempo extends Dialog implements View.OnClickListener {
     private RadioButton radioIndividual, radioBatched, radioOnlyAt;

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'com.android.library'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'io.fabric'
 apply plugin: 'org.greenrobot.greendao'
@@ -16,23 +17,24 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
-//        versionCode "${versionMajor}".toInteger() * 1000 + "${versionMinor}".toInteger() * 100 + "${versionPatch}".toInteger() * 10 + "${versionBuild}".toInteger();
-//        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${versionBuild}-${buildTime}"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         defaultConfig {
             vectorDrawables.useSupportLibrary = true
         }
+        buildConfigField "String", project.KEY_GIT_SHA, "\"${gitSha}\""
+        buildConfigField "String", project.KEY_BUILD_TIME, "\"${buildTime}\""
     }
     buildTypes {
         debug {
             debuggable true
             minifyEnabled false
+            shrinkResources false
         }
         release {
             debuggable false
             // RELEASE: true
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
@@ -77,26 +79,17 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    /**
-     * =================== Test suit  ===================
-     */
     compile 'com.android.support:support-v4:26.1.0'
     testCompile "junit:junit:$junitVersion"
     androidTestCompile("com.android.support.test.espresso:espresso-core:$espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile project(':chips')
-    // compile project(':color-picker')
-    compile project(':notes')
-    compile project(':halo-circle-seekbar')
-    compile project(':horizontal-timepicker')
-    compile project(':status-lib')
-    //compile "com.github.satyan:sugar:$sugarOrmVersion"
+//    compile project(':core')
     compile "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerViewAdapterHelperVersion"
     compile("com.github.paolorotolo:appintro:$appIntroVersion") {
         exclude module: 'appcompat-v7'
     }
-    apt "org.androidannotations:androidannotations:$annotationsVersion"
     compile "org.greenrobot:greendao:$greenDaoVersion"
     compile "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:$keyboardvisibilityEventVersion"
     compile "com.github.bumptech.glide:glide:$glideVersion"
@@ -112,6 +105,8 @@ dependencies {
     compile files('libs/activation.jar')
     compile files('libs/additionnal.jar')
     compile files('libs/mail.jar')
+    compile 'me.relex:circleindicator:1.2.2@aar'// indicator for view pager
+    compile 'com.evernote:android-sdk:2.0.0-RC4'
 
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2') {
         exclude module: 'support-annotations'
@@ -119,6 +114,36 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+
+    /**
+     * =================== Support libraries ===================
+     */
+    // http://developer.android.com/tools/support-library/index.html
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:gridlayout-v7:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+    compile "com.android.support:support-v13:$supportVersion"
+    compile "com.android.support:palette-v7:$supportVersion"
+    compile "com.android.support:multidex:$multidexVersion"
+    compile "org.androidannotations:androidannotations-api:$annotationsVersion"
+    compile "uk.co.chrisjenx:calligraphy:$calligraphyVersion"
+    compile "com.joanzapata.iconify:android-iconify-fontawesome:$iconifyVersion"
+    compile "de.hdodenhof:circleimageview:$circleImageViewVersion"
+    compile("com.crashlytics.sdk.android:crashlytics:$crashlyticsVersion") {
+        transitive = true
+    }
+    compile "com.orhanobut:logger:$loggerVersion"
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    compile "de.greenrobot:eventbus:$eventbusVersion"
+    compile "gun0912.ted:tedpermission:$tedPermissionVersion"
+    compile 'com.blankj:utilcode:1.5.0'
+    apt "org.androidannotations:androidannotations:$annotationsVersion"
+    compile "com.amitshekhar.android:android-networking:$fastAndroidNetworkingVersion"
+
 }
 greendao {
     schemaVersion "${databaseVersion}".toInteger()

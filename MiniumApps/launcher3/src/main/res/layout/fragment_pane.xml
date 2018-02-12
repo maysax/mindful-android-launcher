@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="3"
+    tools:context="co.siempo.phone.fragments.IntentionFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:id="@+id/linTopDoc"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linPane"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.85"
+            android:background="@drawable/ic_center_dock_bg"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pagerPane"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linBottomDoc"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.65"
+            android:background="@drawable/ic_bottom_dock_bg"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <me.relex.circleindicator.CircleIndicator
+                android:id="@+id/indicator"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                app:ci_drawable="@drawable/indicator_active"
+                app:ci_drawable_unselected="@drawable/indicator_inactive" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linSearchList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.5"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/activities_row" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
