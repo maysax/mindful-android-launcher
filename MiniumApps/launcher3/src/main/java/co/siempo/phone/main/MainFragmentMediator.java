@@ -88,7 +88,9 @@ public class MainFragmentMediator {
                     items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
                 } else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                     items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(4, fragment.getString(R
+                            .string.title_call), R.drawable.ic_call_filter,
+                            MainListItemType.DEFAULT));
                 } else if (fragment.getManager().hasCompleted(TokenItemType.DATA)) {
                     items.add(new MainListItem(1, fragment.getString(R
                             .string.title_sendAsSMS), R.drawable.ic_messages_tool,
@@ -98,7 +100,9 @@ public class MainFragmentMediator {
                             MainListItemType.DEFAULT));
                     items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
                 } else {
-                    items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
+                    items.add(new MainListItem(4, fragment.getString(R
+                            .string.title_call), R.drawable.ic_call_filter,
+                            MainListItemType.NUMBERS));
                     items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
                     items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT));
                     items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
@@ -160,10 +164,10 @@ public class MainFragmentMediator {
                             }
                             break;
                         case 3:
-                            if (router != null && fragment != null) {
-                                router.createContact(fragment.getActivity());
-                                FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CREATE_CONTACT, "", data);
-                            }
+//                            if (router != null && fragment != null) {
+//                                router.createContact(fragment.getActivity());
+//                                FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CREATE_CONTACT, "", data);
+//                            }
                             break;
                         case 4:
                             if (router != null && fragment != null) {
@@ -215,7 +219,9 @@ public class MainFragmentMediator {
             for (ContactListItem item : contactItems) {
                 if (item != null && item.getContactId() == selectedContactId) {
                     for (ContactListItem.ContactNumber number : item.getNumbers()) {
-                        items.add(new MainListItem(selectedContactId, number.getNumber(), R.drawable.icon_call, MainListItemType.NUMBERS));
+                        items.add(new MainListItem(selectedContactId, number
+                                .getNumber(), R.drawable.ic_call_filter,
+                                MainListItemType.NUMBERS));
                     }
                 }
             }

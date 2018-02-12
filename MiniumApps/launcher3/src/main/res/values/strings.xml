@@ -35,8 +35,8 @@
 
     <string name="title.mindfulMorning">Mindful Morning</string>
     <string name="title.mindfulMorningAlarm" tools:ignore="UnusedResources">Mindful Morning Alarm</string>
-    <string name="title.sendAsSMS">Send as SMS</string>
-    <string name="title.saveNote">Save Note</string>
+    <string name="title.sendAsSMS">Send as a message</string>
+    <string name="title.saveNote">Save as a note</string>
     <string name="title.createContact">Create Contact</string>
     <string name="title.tempo">Tempo</string>
 

@@ -50,6 +50,7 @@
     <color name="black_05">#0E000000</color>
     <color name="appland_blue">#8A42A4FF</color>
     <color name="appland_blue_bright">#42A4FF</color>
+    <color name="appland_contact_black">#CC000000</color>
     <color name="appland_date">#8A000000</color>
     <color name="bg_junk_apps_top_dock">#42A4FF</color>
 

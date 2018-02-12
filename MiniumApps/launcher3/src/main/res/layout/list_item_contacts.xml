@@ -23,7 +23,7 @@
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
-            android:layout_height="22dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/icon"
@@ -31,8 +31,8 @@
             android:fontFamily="sans-serif"
             android:gravity="center_vertical"
             android:lines="1"
-            android:textColor="#000000"
-            android:textSize="@dimen/text.size.medium"
+            android:textColor="#DE000000"
+            android:textSize="@dimen/sp_16"
             tools:text="John Doe"/>
 
         <TextView
@@ -47,6 +47,7 @@
             android:lines="1"
             android:textColor="#8b000000"
             android:textSize="@dimen/text.size.medium"
+            android:visibility="gone"
             tools:text="+1-555-12345"/>
 
     </RelativeLayout>

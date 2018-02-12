@@ -3,7 +3,6 @@ package co.siempo.phone.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.Settings;
@@ -164,7 +163,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 });
             } else {
                 if (!TextUtils.isEmpty(item.getContactName())) {
-                    Drawable drawable = mProvider.getRound("" + item.getContactName().charAt(0), Color.BLACK);
+                    Drawable drawable = mProvider.getRound("" + item
+                            .getContactName().charAt(0), context.getResources
+                            ().getColor(R.color.appland_contact_black));
                     holder.icon.setImageDrawable(drawable);
                 }
             }
@@ -227,7 +228,10 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 holder.imgChevron.setVisibility(View.GONE);
             }
 
-            if (item.getItemType() == MainListItemType.DEFAULT) {
+            MainListItemType itemType = item.getItemType();
+
+            // Call item in Tools has id=13 , while as a default type has id=4
+            if (itemType == MainListItemType.DEFAULT || item.getId() == 4) {
                 holder.text.setTextColor(context.getResources().getColor(R
                         .color.appland_blue_bright));
             } else {
@@ -382,7 +386,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 filterableString = originalData.get(i).getTitle();
                                 if (!TextUtils.isEmpty(filterableString)) {
                                     if (originalData.get(i).getApplicationInfo() == null) {
-                                        if (filterableString.contains(searchString.toLowerCase().trim())) {
+                                        if (filterableString.toLowerCase().contains
+                                                (searchString.toLowerCase().trim())) {
                                             buildData.add(originalData.get(i));
                                             break;
                                         }
