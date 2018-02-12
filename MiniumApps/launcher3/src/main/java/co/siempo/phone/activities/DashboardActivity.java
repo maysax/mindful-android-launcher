@@ -1,11 +1,13 @@
 package co.siempo.phone.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
+import co.siempo.phone.utils.PrefSiempo;
 
 public class DashboardActivity extends CoreActivity {
 
@@ -24,7 +26,11 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        initView();
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
+            PrefSiempo.getInstance(this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
+            Intent intent = new Intent(this, JunkfoodFlaggingActivity.class);
+            startActivity(intent);
+        }
 
     }
 
@@ -36,9 +42,17 @@ public class DashboardActivity extends CoreActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        initView();
+    }
+
+    @Override
     public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
+        if (mPager != null && mPager.getCurrentItem() == 0) {
             mPager.setCurrentItem(1);
+        } else {
+            super.onBackPressed();
         }
     }
 }

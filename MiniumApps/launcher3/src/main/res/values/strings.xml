@@ -331,6 +331,7 @@
 
 
     <string name="cancel">CANCEL</string>
+    <string name="strcontinue">CONTINUE</string>
     <string name="remove">REMOVE</string>
     <string name="msg_sametime">You can\'t set same time multiple times</string>
     <string name="msg_individual">Notifications will be delivered up to \n1 minute late or as soon as they arrive.</string>
@@ -504,6 +505,17 @@
     <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
     <string name="assign_an_app">Assign an app to </string>
     <string name="title_flagging_screen">Flag apps you want to use less</string>
+    <string name="flagged_apps">Flagged apps</string>
+    <string name="all_other_installed_apps">All other installed apps</string>
+    <string name="tap_apps_below_to_move_them_into_this_section">Tap apps below to move them into this section.</string>
+    <string name="msg_congratulations">Congratulations!</string>
+    <string name="flag_app">Flag this app to use it less</string>
+    <string name="unflagapp">Un-flag this app</string>
+    <string name="get_info_or_uninstall_app">Get info or uninstall app</string>
+    <string name="msg_flage_save_dialog">You\'ve taken an important step towards reducing the use of apps that can make you feel bad when you overuse them.</string>
+    <string name="msg_flag_first_time">Most users report that the more apps they flag, the less they use their phones.  Flagging will make these apps just a bit harder to launch and use unintentionally.</string>
+    <string name="yes_unhide">YES, UNHIDE</string>
+    <string name="are_you_sure">Are you sure?</string>
 
 
 </resources>

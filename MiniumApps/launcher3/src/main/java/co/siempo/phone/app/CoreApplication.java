@@ -415,22 +415,22 @@ public abstract class CoreApplication extends MultiDexApplication {
             HashMap<Integer, AppMenu> map = new HashMap<>();
             //by default on install, the "Recorder", "Payment", and "Browser" tools are hidden
             // (they may be revealed via the tool-selection screen (see tool-selection below)).
-            map.put(1, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(1).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(1).get(0).activityInfo.packageName : ""));
-            map.put(2, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(2).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(2).get(0).activityInfo.packageName : ""));
-            map.put(3, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(3).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(3).get(0).activityInfo.packageName : ""));
-            map.put(4, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(4).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(4).get(0).activityInfo.packageName : ""));
-            map.put(5, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(5).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(5).get(0).activityInfo.packageName : ""));
-            map.put(6, new AppMenu(false, false, CoreApplication.getInstance().getApplicationByCategory(6).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(6).get(0).activityInfo.packageName : ""));
-            map.put(7, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(7).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(7).get(0).activityInfo.packageName : ""));
-            map.put(8, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(8).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(8).get(0).activityInfo.packageName : ""));
-            map.put(9, new AppMenu(false, false, CoreApplication.getInstance().getApplicationByCategory(9).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(9).get(0).activityInfo.packageName : ""));
-            map.put(10, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(10).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
-            map.put(11, new AppMenu(false, false, CoreApplication.getInstance().getApplicationByCategory(11).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(11).get(0).activityInfo.packageName : ""));
-            map.put(12, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(12).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
-            map.put(13, new AppMenu(true, true, CoreApplication.getInstance().getApplicationByCategory(13).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
-            map.put(14, new AppMenu(true, true, CoreApplication.getInstance().getApplicationByCategory(14).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(14).get(0).activityInfo.packageName : ""));
-            map.put(15, new AppMenu(true, true, CoreApplication.getInstance().getApplicationByCategory(15).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
-            map.put(16, new AppMenu(true, true, CoreApplication.getInstance().getApplicationByCategory(16).size() != 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
+            map.put(1, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(1).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(1).get(0).activityInfo.packageName : ""));
+            map.put(2, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(2).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(2).get(0).activityInfo.packageName : ""));
+            map.put(3, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(3).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(3).get(0).activityInfo.packageName : ""));
+            map.put(4, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(4).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(4).get(0).activityInfo.packageName : ""));
+            map.put(5, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(5).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(5).get(0).activityInfo.packageName : ""));
+            map.put(6, new AppMenu(false, false, CoreApplication.getInstance().getApplicationByCategory(6).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(6).get(0).activityInfo.packageName : ""));
+            map.put(7, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(7).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(7).get(0).activityInfo.packageName : ""));
+            map.put(8, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(8).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(8).get(0).activityInfo.packageName : ""));
+            map.put(9, new AppMenu(false, false, CoreApplication.getInstance().getApplicationByCategory(9).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(9).get(0).activityInfo.packageName : ""));
+            map.put(10, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(10).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(10).get(0).activityInfo.packageName : ""));
+            map.put(11, new AppMenu(false, false, CoreApplication.getInstance().getApplicationByCategory(11).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(11).get(0).activityInfo.packageName : ""));
+            map.put(12, new AppMenu(true, false, CoreApplication.getInstance().getApplicationByCategory(12).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(12).get(0).activityInfo.packageName : ""));
+            map.put(13, new AppMenu(true, true, CoreApplication.getInstance().getApplicationByCategory(13).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(13).get(0).activityInfo.packageName : ""));
+            map.put(14, new AppMenu(true, true, CoreApplication.getInstance().getApplicationByCategory(14).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(14).get(0).activityInfo.packageName : ""));
+            map.put(15, new AppMenu(true, true, CoreApplication.getInstance().getApplicationByCategory(15).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(15).get(0).activityInfo.packageName : ""));
+            map.put(16, new AppMenu(true, true, CoreApplication.getInstance().getApplicationByCategory(16).size() == 1 ? CoreApplication.getInstance().getApplicationByCategory(16).get(0).activityInfo.packageName : ""));
             String hashMapToolSettings = new Gson().toJson(map);
             PrefSiempo.getInstance(this).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
 

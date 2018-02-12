@@ -117,6 +117,11 @@
         <item name="android:dropDownVerticalOffset">12dp</item>
     </style>
 
+    <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/dialog_title</item>
+        <item name="android:textColorPrimary">@color/dialog_message</item>
+    </style>
+
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="android:colorForeground">@android:color/primary_text_dark</item>
