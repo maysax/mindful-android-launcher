@@ -35,13 +35,14 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     private final Context context;
     private List<MainListItem> mainListItemList;
-    private boolean isHideIconBranding = true;
+    private boolean isHideIconBranding = true, isBottomDoc = false;
     private HashMap<Integer, AppMenu> map;
 
-    public ToolsMenuAdapter(Context context, boolean isHideIconBranding, List<MainListItem> mainListItemList) {
+    public ToolsMenuAdapter(Context context, boolean isHideIconBranding, boolean isBottomDoc, List<MainListItem> mainListItemList) {
         this.context = context;
         this.mainListItemList = mainListItemList;
         this.isHideIconBranding = isHideIconBranding;
+        this.isBottomDoc = isBottomDoc;
         map = CoreApplication.getInstance().getToolsSettings();
     }
 
@@ -62,66 +63,64 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final MainListItem item = mainListItemList.get(position);
         final AppMenu appMenu = map.get(item.getId());
-        if (!appMenu.isBottomDoc()) {
-            if (appMenu.isVisible()) {
-                holder.linearLayout.setVisibility(View.VISIBLE);
-                if (!TextUtils.isEmpty(item.getTitle())) {
-                    holder.text.setText(item.getTitle());
-                }
-                if (isHideIconBranding) {
-                    holder.icon.setImageResource(item.getDrawable());
+        if (appMenu.isVisible()) {
+            holder.linearLayout.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(item.getTitle())) {
+                holder.text.setText(item.getTitle());
+            }
+            if (isHideIconBranding) {
+                holder.icon.setImageResource(item.getDrawable());
+            } else {
+                if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                    Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(appMenu.getApplicationName());
+                    if (drawable != null) {
+                        holder.icon.setImageDrawable(drawable);
+                        holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
+                    } else {
+                        holder.icon.setImageResource(item.getDrawable());
+                    }
                 } else {
-                    if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
-                        Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(appMenu.getApplicationName());
-                        if (drawable != null) {
-                            holder.icon.setImageDrawable(drawable);
-                            holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
+                    holder.linearLayout.setVisibility(View.INVISIBLE);
+                }
+            }
+        } else {
+            holder.linearLayout.setVisibility(View.INVISIBLE);
+        }
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id;
+                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
+                    id = item.getId();
+                    if (!appMenu.getApplicationName().equalsIgnoreCase("")
+                            && UIUtils.isAppInstalled(context, appMenu.getApplicationName().trim())) {
+                        if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
+                                new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
+                            openAppAssignmentScreen(item);
                         } else {
-                            holder.icon.setImageResource(item.getDrawable());
+//                                if a 3rd party app is already assigned to this tool
+                            new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
                         }
                     } else {
-                        holder.linearLayout.setVisibility(View.INVISIBLE);
-                    }
-                }
-            } else {
-                holder.linearLayout.setVisibility(View.INVISIBLE);
-            }
-            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int id;
-                    if (holder.linearLayout.getVisibility() == View.VISIBLE) {
-                        id = item.getId();
-                        if (!appMenu.getApplicationName().equalsIgnoreCase("")
-                                && UIUtils.isAppInstalled(context, appMenu.getApplicationName().trim())) {
-                            if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
-                                    new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
-                                openAppAssignmentScreen(item);
+                        if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 0) {
+                            if (id == 5) {
+                                new ActivityHelper(context).openNotesApp(false);
                             } else {
-//                                if a 3rd party app is already assigned to this tool
-                                new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                openAppAssignmentScreen(item);
                             }
+                        } else if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 1
+                                && !PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
+                                new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
+//                                if a 3rd party app is already assigned to this tool
+                            String strPackageName = CoreApplication.getInstance().getApplicationByCategory(id).get(0).activityInfo.packageName;
+                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
                         } else {
-                            if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 0) {
-                                if (id == 5) {
-                                    new ActivityHelper(context).openNotesApp(false);
-                                } else {
-                                    openAppAssignmentScreen(item);
-                                }
-                            } else if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 1
-                                    && !PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
-                                    new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
-//                                if a 3rd party app is already assigned to this tool
-                                String strPackageName = CoreApplication.getInstance().getApplicationByCategory(id).get(0).activityInfo.packageName;
-                                new ActivityHelper(context).openAppWithPackageName(strPackageName);
-                            } else {
-                                openAppAssignmentScreen(item);
-                            }
+                            openAppAssignmentScreen(item);
                         }
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
@@ -141,7 +140,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     @Override
     public int getItemCount() {
-        return 12;
+        return isBottomDoc ? 4 : 12;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

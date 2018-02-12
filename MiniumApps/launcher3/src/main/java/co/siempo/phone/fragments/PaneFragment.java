@@ -2,13 +2,29 @@ package co.siempo.phone.fragments;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import co.siempo.phone.R;
+import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.adapters.PanePagerAdapter;
+import co.siempo.phone.adapters.ToolsMenuAdapter;
+import co.siempo.phone.app.CoreApplication;
+import co.siempo.phone.customviews.ItemOffsetDecoration;
+import co.siempo.phone.main.MainListItemLoader;
+import co.siempo.phone.models.AppMenu;
+import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.PrefSiempo;
 import me.relex.circleindicator.CircleIndicator;
 
 
@@ -21,6 +37,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private PanePagerAdapter mPagerAdapter;
     private LinearLayout linPane;
     private LinearLayout linBottomDoc;
+    private RecyclerView recyclerViewBottomDoc;
+    private List<MainListItem> items = new ArrayList<>();
+    private ToolsMenuAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ItemOffsetDecoration itemDecoration;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -39,6 +60,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_pane, container, false);
+        context = (CoreActivity) getActivity();
         initView(view);
         return view;
     }
@@ -58,6 +80,38 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         indicator.setViewPager(pagerPane);
         pagerPane.setCurrentItem(2);
 
+        bindBottomDoc();
+
+    }
+
+    private void bindBottomDoc() {
+        ArrayList<MainListItem> itemsLocal = new ArrayList<>();
+        new MainListItemLoader(getActivity()).loadItemsDefaultApp(itemsLocal);
+        Set<Integer> list = new HashSet<>();
+
+        for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
+            if (entry.getValue().isBottomDoc()) {
+                list.add(entry.getKey());
+            }
+        }
+
+        for (MainListItem mainListItem : itemsLocal) {
+            if (list.contains(mainListItem.getId())) {
+                items.add(mainListItem);
+            }
+        }
+
+        recyclerViewBottomDoc = view.findViewById(R.id.recyclerViewBottomDoc);
+        mLayoutManager = new GridLayoutManager(getActivity(), 4);
+        recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
+        if (itemDecoration != null) {
+            recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
+        }
+        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_1);
+        recyclerViewBottomDoc.addItemDecoration(itemDecoration);
+        boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
+        mAdapter = new ToolsMenuAdapter(getActivity(), isHideIconBranding, true, items);
+        recyclerViewBottomDoc.setAdapter(mAdapter);
     }
 
     @Override
