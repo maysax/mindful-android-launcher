@@ -8,8 +8,8 @@ public class SearchLayoutEvent {
 
     private String str;
 
-    public SearchLayoutEvent(String s) {
-        this.str = s;
+    public SearchLayoutEvent(String searchString) {
+        this.str = searchString;
     }
 
     public String getString() {

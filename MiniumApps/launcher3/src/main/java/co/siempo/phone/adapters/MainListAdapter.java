@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import co.siempo.phone.R;
@@ -57,6 +58,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private DrawableProvider mProvider;
     private TextDrawable.IBuilder mDrawableBuilder;
     private PopupMenu popup;
+    private HashMap<String, Bitmap> iconList;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
@@ -64,6 +66,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         mDrawableBuilder = TextDrawable.builder()
                 .round();
         mProvider = new DrawableProvider(context);
+        iconList = CoreApplication.getInstance().iconList;
         loadData(items);
     }
 
@@ -203,11 +206,15 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
         final MainListItem item = getItem(position);
 
-        if (item != null) {
-            if (item.getId() == -1) {
-                if (!TextUtils.isEmpty(item.getApplicationInfo().packageName)) {
 
-                    holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
+        if (item != null) {
+
+            if (item.getId() == -1) {
+                final String packageName = item.getApplicationInfo().packageName;
+                if (!TextUtils.isEmpty(packageName)) {
+
+
+                    holder.icon.setImageBitmap(iconList.get(packageName));
                 }
                 holder.text.setText(item.getApplicationInfo().name);
                 holder.imgChevron.setVisibility(View.VISIBLE);
@@ -244,7 +251,11 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
                         Intent intent = new Intent();
                         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", item.getApplicationInfo().packageName, null);
+                        Uri uri = null;
+                        if (item != null) {
+                            uri = Uri.fromParts("package", item
+                                    .getApplicationInfo().packageName, null);
+                        }
                         intent.setData(uri);
                         context.startActivity(intent);
                         return true;
@@ -267,7 +278,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private boolean checkDuplicate(List<MainListItem> buildData, String str) {
         if (buildData != null) {
             for (MainListItem mainListItem : buildData) {
-                if (mainListItem.getTitle().toLowerCase().equalsIgnoreCase(str)) {
+                if (mainListItem.getTitle().equalsIgnoreCase(str)) {
                     return false;
                 }
             }

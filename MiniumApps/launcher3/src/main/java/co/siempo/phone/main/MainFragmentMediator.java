@@ -2,7 +2,6 @@ package co.siempo.phone.main;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,16 +67,12 @@ public class MainFragmentMediator {
 
     private void loadContacts() {
         try {
-            Log.d("hardikkamothi","Load Contacts :::");
             if (fragment != null && fragment.getManager() != null && fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
                 return;
             }
             if (fragment != null && contactItems.size() == 0) {
-                Log.d("hardikkamothi","Contact Size 0 so load");
                 contactItems = new ContactsLoader().loadContacts(fragment.getActivity());
             }
-            Log.d("hardikkamothi","Final Contact Size :::"+contactItems
-                    .size());
             items.addAll(contactItems);
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);

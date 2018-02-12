@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +27,6 @@ import com.eyeem.chips.ChipsEditText;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -51,26 +49,20 @@ import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.Subscribe;
 import me.relex.circleindicator.CircleIndicator;
 
-
 public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
-    private View view;
     private LinearLayout linTopDoc;
-    private CircleIndicator indicator;
     private ViewPager pagerPane;
-    private PanePagerAdapter mPagerAdapter;
     private LinearLayout linPane;
     private LinearLayout linBottomDoc;
-    private EditText edtSearchTools;
+    private EditText edtSearchToolsRounded;
     private TextView txtTopDockDate;
     private View linSearchList;
     private SearchLayout searchLayout;
     private RelativeLayout relSearchTools;
-    private LinearLayoutManager layoutManager;
     private ListView listView;
     private CardView cardViewEdtSearch;
-    private ArrayList<String> toolsList;
-    private View blueLineView;
+    private View blueLineDivider;
     private TextView txtIntentionLabelJunkPane;
     private TextView txtIntention;
     private Window mWindow;
@@ -79,10 +71,14 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private TokenRouter router;
     private MainListAdapter adapter;
     private TokenParser parser;
+    /**
+     * Edit Text inside the SearchLayout
+     */
     private ChipsEditText chipsEditText;
+    /**
+     * Clear button inside the SearchLayout
+     */
     private ImageView imageClear;
-    //    private View btnClearSearch;
-    //    private View btnClearSearch;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -98,11 +94,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_pane, container, false);
+        View view = inflater.inflate(R.layout.fragment_pane, container, false);
         initView(view);
         return view;
     }
@@ -142,13 +137,13 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
     private void initView(View view) {
         linTopDoc = view.findViewById(R.id.linTopDoc);
         linTopDoc.setOnClickListener(this);
         linPane = view.findViewById(R.id.linPane);
-        edtSearchTools = view.findViewById(R.id.edtSearchTools);
-        blueLineView = view.findViewById(R.id.blueLineView);
+        edtSearchToolsRounded = view.findViewById(R.id.edtSearchTools);
+        blueLineDivider = view.findViewById(R.id.blueLineView);
         cardViewEdtSearch = view.findViewById(R.id.cardViewEdtSearch);
         searchLayout = view.findViewById(R.id.edtSearchListView);
         relSearchTools = view.findViewById(R.id.relSearchTools);
@@ -160,12 +155,12 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         linSearchList = view.findViewById(R.id.linSearchList);
         listView = view.findViewById(R.id.listView);
         linBottomDoc.setOnClickListener(this);
-        indicator = view.findViewById(R.id.indicator);
+        CircleIndicator indicator = view.findViewById(R.id.indicator);
         pagerPane = view.findViewById(R.id.pagerPane);
         chipsEditText = searchLayout.getTxtSearchBox();
         imageClear = searchLayout.getBtnClear();
 
-        mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
+        PanePagerAdapter mPagerAdapter = new PanePagerAdapter(getChildFragmentManager());
         pagerPane.setAdapter(mPagerAdapter);
         indicator.setViewPager(pagerPane);
         pagerPane.setCurrentItem(2);
@@ -182,14 +177,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         defaultStatusBarColor = mWindow.getStatusBarColor();
 
+        //Focus Change Listener for Search in List
         searchEditTextFocusChanged();
 
         //Code for Date setting
-
         setToolsPaneDate();
-
-        //Code for List Setting
-        setSearchToolsList();
 
         //Code for Page change
         setViewPagerPageChanged();
@@ -209,8 +201,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
                 chipsEditText.clearFocus();
                 chipsEditText.setText("");
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+                InputMethodManager imm = (InputMethodManager) getActivity()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+                }
 
             }
         });
@@ -225,7 +220,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     private void searchEditTextFocusChanged() {
         //Circular Edit Text
-        edtSearchTools.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        edtSearchToolsRounded.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -251,13 +246,13 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
                     linPane.setVisibility(View.GONE);
                     linBottomDoc.setVisibility(View.GONE);
-                    blueLineView.setVisibility(View.VISIBLE);
+                    blueLineDivider.setVisibility(View.VISIBLE);
                     linSearchList.setVisibility(View.VISIBLE);
                     imageClear.setVisibility(View.VISIBLE);
                 } else {
 
                     linPane.setVisibility(View.VISIBLE);
-                    blueLineView.setVisibility(View.VISIBLE);
+                    blueLineDivider.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.GONE);
                     cardViewEdtSearch.setVisibility(View.GONE);
                     relSearchTools.setVisibility(View.VISIBLE);
@@ -345,7 +340,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                             .bg_junk_apps_top_dock));
                     txtTopDockDate.setVisibility(View.GONE);
                     searchLayout.setVisibility(View.GONE);
-                    edtSearchTools.setVisibility(View.GONE);
+                    edtSearchToolsRounded.setVisibility(View.GONE);
 
                     txtIntention.setVisibility(View.VISIBLE);
                     txtIntentionLabelJunkPane.setVisibility(View.VISIBLE);
@@ -378,7 +373,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                             .drawable.top_bar_bg));
                     txtTopDockDate.setVisibility(View.VISIBLE);
                     searchLayout.setVisibility(View.VISIBLE);
-                    edtSearchTools.setVisibility(View.VISIBLE);
+                    edtSearchToolsRounded.setVisibility(View.VISIBLE);
                     txtIntention.setVisibility(View.GONE);
                     txtIntentionLabelJunkPane.setVisibility(View.GONE);
 
@@ -397,51 +392,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         });
     }
 
-    /**
-     * Adpater settings for Tools List
-     */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setSearchToolsList() {
-
-
-        //Code for listview adapter
-        layoutManager = new LinearLayoutManager(getContext());
-//        recyclerSearchList.setLayoutManager(layoutManager);
-
-        //Need to update the model
-        toolsList = new ArrayList<>();
-        toolsList.add("Calendar");
-        toolsList.add("Calculator");
-        toolsList.add("Calls");
-        toolsList.add("Spotify");
-        toolsList.add("Tools");
-        toolsList.add("Travel");
-
-
-//        adapter = new ToolsListAdapter(toolsList, getContext());
-//        recyclerSearchList.setAdapter(adapter);
-//        edtSearchListView.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-//                // TODO Auto-generated method stub
-//            }
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-//                                          int arg3) {
-//                // TODO Auto-generated method stub
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable arg0) {
-//                // TODO Auto-generated method stub
-//                filter(arg0.toString());
-//
-//            }
-//        });
-    }
 
     /**
      * Set Date for Tools Pane
@@ -470,23 +420,6 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         }
     }
 
-    /**
-     * filter the list based on edit text value
-     *
-     * @param text
-     */
-    public void filter(String text) {
-        ArrayList<String> temp = new ArrayList();
-        for (String d : toolsList) {
-            //or use .equal(text) with you want equal match
-            //use .toLowerCase() for better matches
-            if (d.toLowerCase().contains(text.toLowerCase())) {
-                temp.add(d);
-            }
-        }
-        //update recyclerview
-//        adapter.updateList(temp);
-    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -494,6 +427,11 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (!isVisibleToUser && null != mWindow) {
             mWindow.setStatusBarColor(defaultStatusBarColor);
         }
+        if (!isVisibleToUser && null != imageClear && linSearchList
+                .getVisibility() == View.VISIBLE) {
+            imageClear.performClick();
+        }
+
         super.setUserVisibleHint(isVisibleToUser);
     }
 
