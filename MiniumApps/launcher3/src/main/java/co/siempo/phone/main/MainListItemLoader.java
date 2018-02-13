@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +12,6 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.DashboardActivity;
-import co.siempo.phone.activities.SiempoSettingsDefaultAppActivity;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.app.Launcher3App;
 import co.siempo.phone.fragments.PaneFragment;
@@ -241,24 +239,24 @@ public class MainListItemLoader {
                 new ActivityHelper(context).openAppWithPackageName
                         (CoreApplication.getInstance().getToolsSettings().get
                                 (TOOLS_CALL).getApplicationName().trim());
-                if (context instanceof DashboardActivity) {
-                    if (!((DashboardActivity) context).prefs.isCallClicked().get()) {
-                        if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
-                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
-                        } else {
-                            ((DashboardActivity) context).prefs.isCallClickedFirstTime().put(true);
-                            new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.callPackage().get());
-                        }
-                    } else {
-                        new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.callPackage().get());
-                    }
-                } else if (context instanceof SiempoSettingsDefaultAppActivity) {
-                    if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
-                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, true);
-                    } else {
-                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-                    }
-                }
+//                if (context instanceof DashboardActivity) {
+//                    if (!((DashboardActivity) context).prefs.isCallClicked().get()) {
+//                        if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
+//                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
+//                        } else {
+//                            ((DashboardActivity) context).prefs.isCallClickedFirstTime().put(true);
+//                            new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.callPackage().get());
+//                        }
+//                    } else {
+//                        new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.callPackage().get());
+//                    }
+//                } else if (context instanceof SiempoSettingsDefaultAppActivity) {
+//                    if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
+//                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, true);
+//                    } else {
+//                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
                 break;
             case TOOLS_CLOCK://Clock
 

@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="3"
-    tools:context="co.siempo.phone.fragments.IntentionFragment">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="3"
+                tools:context="co.siempo.phone.fragments.IntentionFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,8 +16,8 @@
             android:id="@+id/linTopDoc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.68"
-            android:background="@drawable/top_bar_drawable"
+            android:layout_weight="0.6"
+            android:background="@drawable/top_dock_bg"
             android:orientation="vertical">
 
             <include layout="@layout/layout_top_dock"/>
@@ -49,17 +49,25 @@
             android:id="@+id/linBottomDoc"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.65"
+            android:layout_weight="0.6"
+            android:background="@drawable/bottom_dock_bg"
             android:orientation="vertical"
             android:visibility="visible">
 
             <me.relex.circleindicator.CircleIndicator
                 android:id="@+id/indicator"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="24dp"
                 android:layout_gravity="center"
                 app:ci_drawable="@drawable/indicator_active"
                 app:ci_drawable_unselected="@drawable/indicator_inactive"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewBottomDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clipToPadding="false"/>
         </LinearLayout>
 
         <LinearLayout

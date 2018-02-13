@@ -66,6 +66,8 @@ public class DashboardActivity extends CoreActivity {
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private DashboardPagerAdapter mPagerAdapter;
+    private AlertDialog notificationDialog;
+    private int index = -1;
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
@@ -83,7 +85,6 @@ public class DashboardActivity extends CoreActivity {
                     .check();
         }
     };
-    private AlertDialog notificationDialog;
 
     /**
      * @return True if {@link android.service.notification.NotificationListenerService} is enabled.
@@ -142,8 +143,6 @@ public class DashboardActivity extends CoreActivity {
         }
     }
 
-    private int index = -1;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,7 +184,9 @@ public class DashboardActivity extends CoreActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        index = mPager.getCurrentItem();
+        if (null != mPager) {
+            index = mPager.getCurrentItem();
+        }
     }
 
     @Override

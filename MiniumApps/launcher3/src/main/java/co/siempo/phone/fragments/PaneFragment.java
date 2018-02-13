@@ -8,9 +8,9 @@ import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,25 +29,37 @@ import com.eyeem.chips.ChipsEditText;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.adapters.PanePagerAdapter;
 import co.siempo.phone.adapters.ToolsMenuAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.customviews.ItemOffsetDecoration;
+import co.siempo.phone.customviews.SearchLayout;
+import co.siempo.phone.event.SearchLayoutEvent;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.main.MainFragmentMediator;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.token.TokenCompleteType;
+import co.siempo.phone.token.TokenItem;
+import co.siempo.phone.token.TokenItemType;
+import co.siempo.phone.token.TokenManager;
+import co.siempo.phone.token.TokenParser;
+import co.siempo.phone.token.TokenRouter;
+import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.utils.PrefSiempo;
+import de.greenrobot.event.Subscribe;
 import me.relex.circleindicator.CircleIndicator;
 
 /**
@@ -79,6 +91,13 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private TokenRouter router;
     private MainListAdapter adapter;
     private TokenParser parser;
+
+    private RecyclerView recyclerViewBottomDoc;
+    private List<MainListItem> items = new ArrayList<>();
+    private ToolsMenuAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ItemOffsetDecoration itemDecoration;
+
     /**
      * Edit Text inside the SearchLayout
      */
@@ -87,6 +106,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
      * Clear button inside the SearchLayout
      */
     private ImageView imageClear;
+    private View rootView;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -104,10 +124,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pane, container, false);
+        rootView = inflater.inflate(R.layout.fragment_pane, container, false);
         context = (CoreActivity) getActivity();
-        initView(view);
-        return view;
+        initView(rootView);
+        return rootView;
     }
 
     @Override
@@ -194,7 +214,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
             }
         }
 
-        recyclerViewBottomDoc = view.findViewById(R.id.recyclerViewBottomDoc);
+        recyclerViewBottomDoc = rootView.findViewById(R.id.recyclerViewBottomDoc);
         mLayoutManager = new GridLayoutManager(getActivity(), 4);
         recyclerViewBottomDoc.setLayoutManager(mLayoutManager);
         if (itemDecoration != null) {
