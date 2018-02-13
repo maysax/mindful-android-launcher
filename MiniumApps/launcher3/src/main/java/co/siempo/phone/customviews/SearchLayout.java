@@ -20,7 +20,6 @@ import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
-import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.utils.UIUtils;
@@ -151,14 +150,6 @@ public class SearchLayout extends CardView {
     }
 
     private void handleAfterTextChanged(String s) {
-//        if (btnClear != null) {
-//            if (s.length() != 0) {
-//                btnClear.setVisibility(VISIBLE);
-//            } else {
-//                btnClear.setVisibility(INVISIBLE);
-//            }
-//        }
-
         if (isWatching) {
             EventBus.getDefault().post(new SearchLayoutEvent(s));
         }
@@ -223,10 +214,6 @@ public class SearchLayout extends CardView {
             if (item.getCompleteType() == TokenCompleteType.FULL) {
                 if (item.isChipable()) {
                     formattedTxt += "^";
-                }
-
-                if (item.getItemType() == TokenItemType.CONTACT) {
-                    //formattedTxt += "@";
                 }
 
                 formattedTxt += item.getTitle() + "|";

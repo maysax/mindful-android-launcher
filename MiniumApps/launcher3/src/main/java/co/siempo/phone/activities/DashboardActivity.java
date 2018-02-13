@@ -120,19 +120,6 @@ public class DashboardActivity extends CoreActivity {
             Log.d(TAG, "onResume.. ");
 
             loadViews();
-//            startTime = System.currentTimeMillis();
-            /**
-             * Below logic is disable for NFC which is not used in existing development.
-             */
-//            try {
-//                enableNfc(true);
-//            } catch (Exception e) {
-//                Tracer.e(e);
-//                CoreApplication.getInstance().logException(e);
-//            }
-            // prevent keyboard up on old menu screen when coming back from other launcher
-//            if (pager != null) pager.setCurrentItem(currentItem, true);
-            //  currentIndex = currentItem;
         }
     }
 

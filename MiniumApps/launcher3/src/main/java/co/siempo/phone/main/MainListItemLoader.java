@@ -74,9 +74,6 @@ public class MainListItemLoader {
                 ();
 
 
-
-
-
         if (!TextUtils.isEmpty(toolsSettings.get(TOOLS_MAP)
                 .getApplicationName())) {
             items.add(new MainListItem(TOOLS_MAP, getString(R.string.title_map), R.drawable.ic_menu_map));
@@ -239,24 +236,6 @@ public class MainListItemLoader {
                 new ActivityHelper(context).openAppWithPackageName
                         (CoreApplication.getInstance().getToolsSettings().get
                                 (TOOLS_CALL).getApplicationName().trim());
-//                if (context instanceof DashboardActivity) {
-//                    if (!((DashboardActivity) context).prefs.isCallClicked().get()) {
-//                        if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
-//                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, false);
-//                        } else {
-//                            ((DashboardActivity) context).prefs.isCallClickedFirstTime().put(true);
-//                            new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.callPackage().get());
-//                        }
-//                    } else {
-//                        new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.callPackage().get());
-//                    }
-//                } else if (context instanceof SiempoSettingsDefaultAppActivity) {
-//                    if (CoreApplication.getInstance().getCallPackageList().size() > 1) {
-//                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 2, true);
-//                    } else {
-//                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
                 break;
             case TOOLS_CLOCK://Clock
 
@@ -284,37 +263,7 @@ public class MainListItemLoader {
             case 19:
                 new ActivityHelper(context).openInstallledApp();
                 break;
-            //            case 3:// Contact
-//                if (context instanceof SiempoSettingsDefaultAppActivity) {
-//                    if (CoreApplication.getInstance().getContactPackageList().size() > 1) {
-//                        ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 3, true);
-//                    } else {
-//                        Toast.makeText(context, getString(R.string.msg_no_more_application), Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-////                    new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.contactPackage().get());
-//                    if (!((DashboardActivity) context).prefs.isContactClicked().get()) {
-//                        if (CoreApplication.getInstance().getContactPackageList().size() > 1) {
-//                            ((Launcher3App) CoreApplication.getInstance()).showPreferenceAppListDialog(context, 3, false);
-//                        } else {
-//                            new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.contactPackage().get());
-//                        }
-//                    } else {
-//                        new ActivityHelper(context).openAppWithPackageName(((DashboardActivity) context).prefs.contactPackage().get());
-//                    }
-//                }
-//                break;
-//            case 12:
-//                new ActivityHelper(context).handleDefaultLauncher((CoreActivity) context);
-//                ((CoreActivity) context).loadDialog();
-//                break;
-//            case 15:
-//                if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.alpha))) {
-//                    ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.ALPHA);
-//                } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
-//                    ApiClient_.getInstance_(context).checkAppVersion(CheckVersionEvent.BETA);
-//                }
-//                break;
+
             default:
                 UIUtils.alert(context, getString(R.string.msg_not_yet_implemented));
                 break;
@@ -323,50 +272,5 @@ public class MainListItemLoader {
 
     }
 
-    public void firebaseEvent(int id) {
-//        switch (id) {
-//            case 1:// Message
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_messages), 1);
-//                break;
-//            case 2:// Call
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_call), 1);
-//                break;
-//            case 3:// Contact
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_contacts), 1);
-//                break;
-//            case 6://Notes
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_note), 1);
-//                break;
-//            case 11://Map
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_map), 1);
-//                break;
-//            case 16:// Email
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_email), 1);
-//                break;
-//            case 18://FeedBack
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_feedback), 1);
-//                break;
-//            case 19://Apps
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_apps), 1);
-//                break;
-//            case 20://Calender
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_calendar), 1);
-//                break;
-//            case 21://Clock
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_clock), 1);
-//                break;
-//            case 8://Photos
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_photos), 1);
-//                break;
-//            case 23:// Camera
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_camera), 1);
-//                break;
-//            case 24:// Browser
-//                FirebaseHelper.getIntance().logSiempoMenuUsage(context.getString(R.string.title_browser), 1);
-//                break;
-//            default:
-//                break;
-//        }
 
-    }
 }

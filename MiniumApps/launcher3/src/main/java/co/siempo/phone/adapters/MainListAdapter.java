@@ -231,7 +231,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             MainListItemType itemType = item.getItemType();
 
             // Call item in Tools has id=13 , while as a default type has id=4
-            if (itemType == MainListItemType.DEFAULT || item.getId() == 4) {
+            if ((null != itemType) && (itemType == MainListItemType.DEFAULT ||
+                    item.getId()
+                            == 4)) {
                 holder.text.setTextColor(context.getResources().getColor(R
                         .color.appland_blue_bright));
             } else {
@@ -325,7 +327,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
                 for (int i = 0; i < count; i++) {
                     String filterableString;
-                    String[] splits;
                     if (searchString.startsWith("/")) {
                         if (searchString.length() == 1 && searchString.equalsIgnoreCase("/")) {
                             buildData.clear();

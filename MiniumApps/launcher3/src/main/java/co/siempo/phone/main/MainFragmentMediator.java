@@ -136,7 +136,6 @@ public class MainFragmentMediator {
                 case ACTION:
                     if (getAdapter() != null && getAdapter().getItem(position).getApplicationInfo() == null) {
                         position = getAdapter().getItem(position).getId();
-                        new MainListItemLoader(fragment.getActivity()).firebaseEvent(position);
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
                         if (fragment != null) {
@@ -164,10 +163,6 @@ public class MainFragmentMediator {
                             }
                             break;
                         case 3:
-//                            if (router != null && fragment != null) {
-//                                router.createContact(fragment.getActivity());
-//                                FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CREATE_CONTACT, "", data);
-//                            }
                             break;
                         case 4:
                             if (router != null && fragment != null) {
