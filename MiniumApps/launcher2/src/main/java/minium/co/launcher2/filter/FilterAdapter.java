@@ -237,6 +237,7 @@ public class FilterAdapter extends ArrayAdapter<MainListItem> {
 
             for (int i = 0; i < count; i++) {
 
+
                 if (searchString.isEmpty()) {
                     if (originalData.get(i).getType() == MainListItem.ItemType.ACTION_LIST_ITEM)
                         buildData.add(originalData.get(i));
