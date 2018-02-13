@@ -3,10 +3,10 @@
 
     <item
         android:id="@+id/item_Unflag"
-        android:title="@string/unflagapp" />
+        android:title="@string/unflagapp"/>
 
     <item
         android:id="@+id/item_Info"
-        android:title="@string/get_info_or_uninstall_app" />
+        android:title="@string/get_info_or_uninstall_app"/>
 
 </menu>
