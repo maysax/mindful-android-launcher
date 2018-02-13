@@ -70,7 +70,8 @@
         android:launchMode="singleInstance"
         android:supportsRtl="true"
         android:theme="@style/SiempoAppTheme"
-        tools:ignore="AllowBackup">
+        tools:ignore="AllowBackup"
+        tools:replace="android:theme,name,label">
 
         <!-- Fabric configuration -->
         <meta-data
@@ -85,16 +86,14 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:windowSoftInputMode="stateHidden">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.HOME" /> -->
-            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- <category android:name="RUN_AT_BOOT" /> -->
-            <!-- </intent-filter> -->
+            <!--<category android:name="android.intent.category.HOME" />-->
+            <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="RUN_AT_BOOT" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".launcher.FakeLauncherActivity"
@@ -177,6 +176,7 @@
         <activity
             android:name=".activities.DashboardActivity"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan|adjustResize"
             android:theme="@style/SiempoAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

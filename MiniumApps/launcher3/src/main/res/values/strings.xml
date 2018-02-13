@@ -35,8 +35,8 @@
 
     <string name="title.mindfulMorning">Mindful Morning</string>
     <string name="title.mindfulMorningAlarm" tools:ignore="UnusedResources">Mindful Morning Alarm</string>
-    <string name="title.sendAsSMS">Send as SMS</string>
-    <string name="title.saveNote">Save Note</string>
+    <string name="title.sendAsSMS">Send as a message</string>
+    <string name="title.saveNote">Save as a note</string>
     <string name="title.createContact">Create Contact</string>
     <string name="title.swipe">Swipe right to show flagged apps</string>
     <string name="title.tempo">Tempo</string>
@@ -121,7 +121,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -368,6 +368,7 @@
     <string name="notification_interrupt_description">Normally, when you schedule your notifications to arrive at certain times of day or at a certain interval, then all apps will be blocked until the that scheduled arrival times. \n \nHowever, you can you this setting to choose to allow some apps to interrupt you immediately.</string>
     <string name="msg_tempo_disable">All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.</string>
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
+    <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
 
@@ -409,6 +410,9 @@
         <item>Medium</item>
         <item>Large</item>
     </string-array>
+
+    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"
+</string>
 
 
     <!-- errors -->
@@ -482,6 +486,7 @@
     <string name="tap_always" tools:ignore="TypographyQuotes">Tap \"Always\"</string>
     <string name="ok">OK</string>
     <string name="notes">Notes</string>
+
 
 
     <!--name tools menu-->

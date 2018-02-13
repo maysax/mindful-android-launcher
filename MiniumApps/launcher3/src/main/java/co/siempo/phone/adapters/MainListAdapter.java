@@ -1,17 +1,20 @@
 package co.siempo.phone.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v7.widget.PopupMenu;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,11 +24,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.joanzapata.iconify.IconDrawable;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import co.siempo.phone.R;
@@ -35,9 +36,9 @@ import co.siempo.phone.models.ContactListItem;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.token.TokenManager;
-import co.siempo.phone.util.ColorGenerator;
-import co.siempo.phone.util.DrawableProvider;
-import co.siempo.phone.util.TextDrawable;
+import co.siempo.phone.utils.ColorGenerator;
+import co.siempo.phone.utils.DrawableProvider;
+import co.siempo.phone.utils.TextDrawable;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -47,14 +48,16 @@ import de.greenrobot.event.EventBus;
 
 public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
+    private static final int HIGHLIGHT_COLOR = 0x999be6ff;
     private final Context context;
     private List<MainListItem> originalData = null;
     private List<MainListItem> filteredData = null;
     private ItemFilter filter = new ItemFilter();
-    private TextDrawable.IBuilder mDrawableBuilder;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
-    private static final int HIGHLIGHT_COLOR = 0x999be6ff;
     private DrawableProvider mProvider;
+    private TextDrawable.IBuilder mDrawableBuilder;
+    private PopupMenu popup;
+    private HashMap<String, Bitmap> iconList;
 
     public MainListAdapter(Context context, List<MainListItem> items) {
         super(context, 0);
@@ -62,6 +65,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         mDrawableBuilder = TextDrawable.builder()
                 .round();
         mProvider = new DrawableProvider(context);
+        iconList = CoreApplication.getInstance().iconList;
         loadData(items);
     }
 
@@ -141,13 +145,14 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             holder = (ContactViewHolder) view.getTag();
         }
 
+
         ContactListItem item = (ContactListItem) getItem(position);
 
         if (item != null) {
             holder.text.setText(item.getContactName());
-            if(item.getImageUri()!=null && !TextUtils.isEmpty(item.getImageUri())){
+            if (item.getImageUri() != null && !TextUtils.isEmpty(item.getImageUri())) {
 
-               Glide.with(context).load(Uri.parse(item.getImageUri())).asBitmap().centerCrop().placeholder(R.drawable.placeholder_blank_contact).into(new BitmapImageViewTarget(holder.icon) {
+                Glide.with(context).load(Uri.parse(item.getImageUri())).asBitmap().centerCrop().placeholder(R.drawable.placeholder_blank_contact).into(new BitmapImageViewTarget(holder.icon) {
                     @Override
                     protected void setResource(Bitmap resource) {
                         RoundedBitmapDrawable circularBitmapDrawable =
@@ -156,10 +161,11 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         holder.icon.setImageDrawable(circularBitmapDrawable);
                     }
                 });
-            }
-            else{
-                if(!TextUtils.isEmpty(item.getContactName())){
-                    Drawable drawable = mProvider.getRound(""+item.getContactName().charAt(0),Color.BLACK);
+            } else {
+                if (!TextUtils.isEmpty(item.getContactName())) {
+                    Drawable drawable = mProvider.getRound("" + item
+                            .getContactName().charAt(0), context.getResources
+                            ().getColor(R.color.appland_contact_black));
                     holder.icon.setImageDrawable(drawable);
                 }
             }
@@ -186,6 +192,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                 view = inflater.inflate(R.layout.list_item, parent, false);
                 holder.icon = view.findViewById(R.id.icon);
                 holder.text = view.findViewById(R.id.text);
+                holder.imgChevron = view.findViewById(R.id.imgChevron);
 
                 view.setTag(holder);
             }
@@ -194,26 +201,76 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
             holder = (ActionViewHolder) view.getTag();
         }
 
-        MainListItem item = getItem(position);
+
+        ImageView imgChevron = view.findViewById(R.id.imgChevron);
+
+
+        final MainListItem item = getItem(position);
+
 
         if (item != null) {
+
             if (item.getId() == -1) {
-                if (!TextUtils.isEmpty(item.getApplicationInfo().packageName)) {
-                    holder.icon.setImageBitmap(CoreApplication.getInstance().iconList.get(item.getApplicationInfo().packageName));
+                final String packageName = item.getApplicationInfo().packageName;
+                if (!TextUtils.isEmpty(packageName)) {
+
+
+                    holder.icon.setImageBitmap(iconList.get(packageName));
                 }
                 holder.text.setText(item.getApplicationInfo().name);
+                holder.imgChevron.setVisibility(View.VISIBLE);
             } else {
-                if (item.getIcon() != null) {
-                    holder.icon.setImageDrawable(new IconDrawable(context, item.getIcon())
-                            .colorRes(R.color.text_primary)
-                            .sizeDp(18));
-                } else {
-                    holder.icon.setImageResource(item.getIconRes());
+                if (item.getDrawable() != 0) {
+
+                    holder.icon.setImageResource(item.getDrawable());
                 }
                 holder.text.setText(item.getTitle());
+                holder.imgChevron.setVisibility(View.GONE);
+            }
+
+            MainListItemType itemType = item.getItemType();
+
+            // Call item in Tools has id=13 , while as a default type has id=4
+            if ((null != itemType) && (itemType == MainListItemType.DEFAULT ||
+                    item.getId()
+                            == 4)) {
+                holder.text.setTextColor(context.getResources().getColor(R
+                        .color.appland_blue_bright));
+            } else {
+                holder.text.setTextColor(context.getResources().getColor(R
+                        .color.black));
             }
 
         }
+
+        imgChevron.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup = new PopupMenu(context, v, Gravity.END);
+                popup.getMenuInflater().inflate(R.menu.tempo_notification_popup, popup.getMenu());
+                MenuItem menuItem = popup.getMenu().findItem(R.id.block);
+                menuItem.setTitle(context.getResources().getString(R.string.info_or_uninstall));
+
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = null;
+                        if (item != null) {
+                            uri = Uri.fromParts("package", item
+                                    .getApplicationInfo().packageName, null);
+                        }
+                        intent.setData(uri);
+                        context.startActivity(intent);
+                        return true;
+                    }
+                });
+                popup.show();
+
+            }
+        });
 
         return view;
     }
@@ -227,7 +284,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private boolean checkDuplicate(List<MainListItem> buildData, String str) {
         if (buildData != null) {
             for (MainListItem mainListItem : buildData) {
-                if (mainListItem.getTitle().toLowerCase().equalsIgnoreCase(str)) {
+                if (mainListItem.getTitle().equalsIgnoreCase(str)) {
                     return false;
                 }
             }
@@ -242,6 +299,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
     private static class ActionViewHolder {
         ImageView icon;
         TextView text;
+        ImageView imgChevron;
     }
 
     private static class ContactViewHolder {
@@ -250,6 +308,9 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         TextView txtNumber;
     }
 
+    /**
+     * Filter class for filtering Search Pane list in tools
+     */
     private class ItemFilter extends Filter {
 
         @Override
@@ -266,7 +327,6 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
                 for (int i = 0; i < count; i++) {
                     String filterableString;
-                    String[] splits;
                     if (searchString.startsWith("/")) {
                         if (searchString.length() == 1 && searchString.equalsIgnoreCase("/")) {
                             buildData.clear();
@@ -281,7 +341,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             if (originalData.get(i).getItemType() == MainListItemType.ACTION
                                     && originalData.get(i).getTitle().toLowerCase().contains(strSearch)) {
                                 if (checkDuplicate(buildData, strSearch)) {
-                                    isValidNumber= true;
+                                    isValidNumber = true;
                                     buildData.add(originalData.get(i));
                                 }
                             }
@@ -289,7 +349,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                     } else {
                         switch (originalData.get(i).getItemType()) {
                             case CONTACT:
-                                if(searchString.startsWith("@")) {
+                                if (searchString.startsWith("@")) {
                                     if (searchString.equals("@")) {
                                         isValidNumber = true;
                                         buildData.add(originalData.get(i));
@@ -325,15 +385,18 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 break;
                             case ACTION:
                                 filterableString = originalData.get(i).getTitle();
-                                if (originalData.get(i).getApplicationInfo() == null) {
-                                    if(filterableString.contains(searchString.toLowerCase().trim())){
-                                        buildData.add(originalData.get(i));
-                                        break;
-                                    }
-                                } else {
-                                    if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
-                                        if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
+                                if (!TextUtils.isEmpty(filterableString)) {
+                                    if (originalData.get(i).getApplicationInfo() == null) {
+                                        if (filterableString.toLowerCase().contains
+                                                (searchString.toLowerCase().trim())) {
                                             buildData.add(originalData.get(i));
+                                            break;
+                                        }
+                                    } else {
+                                        if (originalData.get(i).getTitle().toLowerCase().contains(searchString.toLowerCase())) {
+                                            if (checkDuplicate(buildData, searchString.toLowerCase().toLowerCase())) {
+                                                buildData.add(originalData.get(i));
+                                            }
                                         }
                                     }
                                 }
@@ -347,10 +410,13 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                 break;
                             case DEFAULT:
                                 if (checkDuplicate(buildData, originalData.get(i).getTitle().toLowerCase().toLowerCase())) {
-                                    if(originalData.get(i).getTitle().toLowerCase().equalsIgnoreCase("Send as SMS") && !isValidNumber){
+                                    if (originalData.get(i).getTitle()
+                                            .toLowerCase().equalsIgnoreCase
+                                                    ("Send as SMS") &&
+                                            !isValidNumber && searchString
+                                            .startsWith("@")) {
 
-                                    }
-                                    else{
+                                    } else {
                                         buildData.add(originalData.get(i));
                                     }
                                 }
@@ -359,9 +425,13 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         }
                     }
                 }
+            } else {
+                for (MainListItem menuMainListItem : originalData) {
+                    if (!TextUtils.isEmpty(menuMainListItem.getTitle())) {
+                        buildData.add(menuMainListItem);
+                    }
+                }
             }
-
-
             ret.values = buildData;
             ret.count = buildData.size();
             return ret;

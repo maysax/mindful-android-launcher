@@ -148,7 +148,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         public View layout;
         // each data item is just a string in this case
         ImageView icon, imgView;
-        TextView text, textDefaultApp;
+        TextView text;
+        TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
 
