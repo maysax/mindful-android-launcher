@@ -38,6 +38,7 @@
     <string name="title.sendAsSMS">Send as SMS</string>
     <string name="title.saveNote">Save Note</string>
     <string name="title.createContact">Create Contact</string>
+    <string name="title.swipe">Swipe right to show flagged apps</string>
     <string name="title.tempo">Tempo</string>
 
     <string name="label_multiple_numbers">Multiple numbers</string>

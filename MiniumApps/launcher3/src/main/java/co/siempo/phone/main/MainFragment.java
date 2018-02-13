@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -249,8 +250,9 @@ public class MainFragment extends CoreFragment {
             }
             emptyChecker(event.getString());
             parser.parse(event.getString());
-            if (adapter != null)
+            if (adapter != null) {
                 adapter.getFilter().filter(TokenManager.getInstance().getCurrent().getTitle());
+            }
         } catch (Exception e) {
             CoreApplication.getInstance().logException(e);
             Tracer.e(e, e.getMessage());
@@ -290,15 +292,18 @@ public class MainFragment extends CoreFragment {
                     mediator.defaultData();
                 } else if (current.getItemType() == TokenItemType.CONTACT) {
                     if (current.getCompleteType() == TokenCompleteType.HALF) {
+
                         mediator.contactNumberPicker(Integer.parseInt(current.getExtra1()));
                     } else {
                         mediator.contactPicker();
                     }
                 } else if (current.getItemType() == TokenItemType.DATA) {
                     if (TokenManager.getInstance().get(0).getItemType() == TokenItemType.DATA) {
+
                         mediator.resetData();
                         if (adapter != null) adapter.getFilter().filter(current.getTitle());
                     } else {
+
                         mediator.resetData();
                         if (current.getTitle().trim().isEmpty()) {
                             if (adapter != null) adapter.getFilter().filter("^");
