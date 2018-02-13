@@ -54,8 +54,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         View v =
                 inflater.inflate(R.layout.list_item_grid, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -63,7 +62,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final MainListItem item = mainListItemList.get(position);
         final AppMenu appMenu = map.get(item.getId());
-        if (item != null && !appMenu.isBottomDoc()) {
+        if (!appMenu.isBottomDoc()) {
             if (appMenu.isVisible()) {
                 holder.linearLayout.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(item.getTitle())) {
@@ -91,7 +90,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 @Override
                 public void onClick(View v) {
                     int id;
-                    if (item != null && holder.linearLayout.getVisibility() == View.VISIBLE) {
+                    if (holder.linearLayout.getVisibility() == View.VISIBLE) {
                         id = item.getId();
                         if (!appMenu.getApplicationName().equalsIgnoreCase("")
                                 && UIUtils.isAppInstalled(context, appMenu.getApplicationName().trim())) {
@@ -142,7 +141,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     @Override
     public int getItemCount() {
-        return mainListItemList.size();
+        return 12;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

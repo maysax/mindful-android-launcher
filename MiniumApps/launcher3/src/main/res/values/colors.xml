@@ -48,6 +48,10 @@
     <color name="black_15">#26000000</color>
     <color name="black_10">#1A000000</color>
     <color name="black_05">#0E000000</color>
+    <color name="dialog_red">#FF4291</color>
+    <color name="dialog_blue">#42A4FF</color>
+    <color name="dialog_message">#8A000000</color>
+    <color name="dialog_title">#DE000000</color>
     <color name="appland_blue">#8A42A4FF</color>
     <color name="appland_blue_bright">#42A4FF</color>
     <color name="appland_contact_black">#CC000000</color>

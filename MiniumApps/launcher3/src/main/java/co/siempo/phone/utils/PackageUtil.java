@@ -36,6 +36,7 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
+import co.siempo.phone.log.Tracer;
 import co.siempo.phone.service.AlarmBroadcast;
 
 /**
@@ -347,4 +348,14 @@ public class PackageUtil {
         return title;
     }
 
+    public static void appSettings(Context context, String packageName) {
+        try {
+            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.setData(Uri.parse("package:" + packageName));
+            context.startActivity(intent);
+        } catch (Exception e) {
+            Tracer.e(e, e.getMessage());
+            CoreApplication.getInstance().logException(e);
+        }
+    }
 }

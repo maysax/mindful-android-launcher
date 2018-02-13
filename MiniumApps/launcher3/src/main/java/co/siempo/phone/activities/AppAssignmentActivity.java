@@ -54,6 +54,30 @@ public class AppAssignmentActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_assignement);
         mainListItem = (MainListItem) getIntent().getSerializableExtra(Constants.INTENT_MAINLISTITEM);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        filterList();
+        initView();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mainListItem = (MainListItem) savedInstanceState.getSerializable("MainListItem");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("MainListItem", mainListItem);
+        super.onSaveInstanceState(outState);
+
+    }
+
+    private void filterList() {
+        appList = new ArrayList<>();
         if (idList.contains(mainListItem.getId())) {
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -71,7 +95,6 @@ public class AppAssignmentActivity extends CoreActivity {
         } else {
             appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
         }
-        initView();
     }
 
     private void initView() {

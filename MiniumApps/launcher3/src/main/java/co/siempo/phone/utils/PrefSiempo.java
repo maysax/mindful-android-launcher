@@ -62,7 +62,7 @@ public class PrefSiempo {
      */
     public void write(String key, boolean value) {
         editor.putBoolean(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -85,7 +85,7 @@ public class PrefSiempo {
      */
     public void write(String key, float value) {
         editor.putFloat(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -108,7 +108,7 @@ public class PrefSiempo {
      */
     public void write(String key, int value) {
         editor.putInt(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -131,7 +131,7 @@ public class PrefSiempo {
      */
     public void write(String key, long value) {
         editor.putLong(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -154,7 +154,7 @@ public class PrefSiempo {
      */
     public void write(String key, String value) {
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**

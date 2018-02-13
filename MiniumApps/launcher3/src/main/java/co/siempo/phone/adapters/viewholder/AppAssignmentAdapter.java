@@ -28,9 +28,6 @@ import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.utils.DrawableProvider;
 import co.siempo.phone.utils.PrefSiempo;
 
-/**
- * Created by Shahab on 2/23/2017.
- */
 
 public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdapter.ViewHolder> {
 
@@ -57,13 +54,12 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
         View v =
                 inflater.inflate(R.layout.list_item_app_assignment, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ResolveInfo item = resolveInfoList.get(position);
         if (item != null) {
             holder.txtAppName.setText(item.loadLabel(context.getPackageManager()));
@@ -86,11 +82,13 @@ public class AppAssignmentAdapter extends RecyclerView.Adapter<AppAssignmentAdap
                 holder.linearList.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
-                        map.get(id).setApplicationName(item.activityInfo.packageName);
-                        String hashMapToolSettings = new Gson().toJson(map);
-                        PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
-                        ((AppAssignmentActivity) context).finish();
+                        if (holder.btnHideApps.getVisibility() != View.VISIBLE) {
+                            HashMap<Integer, AppMenu> map = CoreApplication.getInstance().getToolsSettings();
+                            map.get(id).setApplicationName(item.activityInfo.packageName);
+                            String hashMapToolSettings = new Gson().toJson(map);
+                            PrefSiempo.getInstance(context).write(PrefSiempo.TOOLS_SETTING, hashMapToolSettings);
+                            ((AppAssignmentActivity) context).finish();
+                        }
                     }
                 });
             }

@@ -1,59 +1,14 @@
 package co.siempo.phone.activities;
 
-import android.app.NotificationManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.AppUpdaterUtils;
-import com.github.javiersantos.appupdater.enums.AppUpdaterError;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
-import com.github.javiersantos.appupdater.objects.Update;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
-
-import java.util.ArrayList;
-
-import co.siempo.phone.BuildConfig;
 import co.siempo.phone.R;
 import co.siempo.phone.adapters.DashboardPagerAdapter;
-import co.siempo.phone.app.Constants;
-import co.siempo.phone.app.CoreApplication;
-import co.siempo.phone.app.Launcher3App;
-import co.siempo.phone.event.AppInstalledEvent;
-import co.siempo.phone.event.CheckVersionEvent;
-import co.siempo.phone.helper.ActivityHelper;
-import co.siempo.phone.log.Tracer;
-import co.siempo.phone.service.ApiClient_;
-import co.siempo.phone.service.SiempoNotificationListener_;
-import co.siempo.phone.utils.PermissionUtil;
-import co.siempo.phone.utils.UIUtils;
-import de.greenrobot.event.Subscribe;
 
 public class DashboardActivity extends CoreActivity {
 
-    public static final String IS_FROM_HOME = "isFromHome";
-    public static String isTextLenghGreater = "";
-    PermissionUtil permissionUtil;
-    ConnectivityManager connectivityManager;
-    AppUpdaterUtils appUpdaterUtils;
-    boolean isApplicationLaunch = false;
-    NotificationManager notificationManager;
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -145,7 +100,12 @@ public class DashboardActivity extends CoreActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        initView();
+        if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
+            PrefSiempo.getInstance(this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
+            Intent intent = new Intent(this, JunkfoodFlaggingActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     private void initView() {
@@ -174,9 +134,17 @@ public class DashboardActivity extends CoreActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        initView();
+    }
+
+    @Override
     public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
+        if (mPager != null && mPager.getCurrentItem() == 0) {
             mPager.setCurrentItem(1);
+        } else {
+            super.onBackPressed();
         }
     }
 
