@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.5"
+            android:background="@drawable/top_dock_bg"
             android:orientation="vertical">
 
         </LinearLayout>
@@ -41,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.65"
+            android:background="@drawable/bottom_dock_bg"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -51,6 +53,13 @@
                 android:layout_gravity="center"
                 app:ci_drawable="@drawable/indicator_active"
                 app:ci_drawable_unselected="@drawable/indicator_inactive" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewBottomDoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:clipToPadding="false" />
         </LinearLayout>
 
         <LinearLayout

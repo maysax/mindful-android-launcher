@@ -22,6 +22,8 @@ public class DashboardActivity extends CoreActivity {
      */
     private DashboardPagerAdapter mPagerAdapter;
 
+    private int index = -1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +40,19 @@ public class DashboardActivity extends CoreActivity {
         mPager = findViewById(R.id.pager);
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(1);
+        mPager.setCurrentItem(index == -1 ? 1 : index);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         initView();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        index = mPager.getCurrentItem();
     }
 
     @Override
