@@ -32,7 +32,6 @@ import java.util.List;
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.main.MainListAdapterEvent;
-import co.siempo.phone.models.ContactListItem;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.token.TokenManager;
@@ -146,7 +145,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         }
 
 
-        ContactListItem item = (ContactListItem) getItem(position);
+        MainListItem item = getItem(position);
 
         if (item != null) {
             holder.text.setText(item.getContactName());
@@ -331,7 +330,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         if (searchString.length() == 1 && searchString.equalsIgnoreCase("/")) {
                             buildData.clear();
                             for (MainListItem menuMainListItem : originalData) {
-                                if (!(menuMainListItem instanceof ContactListItem)) {
+                                if (!(menuMainListItem instanceof MainListItem)) {
                                     isValidNumber = true;
                                     buildData.add(menuMainListItem);
                                 }
@@ -358,7 +357,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                                       A blank space was added with searchString2. After using trim the search problem is resolved
                                      */
                                         String searchString2 = searchString.replaceAll("@", "").trim();
-                                        ContactListItem item = (ContactListItem) originalData.get(i);
+                                        MainListItem item = originalData.get(i);
                                         filterableString = item.getContactName();
                                         boolean isAdded = false;
                                         if (filterableString.toLowerCase().contains(searchString2)) {
@@ -369,8 +368,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
                                         if (!isAdded) {
                                             searchString2 = phoneNumberString(searchString);
-                                            List<ContactListItem.ContactNumber> numbers = item.getNumbers();
-                                            for (ContactListItem.ContactNumber number : numbers) {
+                                            List<MainListItem.ContactNumber> numbers = item.getNumbers();
+                                            for (MainListItem.ContactNumber number : numbers) {
                                                 String phoneNum = phoneNumberString(number.getNumber());
                                                 if (phoneNum.contains(searchString2)) {
                                                     isValidNumber = true;

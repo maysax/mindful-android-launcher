@@ -24,7 +24,6 @@ import co.siempo.phone.app.DroidPrefs_;
 import co.siempo.phone.event.SendSmsEvent;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.log.Tracer;
-import co.siempo.phone.models.ContactListItem;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.msg.SmsObserver;
 import co.siempo.phone.utils.DataUtils;
@@ -87,7 +86,7 @@ public class TokenRouter {
 
     }
 
-    public void contactPicked(ContactListItem item) {
+    public void contactPicked(MainListItem item) {
         if (item.hasMultipleNumber()) {
             TokenManager.getInstance().setCurrent(new TokenItem(TokenItemType.CONTACT));
             TokenManager.getInstance().getCurrent().setTitle(item.getContactName());

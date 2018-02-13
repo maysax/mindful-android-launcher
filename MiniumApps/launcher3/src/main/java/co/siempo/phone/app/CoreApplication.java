@@ -899,7 +899,6 @@ public abstract class CoreApplication extends MultiDexApplication {
 
 
         for (ResolveInfo res : getNotesPackageList()) {
-//            Log.d("Default App Name", "Notes : " + res.activityInfo.packageName + " : " + res.activityInfo.name);
             return res != null ? res.activityInfo.packageName : "Notes";
         }
         return "";

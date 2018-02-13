@@ -8,7 +8,8 @@ import android.provider.ContactsContract;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.siempo.phone.models.ContactListItem;
+import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.models.MainListItemType;
 
 /**
  * Created by Shahab on 6/27/2016.
@@ -31,7 +32,7 @@ public class ContactsLoader {
     };
 
 
-    public List<ContactListItem> loadContacts(Context context) {
+    public List<MainListItem> loadContacts(Context context) {
         Uri contactUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 
         String selection = "((" + DISPLAY_NAME_COMPAT + " NOTNULL) AND ("
@@ -43,8 +44,8 @@ public class ContactsLoader {
         if (contactUri != null) {
             contactCursor = context.getContentResolver().query(contactUri, CONTACTS_SUMMARY_PROJECTION, selection, null, sortOrder);
         }
-        ContactListItem currItem = null;
-        List<ContactListItem> items = new ArrayList<>();
+        MainListItem currItem = null;
+        List<MainListItem> items = new ArrayList<>();
 
         if (contactCursor != null) {
             while (contactCursor.moveToNext()) {
@@ -61,7 +62,9 @@ public class ContactsLoader {
                 String number = contactCursor.getString(contactCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                 if (currItem == null || currItem.getContactId() != id) {
-                    currItem = new ContactListItem(id, name);
+                    currItem = new MainListItem(id, 0, name, "{fa-user-o}", MainListItemType.CONTACT);
+
+
                     items.add(currItem);
                 }
                 if (image_uri != null) {

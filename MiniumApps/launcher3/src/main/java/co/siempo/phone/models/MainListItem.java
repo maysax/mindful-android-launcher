@@ -3,6 +3,10 @@ package co.siempo.phone.models;
 import android.content.pm.ApplicationInfo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import co.siempo.phone.R;
 
@@ -21,6 +25,15 @@ public class MainListItem implements Serializable {
     private String icon;
     private int iconRes;
     private ApplicationInfo applicationInfo = null;
+    private Date currentDateTime;
+
+    /**
+     * Contact Information
+     */
+    private long contactId;
+    private String contactName;
+    private List<ContactNumber> numbers;
+    private String imageUri;
 
 
     public MainListItem(int id, String title, ApplicationInfo applicationInfo) {
@@ -39,6 +52,17 @@ public class MainListItem implements Serializable {
         this.icon = icon;
         this.itemType = itemType;
         this.iconRes = R.drawable.icon_sms;
+    }
+
+    public MainListItem(long contactId, int id, String title, String icon, MainListItemType itemType) {
+        this.id = id;
+        this.contactId = contactId;
+        this.contactName = title;
+        this.title = title;
+        this.icon = icon;
+        this.itemType = itemType;
+        this.iconRes = R.drawable.icon_sms;
+        this.numbers = new ArrayList<>();
     }
 
     public MainListItem(int id, String title, String icon, int iconRes, MainListItemType itemType) {
@@ -67,6 +91,7 @@ public class MainListItem implements Serializable {
         this.id = id;
         this.title = title;
         this.drawable = drawable;
+        this.currentDateTime = Calendar.getInstance().getTime();
 
     }
 
@@ -130,6 +155,14 @@ public class MainListItem implements Serializable {
         this.drawable = drawable;
     }
 
+    public Date getDate() {
+        return currentDateTime;
+    }
+
+    public void setDate(Date date) {
+        this.currentDateTime = date;
+    }
+
     @Override
     public String toString() {
         return "MainListItem{" +
@@ -140,6 +173,79 @@ public class MainListItem implements Serializable {
                 ", itemType=" + itemType +
                 ", icon='" + icon + '\'' +
                 '}';
+    }
+
+
+    public long getContactId() {
+        return contactId;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public List<MainListItem.ContactNumber> getNumbers() {
+        return numbers;
+    }
+
+    public MainListItem.ContactNumber getNumber() {
+        return numbers.get(0);
+    }
+
+    public void addNumbers(String label, String number) {
+        if (!isNumberExists(number))
+            getNumbers().add(new MainListItem.ContactNumber(number, label));
+
+    }
+
+    private boolean isNumberExists(String number) {
+        String strNum = number.replaceAll("[\\D]", "");
+        if (getNumbers() != null) {
+            for (MainListItem.ContactNumber strNumber : getNumbers()) {
+                String str2 = strNumber.getNumber().replaceAll("[\\D]", "");
+                return str2.equals(strNum);
+
+            }
+        }
+        return false;
+    }
+
+
+    public boolean hasMultipleNumber() {
+        if (numbers == null) return false;
+        if (numbers.isEmpty()) return false;
+        return numbers.size() != 1;
+    }
+
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public class ContactNumber {
+        private String label;
+        private String number;
+
+        public ContactNumber(String number, String label) {
+            this.number = number;
+            this.label = label;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        @Override
+        public String toString() {
+            return "ContactNumber{" +
+                    "label='" + label + '\'' +
+                    ", number='" + number + '\'' +
+                    '}';
+        }
     }
 
 

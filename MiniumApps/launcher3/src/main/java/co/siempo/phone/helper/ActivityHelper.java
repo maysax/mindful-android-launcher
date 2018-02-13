@@ -117,7 +117,8 @@ public class ActivityHelper {
             ResolveInfo best = null;
             for (final ResolveInfo info : matches)
                 if (info.activityInfo.packageName.endsWith(".gm") ||
-                        info.activityInfo.name.toLowerCase().contains("gmail")) best = info;
+                        info.activityInfo.name.toLowerCase().contains("gmail"))
+                    best = info;
             if (best != null) {
                 emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
                 context.startActivity(emailIntent);
@@ -144,18 +145,21 @@ public class ActivityHelper {
     /**
      * Open the application with predefine package name.
      */
-    public void openAppWithPackageName(String packageName) {
+    public boolean openAppWithPackageName(String packageName) {
         if (packageName != null && !packageName.equalsIgnoreCase("")) {
             try {
                 Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
                 context.startActivity(intent);
+                return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 CoreApplication.getInstance().logException(e);
                 UIUtils.alert(context, context.getString(R.string.app_not_found));
+                return false;
             }
         } else {
             UIUtils.alert(context, context.getString(R.string.app_not_found));
+            return false;
         }
     }
 

@@ -1,9 +1,12 @@
 package co.siempo.phone.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import co.siempo.phone.MainActivity;
@@ -16,13 +19,15 @@ import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
-import co.siempo.phone.models.ContactListItem;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenRouter;
 import co.siempo.phone.utils.ContactsLoader;
+import co.siempo.phone.utils.PackageUtil;
+import co.siempo.phone.utils.PrefSiempo;
+import co.siempo.phone.utils.Sorting;
 import co.siempo.phone.utils.UIUtils;
 import de.greenrobot.event.EventBus;
 
@@ -32,28 +37,46 @@ import de.greenrobot.event.EventBus;
 
 public class MainFragmentMediator {
 
+    private final Context context;
     private PaneFragment fragment;
 
     private List<MainListItem> items;
-    private List<ContactListItem> contactItems;
+    private List<MainListItem> contactItems;
 
     public MainFragmentMediator(PaneFragment paneFragment) {
         this.fragment = paneFragment;
+        this.context = this.fragment.getActivity();
     }
 
     public void loadData() {
-        items = new ArrayList<>();
-        contactItems = new ArrayList<>();
-        loadActions();
-        loadContacts();
-        loadDefaults();
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+            items = new ArrayList<>();
+            contactItems = new ArrayList<>();
+            loadActions();
+            loadContacts();
+            loadDefaults();
+            items = Sorting.sortList(items);
+            PackageUtil.storeSearchList(items, context);
+        } else {
+            items = PackageUtil.getSearchList(context);
+        }
     }
 
     public void resetData() {
         items.clear();
-        loadActions();
-        loadContacts();
-        loadDefaults();
+
+        if (TextUtils.isEmpty(PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, ""))) {
+            items = new ArrayList<>();
+            contactItems = new ArrayList<>();
+            loadActions();
+            loadContacts();
+            loadDefaults();
+            items = Sorting.sortList(items);
+            PackageUtil.storeSearchList(items, context);
+        } else {
+            items = PackageUtil.getSearchList(context);
+            items = Sorting.sortList(items);
+        }
         if (getAdapter() != null) {
             getAdapter().loadData(items);
             getAdapter().notifyDataSetChanged();
@@ -129,20 +152,31 @@ public class MainFragmentMediator {
             switch (type) {
                 case CONTACT:
                     if (router != null) {
-                        router.contactPicked((ContactListItem) getAdapter().getItem(position));
+                        router.contactPicked(getAdapter().getItem(position));
                         FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CONTACT_PICK, "", data);
                     }
                     break;
                 case ACTION:
                     if (getAdapter() != null && getAdapter().getItem(position).getApplicationInfo() == null) {
+                        //On Click of item , storing the timestamp
+                        items.get(position).setDate(Calendar.getInstance().getTime());
+                        items.set(position, items.get(position));
+                        items = Sorting.sortList(items);
+                        PackageUtil.storeSearchList(items, context);
                         position = getAdapter().getItem(position).getId();
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
                         if (fragment != null) {
                             MainActivity.isTextLenghGreater = "";
                             UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
-                            new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
+                            boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
                             FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getApplicationInfo().packageName, "");
+                            if (status) {
+                                items.get(position).setDate(Calendar.getInstance().getTime());
+                                items.set(position, items.get(position));
+                                items = Sorting.sortList(items);
+                                PackageUtil.storeSearchList(items, context);
+                            }
                         }
                     }
                     break;
@@ -211,9 +245,9 @@ public class MainFragmentMediator {
     public void contactNumberPicker(int selectedContactId) {
         items.clear();
         if (contactItems != null) {
-            for (ContactListItem item : contactItems) {
+            for (MainListItem item : contactItems) {
                 if (item != null && item.getContactId() == selectedContactId) {
-                    for (ContactListItem.ContactNumber number : item.getNumbers()) {
+                    for (MainListItem.ContactNumber number : item.getNumbers()) {
                         items.add(new MainListItem(selectedContactId, number
                                 .getNumber(), R.drawable.ic_call_filter,
                                 MainListItemType.NUMBERS));

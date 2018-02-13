@@ -34,7 +34,9 @@ public class PrefSiempo {
 
     // This field is used for to store junkfood application package name.
     public static final String JUNKFOOD_APPS = "junkfood_apps";
-//
+    //
+    //This field is used for to store search List.
+    public static final String SERACH_LIST = "searchList";
 
     private static final PrefSiempo ourInstance = new PrefSiempo();
     private static SharedPreferences sharedPreferences;
