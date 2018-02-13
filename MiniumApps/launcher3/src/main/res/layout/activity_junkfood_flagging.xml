@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FAFAFA"
+    android:orientation="vertical"
     tools:context="co.siempo.phone.activities.JunkfoodFlaggingActivity">
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -13,4 +15,78 @@
         android:background="@color/toolbar_bg"
         android:elevation="@dimen/dp_5"
         android:minHeight="?android:attr/actionBarSize" />
-</RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="#E81313"
+                android:gravity="center_vertical"
+                android:paddingLeft="55dp"
+                android:paddingRight="55dp"
+                android:text="@string/flagged_apps"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txtFlaggedMessage1"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="55dp"
+                android:paddingRight="55dp"
+                android:text="@string/tap_apps_below_to_move_them_into_this_section"
+                android:textColor="#57000000"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <ListView
+                android:id="@+id/listFlaggedApps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@color/transparent"
+                tools:listitem="@layout/list_item_junkfoodflag" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="#666666"
+                android:gravity="center_vertical"
+                android:paddingLeft="55dp"
+                android:paddingRight="55dp"
+                android:text="@string/all_other_installed_apps"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/txtFlaggedMessage2"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="55dp"
+                android:paddingRight="55dp"
+                android:text="@string/tap_apps_below_to_move_them_into_this_section"
+                android:textColor="#57000000"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <ListView
+                android:id="@+id/listAllApps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@color/transparent"
+                tools:listitem="@layout/list_item_junkfoodflag" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

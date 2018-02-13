@@ -144,38 +144,38 @@ public class StatusBarService extends Service {
 
     /**
      * Remove uninstall app if it contains in blocked list OR HelpfulRobots
+     *
      * @param uninstallPackageName
      */
-    public void removeAppFromBlockedList(String uninstallPackageName){
+    public void removeAppFromBlockedList(String uninstallPackageName) {
         ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
+        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST, "");
         if (!TextUtils.isEmpty(block_AppList)) {
-            try{
+            try {
                 Type type = new TypeToken<ArrayList<String>>() {
                 }.getType();
                 blockedApps = new Gson().fromJson(block_AppList, type);
-                for (String blockedAppName:blockedApps) {
-                    if(blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())){
+                for (String blockedAppName : blockedApps) {
+                    if (blockedAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
                         blockedApps.remove(blockedAppName);
                     }
                 }
                 String blockedList = new Gson().toJson(blockedApps);
                 sharedPreferencesLauncher3.edit().putString(Constants.BLOCKED_APPLIST, blockedList).commit();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
 
-        ArrayList<String> disableApps= new ArrayList<>();
+        ArrayList<String> disableApps = new ArrayList<>();
         String disable_AppList = sharedPreferencesLauncher3.getString(Constants.HELPFUL_ROBOTS, "");
         if (!TextUtils.isEmpty(disable_AppList)) {
             Type type = new TypeToken<ArrayList<String>>() {
             }.getType();
             disableApps = new Gson().fromJson(disable_AppList, type);
-            for (String disableAppName:disableApps) {
-                if(disableAppName.equalsIgnoreCase(uninstallPackageName.trim())){
+            for (String disableAppName : disableApps) {
+                if (disableAppName.equalsIgnoreCase(uninstallPackageName.trim())) {
                     disableApps.remove(disableAppName);
                 }
             }
@@ -187,23 +187,24 @@ public class StatusBarService extends Service {
 
     /**
      * Add install app in blocked list
+     *
      * @param installPackageName
      */
-    public void addAppFromBlockedList(String installPackageName){
+    public void addAppFromBlockedList(String installPackageName) {
         ArrayList<String> blockedApps = new ArrayList<>();
-        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST,"");
+        String block_AppList = sharedPreferencesLauncher3.getString(Constants.BLOCKED_APPLIST, "");
         if (!TextUtils.isEmpty(block_AppList)) {
-            try{
+            try {
                 Type type = new TypeToken<ArrayList<String>>() {
                 }.getType();
                 blockedApps = new Gson().fromJson(block_AppList, type);
-                boolean isAppExist=false;
-                for (String blockedAppName:blockedApps) {
-                    if(blockedAppName.equalsIgnoreCase(installPackageName.trim())){
-                        isAppExist=true;
+                boolean isAppExist = false;
+                for (String blockedAppName : blockedApps) {
+                    if (blockedAppName.equalsIgnoreCase(installPackageName.trim())) {
+                        isAppExist = true;
                     }
                 }
-                if(!isAppExist){
+                if (!isAppExist) {
                     blockedApps.add(installPackageName.trim());
                 }
                 String blockedList = new Gson().toJson(blockedApps);
@@ -258,6 +259,7 @@ public class StatusBarService extends Service {
                             if (!TextUtils.isEmpty(uninstallPackageName)) {
                                 new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                 removeAppFromBlockedList(uninstallPackageName);
+                                EventBus.getDefault().post(new AppInstalledEvent(0));
                             }
                         }
                     }
