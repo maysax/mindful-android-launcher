@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#FAFAFA"
     android:orientation="vertical"
-    tools:context="co.siempo.phone.activities.JunkfoodFlaggingActivity">
+    tools:context="co.siempo.phone.activities.ToolPositioningActivity">
 
 
     <android.support.v7.widget.Toolbar

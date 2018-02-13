@@ -29,7 +29,7 @@ import co.siempo.phone.main.OnStartDragListener;
 import co.siempo.phone.models.MainListItem;
 
 
-class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
     private final Activity context;
     private List<MainListItem> arrayList;
     private boolean isGrid;

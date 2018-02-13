@@ -19,6 +19,7 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
+import co.siempo.phone.activities.ToolPositioningActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
@@ -86,6 +87,17 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         } else {
             holder.linearLayout.setVisibility(View.INVISIBLE);
         }
+
+        holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(context, ToolPositioningActivity.class);
+                intent.putExtra("ID", mainListItemList.get(position).getId());
+                context.startActivity(intent);
+                return true;
+            }
+        });
+
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
