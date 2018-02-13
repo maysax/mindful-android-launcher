@@ -49,6 +49,13 @@ import co.siempo.phone.utils.PrefSiempo;
 import de.greenrobot.event.Subscribe;
 import me.relex.circleindicator.CircleIndicator;
 
+/**
+ * Main class for Tools Pane, Favorites Pane and JunkFood Pane.
+ * Ui is changed based on which pane the user is currently on.
+ * 1. Tools Pane
+ * 2. Favourites Pane
+ * 3. Junkfood Pane
+ */
 public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
     private LinearLayout linTopDoc;
