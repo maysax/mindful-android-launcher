@@ -522,6 +522,8 @@
     <string name="msg_flag_first_time">Most users report that the more apps they flag, the less they use their phones.  Flagging will make these apps just a bit harder to launch and use unintentionally.</string>
     <string name="yes_unhide">YES, UNHIDE</string>
     <string name="are_you_sure">Are you sure?</string>
+    <string name="select_tools">Select Tools</string>
+    <string name="editing_tools">Editing tools</string>
 
 
 </resources>

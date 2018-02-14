@@ -71,17 +71,10 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
      */
     private void initView() {
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
         toolbar.setTitle(R.string.title_flagging_screen);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
                 .colorAccent));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         txtFlaggedMessage1 = findViewById(R.id.txtFlaggedMessage1);
         listFlaggedApps = findViewById(R.id.listFlaggedApps);
         txtFlaggedMessage2 = findViewById(R.id.txtFlaggedMessage2);
@@ -99,10 +92,12 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
         flagAppList = new ArrayList<>();
         allAppList = new ArrayList<>();
         for (ResolveInfo resolveInfo : installedPackageList) {
-            if (list.contains(resolveInfo.activityInfo.packageName)) {
-                flagAppList.add(resolveInfo);
-            } else {
-                allAppList.add(resolveInfo);
+            if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                if (list.contains(resolveInfo.activityInfo.packageName)) {
+                    flagAppList.add(resolveInfo);
+                } else {
+                    allAppList.add(resolveInfo);
+                }
             }
         }
         bindListView();
