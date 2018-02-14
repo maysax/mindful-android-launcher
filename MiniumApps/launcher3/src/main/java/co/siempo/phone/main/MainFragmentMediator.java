@@ -2,7 +2,6 @@ package co.siempo.phone.main;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import co.siempo.phone.adapters.MainListAdapter;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.event.CreateNoteEvent;
 import co.siempo.phone.event.SendSmsEvent;
+import co.siempo.phone.fragments.PaneFragment;
 import co.siempo.phone.helper.ActivityHelper;
 import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.log.Tracer;
@@ -30,31 +30,29 @@ import de.greenrobot.event.EventBus;
  * Created by shahab on 2/16/17.
  */
 
-class MainFragmentMediator {
+public class MainFragmentMediator {
 
-    private MainFragment fragment;
+    private PaneFragment fragment;
 
     private List<MainListItem> items;
     private List<ContactListItem> contactItems;
 
-    MainFragmentMediator(MainFragment mainFragment) {
-        this.fragment = mainFragment;
+    public MainFragmentMediator(PaneFragment paneFragment) {
+        this.fragment = paneFragment;
     }
 
-    void loadData() {
+    public void loadData() {
         items = new ArrayList<>();
         contactItems = new ArrayList<>();
         loadActions();
         loadContacts();
-
         loadDefaults();
     }
 
-    void resetData() {
+    public void resetData() {
         items.clear();
         loadActions();
         loadContacts();
-
         loadDefaults();
         if (getAdapter() != null) {
             getAdapter().loadData(items);
@@ -87,18 +85,26 @@ class MainFragmentMediator {
             if (fragment != null) {
 
                 if (fragment.getManager().hasCompleted(TokenItemType.CONTACT) && fragment.getManager().has(TokenItemType.DATA) && !fragment.getManager().get(TokenItemType.DATA).getTitle().isEmpty()) {
-                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
                 } else if (fragment.getManager().hasCompleted(TokenItemType.CONTACT)) {
-                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(4, fragment.getString(R
+                            .string.title_call), R.drawable.ic_call_filter,
+                            MainListItemType.DEFAULT));
                 } else if (fragment.getManager().hasCompleted(TokenItemType.DATA)) {
-                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(1, fragment.getString(R
+                            .string.title_sendAsSMS), R.drawable.ic_messages_tool,
+                            MainListItemType.DEFAULT));
+                    items.add(new MainListItem(2, fragment.getString(R
+                            .string.title_saveNote), R.drawable.ic_notes_tool,
+                            MainListItemType.DEFAULT));
                     items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
                 } else {
-                    items.add(new MainListItem(4, fragment.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
-                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.icon_sms, MainListItemType.DEFAULT));
-                    items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.icon_save_note, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(4, fragment.getString(R
+                            .string.title_call), R.drawable.ic_call_filter,
+                            MainListItemType.NUMBERS));
+                    items.add(new MainListItem(1, fragment.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
+                    items.add(new MainListItem(2, fragment.getString(R.string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT));
                     items.add(new MainListItem(3, fragment.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
                 }
             }
@@ -108,7 +114,7 @@ class MainFragmentMediator {
         }
     }
 
-    List<MainListItem> getItems() {
+    public List<MainListItem> getItems() {
         return items;
     }
 
@@ -116,7 +122,7 @@ class MainFragmentMediator {
         return fragment.getAdapter();
     }
 
-    void listItemClicked(TokenRouter router, int position, String data) {
+    public void listItemClicked(TokenRouter router, int position, String data) {
         MainListItemType type;
         type = getAdapter().getItem(position).getItemType();
         if (type != null)
@@ -130,7 +136,6 @@ class MainFragmentMediator {
                 case ACTION:
                     if (getAdapter() != null && getAdapter().getItem(position).getApplicationInfo() == null) {
                         position = getAdapter().getItem(position).getId();
-                        new MainListItemLoader(fragment.getActivity()).firebaseEvent(position);
                         new MainListItemLoader(fragment.getActivity()).listItemClicked(position);
                     } else {
                         if (fragment != null) {
@@ -158,10 +163,6 @@ class MainFragmentMediator {
                             }
                             break;
                         case 3:
-                            if (router != null && fragment != null) {
-                                router.createContact(fragment.getActivity());
-                                FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_CREATE_CONTACT, "", data);
-                            }
                             break;
                         case 4:
                             if (router != null && fragment != null) {
@@ -199,7 +200,7 @@ class MainFragmentMediator {
             }
     }
 
-    void contactPicker() {
+    public void contactPicker() {
         items.clear();
         loadContacts();
         loadDefaults();
@@ -207,13 +208,15 @@ class MainFragmentMediator {
         getAdapter().notifyDataSetChanged();
     }
 
-    void contactNumberPicker(int selectedContactId) {
+    public void contactNumberPicker(int selectedContactId) {
         items.clear();
         if (contactItems != null) {
             for (ContactListItem item : contactItems) {
                 if (item != null && item.getContactId() == selectedContactId) {
                     for (ContactListItem.ContactNumber number : item.getNumbers()) {
-                        items.add(new MainListItem(selectedContactId, number.getNumber(), R.drawable.icon_call, MainListItemType.NUMBERS));
+                        items.add(new MainListItem(selectedContactId, number
+                                .getNumber(), R.drawable.ic_call_filter,
+                                MainListItemType.NUMBERS));
                     }
                 }
             }
@@ -222,9 +225,8 @@ class MainFragmentMediator {
         }
     }
 
-    void defaultData() {
+    public void defaultData() {
         items.clear();
-
         loadDefaults();
         getAdapter().loadData(items);
         getAdapter().notifyDataSetChanged();

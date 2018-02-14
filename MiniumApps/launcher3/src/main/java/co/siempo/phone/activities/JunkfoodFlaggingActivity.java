@@ -13,7 +13,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -197,7 +196,6 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("Hardik", "hardik");
                         scrollView.fullScroll(ScrollView.FOCUS_UP);
                     }
                 }, 100);

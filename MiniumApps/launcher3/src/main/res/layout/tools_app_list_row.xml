@@ -4,33 +4,35 @@
               android:id="@+id/linearList"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="?attr/selectableItemBackground"
+
               android:gravity="center"
               android:orientation="vertical"
               android:showDividers="none"
               tools:ignore="UseCompoundDrawables">
 
     <LinearLayout
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
+        android:background="@drawable/rounded_tools_list_item"
         android:orientation="horizontal"
-        android:paddingBottom="15dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingTop="15dp">
+        >
 
         <ImageView
-            android:id="@+id/imgAppIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/imv_appicon"
+            android:layout_width="28dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="12dp"
+            android:src="@drawable/ic_event_note_black_24dp"
             tools:ignore="ContentDescription,PrivateResource"/>
 
         <TextView
-            android:id="@+id/txtAppName"
+            android:id="@+id/txt_app_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/dp_20"
+
             android:layout_weight="1"
             android:ellipsize="end"
             android:fontFamily="sans-serif"
@@ -47,20 +49,15 @@
             tools:ignore="HardcodedText"/>
 
 
-        <ImageView
-            android:id="@+id/imgChevron"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:checked="true"
-            android:gravity="center_vertical"
-            android:padding="@dimen/dp_10"
-            android:src="@drawable/ic_down_arrow"/>
     </LinearLayout>
 
-    <!--<View-->
-    <!--android:id="@+id/divider"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0.8dp"-->
-    <!--android:background="@android:color/darker_gray" />-->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:background="@android:color/transparent"/>
+
+
 </LinearLayout>

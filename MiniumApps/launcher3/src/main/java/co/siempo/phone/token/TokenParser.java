@@ -6,12 +6,13 @@ import org.androidannotations.annotations.EBean;
 /**
  * Created by shahab on 2/16/17.
  */
-@EBean
 public class TokenParser {
 
+    TokenRouter router ;
+    public TokenParser(TokenRouter router) {
+        this.router = router;
+    }
 
-    @Bean
-    TokenRouter router;
 
     public void parse(String str) {
         if (str.isEmpty()) {

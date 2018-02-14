@@ -29,5 +29,10 @@
         <attr name="metaButtonBarStyle" format="reference" />
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
+    <declare-styleable name="ClearableEditText">
+        <attr format="color|reference" name="clearIconDrawable"/>
+        <attr format="boolean" name="clearIconDrawWhenFocused"/>
+    </declare-styleable>
+
 
 </resources>

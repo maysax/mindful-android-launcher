@@ -43,7 +43,7 @@ public class DrawableProvider {
                 .buildRect(text, mGenerator.getColor(text));
     }
 
-    public TextDrawable getRound(String text,int color) {
+    public TextDrawable getRound(String text, int color) {
         return TextDrawable.builder()
                 .beginConfig()
                 .useFont(Typeface.DEFAULT)
@@ -62,7 +62,7 @@ public class DrawableProvider {
     public TextDrawable getRectWithBorder(String text) {
         return TextDrawable.builder()
                 .beginConfig()
-                    .withBorder(toPx(2))
+                .withBorder(toPx(2))
                 .endConfig()
                 .buildRect(text, mGenerator.getColor(text));
     }
@@ -70,7 +70,7 @@ public class DrawableProvider {
     public TextDrawable getRoundWithBorder(String text) {
         return TextDrawable.builder()
                 .beginConfig()
-                    .withBorder(toPx(2))
+                .withBorder(toPx(2))
                 .endConfig()
                 .buildRound(text, mGenerator.getColor(text));
     }
@@ -78,7 +78,7 @@ public class DrawableProvider {
     public TextDrawable getRoundRectWithBorder(String text) {
         return TextDrawable.builder()
                 .beginConfig()
-                    .withBorder(toPx(2))
+                .withBorder(toPx(2))
                 .endConfig()
                 .buildRoundRect(text, mGenerator.getColor(text), toPx(10));
     }
@@ -87,8 +87,8 @@ public class DrawableProvider {
         String text = "AK";
         return TextDrawable.builder()
                 .beginConfig()
-                    .fontSize(toPx(20))
-                    .toUpperCase()
+                .fontSize(toPx(20))
+                .toUpperCase()
                 .endConfig()
                 .buildRect(text, mGenerator.getColor(text));
     }
@@ -97,10 +97,10 @@ public class DrawableProvider {
         String text = "Bold";
         return TextDrawable.builder()
                 .beginConfig()
-                    .useFont(Typeface.DEFAULT)
-                    .fontSize(toPx(15))
-                    .textColor(0xfff58559)
-                    .bold()
+                .useFont(Typeface.DEFAULT)
+                .fontSize(toPx(15))
+                .textColor(0xfff58559)
+                .bold()
                 .endConfig()
                 .buildRect(text, Color.DKGRAY /*toPx(5)*/);
     }
@@ -111,8 +111,8 @@ public class DrawableProvider {
 
         TextDrawable.IBuilder builder = TextDrawable.builder()
                 .beginConfig()
-                    .width(toPx(29))
-                    .withBorder(toPx(2))
+                .width(toPx(29))
+                .withBorder(toPx(2))
                 .endConfig()
                 .rect();
 

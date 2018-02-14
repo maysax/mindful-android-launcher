@@ -103,25 +103,25 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int id;
-                if (holder.linearLayout.getVisibility() == View.VISIBLE) {
-                    id = item.getId();
-                    if (!appMenu.getApplicationName().equalsIgnoreCase("")
-                            && UIUtils.isAppInstalled(context, appMenu.getApplicationName().trim())) {
-                        if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
-                                new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
-                            openAppAssignmentScreen(item);
+                int id = item.getId();
+                if (holder.linearLayout.getVisibility() == View.VISIBLE && id != 12) {
+                    if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                        if (appMenu.getApplicationName().equalsIgnoreCase("Notes")) {
+                            new ActivityHelper(context).openNotesApp(false);
                         } else {
+                            if (UIUtils.isAppInstalled(context, appMenu.getApplicationName().trim())) {
+                                if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
+                                        new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
+                                    openAppAssignmentScreen(item);
+                                } else {
 //                                if a 3rd party app is already assigned to this tool
-                            new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                    new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                }
+                            }
                         }
                     } else {
                         if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 0) {
-                            if (id == 5) {
-                                new ActivityHelper(context).openNotesApp(false);
-                            } else {
-                                openAppAssignmentScreen(item);
-                            }
+                            openAppAssignmentScreen(item);
                         } else if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 1
                                 && !PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
                                 new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
@@ -162,7 +162,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         public View layout;
         // each data item is just a string in this case
         ImageView icon, imgView;
-        TextView text, textDefaultApp;
+        TextView text;
+        TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
 

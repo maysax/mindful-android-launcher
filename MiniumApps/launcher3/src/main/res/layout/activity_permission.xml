@@ -86,22 +86,7 @@
                     android:layout_height="wrap_content" />
 
             </TableRow>
-            <TableRow
-                android:id="@+id/tblCamera"
-                android:layout_marginTop="16dp">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/video_permission"
-                    android:textSize="@dimen/text.size.large" />
-
-                <Switch
-                    android:id="@+id/switchCameraPermission"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </TableRow>
             <TableRow
                 android:id="@+id/tblStorage"
                 android:layout_marginTop="16dp">

@@ -6,8 +6,7 @@
     android:paddingBottom="@dimen/margin.2"
     android:paddingLeft="@dimen/margin.2"
     android:paddingRight="@dimen/margin.2"
-    android:paddingTop="@dimen/margin.2"
-    tools:context="co.siempo.phone.main.MainFragment">
+    android:paddingTop="@dimen/margin.2">
 
     <RelativeLayout
         android:id="@+id/relTop"

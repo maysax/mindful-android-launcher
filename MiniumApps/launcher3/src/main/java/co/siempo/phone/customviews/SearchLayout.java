@@ -20,7 +20,6 @@ import co.siempo.phone.event.NotificationTrayEvent;
 import co.siempo.phone.event.SearchLayoutEvent;
 import co.siempo.phone.token.TokenCompleteType;
 import co.siempo.phone.token.TokenItem;
-import co.siempo.phone.token.TokenItemType;
 import co.siempo.phone.token.TokenManager;
 import co.siempo.phone.token.TokenUpdateEvent;
 import co.siempo.phone.utils.UIUtils;
@@ -73,13 +72,17 @@ public class SearchLayout extends CardView {
         return txtSearchBox;
     }
 
+    public ImageView getBtnClear() {
+        return btnClear;
+    }
+
     private void init(Context context) {
         isWatching = true;
         inflateLayout = inflate(context, R.layout.search_layout, this);
 
         launcherPrefs = context.getSharedPreferences("Launcher3Prefs", 0);
-        txtSearchBox= inflateLayout.findViewById(R.id.txtSearchBox);
-        btnClear= inflateLayout.findViewById(R.id.btnClear);
+        txtSearchBox = inflateLayout.findViewById(R.id.txtSearchBox);
+        btnClear = inflateLayout.findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,17 +131,18 @@ public class SearchLayout extends CardView {
         });
     }
 
+
     public void askFocus() {
 
         if (MainActivity.isTextLenghGreater.length() > 0) {
             MainActivity.isTextLenghGreater = MainActivity.isTextLenghGreater.trim();
             handleAfterTextChanged(MainActivity.isTextLenghGreater);
         } else {
-            if(launcherPrefs.getBoolean("isKeyBoardDisplay",false) && txtSearchBox!=null)
-                 txtSearchBox.requestFocus();
-            if(btnClear!=null)
+            if (launcherPrefs.getBoolean("isKeyBoardDisplay", false) && txtSearchBox != null)
+                txtSearchBox.requestFocus();
+            if (btnClear != null)
                 btnClear.setVisibility(INVISIBLE);
-            if(txtSearchBox!=null)
+            if (txtSearchBox != null)
                 txtSearchBox.setText("");
         }
 
@@ -146,14 +150,6 @@ public class SearchLayout extends CardView {
     }
 
     private void handleAfterTextChanged(String s) {
-        if(btnClear!=null) {
-            if (s.length() != 0) {
-                btnClear.setVisibility(VISIBLE);
-            } else {
-                btnClear.setVisibility(INVISIBLE);
-            }
-        }
-
         if (isWatching) {
             EventBus.getDefault().post(new SearchLayoutEvent(s));
         }
@@ -218,10 +214,6 @@ public class SearchLayout extends CardView {
             if (item.getCompleteType() == TokenCompleteType.FULL) {
                 if (item.isChipable()) {
                     formattedTxt += "^";
-                }
-
-                if (item.getItemType() == TokenItemType.CONTACT) {
-                    //formattedTxt += "@";
                 }
 
                 formattedTxt += item.getTitle() + "|";

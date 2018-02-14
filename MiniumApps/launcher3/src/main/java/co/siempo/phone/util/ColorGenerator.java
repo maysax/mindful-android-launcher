@@ -50,13 +50,13 @@ public class ColorGenerator {
     private final List<Integer> mColors;
     private final Random mRandom;
 
-    public static ColorGenerator create(List<Integer> colorList) {
-        return new ColorGenerator(colorList);
-    }
-
     private ColorGenerator(List<Integer> colorList) {
         mColors = colorList;
         mRandom = new Random(System.currentTimeMillis());
+    }
+
+    public static ColorGenerator create(List<Integer> colorList) {
+        return new ColorGenerator(colorList);
     }
 
     public int getRandomColor() {

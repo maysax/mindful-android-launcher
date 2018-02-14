@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
 
     <com.eyeem.chips.ChipsEditText
         android:id="@+id/txtSearchBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="@color/white"
         android:ellipsize="end"
         android:hint="@string/search_hint"
         android:inputType="textCapSentences|textMultiLine|textAutoCorrect"
@@ -23,19 +22,24 @@
         android:text=""
         android:textColor="@color/text.primary"
         android:textSize="@dimen/text.size.medium"
-        tools:background="@color/material.core.blue"></com.eyeem.chips.ChipsEditText>
+        android:background="@drawable/auto_text_rectangle">
+
+
+    </com.eyeem.chips.ChipsEditText>
 
 
     <ImageView
         android:id="@+id/btnClear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="54dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@null"
         android:paddingEnd="8dp"
         android:paddingStart="4dp"
-        android:src="@drawable/icon_clear_field"
+        android:src="@drawable/ic_close_blue"
         android:visibility="gone"
-        tools:ignore="UnusedIds" />
+        android:background="@drawable/auto_text_rectangle"
+        tools:ignore="UnusedIds"/>
 
 </LinearLayout>
