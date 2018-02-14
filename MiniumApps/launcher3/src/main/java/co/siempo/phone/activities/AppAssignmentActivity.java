@@ -88,8 +88,10 @@ public class AppAssignmentActivity extends CoreActivity {
                 }
             }
             for (ResolveInfo resolveInfo : installedPackageList) {
-                if (resolveInfo != null && !connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
-                    appList.add(resolveInfo);
+                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                    if (resolveInfo != null && !connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
+                        appList.add(resolveInfo);
+                    }
                 }
             }
         } else {
