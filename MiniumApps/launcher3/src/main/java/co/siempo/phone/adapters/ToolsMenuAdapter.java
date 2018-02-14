@@ -62,10 +62,10 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final MainListItem item = mainListItemList.get(position);
         final AppMenu appMenu = map.get(item.getId());
-        if (appMenu.isVisible()) {
+        if (appMenu.isVisible() && item.getId() != 12) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
                 holder.text.setText(item.getTitle());
@@ -93,7 +93,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
             @Override
             public boolean onLongClick(View view) {
                 Intent intent = new Intent(context, ToolPositioningActivity.class);
-                intent.putExtra("ID", mainListItemList.get(position).getId());
+                intent.putExtra("ID", mainListItemList.get(holder.getAdapterPosition()).getId());
                 context.startActivity(intent);
                 ((CoreActivity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 return true;

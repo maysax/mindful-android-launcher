@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.joanzapata.iconify.IconDrawable;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.app.CoreApplication;
@@ -24,23 +24,23 @@ import co.siempo.phone.helper.FirebaseHelper;
 import co.siempo.phone.interfaces.ItemTouchHelperAdapter;
 import co.siempo.phone.interfaces.ItemTouchHelperViewHolder;
 import co.siempo.phone.main.MainListItemLoader;
-import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
+import co.siempo.phone.main.OnToolItemListChangedListener;
 import co.siempo.phone.models.MainListItem;
 
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder> implements ItemTouchHelperAdapter {
     private final Activity context;
-    private List<MainListItem> arrayList;
+    private ArrayList<MainListItem> arrayList;
     private boolean isGrid;
     private OnStartDragListener mDragStartListener;
-    private OnCustomerListChangedListener mListChangedListener;
+    private OnToolItemListChangedListener mListChangedListener;
     private DroidPrefs_ droidPrefs_;
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    MenuAdapter(Activity context, RecyclerView activity_grid_view, Launcher3Prefs_ prefs, DroidPrefs_ droidPrefs_, List<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
-                OnCustomerListChangedListener listChangedListener) {
+    MenuAdapter(Activity context, RecyclerView activity_grid_view, Launcher3Prefs_ prefs, DroidPrefs_ droidPrefs_, ArrayList<MainListItem> arrayList, boolean isGrid, OnStartDragListener dragListener,
+                OnToolItemListChangedListener listChangedListener) {
         this.context = context;
         this.arrayList = arrayList;
         this.isGrid = isGrid;
@@ -62,7 +62,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder
                         Collections.swap(arrayList, i, i - 1);
                     }
                 }
-                mListChangedListener.onNoteListChanged(arrayList);
+                mListChangedListener.onToolItemListChanged(arrayList);
                 notifyItemMoved(fromPosition, toPosition);
             }
         } catch (Exception e) {

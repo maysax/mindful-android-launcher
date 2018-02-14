@@ -24,6 +24,7 @@ import co.siempo.phone.customviews.ItemOffsetDecoration;
 import co.siempo.phone.main.MainListItemLoader;
 import co.siempo.phone.models.AppMenu;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.utils.PackageUtil;
 import co.siempo.phone.utils.PrefSiempo;
 import me.relex.circleindicator.CircleIndicator;
 
@@ -87,6 +88,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     private void bindBottomDoc() {
         ArrayList<MainListItem> itemsLocal = new ArrayList<>();
         new MainListItemLoader(getActivity()).loadItemsDefaultApp(itemsLocal);
+        itemsLocal = PackageUtil.getToolsMenuData(getActivity(), itemsLocal);
         Set<Integer> list = new HashSet<>();
 
         for (Map.Entry<Integer, AppMenu> entry : CoreApplication.getInstance().getToolsSettings().entrySet()) {
@@ -107,7 +109,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (itemDecoration != null) {
             recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
         }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_15);
+        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_10);
         recyclerViewBottomDoc.addItemDecoration(itemDecoration);
         boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
         mAdapter = new ToolsMenuAdapter(getActivity(), isHideIconBranding, true, items);
