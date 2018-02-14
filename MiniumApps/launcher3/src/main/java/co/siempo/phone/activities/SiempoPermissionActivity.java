@@ -44,8 +44,7 @@ public class SiempoPermissionActivity extends CoreActivity {
     Switch switchCallPermission;
     @ViewById
     Switch switchSmsPermission;
-    @ViewById
-    Switch switchCameraPermission;
+
     @ViewById
     Switch switchFilePermission;
     @ViewById
@@ -65,8 +64,6 @@ public class SiempoPermissionActivity extends CoreActivity {
     TableRow tblContact;
     @ViewById
     TableRow tblSMS;
-    @ViewById
-    TableRow tblCamera;
     @ViewById
     TableRow tblNotification;
     @ViewById
@@ -105,9 +102,7 @@ public class SiempoPermissionActivity extends CoreActivity {
                     switchSmsPermission.setChecked(false);
 
                 }
-                if (deniedPermissions.contains(Manifest.permission.CAMERA)) {
-                    switchCameraPermission.setChecked(false);
-                }
+
                 if (deniedPermissions.contains(Manifest.permission.READ_CONTACTS)) {
                     switchContactPermission.setChecked(false);
                 }
@@ -133,7 +128,6 @@ public class SiempoPermissionActivity extends CoreActivity {
         setSupportActionBar(toolbar);
         switchSmsPermission.setOnClickListener(onClickListener);
         switchContactPermission.setOnClickListener(onClickListener);
-        switchCameraPermission.setOnClickListener(onClickListener);
         switchCallPermission.setOnClickListener(onClickListener);
         switchFilePermission.setOnClickListener(onClickListener);
 
@@ -165,11 +159,6 @@ public class SiempoPermissionActivity extends CoreActivity {
         } else {
             switchSmsPermission.setChecked(false);
         }
-        if (permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION)) {
-            switchCameraPermission.setChecked(true);
-        } else {
-            switchCameraPermission.setChecked(false);
-        }
         if (permissionUtil.hasGiven(PermissionUtil.WRITE_EXTERNAL_STORAGE_PERMISSION)) {
             switchFilePermission.setChecked(true);
         } else {
@@ -191,7 +180,6 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchContactPermission.setVisibility(View.VISIBLE);
             switchCallPermission.setVisibility(View.VISIBLE);
             switchSmsPermission.setVisibility(View.VISIBLE);
-            switchCameraPermission.setVisibility(View.VISIBLE);
             switchFilePermission.setVisibility(View.VISIBLE);
             switchNotificationAccess.setVisibility(View.VISIBLE);
             switchOverlayAccess.setVisibility(View.VISIBLE);
@@ -202,7 +190,6 @@ public class SiempoPermissionActivity extends CoreActivity {
             if (Build.VERSION.SDK_INT >= 23) {
                 tblContact.setVisibility(View.VISIBLE);
                 tblCalls.setVisibility(View.VISIBLE);
-                tblCamera.setVisibility(View.VISIBLE);
                 tblDrawOverlay.setVisibility(View.VISIBLE);
                 tblStorage.setVisibility(View.VISIBLE);
                 tblNotification.setVisibility(View.VISIBLE);
@@ -210,7 +197,6 @@ public class SiempoPermissionActivity extends CoreActivity {
             } else {
                 tblContact.setVisibility(View.GONE);
                 tblCalls.setVisibility(View.GONE);
-                tblCamera.setVisibility(View.GONE);
                 tblDrawOverlay.setVisibility(View.GONE);
                 tblStorage.setVisibility(View.GONE);
                 tblNotification.setVisibility(View.VISIBLE);
@@ -220,7 +206,6 @@ public class SiempoPermissionActivity extends CoreActivity {
             switchContactPermission.setVisibility(View.GONE);
             switchCallPermission.setVisibility(View.GONE);
             switchSmsPermission.setVisibility(View.GONE);
-            switchCameraPermission.setVisibility(View.GONE);
             switchFilePermission.setVisibility(View.GONE);
             switchNotificationAccess.setVisibility(View.GONE);
             switchOverlayAccess.setVisibility(View.GONE);
@@ -236,7 +221,7 @@ public class SiempoPermissionActivity extends CoreActivity {
         if (isFromHome && permissionUtil.hasGiven(PermissionUtil
                 .CONTACT_PERMISSION) &&
                 permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
-                permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+                permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
             finish();
         }
     }
@@ -272,7 +257,7 @@ public class SiempoPermissionActivity extends CoreActivity {
     @Click(R.id.btnContinue)
     void myButtonWasClicked() {
         if (permissionUtil.hasGiven(PermissionUtil.CONTACT_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.CALL_PHONE_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.SEND_SMS_PERMISSION) &&
-                permissionUtil.hasGiven(PermissionUtil.CAMERA_PERMISSION) && permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
+                permissionUtil.hasGiven(PermissionUtil.NOTIFICATION_ACCESS) && permissionUtil.hasGiven(PermissionUtil.DRAWING_OVER_OTHER_APPS)) {
 //            launcher3Prefs.isPermissionGivenAndContinued().put(true);
             finish();
         } else {
