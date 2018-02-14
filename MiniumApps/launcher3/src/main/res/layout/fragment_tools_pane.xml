@@ -4,16 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
     tools:context="co.siempo.phone.activities.DashboardActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnListOrGrid"
         android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:clipToPadding="false"
-        android:scrollbars="vertical" />
+        android:layout_marginLeft="@dimen/dp_5"
+        android:layout_marginRight="@dimen/dp_5"
+        android:clipToPadding="false" />
 </RelativeLayout>

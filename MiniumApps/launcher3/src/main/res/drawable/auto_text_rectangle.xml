@@ -7,11 +7,11 @@
         android:right="-8dp"
         android:top="-8dp">
         <shape>
-            <solid android:color="@android:color/white" />
+            <solid android:color="@android:color/white"/>
             <stroke
 
                 android:width="4dp"
-                android:color="#42A4FF" />
+                android:color="#42A4FF"/>
         </shape>
     </item>
 

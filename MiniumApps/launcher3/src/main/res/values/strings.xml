@@ -35,9 +35,10 @@
 
     <string name="title.mindfulMorning">Mindful Morning</string>
     <string name="title.mindfulMorningAlarm" tools:ignore="UnusedResources">Mindful Morning Alarm</string>
-    <string name="title.sendAsSMS">Send as SMS</string>
-    <string name="title.saveNote">Save Note</string>
+    <string name="title.sendAsSMS">Send as a message</string>
+    <string name="title.saveNote">Save as a note</string>
     <string name="title.createContact">Create Contact</string>
+    <string name="title.swipe">Swipe right to show flagged apps</string>
     <string name="title.tempo">Tempo</string>
 
     <string name="label_multiple_numbers">Multiple numbers</string>
@@ -120,7 +121,7 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources" />
+    <string-array name="multi_select_list_preference_default_value" tools:ignore="UnusedResources"/>
 
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
@@ -331,6 +332,7 @@
 
 
     <string name="cancel">CANCEL</string>
+    <string name="strcontinue">CONTINUE</string>
     <string name="remove">REMOVE</string>
     <string name="msg_sametime">You can\'t set same time multiple times</string>
     <string name="msg_individual">Notifications will be delivered up to \n1 minute late or as soon as they arrive.</string>
@@ -366,6 +368,7 @@
     <string name="notification_interrupt_description">Normally, when you schedule your notifications to arrive at certain times of day or at a certain interval, then all apps will be blocked until the that scheduled arrival times. \n \nHowever, you can you this setting to choose to allow some apps to interrupt you immediately.</string>
     <string name="msg_tempo_disable">All Siempo notifications options have been disabled, including Tempo and blocking apps by category. Use Android system settings to adjust notifications or re-enable this setting.</string>
     <string name="allow_interrupt_msg">Allow this app to interrupt you</string>
+    <string name="info_or_uninstall">Get info or uninstall app</string>
     <string name="stop_interrupt_msg">Stop allowing interruptions</string>
     <string name="title_activity_dashboard">DashboardActivity</string>
 
@@ -407,6 +410,9 @@
         <item>Medium</item>
         <item>Large</item>
     </string-array>
+
+    <string name="you_ve_flag">"You've flagged these apps.Your current intention:"
+</string>
 
 
     <!-- errors -->
@@ -482,6 +488,7 @@
     <string name="notes">Notes</string>
 
 
+
     <!--name tools menu-->
     <string name="title.map">Maps</string>
     <string name="title.transport">Transport</string>
@@ -504,6 +511,19 @@
     <string name="iconbranding_description_setting">App icon logos are replaced with less enticing images and patterns.</string>
     <string name="assign_an_app">Assign an app to </string>
     <string name="title_flagging_screen">Flag apps you want to use less</string>
+    <string name="flagged_apps">Flagged apps</string>
+    <string name="all_other_installed_apps">All other installed apps</string>
+    <string name="tap_apps_below_to_move_them_into_this_section">Tap apps below to move them into this section.</string>
+    <string name="msg_congratulations">Congratulations!</string>
+    <string name="flag_app">Flag this app to use it less</string>
+    <string name="unflagapp">Un-flag this app</string>
+    <string name="get_info_or_uninstall_app">Get info or uninstall app</string>
+    <string name="msg_flage_save_dialog">You\'ve taken an important step towards reducing the use of apps that can make you feel bad when you overuse them.</string>
+    <string name="msg_flag_first_time">Most users report that the more apps they flag, the less they use their phones.  Flagging will make these apps just a bit harder to launch and use unintentionally.</string>
+    <string name="yes_unhide">YES, UNHIDE</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="select_tools">Select Tools</string>
+    <string name="editing_tools">Editing tools</string>
 
 
 </resources>

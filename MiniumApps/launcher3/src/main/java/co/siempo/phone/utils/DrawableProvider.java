@@ -47,7 +47,7 @@ public class DrawableProvider {
         return TextDrawable.builder()
                 .beginConfig()
                 .useFont(Typeface.DEFAULT)
-                .fontSize(toPx(25))
+                .fontSize(toPx(30))
                 .textColor(color)
                 .bold()
                 .endConfig()

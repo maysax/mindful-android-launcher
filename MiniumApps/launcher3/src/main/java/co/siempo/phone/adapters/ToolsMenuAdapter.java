@@ -19,6 +19,8 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
+import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.ToolPositioningActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
@@ -35,13 +37,14 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     private final Context context;
     private List<MainListItem> mainListItemList;
-    private boolean isHideIconBranding = true;
+    private boolean isHideIconBranding = true, isBottomDoc = false;
     private HashMap<Integer, AppMenu> map;
 
-    public ToolsMenuAdapter(Context context, boolean isHideIconBranding, List<MainListItem> mainListItemList) {
+    public ToolsMenuAdapter(Context context, boolean isHideIconBranding, boolean isBottomDoc, List<MainListItem> mainListItemList) {
         this.context = context;
         this.mainListItemList = mainListItemList;
         this.isHideIconBranding = isHideIconBranding;
+        this.isBottomDoc = isBottomDoc;
         map = CoreApplication.getInstance().getToolsSettings();
     }
 
@@ -54,75 +57,84 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         View v =
                 inflater.inflate(R.layout.list_item_grid, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final MainListItem item = mainListItemList.get(position);
         final AppMenu appMenu = map.get(item.getId());
-        if (item != null && !appMenu.isBottomDoc()) {
-            if (appMenu.isVisible()) {
-                holder.linearLayout.setVisibility(View.VISIBLE);
-                if (!TextUtils.isEmpty(item.getTitle())) {
-                    holder.text.setText(item.getTitle());
-                }
-                if (isHideIconBranding) {
-                    holder.icon.setImageResource(item.getDrawable());
+        if (appMenu.isVisible() && item.getId() != 12) {
+            holder.linearLayout.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(item.getTitle())) {
+                holder.text.setText(item.getTitle());
+            }
+            if (isHideIconBranding) {
+                holder.icon.setImageResource(item.getDrawable());
+            } else {
+                if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
+                    Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(appMenu.getApplicationName());
+                    if (drawable != null) {
+                        holder.icon.setImageDrawable(drawable);
+                        holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
+                    } else {
+                        holder.icon.setImageResource(item.getDrawable());
+                    }
                 } else {
+                    holder.linearLayout.setVisibility(View.INVISIBLE);
+                }
+            }
+        } else {
+            holder.linearLayout.setVisibility(View.INVISIBLE);
+        }
+
+        holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(context, ToolPositioningActivity.class);
+                intent.putExtra("ID", mainListItemList.get(holder.getAdapterPosition()).getId());
+                context.startActivity(intent);
+                ((CoreActivity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                return true;
+            }
+        });
+
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int id = item.getId();
+                if (holder.linearLayout.getVisibility() == View.VISIBLE && id != 12) {
                     if (!appMenu.getApplicationName().equalsIgnoreCase("")) {
-                        Drawable drawable = CoreApplication.getInstance().getApplicationIconFromPackageName(appMenu.getApplicationName());
-                        if (drawable != null) {
-                            holder.icon.setImageDrawable(drawable);
-                            holder.text.setText(CoreApplication.getInstance().getApplicationNameFromPackageName(appMenu.getApplicationName()));
+                        if (appMenu.getApplicationName().equalsIgnoreCase("Notes")) {
+                            new ActivityHelper(context).openNotesApp(false);
                         } else {
-                            holder.icon.setImageResource(item.getDrawable());
+                            if (UIUtils.isAppInstalled(context, appMenu.getApplicationName().trim())) {
+                                if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
+                                        new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
+                                    openAppAssignmentScreen(item);
+                                } else {
+//                                if a 3rd party app is already assigned to this tool
+                                    new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
+                                }
+                            }
                         }
                     } else {
-                        holder.linearLayout.setVisibility(View.INVISIBLE);
-                    }
-                }
-            } else {
-                holder.linearLayout.setVisibility(View.INVISIBLE);
-            }
-            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int id;
-                    if (item != null && holder.linearLayout.getVisibility() == View.VISIBLE) {
-                        id = item.getId();
-                        if (!appMenu.getApplicationName().equalsIgnoreCase("")
-                                && UIUtils.isAppInstalled(context, appMenu.getApplicationName().trim())) {
-                            if (PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
-                                    new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
-                                openAppAssignmentScreen(item);
-                            } else {
+                        if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 0) {
+                            openAppAssignmentScreen(item);
+                        } else if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 1
+                                && !PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
+                                new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
 //                                if a 3rd party app is already assigned to this tool
-                                new ActivityHelper(context).openAppWithPackageName(appMenu.getApplicationName().trim());
-                            }
+                            String strPackageName = CoreApplication.getInstance().getApplicationByCategory(id).get(0).activityInfo.packageName;
+                            new ActivityHelper(context).openAppWithPackageName(strPackageName);
                         } else {
-                            if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 0) {
-                                if (id == 5) {
-                                    new ActivityHelper(context).openNotesApp(false);
-                                } else {
-                                    openAppAssignmentScreen(item);
-                                }
-                            } else if (CoreApplication.getInstance().getApplicationByCategory(id).size() == 1
-                                    && !PrefSiempo.getInstance(context).read(PrefSiempo.JUNKFOOD_APPS,
-                                    new HashSet<String>()).contains(appMenu.getApplicationName().trim())) {
-//                                if a 3rd party app is already assigned to this tool
-                                String strPackageName = CoreApplication.getInstance().getApplicationByCategory(id).get(0).activityInfo.packageName;
-                                new ActivityHelper(context).openAppWithPackageName(strPackageName);
-                            } else {
-                                openAppAssignmentScreen(item);
-                            }
+                            openAppAssignmentScreen(item);
                         }
                     }
                 }
-            });
-        }
+            }
+        });
     }
 
     /**
@@ -142,7 +154,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     @Override
     public int getItemCount() {
-        return mainListItemList.size();
+        return isBottomDoc ? 4 : 12;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -150,7 +162,8 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         public View layout;
         // each data item is just a string in this case
         ImageView icon, imgView;
-        TextView text, textDefaultApp;
+        TextView text;
+        TextView textDefaultApp;
         RelativeLayout relMenu;
         private LinearLayout linearLayout;
 

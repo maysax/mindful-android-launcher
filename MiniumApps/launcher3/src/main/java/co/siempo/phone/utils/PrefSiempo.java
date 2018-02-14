@@ -34,7 +34,9 @@ public class PrefSiempo {
 
     // This field is used for to store junkfood application package name.
     public static final String JUNKFOOD_APPS = "junkfood_apps";
-//
+
+    //
+    public static final String SORTED_MENU = "sortedMenu";
 
     private static final PrefSiempo ourInstance = new PrefSiempo();
     private static SharedPreferences sharedPreferences;
@@ -62,7 +64,7 @@ public class PrefSiempo {
      */
     public void write(String key, boolean value) {
         editor.putBoolean(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -85,7 +87,7 @@ public class PrefSiempo {
      */
     public void write(String key, float value) {
         editor.putFloat(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -108,7 +110,7 @@ public class PrefSiempo {
      */
     public void write(String key, int value) {
         editor.putInt(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -131,7 +133,7 @@ public class PrefSiempo {
      */
     public void write(String key, long value) {
         editor.putLong(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -154,7 +156,7 @@ public class PrefSiempo {
      */
     public void write(String key, String value) {
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 
     /**

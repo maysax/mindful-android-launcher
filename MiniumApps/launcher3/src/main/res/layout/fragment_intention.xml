@@ -3,8 +3,7 @@
     android:id="@+id/relRootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/layout_bg"
-    tools:context="co.siempo.phone.main.MainFragment">
+    android:background="@color/layout_bg">
 
     <RelativeLayout
         android:id="@+id/relTop"

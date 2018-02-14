@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="29dp"
-    android:height="33dp"
-    android:viewportHeight="33"
-    android:viewportWidth="29">
+        android:width="29dp"
+        android:height="33dp"
+        android:viewportHeight="33"
+        android:viewportWidth="29">
 
     <group
         android:name="Canvas"
@@ -66,6 +66,6 @@
 25.3836 29.4622 25.3412 29.5479 25.2569 29.6335C 25.1722 29.7187 25.0874 29.7616
 25.0031 29.7616L 3.42663 29.7616C 3.34235 29.7616 3.25759 29.7187 3.17283
 29.6335C 3.08854 29.5479 3.04616 29.4622 3.04616 29.377L 3.04616 10.2624L
-25.3836 10.2624L 25.3836 29.377Z" />
+25.3836 10.2624L 25.3836 29.377Z"/>
     </group>
 </vector>

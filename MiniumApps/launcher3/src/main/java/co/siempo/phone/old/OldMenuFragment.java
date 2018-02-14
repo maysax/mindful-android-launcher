@@ -36,17 +36,17 @@ import co.siempo.phone.app.Launcher3Prefs_;
 import co.siempo.phone.fragments.CoreFragment;
 import co.siempo.phone.log.Tracer;
 import co.siempo.phone.main.MainListItemLoader;
-import co.siempo.phone.main.OnCustomerListChangedListener;
 import co.siempo.phone.main.OnStartDragListener;
+import co.siempo.phone.main.OnToolItemListChangedListener;
 import co.siempo.phone.main.SimpleItemTouchHelperCallback;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.utils.UIUtils;
 
 /**
- * A simple {@link Fragment} subclass.onNoteListChanged
+ * A simple {@link Fragment} subclass.onToolItemListChanged
  */
 @EFragment(R.layout.fragment_old_menu)
-public class OldMenuFragment extends CoreFragment implements OnCustomerListChangedListener,
+public class OldMenuFragment extends CoreFragment implements OnToolItemListChangedListener,
         OnStartDragListener {
 
     @Pref
@@ -61,7 +61,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     ImageView icon;
     @ViewById
     CardView cardView;
-    private List<MainListItem> items = new ArrayList<>();
+    private ArrayList<MainListItem> items = new ArrayList<>();
     private MenuAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ItemOffsetDecoration itemDecoration;
@@ -71,6 +71,10 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
 
     public OldMenuFragment() {
         // Required empty public constructor
+    }
+
+    public static OldMenuFragment newInstance() {
+        return new OldMenuFragment();
     }
 
     @Override
@@ -123,7 +127,7 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
     }
 
     @Override
-    public void onNoteListChanged(List<MainListItem> customers) {
+    public void onToolItemListChanged(ArrayList<MainListItem> customers) {
         List<Long> listOfSortedCustomerId = new ArrayList<>();
 
         for (MainListItem customer : customers) {
@@ -141,13 +145,13 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         mItemTouchHelper.startDrag(viewHolder);
     }
 
-    private List<MainListItem> getSampleData() {
+    private ArrayList<MainListItem> getSampleData() {
 
         //Get the sample data
-        List<MainListItem> customerList = items;
+        ArrayList<MainListItem> customerList = items;
 
         //create an empty array to hold the list of sorted Customers
-        List<MainListItem> sortedCustomers = new ArrayList<>();
+        ArrayList<MainListItem> sortedCustomers = new ArrayList<>();
 
         //get the JSON array of the ordered of sorted customers
         String jsonListOfSortedCustomerId = prefs.sortedMenu().get();

@@ -54,6 +54,30 @@ public class AppAssignmentActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_assignement);
         mainListItem = (MainListItem) getIntent().getSerializableExtra(Constants.INTENT_MAINLISTITEM);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        filterList();
+        initView();
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mainListItem = (MainListItem) savedInstanceState.getSerializable("MainListItem");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable("MainListItem", mainListItem);
+        super.onSaveInstanceState(outState);
+
+    }
+
+    private void filterList() {
+        appList = new ArrayList<>();
         if (idList.contains(mainListItem.getId())) {
             Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
             mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -64,14 +88,15 @@ public class AppAssignmentActivity extends CoreActivity {
                 }
             }
             for (ResolveInfo resolveInfo : installedPackageList) {
-                if (resolveInfo != null && !connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
-                    appList.add(resolveInfo);
+                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                    if (resolveInfo != null && !connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
+                        appList.add(resolveInfo);
+                    }
                 }
             }
         } else {
             appList = CoreApplication.getInstance().getApplicationByCategory(mainListItem.getId());
         }
-        initView();
     }
 
     private void initView() {
@@ -89,7 +114,7 @@ public class AppAssignmentActivity extends CoreActivity {
         setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.recyclerView);
         txtErrorMessage = findViewById(R.id.txtErrorMessage);
-        if (appList != null && appList.size() > 1) {
+        if (appList != null && appList.size() >= 1) {
             recyclerView.setVisibility(View.VISIBLE);
             txtErrorMessage.setVisibility(View.INVISIBLE);
             appList = Sorting.sortAppAssignment(this, appList);
