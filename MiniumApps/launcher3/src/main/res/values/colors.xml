@@ -52,6 +52,7 @@
     <color name="dialog_blue">#42A4FF</color>
     <color name="dialog_message">#8A000000</color>
     <color name="dialog_title">#DE000000</color>
+    <color name="bottom_doc">#E8E8E8</color>
 
     <string-array name="colours" translatable="false">
         <item>#44A1EB</item> <!-- blue -->

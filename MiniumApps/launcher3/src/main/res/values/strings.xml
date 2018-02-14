@@ -518,6 +518,7 @@
     <string name="yes_unhide">YES, UNHIDE</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="select_tools">Select Tools</string>
+    <string name="editing_tools">Editing tools</string>
 
 
 </resources>

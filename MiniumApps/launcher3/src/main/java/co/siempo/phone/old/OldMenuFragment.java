@@ -73,6 +73,10 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         // Required empty public constructor
     }
 
+    public static OldMenuFragment newInstance() {
+        return new OldMenuFragment();
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -84,13 +88,13 @@ public class OldMenuFragment extends CoreFragment implements OnCustomerListChang
         super.onResume();
         items = new ArrayList<>();
         new MainListItemLoader(getActivity()).loadItems(items, this);
-        if (prefs.isMenuGrid().get()) {
+//        if (prefs.isMenuGrid().get()) {
             items = getSampleData();
             bindAsGrid();
-        } else {
-            items = getSampleData();
-            bindAsList();
-        }
+//        } else {
+//            items = getSampleData();
+//            bindAsList();
+//        }
 
         // Listener for the grid and list icon.
         btnListOrGrid.setOnClickListener(new View.OnClickListener() {

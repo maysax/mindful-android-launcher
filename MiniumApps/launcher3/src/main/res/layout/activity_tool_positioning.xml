@@ -46,12 +46,11 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/linPane"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2.4"
-            android:background="@drawable/ic_center_dock_bg"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -59,10 +58,10 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:clipToPadding="false" />
-        </LinearLayout>
+                android:clipToPadding="false"
+                android:paddingTop="@dimen/dp_20" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 </RelativeLayout>

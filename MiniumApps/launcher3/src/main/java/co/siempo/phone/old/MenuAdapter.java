@@ -78,6 +78,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.ItemViewHolder
 
     }
 
+
     // Create new views (invoked by the layout manager)
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent,

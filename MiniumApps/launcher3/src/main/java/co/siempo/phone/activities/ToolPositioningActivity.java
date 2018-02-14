@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -51,6 +52,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
     private ItemTouchHelper mItemTouchHelper;
     private Parcelable mListState;
     private RecyclerView recyclerView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,16 +62,37 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
         initView();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     private void initView() {
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_blue_24dp);
+        toolbar.setTitle(R.string.editing_tools);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color
+                .colorAccent));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
         items = new ArrayList<>();
         new MainListItemLoader(this).loadItemsDefaultApp(items);
         recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(mLayoutManager);
         if (itemDecoration != null) {
             recyclerView.removeItemDecoration(itemDecoration);
         }
-        itemDecoration = new ItemOffsetDecoration(this, R.dimen.menu_grid_margin);
+        itemDecoration = new ItemOffsetDecoration(this, R.dimen.dp_15);
         recyclerView.addItemDecoration(itemDecoration);
         boolean is_icon_branding = PrefSiempo.getInstance(this).read(PrefSiempo.IS_ICON_BRANDING, true);
         mAdapter = new MenuAdapter(this, id, items, this, this, is_icon_branding);
@@ -146,6 +169,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
     private class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
 
         private final int mItemOffset;
+        Context context;
 
         ItemOffsetDecoration(int itemOffset) {
             mItemOffset = itemOffset;
@@ -153,13 +177,15 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
 
         ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
             this(context.getResources().getDimensionPixelSize(itemOffsetId));
+            this.context = context;
         }
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
                                    RecyclerView.State state) {
             super.getItemOffsets(outRect, view, parent, state);
-            outRect.set(mItemOffset, mItemOffset, mItemOffset, mItemOffset);
+            int position = parent.getChildCount();
+            outRect.set(0, mItemOffset, 0, mItemOffset);
         }
     }
 
@@ -213,6 +239,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
 
         }
 
+
         // Create new views (invoked by the layout manager)
         @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup parent,
@@ -222,7 +249,9 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
                     parent.getContext());
             View v;
             v = inflater.inflate(R.layout.list_item_grid, parent, false);
-            // set the view's size, margins, paddings and layout parameters
+            int height = parent.getMeasuredHeight() / 8;
+            v.setMinimumHeight(height);
+//             set the view's size, margins, paddings and layout parameters
             return new ItemViewHolder(v);
         }
 
@@ -231,6 +260,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
         public void onBindViewHolder(final ItemViewHolder holder, int position) {
             final MainListItem item = arrayList.get(position);
             final AppMenu appMenu = map.get(item.getId());
+
             if (appMenu.isVisible()) {
                 holder.linearLayout.setVisibility(View.VISIBLE);
                 if (!TextUtils.isEmpty(item.getTitle())) {
@@ -254,6 +284,11 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
             } else {
                 holder.linearLayout.setVisibility(View.INVISIBLE);
             }
+            if (position > 11) {
+                holder.relMenu.setBackgroundColor(ContextCompat.getColor(context, R.color.bottom_doc));
+            } else {
+                holder.relMenu.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+            }
 
             holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -262,6 +297,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
                     return true;
                 }
             });
+//            holder.relMenu.setBackground(ContextCompat.getDrawable(context, R.drawable.tranparent));
 
         }
 
@@ -274,7 +310,7 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
                 ItemTouchHelperViewHolder {
             public View layout;
             // each data item is just a string in this case
-            ImageView icon, imgView;
+            ImageView icon, imgView, temp;
             TextView text, textDefaultApp;
             RelativeLayout relMenu;
             private LinearLayout linearLayout;
@@ -288,33 +324,20 @@ public class ToolPositioningActivity extends CoreActivity implements OnCustomerL
                 textDefaultApp = v.findViewById(R.id.textDefaultApp);
                 icon = v.findViewById(R.id.icon);
                 imgView = v.findViewById(R.id.imgView);
+                temp = v.findViewById(R.id.temp);
             }
 
             @Override
             public void onItemSelected() {
-                if (relMenu.getTag().equals("list")) {
-                    imgView.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.darker_gray));
-                } else {
-                    imgView.setBackground(layout.getContext().getResources().getDrawable(R.drawable.circle_menu_selected, null));
-                }
+//                imgView.setBackground(layout.getContext().getResources().getDrawable(R.drawable.circle_menu_selected, null));
+                //relMenu.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.tranparent));
             }
 
             @Override
             public void onItemClear() {
                 try {
-                    if (relMenu.getTag().equals("list")) {
-                        if (imgView.getTag() != null && imgView.getTag().equals("1")) {
-                            imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.rectagle_menu));
-                        } else {
-                            imgView.setBackground(null);
-                        }
-                    } else {
-                        if (imgView.getTag() != null && imgView.getTag().equals("1")) {
-                            imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu));
-                        } else {
-                            imgView.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.circle_menu_unselected));
-                        }
-                    }
+                    notifyDataSetChanged();
+                    //   relMenu.setBackground(ContextCompat.getDrawable(itemView.getContext(), R.drawable.tranparent));
                 } catch (Exception e) {
                     e.printStackTrace();
                     CoreApplication.getInstance().logException(e);

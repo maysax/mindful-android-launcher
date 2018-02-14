@@ -102,6 +102,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
         if (dragFrom == -1) {
             dragFrom = fromPosition;
+
         }
         dragTo = toPosition;
         // Notify the adapter of the move

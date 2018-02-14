@@ -107,7 +107,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (itemDecoration != null) {
             recyclerViewBottomDoc.removeItemDecoration(itemDecoration);
         }
-        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_1);
+        itemDecoration = new ItemOffsetDecoration(context, R.dimen.dp_15);
         recyclerViewBottomDoc.addItemDecoration(itemDecoration);
         boolean isHideIconBranding = PrefSiempo.getInstance(context).read(PrefSiempo.IS_ICON_BRANDING, true);
         mAdapter = new ToolsMenuAdapter(getActivity(), isHideIconBranding, true, items);

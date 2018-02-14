@@ -19,6 +19,7 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
+import co.siempo.phone.activities.CoreActivity;
 import co.siempo.phone.activities.ToolPositioningActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
@@ -94,6 +95,7 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
                 Intent intent = new Intent(context, ToolPositioningActivity.class);
                 intent.putExtra("ID", mainListItemList.get(position).getId());
                 context.startActivity(intent);
+                ((CoreActivity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 return true;
             }
         });
