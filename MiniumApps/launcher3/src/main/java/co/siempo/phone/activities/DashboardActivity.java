@@ -135,7 +135,6 @@ public class DashboardActivity extends CoreActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         if (PrefSiempo.getInstance(this).read(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, true)) {
-            PrefSiempo.getInstance(this).write(PrefSiempo.IS_APP_INSTALLED_FIRSTTIME, false);
             Intent intent = new Intent(this, JunkfoodFlaggingActivity.class);
             startActivity(intent);
         }
@@ -180,8 +179,6 @@ public class DashboardActivity extends CoreActivity {
     public void onBackPressed() {
         if (mPager != null && mPager.getCurrentItem() == 0) {
             mPager.setCurrentItem(1);
-        } else {
-            super.onBackPressed();
         }
     }
 
