@@ -181,7 +181,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 allAppList = Sorting.sortAppAssignment(this, allAppList);
                 txtFlaggedMessage2.setVisibility(View.GONE);
                 listAllApps.setVisibility(View.VISIBLE);
-                junkFoodAllAppsAdapter = new JunkFoodFlagAdapter(this, allAppList);
+                junkFoodAllAppsAdapter = new JunkFoodFlagAdapter(this, allAppList, false);
                 listAllApps.setAdapter(junkFoodAllAppsAdapter);
                 UIUtils.setDynamicHeight(listAllApps);
                 listAllApps.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -199,7 +199,7 @@ public class JunkfoodFlaggingActivity extends AppCompatActivity {
                 flagAppList = Sorting.sortAppAssignment(this, flagAppList);
                 txtFlaggedMessage1.setVisibility(View.GONE);
                 listFlaggedApps.setVisibility(View.VISIBLE);
-                junkFoodFlagAdapter = new JunkFoodFlagAdapter(this, flagAppList);
+                junkFoodFlagAdapter = new JunkFoodFlagAdapter(this, flagAppList, true);
                 listFlaggedApps.setAdapter(junkFoodFlagAdapter);
                 junkFoodFlagAdapter.notifyDataSetChanged();
                 UIUtils.setDynamicHeight(listFlaggedApps);
