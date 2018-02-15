@@ -13,5 +13,5 @@
         android:layout_centerInParent="true"
         android:layout_marginLeft="@dimen/dp_5"
         android:layout_marginRight="@dimen/dp_5"
-        android:clipToPadding="false" />
+        android:clipToPadding="false"/>
 </RelativeLayout>

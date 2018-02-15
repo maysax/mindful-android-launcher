@@ -30,9 +30,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,8 +43,6 @@ import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
-import co.siempo.phone.log.Tracer;
-import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.service.AlarmBroadcast;
 
 /**
@@ -518,7 +513,6 @@ public class PackageUtil {
         searchItems = Sorting.sortList(searchItems);
         return searchItems;
     }
-
 
 
     public static ArrayList<MainListItem> getToolsMenuData(Context context, ArrayList<MainListItem> items) {
