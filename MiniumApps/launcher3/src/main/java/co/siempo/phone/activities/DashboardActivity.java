@@ -16,6 +16,8 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.github.javiersantos.appupdater.AppUpdater;
@@ -68,6 +70,7 @@ public class DashboardActivity extends CoreActivity {
     private DashboardPagerAdapter mPagerAdapter;
     private AlertDialog notificationDialog;
     private int index = -1;
+    private InputMethodManager inputMethodManager;
     PermissionListener permissionlistener = new PermissionListener() {
         @Override
         public void onPermissionGranted() {
@@ -121,6 +124,7 @@ public class DashboardActivity extends CoreActivity {
 
             loadViews();
         }
+        initView();
     }
 
     @Subscribe
@@ -158,6 +162,8 @@ public class DashboardActivity extends CoreActivity {
         launcher3Prefs =
                 getSharedPreferences("Launcher3Prefs", 0);
         checknavigatePermissions();
+
+
     }
 
     public void loadViews() {
@@ -165,6 +171,10 @@ public class DashboardActivity extends CoreActivity {
         mPagerAdapter = new DashboardPagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(index == -1 ? 1 : index);
+        mPager.setPageTransformer(true, new FadePageTransformer());
+        inputMethodManager = (InputMethodManager) this
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(mPager.getWindowToken(), 0);
     }
 
 
@@ -181,7 +191,9 @@ public class DashboardActivity extends CoreActivity {
         if (mPager != null && mPager.getCurrentItem() == 0) {
             mPager.setCurrentItem(1);
         } else {
-            super.onBackPressed();
+            if (mPager != null && mPager.getCurrentItem() == 0) {
+                mPager.setCurrentItem(0);
+            }
         }
     }
 
@@ -439,7 +451,33 @@ public class DashboardActivity extends CoreActivity {
     protected void onDestroy() {
         super.onDestroy();
         DashboardActivity.isTextLenghGreater = "";
+
+
     }
 
+
+    private static class FadePageTransformer implements ViewPager.PageTransformer {
+        public void transformPage(View view, float position) {
+
+            // Page is not an immediate sibling, just make transparent
+            if (position < -1 || position > 1) {
+                view.setAlpha(0);
+            }
+            // Page is sibling to left or right
+            else if (position <= 0 || position <= 1) {
+
+                // Calculate alpha.  Position is decimal in [-1,0] or [0,1]
+                float alpha = (position <= 0) ? position + 1 : 1 - position;
+                view.setAlpha(alpha);
+
+            }
+            // Page is active, make fully visible
+            else if (position == 0) {
+                view.setAlpha(1);
+            }
+
+        }
+
+    }
 
 }

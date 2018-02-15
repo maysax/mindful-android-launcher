@@ -12,6 +12,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -107,6 +108,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
      */
     private ImageView imageClear;
     private View rootView;
+    private InputMethodManager inputMethodManager;
 
     public PaneFragment() {
         // Required empty public constructor
@@ -194,6 +196,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         pagerPane.setCurrentItem(2);
 
         bindBottomDoc();
+        inputMethodManager = (InputMethodManager) getActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        txtTopDockDate.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (null != imageClear && imageClear.getVisibility() == View
+                        .VISIBLE) {
+                    imageClear.performClick();
+                }
+                return true;
+            }
+        });
 
     }
 
@@ -261,10 +275,9 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
                 chipsEditText.clearFocus();
                 chipsEditText.setText("");
-                InputMethodManager imm = (InputMethodManager) getActivity()
-                        .getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+
+                if (inputMethodManager != null) {
+                    inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
                 }
 
             }
@@ -288,7 +301,8 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
                     searchLayout.setVisibility(View.VISIBLE);
                     cardViewEdtSearch.setVisibility(View.VISIBLE);
                     relSearchTools.setVisibility(View.GONE);
-                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) getActivity()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInputFromWindow(
                             searchLayout.getApplicationWindowToken(),
                             InputMethodManager.SHOW_FORCED, 0);
@@ -306,7 +320,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
 
                     linPane.setVisibility(View.GONE);
                     linBottomDoc.setVisibility(View.GONE);
-                    blueLineDivider.setVisibility(View.VISIBLE);
+                    blueLineDivider.setVisibility(View.GONE);
                     linSearchList.setVisibility(View.VISIBLE);
                     imageClear.setVisibility(View.VISIBLE);
                 } else {
@@ -331,7 +345,7 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         try {
             if (event.getString().equalsIgnoreCase("") || event.getString().equalsIgnoreCase("/")
                     || (event.getString().startsWith("/") && event.getString().length() == 2)) {
-                listView.smoothScrollToPosition(0);
+                listView.setAdapter(adapter);
             }
             parser.parse(event.getString());
             if (adapter != null) {
@@ -487,6 +501,10 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
         if (!isVisibleToUser && null != mWindow) {
             mWindow.setStatusBarColor(defaultStatusBarColor);
         }
+        if (isVisibleToUser && null != mWindow && pagerPane.getCurrentItem() == 0) {
+            mWindow.setStatusBarColor(getResources().getColor(R.color
+                    .appland_blue_bright));
+        }
         if (!isVisibleToUser && null != imageClear && linSearchList
                 .getVisibility() == View.VISIBLE) {
             imageClear.performClick();
@@ -506,5 +524,18 @@ public class PaneFragment extends CoreFragment implements View.OnClickListener {
     public TokenManager getManager() {
         return TokenManager.getInstance();
     }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+        if (null != mWindow) {
+            mWindow.setStatusBarColor(defaultStatusBarColor);
+        }
+        if (inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(chipsEditText.getWindowToken(), 0);
+        }
+    }
+
 
 }

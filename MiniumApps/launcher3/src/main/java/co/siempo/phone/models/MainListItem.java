@@ -20,13 +20,13 @@ public class MainListItem implements Serializable {
     private String title;
     private int drawable;
     private String subTitle;
+    private String packageName = "";
     private boolean isEnabled = true;
     private MainListItemType itemType = MainListItemType.ACTION;
     private String icon;
     private int iconRes;
     private ApplicationInfo applicationInfo = null;
     private Date currentDateTime;
-
     /**
      * Contact Information
      */
@@ -35,15 +35,10 @@ public class MainListItem implements Serializable {
     private List<ContactNumber> numbers;
     private String imageUri;
 
-
-    public MainListItem(int id, String title, ApplicationInfo applicationInfo) {
+    public MainListItem(int id, String title, String packageName) {
         this.id = id;
         this.title = title;
-        this.applicationInfo = applicationInfo;
-    }
-
-    public MainListItem(int id, String title, String icon) {
-        this(id, title, icon, MainListItemType.ACTION);
+        this.packageName = packageName;
     }
 
     public MainListItem(int id, String title, String icon, MainListItemType itemType) {
@@ -53,6 +48,7 @@ public class MainListItem implements Serializable {
         this.itemType = itemType;
         this.iconRes = R.drawable.icon_sms;
     }
+
 
     public MainListItem(long contactId, int id, String title, String icon, MainListItemType itemType) {
         this.id = id;
@@ -64,6 +60,7 @@ public class MainListItem implements Serializable {
         this.iconRes = R.drawable.icon_sms;
         this.numbers = new ArrayList<>();
     }
+
 
     public MainListItem(int id, String title, String icon, int iconRes, MainListItemType itemType) {
         this.id = id;
@@ -93,6 +90,14 @@ public class MainListItem implements Serializable {
         this.drawable = drawable;
         this.currentDateTime = Calendar.getInstance().getTime();
 
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public Date getCurrentDateTime() {
+        return currentDateTime;
     }
 
     public int getId() {
@@ -139,9 +144,9 @@ public class MainListItem implements Serializable {
         return iconRes;
     }
 
-    public ApplicationInfo getApplicationInfo() {
-        return applicationInfo;
-    }
+//    public ApplicationInfo getApplicationInfo() {
+//        return applicationInfo;
+//    }
 
     public void setApplicationInfo(ApplicationInfo applicationInfo) {
         this.applicationInfo = applicationInfo;

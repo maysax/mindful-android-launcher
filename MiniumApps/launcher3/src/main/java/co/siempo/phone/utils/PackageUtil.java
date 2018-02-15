@@ -373,7 +373,9 @@ public class PackageUtil {
             int i = 0;
             for (int j = 0; j < searchItems.size(); j++) {
                 MainListItem item = searchItems.get(j);
-                if (item.getApplicationInfo() != null && !TextUtils.isEmpty(item.getApplicationInfo().packageName) && item.getApplicationInfo().packageName.equalsIgnoreCase(packageName)) {
+                if (!TextUtils.isEmpty(item.getPackageName()) && item
+                        .getPackageName()
+                        .equalsIgnoreCase(packageName)) {
                     isPackageAvailable = true;
                 }
                 if (item.getId() == -1 && item.getTitle().startsWith("" + appName.charAt(0))) {
@@ -381,7 +383,8 @@ public class PackageUtil {
                 }
             }
             if (!isPackageAvailable) {
-                searchItems.add(i - 1, new MainListItem(-1, appName, applicationInfo));
+                String pckageName = applicationInfo != null ? applicationInfo.packageName : "";
+                searchItems.add(i - 1, new MainListItem(-1, appName, pckageName));
             }
             searchItems = Sorting.sortAppList(context, searchItems);
             searchItems = Sorting.sortList(searchItems);
@@ -456,7 +459,7 @@ public class PackageUtil {
             int i = 0;
             for (int j = 0; j < searchItems.size(); j++) {
                 MainListItem item = searchItems.get(j);
-                if (item.getApplicationInfo() != null && !TextUtils.isEmpty(item.getApplicationInfo().packageName) && item.getApplicationInfo().packageName.equalsIgnoreCase(packageName)) {
+                if (!TextUtils.isEmpty(item.getPackageName()) && item.getPackageName().equalsIgnoreCase(packageName)) {
                     isPackageAvailable = true;
                 }
                 if (item.getId() == -1 && item.getTitle().startsWith("" + appName.charAt(0))) {
@@ -464,7 +467,8 @@ public class PackageUtil {
                 }
             }
             if (!isPackageAvailable) {
-                searchItems.add(i - 1, new MainListItem(-1, appName, applicationInfo));
+                searchItems.add(i - 1, new MainListItem(-1, appName,
+                        applicationInfo.packageName));
             }
             searchItems = Sorting.sortAppList(context, searchItems);
             searchItems = Sorting.sortList(searchItems);
@@ -488,7 +492,7 @@ public class PackageUtil {
 
 
         for (MainListItem item : searchItems) {
-            if (item.getApplicationInfo() != null && !TextUtils.isEmpty(item.getApplicationInfo().packageName) && item.getApplicationInfo().packageName.equalsIgnoreCase(packageName)) {
+            if (!TextUtils.isEmpty(item.getPackageName()) && item.getPackageName().equalsIgnoreCase(packageName)) {
                 removeApps.add(item);
             }
         }

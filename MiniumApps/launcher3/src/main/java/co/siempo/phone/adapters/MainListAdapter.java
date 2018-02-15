@@ -43,8 +43,6 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by Shahab on 2/16/2017.
  */
-
-
 public class MainListAdapter extends ArrayAdapter<MainListItem> {
 
     private static final int HIGHLIGHT_COLOR = 0x999be6ff;
@@ -210,13 +208,13 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
         if (item != null) {
 
             if (item.getId() == -1) {
-                final String packageName = item.getApplicationInfo().packageName;
+                final String packageName = item.getPackageName();
                 if (!TextUtils.isEmpty(packageName)) {
 
 
                     holder.icon.setImageBitmap(iconList.get(packageName));
                 }
-                holder.text.setText(item.getApplicationInfo().name);
+                holder.text.setText(item.getTitle());
                 holder.imgChevron.setVisibility(View.VISIBLE);
             } else {
                 if (item.getDrawable() != 0) {
@@ -259,7 +257,7 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                         Uri uri = null;
                         if (item != null) {
                             uri = Uri.fromParts("package", item
-                                    .getApplicationInfo().packageName, null);
+                                    .getPackageName(), null);
                         }
                         intent.setData(uri);
                         context.startActivity(intent);
@@ -385,7 +383,8 @@ public class MainListAdapter extends ArrayAdapter<MainListItem> {
                             case ACTION:
                                 filterableString = originalData.get(i).getTitle();
                                 if (!TextUtils.isEmpty(filterableString)) {
-                                    if (originalData.get(i).getApplicationInfo() == null) {
+                                    if (TextUtils.isEmpty(originalData.get(i)
+                                            .getPackageName())) {
                                         if (filterableString.toLowerCase().contains
                                                 (searchString.toLowerCase().trim())) {
                                             buildData.add(originalData.get(i));

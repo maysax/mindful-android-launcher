@@ -157,7 +157,9 @@ public class MainFragmentMediator {
                     }
                     break;
                 case ACTION:
-                    if (getAdapter() != null && getAdapter().getItem(position).getApplicationInfo() == null) {
+                    if (getAdapter() != null && TextUtils.isEmpty(getAdapter()
+                            .getItem
+                                    (position).getPackageName())) {
                         //On Click of item , storing the timestamp
                         items.get(position).setDate(Calendar.getInstance().getTime());
                         items.set(position, items.get(position));
@@ -169,8 +171,13 @@ public class MainFragmentMediator {
                         if (fragment != null) {
                             MainActivity.isTextLenghGreater = "";
                             UIUtils.hideSoftKeyboard(fragment.getActivity(), fragment.getActivity().getWindow().getDecorView().getWindowToken());
-                            boolean status = new ActivityHelper(fragment.getActivity()).openAppWithPackageName(getAdapter().getItem(position).getApplicationInfo().packageName);
-                            FirebaseHelper.getIntance().logIFAction(FirebaseHelper.ACTION_APPLICATION_PICK, getAdapter().getItem(position).getApplicationInfo().packageName, "");
+                            boolean status = new ActivityHelper(fragment
+                                    .getActivity()).openAppWithPackageName
+                                    (getAdapter().getItem(position).getPackageName());
+                            FirebaseHelper.getIntance().logIFAction
+                                    (FirebaseHelper.ACTION_APPLICATION_PICK,
+                                            getAdapter().getItem(position)
+                                                    .getPackageName(), "");
                             if (status) {
                                 items.get(position).setDate(Calendar.getInstance().getTime());
                                 items.set(position, items.get(position));
