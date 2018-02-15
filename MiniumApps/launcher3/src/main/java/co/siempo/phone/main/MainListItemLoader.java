@@ -166,7 +166,7 @@ public class MainListItemLoader {
                         String packageName = applicationInfo.packageName;
                         if (!appList.contains(packageName)) {
                             String appName = applicationInfo.name;
-                            items.add(new MainListItem(-1, appName, applicationInfo));
+                            items.add(new MainListItem(-1, appName, packageName));
                         }
                     }
                 }

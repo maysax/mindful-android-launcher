@@ -1,10 +1,13 @@
 package co.siempo.phone.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
@@ -68,7 +71,7 @@ public class FeedbackFragment extends CoreFragment {
     @ViewById
     EditText txtMessage;
 
-    String selectedItemText="";
+    String selectedItemText = "";
 
 
     @SystemService
@@ -114,27 +117,33 @@ public class FeedbackFragment extends CoreFragment {
                             } else if (BuildConfig.FLAVOR.equalsIgnoreCase(context.getString(R.string.beta))) {
                                 version = "BETA-" + BuildConfig.VERSION_NAME;
                             }
-                            String body = "User Email :" + droidPrefs_.userEmailId().get() + "\nFeedBack Type : " + selectedItemText + "\n" +
-                                    "Message :" + txtMessage.getText().toString().trim() + "\n" +
-                                    "Phone Data : Manufacturer - " + android.os.Build.MANUFACTURER +
-                                    ", Model - " + android.os.Build.MODEL +
-                                    ", OS Version - " + android.os.Build.VERSION.SDK_INT +
-                                    ", Display - " + getScreenResolution(getActivity()) + "\n" +
-                                    "App Data : UserID - " + telephonyManager.getDeviceId() +
-                                    ", Version - " + version;
-
-                            long currentTimeMills = System.currentTimeMillis();
+                            if (ActivityCompat.checkSelfPermission(context,
+                                    Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 
 
-                            //Creating SendMail object
-                            SendMail sm = new SendMail(getActivity(), getActivity().getResources().getString(R.string.feedback_email), "Thanks for your feedback!  Siempo support ID: " + telephonyManager.getDeviceId(), body);
+                                String body = "User Email :" + droidPrefs_.userEmailId().get() + "\nFeedBack Type : " + selectedItemText + "\n" +
+                                        "Message :" + txtMessage.getText().toString().trim() + "\n" +
+                                        "Phone Data : Manufacturer - " + android.os.Build.MANUFACTURER +
+                                        ", Model - " + android.os.Build.MODEL +
+                                        ", OS Version - " + android.os.Build.VERSION.SDK_INT +
+                                        ", Display - " + getScreenResolution(getActivity()) + "\n" +
+                                        "App Data : UserID - " + telephonyManager.getDeviceId() +
+                                        ", Version - " + version;
 
-                            //Executing sendmail to send email
-                            sm.execute();
 
-                            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                                long currentTimeMills = System.currentTimeMillis();
 
+
+                                //Creating SendMail object
+                                SendMail sm = new SendMail(getActivity(), getActivity().getResources().getString(R.string.feedback_email), "Thanks for your feedback!  Siempo support ID: " + telephonyManager.getDeviceId(), body);
+
+                                //Executing sendmail to send email
+                                sm.execute();
+
+                                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

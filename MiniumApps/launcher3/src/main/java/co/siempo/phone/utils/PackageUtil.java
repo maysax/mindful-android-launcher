@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,8 +41,8 @@ import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.db.DBUtility;
 import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
-import co.siempo.phone.log.Tracer;
 import co.siempo.phone.models.MainListItem;
+import co.siempo.phone.models.MainListItemType;
 import co.siempo.phone.service.AlarmBroadcast;
 
 /**
@@ -355,14 +356,164 @@ public class PackageUtil {
 
     public static void appSettings(Context context, String packageName) {
         try {
-            Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.parse("package:" + packageName));
-            context.startActivity(intent);
+            String appName = "";
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
+            if (applicationInfo != null && !TextUtils.isEmpty(applicationInfo.name)) {
+                appName = applicationInfo.loadLabel(context.getPackageManager()).toString();
+            }
+            boolean isPackageAvailable = false;
+            Type baseType = new TypeToken<List<MainListItem>>() {
+            }.getType();
+            List<MainListItem> searchItems = new ArrayList<MainListItem>();
+            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+            if (!TextUtils.isEmpty(searchList)) {
+                Gson gson = new Gson();
+                searchItems = gson.fromJson(searchList, baseType);
+            }
+            int i = 0;
+            for (int j = 0; j < searchItems.size(); j++) {
+                MainListItem item = searchItems.get(j);
+                if (!TextUtils.isEmpty(item.getPackageName()) && item
+                        .getPackageName()
+                        .equalsIgnoreCase(packageName)) {
+                    isPackageAvailable = true;
+                }
+                if (item.getId() == -1 && item.getTitle().startsWith("" + appName.charAt(0))) {
+                    i = j;
+                }
+            }
+            if (!isPackageAvailable) {
+                String pckageName = applicationInfo != null ? applicationInfo.packageName : "";
+                searchItems.add(i - 1, new MainListItem(-1, appName, pckageName));
+            }
+            searchItems = Sorting.sortAppList(context, searchItems);
+            searchItems = Sorting.sortList(searchItems);
+            storeSearchList(searchItems, context);
         } catch (Exception e) {
-            Tracer.e(e, e.getMessage());
-            CoreApplication.getInstance().logException(e);
+            e.printStackTrace();
         }
     }
+
+    public static void contactsUpdateInSearchList(Context context) {
+        Type baseType = new TypeToken<List<MainListItem>>() {
+        }.getType();
+        List<MainListItem> searchItems = new ArrayList<MainListItem>();
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        if (!TextUtils.isEmpty(searchList)) {
+            Gson gson = new Gson();
+            searchItems = gson.fromJson(searchList, baseType);
+            List<MainListItem> removeItems = new ArrayList<>();
+            for (MainListItem item : searchItems) {
+                if (!TextUtils.isEmpty(item.getContactName())) {
+                    removeItems.add(item);
+                }
+            }
+            searchItems.removeAll(removeItems);
+
+
+            for (MainListItem item : searchItems) {
+                if (item.getItemType() == MainListItemType.DEFAULT) {
+                    removeItems.add(item);
+                }
+            }
+            searchItems.removeAll(removeItems);
+
+            List<MainListItem> contactItems = new ContactsLoader().loadContacts(context);
+            searchItems.addAll(contactItems);
+
+            searchItems.add(new MainListItem(4, context.getString(R.string.title_call), R.drawable.icon_call, MainListItemType.NUMBERS));
+            searchItems.add(new MainListItem(1, context.getString(R.string.title_sendAsSMS), R.drawable.ic_messages_tool, MainListItemType.DEFAULT));
+            searchItems.add(new MainListItem(2, context.getString(R.string.title_saveNote), R.drawable.ic_notes_tool, MainListItemType.DEFAULT));
+            searchItems.add(new MainListItem(3, context.getString(R.string.title_swipe), R.drawable.ic_default_swipe, MainListItemType.DEFAULT));
+
+            Sorting.sortList(searchItems);
+            storeSearchList(searchItems, context);
+        }
+
+    }
+
+    public static void storeSearchList(List<MainListItem> items, Context context) {
+        Type baseType = new TypeToken<List<MainListItem>>() {
+        }.getType();
+        Gson gson = new Gson();
+        String searchValues = gson.toJson(items, baseType);
+        PrefSiempo.getInstance(context).write(PrefSiempo.SERACH_LIST, searchValues);
+    }
+
+    public static void addAppInSearchList(String packageName, Context context) {
+        try {
+            String appName = "";
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo(packageName, 0);
+            if (applicationInfo != null && !TextUtils.isEmpty(applicationInfo.name)) {
+                appName = applicationInfo.loadLabel(context.getPackageManager()).toString();
+            }
+            boolean isPackageAvailable = false;
+            Type baseType = new TypeToken<List<MainListItem>>() {
+            }.getType();
+            List<MainListItem> searchItems = new ArrayList<MainListItem>();
+            String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+            if (!TextUtils.isEmpty(searchList)) {
+                Gson gson = new Gson();
+                searchItems = gson.fromJson(searchList, baseType);
+            }
+            int i = 0;
+            for (int j = 0; j < searchItems.size(); j++) {
+                MainListItem item = searchItems.get(j);
+                if (!TextUtils.isEmpty(item.getPackageName()) && item.getPackageName().equalsIgnoreCase(packageName)) {
+                    isPackageAvailable = true;
+                }
+                if (item.getId() == -1 && item.getTitle().startsWith("" + appName.charAt(0))) {
+                    i = j;
+                }
+            }
+            if (!isPackageAvailable) {
+                searchItems.add(i - 1, new MainListItem(-1, appName,
+                        applicationInfo.packageName));
+            }
+            searchItems = Sorting.sortAppList(context, searchItems);
+            searchItems = Sorting.sortList(searchItems);
+            storeSearchList(searchItems, context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void removeAppFromSearchList(String packageName, Context context) {
+        Type baseType = new TypeToken<List<MainListItem>>() {
+        }.getType();
+        List<MainListItem> searchItems = new ArrayList<MainListItem>();
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        if (!TextUtils.isEmpty(searchList)) {
+            Gson gson = new Gson();
+            searchItems = gson.fromJson(searchList, baseType);
+        }
+
+        List<MainListItem> removeApps = new ArrayList<>();
+
+
+        for (MainListItem item : searchItems) {
+            if (!TextUtils.isEmpty(item.getPackageName()) && item.getPackageName().equalsIgnoreCase(packageName)) {
+                removeApps.add(item);
+            }
+        }
+        searchItems.removeAll(removeApps);
+        searchItems = Sorting.sortList(searchItems);
+        storeSearchList(searchItems, context);
+    }
+
+    public static List<MainListItem> getSearchList(Context context) {
+        Type baseType = new TypeToken<List<MainListItem>>() {
+        }.getType();
+        List<MainListItem> searchItems = new ArrayList<MainListItem>();
+        String searchList = PrefSiempo.getInstance(context).read(PrefSiempo.SERACH_LIST, "");
+        if (!TextUtils.isEmpty(searchList)) {
+            Gson gson = new Gson();
+            searchItems = gson.fromJson(searchList, baseType);
+        }
+        searchItems = Sorting.sortList(searchItems);
+        return searchItems;
+    }
+
 
     public static ArrayList<MainListItem> getToolsMenuData(Context context, ArrayList<MainListItem> items) {
 

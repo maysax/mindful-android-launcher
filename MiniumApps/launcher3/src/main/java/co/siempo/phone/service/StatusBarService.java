@@ -32,6 +32,7 @@ import co.siempo.phone.db.DBClient;
 import co.siempo.phone.event.AppInstalledEvent;
 import co.siempo.phone.event.FirebaseEvent;
 import co.siempo.phone.helper.FirebaseHelper;
+import co.siempo.phone.utils.PackageUtil;
 import de.greenrobot.event.EventBus;
 import de.greenrobot.event.Subscribe;
 
@@ -228,11 +229,8 @@ public class StatusBarService extends Service {
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            // do s.th.
-            // depending on the handler you might be on the UI
-            // thread, so be cautious!
-
             sharedPreferences.edit().putBoolean("isContactUpdate", true).apply();
+            PackageUtil.contactsUpdateInSearchList(context);
         }
     }
 
@@ -249,6 +247,7 @@ public class StatusBarService extends Service {
                             installPackageName = intent.getData().getEncodedSchemeSpecificPart();
                             addAppFromBlockedList(installPackageName);
                             Log.d("Testing with device.", "Added" + installPackageName);
+                            PackageUtil.addAppInSearchList(installPackageName, context);
                         }
 
                     } else if (intent.getAction().equals(Intent.ACTION_PACKAGE_REMOVED)) {
@@ -260,6 +259,7 @@ public class StatusBarService extends Service {
                                 new DBClient().deleteMsgByPackageName(uninstallPackageName);
                                 removeAppFromBlockedList(uninstallPackageName);
                                 EventBus.getDefault().post(new AppInstalledEvent(0));
+                                PackageUtil.removeAppFromSearchList(uninstallPackageName, context);
                             }
                         }
                     }
