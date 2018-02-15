@@ -30,6 +30,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,6 +46,8 @@ import co.siempo.phone.db.TableNotificationSms;
 import co.siempo.phone.db.TableNotificationSmsDao;
 import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.models.MainListItemType;
+import co.siempo.phone.log.Tracer;
+import co.siempo.phone.models.MainListItem;
 import co.siempo.phone.service.AlarmBroadcast;
 
 /**
@@ -515,4 +520,49 @@ public class PackageUtil {
     }
 
 
+
+    public static ArrayList<MainListItem> getToolsMenuData(Context context, ArrayList<MainListItem> items) {
+
+        //Get the sample data
+
+        //create an empty array to hold the list of sorted Customers
+        ArrayList<MainListItem> sortedTools = new ArrayList<>();
+
+        //get the JSON array of the ordered of sorted customers
+        String jsonListOfSortedToolsId = PrefSiempo.getInstance(context).read(PrefSiempo.SORTED_MENU, "");
+
+
+        //check for null
+        if (!jsonListOfSortedToolsId.isEmpty()) {
+
+            //convert onNoteListChangedJSON array into a List<Long>
+            Gson gson = new Gson();
+            List<Long> listOfSortedCustomersId = gson.fromJson(jsonListOfSortedToolsId, new TypeToken<List<Long>>() {
+            }.getType());
+
+            //build sorted list
+            if (listOfSortedCustomersId != null && listOfSortedCustomersId.size() > 0) {
+                for (Long id : listOfSortedCustomersId) {
+                    for (MainListItem tools : items) {
+                        if (tools.getId() == id) {
+                            sortedTools.add(tools);
+                            items.remove(tools);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //if there are still tools that were not in the sorted list
+            //maybe they were added after the last drag and drop
+            //add them to the sorted list
+            if (items.size() > 0) {
+                sortedTools.addAll(items);
+            }
+
+            return sortedTools;
+        } else {
+            return items;
+        }
+    }
 }

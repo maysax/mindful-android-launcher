@@ -19,6 +19,8 @@ import java.util.List;
 
 import co.siempo.phone.R;
 import co.siempo.phone.activities.AppAssignmentActivity;
+import co.siempo.phone.activities.CoreActivity;
+import co.siempo.phone.activities.ToolPositioningActivity;
 import co.siempo.phone.app.Constants;
 import co.siempo.phone.app.CoreApplication;
 import co.siempo.phone.helper.ActivityHelper;
@@ -60,10 +62,10 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final MainListItem item = mainListItemList.get(position);
         final AppMenu appMenu = map.get(item.getId());
-        if (appMenu.isVisible()) {
+        if (appMenu.isVisible() && item.getId() != 12) {
             holder.linearLayout.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(item.getTitle())) {
                 holder.text.setText(item.getTitle());
@@ -86,6 +88,18 @@ public class ToolsMenuAdapter extends RecyclerView.Adapter<ToolsMenuAdapter.View
         } else {
             holder.linearLayout.setVisibility(View.INVISIBLE);
         }
+
+        holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Intent intent = new Intent(context, ToolPositioningActivity.class);
+                intent.putExtra("ID", mainListItemList.get(holder.getAdapterPosition()).getId());
+                context.startActivity(intent);
+                ((CoreActivity) context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                return true;
+            }
+        });
+
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -88,8 +88,10 @@ public class AppAssignmentActivity extends CoreActivity {
                 }
             }
             for (ResolveInfo resolveInfo : installedPackageList) {
-                if (resolveInfo != null && !connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
-                    appList.add(resolveInfo);
+                if (!resolveInfo.activityInfo.packageName.equalsIgnoreCase(getPackageName())) {
+                    if (resolveInfo != null && !connectedAppsList.contains(resolveInfo.activityInfo.packageName)) {
+                        appList.add(resolveInfo);
+                    }
                 }
             }
         } else {
@@ -112,7 +114,7 @@ public class AppAssignmentActivity extends CoreActivity {
         setSupportActionBar(toolbar);
         recyclerView = findViewById(R.id.recyclerView);
         txtErrorMessage = findViewById(R.id.txtErrorMessage);
-        if (appList != null && appList.size() > 1) {
+        if (appList != null && appList.size() >= 1) {
             recyclerView.setVisibility(View.VISIBLE);
             txtErrorMessage.setVisibility(View.INVISIBLE);
             appList = Sorting.sortAppAssignment(this, appList);

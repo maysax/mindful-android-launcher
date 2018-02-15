@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:weightSum="3"
-                tools:context="co.siempo.phone.fragments.IntentionFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="3"
+    tools:context="co.siempo.phone.fragments.PaneFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -69,6 +69,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:clipToPadding="false"/>
+                android:layout_marginBottom="@dimen/dp_15"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:clipToPadding="false" />
         </LinearLayout>
 
         <LinearLayout

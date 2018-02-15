@@ -75,19 +75,19 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = 0;
-            if (oldMenuFragment == null) {
-                return makeMovementFlags(dragFlags, swipeFlags);
-            } else {
-                return makeMovementFlags(dragFlags, 0);
-            }
+//            if (oldMenuFragment == null) {
+//                return makeMovementFlags(dragFlags, swipeFlags);
+//            } else {
+            return makeMovementFlags(dragFlags, 0);
+//            }
         } else {
             final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
             final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-            if (oldMenuFragment == null) {
-                return makeMovementFlags(dragFlags, swipeFlags);
-            } else {
-                return makeMovementFlags(dragFlags, 0);
-            }
+//            if (oldMenuFragment == null) {
+//                return makeMovementFlags(dragFlags, swipeFlags);
+//            } else {
+            return makeMovementFlags(dragFlags, 0);
+//            }
         }
     }
 
@@ -100,8 +100,9 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
         int toPosition = target.getAdapterPosition();
 
 
-        if(dragFrom == -1) {
-            dragFrom =  fromPosition;
+        if (dragFrom == -1) {
+            dragFrom = fromPosition;
+
         }
         dragTo = toPosition;
         // Notify the adapter of the move
@@ -138,7 +139,9 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
                 d.setBounds(left, top, right, bottom);
             }
 
-            d.draw(c);
+            if (d != null) {
+                d.draw(c);
+            }
 
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         } else {
@@ -168,7 +171,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
         if (viewHolder instanceof ItemTouchHelperViewHolder) {
             // Tell the view holder it's time to restore the idle state
-            if(dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
+            if (dragFrom != -1 && dragTo != -1 && dragFrom != dragTo) {
                 reallyMoved(dragFrom, dragTo);
             }
 
@@ -177,6 +180,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
             itemViewHolder.onItemClear();
         }
     }
+
     private void reallyMoved(int from, int to) {
         // I guessed this was what you want...
     }
